@@ -1,21 +1,28 @@
 @import "tailwindcss";
 
 @theme {
-  --color-celestial-bg: #0a0a0a;
-  --color-celestial-accent: #ffffff;
-  --color-celestial-text: #e5e5e5;
-  --color-celestial-muted: #262626;
-  --font-body: "Inter", system-ui, sans-serif;
+  --color-mystic-bg: #FCF9F1;
+  --color-mystic-sidebar: #F5F1E6;
+  --color-mystic-accent: #B8860B;
+  --color-mystic-text: #333333;
+  --color-duck-bg: #2C7A7B;
+
+  --font-sans: "Inter", system-ui, sans-serif;
+
+  /* Arredondamentos Extremos */
+  --radius-xl: 2.5rem;
+  --radius-2xl: 3.5rem;
+  --radius-3xl: 4rem;
 }
 
 :root {
-  font-family: var(--font-body);
+  font-family: var(--font-sans);
   line-height: 1.5;
-  font-weight: 300;
+  font-weight: 400;
 
-  color-scheme: dark;
-  color: var(--color-celestial-text);
-  background-color: var(--color-celestial-bg);
+  color-scheme: light;
+  color: var(--color-mystic-text);
+  background-color: var(--color-mystic-bg);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -29,16 +36,28 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
-  /* Criação de um padrão sutil de estrelas no fundo escuro */
-  background-image: radial-gradient(circle at 15% 50%, rgba(255, 255, 255, 0.04) 0%, transparent 50%),
-    radial-gradient(circle at 85% 30%, rgba(255, 255, 255, 0.04) 0%, transparent 50%);
+  overflow: hidden;
+  /* Prevent body scroll */
+}
+
+/* Esconder scrollbar universalmente, mas permitir rolagem */
+::-webkit-scrollbar {
+  display: none;
+}
+
+* {
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE/Edge */
+  scroll-behavior: smooth;
 }
 
 @layer base {
   body {
-    background-color: var(--color-celestial-bg);
-    color: var(--color-celestial-text);
-    font-family: var(--font-body);
+    background-color: var(--color-mystic-bg);
+    color: var(--color-mystic-text);
+    font-family: var(--font-sans);
   }
 
   h1,
@@ -47,9 +66,7 @@ body {
   h4,
   h5,
   h6 {
-    font-family: var(--font-body);
-    font-weight: 400;
-    letter-spacing: 0.05em;
-    color: var(--color-celestial-accent);
+    font-family: var(--font-sans);
+    color: var(--color-mystic-text);
   }
 }

@@ -1,121 +1,198 @@
 import { useState } from "react";
-import { User, Sparkles, LayoutDashboard, Compass, Settings, Wallet, Calendar, PlusCircle } from "lucide-react";
+import { User, Sparkles, LayoutDashboard, Compass, Settings, Wallet, Calendar, PlusCircle, Activity, ChevronRight } from "lucide-react";
 import "./styles.css";
 
 function App() {
-  const [activeTab, setActiveTab] = useState("Brainstorming");
+  const [activeTab, setActiveTab] = useState("Mesa de Criação");
+  const [strangeOpen, setStrangeOpen] = useState(false);
 
   const navItems = [
-    { id: "Brainstorming", label: "Brainstorming", icon: <LayoutDashboard size={20} /> },
+    { id: "Mesa de Criação", label: "Mesa de Criação", icon: <LayoutDashboard size={20} /> },
     { id: "Astrologia", label: "Astrologia", icon: <Compass size={20} /> },
-    { id: "Painel de Controle", label: "Painel de Controle", icon: <Settings size={20} /> },
+    { id: "Painel de Controle", label: "Controle", icon: <Settings size={20} /> },
     { id: "Finanças", label: "Finanças", icon: <Wallet size={20} /> },
     { id: "Agenda", label: "Agenda", icon: <Calendar size={20} /> },
   ];
 
+  // Identifica se a página atual exige o layout 70/30 (Conteúdo / Chat do Agente)
+  const isAgentPage = ["Astrologia", "Painel de Controle", "Finanças", "Agenda"].includes(activeTab);
+
   return (
-    <main className="flex h-screen bg-celestial-bg text-celestial-text font-body overflow-hidden relative selection:bg-white/20">
+    <main className="flex h-screen bg-mystic-bg text-mystic-text font-sans overflow-hidden">
 
-      {/* Menu Lateral Estilo Celestial */}
-      <aside className="w-72 bg-black/40 border-r border-celestial-muted flex flex-col items-center py-8 shadow-2xl backdrop-blur-sm z-10">
-
-        {/* Header da Sidebar */}
-        <div className="flex flex-col items-center mb-12">
-          <div className="w-16 h-16 rounded-full border border-celestial-muted mb-4 flex items-center justify-center relative overflow-hidden group hover:border-white transition-colors">
-            <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-            <span className="text-white font-light text-2xl tracking-widest">SO</span>
-          </div>
-          <h1 className="text-xl text-white tracking-[0.2em] font-light">AUREA SOLARIS</h1>
+      {/* Navegação Lateral: 16rem foca no bege linho */}
+      <aside className="w-64 bg-mystic-sidebar flex flex-col pt-12 pb-8 h-full rounded-r-[var(--radius-2xl)] shadow-lg z-20 shrink-0">
+        <div className="flex flex-col items-center mb-16">
+          <h1 className="text-2xl font-medium text-mystic-text tracking-widest uppercase mb-4">Aurea</h1>
+          <div className="w-8 h-1 rounded-full bg-mystic-accent"></div>
         </div>
 
-        {/* Navegação Principal */}
-        <nav className="w-full flex-1 flex flex-col gap-1 px-4">
+        <nav className="w-full flex-1 flex flex-col gap-3 px-6">
           {navItems.map((item) => (
             <button
               key={item.id}
               onClick={() => setActiveTab(item.id)}
-              className={`w-full flex items-center gap-3 px-6 py-4 rounded-xl transition-all duration-300 font-light text-sm tracking-wide ${activeTab === item.id
-                  ? "bg-white/10 text-white shadow-[0_0_15px_rgba(255,255,255,0.05)] border border-white/10"
-                  : "text-neutral-400 hover:bg-white/5 hover:text-neutral-200 border border-transparent"
+              className={`w-full flex items-center gap-4 px-5 py-4 rounded-[var(--radius-xl)] transition-all duration-500 font-medium text-sm tracking-wide ${activeTab === item.id
+                  ? "bg-mystic-bg text-mystic-accent shadow-sm"
+                  : "text-mystic-text/70 hover:bg-mystic-bg/50 hover:text-mystic-text"
                 }`}
             >
-              <span className={activeTab === item.id ? "text-white" : "text-neutral-500"}>
-                {item.icon}
-              </span>
+              <span>{item.icon}</span>
               {item.label}
             </button>
           ))}
         </nav>
 
-        {/* Rodapé da Sidebar: Identidade/Login (Canto Inferior Esquerdo) */}
-        <div className="w-full px-6 mt-auto">
-          <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl border border-celestial-muted hover:bg-white/5 transition-colors">
-            <div className="w-8 h-8 rounded-full bg-neutral-800 flex items-center justify-center border border-neutral-700">
-              <User size={16} className="text-neutral-400" />
+        {/* Perfil: "Janela de Contexto da Viviane" */}
+        <div className="px-6 mt-auto">
+          <button
+            onClick={() => setActiveTab("Perfil")}
+            className="w-full flex items-center gap-4 px-4 py-4 rounded-[var(--radius-xl)] bg-white/50 border border-white hover:bg-white hover:shadow-md transition-all"
+          >
+            <div className="w-10 h-10 rounded-full bg-mystic-sidebar flex items-center justify-center text-mystic-accent shadow-sm">
+              <User size={18} />
             </div>
-            <div className="flex flex-col items-start">
-              <span className="text-sm text-white font-medium">Vivica</span>
-              <span className="text-xs text-neutral-500">Autenticada</span>
+            <div className="flex flex-col items-start gap-1">
+              <span className="text-sm font-semibold text-mystic-text leading-none">Viviane</span>
+              <span className="text-[10px] text-mystic-accent uppercase tracking-widest font-bold">Base de Contexto</span>
             </div>
           </button>
         </div>
       </aside>
 
-      {/* Conteúdo Central */}
-      <section className="flex-1 flex flex-col p-10 overflow-y-auto relative z-0">
-        <header className="mb-10 border-b border-celestial-muted pb-6 flex justify-between items-end">
-          <div>
-            <h2 className="text-3xl font-light text-white tracking-wide">{activeTab}</h2>
-            <p className="text-sm text-neutral-500 mt-2 font-light tracking-wide">
-              {activeTab === "Brainstorming" && "Painel de ideação infinito (Miro-like) local."}
-              {activeTab === "Astrologia" && "Mapas natais, transitos do céu e cruzamentos (Rafiki)."}
-              {activeTab === "Painel de Controle" && "Saúde do sistema, tokens e arquivos (Stark)."}
-              {activeTab === "Finanças" && "Relatórios financeiros 100% offline via Ollama (Uncle Duck)."}
-              {activeTab === "Agenda" && "Google Calendar & Todoist gerenciados por IA (Alfred)."}
-            </p>
-          </div>
-          {activeTab === "Astrologia" && (
-            <button className="flex items-center gap-2 text-sm text-white bg-white/10 px-4 py-2 rounded-lg hover:bg-white/20 transition-colors border border-white/10">
-              <PlusCircle size={16} /> Add Pessoa (Mapa)
-            </button>
-          )}
-        </header>
+      {/* Container Flexível de Conteúdo */}
+      <section className="flex-1 flex overflow-hidden p-6 gap-6 relative">
 
-        {/* Dynamic Content Area */}
-        <div className="flex-1 bg-black/20 rounded-2xl border border-celestial-muted p-8 flex flex-col items-center justify-center relative overflow-hidden">
-          {/* Decorações Cósmicas de Fundo */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-white opacity-[0.02] rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+        {/* Conteúdo Principal (Central Scrollable) */}
+        <div className={`h-full overflow-y-auto bg-white rounded-[var(--radius-3xl)] shadow-sm border border-black/5 p-12 transition-all duration-500 ${isAgentPage ? "w-[70%]" : "w-full"}`}>
 
+          <header className="mb-12 flex justify-between items-end border-b border-black/5 pb-6">
+            <div>
+              <h2 className="text-4xl font-light tracking-tight text-mystic-text mb-2">{activeTab}</h2>
+              {activeTab === "Perfil" && <p className="text-mystic-text/60">Sua Janela de Contexto Base (O que os agentes sabem sobre você).</p>}
+              {activeTab === "Mesa de Criação" && <p className="text-mystic-text/60">Painel de exploração 100% livre (100% de largura).</p>}
+              {activeTab === "Finanças" && <p className="text-mystic-text/60">Consultoria offline de baixo risco com Uncle Duck.</p>}
+            </div>
+            {activeTab === "Astrologia" && (
+              <button className="flex items-center gap-2 text-sm bg-mystic-bg text-mystic-accent font-medium px-6 py-3 rounded-[var(--radius-xl)] hover:shadow-md transition-all">
+                <PlusCircle size={18} /> Cadastrar Pessoa
+              </button>
+            )}
+          </header>
+
+          {/* Dynamic Views */}
           {activeTab === "Painel de Controle" && (
-            <div className="text-center bg-black/40 p-8 rounded-2xl border border-red-900/50 shadow-2xl backdrop-blur-md">
-              <p className="text-xl font-medium text-red-500 mb-3 tracking-widest uppercase">Laboratório Stark</p>
-              <p className="text-neutral-400 font-light">
-                Stark só possui acesso isolado ao diretório: <br />
-                <code className="bg-black border border-neutral-800 px-3 py-1.5 rounded text-neutral-300 mt-4 inline-block font-mono text-sm">C:\AureaSolaris\Laboratorio_Stark</code>
+            <div className="grid grid-cols-2 gap-8">
+              <div className="bg-mystic-sidebar rounded-[var(--radius-xl)] p-8">
+                <h3 className="text-sm font-bold uppercase tracking-widest text-mystic-text/50 mb-6">Laboratório do Stark</h3>
+                <div className="flex items-center gap-3 text-sm text-mystic-text bg-white p-4 rounded-[var(--radius-xl)] shadow-sm mb-4">
+                  C:\AureaSolaris\Laboratorio_Stark
+                </div>
+                <p className="text-xs text-mystic-text/60">Comando Rust restrito fisicamente a este diretório.</p>
+              </div>
+              <div className="bg-mystic-sidebar rounded-[var(--radius-xl)] p-8">
+                <h3 className="text-sm font-bold uppercase tracking-widest text-mystic-text/50 mb-6">Hardware Health</h3>
+                <div className="flex gap-4 mb-4">
+                  <div className="flex-1 bg-white p-4 rounded-[var(--radius-xl)] text-center shadow-sm">
+                    <span className="block text-2xl font-bold text-green-600 mb-1">12%</span>
+                    <span className="text-xs font-bold text-mystic-text/50 uppercase">CPU</span>
+                  </div>
+                  <div className="flex-1 bg-white p-4 rounded-[var(--radius-xl)] text-center shadow-sm">
+                    <span className="block text-2xl font-bold text-red-500 mb-1">82%</span>
+                    <span className="text-xs font-bold text-mystic-text/50 uppercase">RAM</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "Finanças" && (
+            <div className="bg-[#2C7A7B] text-white rounded-[var(--radius-2xl)] p-12 shadow-xl shadow-[#2C7A7B]/20">
+              <h3 className="text-2xl font-light mb-4">Conselhos de Baixo Risco</h3>
+              <p className="opacity-90 leading-relaxed font-light text-lg">
+                Seus gastos recentes indicam uma excelente curva de poupança. Recomendo alocar 20% do excedente deste mês em reserva de oportunidade. O processamento do Ollama não encontrou divergências nos extratos.
               </p>
             </div>
           )}
 
-          {activeTab !== "Painel de Controle" && (
-            <div className="flex flex-col items-center text-center opacity-40">
-              <div className="w-32 h-32 rounded-full border-[0.5px] border-white/20 flex flex-col items-center justify-center mb-6 relative">
-                <div className="absolute inset-2 rounded-full border-[0.5px] border-white/10 border-dashed"></div>
-                <div className="absolute inset-6 rounded-full border-[0.5px] border-white/5"></div>
-                <Sparkles size={24} className="text-white/50" />
-              </div>
-              <p className="font-light tracking-wide">Construindo as funcionalidades nativas...</p>
+          {activeTab === "Astrologia" && (
+            <div className="flex justify-center my-16">
+              {/* SVG Placeholder Mandala Clean */}
+              <svg width="300" height="300" viewBox="0 0 100 100" className="opacity-80">
+                <circle cx="50" cy="50" r="48" fill="none" stroke="#B8860B" strokeWidth="0.5" strokeDasharray="2 2" />
+                <circle cx="50" cy="50" r="40" fill="none" stroke="#B8860B" strokeWidth="0.8" />
+                <circle cx="50" cy="50" r="30" fill="none" stroke="#B8860B" strokeWidth="0.2" />
+                <path d="M50 2 L50 98 M2 50 L98 50 M16 16 L84 84 M16 84 L84 16" stroke="#B8860B" strokeWidth="0.2" />
+                <circle cx="50" cy="50" r="8" fill="#F5F1E6" stroke="#B8860B" strokeWidth="1" />
+              </svg>
             </div>
           )}
+
+          {activeTab === "Agenda" && (
+            <div className="flex flex-col gap-6">
+              <div className="flex items-start gap-4 p-6 bg-blue-50 text-blue-900 rounded-[var(--radius-xl)] border border-blue-100">
+                <div className="w-2 h-2 mt-2 rounded-full bg-blue-500"></div>
+                <div>
+                  <span className="text-xs font-bold uppercase tracking-widest text-blue-500 mb-1 block">Google Calendar</span>
+                  <p className="font-medium">Reunião de Alinhamento (14:00)</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-4 p-6 bg-orange-50 text-orange-900 rounded-[var(--radius-xl)] border border-orange-100">
+                <div className="w-2 h-2 mt-2 rounded-full bg-orange-500"></div>
+                <div>
+                  <span className="text-xs font-bold uppercase tracking-widest text-orange-500 mb-1 block">Todoist + Rafiki (Astrologia)</span>
+                  <p className="font-medium">Lua entra em Virgem: Revisar documentos importantes até amanhã.</p>
+                </div>
+              </div>
+            </div>
+          )}
+
         </div>
+
+        {/* Coluna 30%: Chat do Agente (Apenas em páginas de Agente) */}
+        {isAgentPage && (
+          <div className="w-[30%] h-full bg-mystic-sidebar rounded-[var(--radius-3xl)] flex flex-col overflow-hidden shadow-inner border border-black/5">
+            <div className="p-8 border-b border-black/5 bg-white/40">
+              <h3 className="text-lg font-medium text-mystic-text">Interação</h3>
+              <p className="text-xs text-mystic-text/50 mt-1">Chat direto com a Persona via IPC</p>
+            </div>
+            <div className="flex-1 p-6 flex flex-col justify-end">
+              {/* Espaço do Chat Scrollable vai aqui */}
+              <div className="w-full bg-white rounded-[var(--radius-xl)] p-2 shadow-sm border border-black/5 flex items-center pr-4 mt-4">
+                <input type="text" placeholder="Escreva algo..." className="bg-transparent border-none outline-none flex-1 px-4 py-3 text-sm" />
+                <ChevronRight className="text-mystic-accent" size={20} />
+              </div>
+            </div>
+          </div>
+        )}
+
       </section>
 
-      {/* Botão Flutuante: Dr. Strange (Canto Inferior Direito) */}
-      <button
-        className="fixed bottom-8 right-8 w-14 h-14 bg-white text-black rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(255,255,255,0.2)] hover:scale-110 hover:shadow-[0_0_40px_rgba(255,255,255,0.4)] transition-all duration-300 z-50 group"
-        title="Dr. Strange (Dicas e Correções)"
-      >
-        <Sparkles size={24} className="text-black group-hover:rotate-12 transition-transform" />
-      </button>
+      {/* Agente Strange: Floating Action Button (FAB) */}
+      <div className="fixed bottom-10 right-10 flex flex-col items-end z-50">
+        {strangeOpen && (
+          <div className="mb-6 w-80 bg-white rounded-[var(--radius-2xl)] shadow-2xl border border-mystic-accent/20 p-6 transform origin-bottom-right transition-all">
+            <div className="flex items-center gap-3 mb-4">
+              <Sparkles className="text-mystic-accent" size={20} />
+              <h3 className="font-medium">Dr. Strange Report</h3>
+            </div>
+            <p className="text-sm text-mystic-text/70 mb-4 font-light">
+              O sistema está fluindo conforme os princípios primordiais. O fluxo astrológico sugere cautela na execução de rotinas intensas nas próximas horas.
+            </p>
+            <div className="w-full bg-mystic-bg/50 rounded-[var(--radius-xl)] p-2 flex items-center pr-3 border border-black/5">
+              <input type="text" placeholder="Consultar oráculo macro..." className="bg-transparent border-none outline-none flex-1 px-3 py-2 text-xs" />
+              <ChevronRight className="text-mystic-accent" size={16} />
+            </div>
+          </div>
+        )}
+        <button
+          onClick={() => setStrangeOpen(!strangeOpen)}
+          className={`w-16 h-16 rounded-[2rem] flex items-center justify-center shadow-2xl transition-all duration-300 ${strangeOpen ? 'bg-mystic-text text-white' : 'bg-mystic-accent text-white hover:scale-105 hover:shadow-mystic-accent/40'}`}
+          title="Dr. Strange"
+        >
+          <Sparkles size={24} />
+        </button>
+      </div>
 
     </main>
   );
