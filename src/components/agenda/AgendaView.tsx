@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { 
-  Clock, ListTodo, Trash2, ChevronLeft, ChevronRight, 
-  X, ArrowUpRight, Plus 
+  Calendar as CalendarIcon, ChevronLeft, ChevronRight, 
+  Plus, MoreVertical, Check, Clock, Edit2, 
+  Trash2, Flag, AlertCircle, Share2, Filter,
+  Sparkles, X, ListTodo, ArrowUpRight
 } from 'lucide-react';
 import { useAgendaTasks } from '../../hooks/useAgendaTasks';
 import { useAstrologyData } from '../../hooks/useAstrologyData';
@@ -24,11 +26,15 @@ export const AgendaView = () => {
     toggleTask,
     postponeTask,
     addEvent,
+    deleteEvent,
     getMetrics,
-    getPlanetRegency
+    getPlanetRegency,
+    getAlfredInsights
   } = useAgendaTasks();
 
   const activeProfile = profiles.find(p => p.id === activeProfileId);
+  const alfredInsights = getAlfredInsights();
+  const events = tasks.filter((t: any) => t.is_event || t.due?.date);
   const { transits, forecast } = useAstrologyData(activeProfile?.natal);
 
   const [activeTab, setActiveTab] = useState('resumo');
@@ -286,6 +292,21 @@ export const AgendaView = () => {
            </div>
         </div>
       )}
+      {/* ALFRED INSIGHTS PANEL */}
+      <div className="mt-12 bg-white border border-gold/10 p-8 shadow-sm">
+        <div className="flex items-center gap-4 mb-6">
+           <div className="w-10 h-10 bg-gold/5 rounded-none flex items-center justify-center text-gold"><Sparkles size={18}/></div>
+           <h4 className="text-[12px] font-black uppercase tracking-[0.3em] text-gray-800">Insights do Alfred (Proativo)</h4>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+           {alfredInsights.map((ins: any) => (
+             <div key={ins.id} className="p-5 bg-gray-50 border border-gray-100 rounded-none hover:border-gold/30 transition-all group">
+                <p className="text-[11px] font-bold text-gray-600 leading-relaxed italic">"{ins.content}"</p>
+                <button className="mt-4 text-[9px] font-black uppercase tracking-widest text-gold opacity-0 group-hover:opacity-100 transition-all">Executar Recomendação</button>
+             </div>
+           ))}
+        </div>
+      </div>
     </div>
   );
 };

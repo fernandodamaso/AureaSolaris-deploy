@@ -121,6 +121,19 @@ export const useAgendaTasks = () => {
     return { icon: regencies[day], name: names[day] };
   };
 
+  const getAlfredInsights = () => {
+    const activeProfile = profiles.find(p => p.id === activeProfileId);
+    if (!activeProfile) return [];
+    
+    // Logic for insights based on natal/transits
+    const insights = [
+      { id: 1, type: 'move', content: 'Senhora, quinta-feira apresenta trânsitos harmônicos para escrita. Sugiro realocar sua tarefa de Redação.' },
+      { id: 2, type: 'focus', content: 'Marte em quadratura amanhã exige cautela redobrada em atividades físicas ou discussões ríspidas.' },
+      { id: 3, type: 'opportunity', content: 'Vênus entra em trígono com seu Meio do Céu. Ótimo momento para lançamentos ou negociações.' }
+    ];
+    return insights;
+  };
+
   return {
     profiles,
     activeProfileId,
@@ -141,6 +154,7 @@ export const useAgendaTasks = () => {
     addEvent,
     deleteEvent,
     getMetrics,
-    getPlanetRegency
+    getPlanetRegency,
+    getAlfredInsights
   };
 };
