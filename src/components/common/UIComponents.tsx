@@ -23,14 +23,14 @@ export const Card = ({ title, children, icon, className = "" }: { title: string,
 );
 
 export const Advice = ({ agent, content, icon }: { agent: string, content: string, icon?: React.ReactNode }) => (
-  <div className="bg-white rounded-3xl p-6 border border-[#B8860B]/20 shadow-sm flex items-start gap-5 relative overflow-hidden mb-8">
+  <div className="bg-white rounded-xl p-6 border border-[#B8860B]/20 shadow-sm flex items-start gap-5 relative overflow-hidden mb-8">
     <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-[#B8860B]" />
     <div className="p-3 bg-[#FCF9F1] rounded-xl text-[#B8860B] shrink-0">{icon || <Sparkles size={18} />}</div>
     <div className="flex-1">
       <h4 className="text-[9px] font-bold uppercase text-gray-400 mb-1 tracking-widest flex items-center gap-2">
         <Star size={10} className="text-[#B8860B]"/> Conselho do {agent}
       </h4>
-      <p className="text-[13px] text-gray-700 leading-relaxed font-medium italic">"{content}"</p>
+      <p className="text-[12px] text-gray-700 leading-relaxed font-semibold italic">"{content}"</p>
     </div>
   </div>
 );
@@ -65,9 +65,9 @@ export const RoutineItem = ({ name, time }: { name: string, time: string }) => (
 );
 
 export const AspectRow = ({ aspect, desc, bg = 'bg-[#FCF9F1]' }: { aspect: string, desc: string, bg?: string }) => (
-  <div className={`flex items-center justify-between p-4 ${bg} rounded-2xl border border-white shadow-sm transition-all hover:shadow-md cursor-default`}>
-    <span className="text-[12px] font-bold text-[#333333] tracking-widest uppercase">{aspect}</span>
-    <span className="text-[11px] italic text-gray-500 text-right max-w-[60%]">{desc}</span>
+  <div className={`flex items-center justify-between p-4 ${bg} rounded-xl border border-white shadow-sm transition-all hover:shadow-md cursor-default`}>
+    <span className="text-[11px] font-black text-[#333333] tracking-widest uppercase">{aspect}</span>
+    <span className="text-[10px] italic text-gray-500 text-right max-w-[60%] font-bold">{desc}</span>
   </div>
 );
 
