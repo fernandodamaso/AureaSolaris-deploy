@@ -15,9 +15,9 @@ export const SaudeView = () => (
           </div>
        </Card>
        <Card title="Astrologia Médica (Hyleg)" icon={<Star size={18}/>}>
-          <div className="p-6 bg-emerald-50/50 rounded-2xl border border-emerald-100 mb-4">
-             <h5 className="text-[10px] font-bold uppercase text-emerald-700 mb-2">Sol em Sagitário (Doador)</h5>
-             <p className="text-[13px] text-emerald-800 leading-relaxed font-medium">Júpiter atua como Alcocoden, garantindo regeneração rápida, mas sensível a excessos.</p>
+          <div className="p-4 bg-emerald-50/50 rounded-xl border border-emerald-100 mb-4 shadow-xs">
+             <h5 className="text-[9px] font-black uppercase text-emerald-700 mb-2 tracking-[0.2em]">Sol em Sagitário (Doador)</h5>
+             <p className="text-[12px] text-emerald-800 leading-relaxed font-bold">Júpiter atua como Alcocoden, garantindo regeneração rápida, mas sensível a excessos.</p>
           </div>
        </Card>
     </div>
@@ -37,10 +37,10 @@ export const SaudeView = () => (
     </Card>
 
     <SectionTitle>C. Pílulas de Autocuidado</SectionTitle>
-    <div className="panel-light p-10 bg-white shadow-sm border-gold/5">
-       <ul className="text-[14px] text-gray-700 space-y-6 font-medium">
-          <li className="flex gap-4 items-start"><span className="p-2 bg-[#FCF9F1] rounded-lg text-gold"><Brain size={16}/></span> <div><strong>Alquimia Lunar</strong>: Chá de Camomila ativa a energia lunar receptiva necessária para o equilíbrio emocional agora.</div></li>
-          <li className="flex gap-4 items-start"><span className="p-2 bg-[#FCF9F1] rounded-lg text-gold"><Activity size={16}/></span> <div><strong>Fisiologia Astral</strong>: O Sol em Sagitário rege a região lombar; realize alongamentos suaves para circular o fogo interno.</div></li>
+    <div className="panel-light p-8 bg-white shadow-sm border border-gold/5 rounded-xl">
+       <ul className="text-[12px] text-gray-700 space-y-5 font-bold">
+          <li className="flex gap-4 items-start"><span className="p-2 bg-[#FCF9F1] rounded-lg text-gold shadow-xs"><Brain size={16}/></span> <div className="leading-relaxed"><span className="text-gold uppercase text-[10px] block mb-1 tracking-widest">Alquimia Lunar</span> Chá de Camomila ativa a energia lunar receptiva necessária para o equilíbrio emocional agora.</div></li>
+          <li className="flex gap-4 items-start"><span className="p-2 bg-[#FCF9F1] rounded-lg text-gold shadow-xs"><Activity size={16}/></span> <div className="leading-relaxed"><span className="text-gold uppercase text-[10px] block mb-1 tracking-widest">Fisiologia Astral</span> O Sol em Sagitário rege a região lombar; realize alongamentos suaves para circular o fogo interno.</div></li>
        </ul>
     </div>
   </div>

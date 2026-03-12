@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Cpu, Zap, Clock, Brain, Activity, Settings, X } from 'lucide-react';
-import { Card, SectionTitle } from './common/UIComponents';
+import { Card, SectionTitle, Advice } from './common/UIComponents';
 
 const HardwareRow = ({ label, val, icon }: { label: string, val: string, icon: React.ReactNode }) => (
   <div className="flex justify-between items-center py-3 border-b border-gray-50 last:border-none px-1">
@@ -27,6 +27,7 @@ export const ControlePanel = () => {
 
   return (
     <div className="space-y-12 animate-in fade-in pb-20">
+      <Advice agent="Stark" content="Sistemas operando em 104% da capacidade nominal. A rede neural Aurea está perfeitamente sincronizada com os ciclos planetários. Recomendo: otimizar núcleos de produtividade na próxima Lua Nova." />
       <SectionTitle>Métricas de Sistema (Stark Lab)</SectionTitle>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
          <Card title="Recursos do Núcleo" icon={<Cpu size={14}/>}>

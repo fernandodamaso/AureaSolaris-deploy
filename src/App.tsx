@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import {
-  Moon, Calendar, PieChart,
+  Calendar, PieChart,
   Settings,
   User, Star, Edit3, Eye, Clock,
   Sparkles, X, Activity,
@@ -11,6 +11,8 @@ import { safeInvoke } from './utils/tauri';
 import "./styles.css";
 
 // Hooks
+import { useAstrologyData } from './hooks/useAstrologyData';
+import { useAgendaTasks } from './hooks/useAgendaTasks';
 
 // Components
 import { NavItem, SectionTitle } from './components/common/UIComponents';
@@ -51,6 +53,15 @@ export default function App() {
   const [strangeMsgs, setStrangeMsgs] = useState<any[]>([]);
   const [strangeInput, setStrangeInput] = useState('');
   const [loadingStrange, setLoadingStrange] = useState(false);
+
+  const { getPlanetaryHour } = useAstrologyData();
+  const { getPlanetRegency } = useAgendaTasks();
+  const [currentTime, setCurrentTime] = useState(getPlanetaryHour());
+
+  useEffect(() => {
+    const timer = setInterval(() => setCurrentTime(getPlanetaryHour()), 60000);
+    return () => clearInterval(timer);
+  }, [getPlanetaryHour]);
 
   const hasChat = !['mesa-criacao', 'diario', 'memorias'].includes(currentPage);
   const isMesa = currentPage === 'mesa-criacao';
@@ -160,10 +171,35 @@ export default function App() {
       <main className="main-area">
         {!isMesa && (
           <header className="px-12 py-8 flex justify-between items-center glass-panel shrink-0 border-b border-gold/10 z-20">
-            <h2 className="text-2xl font-bold tracking-[0.2em] uppercase text-gray-800">{currentPage.replace('-', ' ')}</h2>
-            <div className="flex items-center gap-6 text-[10px] font-bold uppercase tracking-widest text-gray-500">
-              <span className="flex items-center gap-2.5 text-[#B8860B] bg-[#FCF9F1] px-4 py-2 rounded-xl border border-gold/10"><Moon size={16} /> Minguante</span>
-              <span onClick={() => setCurrentPage('agenda')} className="flex items-center gap-2.5 bg-white px-4 py-2 rounded-xl shadow-sm border border-gray-100 text-gray-800 font-bold cursor-pointer hover:border-gold transition-all"><Clock size={14} /> {new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })}</span>
+            <h2 className="text-2xl font-black tracking-[0.4em] uppercase text-gray-800">{currentPage.replace('-', ' ')}</h2>
+            <div className="flex flex-wrap justify-end gap-3">
+              {/* Moon Phase Pill */}
+              <div className="flex items-center gap-3 bg-[#FCF9F1]/80 border border-gold/10 px-5 py-2 rounded-full shadow-xs">
+                <span className="text-gold text-sm">☽</span>
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#B8860B]">Minguante</span>
+              </div>
+
+              {/* Date & Regent Pill */}
+              <div className="flex items-center gap-4 bg-white border border-gray-100 px-5 py-2 rounded-full shadow-xs">
+                <div className="flex items-center gap-2 border-r border-gray-100 pr-4">
+                  <Clock size={14} className="text-gray-400"/>
+                  <span className="text-[10px] font-black uppercase tracking-[0.1em] text-gray-600">
+                    {new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' }).toUpperCase()}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2" title="Regente do Dia">
+                  <span className="text-gold text-sm">{getPlanetRegency(new Date()).icon}</span>
+                  <span className="text-[9px] font-bold uppercase text-gray-400 tracking-widest">{getPlanetRegency(new Date()).name}</span>
+                </div>
+              </div>
+
+              {/* Planetary Hour Pill */}
+              <div className="flex items-center gap-3 bg-[#333333] text-gold px-5 py-2 rounded-full shadow-md border border-gold/10">
+                <span className="text-sm opacity-80">{currentTime.icon}</span>
+                <span className="text-[9px] font-black uppercase tracking-widest text-gold/80">{currentTime.name}</span>
+                <span className="w-1.5 h-1.5 bg-gold/20 rounded-full" />
+                <span className="text-[11px] font-black text-white">{currentTime.time}</span>
+              </div>
             </div>
           </header>
         )}
