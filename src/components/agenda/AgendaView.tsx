@@ -65,49 +65,75 @@ export const AgendaView = () => {
   };
 
   return (
-    <div className="space-y-6 pb-32 animate-in fade-in max-w-6xl mx-auto px-4 font-sans text-gray-800">
+    <div className="space-y-8 pb-32 animate-in fade-in max-w-6xl mx-auto px-4 font-sans text-gray-800">
       
-      {/* 1. ADVICE (ALFRED) - TOPO */}
-      <div className="pt-4">
+      {/* 1. HEADER - AGENDA + INFO ASTRO */}
+      <div className="flex flex-col md:flex-row justify-between items-center border-b border-gray-100 pb-8 pt-6 gap-6">
+        <h1 className="text-2xl font-black uppercase tracking-[0.4em] text-[#333333]">Agenda</h1>
+        
+        <div className="flex flex-wrap justify-center gap-3">
+           {/* Minguante */}
+           <div className="flex items-center gap-3 bg-[#FCF9F1]/80 border border-gold/10 px-6 py-2 rounded-full shadow-xs">
+              <span className="text-gold opacity-80">☽</span>
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#B8860B]">Minguante</span>
+           </div>
+
+           {/* Data e Regente do Dia */}
+           <div className="flex items-center gap-4 bg-white border border-gray-100 px-6 py-2 rounded-full shadow-xs">
+              <div className="flex items-center gap-2 border-r border-gray-100 pr-4">
+                 <Clock size={14} className="text-gray-400"/>
+                 <span className="text-[10px] font-black uppercase tracking-[0.1em] text-gray-600">
+                    {selectedDay.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })}
+                 </span>
+              </div>
+              {/* Regente do Dia */}
+              <div className="flex items-center gap-2" title="Regente do Dia">
+                 <span className="text-gold text-sm">{getPlanetRegency(selectedDay).icon}</span>
+                 <span className="text-[9px] font-bold uppercase text-gray-400 tracking-widest">{getPlanetRegency(selectedDay).name}</span>
+              </div>
+           </div>
+
+           {/* Hora Planetária */}
+           <div className="flex items-center gap-3 bg-[#333333] text-gold px-6 py-2 rounded-full shadow-md border border-gold/10">
+              <span className="text-sm opacity-80">{currentTime.icon}</span>
+              <span className="text-[9px] font-black uppercase tracking-widest text-gold/80">{currentTime.name}</span>
+              <span className="w-1.5 h-1.5 bg-gold/20 rounded-full" />
+              <span className="text-[11px] font-black text-white">{currentTime.time}</span>
+           </div>
+        </div>
+      </div>
+
+      {/* 2. ADVICE (ALFRED) */}
+      <div className="animate-in slide-in-from-top-4 duration-700">
         <Advice agent="Alfred" content="Viviane, seu ciclo de produtividade atinge o ápice às 16h. Recomendação: finalize as tarefas prioritárias em fluxo." />
       </div>
 
-      {/* 2. PERFIS DE FAMÍLIA (ABAIXO DO ALFRED) */}
-      <div className="flex flex-col items-center gap-2 py-2">
-        <p className="text-[9px] uppercase font-black text-gray-400 tracking-[0.5em] opacity-40">Mapas da Família</p>
-        <div className="flex items-center gap-1.5 bg-white/40 p-1 rounded-xl border border-gray-100 shadow-xs">
-          {profiles.map(p => (
-            <button 
-              key={p.id} 
-              onClick={() => setActiveProfileId(p.id)}
-              className={`px-5 py-2 rounded-lg text-[11px] font-bold transition-all ${activeProfileId === p.id ? 'bg-[#333333] text-white shadow-sm' : 'text-gray-400 hover:bg-white hover:text-gold'}`}
-            >
-              {p.name}
-            </button>
-          ))}
-          <button onClick={() => { const n = prompt('Nome:'); if(n) addProfile(n); }} className="p-2 text-gold hover:bg-white rounded-lg transition-all"><Plus size={14}/></button>
-        </div>
-      </div>
-
-      {/* 3. CALENDÁRIO SEMANAL */}
-      <div className="bg-white/40 p-4 rounded-xl border border-gold/10 backdrop-blur-sm shadow-sm">
-        <div className="flex justify-between items-center mb-4 px-1">
-          <div className="flex items-center gap-3">
-            <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-gold">Ritmos do Ciclo</h2>
-            <div className="flex items-center gap-2 bg-[#333333] text-gold px-3 py-1 rounded-full text-[10px] font-bold shadow-md border border-gold/10">
-              <span className="opacity-70">{currentTime.icon}</span>
-              <span>{currentTime.name}</span>
-              <span className="w-1 h-1 bg-gold/30 rounded-full" />
-              <span className="text-white opacity-80">{currentTime.time}</span>
+      {/* 3. CALENDÁRIO SEMANAL + PERFIS */}
+      <div className="bg-white/40 p-6 rounded-xl border border-gold/10 backdrop-blur-sm shadow-sm">
+        <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4 border-b border-gray-50 pb-4">
+          <div className="flex items-center gap-4">
+            <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-gold">Ritmos do Ciclo</h2>
+            {/* Perfis de Família mais discretos */}
+            <div className="flex items-center gap-1 bg-gray-50 p-1 rounded-lg border border-gray-100">
+               {profiles.map(p => (
+                 <button 
+                   key={p.id} 
+                   onClick={() => setActiveProfileId(p.id)}
+                   className={`px-3 py-1 rounded-md text-[9px] font-black uppercase tracking-widest transition-all ${activeProfileId === p.id ? 'bg-[#333333] text-white' : 'text-gray-400 hover:text-gold'}`}
+                 >
+                   {p.name}
+                 </button>
+               ))}
+               <button onClick={() => { const n = prompt('Nome:'); if(n) addProfile(n); }} className="px-2 text-gold hover:bg-white rounded-md transition-all text-[12px]"><Plus size={12}/></button>
             </div>
           </div>
           <div className="flex gap-1.5">
-            <button onClick={prevWeek} className="p-1.5 hover:bg-white rounded-lg text-gold border border-gold/5 transition-all shadow-sm"><ChevronLeft size={14}/></button>
-            <button onClick={nextWeek} className="p-1.5 hover:bg-white rounded-lg text-gold border border-gold/5 transition-all shadow-sm"><ChevronRight size={14}/></button>
+            <button onClick={prevWeek} className="p-2 hover:bg-white rounded-lg text-gold border border-gold/5 transition-all shadow-sm"><ChevronLeft size={16}/></button>
+            <button onClick={nextWeek} className="p-2 hover:bg-white rounded-lg text-gold border border-gold/5 transition-all shadow-sm"><ChevronRight size={16}/></button>
           </div>
         </div>
 
-        <div className="grid grid-cols-7 gap-2">
+        <div className="grid grid-cols-7 gap-3">
           {weekDays.map(d => {
             const isToday = d.toDateString() === new Date().toDateString();
             const isSelected = d.toDateString() === selectedDay.toDateString();
@@ -119,153 +145,179 @@ export const AgendaView = () => {
                <div 
                  key={d.getTime()} 
                  onClick={() => setSelectedDay(d)} 
-                 className={`relative flex flex-col items-center p-2.5 rounded-xl cursor-pointer transition-all border ${isSelected ? 'bg-[#333333] text-white border-[#333333] shadow-lg scale-[1.02]' : 'bg-white text-gray-800 border-gray-100 hover:border-gold/20'}`}
+                 className={`relative flex flex-col items-center p-3 rounded-xl cursor-pointer transition-all border ${isSelected ? 'bg-[#333333] text-white border-[#333333] shadow-lg scale-[1.02]' : 'bg-white text-gray-800 border-gray-100 hover:border-gold/20'}`}
                >
-                  <span className={`text-[8px] font-bold uppercase mb-0.5 ${isSelected ? 'text-gold' : 'text-gray-400'}`}>{d.toLocaleDateString('pt-BR', { weekday: 'short' })}</span>
-                  <span className="text-base font-bold leading-none">{d.getDate()}</span>
-                  <div className="mt-1.5 flex gap-1 items-center">
-                    <span className="text-[10px] opacity-60" title={`Regente: ${regency.name}`}>{regency.icon}</span>
-                    {astro && <span className="text-[7px] text-emerald-500 font-bold" title={astro}>✦</span>}
+                  <span className={`text-[9px] font-black uppercase mb-1 tracking-widest ${isSelected ? 'text-gold' : 'text-gray-400'}`}>{d.toLocaleDateString('pt-BR', { weekday: 'short' })}</span>
+                  <span className="text-xl font-black leading-none">{d.getDate()}</span>
+                  <div className="mt-2 flex gap-1.5 items-center">
+                    <span className={`text-[12px] ${isSelected ? 'opacity-100' : 'opacity-30'}`} title={`Regente: ${regency.name}`}>{regency.icon}</span>
+                    {astro && <span className="text-[8px] text-emerald-500 font-black" title={astro}>✦</span>}
                   </div>
-                  {isToday && !isSelected && <div className="absolute top-1 right-1 w-1 h-1 bg-gold rounded-full shadow-[0_0_5px_rgba(184,134,11,0.5)]" />}
+                  {isToday && !isSelected && <div className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-gold rounded-full shadow-[0_0_8px_rgba(184,134,11,0.6)]" />}
                </div>
             );
           })}
         </div>
       </div>
 
-      {/* 4. EVENTOS E TAREFAS */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card title={`Compromissos - ${selectedDay.toLocaleDateString('pt-BR')}`} icon={<Clock size={14}/>}>
-           <div className="space-y-2 mt-3">
-              {selectedDay.toDateString() === new Date().toDateString() ? (
-                <div className="p-3 bg-[#FCF9F1]/40 border border-gold/5 rounded-xl flex justify-between items-center group transition-all hover:bg-[#FCF9F1]/60">
-                   <div className="flex gap-3 items-center">
-                      <div className="p-1.5 bg-white rounded-lg text-gold shadow-xs"><Clock size={11}/></div>
-                      <div><p className="text-[11px] font-bold text-gray-800 tracking-tight">Sessão UDV</p><p className="text-[9px] text-gold/60 font-medium">Hoje, 20:00</p></div>
+      {/* 4. GRID DE TRABALHO - REORDENADO */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+        
+        {/* COLUNA ESQUERDA: EVENTOS -> PREVISÕES */}
+        <div className="space-y-8">
+           <Card title={`Compromissos - ${selectedDay.toLocaleDateString('pt-BR')}`} icon={<Clock size={14}/>}>
+              <div className="space-y-3 mt-4">
+                 {selectedDay.toDateString() === new Date().toDateString() ? (
+                   <div className="p-4 bg-[#FCF9F1]/40 border border-gold/5 rounded-xl flex justify-between items-center group transition-all hover:bg-[#FCF9F1]/60 shadow-xs">
+                      <div className="flex gap-4 items-center">
+                         <div className="p-2 bg-white rounded-lg text-gold shadow-xs border border-gold/5"><Clock size={12}/></div>
+                         <div><p className="text-[12px] font-black text-gray-800 tracking-tight">Sessão UDV</p><p className="text-[10px] text-gold/60 font-bold">Hoje, 20:00</p></div>
+                      </div>
+                      <X size={14} className="text-gray-200 group-hover:text-red-400 cursor-pointer transition-all opacity-0 group-hover:opacity-100"/>
                    </div>
-                   <X size={12} className="text-gray-200 group-hover:text-red-400 cursor-pointer transition-all"/>
-                </div>
-              ) : <p className="text-[11px] text-gray-400 italic text-center py-4 opacity-50">Sem eventos planejados.</p>}
-              <button onClick={() => setShowEventModal(true)} className="w-full py-2.5 border border-dashed border-gold/10 text-gold text-[8px] font-bold uppercase tracking-widest rounded-lg hover:bg-gold/5 transition-all">+ Agendar no Google</button>
-           </div>
-        </Card>
+                 ) : <p className="text-[11px] text-gray-400 italic text-center py-6 opacity-50 font-medium">Silêncio profundo na agenda...</p>}
+                 <button onClick={() => setShowEventModal(true)} className="w-full py-3 border border-dashed border-gold/20 text-gold text-[9px] font-black uppercase tracking-[0.2em] rounded-xl hover:bg-gold/5 transition-all shadow-xs">+ Agendar no Fluxo</button>
+              </div>
+           </Card>
 
-        <Card title="Células de Tarefas" icon={<ListTodo size={14}/>}>
-           <div className="space-y-1 mt-3">
-              {tasks.length > 0 ? tasks.slice(0, 4).map(t => (
-                <div key={t.id} className="flex items-center gap-2 group p-1.5 hover:bg-gray-50 rounded-lg transition-all">
-                   <div className="flex-1" onClick={() => toggleTask(t.id, !(t.completed || t.is_completed))}>
-                      <TodoRow label={t.content} checked={t.completed || t.is_completed} />
-                   </div>
-                   <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-all">
-                      <button onClick={() => postponeTask(t.id)} className="p-1 text-gold hover:bg-gold/10 rounded-md"><ArrowUpRight size={11}/></button>
-                      <button onClick={() => deleteTask(t.id)} className="p-1 text-red-300 hover:bg-red-50 rounded-md"><Trash2 size={11}/></button>
-                   </div>
-                </div>
-              )) : <p className="text-[10px] text-gray-400 italic text-center py-4 opacity-50">Trilhas concluídas.</p>}
-              <button onClick={() => setShowTaskModal(true)} className="w-full py-2.5 border border-dashed border-gray-100 text-gray-400 text-[8px] font-bold uppercase tracking-widest rounded-lg hover:border-gold hover:text-gold transition-all">+ Nova no Todoist</button>
-           </div>
-        </Card>
-      </div>
+           {/* FORECAST TABS ABAIXO DOS EVENTOS */}
+           <div className="bg-white rounded-xl border border-gold/10 p-2 shadow-sm">
+              <div className="flex p-1 bg-gray-50 rounded-lg mb-4">
+                {['resumo', 'transitos', 'futuro'].map(t => (
+                  <button 
+                    key={t}
+                    onClick={() => setActiveTab(t)}
+                    className={`flex-1 py-2 rounded-md text-[9px] font-black uppercase tracking-[0.2em] transition-all ${activeTab === t ? 'bg-gold text-white shadow-md' : 'text-gray-400 hover:text-gold'}`}
+                  >
+                    {t}
+                  </button>
+                ))}
+              </div>
 
-      {/* 5. PREVISÕES E PROGRESO (FINAL) */}
-      <div className="space-y-6 pt-4">
-        <div className="flex justify-center">
-          <div className="bg-white/60 p-1 rounded-full border border-gold/10 flex shadow-sm scale-90">
-            {['resumo', 'transitos', 'futuro'].map(t => (
-              <button 
-                key={t}
-                onClick={() => setActiveTab(t)}
-                className={`px-8 py-1.5 rounded-full text-[9px] font-bold uppercase tracking-[0.2em] transition-all ${activeTab === t ? 'bg-gold text-white shadow-md' : 'text-gray-400 hover:text-gold'}`}
-              >
-                {t}
-              </button>
-            ))}
-          </div>
+              <div className="px-4 py-2">
+                {activeTab === 'resumo' && (
+                  <div className="grid grid-cols-2 gap-8 animate-in fade-in slide-in-from-bottom-2">
+                    <div className="space-y-3">
+                      <p className="text-[9px] font-black uppercase text-emerald-600 mb-3 bg-emerald-50 w-fit px-2 py-1 rounded-md tracking-widest">Influências ↑</p>
+                      <ul className="space-y-2">
+                         <li className="text-[12px] font-bold text-gray-700 flex gap-2 items-center"><span className="text-gold">✨</span> Reflexão financeira</li>
+                         <li className="text-[12px] font-bold text-gray-700 flex gap-2 items-center"><span className="text-gold">✨</span> Conexões amorosas</li>
+                      </ul>
+                    </div>
+                    <div className="space-y-3">
+                      <p className="text-[9px] font-black uppercase text-red-500 mb-3 bg-red-50 w-fit px-2 py-1 rounded-md tracking-widest">Atenção !</p>
+                      <ul className="space-y-2">
+                         <li className="text-[12px] font-bold text-gray-700 flex gap-2 items-center"><span>⚠️</span> Decisões impulsivas</li>
+                         <li className="text-[12px] font-bold text-gray-700 flex gap-2 items-center"><span>⚠️</span> Conflitos pessoais</li>
+                      </ul>
+                    </div>
+                  </div>
+                )}
+
+                {activeTab === 'transitos' && (
+                  <div className="space-y-3 animate-in fade-in slide-in-from-bottom-2">
+                     {[
+                       { title: 'Reconhecimento em alta', icon: '△', color: 'text-emerald-500', bg: 'bg-emerald-50' },
+                       { title: 'Evite riscos desnecessários', icon: '□', color: 'text-red-500', bg: 'bg-red-50' }
+                     ].map((t, i) => (
+                       <div key={i} className="flex items-center gap-4 bg-gray-50/50 p-4 rounded-xl border border-gray-100 group hover:border-gold/20 transition-all">
+                          <div className={`w-10 h-10 rounded-xl ${t.bg} flex items-center justify-center font-black text-lg ${t.color} group-hover:scale-110 transition-all shadow-xs`}>{t.icon}</div>
+                          <p className="text-[12px] font-black text-gray-800 tracking-tight">{t.title}</p>
+                       </div>
+                     ))}
+                  </div>
+                )}
+
+                {activeTab === 'futuro' && (
+                  <div className="space-y-2 animate-in fade-in slide-in-from-bottom-2">
+                     {[
+                       { date: '14.03', event: 'Lua Cheia em Virgem' },
+                       { date: '20.03', event: 'Ano Novo Astrológico' },
+                       { date: '29.03', event: 'Lua Nova em Áries' }
+                     ].map((ev, i) => (
+                       <div key={i} className="flex justify-between items-center py-3 px-4 hover:bg-gold/5 rounded-xl transition-all text-[12px] border border-transparent hover:border-gold/10">
+                          <span className="font-black text-gold tracking-widest">{ev.date}</span>
+                          <span className="font-black text-gray-800">{ev.event}</span>
+                       </div>
+                     ))}
+                  </div>
+                )}
+              </div>
+           </div>
         </div>
 
-        <div className="animate-in slide-in-from-bottom-2 duration-500">
-          {activeTab === 'resumo' && (
-            <div className="bg-white rounded-xl p-8 border border-gold/10 shadow-sm max-w-xl mx-auto grid grid-cols-2 gap-8 text-[12px]">
-              <div className="space-y-2.5">
-                <p className="text-[8px] font-black uppercase text-emerald-600 mb-2 bg-emerald-50 w-fit px-2 py-0.5 rounded tracking-widest">Influências ↑</p>
-                <p className="font-bold text-gray-700 flex gap-2 items-center">✨ <span className="border-b border-gray-100">Reflexão financeira</span></p>
-                <p className="font-bold text-gray-700 flex gap-2 items-center">✨ <span className="border-b border-gray-100">Conexões amorosas</span></p>
+        {/* COLUNA DIREITA: TAREFAS -> PROGRESSO */}
+        <div className="space-y-8">
+           <Card title="Células de Tarefas" icon={<ListTodo size={14}/>}>
+              <div className="space-y-2 mt-4">
+                 {tasks.length > 0 ? tasks.slice(0, 5).map(t => (
+                   <div key={t.id} className="flex items-center gap-3 group p-2 hover:bg-[#FCF9F1]/40 rounded-xl transition-all border border-transparent hover:border-gold/5">
+                      <div className="flex-1" onClick={() => toggleTask(t.id, !(t.completed || t.is_completed))}>
+                         <TodoRow label={t.content} checked={t.completed || t.is_completed} />
+                      </div>
+                      <div className="flex gap-1.5 opacity-0 group-hover:opacity-100 transition-all">
+                         <button onClick={() => postponeTask(t.id)} title="Adiar" className="p-1.5 text-gold hover:bg-gold/10 rounded-lg"><ArrowUpRight size={12}/></button>
+                         <button onClick={() => deleteTask(t.id)} title="Excluir" className="p-1.5 text-red-300 hover:bg-red-50 rounded-lg"><Trash2 size={12}/></button>
+                      </div>
+                   </div>
+                 )) : <p className="text-[11px] text-gray-400 italic text-center py-6 opacity-50 font-medium">Sincronizando trilhas...</p>}
+                 <button onClick={() => setShowTaskModal(true)} className="w-full py-3 border border-dashed border-gray-200 text-gray-400 text-[9px] font-black uppercase tracking-[0.2em] rounded-xl hover:border-gold hover:text-gold transition-all shadow-xs">+ Novo Todoist</button>
               </div>
-              <div className="space-y-2.5">
-                <p className="text-[8px] font-black uppercase text-red-500 mb-2 bg-red-50 w-fit px-2 py-0.5 rounded tracking-widest">Atenção !</p>
-                <p className="font-bold text-gray-700 flex gap-2 items-center">⚠️ <span className="border-b border-gray-100">Decisões impulsivas</span></p>
-                <p className="font-bold text-gray-700 flex gap-2 items-center">⚠️ <span className="border-b border-gray-100">Conflitos pessoais</span></p>
-              </div>
-            </div>
-          )}
+           </Card>
 
-          {activeTab === 'transitos' && (
-            <div className="max-w-xl mx-auto space-y-4">
-               {[
-                 { title: 'Reconhecimento em alta', icon: '△', color: 'text-emerald-500', bg: 'bg-emerald-50' },
-                 { title: 'Não arrisque demais hoje', icon: '□', color: 'text-red-500', bg: 'bg-red-50' }
-               ].map((t, i) => (
-                 <div key={i} className="flex items-center gap-4 bg-white p-4 rounded-xl border border-gray-50 shadow-xs">
-                    <div className={`w-8 h-8 rounded-full ${t.bg} flex items-center justify-center font-bold ${t.color}`}>{t.icon}</div>
-                    <p className="text-[12px] font-bold text-gray-700">{t.title}</p>
-                 </div>
-               ))}
-            </div>
-          )}
-
-          {activeTab === 'futuro' && (
-            <div className="max-w-xl mx-auto bg-white rounded-xl border border-gold/5 p-4 space-y-1">
-               {[
-                 { date: '14.03', event: 'Lua Cheia em Virgem' },
-                 { date: '20.03', event: 'Ano Novo Astrológico' },
-                 { date: '29.03', event: 'Lua Nova em Áries' }
-               ].map((ev, i) => (
-                 <div key={i} className="flex justify-between items-center py-2 px-3 hover:bg-gray-50 rounded-lg transition-all text-[11px]">
-                    <span className="font-bold text-gold">{ev.date}</span>
-                    <span className="font-bold text-gray-700">{ev.event}</span>
-                 </div>
-               ))}
-            </div>
-          )}
-
-          <div className="max-w-xl mx-auto mt-10">
-            <Card title="Progresso Ético" icon={<TrendingUp size={12}/>}>
-              <div className="mt-2 space-y-4">
-                <div className="flex justify-between items-end">
-                  <span className="text-2xl font-black text-[#333333] tracking-tighter">{metrics.done}%</span>
-                  <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest pb-1">Concluído</span>
+           {/* PROGRESSO ÉTICO ABAIXO DAS TAREFAS */}
+           <Card title="Progresso Ético" icon={<TrendingUp size={12}/>}>
+              <div className="mt-4 space-y-6">
+                <div className="flex justify-between items-baseline">
+                   <div className="flex items-baseline gap-2">
+                      <span className="text-4xl font-black text-[#333333] tracking-tighter">{(metrics.done || 0)}%</span>
+                      <span className="text-[10px] font-black text-gold uppercase tracking-[0.2em] animate-pulse">Ativo</span>
+                   </div>
+                   <span className="text-[9px] font-black text-gray-400 uppercase tracking-[0.3em]">Integridade do Fluxo</span>
                 </div>
-                <div className="h-1.5 w-full bg-gray-50 rounded-full overflow-hidden flex">
-                  <div className="bg-gold h-full shadow-[0_0_10px_rgba(184,134,11,0.2)] transition-all duration-700" style={{ width: `${metrics.done}%` }} />
+                
+                <div className="relative pt-1">
+                   <div className="overflow-hidden h-2.5 text-xs flex rounded-full bg-gray-50 border border-gray-100 shadow-inner">
+                      <div 
+                        style={{ width: `${metrics.done}%` }} 
+                        className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-gold transition-all duration-1000 relative"
+                      >
+                         <div className="absolute inset-0 bg-white/20 animate-pulse" />
+                      </div>
+                   </div>
+                   <div className="absolute -top-4 w-full flex justify-between px-1">
+                      <div className="w-[1px] h-2 bg-gray-100" />
+                      <div className="w-[1px] h-2 bg-gray-100" />
+                      <div className="w-[1px] h-2 bg-gray-100" />
+                      <div className="w-[1px] h-2 bg-gray-100" />
+                   </div>
                 </div>
-                <div className="flex justify-between text-[7px] font-black uppercase text-gray-300 tracking-widest pt-1">
-                  <div className="flex items-center gap-1.5"><div className="w-1.5 h-1.5 bg-gold rounded-full"/> Feitos</div>
-                  <div className="flex items-center gap-1.5"><div className="w-1.5 h-1.5 bg-emerald-100 rounded-full"/> Em Fluxo</div>
-                  <div className="flex items-center gap-1.5"><div className="w-1.5 h-1.5 bg-red-100 rounded-full"/> Pausados</div>
+
+                <div className="flex justify-between text-[8px] font-black uppercase text-gray-400 tracking-[0.2em] pt-2">
+                  <div className="flex items-center gap-2 group cursor-help"><div className="w-2 h-2 bg-gold rounded-sm group-hover:scale-125 transition-all shadow-xs"/> Feitos</div>
+                  <div className="flex items-center gap-2 group cursor-help"><div className="w-2 h-2 bg-emerald-100 rounded-sm group-hover:scale-125 transition-all shadow-xs"/> Em Fluxo</div>
+                  <div className="flex items-center gap-2 group cursor-help"><div className="w-2 h-2 bg-red-100 rounded-sm group-hover:scale-125 transition-all shadow-xs"/> Pausados</div>
                 </div>
               </div>
-            </Card>
-          </div>
+           </Card>
         </div>
       </div>
 
       {/* MODALS */}
       {(showTaskModal || showEventModal) && (
-        <div className="fixed inset-0 z-[700] flex items-center justify-center bg-black/10 backdrop-blur-xs p-4 animate-in fade-in zoom-in-95">
-           <div className="bg-white rounded-xl p-6 w-full max-w-sm shadow-2xl border border-gold/10">
-              <h4 className="text-[9px] font-black uppercase tracking-[0.3em] text-gold mb-5 pl-1">{showEventModal ? 'Google Calendar' : 'Todoist Task'}</h4>
+        <div className="fixed inset-0 z-[700] flex items-center justify-center bg-black/20 backdrop-blur-sm p-4 animate-in fade-in zoom-in-95">
+           <div className="bg-white rounded-xl p-8 w-full max-w-sm shadow-2xl border border-gold/10">
+              <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-gold mb-6 border-b border-gray-50 pb-4">{showEventModal ? 'Gravar no Google' : 'Novo Todoist'}</h4>
               <input 
                 autoFocus 
-                className="w-full p-3.5 bg-gray-50 border border-gray-100 rounded-lg outline-none text-[12px] font-bold text-gray-800 mb-6 focus:border-gold/30 transition-all placeholder:text-gray-300" 
-                placeholder="..." value={modalText} 
+                className="w-full p-4 bg-gray-50 border border-gray-100 rounded-xl outline-none text-[13px] font-bold text-gray-800 mb-8 focus:border-gold/30 transition-all placeholder:text-gray-300 shadow-inner" 
+                placeholder="Insira o conteúdo do fluxo..." value={modalText} 
                 onChange={e => setModalText(e.target.value)} 
                 onKeyDown={e => e.key === 'Enter' && (showEventModal ? handleAddEvent() : handleTaskSubmit())} 
               />
-              <div className="flex gap-2">
-                 <button onClick={() => { setShowTaskModal(false); setShowEventModal(false); setModalText(''); }} className="flex-1 py-3 text-gray-400 font-bold uppercase text-[9px] tracking-widest hover:text-gray-600 transition-all">Sair</button>
-                 <button onClick={showEventModal ? handleAddEvent : handleTaskSubmit} className="flex-1 py-3 bg-[#333333] text-white rounded-lg font-bold uppercase text-[9px] tracking-widest hover:bg-gold transition-all shadow-md">Salvar</button>
+              <div className="flex gap-4">
+                 <button onClick={() => { setShowTaskModal(false); setShowEventModal(false); setModalText(''); }} className="flex-1 py-4 text-gray-400 font-black uppercase text-[10px] tracking-[0.3em] hover:text-gray-600 transition-all">Recuar</button>
+                 <button onClick={showEventModal ? handleAddEvent : handleTaskSubmit} className="flex-1 py-4 bg-[#333333] text-white rounded-xl font-black uppercase text-[10px] tracking-[0.3em] hover:bg-gold transition-all shadow-lg">Confirmar</button>
               </div>
            </div>
         </div>
