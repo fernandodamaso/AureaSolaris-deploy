@@ -23,7 +23,7 @@ export const AstrologiaPage = () => {
       </div>
 
       <Card title="As Estrelas Cantam (Efemérides)">
-         <div className="grid grid-cols-2 gap-x-12">
+         <div className="grid grid-cols-2 gap-x-12 mt-4">
             {Object.entries(PLANET_ICONS).map(([name, icon]) => (
                <StarRow key={name} icon={icon} name={name} sign={liveData?.[name]?.sign || '---'} deg={`${Math.floor(liveData?.[name]?.pos_in_sign || 0)}°`} />
             ))}
