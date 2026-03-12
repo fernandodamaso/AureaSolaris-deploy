@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import { 
-  Calendar as CalendarIcon, ChevronLeft, ChevronRight, 
-  Plus, MoreVertical, Check, Clock, Edit2, 
-  Trash2, Flag, AlertCircle, Share2, Filter,
-  Sparkles, X, ListTodo, ArrowUpRight
+  ChevronLeft, ChevronRight, 
+  Plus, Clock, 
+  Trash2, Sparkles, X, ListTodo, ArrowUpRight
 } from 'lucide-react';
 import { useAgendaTasks } from '../../hooks/useAgendaTasks';
 import { useAstrologyData } from '../../hooks/useAstrologyData';
@@ -15,26 +14,15 @@ export const AgendaView = () => {
     activeProfileId,
     setActiveProfileId,
     addProfile,
-    tasks,
-    selectedDay,
-    setSelectedDay,
-    weekDays,
-    nextWeek,
-    prevWeek,
-    addTask,
-    deleteTask,
-    toggleTask,
-    postponeTask,
-    addEvent,
-    deleteEvent,
-    getMetrics,
-    getPlanetRegency,
-    getAlfredInsights
+    tasks, 
+    selectedDay, setSelectedDay, weekDays, 
+    nextWeek, prevWeek, addTask, deleteTask, toggleTask, 
+    postponeTask, addEvent, getMetrics, 
+    getPlanetRegency, getAlfredInsights 
   } = useAgendaTasks();
 
-  const activeProfile = profiles.find(p => p.id === activeProfileId);
+  const activeProfile = profiles.find((p: any) => p.id === activeProfileId);
   const alfredInsights = getAlfredInsights();
-  const events = tasks.filter((t: any) => t.is_event || t.due?.date);
   const { transits, forecast } = useAstrologyData(activeProfile?.natal);
 
   const [activeTab, setActiveTab] = useState('resumo');

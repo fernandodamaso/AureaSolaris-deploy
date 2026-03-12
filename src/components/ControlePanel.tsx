@@ -1,4 +1,4 @@
-import { Cpu, Zap, Clock, Brain, Activity, Settings, X } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
 import { Card, SectionTitle, Advice } from './common/UIComponents';
 import { useAstrologyData } from '../hooks/useAstrologyData';
 
@@ -54,7 +54,7 @@ export const ControlePanel = () => {
 
              <Card title="Logs de Integridade" icon={<Activity size={14}/>}>
                 <div className="space-y-3 mt-4">
-                   {logs.map(log => (
+                   {logs.map((log: any) => (
                      <div key={log.id} className="flex items-center gap-3 p-3 bg-gray-50 border border-gray-100 rounded-lg">
                         <div className={`w-1.5 h-1.5 rounded-full ${log.type === 'success' ? 'bg-emerald-500' : 'bg-gold'}`} />
                         <span className="text-[11px] font-bold text-gray-600">{log.text}</span>
