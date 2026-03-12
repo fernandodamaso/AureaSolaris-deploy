@@ -2,6 +2,11 @@ import { useState, useEffect } from 'react';
 import { safeInvoke } from '../utils/tauri';
 
 export const useAgendaTasks = () => {
+  const [profiles, setProfiles] = useState<any[]>(() => {
+    const saved = localStorage.getItem('aurea_profiles');
+    return saved ? JSON.parse(saved) : [{ id: 'viviane', name: 'Viviane', active: true }];
+  });
+  const [activeProfileId, setActiveProfileId] = useState('viviane');
   const [tasks, setTasks] = useState<any[]>([]);
   const [selectedDay, setSelectedDay] = useState(new Date());
   const [weekStart, setWeekStart] = useState(() => {
@@ -9,6 +14,13 @@ export const useAgendaTasks = () => {
     d.setDate(d.getDate() - d.getDay());
     return d;
   });
+
+  const addProfile = (name: string) => {
+    const newProfile = { id: name.toLowerCase().replace(/\s+/g, '_'), name, active: true };
+    const updated = [...profiles, newProfile];
+    setProfiles(updated);
+    localStorage.setItem('aurea_profiles', JSON.stringify(updated));
+  };
 
   const fetchTasks = async () => {
     const tRes = await safeInvoke<string>('get_todoist_tasks');
@@ -94,6 +106,10 @@ export const useAgendaTasks = () => {
   };
 
   return {
+    profiles,
+    activeProfileId,
+    setActiveProfileId,
+    addProfile,
     tasks,
     selectedDay,
     setSelectedDay,
