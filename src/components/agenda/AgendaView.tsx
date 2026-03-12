@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { 
   Clock, ListTodo, Trash2, ChevronLeft, ChevronRight, 
   X, ArrowUpRight, Plus 
@@ -28,7 +28,8 @@ export const AgendaView = () => {
     getPlanetRegency
   } = useAgendaTasks();
 
-  const { transits, forecast } = useAstrologyData();
+  const activeProfile = profiles.find(p => p.id === activeProfileId);
+  const { transits, forecast } = useAstrologyData(activeProfile?.natal);
 
   const [activeTab, setActiveTab] = useState('resumo');
   const [showEventModal, setShowEventModal] = useState(false);
@@ -213,7 +214,7 @@ export const AgendaView = () => {
         <div className="space-y-8">
            <Card title="Células de Tarefas" icon={<ListTodo size={14}/>}>
               <div className="space-y-2 mt-4">
-                 {tasks.length > 0 ? tasks.slice(0, 5).map(t => (
+                 {tasks.length > 0 ? tasks.slice(0, 5).map((t: any) => (
                    <div key={t.id} className="flex items-center gap-3 group p-2 hover:bg-[#FCF9F1]/40 rounded-xl transition-all border border-transparent hover:border-gold/5">
                       <div className="flex-1" onClick={() => toggleTask(t.id, !(t.completed || t.is_completed))}>
                          <TodoRow label={t.content} checked={t.completed || t.is_completed} />

@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import { safeInvoke } from '../utils/tauri';
 
-export const useAstrologyData = () => {
+export const useAstrologyData = (natalData?: { Sun: number, Moon: number, ASC: number }) => {
   const [liveData, setLiveData] = useState<any>(null);
-  const NATAL = { Sun: 269.6, Moon: 196.2, ASC: 321.8 };
+  const NATAL = natalData || { Sun: 269.6, Moon: 196.2, ASC: 321.8 };
 
   const fetchAstro = async () => {
+    // ... existing fetch logic
     try {
       let res = await safeInvoke<string>('run_astro_engine');
       if (!res) {

@@ -115,27 +115,58 @@ export default function App() {
     }
   };
 
-  const ProfilePopup = () => (
-    <div className="fixed inset-0 z-[600] flex items-center justify-center bg-black/50 backdrop-blur-md px-4 animate-in fade-in font-sans">
-       <div className="bg-[#FCF9F1] rounded-[3rem] p-12 w-full max-w-4xl shadow-2xl border border-gold/30">
-          <SectionTitle rightAction={<X onClick={() => setIsProfileOpen(false)} className="cursor-pointer text-gray-400 hover:text-red-500"/>}>Identidade Mestre (Configurações)</SectionTitle>
-          <div className="grid grid-cols-2 gap-12 mt-8">
-             <div className="space-y-6">
-                <div><label className="text-[10px] font-bold uppercase text-gray-400 pl-2 tracking-widest">Nome Mestre</label><input className="w-full bg-white p-4 rounded-2xl border border-gold/10 font-bold text-gray-800" defaultValue="Viviane" /></div>
-                <div><label className="text-[10px] font-bold uppercase text-gray-400 pl-2 tracking-widest">Contexto Pessoal</label><textarea className="w-full h-32 bg-white p-4 rounded-2xl outline-none border border-gold/10 resize-none text-[13px] text-gray-600 font-medium leading-relaxed" defaultValue="Puerpério. Filhos 2m e 2a. Estudo UDV. Foco em equilíbrio total." /></div>
-                <div><label className="text-[10px] font-bold uppercase text-gray-400 pl-2 tracking-widest">Estilo de Diálogo</label><select className="w-full bg-white p-4 rounded-2xl border border-gold/10 text-[13px] font-bold outline-none cursor-pointer"><option>Inteligente e Poética</option></select></div>
-             </div>
-             <div className="space-y-6 flex flex-col">
-                <div className="flex-1 flex flex-col">
-                    <label className="text-[10px] font-bold uppercase text-gray-400 pl-2 tracking-widest">Mapa Natal (Bulk Text)</label>
-                    <textarea className="flex-1 w-full bg-white p-6 rounded-2xl font-mono text-[12px] border border-gold/10 resize-none leading-relaxed text-gray-800 shadow-inner mt-1" defaultValue="Sun in Sagittarius 29°37'\nMoon in Libra 16°17'\nASC in Aquarius 21°51'" />
-                </div>
-                <button className="w-full py-5 bg-[#333333] text-white rounded-full font-bold uppercase text-[10px] tracking-widest hover:bg-gold shadow-xl transition-all">Gravar Alma Master</button>
-             </div>
-          </div>
-       </div>
-    </div>
-  );
+  const { profiles, updateProfile } = useAgendaTasks();
+  const masterProfile = profiles.find(p => p.id === 'viviane') || profiles[0];
+
+  const ProfilePopup = () => {
+    const [name, setName] = useState(masterProfile.name);
+    const [natalText, setNatalText] = useState(`Sun in Sagittarius 29°37'\nMoon in Libra 16°17'\nASC in Aquarius 21°51'`);
+
+    const handleSave = () => {
+      // In a real scenario, we'd parse the natalText to degrees. 
+      // For now, we update the profile metadata.
+      updateProfile(masterProfile.id, { name });
+      setIsProfileOpen(false);
+    };
+
+    return (
+      <div className="fixed inset-0 z-[600] flex items-center justify-center bg-black/50 backdrop-blur-md px-4 animate-in fade-in font-sans">
+         <div className="bg-[#FCF9F1] rounded-[3rem] p-12 w-full max-w-4xl shadow-2xl border border-gold/30">
+            <SectionTitle rightAction={<X onClick={() => setIsProfileOpen(false)} className="cursor-pointer text-gray-400 hover:text-red-500"/>}>Identidade Mestre (Configurações)</SectionTitle>
+            <div className="grid grid-cols-2 gap-12 mt-8">
+               <div className="space-y-6">
+                  <div>
+                    <label className="text-[10px] font-bold uppercase text-gray-400 pl-2 tracking-widest">Nome Mestre</label>
+                    <input 
+                      className="w-full bg-white p-4 rounded-2xl border border-gold/10 font-bold text-gray-800" 
+                      value={name} 
+                      onChange={e => setName(e.target.value)}
+                    />
+                  </div>
+                  <div><label className="text-[10px] font-bold uppercase text-gray-400 pl-2 tracking-widest">Contexto Pessoal</label><textarea className="w-full h-32 bg-white p-4 rounded-2xl outline-none border border-gold/10 resize-none text-[13px] text-gray-600 font-medium leading-relaxed" defaultValue="Puerpério. Filhos 2m e 2a. Estudo UDV. Foco em equilíbrio total." /></div>
+                  <div><label className="text-[10px] font-bold uppercase text-gray-400 pl-2 tracking-widest">Estilo de Diálogo</label><select className="w-full bg-white p-4 rounded-2xl border border-gold/10 text-[13px] font-bold outline-none cursor-pointer"><option>Inteligente e Poética</option></select></div>
+               </div>
+               <div className="space-y-6 flex flex-col">
+                  <div className="flex-1 flex flex-col">
+                      <label className="text-[10px] font-bold uppercase text-gray-400 pl-2 tracking-widest">Mapa Natal (Bulk Text)</label>
+                      <textarea 
+                        className="flex-1 w-full bg-white p-6 rounded-2xl font-mono text-[12px] border border-gold/10 resize-none leading-relaxed text-gray-800 shadow-inner mt-1" 
+                        value={natalText}
+                        onChange={e => setNatalText(e.target.value)}
+                      />
+                  </div>
+                  <button 
+                    onClick={handleSave}
+                    className="w-full py-5 bg-[#333333] text-white rounded-full font-bold uppercase text-[10px] tracking-widest hover:bg-gold shadow-xl transition-all"
+                  >
+                    Gravar Alma Master
+                  </button>
+               </div>
+            </div>
+         </div>
+      </div>
+    );
+  };
 
   return (
     <div className="layout-grid font-sans overflow-hidden" style={{ gridTemplateColumns: `${isSidebarCollapsed ? '80px' : '260px'} 1fr ${hasChat ? '360px' : '0px'}` }}>
