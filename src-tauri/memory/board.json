@@ -1,0 +1,31 @@
+{
+  "edges": [
+    {
+      "id": 101,
+      "source": 1,
+      "target": 2
+    }
+  ],
+  "nodes": [
+    {
+      "color": "#ffffff",
+      "h": 140,
+      "id": 1,
+      "text": "Ideias para o batismo: Alecrim, Flores Brancas e Luz de Velas para compor a mesa principal.",
+      "type": "text",
+      "w": 260,
+      "x": 200,
+      "y": 120
+    },
+    {
+      "color": "#f4f2f9",
+      "h": 140,
+      "id": 2,
+      "text": "Conferir a paleta Creme e Dourado com a decoradora. Lembrar das lembrancinhas de Tarot.",
+      "type": "text",
+      "w": 260,
+      "x": 600,
+      "y": 240
+    }
+  ]
+}
