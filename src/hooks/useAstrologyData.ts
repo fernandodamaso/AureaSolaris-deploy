@@ -24,7 +24,8 @@ export const useAstrologyData = (natalData?: { Sun: number, Moon: number, ASC: n
 
   useEffect(() => {
     fetchAstro();
-  }, []);
+    // Demand-based: Recalculate if natal data changes
+  }, [NATAL.Sun, NATAL.Moon, NATAL.ASC]);
 
   const getAspect = (d1: number, d2: number) => {
     const diff = Math.abs(d1 - d2) % 360;
