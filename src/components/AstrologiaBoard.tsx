@@ -32,16 +32,16 @@ export const AstrologiaPage = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
          <Card title="Pílulas de Sabedoria Astral">
-            <div className="space-y-6">
-               <div className="p-6 bg-[#FCF9F1] border border-gold/10 rounded-2xl shadow-sm">
-                  <h5 className="text-[10px] font-bold uppercase text-[#B8860B] mb-2 tracking-widest">Dignidades Essenciais</h5>
-                  <p className="text-[13px] text-gray-600 leading-relaxed font-medium">
+            <div className="space-y-4 pt-2">
+               <div className="p-5 bg-[#FCF9F1]/60 border border-gold/10 rounded-xl shadow-xs transition-all hover:bg-[#FCF9F1]/80">
+                  <h5 className="text-[9px] font-black uppercase text-[#B8860B] mb-2 tracking-[0.2em] opacity-80">Dignidades Essenciais</h5>
+                  <p className="text-[12px] text-gray-700 leading-relaxed font-bold">
                     {liveData?.Venus?.sign === 'Touro' || liveData?.Venus?.sign === 'Libra' ? "Vênus está em domicílio, favorecendo as artes e o equilíbrio hoje." : "A posição de Vênus pede atenção às relações e valores materiais."}
                   </p>
                </div>
-               <div className="p-6 bg-white border border-gray-100 rounded-2xl shadow-sm">
-                  <h5 className="text-[10px] font-bold uppercase text-gray-400 mb-2 tracking-widest">Ciclo Lunar</h5>
-                  <p className="text-[13px] text-gray-500 leading-relaxed font-medium">
+               <div className="p-5 bg-white border border-gray-50 rounded-xl shadow-xs transition-all hover:border-gold/20">
+                  <h5 className="text-[9px] font-black uppercase text-gray-400 mb-2 tracking-[0.2em] opacity-80">Ciclo Lunar</h5>
+                  <p className="text-[12px] text-gray-600 leading-relaxed font-bold">
                     {liveData?.Moon?.sign === 'Câncer' || liveData?.Moon?.sign === 'Touro' ? "Lua em posição forte: as emoções fluem com proteção." : `Lua em ${liveData?.Moon?.sign || 'sincronizando'}... foco na introspecção.`}
                   </p>
                </div>
@@ -49,7 +49,7 @@ export const AstrologiaPage = () => {
          </Card>
       </div>
       <div className="space-y-6">
-          <SectionTitle rightAction={<button className="p-2 bg-white rounded-lg border border-gold/20 hover:bg-gold/5 transition-all"><Plus size={14} className="text-gold"/></button>}>Círculo Familiar</SectionTitle>
+          <SectionTitle rightAction={<button className="p-2 bg-white rounded-lg border border-gold/20 hover:bg-gold/5 transition-all outline-none"><Plus size={14} className="text-gold"/></button>}>Círculo Familiar</SectionTitle>
           <div className="grid grid-cols-3 gap-5">
              <FamilyItem name="Fernando" data="☉ Sag • ☾ Cân" />
              <FamilyItem name="Aurora" data="☉ Cap • ☾ Tou" />
