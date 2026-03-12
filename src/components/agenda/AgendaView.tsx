@@ -1,10 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { 
   Clock, ListTodo, Trash2, ChevronLeft, ChevronRight, 
   X, ArrowUpRight, Plus 
 } from 'lucide-react';
 import { useAgendaTasks } from '../../hooks/useAgendaTasks';
-import { useAstrologyData } from '../../hooks/useAstrologyData';
 import { Card, Advice, TodoRow } from '../common/UIComponents';
 
 export const AgendaView = () => {
@@ -28,17 +27,10 @@ export const AgendaView = () => {
     getPlanetRegency
   } = useAgendaTasks();
 
-  const { getPlanetaryHour } = useAstrologyData();
   const [activeTab, setActiveTab] = useState('resumo');
   const [showEventModal, setShowEventModal] = useState(false);
   const [showTaskModal, setShowTaskModal] = useState(false);
   const [modalText, setModalText] = useState('');
-  const [currentTime, setCurrentTime] = useState(getPlanetaryHour());
-
-  useEffect(() => {
-    const timer = setInterval(() => setCurrentTime(getPlanetaryHour()), 60000);
-    return () => clearInterval(timer);
-  }, [getPlanetaryHour]);
 
   const metrics = getMetrics();
 
@@ -67,41 +59,7 @@ export const AgendaView = () => {
   return (
     <div className="space-y-8 pb-32 animate-in fade-in max-w-6xl mx-auto px-4 font-sans text-gray-800">
       
-      {/* 1. HEADER - AGENDA + INFO ASTRO */}
-      <div className="flex flex-col md:flex-row justify-between items-center border-b border-gray-100 pb-8 pt-6 gap-6">
-        <h1 className="text-2xl font-black uppercase tracking-[0.4em] text-[#333333]">Agenda</h1>
-        
-        <div className="flex flex-wrap justify-center gap-3">
-           {/* Minguante */}
-           <div className="flex items-center gap-3 bg-[#FCF9F1]/80 border border-gold/10 px-6 py-2 rounded-full shadow-xs">
-              <span className="text-gold opacity-80">☽</span>
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#B8860B]">Minguante</span>
-           </div>
-
-           {/* Data e Regente do Dia */}
-           <div className="flex items-center gap-4 bg-white border border-gray-100 px-6 py-2 rounded-full shadow-xs">
-              <div className="flex items-center gap-2 border-r border-gray-100 pr-4">
-                 <Clock size={14} className="text-gray-400"/>
-                 <span className="text-[10px] font-black uppercase tracking-[0.1em] text-gray-600">
-                    {selectedDay.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })}
-                 </span>
-              </div>
-              {/* Regente do Dia */}
-              <div className="flex items-center gap-2" title="Regente do Dia">
-                 <span className="text-gold text-sm">{getPlanetRegency(selectedDay).icon}</span>
-                 <span className="text-[9px] font-bold uppercase text-gray-400 tracking-widest">{getPlanetRegency(selectedDay).name}</span>
-              </div>
-           </div>
-
-           {/* Hora Planetária */}
-           <div className="flex items-center gap-3 bg-[#333333] text-gold px-6 py-2 rounded-full shadow-md border border-gold/10">
-              <span className="text-sm opacity-80">{currentTime.icon}</span>
-              <span className="text-[9px] font-black uppercase tracking-widest text-gold/80">{currentTime.name}</span>
-              <span className="w-1.5 h-1.5 bg-gold/20 rounded-full" />
-              <span className="text-[11px] font-black text-white">{currentTime.time}</span>
-           </div>
-        </div>
-      </div>
+      {/* 1. HEADER - AGENDA + INFO ASTRO (MOVIDO PARA GLOBAL) */}
 
       {/* 2. ADVICE (ALFRED) */}
       <div className="animate-in slide-in-from-top-4 duration-700">
