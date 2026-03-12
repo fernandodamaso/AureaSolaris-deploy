@@ -203,7 +203,7 @@ export default function App() {
             </div>
           </header>
         )}
-        <div className={`flex-1 relative ${isMesa ? '' : 'px-12 pt-10 overflow-y-auto no-scrollbar pb-40'}`}>
+        <div className={`flex-1 relative ${isMesa ? '' : 'px-12 pt-12 overflow-y-auto no-scrollbar pb-40'}`}>
           {renderPage()}
         </div>
       </main>
