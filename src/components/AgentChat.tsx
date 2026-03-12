@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { MessageSquare, Plus, Send } from 'lucide-react';
 import { safeInvoke } from '../utils/tauri';
 

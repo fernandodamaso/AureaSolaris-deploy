@@ -1,4 +1,3 @@
-import React from 'react';
 import { FileJson, Upload } from 'lucide-react';
 import { Card, Advice, StatBox } from './common/UIComponents';
 

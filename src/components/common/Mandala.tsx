@@ -1,4 +1,4 @@
-import React from 'react';
+
 
 export const Mandala = ({ planets = [] }: { planets?: any[] }) => (
   <div className={`relative w-full max-w-[500px] aspect-square flex items-center justify-center opacity-90 group mx-auto`}>
