@@ -24,9 +24,9 @@ export const FinancasView = () => (
         </Card>
         <Card title="Astrologia do Ouro (Timing de Rafiki)">
             <div className="space-y-4">
-                <div className="p-6 bg-emerald-50 rounded-3xl border border-emerald-100 flex flex-col gap-3">
-                    <h5 className="flex items-center gap-2 text-[10px] font-bold text-emerald-700 uppercase tracking-widest"><TrendingUp size={16}/> Datas de Alta</h5>
-                    <div className="flex justify-between text-[13px] font-bold text-emerald-800"><span>18 Mar (Vênus △ Júp)</span><span className="text-emerald-600 uppercase">Excelente</span></div>
+                <div className="p-5 bg-emerald-50 rounded-xl border border-emerald-100 flex flex-col gap-3">
+                    <h5 className="flex items-center gap-2 text-[9px] font-black text-emerald-700 uppercase tracking-[0.2em]"><TrendingUp size={14}/> Datas de Alta</h5>
+                    <div className="flex justify-between text-[12px] font-bold text-emerald-800"><span>18 Mar (Vênus △ Júp)</span><span className="text-emerald-600 uppercase tracking-widest text-[10px] opacity-70">Excelente</span></div>
                 </div>
             </div>
         </Card>

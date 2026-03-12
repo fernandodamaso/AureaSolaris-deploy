@@ -58,24 +58,24 @@ export const AgentChat = ({ agent }: { agent: string }) => {
   };
 
   return (
-    <div className="flex flex-col h-full bg-white rounded-3xl overflow-hidden border border-[#B8860B]/10 shadow-lg">
-      <div className="p-5 bg-[#FCF9F1] flex justify-between items-center border-b border-[#B8860B]/10">
-        <span className="text-[11px] font-bold uppercase tracking-widest flex items-center gap-2">
-          <MessageSquare size={14} className="text-[#B8860B]" /> {agent}
+    <div className="flex flex-col h-full bg-white rounded-xl overflow-hidden border border-[#B8860B]/10 shadow-md">
+      <div className="p-4 bg-[#FCF9F1] flex justify-between items-center border-b border-[#B8860B]/10">
+        <span className="text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-2 text-gray-700">
+          <MessageSquare size={12} className="text-[#B8860B]" /> {agent}
         </span>
-        <Plus size={14} className="cursor-pointer text-gray-400 hover:text-[#B8860B] transition-all" onClick={async () => { if(confirm('Arquivar conversa ativa?')) { await safeInvoke('archive_chat', { agent }); setMessages([{ role: 'assistant', content: "Novo ciclo iniciado." }]); } }} />
+        <Plus size={12} className="cursor-pointer text-gray-400 hover:text-[#B8860B] transition-all" onClick={async () => { if(confirm('Arquivar conversa ativa?')) { await safeInvoke('archive_chat', { agent }); setMessages([{ role: 'assistant', content: "Novo ciclo iniciado." }]); } }} />
       </div>
-      <div className="flex-1 p-5 space-y-4 overflow-y-auto no-scrollbar bg-white font-sans">
+      <div className="flex-1 p-4 space-y-4 overflow-y-auto no-scrollbar bg-white font-sans">
         {messages.map((m, i) => (
-          <div key={i} className={`p-4 rounded-2xl text-[13px] max-w-[90%] shadow-sm ${m.role === 'user' ? 'bg-[#FCF9F1] ml-auto border border-[#B8860B]/20 rounded-tr-none text-gray-800 font-medium' : 'bg-gray-50 mr-auto border border-gray-100 rounded-tl-none text-gray-600'}`}>
+          <div key={i} className={`p-3.5 rounded-xl text-[12px] max-w-[90%] shadow-xs transition-all ${m.role === 'user' ? 'bg-[#FCF9F1] ml-auto border border-[#B8860B]/15 rounded-tr-none text-gray-800 font-bold' : 'bg-gray-50 mr-auto border border-gray-100 rounded-tl-none text-gray-600 font-medium'}`}>
             {m.content}
           </div>
         ))}
-        {loading && <div className="text-[10px] opacity-40 animate-pulse text-center">Processando...</div>}
+        {loading && <div className="text-[9px] font-bold opacity-30 animate-pulse text-center uppercase tracking-widest">Processando...</div>}
       </div>
-      <div className="p-4 bg-[#FCF9F1] border-t border-gray-100 flex gap-2">
-        <input className="flex-1 bg-white rounded-xl px-4 py-2 text-[12px] outline-none border border-gray-200" placeholder="Mensagem..." value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleSend()} />
-        <button onClick={handleSend} className="p-2.5 bg-[#333333] text-white rounded-xl hover:bg-[#B8860B] transition-all"><Send size={14}/></button>
+      <div className="p-3 bg-white border-t border-gray-50 flex gap-2">
+        <input className="flex-1 bg-gray-50 rounded-lg px-4 py-2 text-[11px] outline-none border border-gray-100 focus:border-gold/20 transition-all font-medium" placeholder="Digite uma mensagem..." value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleSend()} />
+        <button onClick={handleSend} className="p-2.5 bg-[#333333] text-white rounded-lg hover:bg-gold transition-all shadow-sm"><Send size={12}/></button>
       </div>
     </div>
   );
