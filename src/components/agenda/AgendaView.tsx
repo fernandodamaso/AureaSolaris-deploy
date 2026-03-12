@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   Clock, ListTodo, Trash2, ChevronLeft, ChevronRight, 
   X, ArrowUpRight, Plus 
 } from 'lucide-react';
 import { useAgendaTasks } from '../../hooks/useAgendaTasks';
+import { useAstrologyData } from '../../hooks/useAstrologyData';
 import { Card, Advice, TodoRow } from '../common/UIComponents';
 
 export const AgendaView = () => {
@@ -27,18 +28,14 @@ export const AgendaView = () => {
     getPlanetRegency
   } = useAgendaTasks();
 
+  const { transits, forecast } = useAstrologyData();
+
   const [activeTab, setActiveTab] = useState('resumo');
   const [showEventModal, setShowEventModal] = useState(false);
   const [showTaskModal, setShowTaskModal] = useState(false);
   const [modalText, setModalText] = useState('');
 
   const metrics = getMetrics();
-
-  const ASTRO_EVENTS: Record<string, string> = {
-    "2026-03-14": "Lua Cheia em Virgem",
-    "2026-03-20": "Equinócio de Outono",
-    "2026-03-29": "Lua Nova em Áries"
-  };
 
   const handleAddEvent = async () => {
     if (modalText.trim()) {
@@ -96,8 +93,6 @@ export const AgendaView = () => {
             const isToday = d.toDateString() === new Date().toDateString();
             const isSelected = d.toDateString() === selectedDay.toDateString();
             const regency = getPlanetRegency(d);
-            const dateStr = d.toISOString().split('T')[0];
-            const astro = ASTRO_EVENTS[dateStr];
             
             return (
                <div 
@@ -108,8 +103,7 @@ export const AgendaView = () => {
                   <span className={`text-[9px] font-black uppercase mb-1 tracking-widest ${isSelected ? 'text-gold' : 'text-gray-400'}`}>{d.toLocaleDateString('pt-BR', { weekday: 'short' })}</span>
                   <span className="text-xl font-black leading-none">{d.getDate()}</span>
                   <div className="mt-2 flex gap-1.5 items-center">
-                    <span className={`text-[12px] ${isSelected ? 'opacity-100' : 'opacity-30'}`} title={`Regente: ${regency.name}`}>{regency.icon}</span>
-                    {astro && <span className="text-[8px] text-emerald-500 font-black" title={astro}>✦</span>}
+                    <span className={`text-[12px] ${isSelected ? 'opacity-100' : 'opacity-30'}`} title={`Regente: ${regency.icon}`}>{regency.icon}</span>
                   </div>
                   {isToday && !isSelected && <div className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-gold rounded-full shadow-[0_0_8px_rgba(184,134,11,0.6)]" />}
                </div>
@@ -174,28 +168,33 @@ export const AgendaView = () => {
 
                 {activeTab === 'transitos' && (
                   <div className="space-y-3 animate-in fade-in slide-in-from-bottom-2">
-                     {[
-                       { title: 'Reconhecimento em alta', icon: '△', color: 'text-emerald-500', bg: 'bg-emerald-50' },
-                       { title: 'Evite riscos desnecessários', icon: '□', color: 'text-red-500', bg: 'bg-red-50' }
-                     ].map((t, i) => (
+                     {transits.length > 0 ? transits.map((t: any, i: number) => (
                        <div key={i} className="flex items-center gap-4 bg-gray-50/50 p-4 rounded-xl border border-gray-100 group hover:border-gold/20 transition-all">
-                          <div className={`w-10 h-10 rounded-xl ${t.bg} flex items-center justify-center font-black text-lg ${t.color} group-hover:scale-110 transition-all shadow-xs`}>{t.icon}</div>
-                          <p className="text-[12px] font-black text-gray-800 tracking-tight">{t.title}</p>
+                          <div className={`w-10 h-10 rounded-xl bg-white flex items-center justify-center font-black text-lg text-gold group-hover:scale-110 transition-all shadow-xs`}>{t.icon}</div>
+                          <div className="flex-1">
+                             <p className="text-[12px] font-black text-gray-800 tracking-tight">{t.p} em {t.type} ao seu {t.n}</p>
+                             <p className="text-[9px] text-gray-400 font-bold uppercase tracking-widest">{t.desc}</p>
+                          </div>
                        </div>
-                     ))}
+                     )) : <p className="text-[11px] text-gray-400 italic text-center py-6 opacity-50 font-medium">Sincronizando trânsitos...</p>}
                   </div>
                 )}
 
                 {activeTab === 'futuro' && (
                   <div className="space-y-2 animate-in fade-in slide-in-from-bottom-2">
-                     {[
-                       { date: '14.03', event: 'Lua Cheia em Virgem' },
-                       { date: '20.03', event: 'Ano Novo Astrológico' },
-                       { date: '29.03', event: 'Lua Nova em Áries' }
-                     ].map((ev, i) => (
-                       <div key={i} className="flex justify-between items-center py-3 px-4 hover:bg-gold/5 rounded-xl transition-all text-[12px] border border-transparent hover:border-gold/10">
-                          <span className="font-black text-gold tracking-widest">{ev.date}</span>
-                          <span className="font-black text-gray-800">{ev.event}</span>
+                     {forecast.map((ev: any, i: number) => (
+                       <div key={i} className="flex justify-between items-center py-4 px-4 hover:bg-gold/5 rounded-xl transition-all border border-transparent hover:border-gold/10 group">
+                          <div className="flex items-center gap-4">
+                             <div className="text-center border-r border-gold/10 pr-4">
+                               <p className="text-[11px] font-black text-gold tracking-widest leading-none mb-1">{ev.date}</p>
+                               <p className="text-[8px] font-bold text-gray-300 uppercase leading-none">{ev.hour}</p>
+                             </div>
+                             <div>
+                               <p className="text-[12px] font-black text-gray-800 leading-tight">{ev.event}</p>
+                               <p className="text-[9px] text-gray-400 font-medium italic">{ev.desc}</p>
+                             </div>
+                          </div>
+                          <span className="text-gold text-lg opacity-40 group-hover:opacity-100 transition-all font-black">{ev.aspect}</span>
                        </div>
                      ))}
                   </div>
