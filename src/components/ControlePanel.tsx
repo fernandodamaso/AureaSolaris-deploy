@@ -4,10 +4,10 @@ import { Card, SectionTitle } from './common/UIComponents';
 
 const HardwareRow = ({ label, val, icon }: { label: string, val: string, icon: React.ReactNode }) => (
   <div className="flex justify-between items-center py-3 border-b border-gray-50 last:border-none px-1">
-    <div className="flex items-center gap-3 text-[10px] font-bold uppercase tracking-widest text-gray-400">
-      <div className="p-2 bg-[#FCF9F1] rounded-lg text-[#B8860B]">{icon}</div> {label}
+    <div className="flex items-center gap-3 text-[9px] font-black uppercase tracking-[0.2em] text-gray-400">
+      <div className="p-2 bg-[#FCF9F1] rounded-md text-[#B8860B]">{icon}</div> {label}
     </div>
-    <div className="text-[12px] font-bold text-gray-800">{val}</div>
+    <div className="text-[11px] font-black text-gray-700">{val}</div>
   </div>
 );
 
@@ -40,26 +40,28 @@ export const ControlePanel = () => {
       </div>
 
       <SectionTitle>Painel de Controle (Alma dos Agentes)</SectionTitle>
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-2 gap-4">
          {['Rafiki', 'Alfred', 'Stark', 'Uncle Duck'].map(n => (
-           <div key={n} onClick={() => setEditing(n)} className="p-7 bg-white border border-gray-100 rounded-3xl cursor-pointer hover:border-gold transition-all shadow-sm group">
-              <div className="flex justify-between items-center mb-3">
-                 <h5 className="font-bold text-gray-800 tracking-tight uppercase text-[12px]">{n}</h5>
-                 <Settings size={14} className="text-gray-300 group-hover:text-gold transition-all" />
+           <div key={n} onClick={() => setEditing(n)} className="p-5 bg-white border border-gray-100 rounded-xl cursor-pointer hover:border-gold/30 transition-all shadow-xs group">
+              <div className="flex justify-between items-center mb-2">
+                 <h5 className="font-black text-gray-700 uppercase text-[10px] tracking-[0.2em]">{n}</h5>
+                 <Settings size={12} className="text-gray-300 group-hover:text-gold transition-all" />
               </div>
-              <p className="text-[12px] text-gray-400 font-medium">Clique para moldar o comportamento e diretrizes comportamentais.</p>
+              <p className="text-[11px] text-gray-400 font-bold opacity-60">Moldar diretrizes comportamentais.</p>
            </div>
          ))}
       </div>
       {editing && (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/60 backdrop-blur-md px-4 font-sans">
-           <div className="bg-white rounded-[2.5rem] p-12 w-full max-w-2xl shadow-2xl animate-in zoom-in-95 border border-gold/20">
-              <div className="flex justify-between items-center mb-8 border-b border-gray-100 pb-4">
-                 <h3 className="font-sans text-xl font-bold uppercase tracking-widest text-gray-800">Forjar Alma: {editing}</h3>
-                 <X onClick={() => setEditing(null)} className="cursor-pointer text-gray-400 hover:text-red-500 transition-colors"/>
+        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/5backdrop-blur-xs px-4 font-sans animate-in fade-in zoom-in-95">
+           <div className="bg-white rounded-xl p-8 w-full max-w-xl shadow-2xl border border-gold/10">
+              <div className="flex justify-between items-center mb-6">
+                 <h3 className="font-sans text-[12px] font-black uppercase tracking-[0.3em] text-gray-700">Forjar Alma: {editing}</h3>
+                 <X onClick={() => setEditing(null)} className="cursor-pointer text-gray-300 hover:text-red-500 transition-colors" size={18}/>
               </div>
-              <textarea className="w-full h-80 bg-gray-50 p-6 rounded-3xl outline-none focus:border-gold/50 border border-gray-100 text-[14px] leading-relaxed font-sans font-medium" defaultValue={`Instruções mestras para ${editing}...`} />
-              <div className="flex justify-end mt-8"><button onClick={() => setEditing(null)} className="px-12 py-4 bg-[#333333] text-white rounded-full font-bold text-[11px] uppercase tracking-widest hover:bg-gold transition-all shadow-xl">Gravar Alma</button></div>
+              <textarea className="w-full h-64 bg-gray-50 p-5 rounded-lg outline-none focus:border-gold/20 border border-gray-100 text-[12px] leading-relaxed font-sans font-bold text-gray-600" defaultValue={`Instruções mestras para ${editing}...`} />
+              <div className="flex justify-end mt-6">
+                <button onClick={() => setEditing(null)} className="px-8 py-3 bg-[#333333] text-white rounded-lg font-black text-[9px] uppercase tracking-widest hover:bg-gold transition-all shadow-md">Gravar Alma</button>
+              </div>
            </div>
         </div>
       )}

@@ -45,5 +45,19 @@ export const useAstrologyData = () => {
     ].filter(t => t.type);
   };
 
-  return { liveData, transits: getTransits(), fetchAstro, NATAL };
+  const getPlanetaryHour = () => {
+    const now = new Date();
+    const hour = now.getHours();
+    const dayRegents = [6, 1, 2, 3, 4, 5, 0]; // Sun=0, Mon=1, etc.
+    const chaldeanOrder = [0, 5, 3, 1, 6, 2, 4]; // Sun, Ven, Mer, Moon, Sat, Jup, Mars
+    const dayRegent = dayRegents[now.getDay()];
+    const startIndex = chaldeanOrder.indexOf(dayRegent);
+    const hourRegentIndex = (startIndex + hour) % 7;
+    const icons = ['☉', '♀', '☿', '☽', '♄', '♃', '♂'];
+    const names = ['Sol', 'Vênus', 'Mercúrio', 'Lua', 'Saturno', 'Júpiter', 'Marte'];
+    
+    return { icon: icons[hourRegentIndex], name: names[hourRegentIndex], time: now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) };
+  };
+
+  return { liveData, transits: getTransits(), fetchAstro, NATAL, getPlanetaryHour };
 };

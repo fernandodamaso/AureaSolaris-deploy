@@ -1,6 +1,6 @@
 import { Plus } from 'lucide-react';
 import { useAstrologyData } from '../hooks/useAstrologyData';
-import { Card, SectionTitle, Advice, StarRow, AspectRow, FamilyItem } from './common/UIComponents';
+import { Card, SectionTitle, Advice, StarRow, FamilyItem } from './common/UIComponents';
 import { Mandala } from './common/Mandala';
 
 const PLANET_ICONS: Record<string, string> = {
@@ -9,7 +9,7 @@ const PLANET_ICONS: Record<string, string> = {
 };
 
 export const AstrologiaPage = () => {
-  const { liveData, transits } = useAstrologyData();
+  const { liveData } = useAstrologyData();
 
   const planets = liveData ? Object.entries(liveData).filter(([n]) => PLANET_ICONS[n]).map(([n, d]: [string, any]) => ({ icon: PLANET_ICONS[n], degree: d.degree })) : [];
 
@@ -31,14 +31,6 @@ export const AstrologiaPage = () => {
       </Card>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-         <div className="space-y-8">
-            <SectionTitle>Trânsitos sobre Seu Mapa (Natal)</SectionTitle>
-            <div className="space-y-4">
-               {transits.length > 0 ? transits.map((t: any) => (
-                 <AspectRow key={t.aspect} aspect={`${t.p} (T) ${t.type} ${t.n} (N)`} desc={t.desc || ''} bg={t.type === 'Trig.' || t.type === 'Sext.' ? 'bg-green-50/20' : t.type === 'Quad.' || t.type === 'Opos.' ? 'bg-red-50/20' : 'bg-[#FCF9F1]'} />
-               )) : <p className="text-[12px] text-gray-400 italic p-4">Nenhum trânsito maior ativo no momento.</p>}
-            </div>
-         </div>
          <Card title="Pílulas de Sabedoria Astral">
             <div className="space-y-6">
                <div className="p-6 bg-[#FCF9F1] border border-gold/10 rounded-2xl shadow-sm">
