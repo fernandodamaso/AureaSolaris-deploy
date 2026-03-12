@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Plus, Edit3, Image as ImageIcon, ZoomIn, ZoomOut, Star, Trash2, Clock } from 'lucide-react';
 import { safeInvoke } from '../utils/tauri';
 

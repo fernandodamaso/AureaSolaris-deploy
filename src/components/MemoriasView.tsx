@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Star, Calendar, PieChart, Zap, Eye } from 'lucide-react';
 import { SectionTitle } from './common/UIComponents';
 import { safeInvoke } from '../utils/tauri';

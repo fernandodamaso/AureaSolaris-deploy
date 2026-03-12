@@ -1,4 +1,3 @@
-import React from 'react';
 import { FileText, Star, Heart, Brain, Activity } from 'lucide-react';
 import { Card, SectionTitle, Advice, FileItem, RoutineItem, TodoRow } from './common/UIComponents';
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Plus, Save } from 'lucide-react';
 import { SectionTitle } from './common/UIComponents';
 

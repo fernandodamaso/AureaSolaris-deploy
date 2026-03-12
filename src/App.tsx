@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Moon, Calendar, PieChart,
-  Settings, MessageSquare, Plus,
+  Settings,
   User, Star, Edit3, Eye, Clock,
   Sparkles, X, Activity,
   Archive, PanelLeftClose, PanelLeftOpen,
@@ -11,7 +11,6 @@ import { safeInvoke } from './utils/tauri';
 import "./styles.css";
 
 // Hooks
-import { useAstrologyData } from './hooks/useAstrologyData';
 
 // Components
 import { NavItem, SectionTitle } from './components/common/UIComponents';
