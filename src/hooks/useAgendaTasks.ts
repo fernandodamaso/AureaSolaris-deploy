@@ -4,8 +4,16 @@ import { safeInvoke } from '../utils/tauri';
 export const useAgendaTasks = () => {
   const [profiles, setProfiles] = useState<any[]>(() => {
     const saved = localStorage.getItem('aurea_profiles');
-    return saved ? JSON.parse(saved) : [{ id: 'viviane', name: 'Viviane', active: true }];
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      return parsed.map((p: any) => ({
+        ...p,
+        natal: p.natal || { Sun: 269.6, Moon: 196.2, ASC: 321.8 }
+      }));
+    }
+    return [{ id: 'viviane', name: 'Viviane', active: true, natal: { Sun: 269.6, Moon: 196.2, ASC: 321.8 } }];
   });
+  
   const [activeProfileId, setActiveProfileId] = useState('viviane');
   const [tasks, setTasks] = useState<any[]>([]);
   const [selectedDay, setSelectedDay] = useState(new Date());
@@ -16,8 +24,19 @@ export const useAgendaTasks = () => {
   });
 
   const addProfile = (name: string) => {
-    const newProfile = { id: name.toLowerCase().replace(/\s+/g, '_'), name, active: true };
+    const newProfile = { 
+      id: name.toLowerCase().replace(/\s+/g, '_'), 
+      name, 
+      active: true,
+      natal: { Sun: 0, Moon: 0, ASC: 0 } 
+    };
     const updated = [...profiles, newProfile];
+    setProfiles(updated);
+    localStorage.setItem('aurea_profiles', JSON.stringify(updated));
+  };
+
+  const updateProfile = (id: string, updates: any) => {
+    const updated = profiles.map(p => p.id === id ? { ...p, ...updates } : p);
     setProfiles(updated);
     localStorage.setItem('aurea_profiles', JSON.stringify(updated));
   };
@@ -72,7 +91,6 @@ export const useAgendaTasks = () => {
   };
 
   const postponeTask = async (id: string) => {
-    // Logic to move task to tomorrow or next available slot
     await safeInvoke('postpone_todoist_task', { id });
     await fetchTasks();
   };
@@ -87,14 +105,12 @@ export const useAgendaTasks = () => {
 
   const getMetrics = () => {
     if (tasks.length === 0) return { done: 0, pending: 0, notDone: 0 };
-    const done = tasks.filter(t => t.completed || t.is_completed).length;
-    // For simplicity, we'll treat all others as pending for now, 
-    // but in a real app we'd check due dates vs today for "Not Done"
+    const done = tasks.filter((t: any) => t.completed || t.is_completed).length;
     const total = tasks.length;
     return {
       done: Math.round((done / total) * 100),
       pending: Math.round(((total - done) / total) * 100),
-      notDone: 0 // Logic for 'Not Done' requires due date checking
+      notDone: 0 
     };
   };
 
@@ -110,6 +126,7 @@ export const useAgendaTasks = () => {
     activeProfileId,
     setActiveProfileId,
     addProfile,
+    updateProfile,
     tasks,
     selectedDay,
     setSelectedDay,
