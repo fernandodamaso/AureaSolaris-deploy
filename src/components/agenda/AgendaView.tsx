@@ -167,14 +167,20 @@ export const AgendaView = () => {
                 )}
 
                 {activeTab === 'transitos' && (
-                  <div className="space-y-3 animate-in fade-in slide-in-from-bottom-2">
+                  <div className="space-y-2 animate-in fade-in slide-in-from-bottom-2">
                      {transits.length > 0 ? transits.map((t: any, i: number) => (
-                       <div key={i} className="flex items-center gap-4 bg-gray-50/50 p-4 rounded-xl border border-gray-100 group hover:border-gold/20 transition-all">
-                          <div className={`w-10 h-10 rounded-xl bg-white flex items-center justify-center font-black text-lg text-gold group-hover:scale-110 transition-all shadow-xs`}>{t.icon}</div>
-                          <div className="flex-1">
-                             <p className="text-[12px] font-black text-gray-800 tracking-tight">{t.p} em {t.type} ao seu {t.n}</p>
-                             <p className="text-[9px] text-gray-400 font-bold uppercase tracking-widest">{t.desc}</p>
+                       <div key={i} className="flex justify-between items-center py-4 px-4 hover:bg-gold/5 rounded-xl transition-all border border-transparent hover:border-gold/10 group">
+                          <div className="flex items-center gap-4">
+                             <div className="text-center border-r border-gold/10 pr-4">
+                               <p className="text-[11px] font-black text-gold tracking-widest leading-none mb-1">HOJE</p>
+                               <p className="text-[8px] font-bold text-gray-300 uppercase leading-none">AGORA</p>
+                             </div>
+                             <div>
+                               <p className="text-[12px] font-black text-gray-800 leading-tight">{t.p} em {t.type} ao seu {t.n}</p>
+                               <p className="text-[9px] text-gray-400 font-medium italic">{t.desc}</p>
+                             </div>
                           </div>
+                          <span className="text-gold text-lg opacity-40 group-hover:opacity-100 transition-all font-black">{t.icon}</span>
                        </div>
                      )) : <p className="text-[11px] text-gray-400 italic text-center py-6 opacity-50 font-medium">Sincronizando trânsitos...</p>}
                   </div>
@@ -194,7 +200,7 @@ export const AgendaView = () => {
                                <p className="text-[9px] text-gray-400 font-medium italic">{ev.desc}</p>
                              </div>
                           </div>
-                          <span className="text-gold text-lg opacity-40 group-hover:opacity-100 transition-all font-black">{ev.aspect}</span>
+                          <span className="text-gold text-lg opacity-40 group-hover:opacity-100 transition-all font-black">{ev.aspect || ev.icon}</span>
                        </div>
                      ))}
                   </div>
