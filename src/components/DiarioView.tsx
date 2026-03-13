@@ -1,39 +1,99 @@
 import { useState } from 'react';
-import { Plus, Save } from 'lucide-react';
-import { SectionTitle } from './common/UIComponents';
+import { 
+  Save, Bold, Italic, Type, AlignLeft, List, ChevronLeft
+} from 'lucide-react';
+import { useAgendaContext } from '../context/AgendaContext';
 
 export const DiarioView = () => {
-  const [activeNote, setActiveNote] = useState(0);
-  const [text, setText] = useState("");
-  const notes = [
-    {id: 1, title: "Sessão UDV: O Retorno ao Sol", date: "12 Mar"},
-    {id: 2, title: "Insights do Puerpério", date: "10 Mar"},
-    {id: 3, title: "Estudos Tarot Rider", date: "05 Mar"},
-  ];
+  const { addDocument } = useAgendaContext() as any;
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
 
-   return (
-      <div className="flex h-full gap-8 pb-40 animate-in fade-in pt-4 font-sans max-w-7xl mx-auto px-4">
-         <div className="w-72 shrink-0 flex flex-col gap-6">
-            <SectionTitle rightAction={<Plus size={14} className="text-gold cursor-pointer hover:rotate-90 transition-all"/>}>Arquivos do Diário</SectionTitle>
-            <div className="space-y-[1px] overflow-y-auto no-scrollbar pr-2">
-               {notes.map((n, i) => (
-                 <div key={n.id} onClick={() => setActiveNote(i)} className={`p-5 transition-all cursor-pointer ${activeNote === i ? 'bg-[#333333] text-white shadow-xl' : 'bg-white border border-gray-100 hover:bg-gray-50'}`}>
-                    <p className={`text-[11px] font-black leading-tight mb-1 uppercase tracking-wider ${activeNote === i ? 'text-white' : 'text-gray-800'}`}>{n.title}</p>
-                    <p className={`text-[8px] uppercase font-black tracking-[0.2em] ${activeNote === i ? 'text-gold' : 'text-gray-300'}`}>{n.date}</p>
-                 </div>
-               ))}
+  const handleSave = async () => {
+    if (!title.trim() || !content.trim()) return;
+    setIsSaving(true);
+    try {
+      addDocument({
+        id: Date.now().toString(),
+        title,
+        type: 'diary',
+        date: new Date().toLocaleDateString('pt-BR'),
+        size: `${Math.ceil(content.length / 1024)} KB`,
+        content
+      });
+      // Simulate save delay
+      await new Promise(r => setTimeout(r, 600));
+      alert('Sua crônica foi consolidada no Alfred Hub.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  return (
+    <div className="h-full flex flex-col bg-[#FCF9F1] animate-in fade-in slide-in-from-bottom-4">
+      {/* Editor Header */}
+      <header className="px-12 py-8 flex justify-between items-center border-b border-gold/10 bg-white/50 backdrop-blur-md sticky top-0 z-10">
+        <div className="flex items-center gap-6">
+          <div className="flex items-center gap-4 text-gold/40 hover:text-gold transition-colors cursor-pointer group">
+             <ChevronLeft size={20} />
+             <span className="text-[10px] font-black uppercase tracking-[0.3em]">Retornar</span>
+          </div>
+          <div className="w-px h-6 bg-gold/10 mx-2" />
+          <h2 className="text-[11px] font-black uppercase tracking-[0.4em] text-gray-800">Câmara de Escrita</h2>
+        </div>
+
+        <div className="flex gap-4">
+          <div className="flex items-center gap-1 bg-white border border-gray-100 rounded-xl p-1.5 shadow-sm">
+             <button className="p-2 hover:bg-gray-50 rounded-lg text-gray-400 hover:text-gold transition-all"><Bold size={16}/></button>
+             <button className="p-2 hover:bg-gray-50 rounded-lg text-gray-400 hover:text-gold transition-all"><Italic size={16}/></button>
+             <button className="p-2 hover:bg-gray-50 rounded-lg text-gray-400 hover:text-gold transition-all"><Type size={16}/></button>
+             <div className="w-px h-5 bg-gray-100 mx-2" />
+             <button className="p-2 hover:bg-gray-50 rounded-lg text-gray-400 hover:text-gold transition-all"><AlignLeft size={16}/></button>
+             <button className="p-2 hover:bg-gray-50 rounded-lg text-gray-400 hover:text-gold transition-all"><List size={16}/></button>
+          </div>
+          <button 
+            onClick={handleSave}
+            disabled={isSaving}
+            className="px-8 py-3 bg-[#333333] text-white rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-gold transition-all flex items-center gap-3 shadow-lg disabled:opacity-50"
+          >
+            <Save size={14} /> {isSaving ? 'Consolidando...' : 'Publicar Crônica'}
+          </button>
+        </div>
+      </header>
+
+      {/* Surface Editor */}
+      <div className="flex-1 overflow-y-auto no-scrollbar p-12 lg:p-24 bg-white/30">
+        <div className="max-w-3xl mx-auto w-full">
+          <input 
+            type="text" 
+            placeholder="Título da sua Crônica..." 
+            className="w-full text-5xl font-black text-gray-800 border-none outline-none mb-12 placeholder:text-gray-100 tracking-tighter leading-tight uppercase italic bg-transparent"
+            value={title}
+            onChange={e => setTitle(e.target.value)}
+          />
+          
+          <div className="flex items-center gap-5 mb-16 border-b border-gold/5 pb-8">
+            <div className="w-12 h-12 rounded-full bg-gold text-white flex items-center justify-center font-black text-xs shadow-lg">VS</div>
+            <div>
+              <p className="text-[11px] font-black uppercase tracking-widest text-gray-800">Viviane Solaris</p>
+              <p className="text-[10px] text-gray-400 font-bold uppercase tracking-tight">Escriba de Aurea • {new Date().toLocaleDateString('pt-BR')}</p>
             </div>
-         </div>
-         <div className="flex-1 flex flex-col gap-6">
-            <div className="flex justify-between items-center bg-white p-8 border border-gold/10 shadow-sm">
-               <input className="text-xl font-black text-gray-800 bg-transparent outline-none flex-1 px-2 tracking-widest uppercase" defaultValue={notes[activeNote]?.title} />
-               <button className="flex items-center gap-3 px-10 py-4 bg-[#333333] text-white rounded-none text-[10px] font-black uppercase tracking-[0.2em] hover:bg-gold transition-all shadow-lg group"><Save size={14} className="group-hover:scale-110 transition-all"/> Salvar Registro</button>
-            </div>
-            <div className="flex-1 bg-white p-12 border border-gray-100 shadow-xs overflow-hidden flex flex-col relative">
-               <div className="absolute top-0 left-0 w-1.5 h-full bg-gold/10" />
-               <textarea className="flex-1 w-full bg-transparent outline-none text-[14px] leading-[2.6] text-gray-700 font-bold no-scrollbar resize-none pl-6 placeholder:italic" placeholder="Transcrição da alma..." value={text} onChange={e => setText(e.target.value)} />
-            </div>
-         </div>
+          </div>
+
+          <textarea 
+            placeholder="Deixe sua alma fluir nas palavras..."
+            className="w-full text-[20px] font-medium leading-[2.4] text-gray-600 border-none outline-none resize-none placeholder:text-gray-100 min-h-[800px] font-serif bg-transparent"
+            value={content}
+            onChange={e => setContent(e.target.value)}
+          />
+        </div>
       </div>
-   );
+      
+      {/* Footer Info */}
+      <footer className="px-12 py-4 border-t border-gold/5 bg-white/20 text-[9px] font-black uppercase tracking-[0.3em] text-gray-300 text-center">
+        As palavras são sementes no solo da memória.
+      </footer>
+    </div>
+  );
 };
