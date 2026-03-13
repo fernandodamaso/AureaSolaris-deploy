@@ -18,6 +18,14 @@ struct OpenRouterRequest {
 #[derive(Deserialize)]
 struct OpenRouterResponse {
     choices: Vec<OpenRouterChoice>,
+    usage: Option<OpenRouterUsage>,
+}
+
+#[derive(Serialize, Deserialize, Clone)]
+struct OpenRouterUsage {
+    prompt_tokens: u32,
+    completion_tokens: u32,
+    total_tokens: u32,
 }
 
 #[derive(Deserialize)]
@@ -33,13 +41,42 @@ struct OpenRouterChoiceMessage {
 #[derive(Serialize)]
 struct OllamaRequest {
     model: String,
-    prompt: String,
+    messages: Vec<OpenRouterMessage>,
     stream: bool,
 }
 
 #[derive(Deserialize)]
 struct OllamaResponse {
-    response: String,
+    message: OpenRouterChoiceMessage,
+}
+
+#[tauri::command]
+async fn ollama_chat(messages: Vec<OpenRouterMessage>) -> Result<String, String> {
+    let client = reqwest::Client::builder()
+        .timeout(std::time::Duration::from_secs(60))
+        .build()
+        .map_err(|e| format!("Falha ao criar cliente HTTP para Ollama: {}", e))?;
+
+    let req_body = OllamaRequest {
+        model: "llama3.2".to_string(), 
+        messages,
+        stream: false,
+    };
+
+    let res = client.post("http://localhost:11434/api/chat")
+        .json(&req_body)
+        .send()
+        .await
+        .map_err(|e| format!("Erro de rede ao conectar ao Ollama (Certifique-se que está rodando): {}", e))?;
+
+    if !res.status().is_success() {
+        let err_text = res.text().await.unwrap_or_default();
+        return Err(format!("Erro no Ollama: {}", err_text));
+    }
+
+    let json_res: OllamaResponse = res.json().await.map_err(|e| format!("Erro ao decodificar JSON do Ollama: {}", e))?;
+    
+    Ok(json_res.message.content)
 }
 
 // Helpers for paths
@@ -66,9 +103,15 @@ fn get_assets_path(app: &tauri::AppHandle, filename: &str) -> Result<PathBuf, St
 #[tauri::command]
 async fn openrouter_chat(model: String, messages: Vec<OpenRouterMessage>) -> Result<String, String> {
     dotenvy::from_filename(".env.local").ok();
-    let api_key = std::env::var("OPENROUTER_API_KEY").map_err(|_| "OPENROUTER_API_KEY não encontrada".to_string())?;
 
-    let client = reqwest::Client::new();
+    let api_key = std::env::var("OPENROUTER_API_KEY")
+        .map_err(|_| "OPENROUTER_API_KEY não encontrada no ambiente ou .env.local".to_string())?;
+
+    let client = reqwest::Client::builder()
+        .timeout(std::time::Duration::from_secs(30))
+        .build()
+        .map_err(|e| format!("Falha ao criar cliente HTTP: {}", e))?;
+
     let req_body = OpenRouterRequest {
         model,
         messages,
@@ -76,47 +119,50 @@ async fn openrouter_chat(model: String, messages: Vec<OpenRouterMessage>) -> Res
 
     let res = client.post("https://openrouter.ai/api/v1/chat/completions")
         .bearer_auth(api_key)
+        .header("HTTP-Referer", "https://github.com/aurea-solaris")
+        .header("X-Title", "Aurea Solaris")
         .json(&req_body)
         .send()
         .await
-        .map_err(|e| e.to_string())?;
+        .map_err(|e| format!("Erro de rede ao conectar à OpenRouter: {}", e))?;
 
     let status = res.status();
-    let body_text = res.text().await.map_err(|e| e.to_string())?;
+    let body_text = res.text().await.map_err(|e| format!("Falha ao ler corpo da resposta: {}", e))?;
 
     if !status.is_success() {
-        return Err(format!("Erro API ({}): {}", status, body_text));
+        return Err(format!("Erro na API OpenRouter ({}): {}", status, body_text));
     }
 
     let json_res: OpenRouterResponse = serde_json::from_str(&body_text).map_err(|e| {
-        format!("Erro ao processar JSON: {} | Body: {}", e, body_text)
+        format!("Erro ao decodificar JSON da OpenRouter: {} | Resposta: {}", e, body_text)
     })?;
     
+    // Log tokens if available (This is mock-ish but stores in a real file)
+    if let Some(usage) = &json_res.usage {
+        let _ = log_usage(&app, usage.total_tokens);
+    }
+
     if let Some(choice) = json_res.choices.first() {
         Ok(choice.message.content.clone())
     } else {
-        Err("Sem resposta no JSON".to_string())
+        Err("A API retornou uma resposta vazia (sem choices)".to_string())
     }
 }
 
-#[tauri::command]
-async fn ollama_chat(prompt: String) -> Result<String, String> {
-    let client = reqwest::Client::new();
-    let req_body = OllamaRequest {
-        model: "llama3.2".to_string(), // Modelo leve padrão para testes
-        prompt,
-        stream: false,
+fn log_usage(app: &tauri::AppHandle, tokens: u32) -> Result<(), String> {
+    let path = get_mem_path(app, "usage.json")?;
+    let mut usage_data: serde_json::Value = if path.exists() {
+        let content = fs::read_to_string(&path).map_err(|e| e.to_string())?;
+        serde_json::from_str(&content).unwrap_or(serde_json::json!({}))
+    } else {
+        serde_json::json!({})
     };
 
-    let res = client.post("http://localhost:11434/api/generate")
-        .json(&req_body)
-        .send()
-        .await
-        .map_err(|e| e.to_string())?;
-
-    let json_res: OllamaResponse = res.json().await.map_err(|e| e.to_string())?;
+    let total = usage_data["total_tokens"].as_u64().unwrap_or(0) + tokens as u64;
+    usage_data["total_tokens"] = serde_json::Value::from(total);
     
-    Ok(json_res.response)
+    fs::write(path, serde_json::to_string(&usage_data).unwrap()).map_err(|e| e.to_string())?;
+    Ok(())
 }
 
 #[tauri::command]
@@ -141,16 +187,31 @@ fn load_history(app: tauri::AppHandle, agent: String) -> Result<Vec<OpenRouterMe
 #[tauri::command]
 async fn get_todoist_tasks() -> Result<String, String> {
     dotenvy::from_filename(".env.local").ok();
-    let token = std::env::var("TODOIST_TOKEN").map_err(|_| "TODOIST_TOKEN não encontrada".to_string())?;
+    let token = std::env::var("TODOIST_TOKEN")
+        .map_err(|_| "Opa! TODOIST_TOKEN não encontrada no seu .env.local".to_string())?;
 
-    let client = reqwest::Client::new();
+    println!("Stark: Sincronizando tarefas do Todoist com token: {}...", &token[..5]);
+    let client = reqwest::Client::builder()
+        .timeout(std::time::Duration::from_secs(10))
+        .build()
+        .map_err(|e| format!("Falha ao criar cliente HTTP: {}", e))?;
+
     let res = client.get("https://api.todoist.com/rest/v2/tasks")
         .bearer_auth(token)
         .send()
         .await
-        .map_err(|e| e.to_string())?;
+        .map_err(|e| format!("Erro de conexão com o Todoist: {}", e))?;
 
-    let text = res.text().await.map_err(|e| e.to_string())?;
+    println!("Stark: Resposta do Todoist: {}", res.status());
+
+    if !res.status().is_success() {
+        let status = res.status();
+        let err_body = res.text().await.unwrap_or_default();
+        return Err(format!("Erro na API do Todoist ({}): {}", status, err_body));
+    }
+
+    let text = res.text().await.map_err(|e| format!("Falha ao ler resposta do Todoist: {}", e))?;
+    println!("Stark: {} tarefas recebidas do Todoist.", text.chars().filter(|&c| c == '{').count());
     Ok(text)
 }
 
@@ -219,7 +280,7 @@ fn get_sys_info() -> Result<serde_json::Value, String> {
 }
 
 #[tauri::command]
-fn list_archived_chats(app: tauri::AppHandle, agent: String) -> Result<Vec<String>, String> {
+fn list_archived_chats(app: tauri::AppHandle, agent: String) -> Result<Vec<serde_json::Value>, String> {
     let mut path = app.path().app_data_dir().map_err(|e| e.to_string())?;
     path.push("memory");
     path.push("archives");
@@ -231,11 +292,46 @@ fn list_archived_chats(app: tauri::AppHandle, agent: String) -> Result<Vec<Strin
         let entry = entry.map_err(|e| e.to_string())?;
         let name = entry.file_name().to_string_lossy().to_string();
         if name.starts_with(&agent) && name.ends_with(".json") {
-            archives.push(name);
+            let metadata = entry.metadata().map_err(|e| e.to_string())?;
+            let created = metadata.created().unwrap_or(std::time::SystemTime::now());
+            let date = chrono::DateTime::<chrono::Local>::from(created).format("%d %b %Y").to_string();
+            
+            archives.push(serde_json::json!({
+                "id": name,
+                "name": name,
+                "date": date,
+                "agent": agent
+            }));
         }
     }
-    archives.sort_by(|a, b| b.cmp(a)); // Newest first
+    archives.sort_by(|a, b| b["id"].as_str().unwrap().cmp(a["id"].as_str().unwrap())); // Newest first
     Ok(archives)
+}
+
+#[tauri::command]
+fn load_archived_chat(app: tauri::AppHandle, filename: String) -> Result<Vec<OpenRouterMessage>, String> {
+    let mut path = app.path().app_data_dir().map_err(|e| e.to_string())?;
+    path.push("memory");
+    path.push("archives");
+    path.push(filename);
+    
+    if !path.exists() {
+        return Err("Arquivo de arquivo não encontrado".to_string());
+    }
+    let json = fs::read_to_string(path).map_err(|e| e.to_string())?;
+    let history: Vec<OpenRouterMessage> = serde_json::from_str(&json).map_err(|e| e.to_string())?;
+    Ok(history)
+}
+
+#[tauri::command]
+fn get_total_tokens(app: tauri::AppHandle) -> Result<u64, String> {
+    let path = get_mem_path(&app, "usage.json")?;
+    if !path.exists() {
+        return Ok(0);
+    }
+    let content = fs::read_to_string(path).map_err(|e| e.to_string())?;
+    let usage_data: serde_json::Value = serde_json::from_str(&content).map_err(|e| e.to_string())?;
+    Ok(usage_data["total_tokens"].as_u64().unwrap_or(0))
 }
 
 #[tauri::command]
@@ -323,6 +419,8 @@ pub fn run() {
             save_asset,
             archive_chat,
             list_archived_chats,
+            load_archived_chat,
+            get_total_tokens,
             read_text_file,
             run_astro_engine,
             list_lab_files

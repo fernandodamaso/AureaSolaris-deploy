@@ -3,9 +3,10 @@ import { MessageSquare, Plus, Send } from 'lucide-react';
 import { safeInvoke } from '../utils/tauri';
 
 export const AgentChat = ({ agent }: { agent: string }) => {
-  const [messages, setMessages] = useState<any[]>([]);
+   const [messages, setMessages] = useState<any[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const load = async () => {
@@ -18,42 +19,53 @@ export const AgentChat = ({ agent }: { agent: string }) => {
 
   const handleSend = async () => {
     if(!input.trim() || loading) return;
+    setError(null);
     const userMsg = { role: 'user', content: input };
     const updated = [...messages, userMsg];
     setMessages(updated); setInput(''); setLoading(true);
 
     let response = '';
     try {
-      if (agent === 'Uncle Duck') {
-        let res = await safeInvoke<string>('ollama_chat', { prompt: input });
+      const savedConfig = localStorage.getItem(`agent_config_${agent}`);
+      const config = savedConfig ? JSON.parse(savedConfig) : null;
+      
+      const model = config?.model || (agent === 'Stark' ? 'anthropic/claude-3.5-sonnet' : 'openai/gpt-4o-mini');
+      const systemPrompt = config ? 
+        `Você é ${agent}. Sua personalidade: ${config.personality}. Suas funcionalidades: ${config.functionalities}.` :
+        (agent === 'Rafiki' ? 'Você é Rafiki, um astrólogo místico e sábio. Seja poético.' :
+         agent === 'Stark' ? 'Você é Dr. Stark, IA técnica e sarcástica.' :
+         agent === 'Alfred' ? 'Você é Alfred, consultor de produtividade.' :
+         `Você é ${agent} no sistema Aurea Solaris.`);
+
+      if (agent === 'Uncle Duck' && !config) {
+        const ollamaMessages = [{ role: 'system', content: 'Você é Uncle Duck, consultor financeiro. Responda de forma objetiva sobre finanças.' }, ...updated];
+        let res = await safeInvoke<string>('ollama_chat', { messages: ollamaMessages });
         if (!res) {
           res = await safeInvoke<string>('openrouter_chat', { 
             model: 'openai/gpt-4o-mini', 
             messages: [{ role: 'system', content: 'Você é Uncle Duck, consultor financeiro. O sistema local falhou, então você está operando via nuvem.' }, ...updated] 
           });
         }
-        response = res || 'Sistema offline.';
+        response = res || '';
       } else {
-        const model = agent === 'Stark' ? 'anthropic/claude-3.5-sonnet' : 'openai/gpt-4o-mini';
-        const systemPrompt = 
-          agent === 'Rafiki' ? 'Você é Rafiki, um astrólogo místico e sábio. Seja poético.' :
-          agent === 'Stark' ? 'Você é Dr. Stark, IA técnica e sarcástica.' :
-          agent === 'Alfred' ? 'Você é Alfred, consultor de produtividade.' :
-          `Você é ${agent} no sistema Aurea Solaris.`;
-
         const res = await safeInvoke<string>('openrouter_chat', { 
           model, 
           messages: [{ role: 'system', content: systemPrompt }, ...updated] 
         });
-        response = res || 'A conexão falhou.';
+        response = res || '';
       }
 
       if (response) {
         const final = [...updated, { role: 'assistant', content: response }];
         setMessages(final);
         await safeInvoke('save_history', { agent, history: final });
+      } else {
+        setError('A conexão com a IA falhou. Verifique sua chave API ou conexão.');
       }
-    } catch (e) { console.error(e); }
+    } catch (e: any) { 
+      console.error(e);
+      setError(e.message || 'Erro inesperado no subsistema de chat.');
+    }
     setLoading(false);
   };
 
@@ -72,6 +84,7 @@ export const AgentChat = ({ agent }: { agent: string }) => {
           </div>
         ))}
         {loading && <div className="text-[9px] font-bold opacity-30 animate-pulse text-center uppercase tracking-widest">Processando...</div>}
+        {error && <div className="p-3 bg-red-50 text-red-500 text-[10px] font-bold rounded-lg border border-red-100 animate-in fade-in slide-in-from-top-1">{error}</div>}
       </div>
       <div className="p-3 bg-white border-t border-gray-50 flex gap-2">
         <input className="flex-1 bg-gray-50 rounded-lg px-4 py-2 text-[11px] outline-none border border-gray-100 focus:border-gold/20 transition-all font-medium" placeholder="Digite uma mensagem..." value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleSend()} />

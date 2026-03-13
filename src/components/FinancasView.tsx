@@ -1,16 +1,20 @@
 import { useState } from 'react';
 import { 
-  FileJson, Upload, TrendingUp, TrendingDown, 
+  Upload, TrendingUp, TrendingDown, 
   Plus, Target, DollarSign, Wallet, ArrowUpRight, 
-  Trash2, X, ChevronRight
+  Trash2, X, ChevronRight, Shield
 } from 'lucide-react';
-import { Card, Advice, StatBox } from './common/UIComponents';
+import { Advice } from './common/UIComponents';
 import { useFinancasData } from '../hooks/useFinancasData';
+import { ImportFinancialView } from './ImportFinancialView';
+import { OllamaGuide } from './common/OllamaGuide';
 
 export const FinancasView = () => {
-  const { transactions, goals, stats, addTransaction, deleteTransaction } = useFinancasData();
+  const { transactions, goals, stats, addTransaction, deleteTransaction, batchAddTransactions } = useFinancasData();
   const [showAdd, setShowAdd] = useState(false);
-  const [newTx, setNewTx] = useState({ description: '', amount: '', type: 'expense' as const, category: 'Geral' });
+  const [isImporting, setIsImporting] = useState(false);
+  const [showOllama, setShowOllama] = useState(false);
+  const [newTx, setNewTx] = useState<{description: string, amount: string, type: 'income' | 'expense', category: string}>({ description: '', amount: '', type: 'expense', category: 'Geral' });
 
   const handleAdd = () => {
     if (!newTx.description || !newTx.amount) return;
@@ -24,6 +28,18 @@ export const FinancasView = () => {
     setNewTx({ description: '', amount: '', type: 'expense', category: 'Geral' });
     setShowAdd(false);
   };
+
+  if (isImporting) {
+    return (
+      <ImportFinancialView 
+        onBack={() => setIsImporting(false)} 
+        onImport={(txs) => {
+          batchAddTransactions(txs);
+          setIsImporting(false);
+        }}
+      />
+    );
+  }
 
   return (
     <div className="space-y-10 pb-32 animate-in fade-in max-w-7xl mx-auto">
@@ -102,7 +118,7 @@ export const FinancasView = () => {
               </table>
             )}
             <div className="p-4 bg-[#FCF9F1]/50 border-t border-gold/5">
-                <button className="w-full py-4 border border-dashed border-gold/20 text-gold text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-white transition-all">
+                <button onClick={() => setIsImporting(true)} className="w-full py-4 border border-dashed border-gold/20 text-gold text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-white transition-all">
                    <Upload size={14}/> Importar Extrato Bancário
                 </button>
             </div>
@@ -169,6 +185,19 @@ export const FinancasView = () => {
                 </div>
              </div>
           </div>
+          
+          {/* PRIVACY SHIELD */}
+          <div className="bg-emerald-500/5 border border-emerald-500/10 p-8 shadow-sm relative overflow-hidden group cursor-pointer" onClick={() => setShowOllama(true)}>
+             <div className="absolute top-0 right-0 p-8 opacity-5"><Shield size={64} className="text-emerald-500"/></div>
+             <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 bg-emerald-500 text-white rounded-lg"><Shield size={16}/></div>
+                <h4 className="text-[11px] font-black uppercase tracking-[0.3em] text-emerald-700">Escudo de Privacidade</h4>
+             </div>
+             <p className="text-[11px] text-gray-500 font-bold leading-relaxed mb-4">Seus dados financeiros são sensíveis. Ative o processamento local via Ollama para garantir que nada saia deste terminal.</p>
+             <div className="flex items-center gap-2 text-[9px] font-black uppercase text-emerald-600 tracking-widest group-hover:gap-4 transition-all">
+                Configurar IA Local <ChevronRight size={14}/>
+             </div>
+          </div>
 
         </div>
       </div>
@@ -203,6 +232,15 @@ export const FinancasView = () => {
                     Registrar no Patrimônio
                  </button>
               </div>
+           </div>
+        </div>
+      )}
+
+      {/* MODAL OLLAMA */}
+      {showOllama && (
+        <div className="fixed inset-0 z-[700] flex items-center justify-center bg-black/60 backdrop-blur-md p-4 animate-in fade-in">
+           <div className="w-full max-w-2xl shadow-2xl rounded-[2.5rem] overflow-hidden border border-gold/20">
+              <OllamaGuide onClose={() => setShowOllama(false)} />
            </div>
         </div>
       )}

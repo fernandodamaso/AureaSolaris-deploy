@@ -50,7 +50,14 @@ export const useFinancasData = () => {
   };
 
   const addTransaction = (t: Omit<Transaction, 'id'>) => {
-    setTransactions(prev => [{ ...t, id: Date.now().toString() }, ...prev]);
+    setTransactions(prev => [{ ...t, id: Date.now().toString() + Math.random().toString(36).substr(2, 5) }, ...prev]);
+  };
+
+  const batchAddTransactions = (newTxs: Omit<Transaction, 'id'>[]) => {
+    setTransactions(prev => [
+      ...newTxs.map(t => ({ ...t, id: Date.now().toString() + Math.random().toString(36).substr(2, 5) })),
+      ...prev
+    ]);
   };
 
   const deleteTransaction = (id: string) => {
@@ -66,6 +73,7 @@ export const useFinancasData = () => {
     goals,
     stats,
     addTransaction,
+    batchAddTransactions,
     deleteTransaction,
     updateGoal
   };
