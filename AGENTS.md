@@ -64,11 +64,16 @@
 
 ## ⚠️ Regras Globais para Agentes de IA
 
+> **🚨 OBRIGATÓRIO — SEMPRE atualize a documentação.**
+> Todo arquivo que você criar, modificar ou deletar DEVE ter sua documentação atualizada. Não é opcional. Não é "fazer depois". É **agora, na mesma sessão de trabalho**. Se você mudou um componente, atualize os docs. Se adicionou um arquivo, atualize os docs. Sempre.
+
 ### 🎓 Regra Didática — Explique como se eu estivesse aprendendo
 > **Você está conversando com alguém que está aprendendo tecnologia.** Ao explicar conceitos técnicos (React, Tauri, Python, APIs), use analogias simples, evite jargão desnecessário, e quando usar termos técnicos, explique o que significam. Exemplo: em vez de "O hook useAstrologyData faz fetch dos dados", diga "O useAstrologyData é como um assistente que busca informações sobre os planetas e entrega para a tela." **Concisos, mas educativos.**
 
 ### 📝 Regra de Documentação — Código muda, docs atualizam
-> **Toda mudança no código DEVE atualizar a documentação correspondente.** Sem exceção.
+> **Toda mudança no código DEVE atualizar a documentação correspondente. Sem exceção. Sempre.**
+>
+> **Antes de fazer commit de qualquer alteração**, verifique se os docs foram atualizados. Se você criou um arquivo novo e não atualizou os docs, **não finalize** -- volte e atualize primeiro.
 
 | Tipo de mudança | Documento para atualizar |
 |-----------------|-------------------------|
