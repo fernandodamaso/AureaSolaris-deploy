@@ -29,7 +29,7 @@ A injeção das personas ocorre no componente `AgentChat.tsx`, que seleciona o a
 - **Modelo Padrão:** `google/gemini-2.0-pro-exp-02-05`
 
 ### 2.2. Alfred (Mordomo de Produtividade)
-- **Escopo:** `SaudeView.tsx`, `AgendaView.tsx`, `AlfredHubView.tsx`
+- **Escopo:** `SaudeView.tsx`, `agenda/AgendaView.tsx`, `AlfredHubView.tsx`
 - **Função:** Gerente impecável de ordem, produtividade e saúde. Foco em organização prática.
 - **Personalidade:** Direto, impecável, formal mas prestativo.
 - **Modelo Padrão:** `openai/gpt-4o-mini`
