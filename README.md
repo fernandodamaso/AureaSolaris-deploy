@@ -88,6 +88,8 @@ Isso abrirá a aplicação em modo de desenvolvimento com hot reload — qualque
 | `npm run build` | Gera build de produção do frontend |
 | `npm run tauri build` | Gera build de produção completa (inclui binário nativo) |
 | `npm run lint` | Verifica problemas de código |
+| `npm test` | Executa a suíte de testes (Vitest) |
+| `npm run test:watch` | Executa testes em modo watch (re-executa ao salvar) |
 
 ---
 

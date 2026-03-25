@@ -51,6 +51,7 @@
 | Alterar variáveis de ambiente | `.env` ou `.env.local` |
 | Configurar Vite (build, proxy) | `vite.config.ts` |
 | Configurar ESLint | `eslint.config.js` |
+| Executar testes | `npm test` (Vitest) ou `npm run test:watch` para modo contínuo |
 
 ### 📚 Documentação de Referência
 | Se você precisa... | Consulte... |
@@ -83,6 +84,7 @@
 | Nova persona/agemte de IA | `docs/arquitetura.md` e `AGENTS.md` |
 | Nova pasta ou reestruturação | `docs/estrutura-do-projeto.md` e `README.md` |
 | Mudança de configuração (variáveis, .env) | `README.md` e `docs/estrutura-do-projeto.md` |
+| Novos testes ou infraestrutura de testes | `docs/estrutura-do-projeto.md` e `README.md` |
 
 ---
 
