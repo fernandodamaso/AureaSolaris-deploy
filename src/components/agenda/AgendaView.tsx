@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { 
   ChevronLeft, ChevronRight, 
   Plus, Clock, 
-  Trash2, Sparkles, X, ListTodo, ArrowUpRight
+  Trash2, Sparkles, ListTodo, ArrowUpRight
 } from 'lucide-react';
 import { useAgendaTasks } from '../../hooks/useAgendaTasks';
 import { useAstrologyData } from '../../hooks/useAstrologyData';
@@ -15,9 +15,10 @@ export const AgendaView = () => {
     setActiveProfileId,
     addProfile,
     tasks, 
+    events,
     selectedDay, setSelectedDay, weekDays, 
     nextWeek, prevWeek, addTask, deleteTask, toggleTask, 
-    postponeTask, addEvent, getMetrics, 
+    postponeTask, addEvent, deleteEvent, executeInsight, getMetrics, 
     getPlanetRegency, getAlfredInsights 
   } = useAgendaTasks();
 
@@ -55,7 +56,10 @@ export const AgendaView = () => {
 
       {/* 2. ADVICE (ALFRED) */}
       <div className="animate-in slide-in-from-top-4 duration-700">
-        <Advice agent="Alfred" content="Viviane, seu ciclo de produtividade atinge o ápice às 16h. Recomendação: finalize as tarefas prioritárias em fluxo." />
+        <Advice 
+          agent="Alfred" 
+          content={`${activeProfile?.name || 'Viviane'}, hoje é dia de ${getPlanetRegency(new Date()).name}. Sua energia planetária sugere foco em ${getPlanetRegency(new Date()).name === 'Lua' ? 'introspecção e cuidado' : 'ação e clareza'}.`} 
+        />
       </div>
 
       {/* 3. CALENDÁRIO SEMANAL + PERFIS */}
@@ -112,17 +116,27 @@ export const AgendaView = () => {
         
         {/* COLUNA ESQUERDA: EVENTOS -> PREVISÕES */}
         <div className="space-y-8">
-           <Card title={`Compromissos - ${selectedDay.toLocaleDateString('pt-BR')}`} icon={<Clock size={14}/>}>
+            <Card title={`Compromissos - ${selectedDay.toLocaleDateString('pt-BR')}`} icon={<Clock size={14}/>}>
               <div className="space-y-3 mt-4">
-                 {selectedDay.toDateString() === new Date().toDateString() ? (
-                   <div className="p-4 bg-[#FCF9F1]/40 border border-gold/5 rounded-xl flex justify-between items-center group transition-all hover:bg-[#FCF9F1]/60 shadow-xs">
+                 {events.filter(e => {
+                   const eDate = new Date(e.start).toDateString();
+                   const sDate = selectedDay.toDateString();
+                   return eDate === sDate;
+                 }).map(e => (
+                   <div key={e.id} className="p-4 bg-[#FCF9F1]/40 border border-gold/5 rounded-xl flex justify-between items-center group transition-all hover:bg-[#FCF9F1]/60 shadow-xs">
                       <div className="flex gap-4 items-center">
                          <div className="p-2 bg-white rounded-lg text-gold shadow-xs border border-gold/5"><Clock size={12}/></div>
-                         <div><p className="text-[12px] font-black text-gray-800 tracking-tight">Sessão UDV</p><p className="text-[10px] text-gold/60 font-bold">Hoje, 20:00</p></div>
+                         <div>
+                           <p className="text-[12px] font-black text-gray-800 tracking-tight">{e.title}</p>
+                           <p className="text-[10px] text-gold/60 font-bold">{new Date(e.start).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</p>
+                         </div>
                       </div>
-                      <X size={14} className="text-gray-200 group-hover:text-red-400 cursor-pointer transition-all opacity-0 group-hover:opacity-100"/>
+                      <Trash2 onClick={() => deleteEvent(e.id)} size={14} className="text-gray-200 group-hover:text-red-400 cursor-pointer transition-all opacity-0 group-hover:opacity-100"/>
                    </div>
-                 ) : <p className="text-[11px] text-gray-400 italic text-center py-6 opacity-50 font-medium">Silêncio profundo na agenda...</p>}
+                 ))}
+                 {events.filter(e => new Date(e.start).toDateString() === selectedDay.toDateString()).length === 0 && (
+                   <p className="text-[11px] text-gray-400 italic text-center py-6 opacity-50 font-medium">Silêncio profundo na agenda...</p>
+                 )}
                  <button onClick={() => setShowEventModal(true)} className="w-full py-3 border border-dashed border-gold/20 text-gold text-[9px] font-black uppercase tracking-[0.2em] rounded-xl hover:bg-gold/5 transition-all shadow-xs">+ Agendar no Fluxo</button>
               </div>
            </Card>
@@ -289,8 +303,13 @@ export const AgendaView = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
            {alfredInsights.map((ins: any) => (
              <div key={ins.id} className="p-5 bg-gray-50 border border-gray-100 rounded-none hover:border-gold/30 transition-all group">
-                <p className="text-[11px] font-bold text-gray-600 leading-relaxed italic">"{ins.content}"</p>
-                <button className="mt-4 text-[9px] font-black uppercase tracking-widest text-gold opacity-0 group-hover:opacity-100 transition-all">Executar Recomendação</button>
+                <p className="text-[11px] font-bold text-gray-600 leading-relaxed italic">&quot;{ins.content}&quot;</p>
+                <button 
+                  onClick={() => executeInsight(ins)}
+                  className="mt-4 text-[9px] font-black uppercase tracking-widest text-gold opacity-0 group-hover:opacity-100 transition-all"
+                >
+                  Executar Recomendação
+                </button>
              </div>
            ))}
         </div>

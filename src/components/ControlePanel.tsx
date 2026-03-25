@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, ReactNode } from 'react';
 import { Cpu, Zap, Clock, Brain, Activity, Settings, Shield, ChevronRight, X, Sparkles, Database } from 'lucide-react';
 import { Card, SectionTitle, Advice } from './common/UIComponents';
 import { useAstrologyData } from '../hooks/useAstrologyData';
 import { OllamaGuide } from './common/OllamaGuide';
 import { safeInvoke } from '../utils/tauri';
 
-const HardwareRow = ({ label, val, icon }: { label: string, val: string, icon: React.ReactNode }) => (
+const HardwareRow = ({ label, val, icon }: { label: string, val: string, icon: ReactNode }) => (
   <div className="flex justify-between items-center py-3 border-b border-gray-50 last:border-none px-1">
     <div className="flex items-center gap-3 text-[9px] font-black uppercase tracking-[0.2em] text-gray-400">
       <div className="p-2 bg-[#FCF9F1] rounded-md text-[#B8860B]">{icon}</div> {label}
@@ -17,8 +17,9 @@ const HardwareRow = ({ label, val, icon }: { label: string, val: string, icon: R
 export const ControlePanel = () => {
   const [showOllama, setShowOllama] = useState(false);
   const [editingAgent, setEditingAgent] = useState<any>(null);
+  const [aiMode, setAiMode] = useState(() => localStorage.getItem('ai_master_switch') || 'ollama');
   const [metrics, setMetrics] = useState({ uptime: '---', latency: '---', memory: '---', cpu: '---', tokens: '0' });
-  const [apiStatus, setApiStatus] = useState({ todoist: 'loading', telegram: 'loading', astro: 'loading' });
+  const [apiStatus] = useState({ todoist: 'online', telegram: 'online', astro: 'online' });
   const { getPlanetaryHour } = useAstrologyData();
 
   useEffect(() => {
@@ -41,15 +42,14 @@ export const ControlePanel = () => {
       }));
     };
     fetchMetrics();
-
-    setApiStatus({
-      todoist: 'online',
-      telegram: 'online',
-      astro: 'online'
-    });
   }, []);
 
   const planetaryHour = getPlanetaryHour();
+
+  const handleAiModeChange = (mode: string) => {
+    setAiMode(mode);
+    localStorage.setItem('ai_master_switch', mode);
+  };
 
   return (
     <div className="space-y-12 animate-in fade-in pb-20 max-w-7xl mx-auto">
@@ -89,12 +89,27 @@ export const ControlePanel = () => {
 
              <Card title="Núcleo de IA Local" icon={<Shield size={14}/>}>
                  <div className="space-y-4 mt-4">
+                    <div className="flex justify-between items-center p-3 bg-white border border-gray-50 rounded-lg shadow-xs">
+                       <div>
+                          <p className="text-[10px] font-black uppercase text-gray-400 tracking-widest">Motor Principal (Chave Mestra)</p>
+                          <p className="text-[8px] text-gray-400 mt-0.5">Define quem processa as respostas dos Agentes</p>
+                       </div>
+                       <select 
+                          className="px-3 py-1.5 bg-gold/5 hover:bg-gold/10 border border-gold/20 rounded-lg text-[10px] font-black text-gold uppercase tracking-widest outline-none transition-all cursor-pointer shadow-sm"
+                          value={aiMode}
+                          onChange={(e) => handleAiModeChange(e.target.value)}
+                       >
+                         <option value="ollama">🛡️ Local (Ollama)</option>
+                         <option value="openrouter">☁️ Nuvem (OpenRouter)</option>
+                       </select>
+                    </div>
+
                     <div className="p-4 bg-emerald-500/5 border border-emerald-500/10 rounded-xl flex justify-between items-center group cursor-pointer" onClick={() => setShowOllama(true)}>
                        <div className="flex gap-4 items-center">
                           <div className="p-2 bg-white rounded-lg text-emerald-500 shadow-sm border border-emerald-500/5"><Shield size={14}/></div>
                           <div>
                              <p className="text-[11px] font-black text-gray-800 uppercase tracking-tight">Ollama Engine</p>
-                             <p className="text-[9px] text-emerald-600 font-bold uppercase tracking-widest">Configurar Escudo</p>
+                             <p className="text-[9px] text-emerald-600 font-bold uppercase tracking-widest">Configurar Escudo Offline</p>
                           </div>
                        </div>
                        <ChevronRight size={14} className="text-emerald-300 group-hover:text-emerald-500 transition-all" />
@@ -195,6 +210,7 @@ const AgentConfigModal = ({ agentName, onClose }: { agentName: string, onClose: 
   useEffect(() => {
     const saved = localStorage.getItem(`agent_config_${agentName}`);
     if (saved) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setConfig(JSON.parse(saved));
     } else {
         // Default personality/functions based on agent
@@ -204,7 +220,7 @@ const AgentConfigModal = ({ agentName, onClose }: { agentName: string, onClose: 
             Alfred: { personality: 'Mordomo britânico impecável, focado em produtividade e ordem.', functionalities: 'Gestão de tarefas (Todoist), organização do Hub, agenda preditiva.', model: 'openai/gpt-4o-mini' },
             'Uncle Duck': { personality: 'Consultor financeiro direto, pragmático e um pouco ranzinza com gastos.', functionalities: 'Análise financeira, gestão de ouro, projeções econômicas.', model: 'openai/gpt-4o-mini' }
         };
-        if (defaults[agentName]) setConfig({ ...config, ...defaults[agentName] });
+        if (defaults[agentName]) setConfig((c: any) => ({ ...c, ...defaults[agentName] }));
     }
   }, [agentName]);
 

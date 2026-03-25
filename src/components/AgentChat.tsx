@@ -1,95 +1,402 @@
-import { useState, useEffect } from 'react';
-import { MessageSquare, Plus, Send } from 'lucide-react';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { MessageSquare, Plus, Send, ChevronDown, Clock, Trash2, List } from 'lucide-react';
 import { safeInvoke } from '../utils/tauri';
+import { useAstrologyData } from '../hooks/useAstrologyData';
+import { useAgendaContext } from '../context/AgendaContext';
+import { useFinancas } from '../context/FinancasContext';
+
+interface ChatSession {
+  chatId: string;
+  agent: string;
+  date: string;
+  messageCount: number;
+  preview: string;
+}
 
 export const AgentChat = ({ agent }: { agent: string }) => {
    const [messages, setMessages] = useState<any[]>([]);
-  const [input, setInput] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+   const [input, setInput] = useState('');
+   const [loading, setLoading] = useState(false);
+   const [error, setError] = useState<string | null>(null);
+   
+   // Session management
+   const [chatId, setChatId] = useState<string>('');
+   const [sessions, setSessions] = useState<ChatSession[]>([]);
+   const [showSessions, setShowSessions] = useState(false);
+   
+   // Scroll management
+   const messagesEndRef = useRef<HTMLDivElement>(null);
+   const messagesContainerRef = useRef<HTMLDivElement>(null);
+   const [showScrollBtn, setShowScrollBtn] = useState(false);
+   
+   // Hooks para dados contextuais
+   const { liveData, transits, getPlanetaryHour } = useAstrologyData();
+   const { tasks, profiles, activeProfileId } = useAgendaContext();
+   const { stats: financeStats, goals } = useFinancas();
 
-  useEffect(() => {
-    const load = async () => {
-      const h = await safeInvoke<any[]>('load_history', { agent });
-      if (h && h.length > 0) setMessages(h);
-      else setMessages([{ role: 'assistant', content: `Saudações, Viviane. ${agent} pronto para atuar.` }]);
-    };
-    load();
-  }, [agent]);
+   // Generate a new chat ID
+   const generateChatId = () => `chat_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`;
 
-  const handleSend = async () => {
-    if(!input.trim() || loading) return;
-    setError(null);
-    const userMsg = { role: 'user', content: input };
-    const updated = [...messages, userMsg];
-    setMessages(updated); setInput(''); setLoading(true);
+   // Scroll to bottom
+   const scrollToBottom = useCallback(() => {
+     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+   }, []);
 
-    let response = '';
-    try {
-      const savedConfig = localStorage.getItem(`agent_config_${agent}`);
-      const config = savedConfig ? JSON.parse(savedConfig) : null;
+   // Check if user has scrolled up
+   const handleScroll = () => {
+     const container = messagesContainerRef.current;
+     if (!container) return;
+     const isAtBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 80;
+     setShowScrollBtn(!isAtBottom);
+   };
+
+   // Auto-scroll on new messages
+   useEffect(() => {
+     if (!showScrollBtn) scrollToBottom();
+   }, [messages, loading, scrollToBottom, showScrollBtn]);
+
+   // Load sessions list
+   const loadSessions = async () => {
+     const result = await safeInvoke<ChatSession[]>('list_chat_sessions', { agent });
+     if (result) setSessions(result);
+   };
+
+   // Load a specific session
+   const loadSession = async (sessionId: string) => {
+     const history = await safeInvoke<any[]>('load_history', { agent, chat_id: sessionId });
+     setChatId(sessionId);
+     setMessages(history || []);
+     setShowSessions(false);
+   };
+
+   // Create new chat session
+   const newChat = () => {
+     const newId = generateChatId();
+     setChatId(newId);
+     setMessages([]);
+     setShowSessions(false);
+   };
+
+   // Delete a session
+   const deleteSession = async (sessionId: string, e: React.MouseEvent) => {
+     e.stopPropagation();
+     await safeInvoke('delete_chat_session', { agent, chat_id: sessionId });
+     if (sessionId === chatId) newChat();
+     loadSessions();
+   };
+
+   // Load initial session or latest
+   useEffect(() => {
+     const init = async () => {
+       await loadSessions();
+       // Try to load the default session (no chatId = legacy)
+       const history = await safeInvoke<any[]>('load_history', { agent, chat_id: null });
+       if (history && history.length > 0) {
+         setChatId('');
+         setMessages(history);
+       } else {
+         newChat();
+       }
+     };
+     init();
+   }, [agent]);
+
+   // Save history on change
+   useEffect(() => {
+     if (messages.length > 0) {
+       safeInvoke('save_history', { agent, history: messages, chat_id: chatId || null }).catch(console.error);
+     }
+   }, [messages, agent, chatId]);
+
+   // Refresh sessions list when opening dropdown
+   useEffect(() => {
+     if (showSessions) loadSessions();
+   }, [showSessions]);
+
+    // Build context for ALL agents (not just Rafiki)
+    const buildAgentContext = () => {
+      const planetaryHour = getPlanetaryHour();
+      const activeProfile = profiles.find(p => p.id === activeProfileId);
+      const pendingTasks = tasks.filter((t: any) => !t.completed && !t.is_completed);
+      const completedTasks = tasks.filter((t: any) => t.completed || t.is_completed);
       
-      const model = config?.model || (agent === 'Stark' ? 'anthropic/claude-3.5-sonnet' : 'openai/gpt-4o-mini');
-      const systemPrompt = config ? 
-        `Você é ${agent}. Sua personalidade: ${config.personality}. Suas funcionalidades: ${config.functionalities}.` :
-        (agent === 'Rafiki' ? 'Você é Rafiki, um astrólogo místico e sábio. Seja poético.' :
-         agent === 'Stark' ? 'Você é Dr. Stark, IA técnica e sarcástica.' :
-         agent === 'Alfred' ? 'Você é Alfred, consultor de produtividade.' :
-         `Você é ${agent} no sistema Aurea Solaris.`);
+      const formatDegree = (deg: number) => {
+        const d = Math.floor(deg);
+        const m = Math.floor((deg - d) * 60);
+        return `${d}°${m}'`;
+      };
+      
+      const planets = liveData?.planets || {};
+      const actualAspects = liveData?.aspects || [];
+      
+      const retrogradePlanets = Object.entries(planets)
+        .filter(([_, v]: any) => v?.retrograde)
+        .map(([k]) => k);
+      
+      const planetPositions = Object.entries(planets)
+        .map(([k, v]: any) => {
+          const sign = v?.sign || 'Unknown';
+          const pos = v?.pos_in_sign || 0;
+          const retro = v?.retrograde ? ' (R)' : '';
+          return `${k}: ${formatDegree(pos)} ${sign}${retro}`;
+        })
+        .join('\n') || 'Sintonizando esferas...';
+      
+      const skyAspects = actualAspects.map(a => `${a.p1} ${a.symbol} ${a.p2} (${a.type}) orb ${a.orb.toFixed(1)}°`).join('\n') || 'Nenhum aspecto maior no céu';
+      const transitAspects = transits.map(t => `${t.p} ${t.icon} ${t.n} (${t.type})`).join('\n') || 'Nenhum aspecto pessoal ativo';
+      
+      const taskSummary = pendingTasks.length > 0 
+        ? `Pendentes: ${pendingTasks.length} | Completas: ${completedTasks.length}\nPrimeiras pendentes: ${pendingTasks.slice(0, 3).map((t: any) => t.content || t.title).join('; ')}`
+        : `Nenhuma tarefa pendente. Completas: ${completedTasks.length}`;
+      
+      return `
+═══════════════════════════════════════════════════
+CONTEXTO DO SISTEMA AUREA SOLARIS
+═══════════════════════════════════════════════════
 
-      if (agent === 'Uncle Duck' && !config) {
-        const ollamaMessages = [{ role: 'system', content: 'Você é Uncle Duck, consultor financeiro. Responda de forma objetiva sobre finanças.' }, ...updated];
-        let res = await safeInvoke<string>('ollama_chat', { messages: ollamaMessages });
-        if (!res) {
-          res = await safeInvoke<string>('openrouter_chat', { 
-            model: 'openai/gpt-4o-mini', 
-            messages: [{ role: 'system', content: 'Você é Uncle Duck, consultor financeiro. O sistema local falhou, então você está operando via nuvem.' }, ...updated] 
-          });
+--- DATA E HORA ---
+Data: ${new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+Hora Local: ${new Date().toLocaleTimeString('pt-BR')}
+
+--- HORA PLANETÁRIA ---
+Regente atual: ${planetaryHour.icon} ${planetaryHour.name}
+Momento: ${planetaryHour.time}
+
+--- PERFIL DO USUÁRIO ---
+Nome: ${activeProfile?.name || 'Desconhecido'}
+
+--- POSIÇÕES PLANETÁRIAS NO CÉU ---
+${planetPositions}
+
+--- ASPECTOS NO CÉU (MUNDANOS) ---
+${skyAspects}
+
+--- ASPECTOS PESSOAIS (TRÂNSITOS VS NATAL) ---
+${transitAspects}
+
+--- PLANETAS RETROGRADOS ---
+${retrogradePlanets.length > 0 ? retrogradePlanets.join(', ') : 'Nenhum'}
+
+--- TAREFAS ---
+${taskSummary}
+
+--- FINANÇAS ---
+Saldo: R$ ${financeStats.balance.toLocaleString('pt-BR')}
+Entradas: R$ ${financeStats.incomes.toLocaleString('pt-BR')} | Saídas: R$ ${financeStats.expenses.toLocaleString('pt-BR')}
+Metas ativas: ${goals.length}${goals.length > 0 ? '\nMetas: ' + goals.map(g => `${g.name} (${g.current}/${g.target})`).join(', ') : ''}
+
+═══════════════════════════════════════════════════
+`;
+    };
+
+    const buildSystemPrompt = () => {
+      const context = buildAgentContext();
+      const basePrompt = `Responda de forma extremamente concisa, direta e útil. Sem introduções vazias. Você tem acesso ao contexto completo do sistema abaixo.`;
+      
+      if (agent === 'Rafiki') {
+        return `${basePrompt} Você é Rafiki, o tradutor poético e cirúrgico do motor astrológico. Use o contexto técnico para dar orientações práticas baseadas nas estrelas. Seja místico porém pragmático. Pode sugerir criação de tarefas e ações baseadas no momento astrológico.
+
+${context}`;
+      }
+      
+      if (agent === 'Alfred') {
+        return `${basePrompt} Você é Alfred, o mordomo impecável. Foco em produtividade, organização e execução impecável. Use os dados de tarefas e horário planetário para sugerir ações prioritárias.
+
+${context}`;
+      }
+
+      if (agent === 'Uncle Duck') {
+        return `${basePrompt} Você é Uncle Duck. Consultor financeiro pragmático e focado em lucros e economia de ouro. Analise dados financeiros e sugira ações.
+
+${context}`;
+      }
+
+      if (agent === 'Stark') {
+        return `${basePrompt} Você é Stark. Monitor técnico do sistema. Sarcástico, focado em estabilidade, logs e performance. Monitora a saúde do sistema.
+
+${context}`;
+      }
+
+      if (agent === 'Dr. Strange') {
+        return `${basePrompt} Você é Dr. Strange. Supervisor macro que conecta os astros ao estado global do sistema. Você vê TUDO: astrologia, tarefas, finanças, saúde, horários. Conecte padrões entre os dados e dê visão estratégica.
+
+${context}`;
+      }
+
+      return `${basePrompt}\n\n${context}`;
+    };
+
+    const sendMessage = async () => {
+        if (!input.trim() || loading) return;
+        
+        const userMsg = { role: 'user', content: input };
+        const newMessages = [...messages, userMsg];
+        setMessages(newMessages);
+        setInput('');
+        setLoading(true);
+        setError(null);
+        setShowScrollBtn(false);
+        
+        try {
+            const systemMsg = { role: 'system', content: buildSystemPrompt() };
+            const aiMode = localStorage.getItem('ai_master_switch') || 'ollama';
+            
+            let response: string | null = null;
+            if (aiMode === 'ollama') {
+                 response = await safeInvoke<string>('ollama_chat', { 
+                     messages: [systemMsg, ...newMessages.slice(-8)]
+                 });
+            } else {
+                 const savedConfig = localStorage.getItem(`agent_config_${agent}`);
+                 const config = savedConfig ? JSON.parse(savedConfig) : {};
+                 const model = config.model || 'openai/gpt-4o-mini';
+                 
+                 response = await safeInvoke<string>('openrouter_chat', { 
+                     model: model,
+                     messages: [systemMsg, ...newMessages.slice(-8)]
+                 });
+            }
+            
+            if (response) {
+                setMessages(prev => [...prev, { role: 'assistant', content: response }]);
+            }
+        } catch (e: any) {
+            setError(e.toString());
+            console.error(e);
+        } finally {
+            setLoading(false);
         }
-        response = res || '';
-      } else {
-        const res = await safeInvoke<string>('openrouter_chat', { 
-          model, 
-          messages: [{ role: 'system', content: systemPrompt }, ...updated] 
-        });
-        response = res || '';
-      }
+    };
 
-      if (response) {
-        const final = [...updated, { role: 'assistant', content: response }];
-        setMessages(final);
-        await safeInvoke('save_history', { agent, history: final });
-      } else {
-        setError('A conexão com a IA falhou. Verifique sua chave API ou conexão.');
-      }
-    } catch (e: any) { 
-      console.error(e);
-      setError(e.message || 'Erro inesperado no subsistema de chat.');
-    }
-    setLoading(false);
-  };
+    return (
+        <div className="flex flex-col h-full bg-white/40 backdrop-blur-xl border border-gold/10 rounded-2xl overflow-hidden shadow-2xl animate-in slide-in-from-right duration-500">
+            {/* Header with session management */}
+            <div className="p-3 border-b border-gold/5 bg-gradient-to-r from-gold/5 to-transparent">
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center text-gold">
+                            <MessageSquare size={16} />
+                        </div>
+                        <div>
+                            <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-gold">{agent}</h3>
+                            <div className="flex items-center gap-1.5">
+                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                                <span className="text-[8px] text-gray-400 font-bold uppercase tracking-widest">Sintonizado</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-1">
+                        <button onClick={newChat} title="Novo Chat" className="p-2 text-gray-400 hover:text-gold hover:bg-gold/5 rounded-lg transition-all">
+                            <Plus size={14} />
+                        </button>
+                        <button onClick={() => setShowSessions(!showSessions)} title="Histórico de Chats" className="p-2 text-gray-400 hover:text-gold hover:bg-gold/5 rounded-lg transition-all relative">
+                            <List size={14} />
+                            {sessions.length > 0 && <span className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-gold text-white text-[7px] font-black rounded-full flex items-center justify-center">{sessions.length}</span>}
+                        </button>
+                    </div>
+                </div>
+                
+                {/* Sessions dropdown */}
+                {showSessions && (
+                    <div className="mt-2 bg-white rounded-xl border border-gray-100 shadow-lg max-h-[200px] overflow-y-auto no-scrollbar animate-in fade-in slide-in-from-top-2">
+                        {sessions.length === 0 ? (
+                            <p className="p-4 text-[10px] text-gray-400 text-center italic">Nenhuma sessão salva</p>
+                        ) : (
+                            sessions.map((s) => (
+                                <div 
+                                    key={s.chatId} 
+                                    onClick={() => loadSession(s.chatId)}
+                                    className={`flex items-center justify-between p-3 hover:bg-gold/5 cursor-pointer border-b border-gray-50 last:border-none transition-all ${s.chatId === chatId ? 'bg-gold/5' : ''}`}
+                                >
+                                    <div className="flex-1 min-w-0">
+                                        <p className="text-[10px] font-bold text-gray-700 truncate">{s.preview}</p>
+                                        <div className="flex items-center gap-2 mt-0.5">
+                                            <Clock size={8} className="text-gray-300" />
+                                            <span className="text-[8px] text-gray-400">{s.date}</span>
+                                            <span className="text-[8px] text-gold/50">{s.messageCount} msgs</span>
+                                        </div>
+                                    </div>
+                                    <button onClick={(e) => deleteSession(s.chatId, e)} className="p-1 text-gray-300 hover:text-red-400 transition-all ml-2">
+                                        <Trash2 size={10} />
+                                    </button>
+                                </div>
+                            ))
+                        )}
+                    </div>
+                )}
+            </div>
 
-  return (
-    <div className="flex flex-col h-full bg-white rounded-xl overflow-hidden border border-[#B8860B]/10 shadow-md">
-      <div className="p-4 bg-[#FCF9F1] flex justify-between items-center border-b border-[#B8860B]/10">
-        <span className="text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-2 text-gray-700">
-          <MessageSquare size={12} className="text-[#B8860B]" /> {agent}
-        </span>
-        <Plus size={12} className="cursor-pointer text-gray-400 hover:text-[#B8860B] transition-all" onClick={async () => { if(confirm('Arquivar conversa ativa?')) { await safeInvoke('archive_chat', { agent }); setMessages([{ role: 'assistant', content: "Novo ciclo iniciado." }]); } }} />
-      </div>
-      <div className="flex-1 p-4 space-y-4 overflow-y-auto no-scrollbar bg-white font-sans">
-        {messages.map((m, i) => (
-          <div key={i} className={`p-3.5 rounded-xl text-[12px] max-w-[90%] shadow-xs transition-all ${m.role === 'user' ? 'bg-[#FCF9F1] ml-auto border border-[#B8860B]/15 rounded-tr-none text-gray-800 font-bold' : 'bg-gray-50 mr-auto border border-gray-100 rounded-tl-none text-gray-600 font-medium'}`}>
-            {m.content}
-          </div>
-        ))}
-        {loading && <div className="text-[9px] font-bold opacity-30 animate-pulse text-center uppercase tracking-widest">Processando...</div>}
-        {error && <div className="p-3 bg-red-50 text-red-500 text-[10px] font-bold rounded-lg border border-red-100 animate-in fade-in slide-in-from-top-1">{error}</div>}
-      </div>
-      <div className="p-3 bg-white border-t border-gray-50 flex gap-2">
-        <input className="flex-1 bg-gray-50 rounded-lg px-4 py-2 text-[11px] outline-none border border-gray-100 focus:border-gold/20 transition-all font-medium" placeholder="Digite uma mensagem..." value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleSend()} />
-        <button onClick={handleSend} className="p-2.5 bg-[#333333] text-white rounded-lg hover:bg-gold transition-all shadow-sm"><Send size={12}/></button>
-      </div>
-    </div>
-  );
+            {/* Messages */}
+            <div 
+                ref={messagesContainerRef}
+                onScroll={handleScroll}
+                className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar relative"
+            >
+                {messages.length === 0 && (
+                    <div className="h-full flex flex-col items-center justify-center text-center p-8 opacity-40">
+                        <div className="w-12 h-12 rounded-full border border-dashed border-gold/30 mb-4 flex items-center justify-center">
+                            <Plus size={20} className="text-gold/50" />
+                        </div>
+                        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gold/60">Inicie a sintonia com {agent}</p>
+                        <p className="text-[9px] text-gray-300 mt-2">Clique em + para nova conversa</p>
+                    </div>
+                )}
+                {messages.map((m, i) => (
+                    <div key={`${chatId}-${i}`} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-2`}>
+                        <div className={`max-w-[85%] p-3 rounded-2xl text-[12px] font-medium leading-relaxed shadow-sm ${
+                            m.role === 'user' 
+                                ? 'bg-gold text-white rounded-tr-none' 
+                                : 'bg-white border border-gray-100 text-gray-700 rounded-tl-none'
+                        }`}>
+                            {m.content}
+                        </div>
+                    </div>
+                ))}
+                {loading && (
+                    <div className="flex justify-start animate-pulse">
+                        <div className="bg-white border border-gray-100 p-3 rounded-2xl rounded-tl-none">
+                            <div className="flex gap-1">
+                                <span className="w-1 h-1 bg-gold/40 rounded-full animate-bounce"></span>
+                                <span className="w-1 h-1 bg-gold/40 rounded-full animate-bounce [animation-delay:0.2s]"></span>
+                                <span className="w-1 h-1 bg-gold/40 rounded-full animate-bounce [animation-delay:0.4s]"></span>
+                            </div>
+                        </div>
+                    </div>
+                )}
+                {error && <div className="text-[10px] text-red-400 font-bold text-center bg-red-50 p-2 rounded-lg border border-red-100">{error}</div>}
+                <div ref={messagesEndRef} />
+                
+                {/* Scroll to bottom button */}
+                {showScrollBtn && (
+                    <button 
+                        onClick={scrollToBottom}
+                        className="sticky bottom-2 left-1/2 -translate-x-1/2 p-2 bg-white border border-gold/20 rounded-full shadow-lg text-gold hover:bg-gold hover:text-white transition-all animate-in fade-in"
+                    >
+                        <ChevronDown size={16} />
+                    </button>
+                )}
+            </div>
+
+            {/* Input */}
+            <div className="p-4 bg-white/60 border-t border-gold/5">
+                <div className="relative flex items-center">
+                    <input 
+                        type="text"
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
+                        placeholder={`Falar com ${agent}...`}
+                        className="w-full bg-white border border-gray-100 rounded-xl py-3 pl-4 pr-12 text-[12px] placeholder:text-gray-300 focus:outline-none focus:border-gold/30 transition-all font-medium"
+                    />
+                    <button 
+                        onClick={sendMessage}
+                        disabled={loading || !input.trim()}
+                        className="absolute right-2 p-2 text-gold hover:bg-gold hover:text-white rounded-lg transition-all disabled:opacity-30"
+                    >
+                        <Send size={16} />
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
 };

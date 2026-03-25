@@ -107,7 +107,7 @@ export const LoginView = ({ profiles, onLogin, onSignUp }: LoginViewProps) => {
                   {profiles.length === 0 && (
                     <div className="bg-white/50 border border-dashed border-gold/20 p-12 rounded-[2rem] text-center">
                         <p className="text-gray-400 text-[11px] font-black uppercase italic tracking-widest leading-relaxed">
-                          Nenhuma identidade detectada.<br/>Inicie seu protocolo na aba "Inscrever-se".
+                          Nenhuma identidade detectada.<br/>Inicie seu protocolo na aba &quot;Inscrever-se&quot;.
                         </p>
                     </div>
                   )}

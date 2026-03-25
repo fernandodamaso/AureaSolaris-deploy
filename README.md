@@ -23,12 +23,12 @@ O Aurea Solaris foi construído com tecnologias modernas e robustas:
 
 | Tecnologia | Função |
 |------------|--------|
-| **Tauri (Rust)** | Framework para aplicações desktop nativas, rápido e leve |
-| **React** | Biblioteca para interfaces interativas e responsivas |
-| **TypeScript** | JavaScript tipado para código mais seguro e manutenível |
-| **Vite** | Ferramenta de build rápida e moderna |
-| **Tailwind CSS** | Framework CSS para estilização ágil |
-| **Python** | Motor de cálculos astrológicos precisos |
+| **Tauri 2.0 (Rust)** | Framework para aplicações desktop nativas, rápido e leve |
+| **React 19.1** | Biblioteca para interfaces interativas e responsivas |
+| **TypeScript 5.8** | JavaScript tipado para código mais seguro e manutenível |
+| **Vite 7** | Ferramenta de build rápida e moderna |
+| **Tailwind CSS v4** | Framework CSS para estilização ágil (via `@tailwindcss/vite`) |
+| **Python 3** | Motor de cálculos astrológicos precisos (biblioteca Kerykeion) |
 
 ---
 
@@ -136,7 +136,7 @@ O projeto utiliza variáveis de ambiente para configurações sensíveis. Elas d
 | `TELEGRAM_CHAT_ID` | ID do chat para mensagens | Para notificações |
 | `EMAIL_SENDER` | Email remetente | Para funcionalidades de email |
 | `EMAIL_PASSWORD` | Senha de app do email | Para funcionalidades de email |
-| `GOOGLE_API_KEY` | Chave de API do Google | Para funcionalidades Google |
+| `GOOGLE_CLIENT_ID` | Client ID OAuth2 do Google | Para Google Calendar/Drive |
 
 **Nota**: O Ollama local funciona automaticamente em `http://localhost:11434` se estiver instalado.
 
@@ -185,11 +185,11 @@ O diferencial do Aurea Solaris é sua equipe de 5 agentes de IA, cada um com per
 - **Personalidade**: Pragmático, ávido por lucros e direto
 - **Função**: Analisa gastos, sugere economias e monitora investimentos
 
-### 🐒 Rafiki — O Guia Espiritual
+### 🐒 Rafiki — O Astrólogo Técnico
 
 - **Atua**: Astrologia e Diário
-- **Personalidade**: Poético mas cirúrgico
-- **Função**: Traduz cálculos astrológicos em orientações práticas e inspiradoras
+- **Personalidade**: Preciso, técnico, dados concretos
+- **Função**: Traduz dados brutos do motor astrológico em conselhos práticos e orientações
 
 ### ⚙️ Stark — O Monitor Técnico
 
@@ -211,6 +211,7 @@ A interface é dividida em módulos especializados que você pode acessar confor
 6. **Painel de Controle** — Configurações e monitoramento do sistema
 7. **Alfred Hub** — Central de tarefas e links rápidos
 8. **Diário (Memórias)** — Registro diário com insights
+9. **Escola do Rafiki** — Módulo educacional interativo
 
 ---
 

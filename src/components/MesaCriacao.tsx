@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
-import { Plus, Edit3, Image as ImageIcon, ZoomIn, ZoomOut, Star, Trash2, ListTodo, ArrowUpRight } from 'lucide-react';
+import { Plus, Edit3, Image as ImageIcon, ZoomIn, ZoomOut, Star, Trash2, ListTodo, ArrowUpRight, Mail, Cloud, FolderOpen } from 'lucide-react';
 import { safeInvoke } from '../utils/tauri';
+import { sendEmail, saveToGoogleDrive } from '../utils/exportUtils';
+import { AssetPicker } from './mesa/AssetPicker';
 
 export const MesaCriacao = () => {
   const [nodes, setNodes] = useState<any[]>([]);
@@ -10,6 +12,7 @@ export const MesaCriacao = () => {
   const [dragNode, setDragNode] = useState<any>(null);
   const [drawingEdge, setDrawingEdge] = useState<any>(null);
   const [snapToGrid, setSnapToGrid] = useState(true);
+  const [showAssetPicker, setShowAssetPicker] = useState(false);
   
   // Ref-based performance: store values that change rapidly
   const nodesRef = useRef<any[]>(nodes);
@@ -49,7 +52,7 @@ export const MesaCriacao = () => {
           setNodes(initial);
           addHistory('Mesa inicializada');
         }
-      } catch (e) {}
+      } catch (e) { /* ignore */ }
     };
     loadData();
   }, []);
@@ -71,6 +74,7 @@ export const MesaCriacao = () => {
     try {
       const data = { nodes, edges, version: '1.0', timestamp: new Date().toISOString() };
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      // eslint-disable-next-line react-hooks/purity
       downloadFile(blob, `aurea_board_${Date.now()}.json`);
       addHistory('Mesa exportada (JSON)');
     } catch (e) {
@@ -87,6 +91,7 @@ export const MesaCriacao = () => {
     clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
     
     const blob = new Blob([clone.outerHTML], { type: 'image/svg+xml;charset=utf-8' });
+    // eslint-disable-next-line react-hooks/purity
     downloadFile(blob, `aurea_board_${Date.now()}.svg`);
     addHistory('Mesa exportada (SVG)');
   };
@@ -98,6 +103,22 @@ export const MesaCriacao = () => {
     a.download = filename;
     a.click();
     URL.revokeObjectURL(url);
+  };
+
+  // Funções de exportação para email e Google Drive
+  const exportForEmail = () => {
+    const content = nodes.map((n: any) => `- ${n.text}`).join('\n');
+    const subject = 'Mesa de Criação - Aurea Solaris';
+    const body = `Minha Mesa de Criação:\n\n${content}\n\n---\nExportado em ${new Date().toLocaleDateString('pt-BR')}`;
+    sendEmail(subject, body);
+    addHistory('Mesa enviada por email');
+  };
+
+  const exportForDrive = () => {
+    const content = nodes.map((n: any) => `- ${n.text}`).join('\n');
+    const fullContent = `# Mesa de Criação\n\n${content}\n\n---\nExportado do Aurea Solaris em ${new Date().toLocaleDateString('pt-BR')}`;
+    saveToGoogleDrive(fullContent, 'mesa_criacao.md');
+    addHistory('Mesa salva no Google Drive');
   };
 
   const updateLine = (edgeId: number, n1: any, n2: any) => {
@@ -152,6 +173,7 @@ export const MesaCriacao = () => {
 
   const finishEdge = (id: any) => {
     if (drawingEdge && drawingEdge.id1 !== id) {
+      // eslint-disable-next-line react-hooks/purity
       const newEdges = [...edges, { id: Date.now(), from: drawingEdge.id1, to: id }];
       setEdges(newEdges);
     }
@@ -203,12 +225,16 @@ export const MesaCriacao = () => {
            <button title="Lista de Tarefas" onClick={() => { const nn = [...nodes, {id:Date.now(), type:'checklist', x:140, y:140, w:240, h:200, items:[{text:'Item 1', done:false}], color:'#fff'}]; setNodes(nn); addHistory('Checklist criado'); }} className="p-2.5 text-gray-500 hover:text-gold hover:bg-gold/5 rounded-lg transition-all"><ListTodo size={18}/></button>
            <button title="Adesivo Estelar" onClick={() => { const nn = [...nodes, {id:Date.now(), type:'sticker', x:160, y:160, w:80, h:80, symbol:'☽', color:'transparent'}]; setNodes(nn); addHistory('Símbolo adicionado'); }} className="p-2.5 text-gray-500 hover:text-gold hover:bg-gold/5 rounded-lg transition-all"><Star size={18}/></button>
            <button title="Imagem" onClick={() => { const url = prompt('URL da Imagem:'); if(url) { const nn = [...nodes, {id:Date.now(), type:'image', x:150, y:150, w:300, h:200, url, color:'#fff'}]; setNodes(nn); addHistory('Imagem anexada'); } }} className="p-2.5 text-gray-500 hover:text-gold hover:bg-gold/5 rounded-lg transition-all"><ImageIcon size={18}/></button>
-        </div>
+           <div className="w-full h-px bg-gray-100 my-0.5" />
+           <button title="Importar do Servidor" onClick={() => setShowAssetPicker(true)} className="p-2.5 text-gray-500 hover:text-emerald-500 hover:bg-emerald-50 rounded-lg transition-all"><FolderOpen size={18}/></button>
+         </div>
         
         <div className="bg-white/95 backdrop-blur-xl p-1.5 rounded-xl border border-gold/10 shadow-xl flex flex-col gap-1.5">
            <button title="Atrair ao Grid" onClick={() => setSnapToGrid(!snapToGrid)} className={`p-2.5 rounded-lg transition-all ${snapToGrid ? 'bg-gold text-white' : 'text-gray-500 hover:bg-gold/5'}`}><div className="w-4 h-4 border-2 border-current border-dashed rounded-sm opacity-60" /></button>
            <button title="Exportar JSON" onClick={exportJSON} className="p-2.5 text-gray-500 hover:text-gold hover:bg-gold/5 rounded-lg transition-all"><ArrowUpRight size={18}/></button>
            <button title="Exportar SVG" onClick={exportSVG} className="p-2.5 text-gray-500 hover:text-gold hover:bg-gold/5 rounded-lg transition-all"><ImageIcon size={18}/></button>
+           <button title="Enviar por Email" onClick={exportForEmail} className="p-2.5 text-gray-500 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-all"><Mail size={18}/></button>
+           <button title="Salvar no Google Drive" onClick={exportForDrive} className="p-2.5 text-gray-500 hover:text-green-500 hover:bg-green-50 rounded-lg transition-all"><Cloud size={18}/></button>
         </div>
         
         {/* ZOOM CONTROLS */}
@@ -239,7 +265,7 @@ export const MesaCriacao = () => {
           <div 
             ref={el => { if (el) nodeRefs.current.set(node.id, el); }}
             key={node.id} 
-            className={`canvas-node absolute shadow-xl border rounded-[1.25rem] z-10 flex flex-col pointer-events-auto border-gold/5 hover:border-gold/20 hover:shadow-2xl overflow-hidden bg-white`} 
+            className={`canvas-node group absolute shadow-xl border rounded-[1.25rem] z-10 flex flex-col pointer-events-auto border-gold/5 hover:border-gold/20 hover:shadow-2xl bg-white`} 
             style={{ 
               transform: `translate(${node.x}px, ${node.y}px)`, 
               backgroundColor: node.color, 
@@ -308,6 +334,28 @@ export const MesaCriacao = () => {
         ))}
       </div>
       
+      {/* Asset Picker Modal */}
+      {showAssetPicker && (
+        <AssetPicker
+          onClose={() => setShowAssetPicker(false)}
+          onImport={(item) => {
+            const newNode = {
+              id: Date.now(),
+              type: item.type === 'astro' ? 'text' : item.type === 'calendar' ? 'text' : item.type === 'task' ? 'checklist' : 'text',
+              x: 200 + Math.random() * 200,
+              y: 200 + Math.random() * 200,
+              w: 260,
+              h: item.type === 'task' ? 160 : 120,
+              text: `[${item.type.toUpperCase()}] ${item.title}\n\n${item.preview}`,
+              color: item.type === 'astro' ? '#FFF8E1' : item.type === 'calendar' ? '#E8F5E9' : item.type === 'task' ? '#F3E5F5' : '#E3F2FD',
+              items: item.type === 'task' ? [{ text: item.title, done: item.data?.completed || false }] : undefined,
+            };
+            setNodes(prev => [...prev, newNode]);
+            setShowAssetPicker(false);
+            addHistory(`Importado: ${item.title}`);
+          }}
+        />
+      )}
     </div>
   );
 };
