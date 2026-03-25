@@ -12,6 +12,7 @@
 AureaSolaris/
 │
 ├── 📁 src/                          # 🎨 FRONTEND — O que o usuário vê e interage
+│   ├── __tests__/                   # 🧪 Testes automatizados (Vitest)
 │   ├── components/                  # 🧩 Tela principal de cada módulo
 │   │   ├── agenda/                  # 📅 Componentes da Agenda Preditiva
 │   │   ├── common/                  # 🔄 Componentes reutilizáveis (ver seção detalhada abaixo)
@@ -109,6 +110,7 @@ AureaSolaris/
 ├── 📄 package.json                  # 📦 Dependências e scripts do Node.js
 ├── 📄 package-lock.json             # 🔒 Versões exatas das dependências Node
 ├── 📄 vite.config.ts                # ⚙️ Configuração do bundler Vite
+├── 📄 vitest.config.ts              # 🧪 Configuração do test runner Vitest
 ├── 📄 tsconfig.json                 # ⚙️ Configuração do TypeScript
 ├── 📄 tsconfig.node.json            # ⚙️ TypeScript para scripts Node
 ├── 📄 index.html                    # 🌐 Ponto de entrada HTML
@@ -212,6 +214,8 @@ Hooks são funções reutilizáveis que encapsulam lógica complexa. Cada hook t
 | `useAstroData.ts` | Busca dados astrológicos básicos com estados de loading/error |
 | `useAstrologyData.ts` | Calcula horas planetárias, trânsitos e regência planetária com datas reais |
 | `useFinancasData.ts` | Gerencia transações financeiras: receitas, despesas, metas e reservas |
+
+> **Nota:** O hook `useSaudeData` está co-localizado dentro de `src/context/SaudeContext.tsx` (não é um arquivo separado em `hooks/`).
 
 **Por que existe?**  
 Separa a lógica de negócios da interface. Assim, os componentes ficam mais limpos e a lógica pode ser reutilizada.
@@ -360,7 +364,7 @@ O "cartão de identidade" do projeto Node.js. Lista nome, versão, dependências
 
 **Para que serve?**  
 - Define dependências (`dependencies` e `devDependencies`)
-- Define scripts úteis (`npm run dev`, `npm run build`, `npm run lint`)
+- Define scripts úteis (`npm run dev`, `npm run build`, `npm run lint`, `npm test`)
 - É o que o `npm install` usa para instalar tudo
 
 **Arquivos relacionados:** `package-lock.json` (versões exatas), `tsconfig.json` (configuração TypeScript)
