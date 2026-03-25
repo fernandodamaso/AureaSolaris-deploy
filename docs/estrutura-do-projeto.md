@@ -14,31 +14,42 @@ AureaSolaris/
 ├── 📁 src/                          # 🎨 FRONTEND — O que o usuário vê e interage
 │   ├── components/                  # 🧩 Tela principal de cada módulo
 │   │   ├── agenda/                  # 📅 Componentes da Agenda Preditiva
-│   │   ├── common/                  # 🔄 Componentes reutilizáveis (botões, inputs, etc.)
+│   │   ├── common/                  # 🔄 Componentes reutilizáveis (ver seção detalhada abaixo)
+│   │   ├── agenda/                  # 📅 Subcomponentes da Agenda (AgendaView.tsx)
+│   │   ├── mesa/                    # 🎨 Subcomponentes da Mesa (AssetPicker.tsx)
 │   │   ├── AgentChat.tsx            # 💬 Chat com os 5 agentes de IA
 │   │   ├── AlfredHubView.tsx        # 🎩 Central de tarefas do Alfred
 │   │   ├── AstrologiaBoard.tsx      # 🌟 Mapa natal e trânsitos celestes
+│   │   ├── AstrologyMap.tsx         # 🗺️ Mapa astrológico interativo
 │   │   ├── ControlePanel.tsx        # ⚙️ Painel de controle (Stark)
 │   │   ├── DiarioView.tsx           # 📓 Diário com insights astrológicos
 │   │   ├── FinancasView.tsx         # 💰 Gestão de Ouro (Uncle Duck)
 │   │   ├── ImportFinancialView.tsx  # 📥 Importação de dados financeiros
 │   │   ├── LoginView.tsx            # 🔐 Tela de login
-│   │   ├── MandalaView.tsx          # 🔮 Visualização em mandala
+│   │   ├── MandalaChart.tsx         # 📊 Gráfico/chart da mandala zodiacal
+│   │   ├── MandalaPage.tsx          # 🔮 Wrapper da mandala (alimenta MandalaView com dados reais)
+│   │   ├── MandalaView.tsx          # 🔮 SVG interativo da mandala zodiacal
 │   │   ├── MemoriasView.tsx         # 🧠 Módulo de memórias
 │   │   ├── MesaCriacao.tsx          # 🎨 Canvas infinito para criar ideias
+│   │   ├── ProfileEditor.tsx        # 👤 Editor de perfil do usuário
+│   │   ├── RafikiEscola.tsx         # 🐒 Módulo educacional do Rafiki
 │   │   └── SaudeView.tsx            # 💪 Controle de saúde e vitalidade
 │   │
 │   ├── context/                     # 🧠 Estado global do React
-│   │   └── AgendaContext.tsx        # 📋 Provedor de dados da agenda e perfis
+│   │   ├── AgendaContext.tsx        # 📋 Provedor de dados da agenda e perfis
+│   │   ├── SaudeContext.tsx         # 💪 Provedor de dados de saúde e hábitos
+│   │   └── FinancasContext.tsx      # 💰 Provedor de dados financeiros
 │   │
 │   ├── hooks/                       # ⚓ Lógica reutilizável (React Hooks)
-│   │   ├── useAgendaTasks.ts        # 📋 Gerencia tarefas da agenda
-│   │   ├── useAstroData.ts          # ⭐ Dados astrológicos básicos
-│   │   ├── useAstrologyData.ts      # 🌙 Horas planetárias e regência
-│   │   └── useFinancasData.ts       # 💵 Lógica financeira
+│   │   ├── useAgendaTasks.ts        # 📋 Re-exporta o AgendaContext
+│   │   ├── useAstroData.ts          # ⭐ Dados astrológicos (hook simplificado com loading/error)
+│   │   ├── useAstrologyData.ts      # 🌙 Horas planetárias, trânsitos, previsão com datas reais
+│   │   └── useFinancasData.ts       # 💵 Lógica financeira: transações, metas, reservas
 │   │
 │   ├── utils/                       # 🛠️ Funções auxiliares
-│   │   └── tauri.ts                 # 🌉 Ponte de comunicação com o Rust (IPC)
+│   │   ├── tauri.ts                 # 🌉 Ponte de comunicação com o Rust (IPC)
+│   │   ├── exportUtils.ts           # 📤 Funções de exportação (PDF, Email, Drive, JSON, Markdown)
+│   │   └── mockData.ts              # 🧪 Dados fictícios para desenvolvimento e testes
 │   │
 │   ├── assets/                      # 🖼️ Imagens, ícones e mídias estáticas
 │   ├── App.tsx                      # 🚀 Ponto central — roteamento e controle mestre
@@ -66,11 +77,17 @@ AureaSolaris/
 │
 ├── 📁 docs/                         # 📚 Documentação do projeto
 │   ├── estrutura-do-projeto.md      # 📖 Este guia que você está lendo
-│   └── arquitetura.md               # 🏗️ Referência técnica da arquitetura
+│   ├── arquitetura.md               # 🏗️ Referência técnica da arquitetura
+│   ├── ui-tips-agm.md               # 🎨 Dicas de UI para o AntiGravity Module
+│   ├── design-system.md             # 🎨 Sistema de Design e Tokens
+│   ├── components.md                # 🧩 Documentação de Componentes Reutilizáveis
+│   ├── accessibility.md             # 🌈 Padrões de Acessibilidade
+│   ├── MVP_Alfa_Checklist.md        # ✅ Checklist de progresso do MVP Alfa
+│   └── plans/                       # 📋 Planos e documentação de fases
 │
 ├── 📁 .agent/                       # 🤖 Regras e habilidades dos agentes de IA
-│   ├── rules/                       # 📏 Regras de comportamento
-│   └── skills/                      # 🎯 Habilidades especializadas
+│   ├── rules/                       # 📏 Regras de comportamento (ex: ui-preservation.md)
+│   └── skills/                      # 🎯 Habilidades especializadas dos agentes
 │
 ├── 📁 .factory/                     # 🏭 Infraestrutura do sistema de agentes
 │   ├── library/                     # 📚 Base de conhecimento para agentes
@@ -128,25 +145,46 @@ Aqui ficam os componentes React — cada arquivo `.tsx` é uma "peça" da interf
 
 **Para que serve?**  
 Cada view modular do aplicativo tem seu próprio arquivo:
-- `AgentChat.tsx` — Chat com os 5 agentes de IA (Dr. Strange, Alfred, Uncle Duck, Rafiki, Stark)
+- `AgentChat.tsx` — Chat com os 5 agentes de IA (obedece à Chave Mestra Ollama/OpenRouter)
 - `AlfredHubView.tsx` — Central de tarefas e links rápidos
 - `AstrologiaBoard.tsx` — Mapa natal e visualização de trânsitos
-- `ControlePanel.tsx` — Configurações do sistema (Stark supervisiona)
+- `AstrologyMap.tsx` — Mapa astrológico interativo
+- `ControlePanel.tsx` — Configurações do sistema e Chave Mestra de IA (Stark supervisiona)
 - `DiarioView.tsx` — Diário com insights astrológicos
 - `FinancasView.tsx` — Controle financeiro (Uncle Duck)
 - `ImportFinancialView.tsx` — Importação de dados financeiros
 - `LoginView.tsx` — Tela de autenticação
-- `MandalaView.tsx` — Visualização em mandala
+- `MandalaChart.tsx` — Gráfico/chart interativo da mandala zodiacal
+- `MandalaPage.tsx` — Wrapper que alimenta MandalaView com dados reais
+- `MandalaView.tsx` — Visualização em mandala SVG interativa
 - `MemoriasView.tsx` — Registro de memórias
 - `MesaCriacao.tsx` — Canvas infinito para conectar ideias
+- `ProfileEditor.tsx` — Editor de perfil do usuário
+- `RafikiEscola.tsx` — Módulo educacional do agente Rafiki
 - `SaudeView.tsx` — Acompanhamento de saúde (Alfred)
 
 **Subpastas:**
-- `agenda/` — Componentes específicos da Agenda Preditiva
-- `common/` — Componentes reutilizáveis (botões, inputs, títulos) usados em várias telas
+- `agenda/` — Componentes específicos da Agenda Preditiva (`AgendaView.tsx`)
+- `mesa/` — Componentes auxiliares da Mesa de Criação (`AssetPicker.tsx`)
+- `common/` — Componentes reutilizáveis (ver seção detalhada abaixo)
 
 **Por que existe?**  
 Separa cada módulo visual em seu próprio arquivo, facilitando manutenção e reutilização.
+
+---
+
+#### `src/components/common/` — Componentes Reutilizáveis
+
+**O que é?**  
+Componentes genéricos usados em múltiplas views. Não são telas completas — são "peças de LEGO" que se combinam para montar interfaces.
+
+**O que tem?**
+- `UIComponents.tsx` — Botões, NavItems e elementos de interface básicos
+- `BaseComponents.tsx` — Componentes base para layouts e containers
+- `BirthForm.tsx` — Formulário de dados de nascimento (nome, data, hora, local)
+- `Mandala.tsx` — Componente de mandala reutilizável (versão base)
+- `OllamaGuide.tsx` — Guia/configuração do Ollama local
+- `PdfViewer.tsx` — Visualizador de arquivos PDF
 
 ---
 
@@ -170,10 +208,10 @@ Hooks são funções reutilizáveis que encapsulam lógica complexa. Cada hook t
 
 | Hook | Para que serve |
 |------|---------------|
-| `useAgendaTasks.ts` | Gerencia tarefas da agenda: criar, editar, completar |
-| `useAstroData.ts` | Busca dados astrológicos básicos |
-| `useAstrologyData.ts` | Calcula horas planetárias e regência planetária |
-| `useFinancasData.ts` | Gerencia fluxo financeiro: receitas, despesas, categorias |
+| `useAgendaTasks.ts` | Re-exporta os dados do AgendaContext para uso em componentes |
+| `useAstroData.ts` | Busca dados astrológicos básicos com estados de loading/error |
+| `useAstrologyData.ts` | Calcula horas planetárias, trânsitos e regência planetária com datas reais |
+| `useFinancasData.ts` | Gerencia transações financeiras: receitas, despesas, metas e reservas |
 
 **Por que existe?**  
 Separa a lógica de negócios da interface. Assim, os componentes ficam mais limpos e a lógica pode ser reutilizada.
@@ -186,7 +224,9 @@ Separa a lógica de negócios da interface. Assim, os componentes ficam mais lim
 Pasta para funções utilitárias que são usadas em vários lugares.
 
 **O que tem?**  
-- `tauri.ts` — A **ponte de comunicação** entre o React (frontend) e o Rust (backend). Usa `invoke()` para chamar comandos do Tauri.
+- `tauri.ts` — A **ponte de comunicação** entre o React (frontend) e o Rust (backend). Usa `safeInvoke()` para chamar comandos do Tauri de forma segura.
+- `exportUtils.ts` — Funções de exportação para diferentes formatos (PDF, Email, Google Drive, JSON, Markdown).
+- `mockData.ts` — Dados fictícios usados durante o desenvolvimento e testes.
 
 **Por que existe?**  
 Centraliza a comunicação com o backend em um único lugar. Se a API mudar, você só precisa editar este arquivo.
@@ -244,6 +284,12 @@ Pasta dedicada à documentação do projeto, escrita em Markdown.
 **O que tem?**
 - `estrutura-do-projeto.md` — Este guia
 - `arquitetura.md` — Referência técnica detalhada (agentes, IPC, motor Python)
+- `ui-tips-agm.md` — Guia de melhorias de interface para o AntiGravity Module
+- `design-system.md` — Definição de tokens (cores, fontes) e guia visual
+- `components.md` — Catálogo de componentes de UI reutilizáveis
+- `accessibility.md` — Padrões e regras de acessibilidade do sistema
+- `MVP_Alfa_Checklist.md` — Checklist de progresso do MVP Alfa
+- `plans/` — Planos e documentação de fases do projeto
 
 **Por que existe?**  
 Documentação centralizada facilita a navegação tanto para humanos quanto para agentes de IA.
@@ -256,8 +302,8 @@ Documentação centralizada facilita a navegação tanto para humanos quanto par
 Pasta que faz parte da arquitetura multi-agente do projeto. Contém regras e habilidades que os agentes de IA usam.
 
 **O que tem?**
-- `rules/` — Regras de comportamento e contexto
-- `skills/` — Habilidades especializadas dos agentes
+- `rules/` — Regras de comportamento e contexto (ex: `ui-preservation.md`)
+- `skills/` — Habilidades especializadas dos agentes (brainstorming, planning, etc.)
 
 **Por que existe?**  
 Permite que os agentes de IA (Dr. Strange, Alfred, Uncle Duck, Rafiki, Stark) se comportem de acordo com seu papel, com contexto específico para cada situação.
@@ -488,5 +534,5 @@ Leia nesta ordem:
 ---
 
 <p align="center">
-  <em>Última atualização: Março 2026 — Aurea Solaris ✨</em>
+  <em>Última atualização: 24 de Março de 2026 — Aurea Solaris ✨</em>
 </p>

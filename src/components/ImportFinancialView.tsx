@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import React from 'react';
 import { useAgendaContext } from '../context/AgendaContext';
 import { 
   Upload, FileText, 
@@ -143,7 +144,7 @@ export const ImportFinancialView = ({ onBack, onImport }: ImportFinancialViewPro
                             <tr key={tx.id} className="group hover:bg-[#FCF9F1]/40 transition-all">
                                <td className="px-8 py-5">
                                   <div className="flex flex-col">
-                                     <span className="text-[13px] font-bold text-gray-800 italic uppercase">"{tx.description}"</span>
+                                     <span className="text-[13px] font-bold text-gray-800 italic uppercase">{tx.description}</span>
                                      <span className="text-[9px] font-bold text-gray-400 uppercase tracking-tighter">{tx.date}</span>
                                   </div>
                                </td>

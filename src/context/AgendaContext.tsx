@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { safeInvoke } from '../utils/tauri';
 
 interface AgendaContextType {
@@ -6,11 +6,12 @@ interface AgendaContextType {
   activeProfileId: string;
   setActiveProfileId: (id: string) => void;
   addProfile: (name: string, password?: string) => void;
-  addConnection: (name: string, birthData?: any) => void;
+  addConnection: (name: string, birthData: { date: string, time: string, location: string, lat?: number, lng?: number }) => void;
   updateProfile: (id: string, updates: any) => void;
   documents: any[];
   addDocument: (doc: { name: string, type: string, size: string, path?: string }) => void;
   tasks: any[];
+  events: any[];
   selectedDay: Date;
   setSelectedDay: (date: Date) => void;
   weekStart: Date;
@@ -23,6 +24,7 @@ interface AgendaContextType {
   postponeTask: (id: string) => Promise<void>;
   addEvent: (title: string, start: string) => Promise<void>;
   deleteEvent: (id: string) => Promise<void>;
+  executeInsight: (insight: any) => Promise<void>;
   getMetrics: () => { done: number, pending: number, notDone: number };
   getPlanetRegency: (date: Date) => { icon: string, name: string };
   getAlfredInsights: () => any[];
@@ -61,6 +63,7 @@ export const AgendaProvider = ({ children }: { children: ReactNode }) => {
   });
 
   const [tasks, setTasks] = useState<any[]>([]);
+  const [events, setEvents] = useState<any[]>([]);
   const [selectedDay, setSelectedDay] = useState(new Date());
   const [weekStart, setWeekStart] = useState(() => {
     const d = new Date();
@@ -84,15 +87,19 @@ export const AgendaProvider = ({ children }: { children: ReactNode }) => {
     localStorage.setItem('aurea_active_id', newProfile.id);
   };
 
-  const addConnection = (name: string, birthData?: any) => {
+  const addConnection = (name: string, birthData: { date: string, time: string, location: string, lat?: number, lng?: number }) => {
     const activeProfile = profiles.find(p => p.id === activeProfileId);
     if (!activeProfile) return;
+
+    // Default lat/lng (São Paulo) if not provided
+    const lat = birthData.lat ?? -23.5505;
+    const lng = birthData.lng ?? -46.6333;
 
     const newConn = { 
       id: name.toLowerCase().replace(/\s+/g, '_') + '_' + Date.now(), 
       name, 
-      birthData: birthData || null,
-      natal: { Sun: 0, Moon: 0, ASC: 0 }
+      birthData: { ...birthData, lat, lng },
+      natal: null // Will be calculated when first viewed
     };
     
     const updated = profiles.map(p => 
@@ -123,7 +130,17 @@ export const AgendaProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const fetchTasks = async () => {
-    const tRes = await safeInvoke<string>('get_todoist_tasks');
+    let tRes = await safeInvoke<string>('get_todoist_tasks');
+    
+    // Browser Fallback for Todoist
+    // @ts-expect-error - Tauri internal check
+    if (!tRes && !window.__TAURI_INTERNALS__) {
+      tRes = JSON.stringify([
+        { id: 't1', content: 'Estudar UDV', is_completed: false },
+        { id: 't2', content: 'Organizar Mesa de Criação', is_completed: true }
+      ]);
+    }
+
     if (tRes) {
       try {
         const parsed = JSON.parse(tRes);
@@ -132,9 +149,31 @@ export const AgendaProvider = ({ children }: { children: ReactNode }) => {
         console.error("Error parsing tasks", e);
       }
     }
+
+    let eRes = await safeInvoke<string>('get_google_events');
+
+    // Browser Fallback for Google Events
+    // @ts-expect-error - Tauri internal check
+    if (!eRes && !window.__TAURI_INTERNALS__) {
+      const today = new Date().toISOString().split('T')[0];
+      eRes = JSON.stringify([
+        { id: 'g1', title: 'Sessão UDV', start: `${today}T20:00:00Z`, type: 'spiritual' },
+        { id: 'g2', title: 'Almoço em Família', start: `${today}T12:00:00Z`, type: 'social' }
+      ]);
+    }
+
+    if (eRes) {
+      try {
+        const parsed = JSON.parse(eRes);
+        setEvents(parsed);
+      } catch (e) {
+        console.error("Error parsing events", e);
+      }
+    }
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchTasks();
     const interval = setInterval(fetchTasks, 60000); // Refresh every minute
     return () => clearInterval(interval);
@@ -180,10 +219,21 @@ export const AgendaProvider = ({ children }: { children: ReactNode }) => {
 
   const addEvent = async (title: string, start: string) => {
     await safeInvoke('add_google_event', { title, start });
+    await fetchTasks();
   };
 
   const deleteEvent = async (id: string) => {
     await safeInvoke('delete_google_event', { id });
+    await fetchTasks();
+  };
+
+  const executeInsight = async (insight: any) => {
+    if (insight.type === 'move' || insight.type === 'opportunity') {
+      await addTask(insight.suggestion || insight.content);
+    } else {
+      await addEvent(insight.suggestion || insight.content, new Date().toISOString());
+    }
+    await fetchTasks();
   };
 
   const getMetrics = () => {
@@ -208,10 +258,28 @@ export const AgendaProvider = ({ children }: { children: ReactNode }) => {
     const activeProfile = profiles.find(p => p.id === activeProfileId);
     if (!activeProfile) return [];
     
+    // Logic: In a real app we'd use useAstrologyData here if we could, 
+    // but context can't use hooks that depend on it. 
+    // We'll use a simplified version for the MVP that feels real.
     const insights = [
-      { id: 1, type: 'move', content: 'Senhora, quinta-feira apresenta trânsitos harmônicos para escrita. Sugiro realocar sua tarefa de Redação.' },
-      { id: 2, type: 'focus', content: 'Marte em quadratura amanhã exige cautela redobrada em atividades físicas ou discussões ríspidas.' },
-      { id: 3, type: 'opportunity', content: 'Vênus entra em trígono com seu Meio do Céu. Ótimo momento para lançamentos ou negociações.' }
+      { 
+        id: 1, 
+        type: 'move', 
+        content: `A regência de ${getPlanetRegency(new Date()).name} sugere foco em organização. Vamos realocar 'Redação'?`,
+        suggestion: 'Finalizar Redação do Mês'
+      },
+      { 
+        id: 2, 
+        type: 'focus', 
+        content: 'Marte em aspecto tenso detectado. Alfred recomenda cautela em comunicações hoje.',
+        suggestion: 'Revisar e-mails importantes'
+      },
+      { 
+        id: 3, 
+        type: 'opportunity', 
+        content: 'Vênus favorece conexões agora. Ótimo momento para aquela reunião social.',
+        suggestion: 'Marcar café com a equipe'
+      }
     ];
     return insights;
   };
@@ -219,8 +287,8 @@ export const AgendaProvider = ({ children }: { children: ReactNode }) => {
   return (
     <AgendaContext.Provider value={{
       profiles, activeProfileId, setActiveProfileId, addProfile, addConnection, updateProfile,
-      tasks, selectedDay, setSelectedDay, weekStart, weekDays, nextWeek, prevWeek,
-      addTask, deleteTask, toggleTask, postponeTask, addEvent, deleteEvent,
+      tasks, events, selectedDay, setSelectedDay, weekStart, weekDays, nextWeek, prevWeek,
+      addTask, deleteTask, toggleTask, postponeTask, addEvent, deleteEvent, executeInsight,
       documents, addDocument,
       getMetrics, getPlanetRegency, getAlfredInsights, refreshTasks: fetchTasks
     }}>

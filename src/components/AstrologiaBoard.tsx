@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { Plus } from 'lucide-react';
+import { Plus, Info } from 'lucide-react';
 import { useAstrologyData } from '../hooks/useAstrologyData';
 import { useAgendaTasks } from '../hooks/useAgendaTasks';
 import { Card, SectionTitle, Advice, StarRow, FamilyItem } from './common/UIComponents';
-import { MandalaView } from './MandalaView';
 import { BirthForm } from './common/BirthForm';
 
 const PLANET_ICONS: Record<string, string> = {
@@ -11,54 +10,124 @@ const PLANET_ICONS: Record<string, string> = {
   Jupiter: '♃', Saturn: '♄', Uranus: '♅', Neptune: '♆', Pluto: '♇'
 };
 
+import { MandalaPage } from './MandalaPage';
+import { RafikiEscola } from './RafikiEscola';
+
 export const AstrologiaPage = () => {
   const { liveData } = useAstrologyData();
   const { profiles, activeProfileId, addConnection } = useAgendaTasks();
   const [showForm, setShowForm] = useState(false);
+  const [activeTab, setActiveTab] = useState<'list' | 'mandala' | 'escola'>('list');
 
   const activeProfile = profiles.find(p => p.id === activeProfileId) || profiles[0];
   const connections = activeProfile?.connections || [];
 
+  const planets = liveData?.planets || {};
+  const aspects = liveData?.aspects || [];
+
   return (
     <div className="space-y-12 pb-32 animate-in fade-in">
-      <Advice agent="Rafiki" content={liveData ? `O céu diz: ${liveData.Sun?.sign} iluminando seu caminho. Foco em ${liveData.Mercury?.sign} para comunicação.` : "Rafiki sintonizando as esferas..."} />
-      
-      <div className="panel-light p-16 text-center relative flex flex-col items-center shadow-sm">
-        <SectionTitle>A Roda do Tempo (Eixo Central)</SectionTitle>
-        <div className="mt-8 scale-90 lg:scale-100 transition-transform">
-           {liveData ? <MandalaView data={liveData} size={500} /> : <div className="w-[500px] h-[500px] flex items-center justify-center text-gold/20 font-black uppercase tracking-[0.3em] italic">Sintonizando Esferas...</div>}
+      <div className="flex items-center justify-between border-b border-gold/10 pb-6 mb-8">
+        <div className="flex gap-8">
+          <button 
+            onClick={() => setActiveTab('list')}
+            className={`text-[11px] font-black uppercase tracking-[0.2em] transition-all pb-2 border-b-2 ${activeTab === 'list' ? 'text-gold border-gold' : 'text-gray-400 border-transparent'}`}
+          >
+            Efemérides Técnicas
+          </button>
+          <button 
+            onClick={() => setActiveTab('mandala')}
+            className={`text-[11px] font-black uppercase tracking-[0.2em] transition-all pb-2 border-b-2 ${activeTab === 'mandala' ? 'text-gold border-gold' : 'text-gray-400 border-transparent'}`}
+          >
+            Mandala Visual
+          </button>
+          <button 
+            onClick={() => setActiveTab('escola')}
+            className={`text-[11px] font-black uppercase tracking-[0.2em] transition-all pb-2 border-b-2 ${activeTab === 'escola' ? 'text-gold border-gold' : 'text-gray-400 border-transparent'}`}
+          >
+            Escola de Astrologia
+          </button>
         </div>
       </div>
 
-      <Card title="As Estrelas Cantam (Efemérides)">
-         <div className="grid grid-cols-2 gap-x-12 mt-4">
-            {Object.entries(PLANET_ICONS).map(([name, icon]) => (
-               <StarRow key={name} icon={icon} name={name} sign={liveData?.[name]?.sign || '---'} deg={`${Math.floor(liveData?.[name]?.pos_in_sign || 0)}°`} />
-            ))}
+      <Advice 
+        agent="Rafiki" 
+        content={planets.Sun ? `O céu diz: ${planets.Sun.sign} iluminando seu caminho. Foco em ${planets.Mercury?.sign} para comunicação.` : "Rafiki sintonizando as esferas..."} 
+      />
+      
+      {activeTab === 'mandala' ? (
+         <div className="animate-in slide-in-from-right-10 duration-500">
+           <MandalaPage />
          </div>
-      </Card>
+      ) : activeTab === 'escola' ? (
+         <div className="animate-in slide-in-from-right-10 duration-500">
+           <RafikiEscola />
+         </div>
+      ) : (
+        <>
+          {/* Visualização da Mandala removida desta aba (agora exclusiva na sub-aba Mandala) */}
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+        <Card title="As Estrelas Cantam (Efemérides)">
+           <div className="grid grid-cols-2 gap-x-8 mt-4">
+              {Object.entries(PLANET_ICONS).map(([name, icon]) => (
+                 <StarRow 
+                   key={name} 
+                   icon={icon} 
+                   name={name} 
+                   sign={planets[name]?.sign || '---'} 
+                   deg={`${Math.floor(planets[name]?.pos_in_sign || 0)}°`} 
+                 />
+              ))}
+           </div>
+        </Card>
+
+        <Card title="Dança das Esferas (Aspectos)">
+          <div className="space-y-3 mt-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+            {aspects.length > 0 ? aspects.map((asp, i) => (
+              <div key={i} className="flex items-center justify-between p-3 bg-white/50 border border-gold/5 rounded-lg hover:border-gold/20 transition-all">
+                <div className="flex items-center gap-3">
+                  <span className="text-gold text-lg">{asp.symbol}</span>
+                  <div className="flex flex-col">
+                    <span className="text-[10px] font-bold text-gray-700 uppercase tracking-wider">{asp.type}</span>
+                    <span className="text-[11px] text-gray-500">{asp.p1} e {asp.p2}</span>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <span className="text-[10px] bg-gold/10 text-gold px-2 py-0.5 rounded font-bold">Orb {asp.orb.toFixed(1)}°</span>
+                </div>
+              </div>
+            )) : <p className="text-center py-10 text-gray-300 text-[11px] italic">Nenhum aspecto maior sintonizado...</p>}
+          </div>
+        </Card>
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
          <Card title="Pílulas de Sabedoria Astral">
             <div className="space-y-4 pt-2">
-               <div className="p-5 bg-[#FCF9F1]/60 border border-gold/10 rounded-xl shadow-xs transition-all hover:bg-[#FCF9F1]/80">
-                  <h5 className="text-[9px] font-black uppercase text-[#B8860B] mb-2 tracking-[0.2em] opacity-80">Dignidades Essenciais</h5>
+               <div className="p-5 bg-[#FCF9F1]/60 border border-gold/10 rounded-xl shadow-xs transition-all hover:bg-[#FCF9F1]/80 group">
+                  <h5 className="flex items-center justify-between text-[9px] font-black uppercase text-[#B8860B] mb-2 tracking-[0.2em] opacity-80">
+                    Dignidades Essenciais <Info size={10} className="opacity-0 group-hover:opacity-100 transition-opacity"/>
+                  </h5>
                   <p className="text-[12px] text-gray-700 leading-relaxed font-bold">
-                    {liveData?.Venus?.sign === 'Touro' || liveData?.Venus?.sign === 'Libra' ? "Vênus está em domicílio, favorecendo as artes e o equilíbrio hoje." : "A posição de Vênus pede atenção às relações e valores materiais."}
+                    {planets.Venus?.sign === 'Touro' || planets.Venus?.sign === 'Libra' ? "Vênus está em domicílio, favorecendo as artes e o equilíbrio hoje." : "A posição de Vênus pede atenção às relações e valores materiais."}
                   </p>
                </div>
-               <div className="p-5 bg-white border border-gray-50 rounded-xl shadow-xs transition-all hover:border-gold/20">
-                  <h5 className="text-[9px] font-black uppercase text-gray-400 mb-2 tracking-[0.2em] opacity-80">Ciclo Lunar</h5>
+               <div className="p-5 bg-white border border-gray-50 rounded-xl shadow-xs transition-all hover:border-gold/20 group">
+                  <h5 className="flex items-center justify-between text-[9px] font-black uppercase text-gray-400 mb-2 tracking-[0.2em] opacity-80">
+                    Ciclo Lunar <Info size={10} className="opacity-0 group-hover:opacity-100 transition-opacity"/>
+                  </h5>
                   <p className="text-[12px] text-gray-600 leading-relaxed font-bold">
-                    {liveData?.Moon?.sign === 'Câncer' || liveData?.Moon?.sign === 'Touro' ? "Lua em posição forte: as emoções fluem com proteção." : `Lua em ${liveData?.Moon?.sign || 'sincronizando'}... foco na introspecção.`}
+                    {planets.Moon?.sign === 'Câncer' || planets.Moon?.sign === 'Touro' ? "Lua em posição forte: as emoções fluem com proteção." : `Lua em ${planets.Moon?.sign || 'sincronizando'}... foco na introspecção.`}
                   </p>
                </div>
             </div>
          </Card>
       </div>
+
       <div className="space-y-6">
           <SectionTitle rightAction={<button onClick={() => setShowForm(true)} className="p-2 bg-white rounded-lg border border-gold/20 hover:bg-gold/5 transition-all outline-none"><Plus size={14} className="text-gold"/></button>}>Círculo Familiar</SectionTitle>
-          <div className="grid grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
              {connections.map((p: any) => (
                <FamilyItem 
                  key={p.id} 
@@ -66,9 +135,11 @@ export const AstrologiaPage = () => {
                  data={p.birthData ? `${p.birthData.date} • ${p.birthData.time}` : (p.natal ? `☉ ${Math.floor(p.natal.Sun)}° • ☾ ${Math.floor(p.natal.Moon)}°` : "Sintonizando...")} 
                />
              ))}
-             {connections.length === 0 && <p className="col-span-3 text-center py-10 text-gray-300 text-[11px] font-bold uppercase tracking-widest italic">Nenhum ente registrado ainda...</p>}
+             {connections.length === 0 && <p className="col-span-full text-center py-10 text-gray-300 text-[11px] font-bold uppercase tracking-widest italic">Nenhum ente registrado ainda...</p>}
           </div>
-      </div>
+        </div>
+      </>
+    )}
 
       {showForm && (
         <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/40 backdrop-blur-md p-4 animate-in fade-in zoom-in-95">

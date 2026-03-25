@@ -30,7 +30,7 @@ export const Advice = ({ agent, content, icon }: { agent: string, content: strin
       <h4 className="text-[9px] font-bold uppercase text-gray-400 mb-1 tracking-widest flex items-center gap-2">
         <Star size={10} className="text-[#B8860B]"/> Conselho do {agent}
       </h4>
-      <p className="text-[12px] text-gray-700 leading-relaxed font-semibold italic">"{content}"</p>
+      <p className="text-[12px] text-gray-700 leading-relaxed font-semibold italic">&quot;{content}&quot;</p>
     </div>
   </div>
 );
@@ -78,8 +78,8 @@ export const FamilyItem = ({ name, data }: { name: string, data: string }) => (
   </div>
 );
 
-export const TodoRow = ({ label, checked }: { label: string, checked: boolean }) => (
-  <div className="flex items-center gap-4 p-4 panel-light hover:border-gold/30 transition-all cursor-pointer group shadow-sm">
+export const TodoRow = ({ label, checked, onClick }: { label: string, checked: boolean, onClick?: () => void }) => (
+  <div onClick={onClick} className="flex items-center gap-4 p-4 panel-light hover:border-gold/30 transition-all cursor-pointer group shadow-sm">
     <div className={`w-5 h-5 rounded-lg border-2 flex items-center justify-center transition-colors shrink-0 ${checked ? 'bg-[#B8860B] border-[#B8860B] text-white' : 'border-gray-200 text-transparent group-hover:border-[#B8860B]/50'}`}>
       <CheckCircle size={14} />
     </div>

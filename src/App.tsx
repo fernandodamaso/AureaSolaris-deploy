@@ -5,7 +5,7 @@ import {
   User, Star, Edit3, Eye, Clock,
   Sparkles, X, Activity,
   PanelLeftClose, PanelLeftOpen,
-  Package, Save
+  Package
 } from 'lucide-react';
 import { safeInvoke } from './utils/tauri';
 import "./styles.css";
@@ -13,9 +13,10 @@ import "./styles.css";
 // Hooks
 import { useAstrologyData } from './hooks/useAstrologyData';
 import { useAgendaTasks } from './hooks/useAgendaTasks';
+import { useFinancas } from './context/FinancasContext';
 
 // Components
-import { NavItem, SectionTitle } from './components/common/UIComponents';
+import { NavItem } from './components/common/UIComponents';
 import { AgentChat } from './components/AgentChat';
 import { AgendaView } from './components/agenda/AgendaView';
 import { AstrologiaPage } from './components/AstrologiaBoard';
@@ -27,7 +28,7 @@ import { MemoriasView } from './components/MemoriasView';
 import { AlfredHubView } from './components/AlfredHubView';
 import { LoginView } from './components/LoginView';
 import { DiarioView } from './components/DiarioView';
-
+import { ProfileEditor } from './components/ProfileEditor';
 // --- ESTILOS GLOBAIS ---
 const globalStyles = `
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -58,11 +59,11 @@ export default function App() {
   const [strangeInput, setStrangeInput] = useState('');
   const [loadingStrange, setLoadingStrange] = useState(false);
 
-  const { profiles, updateProfile, addProfile: addRootProfile } = useAgendaTasks();
+  const { profiles, tasks, updateProfile, addProfile: addRootProfile, getMetrics, getPlanetRegency, getAlfredInsights } = useAgendaTasks();
+  const { stats: financeStats, goals } = useFinancas();
   const masterProfile = profiles.find(p => p.id === activeProfileId) || profiles[0];
 
-  const { getPlanetaryHour } = useAstrologyData(masterProfile?.natal);
-  const { getPlanetRegency } = useAgendaTasks();
+  const { liveData, getPlanetaryHour, transits } = useAstrologyData(masterProfile?.natal);
   const [currentTime, setCurrentTime] = useState(getPlanetaryHour());
 
   useEffect(() => {
@@ -90,25 +91,86 @@ export default function App() {
     setLoadingStrange(true);
 
     try {
-      const systemContext = `
-        VISÃO MACRO ATIVA:
-        - Horário Planetário: ${currentTime}
-        - Página Atual: ${currentPage}
-        - Perfil Ativo: ${masterProfile?.name}
-        - Status do Sistema: Estável, Stark Lab operando em 100%.
-      `;
+      const planetaryHour = getPlanetaryHour();
+      const regency = getPlanetRegency(new Date());
+      const metrics = getMetrics();
+      const insights = getAlfredInsights();
+      const pendingTasks = tasks.filter((t: any) => !t.completed && !t.is_completed);
+      const completedTasks = tasks.filter((t: any) => t.completed || t.is_completed);
+      
+      const planets = liveData?.planets || {};
+      const aspects = liveData?.aspects || [];
+      const retrogradePlanets = Object.entries(planets)
+        .filter(([_, v]: any) => v?.retrograde)
+        .map(([k]) => k);
+      
+      const planetPositions = Object.entries(planets)
+        .map(([k, v]: any) => `${k}: ${v?.pos_in_sign?.toFixed(1) || 0}° ${v?.sign || '?'}`)
+        .join(', ');
+      
+      const skyAspects = aspects.slice(0, 5).map((a: any) => `${a.p1} ${a.symbol} ${a.p2}`).join(', ') || 'Nenhum';
+      const transitSummary = transits.slice(0, 5).map((t: any) => `${t.p} ${t.icon} ${t.n}`).join(', ') || 'Nenhum';
 
-      const res = await safeInvoke<string>('openrouter_chat', {
-        model: 'google/gemini-2.0-pro-exp-02-05',
-        messages: [
-          { role: 'system', content: `Você é Dr. Strange, o mestre supremo do sistema Aurea Solaris. Você tem visão macro de tudo. Use este contexto: ${systemContext}. Responda de forma sábia, breve, mística e proativa. Ajude a usuária a enxergar padrões entre as estrelas e suas tarefas.` },
-          ...ut
-        ]
-      });
+      const systemContext = `
+═══════════════════════════════════════════════════
+VISÃO MACRO DR. STRANGE — AUREA SOLARIS
+═══════════════════════════════════════════════════
+
+--- TEMPORAL ---
+Data: ${new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })}
+Hora Planetária: ${planetaryHour.icon} ${planetaryHour.name} (${planetaryHour.time})
+Regente do Dia: ${regency.icon} ${regency.name}
+Página Ativa: ${currentPage}
+
+--- PERFIL ---
+Nome: ${masterProfile?.name || 'Não configurado'}
+
+--- ASTROLOGIA (RESUMO) ---
+Planetas: ${planetPositions}
+Aspectos no céu: ${skyAspects}
+Trânsitos pessoais: ${transitSummary}
+Retrogradações: ${retrogradePlanets.length > 0 ? retrogradePlanets.join(', ') : 'Nenhuma'}
+
+--- TAREFAS ---
+Pendentes: ${pendingTasks.length} | Completas: ${completedTasks.length} | Progresso: ${metrics.done}%
+${pendingTasks.slice(0, 3).map((t: any) => `- ${t.content || t.title}`).join('\n') || '- Nenhuma pendente'}
+
+--- FINANÇAS ---
+Saldo: R$ ${financeStats.balance.toLocaleString('pt-BR')}
+Entradas: R$ ${financeStats.incomes.toLocaleString('pt-BR')} | Saídas: R$ ${financeStats.expenses.toLocaleString('pt-BR')}
+Metas ativas: ${goals.length}
+
+--- INSIGHTS DO ALFRED ---
+${insights.map(i => `- [${i.type}] ${i.content}`).join('\n') || '- Nenhum insight gerado'}
+
+--- STATUS ---
+Sistema: Estável | Agentes: 5 ativos | Memória: Persistente
+`;
+
+      const aiMode = localStorage.getItem('ai_master_switch') || 'ollama';
+      let res: string | null = null;
+      
+      if (aiMode === 'ollama') {
+        res = await safeInvoke<string>('ollama_chat', {
+          messages: [
+            { role: 'system', content: `Você é Dr. Strange, o mestre supremo do sistema Aurea Solaris. Você tem visão MACRO de TUDO: astrologia, tarefas, finanças, saúde, horários planetários. Conecte padrões entre os dados e dê visão estratégica. Seja sábio, conciso, místico e proativa. Quando apropriado, sugira ações concretas (criar tarefa, verificar finanças, etc.).\n\n${systemContext}` },
+            ...ut.slice(-6)
+          ]
+        });
+      } else {
+        res = await safeInvoke<string>('openrouter_chat', {
+          model: 'google/gemini-2.0-pro-exp-02-05',
+          messages: [
+            { role: 'system', content: `Você é Dr. Strange, o mestre supremo do sistema Aurea Solaris. Você tem visão MACRO de TUDO: astrologia, tarefas, finanças, saúde, horários planetários. Conecte padrões entre os dados e dê visão estratégica. Seja sábio, conciso, místico e proativa. Quando apropriado, sugira ações concretas (criar tarefa, verificar finanças, etc.).\n\n${systemContext}` },
+            ...ut.slice(-6)
+          ]
+        });
+      }
+      
       if (res) {
         const f = [...ut, { role: 'assistant', content: res }];
         setStrangeMsgs(f);
-        await safeInvoke('save_history', { agent: 'Strange', history: f });
+        await safeInvoke('save_history', { agent: 'Strange', history: f, chat_id: null });
       }
     } catch (err) {
       console.error("Strange error:", err);
@@ -132,119 +194,6 @@ export default function App() {
   };
 
 
-  const ProfilePopup = () => {
-    const [name, setName] = useState(masterProfile.name);
-    const [natalText, setNatalText] = useState(`Sun in Sagittarius 29°37'\nMoon in Libra 16°17'\nASC in Aquarius 21°51'`);
-
-    const handleSave = () => {
-      // In a real scenario, we'd parse the natalText to degrees. 
-      // For now, we update the profile metadata.
-      updateProfile(masterProfile.id, { name });
-      setIsProfileOpen(false);
-    };
-
-    const handleLogout = () => {
-      localStorage.removeItem('aurea_active_id');
-      setIsAuthenticated(false);
-      setIsProfileOpen(false);
-    };
-
-    return (
-      <div 
-        className="fixed inset-0 z-[600] flex items-center justify-center bg-black/50 backdrop-blur-md px-4 animate-in fade-in font-sans"
-        onClick={(e) => { if(e.target === e.currentTarget) setIsProfileOpen(false); }}
-      >
-         <div className="bg-[#FCF9F1] rounded-[3rem] p-12 w-full max-w-6xl shadow-2xl border border-gold/30" onClick={e => e.stopPropagation()}>
-            <SectionTitle rightAction={<X onClick={() => setIsProfileOpen(false)} className="cursor-pointer text-gray-400 hover:text-red-500"/>}>Sua Identidade (Configurações)</SectionTitle>
-            
-            <div className="grid grid-cols-12 gap-12 mt-8">
-               {/* LADO ESQUERDO: FOTO E MAPA */}
-               <div className="col-span-4 flex flex-col items-center gap-6 border-r border-gold/10 pr-12">
-                  <div className="relative group">
-                    <div className="w-40 h-40 rounded-full bg-white shadow-xl border-4 border-white overflow-hidden flex items-center justify-center text-gold/20">
-                      <User size={60} />
-                    </div>
-                    <button className="absolute bottom-1 right-1 p-2.5 bg-gold text-white rounded-full shadow-lg hover:scale-110 transition-all">
-                      <Sparkles size={14} />
-                    </button>
-                    <p className="text-[9px] font-black uppercase text-gold/40 mt-3 tracking-widest text-center">Identidade Biométrica</p>
-                  </div>
-
-                  <div className="w-full space-y-4">
-                    <div>
-                      <label className="text-[9px] font-black uppercase text-gray-400 pl-2 tracking-widest">Nome da Identidade</label>
-                      <input 
-                        className="w-full bg-white p-4 rounded-2xl border border-gold/10 font-bold text-gray-800" 
-                        value={name} 
-                        onChange={e => setName(e.target.value)}
-                      />
-                    </div>
-                    <div className="flex-1 flex flex-col">
-                        <label className="text-[9px] font-black uppercase text-gray-400 pl-2 tracking-widest">Mapa Natal (Bulk)</label>
-                        <textarea 
-                          className="w-full h-32 bg-white p-4 rounded-2xl font-mono text-[11px] border border-gold/10 resize-none leading-relaxed text-gray-800 shadow-inner mt-1" 
-                          value={natalText}
-                          onChange={e => setNatalText(e.target.value)}
-                        />
-                    </div>
-                  </div>
-               </div>
-
-               {/* LADO DIREITO: CONTEXTO E SEGURANÇA */}
-               <div className="col-span-8 grid grid-cols-2 gap-8">
-                  <div className="space-y-6">
-                    <div>
-                      <label className="text-[9px] font-black uppercase text-gray-400 pl-2 tracking-widest">Contexto Pessoal</label>
-                      <textarea 
-                        className="w-full h-32 bg-white p-4 rounded-2xl outline-none border border-gold/10 resize-none text-[13px] text-gray-600 font-medium leading-relaxed" 
-                        defaultValue="Puerpério. Filhos 2m e 2a. Estudo UDV. Foco em equilíbrio total." 
-                      />
-                    </div>
-                    <div>
-                      <label className="text-[9px] font-black uppercase text-gray-400 pl-2 tracking-widest">Estilo de Diálogo</label>
-                      <select className="w-full bg-white p-4 rounded-2xl border border-gold/10 text-[13px] font-bold outline-none cursor-pointer">
-                        <option>Inteligente e Poética</option>
-                        <option>Direta e Técnica</option>
-                        <option>Mística e Oracular</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="space-y-6 bg-white/40 p-6 rounded-[2rem] border border-gold/5 shadow-inner flex flex-col">
-                    <h4 className="text-[9px] font-black uppercase tracking-[0.3em] text-gray-400 border-b border-gray-100 pb-3 mb-4">Segurança & Acesso</h4>
-                    <div className="space-y-4 flex-1">
-                      <div>
-                        <label className="text-[9px] font-black uppercase text-red-400/60 pl-2 tracking-widest">Senha</label>
-                        <input type="password" placeholder="••••••••" className="w-full bg-white p-4 rounded-2xl border border-gold/5 font-bold text-gray-800" />
-                      </div>
-                      <div>
-                        <label className="text-[9px] font-black uppercase text-gray-400 pl-2 tracking-widest">Recuperação</label>
-                        <input className="w-full bg-white p-4 rounded-2xl border border-gold/5 font-bold text-gray-800 text-[12px]" placeholder="mestre@aureasolaris.com" />
-                      </div>
-                      <button className="w-full py-2 text-[9px] font-black uppercase tracking-[0.2em] text-gold/60 hover:text-gold transition-all text-left pl-2">Esqueci minha senha</button>
-                    </div>
-                  </div>
-               </div>
-            </div>
-
-            <div className="mt-12 flex justify-between items-center border-t border-gold/10 pt-8">
-               <button 
-                 onClick={handleLogout} 
-                 className="px-8 py-4 bg-red-500/10 text-red-500 rounded-2xl font-black uppercase text-[10px] tracking-[0.3em] hover:bg-red-500 hover:text-white transition-all flex items-center gap-2"
-               >
-                 <X size={14} /> Sair do Sistema
-               </button>
-               <div className="flex gap-6">
-                 <button onClick={() => setIsProfileOpen(false)} className="px-10 py-4 text-gray-400 font-black uppercase text-[10px] tracking-[0.3em] hover:text-gray-600 transition-all">Recuar</button>
-                 <button onClick={handleSave} className="px-12 py-4 bg-[#333333] text-white rounded-2xl font-black uppercase text-[10px] tracking-[0.3em] hover:bg-gold transition-all shadow-lg flex items-center gap-3">
-                   <Save size={14} /> Consolidar Identidade
-                 </button>
-               </div>
-            </div>
-         </div>
-      </div>
-    );
-  };
 
   if (!isAuthenticated) {
     return (
@@ -346,9 +295,12 @@ export default function App() {
       </aside>
 
       {/* STRANGE FAB */}
+      {isStrangeOpen && (
+        <div className="fixed inset-0 z-40" onClick={() => setIsStrangeOpen(false)} />
+      )}
       <div className="fixed bottom-10 right-10 z-50 flex flex-col items-end gap-6 pointer-events-none">
         {isStrangeOpen && (
-          <div className="w-[420px] h-[650px] bg-white rounded-[3.5rem] shadow-2xl border border-gold/30 flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-10 pointer-events-auto">
+          <div className="w-[420px] h-[650px] bg-white rounded-[3.5rem] shadow-2xl border border-gold/30 flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-10 pointer-events-auto" onClick={e => e.stopPropagation()}>
             <div className="p-8 bg-[#FCF9F1] border-b border-gold/10 flex justify-between items-center shrink-0">
                <div className="flex items-center gap-4">
                   <div className="p-3 bg-white rounded-full text-[#B8860B] shadow-sm"><Eye size={24}/></div>
@@ -375,7 +327,21 @@ export default function App() {
         <button onClick={() => setIsStrangeOpen(!isStrangeOpen)} className="pointer-events-auto w-20 h-20 rounded-full shadow-2xl bg-white border-4 border-[#B8860B]/30 flex items-center justify-center hover:scale-110 transition-all"><Eye size={40} className="text-[#B8860B]"/></button>
       </div>
 
-      {isProfileOpen && <ProfilePopup />}
+      {isProfileOpen && (
+        <ProfileEditor
+          profile={masterProfile}
+          onSave={(updates) => {
+            updateProfile(masterProfile.id, updates);
+            setIsProfileOpen(false);
+          }}
+          onClose={() => setIsProfileOpen(false)}
+          onLogout={() => {
+            localStorage.removeItem('aurea_active_id');
+            setIsAuthenticated(false);
+            setIsProfileOpen(false);
+          }}
+        />
+      )}
     </div>
   );
 }

@@ -34,8 +34,8 @@ As seguintes variaveis sao usadas pelo projeto (definidas em `.env` e `.env.loca
 ### Google APIs (Opcional)
 | Variavel | Descricao | Onde Usado |
 |----------|-----------|------------|
+| `GOOGLE_CLIENT_ID` | Client ID OAuth2 para Google Calendar/Drive | `src-tauri/src/lib.rs` - comandos `google_drive_connect`, `add_google_event` |
 | `GOOGLE_GENERATIVE_AI_API_KEY` | Chave para Google Generative AI | Integracoes opcionais |
-| `GOOGLE_API_KEY` | Chave geral do Google API | Integracoes opcionais |
 
 **Nota:** O arquivo `.env.local` tem prioridade sobre `.env` para variaveis sobrepostas.
 
@@ -63,10 +63,12 @@ As seguintes variaveis sao usadas pelo projeto (definidas em `.env` e `.env.loca
 |--------|--------|
 | `@tauri-apps/api` | API do Tauri para frontend |
 | `@tauri-apps/cli` | CLI do Tauri para build |
-| `react` / `react-dom` | Framework de UI |
-| `@tailwindcss/vite` | Integracao Tailwind com Vite |
+| `@tauri-apps/plugin-dialog` | Plugin de diálogos nativos |
+| `@tauri-apps/plugin-fs` | Plugin de sistema de arquivos |
+| `@tauri-apps/plugin-opener` | Plugin para abrir URLs |
+| `react` / `react-dom` | Framework de UI (v19.1) |
+| `@tailwindcss/vite` | Integracao Tailwind v4 com Vite |
 | `lucide-react` | Biblioteca de icones |
-| `puppeteer` | Automacao de browser (testes) |
 
 ---
 

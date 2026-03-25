@@ -9,8 +9,8 @@ import { useAgendaContext } from '../context/AgendaContext';
 
 export const AlfredHubView = () => {
   const { documents, safeInvoke } = useAgendaContext() as any;
-  const [notes, setNotes] = useState<any[]>([]);
-  const [diaryEntries, setDiaryEntries] = useState<any[]>([]);
+  const [notes] = useState<any[]>([]);
+  const [diaryEntries] = useState<any[]>([]);
   const [chatHistories, setChatHistories] = useState<any[]>([]);
   const [activeTab, setActiveTab] = useState<'docs' | 'notes' | 'chats'>('docs');
   const [selectedPdf, setSelectedPdf] = useState<any>(null);

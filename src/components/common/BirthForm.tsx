@@ -14,7 +14,12 @@ export const BirthForm = ({ onSave, onClose }: BirthFormProps) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave({ name, date, time, location });
+    onSave({ 
+      name, 
+      date, 
+      time, 
+      location
+    });
   };
 
   return (
