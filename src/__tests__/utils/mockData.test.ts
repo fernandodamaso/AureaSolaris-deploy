@@ -45,7 +45,12 @@ describe('getMockResponse', () => {
   });
 
   it('falls back to Rafiki for unknown agents', () => {
-    const response = getMockResponse('UnknownAgent');
-    expect(MOCK_AGENT_RESPONSES['Rafiki']).toContain(response);
+    // getMockResponse picks randomly, so sample multiple times to verify all results are Rafiki responses
+    const responses = new Set(
+      Array.from({ length: 50 }, () => getMockResponse('UnknownAgent'))
+    );
+    for (const r of responses) {
+      expect(MOCK_AGENT_RESPONSES['Rafiki']).toContain(r);
+    }
   });
 });

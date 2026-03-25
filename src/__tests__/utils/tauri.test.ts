@@ -37,15 +37,20 @@ describe('safeInvoke (browser/mock mode)', () => {
   });
 
   it('handles save_history and load_history via localStorage', async () => {
-    await safeInvoke('save_history', {
-      agent: 'test-agent',
-      history: [{ role: 'user', content: 'hello' }],
-      chat_id: 'test-1',
-    });
-    const loaded = await safeInvoke<any[]>('load_history', {
-      agent: 'test-agent',
-      chat_id: 'test-1',
-    });
+    const agent = 'test-agent';
+    const chatId = 'test-1';
+    const history = [{ role: 'user', content: 'hello' }];
+
+    await safeInvoke('save_history', { agent, history, chat_id: chatId });
+
+    // Verify the expected localStorage key was written
+    const expectedKey = `aurea_mock_${agent}_${chatId}`;
+    const raw = localStorage.getItem(expectedKey);
+    expect(raw).not.toBeNull();
+    expect(JSON.parse(raw!)).toEqual(history);
+
+    // Verify load returns the same data
+    const loaded = await safeInvoke<any[]>('load_history', { agent, chat_id: chatId });
     expect(loaded).toHaveLength(1);
     expect(loaded![0].content).toBe('hello');
   });

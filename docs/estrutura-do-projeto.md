@@ -478,6 +478,7 @@ Script de inicialização para Windows — executa os comandos necessários para
 | Serviços do sistema | `.factory/services.yaml` |
 | Testes experimentais | `Laboratorio_Stark/` |
 | Scripts de build/dev | `package.json` (seção `scripts`) |
+| Adicionar ou modificar testes | `src/__tests__/` (Vitest) |
 | Estilos globais | `src/styles.css` e `src/App.css` |
 | Nova dependência Node | `package.json` (execute `npm install`) |
 | Nova dependência Python | `pip install <nome>` |
