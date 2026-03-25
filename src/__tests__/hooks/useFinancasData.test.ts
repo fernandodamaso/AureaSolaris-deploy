@@ -12,6 +12,17 @@ describe('useFinancasData', () => {
     expect(result.current.transactions.length).toBeGreaterThan(0);
   });
 
+  it('loads transactions from localStorage when present', () => {
+    const savedTransactions = [
+      { id: 'saved-1', description: 'Salvo', amount: 500, type: 'income' as const, date: '2026-01-01', category: 'Teste' },
+    ];
+    localStorage.setItem('aurea_transactions', JSON.stringify(savedTransactions));
+
+    const { result } = renderHook(() => useFinancasData());
+    expect(result.current.transactions).toHaveLength(1);
+    expect(result.current.transactions[0].description).toBe('Salvo');
+  });
+
   it('calculates correct balance', () => {
     const { result } = renderHook(() => useFinancasData());
     const { incomes, expenses } = result.current.stats;
