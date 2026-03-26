@@ -221,6 +221,7 @@ Hooks são funções reutilizáveis que encapsulam lógica complexa. Cada hook t
 | `useAstroData.ts` | Busca dados astrológicos básicos com estados de loading/error |
 | `useAstrologyData.ts` | Calcula horas planetárias, trânsitos e regência planetária com datas reais |
 | `useFinancasData.ts` | Gerencia transações financeiras: receitas, despesas, metas e reservas |
+| `useTransitData.ts` | Busca posições planetárias de trânsito atuais (cache 60s, fallback JS) |
 
 > **Nota:** O hook `useSaudeData` está co-localizado dentro de `src/context/SaudeContext.tsx` (não é um arquivo separado em `hooks/`).
 
@@ -486,6 +487,7 @@ Script de inicialização para Windows — executa os comandos necessários para
 | Lógica de tarefas | `src/hooks/useAgendaTasks.ts` |
 | Lógica financeira | `src/hooks/useFinancasData.ts` |
 | Horas planetárias | `src/hooks/useAstrologyData.ts` |
+| Trânsitos planetários | `src/hooks/useTransitData.ts` |
 | Configurações do app | `src-tauri/tauri.conf.json` |
 | Variáveis de ambiente | `.env` ou `.env.local` |
 | Regras dos agentes | `.agent/rules/` e `.agent/skills/` |
