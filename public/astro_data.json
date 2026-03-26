@@ -1,50 +1,50 @@
 {
   "planets": {
     "Sun": {
-      "degree": 6.29,
+      "degree": 6.32,
       "sign": "Ari",
       "sign_full": "Aries",
-      "pos_in_sign": 6.29,
+      "pos_in_sign": 6.32,
       "retrograde": false,
       "speed": 0.99,
       "stationary": false,
-      "house": 6
+      "house": 5
     },
     "Moon": {
-      "degree": 111.27,
+      "degree": 111.71,
       "sign": "Can",
       "sign_full": "Cancer",
-      "pos_in_sign": 21.27,
+      "pos_in_sign": 21.71,
       "retrograde": false,
-      "speed": 13.8567,
+      "speed": 13.8501,
       "stationary": false,
       "house": 9
     },
     "Mercury": {
-      "degree": 340.2,
+      "degree": 340.21,
       "sign": "Pis",
       "sign_full": "Pisces",
-      "pos_in_sign": 10.2,
+      "pos_in_sign": 10.21,
       "retrograde": false,
-      "speed": 0.528,
+      "speed": 0.5302,
       "stationary": false,
       "house": 5
     },
     "Venus": {
-      "degree": 25.43,
+      "degree": 25.46,
       "sign": "Ari",
       "sign_full": "Aries",
-      "pos_in_sign": 25.43,
+      "pos_in_sign": 25.46,
       "retrograde": false,
-      "speed": 1.2344,
+      "speed": 1.2343,
       "stationary": false,
       "house": 6
     },
     "Mars": {
-      "degree": 349.17,
+      "degree": 349.19,
       "sign": "Pis",
       "sign_full": "Pisces",
-      "pos_in_sign": 19.17,
+      "pos_in_sign": 19.19,
       "retrograde": false,
       "speed": 0.7841,
       "stationary": false,
@@ -56,7 +56,7 @@
       "sign_full": "Cancer",
       "pos_in_sign": 15.49,
       "retrograde": false,
-      "speed": 0.0503,
+      "speed": 0.0504,
       "stationary": false,
       "house": 9
     },
@@ -68,7 +68,7 @@
       "retrograde": false,
       "speed": 0.1249,
       "stationary": false,
-      "house": 6
+      "house": 5
     },
     "Uranus": {
       "degree": 58.55,
@@ -81,14 +81,14 @@
       "house": 7
     },
     "Neptune": {
-      "degree": 2.01,
+      "degree": 2.02,
       "sign": "Ari",
       "sign_full": "Aries",
-      "pos_in_sign": 2.01,
+      "pos_in_sign": 2.02,
       "retrograde": false,
       "speed": 0.0379,
       "stationary": false,
-      "house": 6
+      "house": 5
     },
     "Pluto": {
       "degree": 305.13,
@@ -98,29 +98,29 @@
       "retrograde": false,
       "speed": 0.0183,
       "stationary": false,
-      "house": 4
+      "house": 3
     },
     "ASC": {
-      "degree": 217.92,
+      "degree": 230.41,
       "sign": "Sco",
       "sign_full": "Scorpio",
-      "pos_in_sign": 7.92,
+      "pos_in_sign": 20.41,
       "retrograde": false,
       "speed": 0
     },
     "MC": {
-      "degree": 119.32,
-      "sign": "Can",
-      "sign_full": "Cancer",
-      "pos_in_sign": 29.32,
+      "degree": 130.3,
+      "sign": "Leo",
+      "sign_full": "Leo",
+      "pos_in_sign": 10.3,
       "retrograde": false,
       "speed": 0
     },
     "Chiron": {
-      "degree": 25.41,
+      "degree": 25.42,
       "sign": "Ari",
       "sign_full": "Aries",
-      "pos_in_sign": 25.41,
+      "pos_in_sign": 25.42,
       "retrograde": false,
       "speed": 0.0575,
       "house": 6
@@ -128,41 +128,41 @@
   },
   "secondary": {
     "NorthNode": {
-      "degree": 338.72,
+      "degree": 338.73,
       "sign": "Pisces",
-      "pos_in_sign": 8.72,
-      "house": 5
+      "pos_in_sign": 8.73,
+      "house": 4
     },
     "SouthNode": {
-      "degree": 158.72,
+      "degree": 158.73,
       "sign": "Virgo",
-      "pos_in_sign": 8.72,
-      "house": 11
+      "pos_in_sign": 8.73,
+      "house": 10
     },
     "Lilith": {
       "degree": 250.78,
       "sign": "Sagittarius",
       "pos_in_sign": 10.78,
-      "house": 2
+      "house": 1
     },
     "PartOfFortune": {
-      "degree": 322.9,
-      "sign": "Aquarius",
-      "pos_in_sign": 22.9,
+      "degree": 335.8,
+      "sign": "Pisces",
+      "pos_in_sign": 5.8,
       "house": 4
     },
     "Vertex": {
-      "degree": 13.41,
+      "degree": 18.07,
       "sign": "Aries",
-      "pos_in_sign": 13.41,
+      "pos_in_sign": 18.07,
       "house": 6
     }
   },
   "angles": {
-    "ASC": 217.92,
-    "MC": 119.32,
-    "DSC": 37.92,
-    "IC": 299.32
+    "ASC": 230.41,
+    "MC": 130.3,
+    "DSC": 50.41,
+    "IC": 310.3
   },
   "aspects": [
     {
@@ -170,7 +170,7 @@
       "p2": "Saturn",
       "type": "Conjunction",
       "symbol": "☌",
-      "orb": 1.37,
+      "orb": 1.4,
       "applying": false
     },
     {
@@ -178,7 +178,7 @@
       "p2": "Neptune",
       "type": "Conjunction",
       "symbol": "☌",
-      "orb": 4.28,
+      "orb": 4.3,
       "applying": false
     },
     {
@@ -186,15 +186,15 @@
       "p2": "Pluto",
       "type": "Sextile",
       "symbol": "＊",
-      "orb": 1.16,
+      "orb": 1.19,
       "applying": false
     },
     {
       "p1": "Sun",
       "p2": "ASC",
-      "type": "Quincunx",
-      "symbol": "⚻",
-      "orb": 1.63,
+      "type": "Sesqui-Quadrature",
+      "symbol": "⚼",
+      "orb": 0.91,
       "applying": false
     },
     {
@@ -202,7 +202,7 @@
       "p2": "MC",
       "type": "Trine",
       "symbol": "△",
-      "orb": 6.97,
+      "orb": 3.98,
       "applying": true
     },
     {
@@ -210,7 +210,7 @@
       "p2": "Venus",
       "type": "Square",
       "symbol": "□",
-      "orb": 4.16,
+      "orb": 3.75,
       "applying": false
     },
     {
@@ -218,7 +218,7 @@
       "p2": "Mars",
       "type": "Trine",
       "symbol": "△",
-      "orb": 2.1,
+      "orb": 2.52,
       "applying": false
     },
     {
@@ -226,15 +226,15 @@
       "p2": "Jupiter",
       "type": "Conjunction",
       "symbol": "☌",
-      "orb": 5.78,
+      "orb": 6.22,
       "applying": false
     },
     {
       "p1": "Moon",
-      "p2": "MC",
-      "type": "Conjunction",
-      "symbol": "☌",
-      "orb": 8.05,
+      "p2": "ASC",
+      "type": "Trine",
+      "symbol": "△",
+      "orb": 1.3,
       "applying": true
     },
     {
@@ -242,7 +242,7 @@
       "p2": "Chiron",
       "type": "Square",
       "symbol": "□",
-      "orb": 4.14,
+      "orb": 3.71,
       "applying": false
     },
     {
@@ -250,7 +250,7 @@
       "p2": "Venus",
       "type": "Semi-Square",
       "symbol": "∠",
-      "orb": 0.23,
+      "orb": 0.25,
       "applying": false
     },
     {
@@ -258,16 +258,16 @@
       "p2": "Jupiter",
       "type": "Trine",
       "symbol": "△",
-      "orb": 5.29,
+      "orb": 5.28,
       "applying": true
     },
     {
       "p1": "Mercury",
-      "p2": "ASC",
-      "type": "Trine",
-      "symbol": "△",
-      "orb": 2.28,
-      "applying": false
+      "p2": "MC",
+      "type": "Quincunx",
+      "symbol": "⚻",
+      "orb": 0.09,
+      "applying": true
     },
     {
       "p1": "Mercury",
@@ -279,18 +279,10 @@
     },
     {
       "p1": "Venus",
-      "p2": "MC",
-      "type": "Square",
-      "symbol": "□",
-      "orb": 3.89,
-      "applying": true
-    },
-    {
-      "p1": "Venus",
       "p2": "Chiron",
       "type": "Conjunction",
       "symbol": "☌",
-      "orb": 0.02,
+      "orb": 0.04,
       "applying": false
     },
     {
@@ -298,7 +290,7 @@
       "p2": "Jupiter",
       "type": "Trine",
       "symbol": "△",
-      "orb": 3.68,
+      "orb": 3.7,
       "applying": true
     },
     {
@@ -306,7 +298,7 @@
       "p2": "Uranus",
       "type": "Quintile",
       "symbol": "Q",
-      "orb": 2.62,
+      "orb": 2.64,
       "applying": true
     },
     {
@@ -314,8 +306,24 @@
       "p2": "Pluto",
       "type": "Semi-Square",
       "symbol": "∠",
-      "orb": 0.96,
+      "orb": 0.94,
       "applying": false
+    },
+    {
+      "p1": "Mars",
+      "p2": "ASC",
+      "type": "Trine",
+      "symbol": "△",
+      "orb": 1.22,
+      "applying": false
+    },
+    {
+      "p1": "Mars",
+      "p2": "MC",
+      "type": "Bi-Quintile",
+      "symbol": "bQ",
+      "orb": 2.89,
+      "applying": true
     },
     {
       "p1": "Jupiter",
@@ -330,7 +338,7 @@
       "p2": "ASC",
       "type": "Trine",
       "symbol": "△",
-      "orb": 7.57,
+      "orb": 4.92,
       "applying": true
     },
     {
@@ -338,7 +346,7 @@
       "p2": "Neptune",
       "type": "Conjunction",
       "symbol": "☌",
-      "orb": 2.91,
+      "orb": 2.9,
       "applying": false
     },
     {
@@ -351,10 +359,18 @@
     },
     {
       "p1": "Saturn",
+      "p2": "ASC",
+      "type": "Sesqui-Quadrature",
+      "symbol": "⚼",
+      "orb": 0.49,
+      "applying": false
+    },
+    {
+      "p1": "Saturn",
       "p2": "MC",
       "type": "Trine",
       "symbol": "△",
-      "orb": 5.6,
+      "orb": 5.38,
       "applying": true
     },
     {
@@ -362,7 +378,7 @@
       "p2": "Neptune",
       "type": "Sextile",
       "symbol": "＊",
-      "orb": 3.46,
+      "orb": 3.47,
       "applying": false
     },
     {
@@ -375,10 +391,18 @@
     },
     {
       "p1": "Uranus",
+      "p2": "ASC",
+      "type": "Opposition",
+      "symbol": "☍",
+      "orb": 8.14,
+      "applying": true
+    },
+    {
+      "p1": "Uranus",
       "p2": "MC",
-      "type": "Sextile",
-      "symbol": "＊",
-      "orb": 0.77,
+      "type": "Quintile",
+      "symbol": "Q",
+      "orb": 0.25,
       "applying": true
     },
     {
@@ -386,15 +410,7 @@
       "p2": "Pluto",
       "type": "Sextile",
       "symbol": "＊",
-      "orb": 3.12,
-      "applying": false
-    },
-    {
-      "p1": "Neptune",
-      "p2": "ASC",
-      "type": "Bi-Quintile",
-      "symbol": "bQ",
-      "orb": 0.09,
+      "orb": 3.11,
       "applying": false
     },
     {
@@ -402,15 +418,15 @@
       "p2": "MC",
       "type": "Trine",
       "symbol": "△",
-      "orb": 2.69,
+      "orb": 8.28,
       "applying": true
     },
     {
       "p1": "Pluto",
       "p2": "ASC",
-      "type": "Square",
-      "symbol": "□",
-      "orb": 2.79,
+      "type": "Quintile",
+      "symbol": "Q",
+      "orb": 2.72,
       "applying": false
     },
     {
@@ -418,90 +434,82 @@
       "p2": "MC",
       "type": "Opposition",
       "symbol": "☍",
-      "orb": 5.81,
-      "applying": true
-    },
-    {
-      "p1": "MC",
-      "p2": "Chiron",
-      "type": "Square",
-      "symbol": "□",
-      "orb": 3.91,
-      "applying": true
+      "orb": 5.17,
+      "applying": false
     }
   ],
   "houses": [
     {
       "house": 1,
-      "degree": 217.92,
+      "degree": 230.41,
       "sign": "Scorpio",
-      "pos_in_sign": 7.92
+      "pos_in_sign": 20.41
     },
     {
       "house": 2,
-      "degree": 248.79,
+      "degree": 259.63,
       "sign": "Sagittarius",
-      "pos_in_sign": 8.79
+      "pos_in_sign": 19.63
     },
     {
       "house": 3,
-      "degree": 274.56,
+      "degree": 284.85,
       "sign": "Capricorn",
-      "pos_in_sign": 4.56
+      "pos_in_sign": 14.85
     },
     {
       "house": 4,
-      "degree": 299.32,
-      "sign": "Capricorn",
-      "pos_in_sign": 29.32
+      "degree": 310.3,
+      "sign": "Aquarius",
+      "pos_in_sign": 10.3
     },
     {
       "house": 5,
-      "degree": 327.5,
-      "sign": "Aquarius",
-      "pos_in_sign": 27.5
+      "degree": 340.12,
+      "sign": "Pisces",
+      "pos_in_sign": 10.12
     },
     {
       "house": 6,
-      "degree": 1.79,
+      "degree": 15.47,
       "sign": "Aries",
-      "pos_in_sign": 1.79
+      "pos_in_sign": 15.47
     },
     {
       "house": 7,
-      "degree": 37.92,
+      "degree": 50.41,
       "sign": "Taurus",
-      "pos_in_sign": 7.92
+      "pos_in_sign": 20.41
     },
     {
       "house": 8,
-      "degree": 68.79,
+      "degree": 79.63,
       "sign": "Gemini",
-      "pos_in_sign": 8.79
+      "pos_in_sign": 19.63
     },
     {
       "house": 9,
-      "degree": 94.56,
+      "degree": 104.85,
       "sign": "Cancer",
-      "pos_in_sign": 4.56
+      "pos_in_sign": 14.85
     },
     {
       "house": 10,
-      "degree": 119.32,
-      "sign": "Cancer",
-      "pos_in_sign": 29.32
+      "degree": 130.3,
+      "sign": "Leo",
+      "pos_in_sign": 10.3
     },
     {
       "house": 11,
-      "degree": 147.5,
-      "sign": "Leo",
-      "pos_in_sign": 27.5
+      "degree": 160.12,
+      "sign": "Virgo",
+      "pos_in_sign": 10.12
     },
     {
       "house": 12,
-      "degree": 181.79,
+      "degree": 195.47,
       "sign": "Libra",
-      "pos_in_sign": 1.79
+      "pos_in_sign": 15.47
     }
   ],
   "regence": {
@@ -511,16 +519,16 @@
   "moon_phase": {
     "phase": "Quarto Crescente",
     "icon": "🌓",
-    "illumination": 91.6
+    "illumination": 92.1
   },
   "meta": {
-    "timestamp": "2026-03-26T20:00:00",
+    "timestamp": "2026-03-26T20:45:00",
     "location": {
       "lat": -15.7833,
       "lon": -47.9333
     },
     "house_system": "Regiomontanus",
     "ephemeris": "swiss",
-    "jd": 2461126.458333
+    "jd": 2461126.489583
   }
 }
