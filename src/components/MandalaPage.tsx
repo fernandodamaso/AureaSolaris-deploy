@@ -1,5 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useAstroData } from '../hooks/useAstroData';
+import { useTransitData } from '../hooks/useTransitData';
+import { calculateTransitAspects } from '../utils/transitAspects';
 import { MandalaChart } from './MandalaChart';
 import { RefreshCw, Compass, User, Users } from 'lucide-react';
 import { useAgendaContext } from '../context/AgendaContext';
@@ -47,6 +49,16 @@ export const MandalaPage = () => {
   }, [selectedTarget, activeProfile]);
 
   const { data, loading, error, recalculate } = useAstroData(birthData);
+
+  // Transit states
+  const [showTransits, setShowTransits] = useState(false);
+  const [showTransitAspects, setShowTransitAspects] = useState(false);
+
+  // Transit hook
+  const { data: transitData, loading: transitLoading } = useTransitData(
+    selectedTarget === 'current' ? null : birthData,
+    true
+  );
 
   // Parse data for MandalaChart - includes planets, secondary bodies, and angles
   const chartPlanets = useMemo(() => {
@@ -117,6 +129,18 @@ export const MandalaPage = () => {
     return data?.aspects || [];
   }, [data]);
 
+  // Calculate transit aspects
+  const transitAspects = useMemo(() => {
+    if (!showTransitAspects || !transitData?.planets || !chartPlanets) return [];
+    const transitPlanets = Object.entries(transitData.planets).map(([name, info]: [string, any]) => ({
+      name,
+      degree: info.degree || 0,
+      sign: info.sign || '',
+      retrograde: info.retrograde || false,
+    }));
+    return calculateTransitAspects(transitPlanets, chartPlanets);
+  }, [showTransitAspects, transitData, chartPlanets]);
+
   const allTargets = [
     { id: 'current', name: 'Céu Sagrado (Agora)', icon: <Compass size={14}/> },
     { id: 'me', name: `Meu Mapa Natal`, icon: <User size={14}/> },
@@ -161,6 +185,32 @@ export const MandalaPage = () => {
           >
             <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
           </button>
+
+          <button
+            onClick={() => setShowTransits(v => !v)}
+            className={`p-3 border rounded-xl transition-all shadow-sm text-[10px] font-black uppercase tracking-wider ${
+              showTransits
+                ? 'bg-blue-50 border-blue-200 text-blue-500'
+                : 'bg-white border-gray-100 text-gray-500 hover:text-blue-400 hover:border-blue/20'
+            }`}
+            title="Trânsitos Planetários"
+          >
+            Trânsitos
+          </button>
+
+          {showTransits && (
+            <button
+              onClick={() => setShowTransitAspects(v => !v)}
+              className={`p-3 border rounded-xl transition-all shadow-sm text-[10px] font-black uppercase tracking-wider ${
+                showTransitAspects
+                  ? 'bg-purple-50 border-purple-200 text-purple-500'
+                  : 'bg-white border-gray-100 text-gray-500 hover:text-purple-400 hover:border-purple/20'
+              }`}
+              title="Aspectos de Trânsito"
+            >
+              Aspectos
+            </button>
+          )}
         </div>
       </div>
 
@@ -182,12 +232,24 @@ export const MandalaPage = () => {
       )}
 
       {chartPlanets.length > 0 ? (
-        <div className="animate-in zoom-in-95 duration-700 bg-white/40 backdrop-blur-sm rounded-[2rem] border border-gold/10 p-6 shadow-sm">
+        <div className="animate-in zoom-in-95 duration-700 bg-white/40 backdrop-blur-sm rounded-[2rem] border border-gold/10 p-6 shadow-sm relative">
+          {transitLoading && showTransits && (
+            <div className="absolute top-4 right-4 text-[9px] text-blue-400 animate-pulse">
+              Sincronizando trânsitos...
+            </div>
+          )}
           <MandalaChart
             size={580}
             planets={chartPlanets}
             houses={chartHouses}
             aspects={chartAspects}
+            transitPlanets={transitData?.planets ? Object.entries(transitData.planets).map(([name, info]: [string, any]) => ({
+              name,
+              degree: info.degree || 0,
+              sign: info.sign || '',
+              retrograde: info.retrograde || false,
+            })) : []}
+            transitAspects={transitAspects}
           />
         </div>
       ) : !loading && !error ? (
