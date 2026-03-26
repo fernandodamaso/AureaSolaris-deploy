@@ -8,7 +8,7 @@ import { safeInvoke } from '../utils/tauri';
 const HardwareRow = ({ label, val, icon }: { label: string, val: string, icon: ReactNode }) => (
   <div className="flex justify-between items-center py-3 border-b border-gray-50 last:border-none px-1">
     <div className="flex items-center gap-3 text-[9px] font-black uppercase tracking-[0.2em] text-gray-400">
-      <div className="p-2 bg-[#FCF9F1] rounded-md text-[#B8860B]">{icon}</div> {label}
+      <div className="p-2 bg-[#FCF9F1] rounded-md text-[#c5a059]">{icon}</div> {label}
     </div>
     <div className="text-[11px] font-black text-gray-700">{val}</div>
   </div>
@@ -18,6 +18,7 @@ export const ControlePanel = () => {
   const [showOllama, setShowOllama] = useState(false);
   const [editingAgent, setEditingAgent] = useState<any>(null);
   const [aiMode, setAiMode] = useState(() => localStorage.getItem('ai_master_switch') || 'ollama');
+  const [houseSystem, setHouseSystem] = useState(() => localStorage.getItem('aurea_house_system') || 'Regiomontanus');
   const [metrics, setMetrics] = useState({ uptime: '---', latency: '---', memory: '---', cpu: '---', tokens: '0' });
   const [apiStatus] = useState({ todoist: 'online', telegram: 'online', astro: 'online' });
   const { getPlanetaryHour } = useAstrologyData();
@@ -52,15 +53,15 @@ export const ControlePanel = () => {
   };
 
   return (
-    <div className="space-y-12 animate-in fade-in pb-20 max-w-7xl mx-auto">
+    <div className="space-y-8 animate-in fade-in pb-20 max-w-5xl mx-auto">
       <Advice agent="Stark" content="Senhora, seu computador está operando com fluidez solar. Notei que alguns processos em segundo plano estão consumindo energia desnecessária; já silenciei os menos importantes para que sua bateria dure mais durante seus estudos. O sistema Aurea está saudável e pronto." />
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         
         {/* RECURSOS E MÉTRICAS */}
         <div className="lg:col-span-8 space-y-10">
           <SectionTitle>Métricas de Sistema (Stark Lab)</SectionTitle>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
              <Card title="Recursos do Núcleo" icon={<Cpu size={14}/>}>
                 <div className="space-y-1 mt-4">
                    <HardwareRow label="Latência API" val={metrics.latency} icon={<Zap size={14}/>} />
@@ -70,7 +71,38 @@ export const ControlePanel = () => {
                 </div>
              </Card>
 
-             <Card title="Conexões Estelares (APIs)" icon={<Activity size={14}/>}>
+              <Card title="Configurações Astrológicas" icon={<Cpu size={14}/>}>
+                <div className="space-y-3 mt-4">
+                   <div className="space-y-2">
+                     <label className="text-[10px] font-black uppercase text-gray-400 tracking-widest">
+                       Sistema de Casas
+                     </label>
+                     <select
+                       value={houseSystem}
+                       onChange={(e) => {
+                         const value = e.target.value;
+                         setHouseSystem(value);
+                         localStorage.setItem('aurea_house_system', value);
+                       }}
+                       className="w-full px-3 py-2 bg-gold/5 border border-gold/20 rounded-lg 
+                                  text-[10px] font-black text-gold uppercase tracking-widest outline-none
+                                  cursor-pointer shadow-sm"
+                     >
+                       <option value="Regiomontanus">♈ Regiomontanus (Padrão)</option>
+                       <option value="Placidus">♉ Placidus</option>
+                       <option value="Koch">♊ Koch</option>
+                       <option value="Porphyrius">♋ Porphyrius</option>
+                       <option value="Campanus">♌ Campanus</option>
+                       <option value="Equal">⚖ Equal</option>
+                      </select>
+                     <p className="text-[9px] text-gray-400 italic">
+                       Usado para calcular as 12 casas astrológicas.
+                     </p>
+                   </div>
+                </div>
+              </Card>
+
+              <Card title="Conexões Estelares (APIs)" icon={<Activity size={14}/>}>
                 <div className="space-y-3 mt-4">
                    <div className="flex justify-between items-center p-3 bg-white border border-gray-50 rounded-lg shadow-xs">
                       <span className="text-[10px] font-black uppercase text-gray-400 tracking-widest">Todoist Engine</span>
@@ -155,7 +187,7 @@ export const ControlePanel = () => {
            { n: 'Stark', tokens: '5.1k', usage: 80, cost: '$0.03' },
            { n: 'Uncle Duck', tokens: '0.3k', usage: 10, cost: '$0.00' }
          ].map(agent => (
-           <div key={agent.n} className="p-6 bg-white border border-gray-100 rounded-2xl shadow-sm hover:border-gold/20 transition-all group">
+           <div key={agent.n} className="p-6 bg-white border border-gray-100 rounded-lg shadow-sm hover:border-gold/20 transition-all group">
               <div className="flex justify-between items-center mb-4">
                  <h5 className="font-black text-gray-700 uppercase text-[10px] tracking-widest">{agent.n}</h5>
                  <div className="px-2 py-0.5 bg-gold/5 text-gold text-[8px] font-black rounded-full">{agent.usage}%</div>
@@ -183,7 +215,7 @@ export const ControlePanel = () => {
 
        {showOllama && (
         <div className="fixed inset-0 z-[700] flex items-center justify-center bg-black/60 backdrop-blur-md p-4 animate-in fade-in">
-           <div className="w-full max-w-2xl shadow-2xl rounded-[2.5rem] overflow-hidden border border-gold/20">
+           <div className="w-full max-w-2xl shadow-2xl rounded-2xl overflow-hidden border border-gold/20">
               <OllamaGuide onClose={() => setShowOllama(false)} />
            </div>
         </div>
@@ -235,7 +267,7 @@ const AgentConfigModal = ({ agentName, onClose }: { agentName: string, onClose: 
       <div className="bg-[#FCF9F1] w-full max-w-4xl rounded-[3rem] shadow-2xl border border-gold/20 overflow-hidden flex flex-col max-h-[90vh]">
         <div className="px-10 py-8 bg-white/80 border-b border-gold/10 flex justify-between items-center">
           <div className="flex items-center gap-4">
-             <div className="w-12 h-12 rounded-2xl bg-gold/10 flex items-center justify-center text-gold shadow-sm">
+             <div className="w-12 h-12 rounded-lg bg-gold/10 flex items-center justify-center text-gold shadow-sm">
                 <Settings size={24} />
              </div>
              <div>
@@ -246,7 +278,7 @@ const AgentConfigModal = ({ agentName, onClose }: { agentName: string, onClose: 
                 <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">Forjando a essência da IA</p>
              </div>
           </div>
-          <button onClick={onClose} className="p-3 hover:bg-red-50 text-gray-300 hover:text-red-500 rounded-2xl transition-all"><X size={20}/></button>
+          <button onClick={onClose} className="p-3 hover:bg-red-50 text-gray-300 hover:text-red-500 rounded-lg transition-all"><X size={20}/></button>
         </div>
 
         <div className="flex-1 overflow-y-auto p-10 space-y-10 custom-scrollbar">
@@ -261,7 +293,7 @@ const AgentConfigModal = ({ agentName, onClose }: { agentName: string, onClose: 
                      <Sparkles size={12}/> Personalidade & Tom
                   </label>
                   <textarea 
-                    className="w-full h-32 bg-white p-5 rounded-2xl border border-gold/5 focus:border-gold/30 outline-none text-[12px] font-medium leading-relaxed text-gray-700 shadow-sm transition-all"
+                    className="w-full h-32 bg-white p-5 rounded-lg border border-gold/5 focus:border-gold/30 outline-none text-[12px] font-medium leading-relaxed text-gray-700 shadow-sm transition-all"
                     placeholder="Descreva como o agente deve se comportar..."
                     value={config.personality}
                     onChange={e => setConfig({...config, personality: e.target.value})}
@@ -273,7 +305,7 @@ const AgentConfigModal = ({ agentName, onClose }: { agentName: string, onClose: 
                      <Activity size={12}/> Funcionalidades Principais
                   </label>
                   <textarea 
-                    className="w-full h-32 bg-white p-5 rounded-2xl border border-gold/5 focus:border-gold/30 outline-none text-[12px] font-medium leading-relaxed text-gray-700 shadow-sm transition-all"
+                    className="w-full h-32 bg-white p-5 rounded-lg border border-gold/5 focus:border-gold/30 outline-none text-[12px] font-medium leading-relaxed text-gray-700 shadow-sm transition-all"
                     placeholder="Quais são as responsabilidades técnicas deste agente?"
                     value={config.functionalities}
                     onChange={e => setConfig({...config, functionalities: e.target.value})}
@@ -288,7 +320,7 @@ const AgentConfigModal = ({ agentName, onClose }: { agentName: string, onClose: 
                      <Database size={12}/> Modelo de LLM (Cérebro)
                   </label>
                   <select 
-                     className="w-full p-4 bg-white rounded-2xl border border-gold/5 focus:border-gold/30 outline-none text-[12px] font-black text-gray-700 shadow-sm appearance-none cursor-pointer"
+                     className="w-full p-4 bg-white rounded-lg border border-gold/5 focus:border-gold/30 outline-none text-[12px] font-black text-gray-700 shadow-sm appearance-none cursor-pointer"
                      value={config.model}
                      onChange={e => setConfig({...config, model: e.target.value})}
                   >
@@ -319,7 +351,7 @@ const AgentConfigModal = ({ agentName, onClose }: { agentName: string, onClose: 
                   </div>
                </div>
 
-               <div className="p-6 bg-gold/5 rounded-3xl border border-gold/10 flex gap-4 items-start">
+               <div className="p-6 bg-gold/5 rounded-xl border border-gold/10 flex gap-4 items-start">
                   <Shield size={18} className="text-gold shrink-0 mt-1" />
                   <div>
                      <p className="text-[10px] font-black uppercase tracking-tight text-gray-700">Protocolo de Segurança Ativo</p>
