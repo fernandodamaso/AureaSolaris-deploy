@@ -367,6 +367,18 @@ result = calculate_transit_positions(
 
 **Integração frontend:** Hook `useTransitData.ts` busca dados via comando Tauri `get_transit_positions`.
 
+### 5.11 Cálculo de Aspectos de Trânsitos
+
+A função `calculateTransitAspects` em `src/utils/transitAspects.ts` calcula aspectos entre planetas de trânsito (posições atuais) e planetas natais (mapa natal).
+
+**Aspectos considerados:** Conjunção (0°, orb 8°), Oposição (180°, orb 8°), Trígono (120°, orb 8°), Quadratura (90°, orb 6°), Sextil (60°, orb 4°), Quincúncio (150°, orb 3°).
+
+**Regras:**
+- Ignora ASC e MC (ângulos) nos cálculos.
+- Usa a menor distância angular (considerando wrapping 0°/360°).
+- Retorna o primeiro aspecto que se enquadra dentro do orb (por ordem de definição).
+- Interfaces `Planet` e `Aspect` exportadas de `MandalaChart.tsx`.
+
 ---
 
 ## 6. Fluxo de Dados
