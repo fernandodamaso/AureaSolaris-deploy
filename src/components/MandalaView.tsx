@@ -66,7 +66,7 @@ export const MandalaView = ({ data, size = 600 }: MandalaViewProps) => {
       .filter(([_, pos]: [string, any]) => pos && typeof pos.degree === 'number')
       .map(([name, pos]: [string, any]) => {
         // 0 graus abs_pos -> 180 no SVG (esquerda, ASC tradicional)
-        const angle = (pos.degree + 180) * (Math.PI / 180);
+        const angle = (180 - pos.degree) * (Math.PI / 180);
         return {
           name,
           symbol: getPlanetSymbol(name),
@@ -197,12 +197,12 @@ export const MandalaView = ({ data, size = 600 }: MandalaViewProps) => {
 
         {/* Zodiac Signs Segments */}
         {signs.map((sign, i) => {
-          const startAngle = (i * 30 - 180) * (Math.PI / 180);
-          
+          const startAngle = (180 - i * 30) * (Math.PI / 180);
+
           const x1 = center + radius * Math.cos(startAngle);
           const y1 = center + radius * Math.sin(startAngle);
-          
-          const textAngle = (i * 30 + 15 - 180) * (Math.PI / 180);
+
+          const textAngle = (180 - (i * 30 + 15)) * (Math.PI / 180);
           const tx = center + (radius + 20) * Math.cos(textAngle);
           const ty = center + (radius + 20) * Math.sin(textAngle);
 
