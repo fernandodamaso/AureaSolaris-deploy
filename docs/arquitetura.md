@@ -247,6 +247,7 @@ O script Python recebe argumentos em JSON (opcional), processa e retorna o resul
 
 ### 5.3. Funcionalidades
 - `calculate_astrology`: Calcula planetas, aspectos e regências (dia/hora).
+- `calculate_transit_positions`: Calcula posições planetárias atuais (trânsitos) para data/hora, sem casas ou aspectos.
 - `get_aspects`: Detecção dinâmica de distâncias com orbes configuráveis.
 - `get_planetary_hour`: Cálculo baseado na ordem caldéia (24 horas).
 - Cache global em `astro_data.json` na raiz do projeto.

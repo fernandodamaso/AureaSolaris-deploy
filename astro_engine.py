@@ -18,10 +18,14 @@ warnings.filterwarnings("ignore")
 try:
     import swisseph as swe
     SWE_AVAILABLE = True
-    # Set ephemeris path to project directory
+    # Set ephemeris path to ephe subdirectory (Swiss Ephemeris compressed files)
     import os
     project_root = os.path.dirname(os.path.abspath(__file__))
-    swe.set_ephe_path(project_root)
+    ephe_dir = os.path.join(project_root, "ephe")
+    if os.path.isdir(ephe_dir):
+        swe.set_ephe_path(ephe_dir)
+    else:
+        swe.set_ephe_path(project_root)  # fallback
 except ImportError:
     SWE_AVAILABLE = False
 
@@ -74,13 +78,35 @@ ASPECTS = [
     {"type": "Trine",          "angle": 120, "orb": 8.0, "symbol": "△"},
     {"type": "Square",         "angle": 90,  "orb": 6.0, "symbol": "□"},
     {"type": "Sextile",        "angle": 60,  "orb": 4.0, "symbol": "＊"},
-    {"type": "Quincunx",       "angle": 150, "orb": 3.0, "symbol": "⚹"},
-    {"type": "Quintile",       "angle": 72,  "orb": 3.0, "symbol": "ℍ"},
-    {"type": "Bi-Quintile",    "angle": 144, "orb": 3.0, "symbol": "ℎ"},
+    {"type": "Quincunx",       "angle": 150, "orb": 3.0, "symbol": "⚻"},
+    {"type": "Quintile",       "angle": 72,  "orb": 3.0, "symbol": "Q"},
+    {"type": "Bi-Quintile",    "angle": 144, "orb": 3.0, "symbol": "bQ"},
     {"type": "Semi-Sextile",   "angle": 30,  "orb": 2.0, "symbol": "⧬"},
     {"type": "Semi-Square",    "angle": 45,  "orb": 2.0, "symbol": "∠"},
     {"type": "Sesqui-Quadrature", "angle": 135, "orb": 3.0, "symbol": "⚼"},
 ]
+
+# Bodies that get increased orbs: luminaries and angles
+LUMINAR_ANGLES = {"Sun", "Moon", "ASC", "MC"}
+
+# Increased orbs for aspects involving luminaries/angles
+LUMINAR_ORBS = {
+    "Conjunction": 10.0,
+    "Opposition": 10.0,
+    "Trine": 10.0,
+    "Square": 8.0,
+    "Sextile": 6.0,
+    "Quincunx": 3.0,
+}
+
+
+def get_orb_limit(asp_type: str, p1: str, p2: str) -> float:
+    """Return the applicable orb limit based on involved bodies.
+    Luminaries (Sun, Moon) and angles (ASC, MC) get larger orbs."""
+    base_orb = next((a["orb"] for a in ASPECTS if a["type"] == asp_type), 3.0)
+    if p1 in LUMINAR_ANGLES or p2 in LUMINAR_ANGLES:
+        return LUMINAR_ORBS.get(asp_type, base_orb)
+    return base_orb
 
 
 # Horário de verão no Brasil — anos em que DST esteve ativo.
@@ -193,7 +219,16 @@ def calculate_whole_sign_houses(asc_degree: float) -> List[float]:
 
 
 def calculate_aspects(planets: Dict, speeds: Dict) -> List[Dict]:
-    """Calculate all aspects between planets."""
+    """Calculate all aspects between planets with correct applying/separating logic.
+    
+    Applying = the angular distance to the exact aspect angle is DECREASING.
+    Separating = the angular distance is INCREASING.
+    
+    The rate of change of angular distance depends on:
+    - Whether the aspect is on the short arc (dist < 180) or long arc
+    - The relative speeds of the two planets
+    - The direction of approach to the aspect angle
+    """
     keys = list(planets.keys())
     aspects_list = []
     
@@ -209,14 +244,30 @@ def calculate_aspects(planets: Dict, speeds: Dict) -> List[Dict]:
             
             for asp in ASPECTS:
                 angle_val = asp["angle"]
-                orb_limit = asp["orb"]
+                orb_limit = get_orb_limit(asp["type"], p1, p2)
                 dist_from_angle = abs(dist - angle_val)
                 
                 if dist_from_angle < orb_limit:
                     s1 = speeds.get(p1, 0)
                     s2 = speeds.get(p2, 0)
-                    # Applying = faster body moving toward slower
-                    applying = abs(s1) > abs(s2) if (s1 and s2) else True
+                    
+                    # Correct applying/separating logic:
+                    # Compute the signed angular difference (d1 - d2) normalized to [-180, 180]
+                    signed_diff = (d1 - d2) % 360
+                    if signed_diff > 180:
+                        signed_diff -= 360
+                    
+                    # Rate of change of signed angular difference
+                    rate = s1 - s2
+                    
+                    # For the aspect at angle_val:
+                    # If signed_diff is positive and rate is negative → approaching (applying)
+                    # If signed_diff is negative and rate is positive → approaching (applying)
+                    # General rule: signed_diff * rate < 0 means approaching
+                    if rate != 0:
+                        applying = (signed_diff * rate) < 0
+                    else:
+                        applying = True  # stationary, assume applying
                     
                     aspects_list.append({
                         "p1": p1,
@@ -266,10 +317,22 @@ def calculate_astrology(
         # ─── PLANETS via Swiss Ephemeris ───
         planets_data: Dict[str, Dict[str, Any]] = {}
         speeds: Dict[str, float] = {}
+        ephemeris_mode = "unknown"
         
         for name, pid in SWE_PLANETS.items():
             r = swe.calc(jd, pid, flags)
             if r and r[0]:
+                # Detect ephemeris fallback on first planet
+                if ephemeris_mode == "unknown":
+                    returned_flags = r[1]
+                    if returned_flags & swe.FLG_SWIEPH:
+                        ephemeris_mode = "swiss"
+                    elif returned_flags & swe.FLG_MOSEPH:
+                        ephemeris_mode = "moshier"
+                    elif returned_flags & swe.FLG_JPLEPH:
+                        ephemeris_mode = "jpl"
+                    else:
+                        ephemeris_mode = f"unknown({returned_flags})"
                 ecl_lon = r[0][0] % 360
                 ecl_lat = r[0][1]
                 speed = r[0][3] if len(r[0]) > 3 else 0
@@ -282,6 +345,7 @@ def calculate_astrology(
                     "pos_in_sign": round(pos, 2),
                     "retrograde": speed < 0,
                     "speed": round(speed, 4),
+                    "stationary": abs(speed) < 0.001,
                 }
                 speeds[name] = speed
         
@@ -504,6 +568,7 @@ def calculate_astrology(
                 "timestamp": local_dt.isoformat(),
                 "location": {"lat": lat, "lon": lon},
                 "house_system": house_system_used,
+                "ephemeris": ephemeris_mode,
                 "jd": round(jd, 6),
             },
         }
@@ -511,6 +576,41 @@ def calculate_astrology(
     except Exception as e:
         import traceback
         return {"error": str(e), "traceback": traceback.format_exc()}
+
+
+def calculate_transit_positions(
+    year: int,
+    month: int,
+    day: int,
+    hour: float,
+    lat: float = -15.7833,
+    lon: float = -47.9333,
+    include_asteroids: bool = False,
+) -> Dict[str, Any]:
+    """Calcula posições planetárias atuais (trânsitos) para data/hora fornecida.
+    
+    Retorna apenas planetas e corpos secundários (sem casas, aspectos, ângulos).
+    """
+    # Chama a função principal mas filtra a saída
+    full_result = calculate_astrology(year, month, day, hour, lat, lon)
+    if "error" in full_result:
+        return full_result
+    
+    transit_data = {
+        "planets": full_result.get("planets", {}),
+        "secondary": full_result.get("secondary", {}),
+        "moon_phase": full_result.get("moon_phase", {}),
+        "meta": full_result.get("meta", {}),
+    }
+    
+    # Filtrar corpos secundários: manter apenas NorthNode (se não quiser asteroides)
+    if not include_asteroids:
+        allowed = {"NorthNode"}
+        transit_data["secondary"] = {
+            k: v for k, v in transit_data["secondary"].items() if k in allowed
+        }
+    
+    return transit_data
 
 
 if __name__ == "__main__":
@@ -538,14 +638,24 @@ if __name__ == "__main__":
             lat = float(data.get("lat", -15.7833))
             lon = float(data.get("lon", -47.9333))
             house_system = str(data.get("house_system", "Regiomontanus"))
+            transit = data.get("transit", False)
+            include_asteroids = data.get("include_asteroids", False)
         else:
             now = datetime.now()
             y, m, d = now.year, now.month, now.day
             time_val = now.hour + now.minute / 60
             lat, lon = -15.7833, -47.9333
             house_system = "Regiomontanus"
+            transit = False
+            include_asteroids = False
         
-        result = calculate_astrology(y, m, d, time_val, lat, lon, house_system)
+        if transit:
+            result = calculate_transit_positions(
+                y, m, d, time_val, lat, lon,
+                include_asteroids=include_asteroids
+            )
+        else:
+            result = calculate_astrology(y, m, d, time_val, lat, lon, house_system)
         output = json.dumps(result, ensure_ascii=False, indent=2)
         
         print(output, flush=True)
