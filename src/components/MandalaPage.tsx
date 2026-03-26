@@ -54,11 +54,27 @@ export const MandalaPage = () => {
   const [showTransits, setShowTransits] = useState(false);
   const [showTransitAspects, setShowTransitAspects] = useState(false);
 
-  // Transit hook
+  // Transit hook — only fetch when transits are shown
+  const transitBirthData = useMemo(() => {
+    if (!showTransits) return null;
+    return selectedTarget === 'current' ? null : birthData;
+  }, [showTransits, selectedTarget, birthData]);
+
   const { data: transitData, loading: transitLoading } = useTransitData(
-    selectedTarget === 'current' ? null : birthData,
-    true
+    transitBirthData,
+    false
   );
+
+  // Memoized transit planets — reused in both aspects and chart props
+  const transitPlanets = useMemo(() => {
+    if (!transitData?.planets) return [];
+    return Object.entries(transitData.planets).map(([name, info]: [string, any]) => ({
+      name,
+      degree: info.degree || 0,
+      sign: info.sign || '',
+      retrograde: info.retrograde || false,
+    }));
+  }, [transitData]);
 
   // Parse data for MandalaChart - includes planets, secondary bodies, and angles
   const chartPlanets = useMemo(() => {
@@ -131,15 +147,9 @@ export const MandalaPage = () => {
 
   // Calculate transit aspects
   const transitAspects = useMemo(() => {
-    if (!showTransitAspects || !transitData?.planets || !chartPlanets) return [];
-    const transitPlanets = Object.entries(transitData.planets).map(([name, info]: [string, any]) => ({
-      name,
-      degree: info.degree || 0,
-      sign: info.sign || '',
-      retrograde: info.retrograde || false,
-    }));
+    if (!showTransitAspects || transitPlanets.length === 0 || !chartPlanets) return [];
     return calculateTransitAspects(transitPlanets, chartPlanets);
-  }, [showTransitAspects, transitData, chartPlanets]);
+  }, [showTransitAspects, transitPlanets, chartPlanets]);
 
   const allTargets = [
     { id: 'current', name: 'Céu Sagrado (Agora)', icon: <Compass size={14}/> },
@@ -243,12 +253,7 @@ export const MandalaPage = () => {
             planets={chartPlanets}
             houses={chartHouses}
             aspects={chartAspects}
-            transitPlanets={transitData?.planets ? Object.entries(transitData.planets).map(([name, info]: [string, any]) => ({
-              name,
-              degree: info.degree || 0,
-              sign: info.sign || '',
-              retrograde: info.retrograde || false,
-            })) : []}
+            transitPlanets={showTransits ? transitPlanets : []}
             transitAspects={transitAspects}
           />
         </div>
