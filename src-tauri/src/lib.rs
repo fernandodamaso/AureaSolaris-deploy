@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use tauri::Manager;
+use tauri::{Emitter, Manager};
 use std::fs;
 use std::path::{Path, PathBuf};
 use chrono::{Datelike, Timelike};
@@ -84,6 +84,124 @@ async fn ollama_chat(messages: Vec<OpenRouterMessage>) -> Result<String, String>
     let content = json_res.message.content;
     println!("Stark: Resposta Ollama recebida ({} chars)", content.len());
     Ok(content)
+}
+
+#[tauri::command]
+async fn ollama_chat_stream(window: tauri::Window, messages: Vec<OpenRouterMessage>) -> Result<String, String> {
+    let client = reqwest::Client::builder()
+        .timeout(std::time::Duration::from_secs(120))
+        .build()
+        .map_err(|e| format!("Falha ao criar cliente: {}", e))?;
+
+    let req_body = serde_json::json!({
+        "model": "llama3.2",
+        "messages": messages,
+        "stream": true
+    });
+
+    let res = client.post("http://localhost:11434/api/chat")
+        .json(&req_body)
+        .send()
+        .await
+        .map_err(|e| format!("Erro de rede Ollama: {}", e))?;
+
+    if !res.status().is_success() {
+        let err = res.text().await.unwrap_or_default();
+        return Err(format!("Erro Ollama: {}", err));
+    }
+
+    let mut full_content = String::new();
+    let mut stream = res.bytes_stream();
+
+    use futures_util::StreamExt;
+    while let Some(chunk) = stream.next().await {
+        let chunk = chunk.map_err(|e: reqwest::Error| format!("Erro no stream: {}", e))?;
+        let text = String::from_utf8_lossy(&chunk);
+
+        for line in text.lines() {
+            if line.trim().is_empty() { continue; }
+            if let Ok(json) = serde_json::from_str::<serde_json::Value>(line) {
+                if let Some(content) = json["message"]["content"].as_str() {
+                    full_content.push_str(content);
+                    let _ = window.emit("chat-stream-chunk", serde_json::json!({
+                        "content": content,
+                        "done": false
+                    }));
+                }
+                if json["done"].as_bool() == Some(true) {
+                    let _ = window.emit("chat-stream-chunk", serde_json::json!({
+                        "content": "",
+                        "done": true
+                    }));
+                }
+            }
+        }
+    }
+
+    Ok(full_content)
+}
+
+#[tauri::command]
+async fn openrouter_chat_stream(window: tauri::Window, model: String, messages: Vec<OpenRouterMessage>) -> Result<String, String> {
+    dotenvy::from_filename(".env").ok();
+    let api_key = std::env::var("OPENROUTER_API_KEY")
+        .map_err(|_| "OPENROUTER_API_KEY não encontrada".to_string())?;
+
+    let client = reqwest::Client::builder()
+        .timeout(std::time::Duration::from_secs(60))
+        .build()
+        .map_err(|e| format!("Falha ao criar cliente: {}", e))?;
+
+    let req_body = serde_json::json!({
+        "model": model,
+        "messages": messages,
+        "stream": true
+    });
+
+    let res = client.post("https://openrouter.ai/api/v1/chat/completions")
+        .bearer_auth(api_key)
+        .header("HTTP-Referer", "https://github.com/aurea-solaris")
+        .header("X-Title", "Aurea Solaris")
+        .json(&req_body)
+        .send()
+        .await
+        .map_err(|e| format!("Erro de rede OpenRouter: {}", e))?;
+
+    if !res.status().is_success() {
+        let err = res.text().await.unwrap_or_default();
+        return Err(format!("Erro OpenRouter: {}", err));
+    }
+
+    let mut full_content = String::new();
+    let mut stream = res.bytes_stream();
+
+    use futures_util::StreamExt;
+    while let Some(chunk) = stream.next().await {
+        let chunk = chunk.map_err(|e: reqwest::Error| format!("Erro no stream: {}", e))?;
+        let text = String::from_utf8_lossy(&chunk);
+
+        for line in text.lines() {
+            let line = line.trim();
+            if !line.starts_with("data: ") { continue; }
+            let data = &line[6..];
+            if data == "[DONE]" {
+                let _ = window.emit("chat-stream-chunk", serde_json::json!({
+                    "content": "", "done": true
+                }));
+                continue;
+            }
+            if let Ok(json) = serde_json::from_str::<serde_json::Value>(data) {
+                if let Some(content) = json["choices"][0]["delta"]["content"].as_str() {
+                    full_content.push_str(content);
+                    let _ = window.emit("chat-stream-chunk", serde_json::json!({
+                        "content": content, "done": false
+                    }));
+                }
+            }
+        }
+    }
+
+    Ok(full_content)
 }
 
 // Helpers for paths
@@ -779,8 +897,10 @@ pub fn run() {
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_dialog::init())
         .invoke_handler(tauri::generate_handler![
-            openrouter_chat, 
-            ollama_chat, 
+            openrouter_chat,
+            ollama_chat,
+            ollama_chat_stream,
+            openrouter_chat_stream,
             save_history, 
             load_history,
             list_chat_sessions,
