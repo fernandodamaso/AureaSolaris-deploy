@@ -685,6 +685,14 @@ fn run_agm_engine(payload: Option<String>) -> Result<String, String> {
     }
 }
 
+/// Obtém as posições de trânsito planetário para uma data e local específicos.
+///
+/// # Parâmetros
+/// - `payload`: JSON com `year`, `month`, `day`, `hour` (número ou string), `lat`, `lon`, `include_asteroids`.
+///   Se algum campo numérico for omitido, usa a data/hora atual e coordenadas de Brasília.
+///
+/// # Retorno
+/// JSON com dados dos trânsitos planetários.
 #[tauri::command]
 async fn get_transit_positions(payload: String) -> Result<String, String> {
     // Parse do JSON
@@ -693,13 +701,56 @@ async fn get_transit_positions(payload: String) -> Result<String, String> {
     
     // Extrair parâmetros
     let now = chrono::Local::now();
-    let year = data["year"].as_i64().unwrap_or(now.year() as i64) as i32;
-    let month = data["month"].as_i64().unwrap_or(now.month() as i64) as u32;
-    let day = data["day"].as_i64().unwrap_or(now.day() as i64) as u32;
-    let hour = data["hour"].as_f64().unwrap_or(now.hour() as f64 + now.minute() as f64 / 60.0);
-    let lat = data["lat"].as_f64().unwrap_or(-15.7833);
-    let lon = data["lon"].as_f64().unwrap_or(-47.9333);
+    
+    // Helper closures to parse numeric values from JSON, supporting both number and string types
+    let parse_i64 = |key: &str, default: i64| -> i64 {
+        match data[key].as_i64() {
+            Some(v) => v,
+            None => {
+                if let Some(s) = data[key].as_str() {
+                    s.parse::<i64>().unwrap_or(default)
+                } else {
+                    default
+                }
+            }
+        }
+    };
+    
+    let parse_f64 = |key: &str, default: f64| -> f64 {
+        match data[key].as_f64() {
+            Some(v) => v,
+            None => {
+                if let Some(s) = data[key].as_str() {
+                    s.parse::<f64>().unwrap_or(default)
+                } else {
+                    default
+                }
+            }
+        }
+    };
+    
+    let year = parse_i64("year", now.year() as i64) as i32;
+    let month = parse_i64("month", now.month() as i64) as u32;
+    let day = parse_i64("day", now.day() as i64) as u32;
+    let hour = parse_f64("hour", now.hour() as f64 + now.minute() as f64 / 60.0);
+    let lat = parse_f64("lat", -15.7833);
+    let lon = parse_f64("lon", -47.9333);
     let include_asteroids = data["include_asteroids"].as_bool().unwrap_or(false);
+    
+    // Validação de parâmetros
+    if !(1..=12).contains(&month) {
+        return Err(format!("Mês deve estar entre 1 e 12, recebido: {}", month));
+    }
+    if !(1..=31).contains(&day) {
+        return Err(format!("Dia deve estar entre 1 e 31, recebido: {}", day));
+    }
+    if !(0.0..=24.0).contains(&hour) {
+        return Err(format!("Hora deve estar entre 0 e 24, recebido: {}", hour));
+    }
+    // year validation: reasonably between 1900 and 2100
+    if year < 1900 || year > 2100 {
+        return Err(format!("Ano deve estar entre 1900 e 2100, recebido: {}", year));
+    }
     
     // Construir payload para Python
     let python_payload = serde_json::json!({
