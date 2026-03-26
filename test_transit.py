@@ -40,6 +40,16 @@ def test_transit_basic():
     assert "Sun" in planets, "Missing Sun in planets"
     assert "Moon" in planets, "Missing Moon in planets"
     
+    # Angles (ASC, MC, DSC, IC) must NOT be present
+    assert "ASC" not in planets, "ASC should not be in planets"
+    assert "MC" not in planets, "MC should not be in planets"
+    assert "DSC" not in planets, "DSC should not be in planets"
+    assert "IC" not in planets, "IC should not be in planets"
+    
+    # No planet should have a 'house' field
+    for planet_name, planet_data in planets.items():
+        assert "house" not in planet_data, f"Planet {planet_name} should not have 'house' field"
+    
     # Secondary should contain only NorthNode when include_asteroids=False
     secondary = result["secondary"]
     allowed = {"NorthNode"}
@@ -48,6 +58,10 @@ def test_transit_basic():
     
     # NorthNode should be present
     assert "NorthNode" in secondary, "Missing NorthNode in secondary"
+    
+    # No secondary body should have a 'house' field
+    for sec_name, sec_data in secondary.items():
+        assert "house" not in sec_data, f"Secondary body {sec_name} should not have 'house' field"
     
     print("PASS test_transit_basic")
 
@@ -60,12 +74,27 @@ def test_transit_with_asteroids():
     )
     
     assert "error" not in result
+    planets = result["planets"]
+    # Angles (ASC, MC, DSC, IC) must NOT be present
+    assert "ASC" not in planets, "ASC should not be in planets"
+    assert "MC" not in planets, "MC should not be in planets"
+    assert "DSC" not in planets, "DSC should not be in planets"
+    assert "IC" not in planets, "IC should not be in planets"
+    
+    # No planet should have a 'house' field
+    for planet_name, planet_data in planets.items():
+        assert "house" not in planet_data, f"Planet {planet_name} should not have 'house' field"
+    
     secondary = result["secondary"]
     # Should have at least NorthNode, SouthNode, Lilith, PartOfFortune, Vertex
     # (depending on what calculate_astrology returns)
     # At least NorthNode should be present
     assert "NorthNode" in secondary, "Missing NorthNode in secondary"
     # Could have others, but we don't enforce exact list
+    
+    # No secondary body should have a 'house' field
+    for sec_name, sec_data in secondary.items():
+        assert "house" not in sec_data, f"Secondary body {sec_name} should not have 'house' field"
     
     print("PASS test_transit_with_asteroids")
 

@@ -247,7 +247,7 @@ O script Python recebe argumentos em JSON (opcional), processa e retorna o resul
 
 ### 5.3. Funcionalidades
 - `calculate_astrology`: Calcula planetas, aspectos e regências (dia/hora).
-- `calculate_transit_positions`: Calcula posições planetárias atuais (trânsitos) para data/hora, sem casas ou aspectos.
+- `calculate_transit_positions`: Calcula posições planetárias atuais (trânsitos) para data/hora, sem casas, sem aspectos, sem ângulos (ASC, MC) e sem campo `house` em cada planeta.
 - `get_aspects`: Detecção dinâmica de distâncias com orbes configuráveis.
 - `get_planetary_hour`: Cálculo baseado na ordem caldéia (24 horas).
 - Cache global em `astro_data.json` na raiz do projeto.
@@ -351,7 +351,7 @@ A mandala zodiacal segue o padrão da astrologia ocidental (compatível com Astr
 
 ### 5.10 Cálculo de Trânsitos Atuais
 
-A função `calculate_transit_positions` fornece posições planetárias para uma data/hora específica (geralmente o momento atual), sem calcular casas ou aspectos natais.
+A função `calculate_transit_positions` fornece posições planetárias para uma data/hora específica (geralmente o momento atual), sem calcular casas, aspectos ou ângulos (ASC, MC). Os planetas e corpos secundários retornados não incluem o campo `house`.
 
 **Uso:**
 ```python
