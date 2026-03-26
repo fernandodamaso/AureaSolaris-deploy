@@ -57,39 +57,65 @@ pip install kerykeion
 
 ## 🚀 Como Rodar o Projeto
 
-### Opção 1: Usando o Script de Inicialização (Recomendado)
+### ⚡ TESTE RÁPIDO (Para você!)
 
-No Windows, simplesmente execute o arquivo `launch_aurea.bat` na pasta do projeto:
+**Clique duas vezes neste arquivo na sua Área de Trabalho:**
 
-```batch
-launch_aurea.bat
+```
+📁 AureaSolaris-Dev.bat
 ```
 
-### Opção 2: Usando Terminal
+Isso vai:
+1. ✅ Verificar dependências
+2. ✅ Iniciar o servidor Vite
+3. ✅ Abrir automaticamente `http://localhost:1420/` no navegador
 
-1. **Instale as dependências Node.js** (primeira vez apenas):
-   ```bash
-   npm install
-   ```
+---
 
-2. **Inicie o modo desenvolvimento**:
-   ```bash
-   npm run tauri dev
-   ```
+### Opção 2: Dentro do Projeto
 
-Isso abrirá a aplicação em modo de desenvolvimento com hot reload — qualquer mudança no código será refletida automaticamente.
+Execute `start-dev.bat` na pasta do projeto:
+
+```batch
+start-dev.bat
+```
+
+### Opção 3: Via Terminal
+
+```bash
+npm start
+```
+
+O servidor estará em `http://localhost:1420/`
+
+---
 
 ### Comandos Disponíveis
 
-| Comando | Descrição |
-|---------|-----------|
-| `npm run dev` | Inicia apenas o frontend (Vite) |
-| `npm run tauri dev` | Inicia a aplicação completa em desenvolvimento |
-| `npm run build` | Gera build de produção do frontend |
-| `npm run tauri build` | Gera build de produção completa (inclui binário nativo) |
-| `npm run lint` | Verifica problemas de código |
-| `npm test` | Executa a suíte de testes (Vitest) |
-| `npm run test:watch` | Executa testes em modo watch (re-executa ao salvar) |
+| Comando | Descrição | Uso |
+|---------|-----------|-----|
+| `📁 AureaSolaris-Dev.bat` | **ONE-CLICK** - Inicia + abre navegador | **USE ESTE!** |
+| `npm start` | Inicia servidor Vite | Terminal |
+| `npm run dev` | Vite com hot reload | Desenvolvimento |
+| `npm run build` | Verifica TypeScript + build | Pre-deploy |
+| `npm run tauri dev` | App desktop completa | Com Tauri |
+| `npm run lint` | Verifica código | Pre-commit |
+| `npm test` | Executa testes | Verificação |
+
+---
+
+### 🔧 Se der Problema
+
+**Porta já em uso?**
+```bash
+npx kill-port 1420
+npm start
+```
+
+**Erro de TypeScript?**
+```bash
+npm run build
+```
 
 ---
 
@@ -162,6 +188,21 @@ AureaSolaris/
 ```
 
 Para uma explicação detalhada de cada pasta e arquivo, consulte o guia completo: [docs/estrutura-do-projeto.md](docs/estrutura-do-projeto.md)
+
+---
+
+## Cálculos Astrológicos
+
+O Aurea Solaris utiliza o motor `kerykeion` (Python) para cálculos astrológicos de alta precisão:
+
+- **Efemérides:** Swiss Ephemeris (de421.bsp)
+- **Sistema de casas:** Configurável (Regiomontanus, Placidus, Koch, etc.)
+- **Corpos:** 10 planetas + Chiron + North Node + Lilith + Part of Fortune + Vertex
+- **Aspectos:** Todos os aspectos maiores e menores com orbs configuráveis
+- **Horas planetárias:** Baseadas na ordem caldéia
+- **Fase lunar:** Cálculo real via ephemeris
+
+Para validar a precisão, o mapa natal de referência está em `natal_charts/viviane.json`.
 
 ---
 

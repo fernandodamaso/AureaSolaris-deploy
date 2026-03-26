@@ -1,5 +1,59 @@
 import { useState, useEffect, useRef } from 'react';
 import { safeInvoke } from '../utils/tauri';
+import { calculateFallback } from '../utils/astro-calc';
+
+const SIGN_MAP: Record<string, string> = {
+  Ari: 'Áries', Tau: 'Touro', Gem: 'Gêmeos', Can: 'Câncer',
+  Leo: 'Leão', Vir: 'Virgem', Lib: 'Libra', Sco: 'Escorpião',
+  Sag: 'Sagitário', Cap: 'Capricórnio', Aqu: 'Aquário', Pis: 'Peixes'
+};
+
+const ASPECT_MAP: Record<string, string> = {
+  Conjunction: 'Conjunção', Trine: 'Trígono', Square: 'Quadratura',
+  Sextile: 'Sextil', Opposition: 'Oposição', Quincunx: 'Inconjunto',
+  Quintile: 'Quintil', BiQuintile: 'Bi-Quintil', SemiSextile: 'Semi-Sextil',
+  SemiSquare: 'Semi-Quadratura', SesquiQuadrature: 'Sesqui-Quadratura'
+};
+
+const REGENT_MAP: Record<string, string> = {
+  Sun: 'Sol', Moon: 'Lua', Mercury: 'Mercúrio', Venus: 'Vênus',
+  Mars: 'Marte', Jupiter: 'Júpiter', Saturn: 'Saturno'
+};
+
+function normalizeAstroData(data: any): any {
+  if (!data) return null;
+  
+  const normalized = { ...data };
+  
+  if (normalized.planets) {
+    normalized.planets = Object.fromEntries(
+      Object.entries(normalized.planets).map(([k, v]: [string, any]) => [
+        k,
+        {
+          ...v,
+          sign: SIGN_MAP[v.sign] || v.sign,
+          element: v.element === 'Fire' ? 'Fogo' : v.element === 'Earth' ? 'Terra' : v.element === 'Air' ? 'Ar' : v.element === 'Water' ? 'Água' : v.element
+        }
+      ])
+    );
+  }
+  
+  if (normalized.aspects) {
+    normalized.aspects = normalized.aspects.map((a: any) => ({
+      ...a,
+      type: ASPECT_MAP[a.type] || a.type
+    }));
+  }
+  
+  if (normalized.regence) {
+    normalized.regence = {
+      day_regent: REGENT_MAP[normalized.regence.day_regent] || normalized.regence.day_regent,
+      hour_regent: REGENT_MAP[normalized.regence.hour_regent] || normalized.regence.hour_regent
+    };
+  }
+  
+  return normalized;
+}
 
 export interface PlanetaryPosition {
   sign: string;
@@ -16,6 +70,7 @@ export interface AstroAspect {
   type: string;
   symbol: string;
   orb: number;
+  applying?: boolean;
 }
 
 export interface LiveAstroData {
@@ -25,6 +80,11 @@ export interface LiveAstroData {
   regence: {
     day_regent: string;
     hour_regent: string;
+  };
+  moon_phase: {
+    phase: string;
+    icon: string;
+    illumination: number;
   };
   meta: {
     timestamp: string;
@@ -67,12 +127,26 @@ export const useAstrologyData = (natalData?: { Sun: number, Moon: number, ASC: n
         }
       }
 
+      // Último fallback: calcular no browser usando algorithms JavaScript puros
+      if (!res) {
+        const now = new Date();
+        const fallback = await calculateFallback(
+          now.getFullYear(),
+          now.getMonth() + 1,
+          now.getDate(),
+          now.getHours(),
+          now.getMinutes()
+        );
+        setLiveData(normalizeAstroData(fallback));
+        return;
+      }
+
       if (res) {
         try {
           const parsed = JSON.parse(res);
           if (parsed && !parsed.error) {
             if (parsed.planets) {
-              setLiveData(parsed);
+              setLiveData(normalizeAstroData(parsed));
             }
           }
         } catch (e) { console.error("Erro ao parsear astro data:", e); }
@@ -92,16 +166,28 @@ export const useAstrologyData = (natalData?: { Sun: number, Moon: number, ASC: n
   const ORB_TRINE = 8;
   const ORB_SQUARE = 6;
   const ORB_SEXTILE = 4;
+  const ORB_QUINCUNX = 3;
+  const ORB_QUINTILE = 3;
+  const ORB_SEMI_SEXTILE = 2;
+  const ORB_SEMI_SQUARE = 2;
 
   const getAspect = (d1: number, d2: number) => {
     const diff = Math.abs(d1 - d2) % 360;
     const dist = diff > 180 ? 360 - diff : diff;
     const orb = Math.round(dist * 100) / 100;
+    
     if (dist < ORB_CONJUNCTION) return { type: 'Conjunção', icon: '☌', desc: `Conjunção (orbe: ${orb}°)`, orb };
     if (Math.abs(dist - 180) < ORB_OPPOSITION) return { type: 'Oposição', icon: '☍', desc: `Oposição (orbe: ${orb}°)`, orb };
     if (Math.abs(dist - 120) < ORB_TRINE) return { type: 'Trígono', icon: '△', desc: `Trígono (orbe: ${orb}°)`, orb };
     if (Math.abs(dist - 90) < ORB_SQUARE) return { type: 'Quadratura', icon: '□', desc: `Quadratura (orbe: ${orb}°)`, orb };
     if (Math.abs(dist - 60) < ORB_SEXTILE) return { type: 'Sextil', icon: '＊', desc: `Sextil (orbe: ${orb}°)`, orb };
+    // Minor aspects
+    if (Math.abs(dist - 150) < ORB_QUINCUNX) return { type: 'Inconjunto', icon: '☽', desc: `Inconjunto (orbe: ${orb}°)`, orb };
+    if (Math.abs(dist - 72) < ORB_QUINTILE) return { type: 'Quintil', icon: 'ℍ', desc: `Quintil (orbe: ${orb}°)`, orb };
+    if (Math.abs(dist - 144) < ORB_QUINTILE) return { type: 'Bi-Quintil', icon: 'ℎ', desc: `Bi-Quintil (orbe: ${orb}°)`, orb };
+    if (Math.abs(dist - 30) < ORB_SEMI_SEXTILE) return { type: 'Semi-Sextil', icon: '⚹', desc: `Semi-Sextil (orbe: ${orb}°)`, orb };
+    if (Math.abs(dist - 45) < ORB_SEMI_SQUARE) return { type: 'Semi-Quadratura', icon: '∠', desc: `Semi-Quadratura (orbe: ${orb}°)`, orb };
+    if (Math.abs(dist - 135) < ORB_QUINCUNX) return { type: 'Sesqui-Quadratura', icon: '⚼', desc: `Sesqui-Quadratura (orbe: ${orb}°)`, orb };
     return null;
   };
 
@@ -160,14 +246,25 @@ export const useAstrologyData = (natalData?: { Sun: number, Moon: number, ASC: n
   };
 
   const getPlanetaryHour = () => {
+    const now = new Date();
+    const icons: Record<string, string> = { 'Sun': '☉', 'Moon': '☽', 'Mercury': '☿', 'Venus': '♀', 'Mars': '♂', 'Jupiter': '♃', 'Saturn': '♄' };
+    const engToPt: Record<string, string> = { 'Sun': 'Sol', 'Moon': 'Lua', 'Mercury': 'Mercúrio', 'Venus': 'Vênus', 'Mars': 'Marte', 'Jupiter': 'Júpiter', 'Saturn': 'Saturno' };
+    
     if (liveData?.regence) {
-      const icons: Record<string, string> = { 'Sol': '☉', 'Vênus': '♀', 'Mercúrio': '☿', 'Lua': '☽', 'Saturno': '♄', 'Júpiter': '♃', 'Marte': '♂' };
-      const engToPt: Record<string, string> = { 'Sun': 'Sol', 'Venus': 'Vênus', 'Mercury': 'Mercúrio', 'Moon': 'Lua', 'Saturn': 'Saturno', 'Jupiter': 'Júpiter', 'Mars': 'Marte' };
       const regentEng = liveData.regence.hour_regent;
       const ptName = engToPt[regentEng] || regentEng;
-      return { icon: icons[ptName] || '?', name: ptName, time: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) };
+      return { icon: icons[ptName] || icons[regentEng] || '?', name: ptName, time: now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) };
     }
-    return { icon: '?', name: 'Calculando...', time: '--:--' };
+    
+    const dayOfWeek = (now.getDay() + 1) % 7;
+    const dayRegent = ["Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn"][dayOfWeek];
+    const chaldeanOrder = ["Saturn", "Jupiter", "Mars", "Sun", "Venus", "Mercury", "Moon"];
+    const startIdx = chaldeanOrder.indexOf(dayRegent);
+    const hourIdx = (startIdx + now.getHours()) % 7;
+    const regentEng = chaldeanOrder[hourIdx];
+    const ptName = engToPt[regentEng] || regentEng;
+    
+    return { icon: icons[regentEng] || '?', name: ptName, time: now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) };
   };
 
   const getSchedulingSuggestion = () => {

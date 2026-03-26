@@ -114,7 +114,7 @@ git commit -t -m "feat: add transit position calculation function"
 **Files:**
 - Modify: `src-tauri/src/lib.rs`
 
-- [ ] **Step 1: Adicionar comando `get_transit_positions`**
+- [x] **Step 1: Adicionar comando `get_transit_positions`**
 
 Abra `src-tauri/src/lib.rs` e adicione novo comando após os existentes (procure por `#[tauri::command]`):
 
@@ -154,7 +154,7 @@ fn get_transit_positions(payload: String) -> Result<String, String> {
 }
 ```
 
-- [ ] **Step 2: Registrar comando no `invoke_handler`**
+- [x] **Step 2: Registrar comando no `invoke_handler`**
 
 No array de comandos em `tauri::generate_handler![...]`, adicione `get_transit_positions`.
 
@@ -167,7 +167,7 @@ const result = await safeInvoke('get_transit_positions', { payload: JSON.stringi
 console.log(result);
 ```
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add src-tauri/src/lib.rs

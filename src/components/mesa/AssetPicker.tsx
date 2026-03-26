@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X, FileText, Star, Calendar, ListTodo, BookOpen, MessageSquare, ChevronRight } from 'lucide-react';
+import { X, FileText, Star, Calendar, ListTodo, BookOpen, ChevronRight } from 'lucide-react';
 
 interface AssetItem {
   id: string;
@@ -62,26 +62,9 @@ export const AssetPicker = ({ onClose, onImport }: AssetPickerProps) => {
           data: l,
         }));
       }
+      // TODO: não implementado - funcionalidade de importar chats removida da mesa
       case 'chats': {
-        // Gather from mock chat sessions
-        const chatItems: AssetItem[] = [];
-        for (let i = 0; i < localStorage.length; i++) {
-          const key = localStorage.key(i);
-          if (key?.startsWith('aurea_mock_') && !key.includes('legacy') && !key.includes('board')) {
-            const agent = key.replace('aurea_mock_', '').split('_')[0];
-            const data = JSON.parse(localStorage.getItem(key) || '[]');
-            if (data.length > 0) {
-              chatItems.push({
-                id: key,
-                type: 'chat' as const,
-                title: `Chat com ${agent}`,
-                preview: data[data.length - 1]?.content?.substring(0, 60) || 'Conversa',
-                data: { agent, messages: data },
-              });
-            }
-          }
-        }
-        return chatItems;
+        return [];
       }
       default:
         return [];
@@ -94,7 +77,8 @@ export const AssetPicker = ({ onClose, onImport }: AssetPickerProps) => {
     { id: 'calendar', label: 'Calendário', icon: <Calendar size={12} /> },
     { id: 'tasks', label: 'Tarefas', icon: <ListTodo size={12} /> },
     { id: 'lessons', label: 'Lições', icon: <BookOpen size={12} /> },
-    { id: 'chats', label: 'Chats', icon: <MessageSquare size={12} /> },
+    // TODO: não implementado - funcionalidade de importar chats removida da mesa
+    // { id: 'chats', label: 'Chats', icon: <MessageSquare size={12} /> },
   ];
 
   const assets = getAssets(activeTab);

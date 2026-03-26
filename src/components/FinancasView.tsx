@@ -25,7 +25,7 @@ export const FinancasView = () => {
     description: '', amount: '', type: 'expense', category: 'Geral' 
   });
 
-  const [newGoal, setNewGoal] = useState({ name: '', target: '', current: '', color: '#B8860B' });
+  const [newGoal, setNewGoal] = useState({ name: '', target: '', current: '', color: '#c5a059' });
   const [showAddGoal, setShowAddGoal] = useState(false);
 
   const handleAdd = () => {
@@ -49,7 +49,7 @@ export const FinancasView = () => {
       current: Number(newGoal.current) || 0,
       color: newGoal.color
     });
-    setNewGoal({ name: '', target: '', current: '', color: '#B8860B' });
+    setNewGoal({ name: '', target: '', current: '', color: '#c5a059' });
     setShowAddGoal(false);
   };
 
@@ -344,7 +344,7 @@ export const FinancasView = () => {
 
       {showOllama && (
         <div className="fixed inset-0 z-[700] flex items-center justify-center bg-black/60 backdrop-blur-md p-4 animate-in fade-in">
-           <div className="w-full max-w-2xl shadow-2xl rounded-[2.5rem] overflow-hidden border border-gold/20">
+           <div className="w-full max-w-2xl shadow-2xl rounded-2xl overflow-hidden border border-gold/20">
               <OllamaGuide onClose={() => setShowOllama(false)} />
            </div>
         </div>

@@ -1,6 +1,17 @@
 import { useRef, useEffect, useState, useMemo } from 'react';
 import * as d3 from 'd3';
 import { Settings, X } from 'lucide-react';
+import {
+  calcElements, calcQualities, calcMidpoints,
+  calcDominance, calcRegentAsc, calcSenhorGenitura,
+  calcAlcocoden, calcAstroSignature, calcHyleg, getDignityState,
+  SIGN_SYMBOLS as DIGNITY_SIGNS,
+  ELEMENT_COLORS as EL_COLORS, ELEMENT_LABELS, ELEMENT_EMOJIS,
+  QUALITY_COLORS, QUALITY_LABELS, PLANET_NAMES_PT, PLANET_SYMBOLS as DIGNITY_PSYMBOLS,
+  formatDeg as dignityFormatDeg,
+} from '../utils/astro-dignity';
+
+
 
 /* ─── Interfaces ──────────────────────────────────────────────── */
 
@@ -15,6 +26,7 @@ interface Planet {
   stationary?: boolean;
   applying?: boolean;
   speed?: number;
+  house?: number;
 }
 
 interface House {
@@ -62,7 +74,7 @@ const PLANET_SYMBOLS: Record<string, string> = {
   Sun: '☉', Moon: '☽', Mercury: '☿', Venus: '♀', Mars: '♂',
   Jupiter: '♃', Saturn: '♄', Uranus: '♅', Neptune: '♆', Pluto: '♇',
   Chiron: '⚷', NorthNode: '☊', SouthNode: '☋', Lilith: '⚸',
-  PartOfFortune: '⊙', Vertex: 'Vx',
+  PartOfFortune: '⊗', Vertex: 'Vx',
   ASC: 'Asc', MC: 'MC', DSC: 'Dsc', IC: 'IC',
 };
 
@@ -99,7 +111,20 @@ const TERMS: TermDef[][] = [
 
 /* ─── Decanatos ────────────────────────────────────────────────── */
 
-const DECANATE_RULERS = ['Marte','Sol','Vênus','Mercúrio','Lua','Saturno','Júpiter','Marte','Sol','Vênus','Mercúrio','Lua'];
+const DECANATE_RULERS = [
+  'Marte','Sol','Vênus',        // Áries
+  'Sol','Vênus','Mercúrio',     // Touro
+  'Vênus','Mercúrio','Lua',     // Gêmeos
+  'Mercúrio','Lua','Saturno',   // Câncer
+  'Lua','Saturno','Júpiter',    // Leão
+  'Saturno','Júpiter','Marte',  // Virgem
+  'Júpiter','Marte','Sol',      // Libra
+  'Marte','Sol','Vênus',        // Escorpião
+  'Sol','Vênus','Mercúrio',     // Sagitário
+  'Vênus','Mercúrio','Lua',     // Capricórnio
+  'Mercúrio','Lua','Saturno',   // Aquário
+  'Lua','Saturno','Júpiter',    // Peixes
+];
 
 /* ─── Helpers ──────────────────────────────────────────────────── */
 
@@ -303,23 +328,23 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects }: MandalaCh
             startAngle: arcRad(absStart),
             endAngle: arcRad(absEnd),
           })!;
-          g.append('path').attr('d', termPath)
-            .attr('transform', `translate(${cx},${cy})`)
-            .attr('fill', PLANET_COLORS[t.planet] || '#ccc').attr('opacity', 0.12);
+           g.append('path').attr('d', termPath)
+             .attr('transform', `translate(${cx},${cy})`)
+             .attr('fill', PLANET_COLORS[t.planet] || '#ccc').attr('opacity', 0.30);
 
-          g.append('line')
-            .attr('x1', polarX(termR, absStart)).attr('y1', polarY(termR, absStart))
-            .attr('x2', polarX(houseR, absStart)).attr('y2', polarY(houseR, absStart))
-            .attr('stroke', '#c5a059').attr('stroke-width', 0.2).attr('opacity', 0.15);
+           g.append('line')
+             .attr('x1', polarX(termR, absStart)).attr('y1', polarY(termR, absStart))
+             .attr('x2', polarX(houseR, absStart)).attr('y2', polarY(houseR, absStart))
+             .attr('stroke', '#c5a059').attr('stroke-width', 0.3).attr('opacity', 0.25);
 
-          if (t.end - t.start >= 5) {
-            g.append('text')
-              .attr('x', polarX((houseR + termR) / 2, absMid))
-              .attr('y', polarY((houseR + termR) / 2, absMid))
-              .attr('text-anchor', 'middle').attr('dominant-baseline', 'central')
-              .attr('font-size', 4).attr('fill', '#999').attr('opacity', 0.5)
-              .text(t.planet.substring(0, 2));
-          }
+           if (t.end - t.start >= 4) {
+             g.append('text')
+               .attr('x', polarX((houseR + termR) / 2, absMid))
+               .attr('y', polarY((houseR + termR) / 2, absMid))
+               .attr('text-anchor', 'middle').attr('dominant-baseline', 'central')
+               .attr('font-size', 6).attr('fill', '#999').attr('opacity', 0.75)
+               .text(t.planet.substring(0, 2));
+           }
         }
       }
     }
@@ -501,7 +526,9 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects }: MandalaCh
       .sort((a, b) => normDeg(a.degree) - normDeg(b.degree))
       .map(p => {
         const si = getSignIdx(p.degree);
-        const motion = p.stationary ? 'Est' : p.retrograde ? 'Rx' : p.applying ? 'App' : 'Sep';
+        const namePt = PLANET_NAMES_PT[p.name] || p.name;
+        const motion = p.stationary ? 'Est' : p.retrograde ? 'Rx' : '';
+        const dignity = getDignityState(p.name, p.degree);
         return {
           ...p,
           signSymbol: SIGN_SYMBOLS[si],
@@ -510,9 +537,47 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects }: MandalaCh
           absDeg: normDeg(p.degree).toFixed(2),
           color: p.color || PLANET_COLORS[p.name] || '#888',
           motion,
+          dignity,
+          namePt,
+          house: p.house || 1,
         };
       });
   }, [filteredPlanets]);
+
+  /* ─── Planet map for astro-dignity functions ─────────────────── */
+  const planetsMap = useMemo(() => {
+    const map: Record<string, { degree: number; house?: number }> = {};
+    for (const p of planets) {
+      const key = p.name === 'Asc' ? 'ASC' : p.name;
+      map[key] = { degree: p.degree, house: p.house };
+    }
+    return map;
+  }, [planets]);
+
+  /* ─── Astro Stats computations ───────────────────────────────── */
+  const elResult  = useMemo(() => calcElements(planetsMap),      [planetsMap]);
+  const qResult   = useMemo(() => calcQualities(planetsMap),     [planetsMap]);
+  const midpoints = useMemo(() => calcMidpoints(planetsMap, 10), [planetsMap]);
+  const dominance = useMemo(() => calcDominance(planetsMap),     [planetsMap]);
+  const regentAsc = useMemo(() => {
+    // If planetsMap['ASC'] is undefined, maybe it's passed as 'Ascendant' or 'Asc' but missed by map.
+    // Try to find any angle that looks like ASC directly from points list.
+    let asc = planetsMap['ASC'];
+    if (!asc) {
+      const fallbackAsc = planets.find(p => p.name.toUpperCase().startsWith('ASC'));
+      if (fallbackAsc) {
+        asc = { degree: fallbackAsc.degree, house: 1 };
+      }
+    }
+    return asc ? calcRegentAsc(asc.degree) : null;
+  }, [planetsMap, planets]);
+  const senhor    = useMemo(() => calcSenhorGenitura(dominance), [dominance]);
+  const alcocoden = useMemo(() => calcAlcocoden(planetsMap),     [planetsMap]);
+  const signature = useMemo(() => calcAstroSignature(elResult, qResult), [elResult, qResult]);
+  const hyleg     = useMemo(() => calcHyleg(planetsMap),         [planetsMap]);
+  const maxDom    = useMemo(() =>
+    Math.max(1, ...dominance.map(d => Math.max(Math.abs(d.scoreTrad), Math.abs(d.scoreModern)))),
+  [dominance]);
 
   return (
     <div className="flex flex-col items-center gap-6">
@@ -594,17 +659,24 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects }: MandalaCh
               <div key={i} className="flex items-center justify-between text-[10px] py-1 border-b border-gray-50 last:border-0">
                 <div className="flex items-center gap-2">
                   <span className="font-bold w-5" style={{ color: p.color }}>{p.symbol}</span>
-                  <span className="font-semibold text-gray-700 w-16">{p.name}</span>
+                  <span className="font-semibold text-gray-700 w-16">{p.namePt}</span>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[10px] text-gray-400 font-semibold w-6 text-center" title={`Casa ${p.house}`}>C{p.house}</span>
+                  {p.dignity.state !== 'peregrine' && (
+                    <span className={`text-[7px] font-bold px-1 py-0.5 rounded ${p.dignity.bg}`}>
+                      {p.dignity.label}
+                    </span>
+                  )}
                   <span className="text-gray-400">{p.signSymbol}</span>
                   <span className="text-gray-600 font-medium tabular-nums w-14 text-right">{p.signDeg}</span>
-                  <span className={`text-[8px] font-bold px-1 rounded ${
-                    p.motion === 'Rx' ? 'bg-red-50 text-red-500' :
-                    p.motion === 'Est' ? 'bg-amber-50 text-amber-600' :
-                    p.motion === 'App' ? 'bg-blue-50 text-blue-500' :
-                    'text-gray-400'
-                  }`}>{p.motion}</span>
+                  {p.motion && (
+                    <span className={`text-[8px] font-bold px-1 rounded ${
+                      p.motion === 'Rx' ? 'bg-red-50 text-red-500' :
+                      p.motion === 'Est' ? 'bg-amber-50 text-amber-600' :
+                      'text-gray-400'
+                    }`}>{p.motion}</span>
+                  )}
                 </div>
               </div>
             ))}
@@ -633,6 +705,231 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects }: MandalaCh
           </div>
         </div>
       </div>
+
+      {/* ═══════════════════════════════════════════════════════════
+           ASTROLOGICAL STATS PANEL
+          ═══════════════════════════════════════════════════════════ */}
+      {Object.keys(planetsMap).length > 0 && (
+        <div className="w-full max-w-[620px] flex flex-col gap-4">
+
+          {/* ─── ROW 1: Elementos + Qualidades ─────────────────── */}
+          <div className="grid grid-cols-2 gap-4">
+
+            {/* Elementos */}
+            <div className="bg-white/60 backdrop-blur-sm border border-[#c5a059]/10 rounded-xl p-4">
+              <h3 className="text-[9px] font-black uppercase tracking-[0.25em] text-[#c5a059] mb-3">Elementos</h3>
+              <div className="space-y-2">
+                {(['fire','earth','air','water'] as const).map(el => {
+                  const count = elResult[el];
+                  const pct = elResult.pct[el];
+                  const color = EL_COLORS[el];
+                  return (
+                    <div key={el}>
+                      <div className="flex items-center justify-between mb-0.5">
+                        <span className="text-[10px] font-semibold text-gray-600">
+                          {ELEMENT_EMOJIS[el]} {ELEMENT_LABELS[el]}
+                        </span>
+                        <span className="text-[9px] font-bold tabular-nums" style={{ color }}>
+                          {count} · {pct}%
+                        </span>
+                      </div>
+                      <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                        <div
+                          className="h-full rounded-full transition-all duration-700"
+                          style={{ width: `${pct}%`, backgroundColor: color }}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Qualidades */}
+            <div className="bg-white/60 backdrop-blur-sm border border-[#c5a059]/10 rounded-xl p-4">
+              <h3 className="text-[9px] font-black uppercase tracking-[0.25em] text-[#c5a059] mb-3">Qualidades</h3>
+              <div className="space-y-2">
+                {(['cardinal','fixed','mutable'] as const).map(q => {
+                  const count = qResult[q];
+                  const pct = qResult.pct[q];
+                  const color = QUALITY_COLORS[q];
+                  return (
+                    <div key={q}>
+                      <div className="flex items-center justify-between mb-0.5">
+                        <span className="text-[10px] font-semibold text-gray-600">
+                          {QUALITY_LABELS[q]}
+                        </span>
+                        <span className="text-[9px] font-bold tabular-nums" style={{ color }}>
+                          {count} · {pct}%
+                        </span>
+                      </div>
+                      <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                        <div
+                          className="h-full rounded-full transition-all duration-700"
+                          style={{ width: `${pct}%`, backgroundColor: color }}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* ─── ROW 2: Midpoints + Dominância ─────────────────── */}
+          <div className="grid grid-cols-2 gap-4">
+
+            {/* Midpoints */}
+            <div className="bg-white/60 backdrop-blur-sm border border-[#c5a059]/10 rounded-xl p-4">
+              <h3 className="text-[9px] font-black uppercase tracking-[0.25em] text-[#c5a059] mb-3">Pontos Médios</h3>
+              <div className="space-y-1.5">
+                {midpoints.map((mp, i) => (
+                  <div key={i} className="flex items-center justify-between text-[10px] py-0.5 border-b border-gray-50 last:border-0">
+                    <span className="font-semibold text-gray-600 w-20 truncate">
+                      {mp.p1}/{mp.p2}
+                    </span>
+                    <span className="flex items-center gap-1 text-gray-500">
+                      <span className="text-[12px]">{DIGNITY_SIGNS[mp.signIdx]}</span>
+                      <span className="tabular-nums font-medium">{dignityFormatDeg(mp.degree)}</span>
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Dominância dos Planetas */}
+            <div className="bg-white/60 backdrop-blur-sm border border-[#c5a059]/10 rounded-xl p-4">
+              <h3 className="text-[9px] font-black uppercase tracking-[0.25em] text-[#c5a059] mb-1">Dominância</h3>
+              <div className="flex gap-2 mb-2">
+                <span className="text-[7px] font-bold text-gray-400 uppercase tracking-wider">Trad</span>
+                <span className="text-[7px] font-bold text-indigo-400 uppercase tracking-wider">Mod</span>
+              </div>
+              <div className="space-y-1.5">
+                {dominance.map((d) => {
+                  const tradBarW = Math.max(0, (d.scoreTrad / maxDom) * 100);
+                  const modBarW  = Math.max(0, (d.scoreModern / maxDom) * 100);
+                  const tradNeg  = d.scoreTrad < 0;
+                  const modNeg   = d.scoreModern < 0;
+                  return (
+                    <div key={d.name} className="flex items-center gap-1.5">
+                      <span className="text-[11px] w-5 text-center" style={{ color: d.dignity.color }}>
+                        {d.symbol}
+                      </span>
+                      <span className="text-[8px] text-gray-500 w-12 truncate">{d.namePt}</span>
+                      <div className="flex-1 flex flex-col gap-0.5">
+                        {/* Tradicional */}
+                        <div className="flex items-center gap-1">
+                          <div className="flex-1 h-1 bg-gray-100 rounded-full overflow-hidden">
+                            <div
+                              className={`h-full rounded-full transition-all ${
+                                tradNeg ? 'bg-red-400' : 'bg-amber-400'
+                              }`}
+                              style={{ width: `${tradBarW}%` }}
+                            />
+                          </div>
+                          <span className={`text-[7px] tabular-nums w-5 text-right font-bold ${
+                            tradNeg ? 'text-red-400' : 'text-amber-600'
+                          }`}>
+                            {d.scoreTrad > 0 ? '+' : ''}{d.scoreTrad}
+                          </span>
+                        </div>
+                        {/* Moderno */}
+                        <div className="flex items-center gap-1">
+                          <div className="flex-1 h-1 bg-gray-100 rounded-full overflow-hidden">
+                            <div
+                              className={`h-full rounded-full transition-all ${
+                                modNeg ? 'bg-red-300' : 'bg-indigo-400'
+                              }`}
+                              style={{ width: `${modBarW}%` }}
+                            />
+                          </div>
+                          <span className={`text-[7px] tabular-nums w-5 text-right font-bold ${
+                            modNeg ? 'text-red-300' : 'text-indigo-500'
+                          }`}>
+                            {d.scoreModern > 0 ? '+' : ''}{d.scoreModern}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* ─── ROW 3: Mini-cards ──────────────────────────────── */}
+          <div className="grid grid-cols-5 gap-2">
+
+            {/* Hyleg */}
+            <div className="bg-white/60 backdrop-blur-sm border border-[#c5a059]/10 rounded-xl p-3 flex flex-col items-center text-center gap-1">
+              <span className="text-[7px] font-black uppercase tracking-wider text-[#c5a059]">Hyleg</span>
+              <span className="text-[20px]">{DIGNITY_PSYMBOLS[hyleg.planet] ?? '☉'}</span>
+              <span className="text-[9px] font-bold text-gray-700">{hyleg.planetPt}</span>
+              <span className="text-[8px] text-gray-400">{hyleg.signSymbol} {hyleg.posInSign}</span>
+              <span className={`text-[6px] font-bold px-1 py-0.5 rounded mt-0.5 ${
+                hyleg.aphetical ? 'bg-green-50 text-green-700' : 'bg-gray-50 text-gray-400'
+              }`}>
+                {hyleg.aphetical ? 'Afético' : 'Fallback'} · {hyleg.method}
+              </span>
+            </div>
+
+            {/* Regente ASC */}
+            <div className="bg-white/60 backdrop-blur-sm border border-[#c5a059]/10 rounded-xl p-3 flex flex-col items-center text-center gap-1">
+              <span className="text-[7px] font-black uppercase tracking-wider text-[#c5a059]">Regente ASC</span>
+              {regentAsc ? (
+                <>
+                  <span className="text-[20px]">{DIGNITY_PSYMBOLS[regentAsc.planet] ?? '?'}</span>
+                  <span className="text-[9px] font-bold text-gray-700">{regentAsc.planetPt}</span>
+                  <span className="text-[8px] text-gray-400">{regentAsc.signSymbol} {regentAsc.signPt}</span>
+                  {regentAsc.modernCo && (
+                    <span className="text-[6px] text-indigo-400 font-semibold">
+                      co: {regentAsc.modernCoPt}
+                    </span>
+                  )}
+                </>
+              ) : <span className="text-gray-300 text-[8px]">—</span>}
+            </div>
+
+            {/* Alcocoden */}
+            <div className="bg-white/60 backdrop-blur-sm border border-[#c5a059]/10 rounded-xl p-3 flex flex-col items-center text-center gap-1">
+              <span className="text-[7px] font-black uppercase tracking-wider text-[#c5a059]">Alcocoden</span>
+              <span className="text-[20px]">{DIGNITY_PSYMBOLS[alcocoden.planet] ?? '?'}</span>
+              <span className="text-[9px] font-bold text-gray-700">{alcocoden.planetPt}</span>
+              <span className="text-[8px] text-gray-400">Hyleg: {PLANET_NAMES_PT[alcocoden.hyleg] ?? alcocoden.hyleg}</span>
+              <span className="text-[6px] text-gray-400 font-medium mt-0.5">{alcocoden.method}</span>
+            </div>
+
+            {/* Senhor da Genitura */}
+            <div className="bg-white/60 backdrop-blur-sm border border-[#c5a059]/10 rounded-xl p-3 flex flex-col items-center text-center gap-1">
+              <span className="text-[7px] font-black uppercase tracking-wider text-[#c5a059]">Sr. Genitura</span>
+              <span className="text-[20px]">{DIGNITY_PSYMBOLS[senhor.planet] ?? '?'}</span>
+              <span className="text-[9px] font-bold text-gray-700">{senhor.planetPt}</span>
+              <span className="text-[6px] font-bold text-amber-600 mt-0.5">
+                Trad: {senhor.scoreTrad > 0 ? '+' : ''}{senhor.scoreTrad}
+              </span>
+              <span className="text-[6px] font-bold text-indigo-500">
+                Mod: {senhor.scoreModern > 0 ? '+' : ''}{senhor.scoreModern}
+              </span>
+            </div>
+
+            {/* Assinatura Astrológica */}
+            <div
+              className="bg-white/60 backdrop-blur-sm border border-[#c5a059]/10 rounded-xl p-3 flex flex-col items-center text-center gap-1"
+              style={{ borderColor: `${signature.color}25` }}
+            >
+              <span className="text-[7px] font-black uppercase tracking-wider text-[#c5a059]">Assinatura</span>
+              <span className="text-[20px]">{ELEMENT_EMOJIS[signature.element]}</span>
+              <span className="text-[9px] font-bold" style={{ color: signature.color }}>
+                {signature.label}
+              </span>
+              <span className="text-[7px] text-gray-400 leading-tight text-center">
+                {signature.desc}
+              </span>
+            </div>
+          </div>
+
+        </div>
+      )}
     </div>
   );
 };

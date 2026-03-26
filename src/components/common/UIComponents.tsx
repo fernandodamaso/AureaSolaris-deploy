@@ -2,15 +2,15 @@ import React from 'react';
 import { Sparkles, Star, FileText, CheckCircle } from 'lucide-react';
 
 export const NavItem = ({ icon, label, active, onClick, collapsed }: { icon: React.ReactNode, label: string, active: boolean, onClick: () => void, collapsed: boolean }) => (
-  <button onClick={onClick} title={label} className={`w-full flex items-center gap-4 px-5 py-3 rounded-lg transition-all duration-300 text-[11px] font-bold uppercase tracking-widest ${active ? 'bg-[#FCF9F1] text-[#B8860B] border border-gold/10' : 'text-gray-500 hover:text-[#333333] hover:bg-gray-50'}`}>
-    <span className={active ? 'text-[#B8860B]' : 'opacity-40'}>{icon}</span>
+  <button onClick={onClick} title={label} className={`w-full flex items-center gap-4 px-5 py-3 rounded-md transition-all duration-300 text-[11px] font-bold uppercase tracking-widest ${active ? 'bg-[#FCF9F1] text-[#c5a059] border border-gold/10' : 'text-gray-500 hover:text-[#333333] hover:bg-gray-50'}`}>
+    <span className={active ? 'text-[#c5a059]' : 'opacity-40'}>{icon}</span>
     {!collapsed && <span className="truncate">{label}</span>}
   </button>
 );
 
 export const SectionTitle = ({ children, rightAction }: { children: React.ReactNode, rightAction?: React.ReactNode }) => (
-  <div className="flex justify-between items-center border-b border-[#B8860B]/10 pb-2 mb-6">
-    <h4 className="font-sans text-[10px] uppercase tracking-[0.25em] text-[#B8860B] font-bold">{children}</h4>
+  <div className="flex justify-between items-center border-b border-[#c5a059]/10 pb-2 mb-4">
+    <h4 className="font-sans text-[10px] uppercase tracking-[0.25em] text-[#c5a059] font-bold">{children}</h4>
     {rightAction}
   </div>
 );
@@ -23,12 +23,12 @@ export const Card = ({ title, children, icon, className = "" }: { title: string,
 );
 
 export const Advice = ({ agent, content, icon }: { agent: string, content: string, icon?: React.ReactNode }) => (
-  <div className="bg-white rounded-xl p-6 border border-[#B8860B]/20 shadow-sm flex items-start gap-5 relative overflow-hidden mb-8">
-    <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-[#B8860B]" />
-    <div className="p-3 bg-[#FCF9F1] rounded-xl text-[#B8860B] shrink-0">{icon || <Sparkles size={18} />}</div>
+  <div className="bg-white rounded-md p-6 border border-[#c5a059]/20 shadow-sm flex items-start gap-5 relative overflow-hidden mb-8">
+    <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-[#c5a059]" />
+    <div className="p-3 bg-[#FCF9F1] rounded-md text-[#c5a059] shrink-0">{icon || <Sparkles size={18} />}</div>
     <div className="flex-1">
       <h4 className="text-[9px] font-bold uppercase text-gray-400 mb-1 tracking-widest flex items-center gap-2">
-        <Star size={10} className="text-[#B8860B]"/> Conselho do {agent}
+        <Star size={10} className="text-[#c5a059]"/> Conselho do {agent}
       </h4>
       <p className="text-[12px] text-gray-700 leading-relaxed font-semibold italic">&quot;{content}&quot;</p>
     </div>
@@ -38,7 +38,7 @@ export const Advice = ({ agent, content, icon }: { agent: string, content: strin
 export const StarRow = ({ icon, name, sign, deg }: { icon: string, name: string, sign: string, deg: string }) => (
   <div className="flex items-center justify-between py-3 border-b border-gray-50 last:border-none group hover:bg-[#FCF9F1] transition-colors rounded-lg px-2">
     <div className="flex items-center gap-4 w-1/3">
-      <span className="text-xl text-[#B8860B]">{icon}</span>
+      <span className="text-xl text-[#c5a059]">{icon}</span>
       <span className="text-[13px] text-gray-800 font-semibold">{name}</span>
     </div>
     <div className="w-1/3 text-center text-[12px] text-gray-500 font-medium">{sign}</div>
@@ -47,9 +47,9 @@ export const StarRow = ({ icon, name, sign, deg }: { icon: string, name: string,
 );
 
 export const FileItem = ({ name, date, onClick }: { name: string, date: string, onClick?: () => void }) => (
-  <div onClick={onClick} className="flex justify-between items-center py-3.5 border-b border-gray-100 last:border-none group cursor-pointer hover:bg-gray-50 rounded-xl px-3 transition-all">
+  <div onClick={onClick} className="flex justify-between items-center py-3.5 border-b border-gray-100 last:border-none group cursor-pointer hover:bg-gray-50 rounded-md px-3 transition-all">
     <div className="flex items-center gap-3 text-[13px] text-[#333333] font-medium">
-      <div className="p-2 bg-red-50 text-red-400 rounded-lg"><FileText size={14} /></div> {name}
+      <div className="p-2 bg-red-50 text-red-400 rounded-md"><FileText size={14} /></div> {name}
     </div>
     <div className="text-[9px] font-bold uppercase text-gray-400">{date}</div>
   </div>
@@ -58,14 +58,14 @@ export const FileItem = ({ name, date, onClick }: { name: string, date: string, 
 export const RoutineItem = ({ name, time }: { name: string, time: string }) => (
   <div className="flex justify-between items-center py-3 border-b border-gray-50 last:border-none px-2 group hover:bg-[#FCF9F1] transition-all">
     <div className="flex items-center gap-4 text-[13px] text-gray-700 font-medium">
-      <div className="w-2 h-2 rounded-full bg-[#B8860B]"></div> {name}
+      <div className="w-2 h-2 rounded-full bg-[#c5a059]"></div> {name}
     </div>
-    <span className="text-[10px] font-bold text-[#B8860B] bg-[#FCF9F1] px-2 py-1 rounded-lg border border-gold/10">{time}</span>
+    <span className="text-[10px] font-bold text-[#c5a059] bg-[#FCF9F1] px-2 py-1 rounded border border-gold/10">{time}</span>
   </div>
 );
 
 export const AspectRow = ({ aspect, desc, bg = 'bg-[#FCF9F1]' }: { aspect: string, desc: string, bg?: string }) => (
-  <div className={`flex items-center justify-between p-4 ${bg} rounded-xl border border-white shadow-sm transition-all hover:shadow-md cursor-default`}>
+  <div className={`flex items-center justify-between p-4 ${bg} rounded-md border border-white shadow-sm transition-all hover:shadow-md cursor-default`}>
     <span className="text-[11px] font-black text-[#333333] tracking-widest uppercase">{aspect}</span>
     <span className="text-[10px] italic text-gray-500 text-right max-w-[60%] font-bold">{desc}</span>
   </div>
@@ -74,13 +74,13 @@ export const AspectRow = ({ aspect, desc, bg = 'bg-[#FCF9F1]' }: { aspect: strin
 export const FamilyItem = ({ name, data }: { name: string, data: string }) => (
   <div className="p-5 panel-light text-center hover:border-gold transition-all cursor-pointer shadow-sm">
     <p className="font-sans text-[12px] font-bold text-gray-800 mb-2 uppercase tracking-widest">{name}</p>
-    <p className="font-sans text-[10px] font-bold text-[#B8860B] bg-[#FCF9F1] py-1.5 rounded-lg">{data}</p>
+    <p className="font-sans text-[10px] font-bold text-[#c5a059] bg-[#FCF9F1] py-1.5 rounded-md">{data}</p>
   </div>
 );
 
 export const TodoRow = ({ label, checked, onClick }: { label: string, checked: boolean, onClick?: () => void }) => (
   <div onClick={onClick} className="flex items-center gap-4 p-4 panel-light hover:border-gold/30 transition-all cursor-pointer group shadow-sm">
-    <div className={`w-5 h-5 rounded-lg border-2 flex items-center justify-center transition-colors shrink-0 ${checked ? 'bg-[#B8860B] border-[#B8860B] text-white' : 'border-gray-200 text-transparent group-hover:border-[#B8860B]/50'}`}>
+    <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-colors shrink-0 ${checked ? 'bg-[#c5a059] border-[#c5a059] text-white' : 'border-gray-200 text-transparent group-hover:border-[#c5a059]/50'}`}>
       <CheckCircle size={14} />
     </div>
     <span className={`text-[13px] font-medium ${checked ? 'line-through text-gray-400' : 'text-[#333333]'}`}>{label}</span>
@@ -89,7 +89,7 @@ export const TodoRow = ({ label, checked, onClick }: { label: string, checked: b
 
 export const StatBox = ({ label, val }: { label: string, val: string }) => (
   <div className="panel-light p-8 text-center shadow-sm">
-    <p className="font-sans text-[10px] font-bold uppercase tracking-widest text-[#B8860B] mb-2">{label}</p>
+    <p className="font-sans text-[10px] font-bold uppercase tracking-widest text-[#c5a059] mb-2">{label}</p>
     <p className="font-sans text-2xl font-bold text-gray-800">{val}</p>
   </div>
 );

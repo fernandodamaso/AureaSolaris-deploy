@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { MessageSquare, Plus, Send, ChevronDown, Clock, Trash2, List } from 'lucide-react';
 import { safeInvoke } from '../utils/tauri';
 import { useAstrologyData } from '../hooks/useAstrologyData';
@@ -55,11 +55,13 @@ export const AgentChat = ({ agent }: { agent: string }) => {
      if (!showScrollBtn) scrollToBottom();
    }, [messages, loading, scrollToBottom, showScrollBtn]);
 
-   // Load sessions list
-   const loadSessions = async () => {
-     const result = await safeInvoke<ChatSession[]>('list_chat_sessions', { agent });
-     if (result) setSessions(result);
-   };
+    // Load sessions list
+    const loadSessions = async () => {
+      console.log('[AgentChat] Loading sessions for:', agent);
+      const result = await safeInvoke<ChatSession[]>('list_chat_sessions', { agent });
+      console.log('[AgentChat] Sessions loaded:', result?.length || 0);
+      if (result) setSessions(result);
+    };
 
    // Load a specific session
    const loadSession = async (sessionId: string) => {
@@ -78,35 +80,35 @@ export const AgentChat = ({ agent }: { agent: string }) => {
    };
 
    // Delete a session
-   const deleteSession = async (sessionId: string, e: React.MouseEvent) => {
+    const deleteSession = async (sessionId: string, e: React.MouseEvent<HTMLButtonElement>) => {
      e.stopPropagation();
      await safeInvoke('delete_chat_session', { agent, chat_id: sessionId });
      if (sessionId === chatId) newChat();
      loadSessions();
    };
 
-   // Load initial session or latest
-   useEffect(() => {
-     const init = async () => {
-       await loadSessions();
-       // Try to load the default session (no chatId = legacy)
-       const history = await safeInvoke<any[]>('load_history', { agent, chat_id: null });
-       if (history && history.length > 0) {
-         setChatId('');
-         setMessages(history);
-       } else {
-         newChat();
-       }
-     };
-     init();
-   }, [agent]);
+    // Load initial session or latest
+    useEffect(() => {
+      const init = async () => {
+        await loadSessions();
+        // Try to load the default session (no chatId = legacy)
+        const history = await safeInvoke<any[]>('load_history', { agent, chat_id: chatId || null });
+        if (history && history.length > 0) {
+          setMessages(history);
+        } else {
+          newChat();
+        }
+      };
+      init();
+    }, [agent]);
 
-   // Save history on change
-   useEffect(() => {
-     if (messages.length > 0) {
-       safeInvoke('save_history', { agent, history: messages, chat_id: chatId || null }).catch(console.error);
-     }
-   }, [messages, agent, chatId]);
+    // Save history on change
+    useEffect(() => {
+      if (messages.length > 0) {
+        safeInvoke('save_history', { agent, history: messages, chat_id: chatId || null }).catch(console.error);
+        console.log('[AgentChat] Saved history for:', agent, 'chatId:', chatId || null, 'messages:', messages.length);
+      }
+    }, [messages, agent, chatId]);
 
    // Refresh sessions list when opening dropdown
    useEffect(() => {
@@ -269,19 +271,22 @@ ${context}`;
     };
 
     return (
-        <div className="flex flex-col h-full bg-white/40 backdrop-blur-xl border border-gold/10 rounded-2xl overflow-hidden shadow-2xl animate-in slide-in-from-right duration-500">
+        <div className="flex flex-col h-full bg-white rounded-xl overflow-hidden animate-in slide-in-from-right duration-500 chat-panel">
+            {/* Símbolos cósmicos decorativos */}
+            <div className="text-center text-[9px] tracking-[6px] text-gold/30 py-1 select-none shrink-0">✦ ✧ ✦</div>
+            
             {/* Header with session management */}
-            <div className="p-3 border-b border-gold/5 bg-gradient-to-r from-gold/5 to-transparent">
+            <div className="p-3 border-b border-gold/10 bg-gradient-to-r from-white to-[#FCF9F1] shrink-0">
                 <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center text-gold">
-                            <MessageSquare size={16} />
+                    <div className="flex items-center gap-2">
+                        <div className="w-7 h-7 rounded-full bg-gold/10 flex items-center justify-center text-gold">
+                            <MessageSquare size={13} />
                         </div>
                         <div>
-                            <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-gold">{agent}</h3>
-                            <div className="flex items-center gap-1.5">
+                            <h3 className="text-[10px] font-bold uppercase tracking-[0.15em] text-gold">{agent}</h3>
+                            <div className="flex items-center gap-1">
                                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                                <span className="text-[8px] text-gray-400 font-bold uppercase tracking-widest">Sintonizado</span>
+                                <span className="text-[7px] text-gray-400 font-bold uppercase tracking-wider">Sintonizado</span>
                             </div>
                         </div>
                     </div>
@@ -298,7 +303,7 @@ ${context}`;
                 
                 {/* Sessions dropdown */}
                 {showSessions && (
-                    <div className="mt-2 bg-white rounded-xl border border-gray-100 shadow-lg max-h-[200px] overflow-y-auto no-scrollbar animate-in fade-in slide-in-from-top-2">
+                    <div className="mt-2 bg-white rounded-lg border border-gray-100 shadow-lg max-h-[200px] overflow-y-auto no-scrollbar animate-in fade-in slide-in-from-top-2">
                         {sessions.length === 0 ? (
                             <p className="p-4 text-[10px] text-gray-400 text-center italic">Nenhuma sessão salva</p>
                         ) : (
@@ -330,23 +335,23 @@ ${context}`;
             <div 
                 ref={messagesContainerRef}
                 onScroll={handleScroll}
-                className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar relative"
+                className="flex-1 overflow-y-auto p-3 space-y-3 custom-scrollbar relative"
             >
                 {messages.length === 0 && (
-                    <div className="h-full flex flex-col items-center justify-center text-center p-8 opacity-40">
-                        <div className="w-12 h-12 rounded-full border border-dashed border-gold/30 mb-4 flex items-center justify-center">
-                            <Plus size={20} className="text-gold/50" />
+                    <div className="h-full flex flex-col items-center justify-center text-center px-4 opacity-40">
+                        <div className="w-10 h-10 rounded-full border border-dashed border-gold/30 mb-3 flex items-center justify-center">
+                            <Plus size={18} className="text-gold/50" />
                         </div>
-                        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gold/60">Inicie a sintonia com {agent}</p>
-                        <p className="text-[9px] text-gray-300 mt-2">Clique em + para nova conversa</p>
+                        <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-gold/60">Inicie a sintonia</p>
+                        <p className="text-[9px] text-gray-400 mt-1">Clique em + para nova conversa</p>
                     </div>
                 )}
                 {messages.map((m, i) => (
                     <div key={`${chatId}-${i}`} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-2`}>
-                        <div className={`max-w-[85%] p-3 rounded-2xl text-[12px] font-medium leading-relaxed shadow-sm ${
+                        <div className={`max-w-[88%] p-3 rounded-lg text-[11px] font-medium leading-relaxed ${
                             m.role === 'user' 
-                                ? 'bg-gold text-white rounded-tr-none' 
-                                : 'bg-white border border-gray-100 text-gray-700 rounded-tl-none'
+                                ? 'bg-gold/10 text-gray-700' 
+                                : 'bg-[#FCF9F1] text-gray-600'
                         }`}>
                             {m.content}
                         </div>
@@ -354,11 +359,11 @@ ${context}`;
                 ))}
                 {loading && (
                     <div className="flex justify-start animate-pulse">
-                        <div className="bg-white border border-gray-100 p-3 rounded-2xl rounded-tl-none">
+                        <div className="bg-[#FCF9F1] p-3 rounded-lg">
                             <div className="flex gap-1">
-                                <span className="w-1 h-1 bg-gold/40 rounded-full animate-bounce"></span>
-                                <span className="w-1 h-1 bg-gold/40 rounded-full animate-bounce [animation-delay:0.2s]"></span>
-                                <span className="w-1 h-1 bg-gold/40 rounded-full animate-bounce [animation-delay:0.4s]"></span>
+                                <span className="w-1.5 h-1.5 bg-gold/40 rounded-full animate-bounce"></span>
+                                <span className="w-1.5 h-1.5 bg-gold/40 rounded-full animate-bounce [animation-delay:0.2s]"></span>
+                                <span className="w-1.5 h-1.5 bg-gold/40 rounded-full animate-bounce [animation-delay:0.4s]"></span>
                             </div>
                         </div>
                     </div>
@@ -370,15 +375,15 @@ ${context}`;
                 {showScrollBtn && (
                     <button 
                         onClick={scrollToBottom}
-                        className="sticky bottom-2 left-1/2 -translate-x-1/2 p-2 bg-white border border-gold/20 rounded-full shadow-lg text-gold hover:bg-gold hover:text-white transition-all animate-in fade-in"
+                        className="sticky bottom-2 left-1/2 -translate-x-1/2 p-1.5 bg-white border border-gold/20 rounded-full text-gold hover:bg-gold/10 transition-all animate-in fade-in"
                     >
-                        <ChevronDown size={16} />
+                        <ChevronDown size={14} />
                     </button>
                 )}
             </div>
 
             {/* Input */}
-            <div className="p-4 bg-white/60 border-t border-gold/5">
+            <div className="p-3 bg-white border-t border-gold/10 shrink-0">
                 <div className="relative flex items-center">
                     <input 
                         type="text"
@@ -386,14 +391,14 @@ ${context}`;
                         onChange={(e) => setInput(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
                         placeholder={`Falar com ${agent}...`}
-                        className="w-full bg-white border border-gray-100 rounded-xl py-3 pl-4 pr-12 text-[12px] placeholder:text-gray-300 focus:outline-none focus:border-gold/30 transition-all font-medium"
+                        className="w-full bg-[#FCF9F1] border border-gold/10 rounded-lg py-2.5 pl-3 pr-10 text-[11px] placeholder:text-gray-400 focus:outline-none focus:border-gold/30 transition-all font-medium"
                     />
                     <button 
                         onClick={sendMessage}
                         disabled={loading || !input.trim()}
-                        className="absolute right-2 p-2 text-gold hover:bg-gold hover:text-white rounded-lg transition-all disabled:opacity-30"
+                        className="absolute right-1.5 p-1.5 text-gold hover:bg-gold/10 rounded-lg transition-all disabled:opacity-30"
                     >
-                        <Send size={16} />
+                        <Send size={14} />
                     </button>
                 </div>
             </div>

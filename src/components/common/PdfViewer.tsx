@@ -13,7 +13,7 @@ export const PdfViewer = ({ url, name, onClose }: PdfViewerProps) => {
 
   return (
     <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/60 backdrop-blur-md p-4 animate-in fade-in duration-300">
-      <div className="bg-white rounded-[2.5rem] w-full max-w-6xl h-[90vh] flex flex-col shadow-2xl overflow-hidden border border-gold/10">
+      <div className="bg-white rounded-2xl w-full max-w-6xl h-[90vh] flex flex-col shadow-2xl overflow-hidden border border-gold/10">
         
         {/* HEADER */}
         <div className="px-8 py-5 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">

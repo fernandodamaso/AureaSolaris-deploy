@@ -1,12 +1,14 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   ChevronLeft, ChevronRight, 
   Plus, Clock, 
-  Trash2, Sparkles, ListTodo, ArrowUpRight
+  Trash2, Sparkles, ListTodo, ArrowUpRight,
+  Calendar, CheckCircle2
 } from 'lucide-react';
 import { useAgendaTasks } from '../../hooks/useAgendaTasks';
 import { useAstrologyData } from '../../hooks/useAstrologyData';
 import { Card, Advice, TodoRow } from '../common/UIComponents';
+import { googleCalendarService, GoogleCalendarEvent } from '../../services/composio';
 
 export const AgendaView = () => {
   const {
@@ -30,6 +32,48 @@ export const AgendaView = () => {
   const [showEventModal, setShowEventModal] = useState(false);
   const [showTaskModal, setShowTaskModal] = useState(false);
   const [modalText, setModalText] = useState('');
+  const [googleConnected, setGoogleConnected] = useState(false);
+  const [googleEvents, setGoogleEvents] = useState<GoogleCalendarEvent[]>([]);
+  const [googleLoading, setGoogleLoading] = useState(false);
+
+  useEffect(() => {
+    if (googleConnected) {
+      loadGoogleEvents();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedDay, googleConnected]);
+
+  const handleConnectGoogle = async () => {
+    setGoogleLoading(true);
+    try {
+      const success = await googleCalendarService.connect();
+      setGoogleConnected(success);
+      if (success) {
+        await loadGoogleEvents();
+      }
+    } finally {
+      setGoogleLoading(false);
+    }
+  };
+
+  const handleDisconnectGoogle = () => {
+    googleCalendarService.disconnect();
+    setGoogleConnected(false);
+    setGoogleEvents([]);
+  };
+
+  const loadGoogleEvents = async () => {
+    const dayStart = new Date(selectedDay);
+    dayStart.setHours(0, 0, 0, 0);
+    const dayEnd = new Date(selectedDay);
+    dayEnd.setHours(23, 59, 59, 999);
+
+    const events = await googleCalendarService.listEvents({
+      timeMin: dayStart.toISOString(),
+      timeMax: dayEnd.toISOString(),
+    });
+    setGoogleEvents(events);
+  };
 
   const metrics = getMetrics();
 
@@ -82,6 +126,22 @@ export const AgendaView = () => {
             </div>
           </div>
           <div className="flex gap-1.5">
+            {!googleConnected ? (
+              <button 
+                onClick={handleConnectGoogle}
+                disabled={googleLoading}
+                className="flex items-center gap-2 px-3 py-2 bg-white border border-gold/20 text-gold text-[9px] font-black uppercase tracking-widest rounded-lg hover:bg-gold/5 transition-all disabled:opacity-50"
+              >
+                <Calendar size={14}/> {googleLoading ? 'Conectando...' : 'Google Calendar'}
+              </button>
+            ) : (
+              <button 
+                onClick={handleDisconnectGoogle}
+                className="flex items-center gap-2 px-3 py-2 bg-emerald-50 border border-emerald-200 text-emerald-600 text-[9px] font-black uppercase tracking-widest rounded-lg hover:bg-emerald-100 transition-all"
+              >
+                <CheckCircle2 size={14}/> Conectado
+              </button>
+            )}
             <button onClick={prevWeek} className="p-2 hover:bg-white rounded-lg text-gold border border-gold/5 transition-all shadow-sm"><ChevronLeft size={16}/></button>
             <button onClick={nextWeek} className="p-2 hover:bg-white rounded-lg text-gold border border-gold/5 transition-all shadow-sm"><ChevronRight size={16}/></button>
           </div>
@@ -118,23 +178,34 @@ export const AgendaView = () => {
         <div className="space-y-8">
             <Card title={`Compromissos - ${selectedDay.toLocaleDateString('pt-BR')}`} icon={<Clock size={14}/>}>
               <div className="space-y-3 mt-4">
-                 {events.filter(e => {
+                 {[...events.filter(e => {
                    const eDate = new Date(e.start).toDateString();
                    const sDate = selectedDay.toDateString();
                    return eDate === sDate;
-                 }).map(e => (
-                   <div key={e.id} className="p-4 bg-[#FCF9F1]/40 border border-gold/5 rounded-xl flex justify-between items-center group transition-all hover:bg-[#FCF9F1]/60 shadow-xs">
+                 }), ...googleEvents.filter(e => {
+                   const eDate = new Date(e.start).toDateString();
+                   const sDate = selectedDay.toDateString();
+                   return eDate === sDate;
+                 })].map(e => (
+                   <div key={e.id} className={`p-4 border rounded-xl flex justify-between items-center group transition-all hover:bg-[#FCF9F1]/60 shadow-xs ${'source' in e && e.source === 'google' ? 'bg-blue-50/40 border-blue-100' : 'bg-[#FCF9F1]/40 border-gold/5'}`}>
                       <div className="flex gap-4 items-center">
-                         <div className="p-2 bg-white rounded-lg text-gold shadow-xs border border-gold/5"><Clock size={12}/></div>
+                         <div className={`p-2 rounded-lg shadow-xs border ${'source' in e && e.source === 'google' ? 'bg-blue-100 text-blue-600 border-blue-200' : 'bg-white text-gold border-gold/5'}`}>
+                           {'source' in e && e.source === 'google' ? <Calendar size={12}/> : <Clock size={12}/>}
+                         </div>
                          <div>
                            <p className="text-[12px] font-black text-gray-800 tracking-tight">{e.title}</p>
-                           <p className="text-[10px] text-gold/60 font-bold">{new Date(e.start).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</p>
+                           <p className="text-[10px] text-gold/60 font-bold">
+                             {new Date(e.start).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+                             {'source' in e && e.source === 'google' && <span className="ml-2 text-blue-400/60">Google</span>}
+                           </p>
                          </div>
                       </div>
-                      <Trash2 onClick={() => deleteEvent(e.id)} size={14} className="text-gray-200 group-hover:text-red-400 cursor-pointer transition-all opacity-0 group-hover:opacity-100"/>
+                      {!('source' in e) && (
+                        <Trash2 onClick={() => deleteEvent(e.id)} size={14} className="text-gray-200 group-hover:text-red-400 cursor-pointer transition-all opacity-0 group-hover:opacity-100"/>
+                      )}
                    </div>
                  ))}
-                 {events.filter(e => new Date(e.start).toDateString() === selectedDay.toDateString()).length === 0 && (
+                 {events.filter(e => new Date(e.start).toDateString() === selectedDay.toDateString()).length === 0 && googleEvents.filter(e => new Date(e.start).toDateString() === selectedDay.toDateString()).length === 0 && (
                    <p className="text-[11px] text-gray-400 italic text-center py-6 opacity-50 font-medium">Silêncio profundo na agenda...</p>
                  )}
                  <button onClick={() => setShowEventModal(true)} className="w-full py-3 border border-dashed border-gold/20 text-gold text-[9px] font-black uppercase tracking-[0.2em] rounded-xl hover:bg-gold/5 transition-all shadow-xs">+ Agendar no Fluxo</button>
