@@ -1,5 +1,8 @@
-import { useMemo, useState } from 'react';
+import { useRef, useEffect, useState, useMemo } from 'react';
+import * as d3 from 'd3';
 import { Settings, X } from 'lucide-react';
+
+/* ─── Interfaces ──────────────────────────────────────────────── */
 
 interface Planet {
   name: string;
@@ -8,6 +11,10 @@ interface Planet {
   color?: string;
   symbol?: string;
   retrograde?: boolean;
+  isAngle?: boolean;
+  stationary?: boolean;
+  applying?: boolean;
+  speed?: number;
 }
 
 interface House {
@@ -31,271 +38,601 @@ interface MandalaChartProps {
   aspects: Aspect[];
 }
 
-const SIGNS = ['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'];
+/* ─── Constants ────────────────────────────────────────────────── */
+
+const SIGN_SYMBOLS = ['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'];
 const SIGN_NAMES = ['Áries','Touro','Gêmeos','Câncer','Leão','Virgem','Libra','Escorpião','Sagitário','Capricórnio','Aquário','Peixes'];
+const SIGN_SHORT = ['Ar','To','Gê','Cn','Le','Vi','Li','Es','Sg','Cp','Aq','Pe'];
+const SIGN_ELEMENTS: ('fire'|'earth'|'air'|'water')[] = ['fire','earth','air','water','fire','earth','air','water','fire','earth','air','water'];
+
+const ELEMENT_COLORS: Record<string, string> = {
+  fire: '#D94F3D', earth: '#5B8C5A', air: '#C4A84D', water: '#3D6FA0'
+};
 
 const PLANET_COLORS: Record<string, string> = {
   Sun: '#FFD700', Moon: '#C0C0C0', Mercury: '#87CEEB', Venus: '#FF69B4',
   Mars: '#FF4500', Jupiter: '#DAA520', Saturn: '#708090', Uranus: '#00CED1',
   Neptune: '#4169E1', Pluto: '#8B0000', Chiron: '#9370DB',
-  'Norte': '#228B22', 'Sul': '#8B0000', Fortuna: '#FF8C00'
+  NorthNode: '#F97316', SouthNode: '#F97316',
+  Lilith: '#A855F7', PartOfFortune: '#FF8C00', Vertex: '#DB2777',
+  ASC: '#B8860B', MC: '#B8860B', DSC: '#B8860B', IC: '#B8860B',
 };
 
 const PLANET_SYMBOLS: Record<string, string> = {
   Sun: '☉', Moon: '☽', Mercury: '☿', Venus: '♀', Mars: '♂',
   Jupiter: '♃', Saturn: '♄', Uranus: '♅', Neptune: '♆', Pluto: '♇',
-  Chiron: '⚷', Norte: '☊', Sul: '☋', Fortuna: '⊗'
+  Chiron: '⚷', NorthNode: '☊', SouthNode: '☋', Lilith: '⚸',
+  PartOfFortune: '⊙', Vertex: 'Vx',
+  ASC: 'Asc', MC: 'MC', DSC: 'Dsc', IC: 'IC',
 };
 
 const ASPECT_COLORS: Record<string, string> = {
-  Conjunção: '#FFD700',
-  Oposição: '#FF4500',
-  Trígono: '#228B22',
-  Quadratura: '#FF4500',
-  Sextil: '#4169E1',
+  'Conjunção': '#FFD700', 'Oposição': '#E74C3C', 'Trígono': '#27AE60',
+  'Quadratura': '#E74C3C', 'Sextil': '#3498DB', 'Quincúncio': '#9B59B6',
+  'Semi-Sextil': '#95A5A6', 'Quintil': '#1ABC9C', 'Bi-Quintil': '#1ABC9C',
+  'Semi-Quadratura': '#E67E22', 'Sesqui-Quadratura': '#E67E22',
 };
 
-const DECANATE_COLORS = ['#E8D5B7', '#D4C4A0', '#C0B389'];
+const ASPECT_OPACITY: Record<string, number> = {
+  'Conjunção': 0.7, 'Oposição': 0.55, 'Trígono': 0.45,
+  'Quadratura': 0.55, 'Sextil': 0.4,
+};
 
-// Convert absolute degree (0-360) to SVG angle (0° = top/12 o'clock)
-const degToAngle = (deg: number) => ((deg - 90) * Math.PI) / 180;
+/* ─── Termos (Egyptian Terms) por signo ─────────────────────────── */
 
-const polarToXY = (cx: number, cy: number, r: number, angleRad: number) => ({
-  x: cx + r * Math.cos(angleRad),
-  y: cy + r * Math.sin(angleRad),
-});
+interface TermDef { planet: string; start: number; end: number; }
+
+const TERMS: TermDef[][] = [
+  [ {planet:'Jupiter',start:0,end:6},{planet:'Venus',start:6,end:12},{planet:'Mercúrio',start:12,end:20},{planet:'Marte',start:20,end:25},{planet:'Saturno',start:25,end:30} ],
+  [ {planet:'Vênus',start:0,end:8},{planet:'Mercúrio',start:8,end:14},{planet:'Júpiter',start:14,end:22},{planet:'Saturno',start:22,end:27},{planet:'Marte',start:27,end:30} ],
+  [ {planet:'Mercúrio',start:0,end:6},{planet:'Júpiter',start:6,end:12},{planet:'Vênus',start:12,end:17},{planet:'Marte',start:17,end:24},{planet:'Saturno',start:24,end:30} ],
+  [ {planet:'Marte',start:0,end:7},{planet:'Vênus',start:7,end:13},{planet:'Mercúrio',start:13,end:19},{planet:'Júpiter',start:19,end:26},{planet:'Saturno',start:26,end:30} ],
+  [ {planet:'Júpiter',start:0,end:6},{planet:'Vênus',start:6,end:11},{planet:'Saturno',start:11,end:18},{planet:'Mercúrio',start:18,end:24},{planet:'Marte',start:24,end:30} ],
+  [ {planet:'Mercúrio',start:0,end:7},{planet:'Vênus',start:7,end:17},{planet:'Júpiter',start:17,end:21},{planet:'Marte',start:21,end:28},{planet:'Saturno',start:28,end:30} ],
+  [ {planet:'Saturno',start:0,end:6},{planet:'Mercúrio',start:6,end:14},{planet:'Júpiter',start:14,end:21},{planet:'Vênus',start:21,end:28},{planet:'Marte',start:28,end:30} ],
+  [ {planet:'Marte',start:0,end:7},{planet:'Vênus',start:7,end:11},{planet:'Júpiter',start:11,end:19},{planet:'Mercúrio',start:19,end:24},{planet:'Saturno',start:24,end:30} ],
+  [ {planet:'Júpiter',start:0,end:12},{planet:'Vênus',start:12,end:17},{planet:'Mercúrio',start:17,end:21},{planet:'Saturno',start:21,end:26},{planet:'Marte',start:26,end:30} ],
+  [ {planet:'Vênus',start:0,end:6},{planet:'Mercúrio',start:6,end:12},{planet:'Júpiter',start:12,end:19},{planet:'Saturno',start:19,end:25},{planet:'Marte',start:25,end:30} ],
+  [ {planet:'Mercúrio',start:0,end:7},{planet:'Vênus',start:7,end:13},{planet:'Júpiter',start:13,end:20},{planet:'Marte',start:20,end:25},{planet:'Saturno',start:25,end:30} ],
+  [ {planet:'Vênus',start:0,end:12},{planet:'Júpiter',start:12,end:16},{planet:'Mercúrio',start:16,end:19},{planet:'Marte',start:19,end:28},{planet:'Saturno',start:28,end:30} ],
+];
+
+/* ─── Decanatos ────────────────────────────────────────────────── */
+
+const DECANATE_RULERS = ['Marte','Sol','Vênus','Mercúrio','Lua','Saturno','Júpiter','Marte','Sol','Vênus','Mercúrio','Lua'];
+
+/* ─── Helpers ──────────────────────────────────────────────────── */
+
+const normDeg = (d: number) => ((d % 360) + 360) % 360;
 
 const formatDeg = (absDeg: number) => {
-  const signDeg = absDeg % 30;
-  const d = Math.floor(signDeg);
-  const m = Math.floor((signDeg - d) * 60);
+  const sd = absDeg % 30;
+  const d = Math.floor(sd);
+  const m = Math.floor((sd - d) * 60);
   return `${d}°${String(m).padStart(2, '0')}'`;
 };
 
-const getSignFromDeg = (absDeg: number) => SIGN_NAMES[Math.floor((absDeg % 360) / 30) % 12];
+const getSignIdx = (deg: number) => Math.floor(normDeg(deg) / 30);
 
-export const MandalaChart = ({ size = 580, planets, houses, aspects }: MandalaChartProps) => {
-  const [showAsteroids, setShowAsteroids] = useState(false);
+/* ─── Component ────────────────────────────────────────────────── */
+
+export const MandalaChart = ({ size = 620, planets, houses, aspects }: MandalaChartProps) => {
+  const svgRef = useRef<SVGSVGElement>(null);
   const [showDecanates, setShowDecanates] = useState(false);
-  const [showTransits, setShowTransits] = useState(false);
+  const [showTerms, setShowTerms] = useState(false);
+  const [showAsteroids, setShowAsteroids] = useState(true);
   const [showSettings, setShowSettings] = useState(false);
-  const [hoveredPlanet, setHoveredPlanet] = useState<string | null>(null);
+  const [tooltip, setTooltip] = useState<{
+    name: string; sign: string; degree: string;
+    retrograde: boolean; stationary: boolean;
+    motion: string; color: string; x: number; y: number;
+  } | null>(null);
 
   const cx = size / 2;
   const cy = size / 2;
-  const outerR = size * 0.46;
-  const signR = size * 0.42;
-  const houseR = size * 0.36;
-  const planetR = size * 0.30;
-  const innerR = size * 0.22;
+  const R = size / 2 - 30;
 
-  // Compute planet positions
-  const planetNodes = useMemo(() => {
-    return planets.map(p => {
-      const deg = ((p.degree % 360) + 360) % 360;
-      const angle = degToAngle(deg);
-      const pos = polarToXY(cx, cy, planetR, angle);
-      return {
-        ...p,
-        deg,
-        angle,
-        x: pos.x,
-        y: pos.y,
-        sign: p.sign || getSignFromDeg(deg),
-        color: p.color || PLANET_COLORS[p.name] || '#888',
-        symbol: p.symbol || PLANET_SYMBOLS[p.name] || '●',
-      };
+  /* radii dos anéis */
+  const degreeR   = R;
+  const signR     = R * 0.90;
+  const decR      = R * 0.83;
+  const termR     = R * 0.76;
+  const houseR    = R * 0.68;
+  const planetR   = R * 0.52;
+  const aspectR   = R * 0.18;
+
+  /* rotação: ASC fixo em 180° SVG (esquerda/9h), MC fica onde o cálculo colocar */
+  const ascDeg = useMemo(() => {
+    const a = planets.find(p => p.name === 'ASC');
+    return a ? normDeg(a.degree) : 0;
+  }, [planets]);
+
+  const rotOffset = useMemo(() => (ascDeg + 180) % 360, [ascDeg]);
+
+  const rotDeg = (d: number) => normDeg(d + rotOffset);
+  const toRad = (svgDeg: number) => (svgDeg * Math.PI) / 180;
+
+  /* planetas filtrados */
+  const filteredPlanets = useMemo(() => {
+    if (showAsteroids) return planets;
+    return planets.filter(p => !['NorthNode','SouthNode','Lilith','PartOfFortune','Vertex'].includes(p.name));
+  }, [planets, showAsteroids]);
+
+  /* ─── D3 Render ──────────────────────────────────────────────── */
+  useEffect(() => {
+    if (!svgRef.current) return;
+    const svg = d3.select(svgRef.current);
+    svg.selectAll('*').remove();
+
+    const g = svg.append('g');
+
+    /* helpers locais — corrected for counterclockwise progression */
+    // toRad: converts degrees to radians (used for text rotation)
+    // eclRad: converts ecliptic degree to SVG coordinate angle (counterclockwise)
+    const eclRad = (deg: number) => toRad(180 - rotDeg(deg));
+    const polarX = (r: number, deg: number) => cx + r * Math.cos(eclRad(deg));
+    const polarY = (r: number, deg: number) => cy + r * Math.sin(eclRad(deg));
+    // For pure SVG degrees (degree ring tick marks)
+    const svgX = (r: number, svgDeg: number) => cx + r * Math.cos(toRad(180 - svgDeg));
+    const svgY = (r: number, svgDeg: number) => cy + r * Math.sin(toRad(180 - svgDeg));
+    // D3 arc angle: SVG→D3 subtract 90°, plus counterclockwise negation
+    const arcRad = (deg: number) => toRad(180 - rotDeg(deg) - 90);
+
+    /* ─── 1. Background ─────────────────────────────────────── */
+    g.append('circle').attr('cx', cx).attr('cy', cy).attr('r', R + 12)
+      .attr('fill', '#FDFAF3').attr('stroke', '#c5a059').attr('stroke-width', 1).attr('opacity', 0.95);
+    g.append('circle').attr('cx', cx).attr('cy', cy).attr('r', R + 2)
+      .attr('fill', 'none').attr('stroke', '#c5a059').attr('stroke-width', 2).attr('opacity', 0.6);
+    g.append('circle').attr('cx', cx).attr('cy', cy).attr('r', aspectR)
+      .attr('fill', 'none').attr('stroke', '#c5a059').attr('stroke-width', 0.5).attr('opacity', 0.15);
+
+    /* ─── 2. Degree ring ────────────────────────────────────── */
+    for (let i = 0; i < 360; i++) {
+      const isSignB = i % 30 === 0;
+      const is10 = i % 10 === 0;
+      const is5 = i % 5 === 0;
+      if (!isSignB && !is10 && !is5) continue;
+      const len = isSignB ? 14 : is10 ? 8 : 4;
+      const sw = isSignB ? 1.8 : is10 ? 0.8 : 0.4;
+      const op = isSignB ? 0.7 : is10 ? 0.4 : 0.2;
+      g.append('line')
+        .attr('x1', svgX(degreeR, i)).attr('y1', svgY(degreeR, i))
+        .attr('x2', svgX(degreeR - len, i)).attr('y2', svgY(degreeR - len, i))
+        .attr('stroke', '#c5a059').attr('stroke-width', sw).attr('opacity', op);
+    }
+
+    /* graus numéricos a cada 10° */
+    for (let i = 0; i < 360; i += 10) {
+      if (i % 30 === 0) continue; /* pular limites de signo */
+      const sd = i % 30;
+      g.append('text')
+        .attr('x', svgX(degreeR - 12, i)).attr('y', svgY(degreeR - 12, i))
+        .attr('text-anchor', 'middle').attr('dominant-baseline', 'central')
+        .attr('font-size', 6).attr('fill', '#b09860').attr('opacity', 0.5)
+        .attr('transform', `rotate(${180 - i}, ${svgX(degreeR - 12, i)}, ${svgY(degreeR - 12, i)})`)
+        .text(`${sd}`);
+    }
+
+    /* ─── 3. Sign ring ──────────────────────────────────────── */
+    for (let i = 0; i < 12; i++) {
+      const startD = i * 30;
+      const midD = startD + 15;
+      const elem = SIGN_ELEMENTS[i];
+      const eColor = ELEMENT_COLORS[elem];
+
+      /* arco do signo */
+      const arcPath = d3.arc()({
+        innerRadius: houseR, outerRadius: signR,
+        startAngle: arcRad(startD),
+        endAngle: arcRad(startD + 30),
+      })!;
+      g.append('path').attr('d', arcPath)
+        .attr('transform', `translate(${cx},${cy})`)
+        .attr('fill', eColor).attr('opacity', 0.08);
+
+      /* linha divisória */
+      g.append('line')
+        .attr('x1', polarX(signR, startD)).attr('y1', polarY(signR, startD))
+        .attr('x2', polarX(houseR, startD)).attr('y2', polarY(houseR, startD))
+        .attr('stroke', '#c5a059').attr('stroke-width', 0.6).attr('opacity', 0.3);
+
+      /* símbolo do signo */
+      g.append('text')
+        .attr('x', polarX((signR + degreeR) / 2, midD))
+        .attr('y', polarY((signR + degreeR) / 2, midD))
+        .attr('text-anchor', 'middle').attr('dominant-baseline', 'central')
+        .attr('font-size', 14).attr('fill', eColor).attr('opacity', 0.85).attr('font-weight', 'bold')
+        .text(SIGN_SYMBOLS[i]);
+
+      /* nome curto */
+      g.append('text')
+        .attr('x', polarX((signR + houseR) / 2, midD))
+        .attr('y', polarY((signR + houseR) / 2, midD))
+        .attr('text-anchor', 'middle').attr('dominant-baseline', 'central')
+        .attr('font-size', 7).attr('fill', eColor).attr('opacity', 0.5).attr('font-weight', '600')
+        .text(SIGN_SHORT[i]);
+    }
+
+    /* ─── 4. Decanate ring (toggle) ─────────────────────────── */
+    if (showDecanates) {
+      for (let i = 0; i < 36; i++) {
+        const signI = Math.floor(i / 3);
+        const decI = i % 3;
+        const startD = i * 10;
+        const midD = startD + 5;
+        const colors = ['#E8D5B7', '#D4C4A0', '#C0B389'];
+
+        const decPath = d3.arc()({
+          innerRadius: termR, outerRadius: decR,
+          startAngle: arcRad(startD),
+          endAngle: arcRad(startD + 10),
+        })!;
+        g.append('path').attr('d', decPath)
+          .attr('transform', `translate(${cx},${cy})`)
+          .attr('fill', colors[decI]).attr('opacity', 0.35);
+
+        /* linha divisória */
+        g.append('line')
+          .attr('x1', polarX(decR, startD)).attr('y1', polarY(decR, startD))
+          .attr('x2', polarX(termR, startD)).attr('y2', polarY(termR, startD))
+          .attr('stroke', '#c5a059').attr('stroke-width', 0.3).attr('opacity', 0.2);
+
+        /* ruler label */
+        const ruler = DECANATE_RULERS[signI * 3 + decI];
+        g.append('text')
+          .attr('x', polarX((decR + termR) / 2, midD))
+          .attr('y', polarY((decR + termR) / 2, midD))
+          .attr('text-anchor', 'middle').attr('dominant-baseline', 'central')
+          .attr('font-size', 5).attr('fill', '#8a7a5a').attr('opacity', 0.6)
+          .text(ruler.substring(0, 3));
+      }
+    }
+
+    /* ─── 5. Terms ring (toggle) ────────────────────────────── */
+    if (showTerms) {
+      for (let si = 0; si < 12; si++) {
+        const signTerms = TERMS[si];
+        for (let ti = 0; ti < signTerms.length; ti++) {
+          const t = signTerms[ti];
+          const absStart = si * 30 + t.start;
+          const absEnd = si * 30 + t.end;
+          const absMid = (absStart + absEnd) / 2;
+
+          const termPath = d3.arc()({
+            innerRadius: houseR, outerRadius: termR,
+            startAngle: arcRad(absStart),
+            endAngle: arcRad(absEnd),
+          })!;
+          g.append('path').attr('d', termPath)
+            .attr('transform', `translate(${cx},${cy})`)
+            .attr('fill', PLANET_COLORS[t.planet] || '#ccc').attr('opacity', 0.12);
+
+          g.append('line')
+            .attr('x1', polarX(termR, absStart)).attr('y1', polarY(termR, absStart))
+            .attr('x2', polarX(houseR, absStart)).attr('y2', polarY(houseR, absStart))
+            .attr('stroke', '#c5a059').attr('stroke-width', 0.2).attr('opacity', 0.15);
+
+          if (t.end - t.start >= 5) {
+            g.append('text')
+              .attr('x', polarX((houseR + termR) / 2, absMid))
+              .attr('y', polarY((houseR + termR) / 2, absMid))
+              .attr('text-anchor', 'middle').attr('dominant-baseline', 'central')
+              .attr('font-size', 4).attr('fill', '#999').attr('opacity', 0.5)
+              .text(t.planet.substring(0, 2));
+          }
+        }
+      }
+    }
+
+    /* ─── 6. House cusps ────────────────────────────────────── */
+    houses.forEach((h) => {
+      const d = h.degree;
+      const isMain = [1, 4, 7, 10].includes(h.house);
+      const sw = isMain ? 2.2 : 0.9;
+      const op = isMain ? 0.75 : 0.3;
+      const dash = isMain ? 'none' : '4 3';
+      const color = isMain ? '#1a1a2e' : '#c5a059';
+
+      g.append('line')
+        .attr('x1', polarX(degreeR - 2, d)).attr('y1', polarY(degreeR - 2, d))
+        .attr('x2', polarX(aspectR + 5, d)).attr('y2', polarY(aspectR + 5, d))
+        .attr('stroke', color).attr('stroke-width', sw).attr('opacity', op)
+        .attr('stroke-dasharray', dash);
+
+      /* número da casa */
+      const nextH = houses[(h.house) % 12];
+      const midAngle = (() => {
+        let diff = normDeg(nextH.degree - d);
+        if (diff > 180) diff -= 360;
+        return normDeg(d + diff / 2);
+      })();
+      const labelR = (houseR + aspectR) / 2;
+      g.append('text')
+        .attr('x', polarX(labelR, midAngle)).attr('y', polarY(labelR, midAngle))
+        .attr('text-anchor', 'middle').attr('dominant-baseline', 'central')
+        .attr('font-size', 7).attr('fill', isMain ? '#1a1a2e' : '#c5a059')
+        .attr('opacity', isMain ? 0.6 : 0.35).attr('font-weight', 'bold')
+        .text(h.house);
     });
-  }, [planets, cx, cy, planetR]);
 
-  // Compute house cusps
-  const houseCusps = useMemo(() => {
-    return houses.map(h => {
-      const deg = ((h.degree % 360) + 360) % 360;
-      const angle = degToAngle(deg);
-      const outer = polarToXY(cx, cy, outerR, angle);
-      const inner = polarToXY(cx, cy, innerR, angle);
-      const label = polarToXY(cx, cy, houseR - 12, angle);
-      return { ...h, deg, angle, outer, inner, labelPos: label };
+    /* labels dos ângulos principais no outer ring */
+    const angleLabels: { name: string; house: number; label: string }[] = [
+      { name: 'ASC', house: 1, label: 'Asc' },
+      { name: 'MC', house: 10, label: 'MC' },
+      { name: 'DSC', house: 7, label: 'Dsc' },
+      { name: 'IC', house: 4, label: 'IC' },
+    ];
+    angleLabels.forEach(({ house: hn, label }) => {
+      const h = houses.find(hh => hh.house === hn);
+      if (!h) return;
+      const d = h.degree;
+      const lx = polarX(degreeR + 14, d);
+      const ly = polarY(degreeR + 14, d);
+      g.append('text')
+        .attr('x', lx).attr('y', ly)
+        .attr('text-anchor', 'middle').attr('dominant-baseline', 'central')
+        .attr('font-size', 8).attr('fill', '#1a1a2e').attr('font-weight', '900')
+        .attr('opacity', 0.85)
+        .text(label);
     });
-  }, [houses, cx, cy, outerR, innerR, houseR]);
 
-  // Aspect lines
-  const aspectLines = useMemo(() => {
-    return aspects.map(a => {
-      const p1Node = planetNodes.find(p => p.name === a.p1);
-      const p2Node = planetNodes.find(p => p.name === a.p2);
-      if (!p1Node || !p2Node) return null;
-      return {
-        ...a,
-        x1: p1Node.x, y1: p1Node.y,
-        x2: p2Node.x, y2: p2Node.y,
-        color: ASPECT_COLORS[a.type] || '#ccc',
-      };
-    }).filter(Boolean);
-  }, [aspects, planetNodes]);
+    /* ─── 7. Aspect lines ───────────────────────────────────── */
+    aspects.forEach((asp) => {
+      const p1 = filteredPlanets.find(p => p.name === asp.p1);
+      const p2 = filteredPlanets.find(p => p.name === asp.p2);
+      if (!p1 || !p2) return;
+      const col = ASPECT_COLORS[asp.type] || '#ccc';
+      const op = ASPECT_OPACITY[asp.type] || 0.3;
+      g.append('line')
+        .attr('x1', polarX(planetR, p1.degree)).attr('y1', polarY(planetR, p1.degree))
+        .attr('x2', polarX(planetR, p2.degree)).attr('y2', polarY(planetR, p2.degree))
+        .attr('stroke', col).attr('stroke-width', 0.8).attr('opacity', op);
+    });
+
+    /* ─── 8. Planets ────────────────────────────────────────── */
+    /* anti-overlap: sort by degree and nudge close planets */
+    const sorted = [...filteredPlanets].sort((a, b) => normDeg(a.degree) - normDeg(b.degree));
+    const placed: { x: number; y: number; r: number }[] = [];
+    const MIN_DIST = 22;
+
+    sorted.forEach((p) => {
+      const d = p.degree;
+      const isAngle = p.isAngle || ['ASC','MC','DSC','IC'].includes(p.name);
+      const color = p.color || PLANET_COLORS[p.name] || (isAngle ? '#B8860B' : '#888');
+      const symbol = p.symbol || PLANET_SYMBOLS[p.name] || '●';
+
+      /* base position */
+      let px = polarX(planetR, d);
+      let py = polarY(planetR, d);
+
+      /* nudge if overlapping */
+      for (let attempt = 0; attempt < 8; attempt++) {
+        const tooClose = placed.some(pl =>
+          Math.hypot(pl.x - px, pl.y - py) < MIN_DIST
+        );
+        if (!tooClose) break;
+        const nudge = (attempt + 1) * 4;
+        px = polarX(planetR + nudge, d);
+        py = polarY(planetR + nudge, d);
+      }
+      placed.push({ x: px, y: py, r: 12 });
+
+      /* line from center to planet */
+      g.append('line')
+        .attr('x1', polarX(aspectR + 5, d)).attr('y1', polarY(aspectR + 5, d))
+        .attr('x2', px).attr('y2', py)
+        .attr('stroke', color).attr('stroke-width', 0.3).attr('opacity', 0.15);
+
+      /* planet group for hover */
+      const pg = g.append('g')
+        .attr('class', 'planet-node')
+        .style('cursor', 'pointer');
+
+      /* hit area (invisible larger circle for easier hover) */
+      pg.append('circle')
+        .attr('cx', px).attr('cy', py).attr('r', 14)
+        .attr('fill', 'transparent');
+
+      /* shape: diamond for angles, circle for planets */
+      if (isAngle) {
+        const s = 10;
+        pg.append('polygon')
+          .attr('points', `${px},${py - s} ${px + s},${py} ${px},${py + s} ${px - s},${py}`)
+          .attr('fill', 'white').attr('stroke', color).attr('stroke-width', 1.5);
+      } else {
+        pg.append('circle')
+          .attr('cx', px).attr('cy', py).attr('r', 10)
+          .attr('fill', 'white').attr('stroke', color).attr('stroke-width', 1.5);
+      }
+
+      /* symbol */
+      pg.append('text')
+        .attr('x', px).attr('y', py + 1)
+        .attr('text-anchor', 'middle').attr('dominant-baseline', 'central')
+        .attr('font-size', isAngle ? 8 : 10).attr('fill', color)
+        .attr('font-weight', 'bold')
+        .text(symbol);
+
+      /* degree */
+      pg.append('text')
+        .attr('x', px).attr('y', py - 15)
+        .attr('text-anchor', 'middle')
+        .attr('font-size', 6).attr('fill', '#666').attr('font-weight', '600')
+        .text(formatDeg(normDeg(d)));
+
+      /* retrograde ℞ */
+      if (p.retrograde) {
+        pg.append('text')
+          .attr('x', px + 13).attr('y', py - 8)
+          .attr('font-size', 7).attr('fill', '#E74C3C').attr('font-weight', 'bold')
+          .text('℞');
+      }
+
+      /* hover events */
+      pg.on('mouseenter', (event: MouseEvent) => {
+        const signIdx = getSignIdx(d);
+        const motion = p.stationary
+          ? 'Estacionário'
+          : p.applying !== undefined
+            ? (p.applying ? 'Aplicativo' : 'Separativo')
+            : (p.speed !== undefined ? (p.speed > 0 ? 'Direto' : 'Retrógrado') : '—');
+
+        setTooltip({
+          name: p.name,
+          sign: `${SIGN_NAMES[signIdx]} ${formatDeg(normDeg(d))}`,
+          degree: `${normDeg(d).toFixed(2)}°`,
+          retrograde: !!p.retrograde,
+          stationary: !!p.stationary,
+          motion,
+          color,
+          x: event.clientX,
+          y: event.clientY,
+        });
+      }).on('mouseleave', () => setTooltip(null));
+    });
+
+  }, [size, filteredPlanets, houses, aspects, showDecanates, showTerms, rotOffset]);
+
+  /* ─── Tabelas abaixo ─────────────────────────────────────────── */
+
+  const planetTable = useMemo(() => {
+    return filteredPlanets
+      .filter(p => !['ASC','DSC','IC'].includes(p.name))
+      .sort((a, b) => normDeg(a.degree) - normDeg(b.degree))
+      .map(p => {
+        const si = getSignIdx(p.degree);
+        const motion = p.stationary ? 'Est' : p.retrograde ? 'Rx' : p.applying ? 'App' : 'Sep';
+        return {
+          ...p,
+          signSymbol: SIGN_SYMBOLS[si],
+          signName: SIGN_NAMES[si],
+          signDeg: formatDeg(normDeg(p.degree)),
+          absDeg: normDeg(p.degree).toFixed(2),
+          color: p.color || PLANET_COLORS[p.name] || '#888',
+          motion,
+        };
+      });
+  }, [filteredPlanets]);
 
   return (
-    <div className="relative flex items-center justify-center">
-      {/* Settings toggle */}
-      <button
-        onClick={() => setShowSettings(!showSettings)}
-        className="absolute top-3 right-3 z-20 p-2 bg-white/80 border border-gray-100 rounded-lg shadow-sm text-gray-400 hover:text-gold transition-all"
-        title="Configurações da Mandala"
-      >
-        <Settings size={16} />
-      </button>
+    <div className="flex flex-col items-center gap-6">
+      {/* ─── Wheel Container ──────────────────────────────────── */}
+      <div className="relative">
+        {/* Settings */}
+        <button
+          onClick={() => setShowSettings(!showSettings)}
+          className="absolute top-2 right-2 z-20 p-2 bg-white/90 border border-gray-100 rounded-lg shadow-sm text-gray-400 hover:text-[#c5a059] transition-all"
+          title="Configurações"
+        >
+          <Settings size={15} />
+        </button>
 
-      {/* Settings panel */}
-      {showSettings && (
-        <div className="absolute top-12 right-3 z-30 bg-white border border-gray-100 rounded-xl shadow-xl p-4 w-56 space-y-3 animate-in fade-in">
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-[9px] font-black uppercase tracking-widest text-gray-500">Elementos</span>
-            <X size={12} className="text-gray-300 cursor-pointer hover:text-red-400" onClick={() => setShowSettings(false)} />
+        {showSettings && (
+          <div className="absolute top-10 right-2 z-30 bg-white border border-gray-100 rounded-xl shadow-xl p-4 w-56 space-y-3 animate-in fade-in">
+            <div className="flex justify-between items-center mb-1">
+              <span className="text-[9px] font-black uppercase tracking-widest text-gray-500">Camadas</span>
+              <X size={12} className="text-gray-300 cursor-pointer hover:text-red-400" onClick={() => setShowSettings(false)} />
+            </div>
+            {[
+              { label: 'Corpos Secundários', state: showAsteroids, setter: setShowAsteroids },
+              { label: 'Decanatos', state: showDecanates, setter: setShowDecanates },
+              { label: 'Termos (Egípcios)', state: showTerms, setter: setShowTerms },
+            ].map(item => (
+              <label key={item.label} className="flex items-center gap-3 cursor-pointer group">
+                <input type="checkbox" checked={item.state}
+                  onChange={() => item.setter(!item.state)}
+                  className="w-3.5 h-3.5 accent-[#c5a059]" />
+                <span className="text-[11px] font-medium text-gray-600 group-hover:text-[#c5a059] transition-colors">{item.label}</span>
+              </label>
+            ))}
           </div>
-          {[
-            { label: 'Asteroides/Nodos/Fortuna', state: showAsteroids, setter: setShowAsteroids },
-            { label: 'Decanatos', state: showDecanates, setter: setShowDecanates },
-            { label: 'Trânsitos', state: showTransits, setter: setShowTransits },
-          ].map(item => (
-            <label key={item.label} className="flex items-center gap-3 cursor-pointer group">
-              <input
-                type="checkbox"
-                checked={item.state}
-                onChange={() => item.setter(!item.state)}
-                className="w-3.5 h-3.5 accent-gold"
-              />
-              <span className="text-[11px] font-medium text-gray-600 group-hover:text-gold transition-colors">{item.label}</span>
-            </label>
-          ))}
+        )}
+
+        <svg ref={svgRef} width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="drop-shadow-sm" />
+      </div>
+
+      {/* ─── Tooltip (React overlay) ──────────────────────────── */}
+      {tooltip && (
+        <div
+          className="fixed z-50 bg-white border border-[#c5a059]/30 rounded-xl shadow-xl px-4 py-3 pointer-events-none min-w-[180px]"
+          style={{ left: tooltip.x + 16, top: tooltip.y - 20 }}
+        >
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-lg font-bold" style={{ color: tooltip.color }}>
+              {PLANET_SYMBOLS[tooltip.name] || '●'}
+            </span>
+            <span className="text-[11px] font-black uppercase tracking-wider" style={{ color: tooltip.color }}>
+              {tooltip.name}
+            </span>
+          </div>
+          <p className="text-[11px] text-gray-700 font-medium">{tooltip.sign}</p>
+          <div className="flex gap-2 mt-1.5 flex-wrap">
+            {tooltip.retrograde && (
+              <span className="text-[9px] font-bold px-1.5 py-0.5 bg-red-50 text-red-500 rounded">℞ Retrógrado</span>
+            )}
+            {tooltip.stationary && (
+              <span className="text-[9px] font-bold px-1.5 py-0.5 bg-amber-50 text-amber-600 rounded">Estacionário</span>
+            )}
+            <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${
+              tooltip.motion === 'Aplicativo' ? 'bg-blue-50 text-blue-600' :
+              tooltip.motion === 'Separativo' ? 'bg-purple-50 text-purple-600' :
+              'bg-gray-50 text-gray-500'
+            }`}>
+              {tooltip.motion}
+            </span>
+          </div>
         </div>
       )}
 
-      {/* Tooltip */}
-      {hoveredPlanet && (() => {
-        const p = planetNodes.find(n => n.name === hoveredPlanet);
-        if (!p) return null;
-        return (
-          <div
-            className="absolute z-30 bg-white border border-gold/20 rounded-xl shadow-lg px-4 py-3 pointer-events-none"
-            style={{ left: p.x + 20, top: p.y - 20 }}
-          >
-            <p className="text-[10px] font-black uppercase text-gold tracking-wider">{p.name}</p>
-            <p className="text-[11px] text-gray-700 font-medium">{p.sign} {formatDeg(p.degree)}</p>
-            {p.retrograde && <p className="text-[9px] text-red-400 font-bold">Retrógrado</p>}
+      {/* ─── Tables Below ─────────────────────────────────────── */}
+      <div className="w-full max-w-[620px] grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Planet Table */}
+        <div className="bg-white/60 backdrop-blur-sm border border-[#c5a059]/10 rounded-xl p-4">
+          <h3 className="text-[9px] font-black uppercase tracking-[0.25em] text-[#c5a059] mb-3">Planetas</h3>
+          <div className="space-y-1.5">
+            {planetTable.map((p, i) => (
+              <div key={i} className="flex items-center justify-between text-[10px] py-1 border-b border-gray-50 last:border-0">
+                <div className="flex items-center gap-2">
+                  <span className="font-bold w-5" style={{ color: p.color }}>{p.symbol}</span>
+                  <span className="font-semibold text-gray-700 w-16">{p.name}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-gray-400">{p.signSymbol}</span>
+                  <span className="text-gray-600 font-medium tabular-nums w-14 text-right">{p.signDeg}</span>
+                  <span className={`text-[8px] font-bold px-1 rounded ${
+                    p.motion === 'Rx' ? 'bg-red-50 text-red-500' :
+                    p.motion === 'Est' ? 'bg-amber-50 text-amber-600' :
+                    p.motion === 'App' ? 'bg-blue-50 text-blue-500' :
+                    'text-gray-400'
+                  }`}>{p.motion}</span>
+                </div>
+              </div>
+            ))}
           </div>
-        );
-      })()}
+        </div>
 
-      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="drop-shadow-sm">
-        {/* Background */}
-        <circle cx={cx} cy={cy} r={outerR + 8} fill="white" stroke="#B8860B" strokeWidth="0.5" opacity="0.1" />
-
-        {/* Outer circle */}
-        <circle cx={cx} cy={cy} r={outerR} fill="none" stroke="#B8860B" strokeWidth="1.5" opacity="0.3" />
-        <circle cx={cx} cy={cy} r={signR} fill="none" stroke="#B8860B" strokeWidth="0.5" opacity="0.15" />
-        <circle cx={cx} cy={cy} r={houseR} fill="none" stroke="#B8860B" strokeWidth="0.5" opacity="0.1" />
-        <circle cx={cx} cy={cy} r={planetR} fill="none" stroke="#B8860B" strokeWidth="0.3" opacity="0.08" />
-        <circle cx={cx} cy={cy} r={innerR} fill="none" stroke="#B8860B" strokeWidth="0.5" opacity="0.1" />
-
-        {/* Zodiac sign segments (every 30°) */}
-        {Array.from({ length: 12 }).map((_, i) => {
-          const absDeg = i * 30;
-          const angle = degToAngle(absDeg);
-          const outerPt = polarToXY(cx, cy, outerR, angle);
-          const innerPt = polarToXY(cx, cy, innerR, angle);
-          const labelAngle = degToAngle(absDeg + 15);
-          const labelPt = polarToXY(cx, cy, outerR - 20, labelAngle);
-          return (
-            <g key={`sign-${i}`}>
-              <line x1={innerPt.x} y1={innerPt.y} x2={outerPt.x} y2={outerPt.y} stroke="#B8860B" strokeWidth="0.5" opacity="0.15" />
-              <text x={labelPt.x} y={labelPt.y} textAnchor="middle" dominantBaseline="central" fontSize="14" fill="#B8860B" opacity="0.7" fontWeight="bold" className="select-none">{SIGNS[i]}</text>
-            </g>
-          );
-        })}
-
-        {/* Degree marks every 5° */}
-        {Array.from({ length: 72 }).map((_, i) => {
-          const absDeg = i * 5;
-          const angle = degToAngle(absDeg);
-          const isSignBoundary = absDeg % 30 === 0;
-          const isTenDeg = absDeg % 10 === 0;
-          const outerPt = polarToXY(cx, cy, isSignBoundary ? outerR : isTenDeg ? outerR - 6 : outerR - 3, angle);
-          const innerPt = polarToXY(cx, cy, outerR, angle);
-          return (
-            <line key={`tick-${i}`} x1={innerPt.x} y1={innerPt.y} x2={outerPt.x} y2={outerPt.y}
-              stroke="#B8860B" strokeWidth={isSignBoundary ? 1.5 : isTenDeg ? 0.8 : 0.3}
-              opacity={isSignBoundary ? 0.4 : isTenDeg ? 0.25 : 0.12}
-            />
-          );
-        })}
-
-        {/* Decanates (optional) */}
-        {showDecanates && Array.from({ length: 36 }).map((_, i) => {
-          const absDeg = i * 10;
-          const angle = degToAngle(absDeg);
-          const outerPt = polarToXY(cx, cy, signR, angle);
-          const innerPt = polarToXY(cx, cy, signR - 14, angle);
-          const decIdx = Math.floor((absDeg % 30) / 10);
-          return (
-            <line key={`dec-${i}`} x1={innerPt.x} y1={innerPt.y} x2={outerPt.x} y2={outerPt.y}
-              stroke={DECANATE_COLORS[decIdx]} strokeWidth="8" opacity="0.25" strokeLinecap="round"
-            />
-          );
-        })}
-
-        {/* House cusps */}
-        {houseCusps.map((h, i) => (
-          <g key={`house-${i}`}>
-            <line x1={h.inner.x} y1={h.inner.y} x2={h.outer.x} y2={h.outer.y}
-              stroke="#B8860B" strokeWidth={h.house === 1 || h.house === 10 ? 1.5 : 0.7}
-              opacity={h.house === 1 || h.house === 10 ? 0.4 : 0.2}
-              strokeDasharray={h.house === 1 || h.house === 10 ? 'none' : '3 2'}
-            />
-            <text x={h.labelPos.x} y={h.labelPos.y} textAnchor="middle" dominantBaseline="central"
-              fontSize="8" fill="#B8860B" opacity="0.5" fontWeight="bold" className="select-none">
-              {h.house}
-            </text>
-          </g>
-        ))}
-
-        {/* Aspect lines */}
-        {aspectLines.map((line: any, i) => (
-          <line key={`aspect-${i}`} x1={line.x1} y1={line.y1} x2={line.x2} y2={line.y2}
-            stroke={line.color} strokeWidth="0.8" opacity="0.25"
-          />
-        ))}
-
-        {/* Center */}
-        <circle cx={cx} cy={cy} r={3} fill="#B8860B" opacity="0.3" />
-
-        {/* Planets */}
-        {planetNodes.map((p, i) => (
-          <g key={`planet-${i}`}
-            onMouseEnter={() => setHoveredPlanet(p.name)}
-            onMouseLeave={() => setHoveredPlanet(null)}
-            className="cursor-pointer"
-          >
-            {/* Planet line to outer ring */}
-            <line x1={cx} y1={cy} x2={p.x} y2={p.y} stroke={p.color} strokeWidth="0.4" opacity="0.1" />
-            {/* Planet circle */}
-            <circle cx={p.x} cy={p.y} r={11} fill="white" stroke={p.color} strokeWidth="1.5" />
-            {/* Planet symbol */}
-            <text x={p.x} y={p.y + 1} textAnchor="middle" dominantBaseline="central"
-              fontSize="11" fill={p.color} fontWeight="bold" className="select-none">
-              {p.symbol}
-            </text>
-            {/* Degree label */}
-            <text x={p.x} y={p.y - 16} textAnchor="middle" fontSize="6.5" fill="#666" fontWeight="600" className="select-none">
-              {formatDeg(p.degree)}
-            </text>
-            {/* Retrograde marker */}
-            {p.retrograde && (
-              <text x={p.x + 12} y={p.y - 8} fontSize="7" fill="#FF4500" fontWeight="bold">℞</text>
+        {/* Aspect Table */}
+        <div className="bg-white/60 backdrop-blur-sm border border-[#c5a059]/10 rounded-xl p-4">
+          <h3 className="text-[9px] font-black uppercase tracking-[0.25em] text-[#c5a059] mb-3">Aspectos</h3>
+          <div className="space-y-1.5 max-h-[300px] overflow-y-auto pr-1 custom-scrollbar">
+            {aspects.length > 0 ? aspects.map((asp, i) => {
+              const col = ASPECT_COLORS[asp.type] || '#999';
+              return (
+                <div key={i} className="flex items-center justify-between text-[10px] py-1 border-b border-gray-50 last:border-0">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: col, opacity: 0.7 }} />
+                    <span className="font-semibold text-gray-700 w-20">{asp.type}</span>
+                  </div>
+                  <span className="text-gray-500 flex-1 text-center">{asp.p1} – {asp.p2}</span>
+                  <span className="text-gray-400 tabular-nums text-right w-10">{asp.orb.toFixed(1)}°</span>
+                </div>
+              );
+            }) : (
+              <p className="text-center py-6 text-gray-300 text-[10px] italic">Nenhum aspecto calculado</p>
             )}
-          </g>
-        ))}
-      </svg>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
