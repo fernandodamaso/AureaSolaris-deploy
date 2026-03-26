@@ -5,7 +5,7 @@ import { Planet } from '../../components/MandalaChart';
 const makePlanet = (name: string, degree: number): Planet => ({
   name,
   degree,
-  sign: '',
+  sign: 'Áries',
   color: '#fff',
 });
 
@@ -129,7 +129,6 @@ describe('calculateTransitAspects', () => {
   });
 
   it('prefers tighter aspect over wider orb aspect', () => {
-    // 120° from 180 is outside opposition orb (8), but inside trine (8)
     const transit = [makePlanet('Sun', 0)];
     const natal = [makePlanet('Moon', 125)]; // 5° orb from trine
     const aspects = calculateTransitAspects(transit, natal);
