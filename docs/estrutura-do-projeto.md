@@ -47,6 +47,12 @@ AureaSolaris/
 │   │   ├── useAstrologyData.ts      # 🌙 Horas planetárias, trânsitos, previsão com datas reais
 │   │   └── useFinancasData.ts       # 💵 Lógica financeira: transações, metas, reservas
 │   │
+│   ├── services/                    # 🔌 Serviços externos (APIs de terceiros)
+│   │   └── composio.ts             # 📅 Wrapper para Google Calendar via Composio MCP
+│   │
+│   ├── types/                       # 📝 Definições de tipos TypeScript
+│   │   └── googleCalendar.ts       # 📅 Tipos para eventos do Google Calendar
+│   │
 │   ├── utils/                       # 🛠️ Funções auxiliares
 │   │   ├── tauri.ts                 # 🌉 Ponte de comunicação com o Rust (IPC)
 │   │   ├── exportUtils.ts           # 📤 Funções de exportação (PDF, Email, Drive, JSON, Markdown)
@@ -156,9 +162,9 @@ Cada view modular do aplicativo tem seu próprio arquivo:
 - `FinancasView.tsx` — Controle financeiro (Uncle Duck)
 - `ImportFinancialView.tsx` — Importação de dados financeiros
 - `LoginView.tsx` — Tela de autenticação
-- `MandalaChart.tsx` — Gráfico/chart interativo da mandala zodiacal
+- `MandalaChart.tsx` — Gráfico/chart interativo da mandala zodiacal (coordenadas: 0° Áries às 9h, sentido anti-horário, rotação ASC)
 - `MandalaPage.tsx` — Wrapper que alimenta MandalaView com dados reais
-- `MandalaView.tsx` — Visualização em mandala SVG interativa
+- `MandalaView.tsx` — Visualização em mandala SVG interativa (Céu do Momento, sem rotação ASC)
 - `MemoriasView.tsx` — Registro de memórias
 - `MesaCriacao.tsx` — Canvas infinito para conectar ideias
 - `ProfileEditor.tsx` — Editor de perfil do usuário
@@ -231,6 +237,12 @@ Pasta para funções utilitárias que são usadas em vários lugares.
 - `tauri.ts` — A **ponte de comunicação** entre o React (frontend) e o Rust (backend). Usa `safeInvoke()` para chamar comandos do Tauri de forma segura.
 - `exportUtils.ts` — Funções de exportação para diferentes formatos (PDF, Email, Google Drive, JSON, Markdown).
 - `mockData.ts` — Dados fictícios usados durante o desenvolvimento e testes.
+- `astro-calc.ts` — Motor de cálculo astrológico em TypeScript puro para fallback em browser (quando Tauri/Python não disponível).
+
+### natal_charts/
+
+Diretório com mapas natais de referência para validação de cálculos.
+- `natal_charts/viviane.json` — Mapa de referência da usuária principal
 
 **Por que existe?**  
 Centraliza a comunicação com o backend em um único lugar. Se a API mudar, você só precisa editar este arquivo.

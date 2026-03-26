@@ -55,11 +55,67 @@ A injeção das personas ocorre no componente `AgentChat.tsx`, que obedece à **
 
 ---
 
-## 3. Ponte Tauri IPC (Rust ↔ React)
+## 3. Integração com Google Calendar (Composio MCP)
+
+A integração com Google Calendar utiliza o **Composio MCP** para gerenciar OAuth2 e chamadas à API.
+
+### 3.1 Configuração
+
+1. Obtenha uma API key em [app.composio.dev](https://app.composio.dev)
+2. Adicione ao `.env`:
+   ```
+   VITE_COMPOSIO_API_KEY=sua_chave_aqui
+   ```
+3. Conecte sua conta Google via dashboard do Composio
+
+### 3.2 Serviço: `src/services/composio.ts`
+
+O wrapper fornece funções para operações básicas:
+
+| Função | Descrição |
+|--------|-----------|
+| `connect()` | Conecta à conta Google via Composio |
+| `listEvents(params)` | Lista eventos (suporta `timeMin`, `timeMax`) |
+| `createEvent(params)` | Cria novo evento no Google Calendar |
+| `deleteEvent(id)` | Remove evento do Google Calendar |
+
+### 3.3 Interface no Frontend
+
+O componente `AgendaView.tsx` integra eventos do Google Calendar:
+- **Botão "Google Calendar"** — conecta/desconecta
+- **Eventos Google** — mostrados com badge azul e ícone `Calendar`
+- **Eventos locais** — mostrados com badge dourado e ícone `Clock`
+- Os eventos são mesclados na visualização diária
+
+### 3.4 Exemplo de Uso
+
+```typescript
+import { googleCalendarService } from '../services/composio';
+
+// Conectar
+await googleCalendarService.connect();
+
+// Listar eventos do dia
+const events = await googleCalendarService.listEvents({
+  timeMin: new Date().toISOString(),
+  timeMax: endOfDay.toISOString(),
+});
+
+// Criar evento
+await googleCalendarService.createEvent({
+  summary: 'Reunião importante',
+  start: '2026-03-25T14:00:00',
+  end: '2026-03-25T15:00:00',
+});
+```
+
+---
+
+## 4. Ponte Tauri IPC (Rust ↔ React)
 
 A comunicação entre o React (frontend) e o Rust (backend) é feita através do sistema de invoke do Tauri.
 
-### 3.1. Frontend: `safeInvoke`
+### 4.1. Frontend: `safeInvoke`
 Utilizamos um wrapper em `src/utils/tauri.ts` chamado `safeInvoke`. Ele verifica se o ambiente Tauri está disponível antes de fazer a chamada, prevenindo erros em desenvolvimento web puro.
 
 ```typescript
@@ -78,7 +134,7 @@ export async function safeInvoke<T>(cmd: string, args?: any): Promise<T | null> 
 }
 ```
 
-### 3.2. Backend: `#[tauri::command]`
+### 4.2. Backend: `#[tauri::command]`
 No Rust (`src-tauri/src/lib.rs`), cada função exposta ao frontend é marcada com o atributo `#[tauri::command]`.
 
 As funções são registradas no `invoke_handler` dentro de `tauri::Builder`:
@@ -95,7 +151,7 @@ tauri::Builder::default()
     ])
 ```
 
-### 3.3. Lista de Comandos Disponíveis
+### 4.3. Lista de Comandos Disponíveis
 
 | Comando | Descrição |
 |---------|-----------|
@@ -132,19 +188,19 @@ tauri::Builder::default()
 | `google_drive_list_files` | Lista arquivos no Google Drive do usuário conectado. |
 | `google_drive_upload` | Faz upload de arquivo (nome + conteúdo) para o Google Drive. |
 
-### 3.4. Gestão de Ouro (Finanças)
+### 4.4. Gestão de Ouro (Finanças)
 - **Componente:** `FinancasView.tsx`
 - **Contexto:** `FinancasContext.tsx`
 - **Agente:** Uncle Duck (Pragmático).
 - **Funcionalidades:** CRUD de transações, gestão de reservas/metas, integração de timing astral.
 
-### 3.5. Saúde & Vitalidade
+### 4.5. Saúde & Vitalidade
 - **Componente:** `SaudeView.tsx`
 - **Contexto:** `SaudeContext.tsx`
 - **Agente:** Alfred (Eficiente).
 - **Funcionalidades:** Rastreamento de hábitos, biometria e gestão de documentos de saúde.
 
-### 3.6. Google Drive (OAuth2)
+### 4.6. Google Drive (OAuth2)
 - **Componente:** Integração no `ControlePanel.tsx`
 - **Funcionalidades:** Conexão OAuth2 com PKCE, listagem de arquivos, upload de conteúdo.
 - **Comandos:** `google_drive_status`, `google_drive_connect`, `google_drive_disconnect`, `google_drive_list_files`, `google_drive_upload`.
@@ -153,16 +209,16 @@ tauri::Builder::default()
 
 ---
 
-## 4. Motor de Astrologia (Python)
+## 5. Motor de Astrologia (Python)
 
 O cálculo astrológico complexo é delegado a um script Python, que roda como um **subprocesso** chamado pelo Rust.
 
-### 4.1. Arquivo Principal e Ambiente
+### 5.1. Arquivo Principal e Ambiente
 - **Motor:** `C:\AureaSolaris\astro_engine.py` (caminho fixo em ambiente Dev)
 - **Biblioteca:** `kerykeion` (para cálculos astrológicos)
 - **Efemérides:** `de421.bsp` (Swiss Ephemeris - NASA)
 
-### 4.2. Integração Rust-Python
+### 5.2. Integração Rust-Python
 O comando Tauri `run_astro_engine` em `lib.rs` executa o script Python usando caminhos absolutos para estabilidade no Windows:
 
 ```rust
@@ -184,25 +240,121 @@ async fn run_astro_engine(payload: Option<String>) -> Result<String, String> {
 
 O script Python recebe argumentos em JSON (opcional), processa e retorna o resultado em JSON para o Rust, que repassa ao frontend.
 
-### 4.3. Funcionalidades
+### 5.3. Funcionalidades
 - `calculate_astrology`: Calcula planetas, aspectos e regências (dia/hora).
 - `get_aspects`: Detecção dinâmica de distâncias com orbes configuráveis.
 - `get_planetary_hour`: Cálculo baseado na ordem caldéia (24 horas).
 - Cache global em `astro_data.json` na raiz do projeto.
 
+### 5.4 Corpos Celestes e Pontos Adicionais
+
+Além dos 10 planetas clássicos, o motor calcula:
+
+| Corpo | Descrição | Fórmula |
+|-------|-----------|---------|
+| North Node (☊) | Nodo Norte Lunar | Lua - 180° |
+| South Node (☋) | Nodo Sul Lunar | Lua + 180° |
+| Lilith (⚸) | Nodo Sul Lunar (Black Moon) | Lua + 180° |
+| Part of Fortune (⊙) | Ponto de Fortuna | ASC + Lua - Sol |
+| Vertex (Vx) | Ponto Fictício | ASC + 60° (aproximado) |
+| Chiron (⚷) | Centauro | Via kerykeion |
+
+### 5.5 Sistema de Casas
+
+O sistema de casas é **configurável** via parâmetro `house_system`:
+
+| Código | Sistema | Descrição |
+|--------|---------|-----------|
+| `R` | Regiomontanus | Padrão. Cúspides na intersecção do meridiano do lugar com o equador |
+| `P` | Placidus | Mais usado worldwide |
+| `K` | Koch | Baseado em movimentos diurnos |
+| `O` | Porphyrius | Divisions equal of the zodiac arc |
+| `C` | Campanus | Baseado em quadrant divisions |
+| `W` | Whole Sign | Casas definidas pelo signo completo |
+
+### 5.6 Aspectos Astrológicos
+
+| Aspecto | Ângulo | Orb | Tipo |
+|---------|--------|-----|------|
+| Conjunção ☌ | 0° | 8° | Maior |
+| Oposição ☍ | 180° | 8° | Maior |
+| Trígono △ | 120° | 8° | Maior |
+| Quadratura □ | 90° | 6° | Maior |
+| Sextil ＊ | 60° | 4° | Menor |
+| Inconjunto ☽ | 150° | 3° | Menor |
+| Quintil ℍ | 72° | 3° | Menor |
+| Bi-Quintil ℎ | 144° | 3° | Menor |
+| Semi-Sextil ⚹ | 30° | 2° | Menor |
+| Semi-Quadratura ∠ | 45° | 2° | Menor |
+
+Cada aspecto inclui indicador `applying` (planetas convergindo) ou `separating` (divergindo).
+
+### 5.7 Fallback Browser (TypeScript)
+
+Quando Tauri/Python não está disponível (ex: desenvolvimento web puro sem Tauri), um motor em TypeScript puro (`src/utils/astro-calc.ts`) fornece cálculos approximations para uso em desenvolvimento web.
+
+**Arquivo:** `src/utils/astro-calc.ts`
+
+**Funcionalidades:**
+- Cálculo de posição planetária via fórmulas simplificadas (VSOP87-style)
+- Cálculo de aspectos com orbes configuráveis
+- Cálculo de casas (sistema Regiomontanus)
+- Cálculo de pontos adicionais (Nodos, Lilith, Part of Fortune)
+- Cálculo de fase lunar
+
+**Uso:**
+```typescript
+import { calculateFallback } from '../utils/astro-calc';
+
+const result = await calculateFallback(
+  2026, 3, 25, 14, 30,  // year, month, day, hour, minute
+  -15.7833,              // latitude
+  -47.9333,              // longitude
+  'Regiomontanus'        // house system
+);
+```
+
+**Hooks que usam fallback:**
+- `useAstrologyData.ts` — Dados astrais em tempo real
+- `useAstroData.ts` — Cálculos de mapa natal
+
+**Nota:** Os cálculos são aproximações (±1-2°). Para precisão completa, use o motor Python via Tauri.
+
+### 5.8 Mapa Natal de Referência
+
+O mapa natal de Viviane está salvo em `natal_charts/viviane.json` como base de validação para os cálculos astrológicos.
+
+### 5.9 Convenção de Orientação da Roda Zodiacal
+
+A mandala zodiacal segue o padrão da astrologia ocidental (compatível com AstroChart, astro-seek.com, Solar Fire):
+
+| Ponto | Posição |
+|-------|---------|
+| 0° Áries | 9 horas (esquerda) |
+| 0° Câncer | 12 horas (topo) |
+| 0° Libra | 3 horas (direita) |
+| 0° Capricórnio | 6 horas (base) |
+
+- **Direção:** Anti-horária (counterclockwise) — padrão ocidental
+- **Fórmula de conversão:** `(180 - angle) * PI/180` — equivalente a `SHIFT_IN_DEGREES = 180` do AstroChart
+- **Rotação ASC:** Em `MandalaChart.tsx`, a roda gira para que o ASC fique sempre às 9 horas
+
+**Componentes:**
+- `MandalaChart.tsx` — Renderiza mapa natal com rotação ASC
+- `MandalaView.tsx` — Visualização do Céu do Momento (sem rotação ASC)
 
 ---
 
-## 5. Fluxo de Dados
+## 6. Fluxo de Dados
 
-### 5.1. Fluxo de Chat com IA
+### 6.1. Fluxo de Chat com IA
 1. Usuário envia mensagem na UI (`AgentChat.tsx`).
 2. Frontend chama `safeInvoke('openrouter_chat', { model, messages })`.
 3. Rust recebe a chamada, busca a API Key de `.env.local`, e faz a requisição HTTP para OpenRouter.
 4. Resposta volta para o Rust, que retorna a string para o React.
 5. React atualiza o estado e salva o histórico via `safeInvoke('save_history')`.
 
-### 5.2. Fluxo de Astrologia
+### 6.2. Fluxo de Astrologia
 1. `useAstrologyData` ou componente chama `safeInvoke('run_astro_engine')`.
 2. Rust executa `python.exe astro_engine.py` como subprocesso.
 3. Python usa `kerykeion` para calcular posições.
@@ -211,25 +363,25 @@ O script Python recebe argumentos em JSON (opcional), processa e retorna o resul
 
 ---
 
-## 6. Gerenciamento de Estado Global (AgendaContext)
+## 7. Gerenciamento de Estado Global (AgendaContext)
 
 O `src/context/AgendaContext.tsx` é o coração do estado global da aplicação.
 
-### 6.1. Responsabilidades
+### 7.1. Responsabilidades
 - **Perfis:** Gerencia múltiplos perfis de usuários (ex: Viviane, conexões).
 - **Tarefas:** Sincroniza tarefas com o Todoist via API.
 - **Eventos:** Gerencia eventos da agenda (integração Google Calendar planejada).
 - **Documentos:** Gerencia metadados de documentos locais.
 - **Insights:** Fornece insights do agente Alfred baseados nos dados.
 
-### 6.2. Persistência no Contexto
+### 7.2. Persistência no Contexto
 - **Perfis e Documentos:** Persistidos em `localStorage` (`aurea_profiles`, `aurea_documents`).
 - **Tarefas:** Persistidas remotamente no Todoist.
 - **Chat:** Persistidos no sistema de arquivos local via comandos Tauri (`memory/`).
 
 ---
 
-## 7. Persistência de Dados
+## 8. Persistência de Dados
 
 | Tipo de Dado | Local de Armazenamento | Mecanismo |
 |---|---|---|
@@ -246,11 +398,11 @@ O `src/context/AgendaContext.tsx` é o coração do estado global da aplicação
 
 ---
 
-## 8. Sistema de Exportação
+## 9. Sistema de Exportação
 
 O Aurea Solaris possui um sistema de exportação unificado em `src/utils/exportUtils.ts` que permite aos usuários exportar conteúdo de diferentes views.
 
-### 8.1. Funcionalidades Disponíveis
+### 9.1. Funcionalidades Disponíveis
 
 | Função | Descrição | Views |
 |--------|-----------|-------|
@@ -261,13 +413,13 @@ O Aurea Solaris possui um sistema de exportação unificado em `src/utils/export
 | `exportAsJSON` | Exporta dados como JSON | DiarioView, MesaCriacao |
 | `exportAsMarkdown` | Exporta como arquivo Markdown | DiarioView |
 
-### 8.2. Views com Exportação
+### 9.2. Views com Exportação
 
 - **DiarioView.tsx**: Download (Markdown/JSON), Email, Google Drive
 - **MandalaPage.tsx** / **MandalaView.tsx**: Download (SVG/PNG), Email, Google Drive  
 - **MesaCriacao.tsx**: Download (JSON/SVG), Email, Google Drive
 
-### 8.3. Formato de Arquivos
+### 9.3. Formato de Arquivos
 
 - **Markdown**: `# Título\n\nconteúdo\n\n---\n*Exportado do Aurea Solaris em [data]*`
 - **JSON**: `{ title, content, date, exportedAt }`
