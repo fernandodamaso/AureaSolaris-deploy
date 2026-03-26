@@ -241,6 +241,7 @@ Pasta para funções utilitárias que são usadas em vários lugares.
 - `mockData.ts` — Dados fictícios usados durante o desenvolvimento e testes.
 - `astro-calc.ts` — Motor de cálculo astrológico em TypeScript puro para fallback em browser (quando Tauri/Python não disponível).
 - `astro-dignity.ts` — **Tabelas de dignidade astrológica** (Ptolomaica/Helenística) e funções puras para: Elementos %, Qualidades %, Midpoints, Dominância dos Planetas (Trad + Moderna), Regente do Ascendente, Alcocoden, Senhor da Genitura, Assinatura Astrológica, Hyleg e estado de dignidade por planeta (Domicílio/Exaltação/Exílio/Queda). Sem dependências React.
+- `transitAspects.ts` — Cálculo de aspectos entre planetas de trânsito e natal. Considera Conjunção, Oposição, Trígono, Quadratura, Sextil e Quincúncio. Ignora ASC e MC.
 
 ### natal_charts/
 
