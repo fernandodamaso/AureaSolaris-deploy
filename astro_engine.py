@@ -596,19 +596,32 @@ def calculate_transit_positions(
     if "error" in full_result:
         return full_result
     
+    # Filter planets: remove angles (ASC, MC) and remove 'house' field
+    filtered_planets = {}
+    for name, data in full_result.get("planets", {}).items():
+        if name in ("ASC", "MC", "DSC", "IC"):
+            continue
+        # Remove 'house' field if present
+        filtered_data = {k: v for k, v in data.items() if k != "house"}
+        filtered_planets[name] = filtered_data
+    
+    # Filter secondary bodies: optionally keep only NorthNode, and remove 'house' field
+    secondary = full_result.get("secondary", {})
+    if not include_asteroids:
+        allowed = {"NorthNode"}
+        secondary = {k: v for k, v in secondary.items() if k in allowed}
+    
+    filtered_secondary = {}
+    for name, data in secondary.items():
+        filtered_data = {k: v for k, v in data.items() if k != "house"}
+        filtered_secondary[name] = filtered_data
+    
     transit_data = {
-        "planets": full_result.get("planets", {}),
-        "secondary": full_result.get("secondary", {}),
+        "planets": filtered_planets,
+        "secondary": filtered_secondary,
         "moon_phase": full_result.get("moon_phase", {}),
         "meta": full_result.get("meta", {}),
     }
-    
-    # Filtrar corpos secundários: manter apenas NorthNode (se não quiser asteroides)
-    if not include_asteroids:
-        allowed = {"NorthNode"}
-        transit_data["secondary"] = {
-            k: v for k, v in transit_data["secondary"].items() if k in allowed
-        }
     
     return transit_data
 
