@@ -45,6 +45,10 @@ A injeção das personas ocorre no componente `AgentChat.tsx`, que obedece à **
 - **Função:** Traduz os dados brutos do motor de astrologia em conselhos. A aba **Astrologia** agora foca em efemérides textuais e horários planetários, enquanto a aba **Mandala** é o telescópio visual para o Céu do Momento e Mapas Natais.
 - **Personalidade:** Preciso, técnico, direto ao ponto. Sem metáforas, usa dados concretos (graus, minutos, orbes). Formato de resposta: "[Planeta] em [posição exata]. Aspecto: [tipo] com [planeta/ponto]. Interpretação direta: [ação sugerida]."
 - **Dados fornecidos:** Posições planetárias com graus e minutos, signos exatos, aspectos geométricos (trígono 120°, quadratura 90°, etc.), mapa natal do usuário, casas astrológicas, trânsitos com orbes.
+- **Mandala Chart Improvements:** 
+  - Correção crítica nos Decanatos: Array DECANATE_RULERS expandido de 12 para 36 entradas para suportar todos os 3 decanatos por signo
+  - Visibilidade melhorada: Opacidade aumentada para signos (0.08→0.14), decanatos (0.35→0.50) e termos (0.12→0.30)
+  - Tamanhos de fonte aumentados para melhor legibilidade em telas de alta densidade
 - **Modelo Padrão:** `openai/gpt-4o-mini`
 
 ### 2.5. Stark (Monitor Técnico)
@@ -178,6 +182,7 @@ tauri::Builder::default()
 | `save_asset` | Copia um arquivo para a pasta de assets do app. |
 | `get_sys_info` | Retorna info de sistema (CPU, RAM, Disco). |
 | `run_astro_engine` | Executa o motor de astrologia Python como subprocesso (com `current_dir` do projeto). |
+| `get_transit_positions` | Retorna posições planetárias atuais (trânsitos) para data/hora fornecida. |
 | `run_agm_engine` | Executa o motor AntiGravity Module (AGM) Python como subprocesso. |
 | `read_text_file` | Lê o conteúdo de um arquivo de texto (usado para fallback de dados astrais). |
 | `list_lab_files` | Lista arquivos na pasta `Laboratorio_Stark`. |
@@ -342,6 +347,24 @@ A mandala zodiacal segue o padrão da astrologia ocidental (compatível com Astr
 **Componentes:**
 - `MandalaChart.tsx` — Renderiza mapa natal com rotação ASC
 - `MandalaView.tsx` — Visualização do Céu do Momento (sem rotação ASC)
+
+### 5.10 Cálculo de Trânsitos Atuais
+
+A função `calculate_transit_positions` fornece posições planetárias para uma data/hora específica (geralmente o momento atual), sem calcular casas ou aspectos natais.
+
+**Uso:**
+```python
+# No astro_engine.py
+result = calculate_transit_positions(
+    year=2026, month=3, day=26, hour=15.5,
+    lat=-15.7833, lon=-47.9333,
+    include_asteroids=False  # Apenas 10 planetas + Chiron + NorthNode
+)
+```
+
+**Retorno:** Objeto JSON com `planets`, `secondary` (apenas NorthNode se `include_asteroids=False`), `moon_phase`, `meta`.
+
+**Integração frontend:** Hook `useTransitData.ts` busca dados via comando Tauri `get_transit_positions`.
 
 ---
 

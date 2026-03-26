@@ -45,6 +45,7 @@ AureaSolaris/
 │   │   ├── useAgendaTasks.ts        # 📋 Re-exporta o AgendaContext
 │   │   ├── useAstroData.ts          # ⭐ Dados astrológicos (hook simplificado com loading/error)
 │   │   ├── useAstrologyData.ts      # 🌙 Horas planetárias, trânsitos, previsão com datas reais
+│   │   ├── useTransitData.ts       # 🌍 Dados de trânsitos planetários atuais
 │   │   └── useFinancasData.ts       # 💵 Lógica financeira: transações, metas, reservas
 │   │
 │   ├── services/                    # 🔌 Serviços externos (APIs de terceiros)
@@ -162,7 +163,7 @@ Cada view modular do aplicativo tem seu próprio arquivo:
 - `FinancasView.tsx` — Controle financeiro (Uncle Duck)
 - `ImportFinancialView.tsx` — Importação de dados financeiros
 - `LoginView.tsx` — Tela de autenticação
-- `MandalaChart.tsx` — Gráfico/chart interativo da mandala zodiacal (coordenadas: 0° Áries às 9h, sentido anti-horário, rotação ASC)
+- `MandalaChart.tsx` — Gráfico/chart interativo da mandala zodiacal com toggles para Decanatos, Termos (Egípcios) e Asteroides. Painel de stats abaixo: Elementos %, Qualidades %, Midpoints, Dominância (Trad/Moderna), Hyleg, Regente ASC, Alcocoden, Senhor da Genitura e Assinatura Astrológica. Tabela de planetas inclui badge de dignidade (Domicílio/Exaltação/Exílio/Queda).
 - `MandalaPage.tsx` — Wrapper que alimenta MandalaView com dados reais
 - `MandalaView.tsx` — Visualização em mandala SVG interativa (Céu do Momento, sem rotação ASC)
 - `MemoriasView.tsx` — Registro de memórias
@@ -238,6 +239,7 @@ Pasta para funções utilitárias que são usadas em vários lugares.
 - `exportUtils.ts` — Funções de exportação para diferentes formatos (PDF, Email, Google Drive, JSON, Markdown).
 - `mockData.ts` — Dados fictícios usados durante o desenvolvimento e testes.
 - `astro-calc.ts` — Motor de cálculo astrológico em TypeScript puro para fallback em browser (quando Tauri/Python não disponível).
+- `astro-dignity.ts` — **Tabelas de dignidade astrológica** (Ptolomaica/Helenística) e funções puras para: Elementos %, Qualidades %, Midpoints, Dominância dos Planetas (Trad + Moderna), Regente do Ascendente, Alcocoden, Senhor da Genitura, Assinatura Astrológica, Hyleg e estado de dignidade por planeta (Domicílio/Exaltação/Exílio/Queda). Sem dependências React.
 
 ### natal_charts/
 
@@ -402,6 +404,7 @@ O **motor de cálculos astrológicos**, escrito em Python. Usa a biblioteca **Ke
 
 **Para que serve?**  
 - Calcula posições planetárias (`calculate_natal`)
+- Calcula posições de trânsitos atuais (`calculate_transit_positions`)
 - Gera dados para a agenda (`get_agenda_data`)
 - Produz o arquivo `astro_data.json` com os resultados
 
@@ -551,5 +554,5 @@ Leia nesta ordem:
 ---
 
 <p align="center">
-  <em>Última atualização: 24 de Março de 2026 — Aurea Solaris ✨</em>
+  <em>Última atualização: 26 de Março de 2026 — Aurea Solaris ✨</em>
 </p>
