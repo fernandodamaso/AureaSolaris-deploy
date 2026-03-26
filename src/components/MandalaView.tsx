@@ -36,7 +36,7 @@ export const MandalaView = ({ data, size = 600 }: MandalaViewProps) => {
       case 'Venus': return '#FF69B4';
       case 'Jupiter': return '#DAA520';
       case 'Saturn': return '#708090';
-      default: return '#B8860B';
+      default: return '#c5a059';
     }
   };
 
@@ -66,7 +66,7 @@ export const MandalaView = ({ data, size = 600 }: MandalaViewProps) => {
       .filter(([_, pos]: [string, any]) => pos && typeof pos.degree === 'number')
       .map(([name, pos]: [string, any]) => {
         // 0 graus abs_pos -> 180 no SVG (esquerda, ASC tradicional)
-        const angle = (pos.degree - 180) * (Math.PI / 180);
+        const angle = (pos.degree + 180) * (Math.PI / 180);
         return {
           name,
           symbol: getPlanetSymbol(name),
@@ -189,11 +189,11 @@ export const MandalaView = ({ data, size = 600 }: MandalaViewProps) => {
       
       <svg ref={svgRef} width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="drop-shadow-2xl">
         {/* Background Grids */}
-        <circle cx={center} cy={center} r={radius} fill="white" stroke="#B8860B" strokeWidth="1" opacity="0.1" />
-        <circle cx={center} cy={center} r={innerRadius} fill="none" stroke="#B8860B" strokeWidth="0.5" opacity="0.2" strokeDasharray="4 4" />
+        <circle cx={center} cy={center} r={radius} fill="white" stroke="#c5a059" strokeWidth="1" opacity="0.1" />
+        <circle cx={center} cy={center} r={innerRadius} fill="none" stroke="#c5a059" strokeWidth="0.5" opacity="0.2" strokeDasharray="4 4" />
         
         {/* Zodiac Border */}
-        <circle cx={center} cy={center} r={radius} fill="none" stroke="#B8860B" strokeWidth="1" opacity="0.3" />
+        <circle cx={center} cy={center} r={radius} fill="none" stroke="#c5a059" strokeWidth="1" opacity="0.3" />
 
         {/* Zodiac Signs Segments */}
         {signs.map((sign, i) => {
@@ -210,7 +210,7 @@ export const MandalaView = ({ data, size = 600 }: MandalaViewProps) => {
             <g key={sign.name}>
               <line 
                 x1={center} y1={center} x2={x1} y2={y1} 
-                stroke="#B8860B" strokeWidth="0.5" opacity="0.1" 
+                stroke="#c5a059" strokeWidth="0.5" opacity="0.1" 
               />
               <text 
                 x={tx} y={ty} 
@@ -251,7 +251,7 @@ export const MandalaView = ({ data, size = 600 }: MandalaViewProps) => {
         ))}
 
         {/* Center Point */}
-        <circle cx={center} cy={center} r={4} fill="#B8860B" opacity="0.4" />
+        <circle cx={center} cy={center} r={4} fill="#c5a059" opacity="0.4" />
       </svg>
       
       {/* Legend Overlay */}
