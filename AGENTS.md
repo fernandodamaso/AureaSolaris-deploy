@@ -34,6 +34,14 @@
 | Modificar integração Rust-Python | Comando `run_astro_engine` em `src-tauri/src/lib.rs` |
 | Saber mais sobre a arquitetura do motor | `docs/arquitetura.md` seção "Motor de Astrologia" |
 
+### 📅 Google Calendar (Composio MCP)
+| Se você precisa... | Vá para... |
+|-------------------|------------|
+| Modificar serviço de calendário | `src/services/composio.ts` |
+| Alterar tipos de eventos | `src/types/googleCalendar.ts` |
+| Ver integração na agenda | `src/components/agenda/AgendaView.tsx` |
+| Configurar API key Composio | Variável `VITE_COMPOSIO_API_KEY` no `.env` |
+
 ### 🤖 Agentes de IA (Personas)
 | Se você precisa... | Vá para... |
 |-------------------|------------|

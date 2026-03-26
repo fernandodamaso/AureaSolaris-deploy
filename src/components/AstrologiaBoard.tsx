@@ -26,9 +26,9 @@ export const AstrologiaPage = () => {
   const aspects = liveData?.aspects || [];
 
   return (
-    <div className="space-y-12 pb-32 animate-in fade-in">
-      <div className="flex items-center justify-between border-b border-gold/10 pb-6 mb-8">
-        <div className="flex gap-8">
+    <div className="space-y-8 pb-24 animate-in fade-in">
+      <div className="flex items-center justify-between border-b border-gold/10 pb-4 mb-4 gap-4">
+        <div className="flex gap-6">
           <button 
             onClick={() => setActiveTab('list')}
             className={`text-[11px] font-black uppercase tracking-[0.2em] transition-all pb-2 border-b-2 ${activeTab === 'list' ? 'text-gold border-gold' : 'text-gray-400 border-transparent'}`}
@@ -67,7 +67,7 @@ export const AstrologiaPage = () => {
         <>
           {/* Visualização da Mandala removida desta aba (agora exclusiva na sub-aba Mandala) */}
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card title="As Estrelas Cantam (Efemérides)">
            <div className="grid grid-cols-2 gap-x-8 mt-4">
               {Object.entries(PLANET_ICONS).map(([name, icon]) => (
@@ -84,29 +84,33 @@ export const AstrologiaPage = () => {
 
         <Card title="Dança das Esferas (Aspectos)">
           <div className="space-y-3 mt-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
-            {aspects.length > 0 ? aspects.map((asp, i) => (
-              <div key={i} className="flex items-center justify-between p-3 bg-white/50 border border-gold/5 rounded-lg hover:border-gold/20 transition-all">
-                <div className="flex items-center gap-3">
-                  <span className="text-gold text-lg">{asp.symbol}</span>
-                  <div className="flex flex-col">
-                    <span className="text-[10px] font-bold text-gray-700 uppercase tracking-wider">{asp.type}</span>
-                    <span className="text-[11px] text-gray-500">{asp.p1} e {asp.p2}</span>
+            {aspects.length > 0 ? aspects.map((asp, i) => {
+              const isMinor = ['Inconjunto', 'Quintil', 'Bi-Quintil', 'Semi-Sextil', 'Semi-Quadratura', 'Sesqui-Quadratura'].includes(asp.type);
+              const applyingIndicator = asp.applying !== undefined ? (asp.applying ? '→' : '←') : null;
+              return (
+                <div key={i} className={`flex items-center justify-between p-3 rounded-lg transition-all ${isMinor ? 'bg-white/30 border border-gray-100/50 hover:border-gray-300/50' : 'bg-white/50 border border-gold/5 hover:border-gold/20'}`}>
+                  <div className="flex items-center gap-3">
+                    <span className={`${isMinor ? 'text-gray-400' : 'text-gold'} text-lg`}>{asp.symbol}</span>
+                    <div className="flex flex-col">
+                      <span className="text-[10px] font-bold text-gray-700 uppercase tracking-wider">{asp.type}</span>
+                      <span className="text-[11px] text-gray-500">{asp.p1} e {asp.p2}{applyingIndicator && <span className="ml-1 text-gold/60">{applyingIndicator}</span>}</span>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <span className={`text-[10px] px-2 py-0.5 rounded font-bold ${isMinor ? 'bg-gray-100 text-gray-500' : 'bg-gold/10 text-gold'}`}>Orb {asp.orb.toFixed(1)}°</span>
                   </div>
                 </div>
-                <div className="text-right">
-                  <span className="text-[10px] bg-gold/10 text-gold px-2 py-0.5 rounded font-bold">Orb {asp.orb.toFixed(1)}°</span>
-                </div>
-              </div>
-            )) : <p className="text-center py-10 text-gray-300 text-[11px] italic">Nenhum aspecto maior sintonizado...</p>}
+              );
+            }) : <p className="text-center py-10 text-gray-300 text-[11px] italic">Nenhum aspecto sintonizado...</p>}
           </div>
         </Card>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
          <Card title="Pílulas de Sabedoria Astral">
             <div className="space-y-4 pt-2">
                <div className="p-5 bg-[#FCF9F1]/60 border border-gold/10 rounded-xl shadow-xs transition-all hover:bg-[#FCF9F1]/80 group">
-                  <h5 className="flex items-center justify-between text-[9px] font-black uppercase text-[#B8860B] mb-2 tracking-[0.2em] opacity-80">
+                  <h5 className="flex items-center justify-between text-[9px] font-black uppercase text-[#c5a059] mb-2 tracking-[0.2em] opacity-80">
                     Dignidades Essenciais <Info size={10} className="opacity-0 group-hover:opacity-100 transition-opacity"/>
                   </h5>
                   <p className="text-[12px] text-gray-700 leading-relaxed font-bold">

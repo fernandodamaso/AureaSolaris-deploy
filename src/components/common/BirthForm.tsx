@@ -23,7 +23,7 @@ export const BirthForm = ({ onSave, onClose }: BirthFormProps) => {
   };
 
   return (
-    <div className="bg-white rounded-[2.5rem] p-10 w-full max-w-xl shadow-2xl border border-gold/10 font-sans relative overflow-hidden">
+    <div className="bg-white rounded-2xl p-10 w-full max-w-xl shadow-2xl border border-gold/10 font-sans relative overflow-hidden">
       {/* DECORATIVE ELEMENT */}
       <div className="absolute -top-10 -right-10 w-40 h-40 bg-gold/5 rounded-full blur-3xl" />
       

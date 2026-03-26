@@ -308,7 +308,7 @@ export const RafikiEscola = () => {
               </h3>
               <div className="space-y-6">
                 {selectedLesson.quiz.map((q, qi) => (
-                  <div key={qi} className="bg-[#FCF9F1] p-6 rounded-2xl border border-gold/10">
+                  <div key={qi} className="bg-[#FCF9F1] p-6 rounded-lg border border-gold/10">
                     <p className="text-[12px] font-bold text-gray-800 mb-4">{qi + 1}. {q.question}</p>
                     <div className="space-y-2">
                       {q.options.map((opt, oi) => (
@@ -356,7 +356,7 @@ export const RafikiEscola = () => {
       <div className="bg-white/40 backdrop-blur-md p-6 rounded-[2rem] border border-gold/10 shadow-sm">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="p-3 bg-gold/10 rounded-2xl text-gold"><BookOpen size={24}/></div>
+            <div className="p-3 bg-gold/10 rounded-lg text-gold"><BookOpen size={24}/></div>
             <div>
               <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-gold">Escola de Astrologia</h2>
               <p className="text-xl font-black text-gray-800 tracking-tight">Rafiki — Estudos Avançados</p>
@@ -371,7 +371,7 @@ export const RafikiEscola = () => {
       </div>
 
       {/* Generate content */}
-      <div className="bg-white/60 p-5 rounded-2xl border border-gold/10 space-y-3">
+      <div className="bg-white/60 p-5 rounded-lg border border-gold/10 space-y-3">
         <div className="flex items-center gap-2 mb-2">
           <Wand2 size={14} className="text-gold" />
           <span className="text-[10px] font-black uppercase tracking-widest text-gold">Gerar Conteúdo com Rafiki</span>
@@ -398,7 +398,7 @@ export const RafikiEscola = () => {
       {/* New lesson modal */}
       {showNewLesson && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 animate-in fade-in">
-          <div className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl border border-gold/20">
+          <div className="bg-white rounded-xl p-8 max-w-md w-full shadow-2xl border border-gold/20">
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-[12px] font-black uppercase tracking-widest text-gold">Nova Lição</h3>
               <X size={18} className="text-gray-300 cursor-pointer hover:text-red-400" onClick={() => setShowNewLesson(false)} />
@@ -433,7 +433,7 @@ export const RafikiEscola = () => {
               {lessons.filter(l => l.category === cat).map(lesson => (
                 <div key={lesson.id}
                   onClick={() => { setSelectedLesson(lesson); resetQuiz(); }}
-                  className="group relative p-5 bg-white border border-gray-50 rounded-2xl text-left hover:border-gold/20 hover:shadow-lg transition-all cursor-pointer">
+                  className="group relative p-5 bg-white border border-gray-50 rounded-lg text-left hover:border-gold/20 hover:shadow-lg transition-all cursor-pointer">
                   {lesson.custom && (
                     <button onClick={(e) => handleDelete(lesson.id, e)}
                       className="absolute top-3 right-3 p-1.5 text-gray-200 hover:text-red-400 hover:bg-red-50 rounded-lg transition-all opacity-0 group-hover:opacity-100">

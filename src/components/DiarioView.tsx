@@ -79,9 +79,9 @@ export const DiarioView = () => {
   };
 
   return (
-    <div className="h-full flex flex-col bg-[#FCF9F1] animate-in fade-in slide-in-from-bottom-4">
+    <div className="flex flex-col bg-[#FCF9F1] animate-in fade-in slide-in-from-bottom-4 max-w-5xl mx-auto px-4">
       {/* Editor Header */}
-      <header className="px-12 py-8 flex justify-between items-center border-b border-gold/10 bg-white/50 backdrop-blur-md sticky top-0 z-10">
+      <header className="px-4 py-6 flex justify-between items-center border-b border-gold/10 bg-white/50 backdrop-blur-md sticky top-0 z-10">
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-4 text-gold/40 hover:text-gold transition-colors cursor-pointer group">
              <ChevronLeft size={20} />
@@ -152,7 +152,7 @@ export const DiarioView = () => {
       </header>
 
       {/* Surface Editor */}
-      <div className="flex-1 overflow-y-auto no-scrollbar p-12 lg:p-24 bg-white/30">
+      <div className="flex-1 overflow-y-auto no-scrollbar p-8 lg:p-12 bg-white/30">
         <div className="max-w-3xl mx-auto w-full">
           <input 
             type="text" 
@@ -180,7 +180,7 @@ export const DiarioView = () => {
       </div>
       
       {/* Footer Info */}
-      <footer className="px-12 py-4 border-t border-gold/5 bg-white/20 text-[9px] font-black uppercase tracking-[0.3em] text-gray-300 text-center">
+      <footer className="px-4 py-4 border-t border-gold/5 bg-white/20 text-[9px] font-black uppercase tracking-[0.3em] text-gray-300 text-center">
         As palavras são sementes no solo da memória.
       </footer>
     </div>

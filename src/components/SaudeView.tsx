@@ -45,7 +45,7 @@ export const SaudeView = () => {
             </div>
             <button 
                 onClick={handleUpload}
-                className="w-full py-4 mt-4 border border-dashed border-[#B8860B]/20 text-[#B8860B] text-[10px] font-bold uppercase rounded-xl hover:bg-[#FCF9F1] transition-all"
+                className="w-full py-4 mt-4 border border-dashed border-[#c5a059]/20 text-[#c5a059] text-[10px] font-bold uppercase rounded-xl hover:bg-[#FCF9F1] transition-all"
             >
                 Simular Upload de Documento
             </button>
@@ -94,9 +94,9 @@ export const SaudeView = () => {
 
       {showHabitModal && (
         <div className="fixed inset-0 bg-white/80 backdrop-blur-sm z-50 flex items-center justify-center p-6 animate-in fade-in">
-          <div className="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl border border-gold/20">
+          <div className="bg-white rounded-xl p-8 max-w-sm w-full shadow-2xl border border-gold/20">
             <div className="flex justify-between items-center mb-6">
-              <h3 className="font-sans text-[12px] tracking-[0.2em] font-bold uppercase text-[#B8860B]">Novo Hábito de Cura</h3>
+              <h3 className="font-sans text-[12px] tracking-[0.2em] font-bold uppercase text-[#c5a059]">Novo Hábito de Cura</h3>
               <X className="cursor-pointer text-gray-400 hover:text-red-500" size={20} onClick={() => setShowHabitModal(false)} />
             </div>
             

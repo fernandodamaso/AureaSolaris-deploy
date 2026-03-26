@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { 
   X, Save, User, 
-  Sparkles, CalendarDays, 
-  Eye, EyeOff, Key, Palette
+  CalendarDays, 
+  Eye, EyeOff, Key, Palette, Camera
 } from 'lucide-react';
 import { safeInvoke } from '../utils/tauri';
 
@@ -37,6 +37,8 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEdi
   const [showPassword, setShowPassword] = useState(false);
   const [natalPreview, setNatalPreview] = useState<string>('');
   const [loadingNatal, setLoadingNatal] = useState(false);
+  const [avatar, setAvatar] = useState<string>(profile.avatar || '');
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Calculate natal preview when birth data changes
   useEffect(() => {
@@ -75,6 +77,18 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEdi
     return () => clearTimeout(timer);
   }, [birthDate, birthTime, birthCity]);
 
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      alert('Imagem muito grande. Máximo 2MB.');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => setAvatar(reader.result as string);
+    reader.readAsDataURL(file);
+  };
+
   const handleSave = () => {
     const city = BRAZILIAN_CITIES.find(c => c.name === birthCity) || BRAZILIAN_CITIES[0];
     
@@ -93,6 +107,7 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEdi
     }
 
     onSave({
+      avatar,
       name,
       birthDate,
       birthTime,
@@ -109,18 +124,18 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEdi
       className="fixed inset-0 z-[600] flex items-center justify-center bg-black/50 backdrop-blur-md px-4 animate-in fade-in font-sans"
       onClick={(e) => { if(e.target === e.currentTarget) onClose(); }}
     >
-      <div className="bg-[#FCF9F1] rounded-[2.5rem] p-8 w-full max-w-5xl shadow-2xl border border-gold/30 max-h-[90vh] overflow-y-auto no-scrollbar" onClick={e => e.stopPropagation()}>
+      <div className="bg-[#FCF9F1] rounded-2xl p-8 w-full max-w-5xl shadow-2xl border border-gold/30 max-h-[90vh] overflow-y-auto no-scrollbar" onClick={e => e.stopPropagation()}>
         
         {/* Header */}
         <div className="flex justify-between items-center mb-8 pb-6 border-b border-gold/10">
           <div className="flex items-center gap-4">
-            <div className="p-3 bg-gold/10 rounded-2xl text-gold"><User size={24}/></div>
+            <div className="p-3 bg-gold/10 rounded-lg text-gold"><User size={24}/></div>
             <div>
               <h2 className="text-lg font-black uppercase tracking-[0.2em] text-gray-800">Sua Identidade</h2>
               <p className="text-[9px] font-bold text-gold uppercase tracking-widest">Configurações do Perfil</p>
             </div>
           </div>
-          <button onClick={onClose} className="p-3 hover:bg-red-50 text-gray-400 hover:text-red-500 rounded-2xl transition-all">
+          <button onClick={onClose} className="p-3 hover:bg-red-50 text-gray-400 hover:text-red-500 rounded-lg transition-all">
             <X size={20}/>
           </button>
         </div>
@@ -133,17 +148,34 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEdi
             {/* Avatar + Name */}
             <div className="flex flex-col items-center gap-4">
               <div className="relative group">
-                <div className="w-28 h-28 rounded-full bg-white shadow-xl border-4 border-white overflow-hidden flex items-center justify-center text-gold/20">
-                  <User size={48} />
+                <div 
+                  className="w-28 h-28 rounded-full bg-white shadow-xl border-4 border-white overflow-hidden flex items-center justify-center text-gold/20 cursor-pointer hover:opacity-80 transition-opacity"
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  {avatar ? (
+                    <img src={avatar} alt="Avatar" className="w-full h-full object-cover" />
+                  ) : (
+                    <User size={48} />
+                  )}
                 </div>
-                <button className="absolute bottom-1 right-1 p-2 bg-gold text-white rounded-full shadow-lg hover:scale-110 transition-all">
-                  <Sparkles size={12} />
+                <button 
+                  onClick={() => fileInputRef.current?.click()}
+                  className="absolute bottom-1 right-1 p-2 bg-gold text-white rounded-full shadow-lg hover:scale-110 transition-all"
+                >
+                  <Camera size={12} />
                 </button>
+                <input 
+                  ref={fileInputRef}
+                  type="file" 
+                  accept="image/*" 
+                  className="hidden" 
+                  onChange={handleAvatarChange}
+                />
               </div>
               <div className="w-full">
                 <label className="text-[9px] font-black uppercase text-gray-400 pl-2 tracking-widest block mb-2">Nome</label>
                 <input 
-                  className="w-full bg-white p-4 rounded-2xl border border-gold/10 font-bold text-gray-800 outline-none focus:border-gold/30 transition-all" 
+                  className="w-full bg-white p-4 rounded-lg border border-gold/10 font-bold text-gray-800 outline-none focus:border-gold/30 transition-all" 
                   value={name} 
                   onChange={e => setName(e.target.value)}
                 />
@@ -161,7 +193,7 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEdi
                   <label className="text-[8px] font-black uppercase text-gray-400 tracking-widest block mb-1">Data</label>
                   <input 
                     type="date"
-                    className="w-full bg-gray-50 p-3 rounded-xl border border-gray-100 text-[12px] font-bold text-gray-800 outline-none focus:border-gold/30"
+                    className="w-full bg-gray-50 p-3 rounded-lg border border-gray-100 text-[12px] font-bold text-gray-800 outline-none focus:border-gold/30"
                     value={birthDate}
                     onChange={e => setBirthDate(e.target.value)}
                   />
@@ -170,7 +202,7 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEdi
                   <label className="text-[8px] font-black uppercase text-gray-400 tracking-widest block mb-1">Hora</label>
                   <input 
                     type="time"
-                    className="w-full bg-gray-50 p-3 rounded-xl border border-gray-100 text-[12px] font-bold text-gray-800 outline-none focus:border-gold/30"
+                    className="w-full bg-gray-50 p-3 rounded-lg border border-gray-100 text-[12px] font-bold text-gray-800 outline-none focus:border-gold/30"
                     value={birthTime}
                     onChange={e => setBirthTime(e.target.value)}
                   />
@@ -180,7 +212,7 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEdi
               <div>
                 <label className="text-[8px] font-black uppercase text-gray-400 tracking-widest block mb-1">Cidade</label>
                 <select 
-                  className="w-full bg-gray-50 p-3 rounded-xl border border-gray-100 text-[12px] font-bold text-gray-800 outline-none focus:border-gold/30 cursor-pointer"
+                  className="w-full bg-gray-50 p-3 rounded-lg border border-gray-100 text-[12px] font-bold text-gray-800 outline-none focus:border-gold/30 cursor-pointer"
                   value={birthCity}
                   onChange={e => setBirthCity(e.target.value)}
                 >
@@ -191,7 +223,7 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEdi
               </div>
 
               {/* Natal Preview */}
-              <div className="bg-[#FCF9F1] p-4 rounded-xl border border-gold/10">
+              <div className="bg-[#FCF9F1] p-4 rounded-lg border border-gold/10">
                 <p className="text-[8px] font-black uppercase text-gray-400 tracking-widest mb-2">Preview do Mapa Natal</p>
                 {loadingNatal ? (
                   <p className="text-[10px] text-gold animate-pulse italic">Calculando posições...</p>
@@ -211,7 +243,7 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEdi
             <div>
               <label className="text-[9px] font-black uppercase text-gray-400 pl-2 tracking-widest block mb-2">Contexto Pessoal</label>
               <textarea 
-                className="w-full h-28 bg-white p-4 rounded-2xl outline-none border border-gold/10 resize-none text-[13px] text-gray-600 font-medium leading-relaxed focus:border-gold/30 transition-all" 
+                className="w-full h-28 bg-white p-4 rounded-lg outline-none border border-gold/10 resize-none text-[13px] text-gray-600 font-medium leading-relaxed focus:border-gold/30 transition-all" 
                 value={context}
                 onChange={e => setContext(e.target.value)}
                 placeholder="Conte sobre você: rotina, filhos, estudos, foco atual..."
@@ -224,7 +256,7 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEdi
                 <Palette size={10}/> Estilo de Diálogo
               </label>
               <select 
-                className="w-full bg-white p-4 rounded-2xl border border-gold/10 text-[13px] font-bold outline-none cursor-pointer focus:border-gold/30 transition-all"
+                className="w-full bg-white p-4 rounded-lg border border-gold/10 text-[13px] font-bold outline-none cursor-pointer focus:border-gold/30 transition-all"
                 value={dialogStyle}
                 onChange={e => setDialogStyle(e.target.value)}
               >
@@ -248,7 +280,7 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEdi
                     placeholder="••••••••" 
                     value={password}
                     onChange={e => setPassword(e.target.value)}
-                    className="w-full bg-white p-4 rounded-2xl border border-gold/5 font-bold text-gray-800 outline-none focus:border-gold/30 transition-all pr-12" 
+                    className="w-full bg-white p-4 rounded-lg border border-gold/5 font-bold text-gray-800 outline-none focus:border-gold/30 transition-all pr-12" 
                   />
                   <button 
                     onClick={() => setShowPassword(!showPassword)}
@@ -260,7 +292,7 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEdi
               </div>
               <div>
                 <label className="text-[8px] font-black uppercase text-gray-400 tracking-widest block mb-1">Email de Recuperação</label>
-                <input className="w-full bg-white p-4 rounded-2xl border border-gold/5 font-bold text-gray-800 text-[12px] outline-none focus:border-gold/30 transition-all" placeholder="email@exemplo.com" />
+                <input className="w-full bg-white p-4 rounded-lg border border-gold/5 font-bold text-gray-800 text-[12px] outline-none focus:border-gold/30 transition-all" placeholder="email@exemplo.com" />
               </div>
             </div>
           </div>
@@ -270,13 +302,13 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEdi
         <div className="mt-8 flex justify-between items-center border-t border-gold/10 pt-6">
           <button 
             onClick={onLogout} 
-            className="px-6 py-3 bg-red-500/10 text-red-500 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] hover:bg-red-500 hover:text-white transition-all flex items-center gap-2"
+            className="px-6 py-3 bg-red-500/10 text-red-500 rounded-lg font-black uppercase text-[10px] tracking-[0.2em] hover:bg-red-500 hover:text-white transition-all flex items-center gap-2"
           >
             <X size={12} /> Sair
           </button>
           <div className="flex gap-4">
             <button onClick={onClose} className="px-8 py-3 text-gray-400 font-black uppercase text-[10px] tracking-[0.2em] hover:text-gray-600 transition-all">Cancelar</button>
-            <button onClick={handleSave} className="px-10 py-3 bg-[#333333] text-white rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] hover:bg-gold transition-all shadow-lg flex items-center gap-2">
+            <button onClick={handleSave} className="px-10 py-3 bg-[#333333] text-white rounded-lg font-black uppercase text-[10px] tracking-[0.2em] hover:bg-gold transition-all shadow-lg flex items-center gap-2">
               <Save size={12} /> Salvar
             </button>
           </div>

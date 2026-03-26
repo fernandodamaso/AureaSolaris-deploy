@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { 
   Search, FileText, ExternalLink,
-  Edit3, Package, BookOpen, MessageSquare, Clock, User, ChevronRight, Cpu
+  Edit3, Package, BookOpen, MessageSquare, Clock, User, ChevronRight, Cpu, Archive
 } from 'lucide-react';
 import { Card } from './common/UIComponents';
 import { PdfViewer } from './common/PdfViewer';
@@ -18,17 +18,19 @@ export const AlfredHubView = () => {
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    const fetchArchivedChats = async () => {
+    const fetchAllChats = async () => {
       let combined: any[] = [];
       const agents = ['Rafiki', 'Alfred', 'Stark', 'Uncle Duck'];
       for (const agent of agents) {
+        const sessions = await safeInvoke('list_chat_sessions', { agent });
         const archives = await safeInvoke('list_archived_chats', { agent });
-        if (archives) combined = [...combined, ...archives];
+        if (sessions) combined = [...combined, ...sessions.map((s: any) => ({ ...s, isArchived: false }))];
+        if (archives) combined = [...combined, ...archives.map((a: any) => ({ ...a, isArchived: true }))];
       }
       setChatHistories(combined);
     };
 
-    fetchArchivedChats();
+    fetchAllChats();
   }, []);
 
   const loadFullChat = async (item: any) => {
@@ -39,6 +41,16 @@ export const AlfredHubView = () => {
          setActiveItem({ ...item, messages: fullHistory, title: `Sessão ${item.date}` });
        }
     }
+  };
+
+  const restoreChat = async (item: any) => {
+    await safeInvoke('restore_chat', { agent: item.agent, filename: item.name });
+    // Atualiza o hash para refletir a navegação (sem reload da página)
+    window.location.hash = `#/${item.agent.toLowerCase().replace(' ', '-')}`;
+    // Recarrega a lista de chats após um pequeno delay
+    setChatHistories(prev => prev.map(c => 
+      c.name === item.name ? { ...c, isArchived: false } : c
+    ));
   };
 
   const filteredItems = () => {
@@ -52,9 +64,9 @@ export const AlfredHubView = () => {
     <div className="space-y-8 pb-32 animate-in fade-in max-w-6xl mx-auto px-4 font-sans text-gray-800">
       
       {/* 1. HEADER LOGÍSTICA */}
-      <div className="flex justify-between items-center bg-white/40 p-6 rounded-2xl border border-gold/10 backdrop-blur-sm shadow-sm">
+      <div className="flex justify-between items-center bg-white/40 p-6 rounded-lg border border-gold/10 backdrop-blur-sm shadow-sm">
         <div className="flex items-center gap-5">
-          <div className="w-12 h-12 bg-gold/10 rounded-2xl flex items-center justify-center text-gold shadow-sm">
+          <div className="w-12 h-12 bg-gold/10 rounded-lg flex items-center justify-center text-gold shadow-sm">
             <Package size={24} />
           </div>
           <div>
@@ -108,12 +120,16 @@ export const AlfredHubView = () => {
             ) : (
               <>
                 {filteredItems().map((item: any) => (
-                  <div key={item.id} onClick={() => loadFullChat(item)} className={`p-4 rounded-xl border transition-all cursor-pointer group shadow-sm ${activeItem?.id === item.id ? 'bg-gold/5 border-gold/20' : 'bg-white border-gray-50 hover:border-gold/10'}`}>
+                  <div key={item.id || item.name} onClick={() => loadFullChat(item)} className={`p-4 rounded-xl border transition-all cursor-pointer group shadow-sm ${activeItem?.id === item.id ? 'bg-gold/5 border-gold/20' : 'bg-white border-gray-50 hover:border-gold/10'}`}>
                     <div className="flex justify-between items-start mb-2">
-                      <h5 className="text-[11px] font-black text-gray-800 uppercase tracking-wider line-clamp-1">{activeTab === 'chats' ? `Chat com ${item.agent}` : item.title}</h5>
+                      <div className="flex items-center gap-2">
+                        <h5 className="text-[11px] font-black text-gray-800 uppercase tracking-wider line-clamp-1">{activeTab === 'chats' ? `Chat com ${item.agent}` : item.title}</h5>
+                        {item.isArchived && <span className="text-[7px] font-black bg-gray-100 text-gray-400 px-1.5 py-0.5 rounded uppercase">Arquivado</span>}
+                      </div>
                       <span className="text-[8px] font-black text-gold/40 uppercase tracking-widest">{item.date}</span>
                     </div>
-                    <p className="text-[10px] text-gray-400 font-medium line-clamp-1 italic">{activeTab === 'chats' ? item.lastMsg : item.content}</p>
+                    <p className="text-[10px] text-gray-400 font-medium line-clamp-1 italic">{item.lastMsg || item.preview || item.content}</p>
+                    {item.messageCount > 0 && <span className="text-[8px] text-gold/30 font-bold mt-1 block">{item.messageCount} mensagens</span>}
                   </div>
                 ))}
                 {filteredItems().length === 0 && (
@@ -126,12 +142,12 @@ export const AlfredHubView = () => {
 
         <div className="lg:col-span-2">
           {!activeItem && activeTab !== 'docs' ? (
-            <div className="bg-white rounded-[2.5rem] border border-gold/10 shadow-xl overflow-hidden min-h-[600px] flex flex-col items-center justify-center text-center p-12 text-gray-300">
+            <div className="bg-white rounded-2xl border border-gold/10 shadow-xl overflow-hidden min-h-[600px] flex flex-col items-center justify-center text-center p-12 text-gray-300">
                <BookOpen size={64} className="mb-6 opacity-10" />
                <p className="text-[10px] font-black uppercase tracking-[0.3em]">Selecione um item para visualizar o histórico</p>
             </div>
           ) : activeTab === 'docs' ? (
-            <div className="bg-white rounded-[2.5rem] border border-gold/10 shadow-xl overflow-hidden min-h-[600px] flex flex-col items-center justify-center text-center p-12 text-gray-300">
+            <div className="bg-white rounded-2xl border border-gold/10 shadow-xl overflow-hidden min-h-[600px] flex flex-col items-center justify-center text-center p-12 text-gray-300">
                <FileText size={64} className="mb-6 opacity-20" />
                <p className="text-[10px] font-black uppercase tracking-[0.3em]">Selecione um documento para visualizar</p>
             </div>
@@ -180,7 +196,7 @@ export const AlfredHubView = () => {
                 <div className="flex-1 overflow-y-auto no-scrollbar p-10 space-y-6">
                    {activeItem?.messages.map((m: any, i: number) => (
                       <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                         <div className={`max-w-[80%] p-6 rounded-[2rem] text-[13px] leading-relaxed shadow-sm ${m.role === 'user' ? 'bg-white border border-gold/10 text-gray-800 rounded-tr-none' : 'bg-gold/10 border border-gold/5 text-gray-700 rounded-tl-none'}`}>
+                         <div className={`max-w-[80%] p-6 rounded-lg text-[13px] leading-relaxed shadow-sm ${m.role === 'user' ? 'bg-white border border-gold/10 text-gray-800 rounded-tr-none' : 'bg-gold/10 border border-gold/5 text-gray-700 rounded-tl-none'}`}>
                             <div className="flex items-center gap-2 mb-2 opacity-30">
                                {m.role === 'user' ? <User size={10}/> : <Cpu size={10}/>}
                                <span className="text-[8px] font-black uppercase tracking-widest">{m.role === 'user' ? 'Viviane' : activeItem?.agent}</span>
@@ -191,11 +207,34 @@ export const AlfredHubView = () => {
                    ))}
                 </div>
 
-                <div className="p-8 bg-white/50 border-t border-gold/5 flex justify-center">
-                   <button className="flex items-center gap-3 px-8 py-3 bg-[#333333] text-white rounded-full text-[9px] font-black uppercase tracking-widest hover:bg-gold transition-all shadow-md group">
-                      Continuar esta Conversa <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
-                   </button>
-                </div>
+                <div className="p-8 bg-white/50 border-t border-gold/5 flex justify-center gap-4">
+                   {!activeItem?.isArchived ? (
+                     <>
+                       <button 
+                         onClick={async () => {
+                           await safeInvoke('archive_chat', { agent: activeItem.agent });
+                           setActiveItem(null);
+                         }}
+                         className="flex items-center gap-3 px-6 py-3 bg-gray-100 text-gray-500 rounded-full text-[9px] font-black uppercase tracking-widest hover:bg-gray-200 transition-all"
+                       >
+                           <Archive size={12}/> Arquivar
+                       </button>
+                       <button 
+                         onClick={() => restoreChat(activeItem)}
+                         className="flex items-center gap-3 px-8 py-3 bg-[#333333] text-white rounded-full text-[9px] font-black uppercase tracking-widest hover:bg-gold transition-all shadow-md group"
+                       >
+                           Continuar esta Conversa <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                        </button>
+                     </>
+                   ) : (
+                     <button 
+                       onClick={() => restoreChat(activeItem)}
+                       className="flex items-center gap-3 px-8 py-3 bg-[#333333] text-white rounded-full text-[9px] font-black uppercase tracking-widest hover:bg-gold transition-all shadow-md group"
+                     >
+                         Restaurar & Continuar <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                      </button>
+                   )}
+                 </div>
              </div>
           )}
         </div>

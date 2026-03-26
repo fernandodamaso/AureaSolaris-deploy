@@ -30,7 +30,7 @@ export const useFinancasData = () => {
   const [goals, setGoals] = useState<Goal[]>(() => {
     const saved = localStorage.getItem('aurea_goals');
     return saved ? JSON.parse(saved) : [
-      { id: '1', name: 'Reserva Master', target: 50000, current: 32000, color: '#B8860B' },
+      { id: '1', name: 'Reserva Master', target: 50000, current: 32000, color: '#c5a059' },
       { id: '2', name: 'Viagem Egito', target: 20000, current: 8500, color: '#333333' }
     ];
   });

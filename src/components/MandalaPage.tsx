@@ -15,11 +15,24 @@ export const MandalaPage = () => {
   const birthData = useMemo(() => {
     if (selectedTarget === 'current') return null;
     if (selectedTarget === 'me') {
+       const bd = activeProfile?.birthData;
+       if (bd) {
+         const [y, m, d] = String(bd.date || '1989-12-21').split('-').map(Number);
+         const [h, min] = String(bd.time || '10:32').split(':').map(Number);
+         return {
+           year: y || 1989,
+           month: m || 12,
+           day: d || 21,
+           hour: (h || 10) + ((min || 32) / 60),
+           lat: bd.lat ?? -15.7833,
+           lon: bd.lng ?? -47.9333,
+         };
+       }
        return {
-         year: 1985, month: 12, day: 26, hour: 12.0,
-         lat: -23.5505, lon: -46.6333
+         year: 1989, month: 12, day: 21, hour: 10.533,
+         lat: -15.7833, lon: -47.9333
        };
-    }
+     }
     const conn = activeProfile.connections?.find((c: any) => c.id === selectedTarget);
     if (conn && conn.birthData) {
        const [y, m, d] = conn.birthData.date.split('-').map(Number);
@@ -35,15 +48,60 @@ export const MandalaPage = () => {
 
   const { data, loading, error, recalculate } = useAstroData(birthData);
 
-  // Parse data for MandalaChart
+  // Parse data for MandalaChart - includes planets, secondary bodies, and angles
   const chartPlanets = useMemo(() => {
     if (!data?.planets) return [];
-    return Object.entries(data.planets).map(([name, info]: [string, any]) => ({
-      name,
-      degree: info.degree || 0,
-      sign: info.sign,
-      retrograde: info.retrograde || false,
-    }));
+    const allPoints: Array<{
+      name: string;
+      degree: number;
+      sign: string;
+      retrograde?: boolean;
+      isAngle?: boolean;
+    }> = [];
+
+    // Traditional planets + Chiron
+    Object.entries(data.planets).forEach(([name, info]: [string, any]) => {
+      allPoints.push({
+        name,
+        degree: info.degree || 0,
+        sign: info.sign || '',
+        retrograde: info.retrograde || false,
+        isAngle: ['ASC', 'MC'].includes(name),
+      });
+    });
+
+    // Secondary bodies (NorthNode, SouthNode, Lilith, PartOfFortune, Vertex)
+    if (data.secondary) {
+      Object.entries(data.secondary).forEach(([name, info]: [string, any]) => {
+        allPoints.push({
+          name,
+          degree: info.degree || 0,
+          sign: info.sign || '',
+          retrograde: false,
+        });
+      });
+    }
+
+    // Angles (ASC, MC, DSC, IC) - DSC and IC calculated
+    if (data.angles) {
+      Object.entries(data.angles).forEach(([name, deg]: [string, any]) => {
+        if (!data.planets[name]) { // Don't duplicate ASC/MC if already in planets
+          const signs = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo',
+                         'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'];
+          const idx = Math.floor((deg % 360) / 30);
+          const pos = deg % 30;
+          allPoints.push({
+            name,
+            degree: deg,
+            sign: `${signs[idx]} ${pos.toFixed(0)}°`,
+            retrograde: false,
+            isAngle: true,
+          });
+        }
+      });
+    }
+
+    return allPoints;
   }, [data]);
 
   const chartHouses = useMemo(() => {
@@ -73,12 +131,12 @@ export const MandalaPage = () => {
     <div className="flex flex-col h-full items-center justify-center gap-6 p-8 overflow-y-auto no-scrollbar">
       <div className="w-full max-w-2xl flex flex-col md:flex-row items-center justify-between gap-6 bg-white/40 backdrop-blur-md p-6 rounded-[2rem] border border-gold/10 shadow-sm">
         <div className="flex items-center gap-4">
-          <div className="p-3 bg-[#FCF9F1] rounded-2xl border border-gold/10 text-[#B8860B]">
+          <div className="p-3 bg-[#FCF9F1] rounded-2xl border border-gold/10 text-[#c5a059]">
             {selectedTarget === 'current' ? <Compass size={24} /> : <User size={24} />}
           </div>
           <div>
             <h1 className="text-[12px] font-black uppercase tracking-[0.3em] text-gray-800 leading-tight">Mandala Astrológica</h1>
-            <p className="text-[9px] font-bold text-[#B8860B] uppercase tracking-widest mt-1">
+            <p className="text-[9px] font-bold text-[#c5a059] uppercase tracking-widest mt-1">
               {allTargets.find(t => t.id === selectedTarget)?.name}
             </p>
           </div>
@@ -98,7 +156,7 @@ export const MandalaPage = () => {
           <button
             onClick={recalculate}
             disabled={loading}
-            className="p-3 bg-white border border-gray-100 rounded-xl text-gray-500 hover:text-[#B8860B] hover:border-gold/20 transition-all shadow-sm disabled:opacity-40"
+            className="p-3 bg-white border border-gray-100 rounded-xl text-gray-500 hover:text-[#c5a059] hover:border-gold/20 transition-all shadow-sm disabled:opacity-40"
             title="Sincronizar Estrelas"
           >
             <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />

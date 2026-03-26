@@ -8,6 +8,8 @@ interface AgendaContextType {
   addProfile: (name: string, password?: string) => void;
   addConnection: (name: string, birthData: { date: string, time: string, location: string, lat?: number, lng?: number }) => void;
   updateProfile: (id: string, updates: any) => void;
+  houseSystem: string;
+  setHouseSystem: (hs: string) => void;
   documents: any[];
   addDocument: (doc: { name: string, type: string, size: string, path?: string }) => void;
   tasks: any[];
@@ -26,7 +28,9 @@ interface AgendaContextType {
   deleteEvent: (id: string) => Promise<void>;
   executeInsight: (insight: any) => Promise<void>;
   getMetrics: () => { done: number, pending: number, notDone: number };
-  getPlanetRegency: (date: Date) => { icon: string, name: string };
+  getPlanetaryHour: (date: Date) => { icon: string, name: string, hour: string };
+  getPlanetaryDayRegent: (date: Date) => { icon: string, name: string };
+  getPlanetRegency: (date: Date) => { icon: string, name: string }; // Alias para getPlanetaryDayRegent
   getAlfredInsights: () => any[];
   refreshTasks: () => Promise<void>;
 }
@@ -65,6 +69,9 @@ export const AgendaProvider = ({ children }: { children: ReactNode }) => {
   const [tasks, setTasks] = useState<any[]>([]);
   const [events, setEvents] = useState<any[]>([]);
   const [selectedDay, setSelectedDay] = useState(new Date());
+  const [houseSystem, setHouseSystem] = useState(
+    () => localStorage.getItem('aurea_house_system') || 'Regiomontanus'
+  );
   const [weekStart, setWeekStart] = useState(() => {
     const d = new Date();
     d.setDate(d.getDate() - d.getDay());
@@ -130,49 +137,68 @@ export const AgendaProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const fetchTasks = async () => {
+    console.log('[AgendaContext] fetchTasks() called');
+    console.log('[AgendaContext] isTauri:', !!(window as any).__TAURI_INTERNALS__);
+    
     let tRes = await safeInvoke<string>('get_todoist_tasks');
+    console.log('[AgendaContext] Todoist result type:', typeof tRes, tRes ? 'HAS DATA' : 'NULL/EMPTY');
     
     // Browser Fallback for Todoist
     // @ts-expect-error - Tauri internal check
     if (!tRes && !window.__TAURI_INTERNALS__) {
+      console.log('[AgendaContext] Applying Todoist browser fallback mock');
       tRes = JSON.stringify([
-        { id: 't1', content: 'Estudar UDV', is_completed: false },
-        { id: 't2', content: 'Organizar Mesa de Criação', is_completed: true }
+        { id: 't1', content: 'Estudar trânsitos de Netuno', is_completed: false },
+        { id: 't2', content: 'Revisão mensal de finanças', is_completed: false },
+        { id: 't3', content: 'Sessão UDV às 20h', is_completed: false },
+        { id: 't4', content: 'Organizar Mesa de Criação', is_completed: true }
       ]);
     }
 
     if (tRes) {
       try {
         const parsed = JSON.parse(tRes);
+        console.log('[AgendaContext] Todoist tasks count:', parsed.length);
         setTasks(parsed);
+        console.log('[AgendaContext] setTasks called with', parsed.length, 'items');
       } catch (e) {
-        console.error("Error parsing tasks", e);
+        console.error("[AgendaContext] Error parsing tasks", e);
       }
+    } else {
+      console.warn('[AgendaContext] WARNING: No Todoist data!');
     }
 
     let eRes = await safeInvoke<string>('get_google_events');
+    console.log('[AgendaContext] Google events result type:', typeof eRes, eRes ? 'HAS DATA' : 'NULL/EMPTY');
 
     // Browser Fallback for Google Events
     // @ts-expect-error - Tauri internal check
     if (!eRes && !window.__TAURI_INTERNALS__) {
+      console.log('[AgendaContext] Applying Google events browser fallback mock');
       const today = new Date().toISOString().split('T')[0];
       eRes = JSON.stringify([
         { id: 'g1', title: 'Sessão UDV', start: `${today}T20:00:00Z`, type: 'spiritual' },
-        { id: 'g2', title: 'Almoço em Família', start: `${today}T12:00:00Z`, type: 'social' }
+        { id: 'g2', title: 'Almoço em Família', start: `${today}T12:00:00Z`, type: 'social' },
+        { id: 'g3', title: 'Consulta Médica', start: `${today}T14:30:00Z`, type: 'health' }
       ]);
     }
 
     if (eRes) {
       try {
         const parsed = JSON.parse(eRes);
+        console.log('[AgendaContext] Google events count:', parsed.length);
         setEvents(parsed);
+        console.log('[AgendaContext] setEvents called with', parsed.length, 'items');
       } catch (e) {
-        console.error("Error parsing events", e);
+        console.error("[AgendaContext] Error parsing events", e);
       }
+    } else {
+      console.warn('[AgendaContext] WARNING: No Google events data!');
     }
   };
 
   useEffect(() => {
+    console.log('[AgendaContext] useEffect mounted - calling fetchTasks()');
     // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchTasks();
     const interval = setInterval(fetchTasks, 60000); // Refresh every minute
@@ -247,11 +273,25 @@ export const AgendaProvider = ({ children }: { children: ReactNode }) => {
     };
   };
 
-  const getPlanetRegency = (date: Date) => {
-    const day = date.getDay();
-    const regencies = ['☉', '☽', '♂', '☿', '♃', '♀', '♄'];
-    const names = ['Sol', 'Lua', 'Marte', 'Mercúrio', 'Júpiter', 'Vênus', 'Saturno'];
-    return { icon: regencies[day], name: names[day] };
+  const CHALDEAN_ORDER = ["Saturn", "Jupiter", "Mars", "Sun", "Venus", "Mercury", "Moon"];
+  const DAY_REGENTS = ["Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn"];
+  const PLANET_ICONS: Record<string, string> = { 'Sun': '☉', 'Moon': '☽', 'Mercury': '☿', 'Venus': '♀', 'Mars': '♂', 'Jupiter': '♃', 'Saturn': '♄' };
+  const PLANET_NAMES_PT: Record<string, string> = { 'Sun': 'Sol', 'Moon': 'Lua', 'Mercury': 'Mercúrio', 'Venus': 'Vênus', 'Mars': 'Marte', 'Jupiter': 'Júpiter', 'Saturn': 'Saturno' };
+
+  const getPlanetaryHour = (date: Date) => {
+    const dayOfWeek = (date.getDay() + 1) % 7;
+    const dayRegent = DAY_REGENTS[dayOfWeek];
+    const startIdx = CHALDEAN_ORDER.indexOf(dayRegent);
+    const hourIdx = (startIdx + date.getHours()) % 7;
+    const regentEng = CHALDEAN_ORDER[hourIdx];
+    const ptName = PLANET_NAMES_PT[regentEng] || regentEng;
+    return { icon: PLANET_ICONS[regentEng] || '?', name: ptName, hour: date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) };
+  };
+
+  const getPlanetaryDayRegent = (date: Date) => {
+    const dayOfWeek = (date.getDay() + 1) % 7;
+    const dayRegent = DAY_REGENTS[dayOfWeek];
+    return { icon: PLANET_ICONS[dayRegent] || '?', name: PLANET_NAMES_PT[dayRegent] || dayRegent };
   };
 
   const getAlfredInsights = () => {
@@ -265,7 +305,7 @@ export const AgendaProvider = ({ children }: { children: ReactNode }) => {
       { 
         id: 1, 
         type: 'move', 
-        content: `A regência de ${getPlanetRegency(new Date()).name} sugere foco em organização. Vamos realocar 'Redação'?`,
+        content: `A regência de ${getPlanetaryDayRegent(new Date()).name} sugere foco em organização. Vamos realocar 'Redação'?`,
         suggestion: 'Finalizar Redação do Mês'
       },
       { 
@@ -290,7 +330,12 @@ export const AgendaProvider = ({ children }: { children: ReactNode }) => {
       tasks, events, selectedDay, setSelectedDay, weekStart, weekDays, nextWeek, prevWeek,
       addTask, deleteTask, toggleTask, postponeTask, addEvent, deleteEvent, executeInsight,
       documents, addDocument,
-      getMetrics, getPlanetRegency, getAlfredInsights, refreshTasks: fetchTasks
+      getMetrics, getPlanetaryHour, getPlanetaryDayRegent, getPlanetRegency: getPlanetaryDayRegent, getAlfredInsights, refreshTasks: fetchTasks,
+      houseSystem,
+      setHouseSystem: (hs: string) => {
+        setHouseSystem(hs);
+        localStorage.setItem('aurea_house_system', hs);
+      }
     }}>
       {children}
     </AgendaContext.Provider>

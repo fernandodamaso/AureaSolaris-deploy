@@ -29,4 +29,5 @@ dotenvy = "0.15"
 sysinfo = "0.33"
 sys-info = "0.9"
 chrono = "0.4"
+futures-util = "0.3"
 

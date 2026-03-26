@@ -58,7 +58,7 @@ export const LoginView = ({ profiles, onLogin, onSignUp }: LoginViewProps) => {
               </div>
            </div>
            <h1 className="text-3xl font-black uppercase tracking-[0.5em] text-gray-800 mb-2">Aurea Solaris</h1>
-           <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#B8860B]/60 italic">Protocolo de Identidade Ativa</p>
+           <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#c5a059]/60 italic">Protocolo de Identidade Ativa</p>
         </div>
 
         {/* Tab Switcher */}
@@ -88,9 +88,9 @@ export const LoginView = ({ profiles, onLogin, onSignUp }: LoginViewProps) => {
                     <button 
                       key={profile.id}
                       onClick={() => setSelectedProfile(profile)}
-                      className="group relative flex items-center gap-4 bg-white border border-gold/5 p-6 rounded-2xl hover:bg-[#FCF9F1] hover:border-gold/30 transition-all text-left shadow-sm"
+                      className="group relative flex items-center gap-4 bg-white border border-gold/5 p-6 rounded-lg hover:bg-[#FCF9F1] hover:border-gold/30 transition-all text-left shadow-sm"
                     >
-                       <div className="w-14 h-14 bg-[#FCF9F1] border border-gold/10 flex items-center justify-center rounded-xl overflow-hidden group-hover:border-gold/30 transition-all shadow-inner">
+                       <div className="w-14 h-14 bg-[#FCF9F1] border border-gold/10 flex items-center justify-center rounded-lg overflow-hidden group-hover:border-gold/30 transition-all shadow-inner">
                           {profile.avatar ? (
                             <img src={profile.avatar} className="w-full h-full object-cover" alt="" />
                           ) : (
@@ -99,7 +99,7 @@ export const LoginView = ({ profiles, onLogin, onSignUp }: LoginViewProps) => {
                        </div>
                        <div className="flex-1">
                           <p className="text-[15px] font-black text-gray-800 tracking-widest uppercase">{profile.name}</p>
-                          <p className="text-[9px] font-bold text-[#B8860B]/50 uppercase tracking-tighter">Sua Identidade Ativa</p>
+                          <p className="text-[9px] font-bold text-[#c5a059]/50 uppercase tracking-tighter">Sua Identidade Ativa</p>
                        </div>
                        <ChevronRight size={18} className="text-gold/20 group-hover:text-gold transition-all" />
                     </button>
@@ -125,7 +125,7 @@ export const LoginView = ({ profiles, onLogin, onSignUp }: LoginViewProps) => {
                       value={newName}
                       onChange={(e) => setNewName(e.target.value)}
                       placeholder="Ex: Viviane Solaris"
-                      className="w-full bg-white border border-gold/10 p-5 rounded-2xl text-gray-800 font-bold outline-none focus:border-gold/40 transition-all shadow-sm"
+                      className="w-full bg-white border border-gold/10 p-5 rounded-lg text-gray-800 font-bold outline-none focus:border-gold/40 transition-all shadow-sm"
                     />
                   </div>
                   <div>
@@ -137,7 +137,7 @@ export const LoginView = ({ profiles, onLogin, onSignUp }: LoginViewProps) => {
                          value={password}
                          onChange={(e) => setPassword(e.target.value)}
                          placeholder="••••••••"
-                         className="w-full bg-white border border-gold/10 p-5 pl-14 rounded-2xl text-gray-800 font-bold outline-none focus:border-gold/40 transition-all shadow-sm"
+                         className="w-full bg-white border border-gold/10 p-5 pl-14 rounded-lg text-gray-800 font-bold outline-none focus:border-gold/40 transition-all shadow-sm"
                        />
                     </div>
                   </div>
@@ -157,7 +157,7 @@ export const LoginView = ({ profiles, onLogin, onSignUp }: LoginViewProps) => {
                    <Lock size={20} />
                 </button>
                 <div className="flex-1">
-                   <p className="text-[9px] font-black uppercase tracking-[0.3em] text-[#B8860B]/60">Autenticando</p>
+                   <p className="text-[9px] font-black uppercase tracking-[0.3em] text-[#c5a059]/60">Autenticando</p>
                    <h2 className="text-xl font-black uppercase tracking-[0.1em] text-gray-800">{selectedProfile.name}</h2>
                 </div>
              </div>
@@ -173,7 +173,7 @@ export const LoginView = ({ profiles, onLogin, onSignUp }: LoginViewProps) => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="••••••••"
-                        className="w-full bg-white border border-gold/10 p-5 pl-14 rounded-2xl text-gray-800 font-bold outline-none focus:border-gold/40 transition-all shadow-sm"
+                        className="w-full bg-white border border-gold/10 p-5 pl-14 rounded-lg text-gray-800 font-bold outline-none focus:border-gold/40 transition-all shadow-sm"
                       />
                       <button 
                         onClick={() => setShowPassword(!showPassword)}
