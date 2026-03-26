@@ -48,6 +48,8 @@ interface MandalaChartProps {
   planets: Planet[];
   houses: House[];
   aspects: Aspect[];
+  transitPlanets?: Planet[];
+  transitAspects?: Aspect[];
 }
 
 /* ─── Constants ────────────────────────────────────────────────── */
@@ -141,11 +143,13 @@ const getSignIdx = (deg: number) => Math.floor(normDeg(deg) / 30);
 
 /* ─── Component ────────────────────────────────────────────────── */
 
-export const MandalaChart = ({ size = 620, planets, houses, aspects }: MandalaChartProps) => {
+export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlanets, transitAspects }: MandalaChartProps) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const [showDecanates, setShowDecanates] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
   const [showAsteroids, setShowAsteroids] = useState(true);
+  const [showTransits, setShowTransits] = useState(false);
+  const [showTransitAspects, setShowTransitAspects] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [tooltip, setTooltip] = useState<{
     name: string; sign: string; degree: string;
@@ -165,12 +169,15 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects }: MandalaCh
   const houseR    = R * 0.68;
   const planetR   = R * 0.52;
   const aspectR   = R * 0.18;
+  const transitR  = R * 0.95; // Outer ring for transits
 
   /* rotação: ASC fixo em 180° SVG (esquerda/9h), MC fica onde o cálculo colocar */
   const ascDeg = useMemo(() => {
+    const ascHouse = houses.find(h => h.house === 1);
+    if (ascHouse) return normDeg(ascHouse.degree);
     const a = planets.find(p => p.name.toUpperCase().startsWith('ASC'));
     return a ? normDeg(a.degree) : 0;
-  }, [planets]);
+  }, [planets, houses]);
 
   const rotOffset = useMemo(() => (360 - ascDeg) % 360, [ascDeg]);
 
@@ -424,6 +431,26 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects }: MandalaCh
         .attr('stroke', col).attr('stroke-width', 0.8).attr('opacity', op);
     });
 
+    /* ─── 7b. Transit aspect lines (toggle) ──────────────────── */
+    if (showTransitAspects && transitAspects && transitAspects.length > 0) {
+      transitAspects.forEach((asp) => {
+        const p1 = filteredPlanets.find(p => p.name === asp.p1) ||
+                   (transitPlanets || []).find(p => p.name === asp.p1);
+        const p2 = filteredPlanets.find(p => p.name === asp.p2) ||
+                   (transitPlanets || []).find(p => p.name === asp.p2);
+        if (!p1 || !p2) return;
+
+        const col = ASPECT_COLORS[asp.type] || '#ccc';
+        g.append('line')
+          .attr('x1', polarX(p1.isAngle ? planetR : transitR, p1.degree))
+          .attr('y1', polarY(p1.isAngle ? planetR : transitR, p1.degree))
+          .attr('x2', polarX(p2.isAngle ? planetR : transitR, p2.degree))
+          .attr('y2', polarY(p2.isAngle ? planetR : transitR, p2.degree))
+          .attr('stroke', col).attr('stroke-width', 0.8).attr('opacity', 0.3)
+          .attr('stroke-dasharray', '4,4');
+      });
+    }
+
     /* ─── 8. Planets ────────────────────────────────────────── */
     /* anti-overlap: sort by degree and nudge close planets */
     const sorted = [...filteredPlanets].sort((a, b) => normDeg(a.degree) - normDeg(b.degree));
@@ -526,7 +553,55 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects }: MandalaCh
       }).on('mouseleave', () => setTooltip(null));
     });
 
-  }, [size, filteredPlanets, houses, aspects, showDecanates, showTerms, rotOffset]);
+    /* ─── 9. Transit planets (toggle) ──────────────────────────── */
+    if (showTransits && transitPlanets && transitPlanets.length > 0) {
+      const sortedTransits = [...transitPlanets].sort((a, b) => normDeg(a.degree) - normDeg(b.degree));
+      const placedTransits: { x: number; y: number; r: number }[] = [];
+      const MIN_DIST_TRANSIT = 22;
+
+      sortedTransits.forEach((p) => {
+        const d = p.degree;
+        const color = '#87CEEB';
+        const symbol = p.symbol || PLANET_SYMBOLS[p.name] || '●';
+        const isAngle = p.isAngle || ['ASC','MC','DSC','IC'].includes(p.name);
+
+        let px = polarX(transitR, d);
+        let py = polarY(transitR, d);
+
+        for (let attempt = 0; attempt < 8; attempt++) {
+          const tooClose = placedTransits.some(pl => Math.hypot(pl.x - px, pl.y - py) < MIN_DIST_TRANSIT);
+          if (!tooClose) break;
+          const nudge = (attempt + 1) * 4;
+          px = polarX(transitR + nudge, d);
+          py = polarY(transitR + nudge, d);
+        }
+        placedTransits.push({ x: px, y: py, r: 12 });
+
+        g.append('line')
+          .attr('x1', polarX(aspectR + 5, d)).attr('y1', polarY(aspectR + 5, d))
+          .attr('x2', px).attr('y2', py)
+          .attr('stroke', color).attr('stroke-width', 0.3).attr('opacity', 0.15);
+
+        const pg = g.append('g')
+          .attr('class', 'transit-node')
+          .style('cursor', 'pointer');
+
+        pg.append('circle')
+          .attr('cx', px).attr('cy', py).attr('r', 10)
+          .attr('fill', 'white').attr('stroke', color).attr('stroke-width', 1.5)
+          .attr('stroke-dasharray', '2,2');
+
+        pg.append('text')
+          .attr('x', px).attr('y', py + 1)
+          .attr('text-anchor', 'middle').attr('dominant-baseline', 'central')
+          .attr('font-size', isAngle ? 8 : 10).attr('fill', color)
+          .attr('font-weight', 'bold')
+          .text(symbol);
+      });
+    }
+
+  }, [size, filteredPlanets, houses, aspects, showDecanates, showTerms, rotOffset,
+      showTransits, showTransitAspects, transitPlanets, transitAspects]);
 
   /* ─── Tabelas abaixo ─────────────────────────────────────────── */
 
@@ -612,6 +687,8 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects }: MandalaCh
               { label: 'Corpos Secundários', state: showAsteroids, setter: setShowAsteroids },
               { label: 'Decanatos', state: showDecanates, setter: setShowDecanates },
               { label: 'Termos (Egípcios)', state: showTerms, setter: setShowTerms },
+              { label: 'Trânsitos Atuais', state: showTransits, setter: setShowTransits },
+              { label: 'Aspectos de Trânsitos', state: showTransitAspects, setter: setShowTransitAspects },
             ].map(item => (
               <label key={item.label} className="flex items-center gap-3 cursor-pointer group">
                 <input type="checkbox" checked={item.state}
