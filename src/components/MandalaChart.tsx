@@ -15,7 +15,7 @@ import {
 
 /* ─── Interfaces ──────────────────────────────────────────────── */
 
-interface Planet {
+export interface Planet {
   name: string;
   degree: number;
   sign?: string;
@@ -35,7 +35,7 @@ interface House {
   sign?: string;
 }
 
-interface Aspect {
+export interface Aspect {
   p1: string;
   p2: string;
   type: string;
@@ -168,11 +168,11 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects }: MandalaCh
 
   /* rotação: ASC fixo em 180° SVG (esquerda/9h), MC fica onde o cálculo colocar */
   const ascDeg = useMemo(() => {
-    const a = planets.find(p => p.name === 'ASC');
+    const a = planets.find(p => p.name.toUpperCase().startsWith('ASC'));
     return a ? normDeg(a.degree) : 0;
   }, [planets]);
 
-  const rotOffset = useMemo(() => (ascDeg + 180) % 360, [ascDeg]);
+  const rotOffset = useMemo(() => (360 - ascDeg) % 360, [ascDeg]);
 
   const rotDeg = (d: number) => normDeg(d + rotOffset);
   const toRad = (svgDeg: number) => (svgDeg * Math.PI) / 180;
@@ -185,6 +185,9 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects }: MandalaCh
 
   /* ─── D3 Render ──────────────────────────────────────────────── */
   useEffect(() => {
+    console.log('--- RENDERING D3 WIDGET ---');
+    console.log('ascDeg:', ascDeg);
+    console.log('rotOffset:', rotOffset);
     if (!svgRef.current) return;
     const svg = d3.select(svgRef.current);
     svg.selectAll('*').remove();
@@ -363,6 +366,13 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects }: MandalaCh
         .attr('x2', polarX(aspectR + 5, d)).attr('y2', polarY(aspectR + 5, d))
         .attr('stroke', color).attr('stroke-width', sw).attr('opacity', op)
         .attr('stroke-dasharray', dash);
+
+      if (h.house === 1) {
+         console.log('House 1 (ASC) line drawn at degree', d, 'Mapped x,y =', polarX(degreeR, d), polarY(degreeR, d));
+      }
+      if (h.house === 10) {
+         console.log('House 10 (MC) line drawn at degree', d, 'Mapped x,y =', polarX(degreeR, d), polarY(degreeR, d));
+      }
 
       /* número da casa */
       const nextH = houses[(h.house) % 12];
