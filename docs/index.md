@@ -41,6 +41,16 @@
 ### Portuguese
 - [estrutura-do-projeto.md](estrutura-do-projeto.md) — 🇧🇷 Folder structure guide
 
+### Project Documentation
+- [accessibility.md](accessibility.md) — Accessibility patterns
+- [components.md](components.md) — Reusable components
+- [design-system.md](design-system.md) — Design tokens and visual guide
+- [ui-tips-agm.md](ui-tips-agm.md) — UI tips for AntiGravity Module
+- [MVP_Alfa_Checklist.md](MVP_Alfa_Checklist.md) — MVP progress checklist
+- [ASTROLOGY_LESSONS_LEARNED.md](ASTROLOGY_LESSONS_LEARNED.md) — Astrology lessons learned
+- [plans/](plans/) — Implementation plans
+- [superpowers/](superpowers/) — Specs and plans (superpowers skill)
+
 ## Legacy (Preserved)
 - [arquitetura.md](arquitetura.md) — ⚠️ Original (deprecated, content preserved)
 - [AGENTS.md](../AGENTS.md) — ⚠️ Original (deprecated, content preserved)
