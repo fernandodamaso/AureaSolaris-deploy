@@ -260,8 +260,25 @@ A interface é dividida em módulos especializados que você pode acessar confor
 
 ## 📚 Documentação
 
+### Navigation Hub
+- **[docs/index.md](docs/index.md)** — All documentation organized by domain (English)
+
+### Quick Reference
+- **[docs/quick-reference.md](docs/quick-reference.md)** — Fast lookup for common tasks
+
+### Domain Documentation (English)
+- [Agents System](docs/agents-system.md) — Personas, configuration, models
+- [Tauri IPC API](docs/tauri-ipc-api.md) — All backend commands
+- [Astrology Engine](docs/astrology-engine.md) — Python calculations
+- [Google Calendar](docs/google-calendar.md) — Calendar integration
+- [Data Persistence](docs/data-persistence.md) — Storage mechanisms
+- [Setup Guide](docs/setup-guide.md) — Installation instructions
+
+### Portuguese Documentation
 - [Estrutura do Projeto](docs/estrutura-do-projeto.md) — Guia completo de pastas e arquivos
-- [Arquitetura Técnica](docs/arquitetura.md) — Detalhes técnicos do sistema
+
+### Legacy (Preserved)
+- [Arquitetura Técnica](docs/arquitetura.md) — ⚠️ Original (see domain docs above)
 
 ---
 
