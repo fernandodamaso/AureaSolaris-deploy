@@ -687,6 +687,80 @@ fn load_archived_chat(app: tauri::AppHandle, filename: String) -> Result<Vec<Ope
 }
 
 #[tauri::command]
+// Diary data structures
+#[derive(Serialize, Deserialize, Clone)]
+pub struct DiaryEntry {
+    pub id: String,
+    pub title: String,
+    pub content: String, // TipTap JSON stringified
+    pub folder_id: String,
+    pub created_at: String, // ISO 8601
+    pub updated_at: String, // ISO 8601
+    pub word_count: usize,
+}
+
+#[derive(Serialize, Deserialize, Clone)]
+pub struct DiaryFolder {
+    pub id: String,
+    pub name: String,
+    pub icon: String, // emoji
+    pub order: usize,
+    pub created_at: String, // ISO 8601
+}
+
+#[derive(Serialize, Deserialize, Clone)]
+pub struct DiaryTabsState {
+    pub open_tab_ids: Vec<String>,
+    pub active_tab_id: Option<String>,
+}
+
+// Helper functions for diary persistence
+fn get_diary_dir(app: &tauri::AppHandle) -> Result<PathBuf, String> {
+    let mut dir = app.path().app_data_dir().map_err(|e| e.to_string())?;
+    dir.push("memory/diary");
+    fs::create_dir_all(&dir).map_err(|e| format!("Falha ao criar diretório do diário: {}", e))?;
+    Ok(dir)
+}
+
+fn get_entry_path(app: &tauri::AppHandle, entry_id: &str) -> Result<PathBuf, String> {
+    let mut path = get_diary_dir(app)?;
+    path.push("entries");
+    path.push(format!("{}.json", entry_id));
+    Ok(path)
+}
+
+fn get_folders_path(app: &tauri::AppHandle) -> Result<PathBuf, String> {
+    let mut path = get_diary_dir(app)?;
+    path.push("folders.json");
+    Ok(path)
+}
+
+fn get_tabs_path(app: &tauri::AppHandle) -> Result<PathBuf, String> {
+    let mut path = get_diary_dir(app)?;
+    path.push("tabs.json");
+    Ok(path)
+}
+
+// Ensure default "Geral" folder exists
+fn ensure_default_folder(app: &tauri::AppHandle) -> Result<(), String> {
+    let folders_path = get_folders_path(app)?;
+    if !folders_path.exists() {
+        let folder = DiaryFolder {
+            id: "general".to_string(),
+            name: "Geral".to_string(),
+            icon: "📁".to_string(),
+            order: 0,
+            created_at: chrono::Utc::now().to_rfc3339(),
+        };
+        let folders = vec![folder];
+        let json = serde_json::to_string_pretty(&folders)
+            .map_err(|e| format!("Falha ao serializar pastas: {}", e))?;
+        fs::write(&folders_path, json)
+            .map_err(|e| format!("Falha ao salvar pastas: {}", e))?;
+    }
+    Ok(())
+}
+
 fn get_total_tokens(app: tauri::AppHandle) -> Result<u64, String> {
     let path = get_mem_path(&app, "usage.json")?;
     if !path.exists() {
@@ -890,44 +964,333 @@ async fn get_transit_positions(payload: String) -> Result<String, String> {
 
 // Google integration will use Composio MCP - no manual OAuth2 needed
 
+// Diary command implementations
+#[tauri::command]
+pub fn diary_create_entry(app: tauri::AppHandle, title: String, folder_id: String) -> Result<DiaryEntry, String> {
+    let entry_id = uuid::Uuid::new_v4().to_string();
+    let now = chrono::Utc::now().to_rfc3339();
+    
+    let entry = DiaryEntry {
+        id: entry_id.clone(),
+        title,
+        content: "".to_string, // Starts empty
+        folder_id: if folder_id.is_empty() { "general".to_string() } else { folder_id },
+        created_at: now.clone(),
+        updated_at: now.clone(),
+        word_count: 0,
+    };
+    
+    // Ensure default folder exists
+    let _ = ensure_default_folder(&app);
+    
+    // Save entry to file
+    let entry_path = get_entry_path(&app, &entry_id)?;
+    let json = serde_json::to_string_pretty(&entry)
+        .map_err(|e| format!("Falha ao serializar entrada: {}", e))?;
+    fs::write(&entry_path, json)
+        .map_err(|e| format!("Falha ao salvar entrada: {}", e))?;
+    
+    Ok(entry)
+}
+
+#[tauri::command]
+pub fn diary_update_entry(
+    app: tauri::AppHandle,
+    id: String,
+    title: Option<String>,
+    content: Option<String>,
+    folder_id: Option<String>
+) -> Result<DiaryEntry, String> {
+    // Load existing entry
+    let entry_path = get_entry_path(&app, &id)?;
+    let mut entry: DiaryEntry = fs::read_to_string(&entry_path)
+        .map_err(|e| format!("Falha ao ler entrada: {}", e))?
+        .parse::<serde_json::Value>()
+        .map_err(|e| format!("Falha ao parsear entrada JSON: {}", e))?
+        .serde_deserialize()
+        .map_err(|e| format!("Falha ao desserializar entrada: {}", e))?;
+    
+    // Update fields provided
+    if let Some(t) = title {
+        entry.title = t;
+    }
+    if let Some(c) = content {
+        entry.content = c;
+        // Update word count
+        entry.word_count = c.split_whitespace().count();
+    }
+    if let Some(f) = folder_id {
+        if !f.is_empty() {
+            entry.folder_id = f;
+        }
+    }
+    entry.updated_at = chrono::Utc::now().to_rfc3339();
+    
+    // Save updated entry
+    let json = serde_json::to_string_pretty(&entry)
+        .map_err(|e| format!("Falha ao serializar entrada atualizada: {}", e))?;
+    fs::write(&entry_path, json)
+        .map_err(|e| format!("Falha ao salvar entrada atualizada: {}", e))?;
+    
+    Ok(entry)
+}
+
+#[tauri::command]
+pub fn diary_delete_entry(app: tauri::AppHandle, id: String) -> Result<(), String> {
+    let entry_path = get_entry_path(&app, &id)?;
+    fs::remove_file(&entry_path)
+        .map_err(|e| format!("Falha ao excluir entrada: {}", e))?;
+    Ok(())
+}
+
+#[tauri::command]
+pub fn diary_list_entries(app: tauri::AppHandle, folder_id: Option<String>) -> Result<Vec<DiaryEntry>, String> {
+    let diary_dir = get_diary_dir(&app)?;
+    let entries_dir = diary_dir.join("entries");
+    
+    // Check if entries directory exists
+    if !entries_dir.exists() {
+        return Ok(Vec::new());
+    }
+    
+    let mut entries = Vec::new();
+    
+    // Read all JSON files in entries directory
+    for entry in fs::read_dir(&entries_dir)
+        .map_err(|e| format!("Falha ao ler diretório de entradas: {}", e))? {
+        let entry_path = entry
+            .map_err(|e| format!("Falha ao obter entrada do diretório: {}", e))?
+            .path();
+        
+        if entry_path.extension().and_then(|s| s.to_str()) == Some("json") {
+            let entry_data = fs::read_to_string(&entry_path)
+                .map_err(|e| format!("Falha ao ler arquivo de entrada: {}", e))?;
+            
+            let entry: DiaryEntry = serde_json::from_str(&entry_data)
+                .map_err(|e| format!("Falha ao desserializar entrada: {}", e))?;
+            
+            // Filter by folder if specified
+            if let Some(ref folder_id) = folder_id {
+                if entry.folder_id == *folder_id {
+                    entries.push(entry);
+                }
+            } else {
+                entries.push(entry);
+            }
+        }
+    }
+    
+    // Sort by creation date (newest first)
+    entries.sort_by(|a, b| b.created_at.cmp(&a.created_at));
+    
+    Ok(entries)
+}
+
+#[tauri::command]
+pub fn diary_get_entry(app: tauri::AppHandle, id: String) -> Result<Option<DiaryEntry>, String> {
+    let entry_path = get_entry_path(&app, &id)?;
+    
+    if !entry_path.exists() {
+        return Ok(None);
+    }
+    
+    let entry_data = fs::read_to_string(&entry_path)
+        .map_err(|e| format!("Falha ao ler arquivo de entrada: {}", e))?;
+    
+    let entry: DiaryEntry = serde_json::from_str(&entry_data)
+        .map_err(|e| format!("Falha ao desserializar entrada: {}", e))?;
+    
+    Ok(Some(entry))
+}
+
+#[tauri::command]
+pub fn diary_create_folder(app: tauri::AppHandle, name: String, icon: String) -> Result<DiaryFolder, String> {
+    let folder_id = uuid::Uuid::new_v4().to_string();
+    let now = chrono::Utc::now().to_rfc3339();
+    
+    // Load existing folders to determine order
+    let mut folders = diary_list_folders(&app)?;
+    let order = folders.len();
+    
+    let folder = DiaryFolder {
+        id: folder_id.clone(),
+        name,
+        icon,
+        order,
+        created_at: now.clone(),
+    };
+    
+    // Add new folder to list
+    folders.push(folder.clone());
+    
+    // Save updated folder list
+    let folders_path = get_folders_path(&app)?;
+    let json = serde_json::to_string_pretty(&folders)
+        .map_err(|e| format!("Falha ao serializar pastas: {}", e))?;
+    fs::write(&folders_path, json)
+        .map_err(|e| format!("Falha ao salvar pastas: {}", e))?;
+    
+    Ok(folder)
+}
+
+#[tauri::command]
+pub fn diary_list_folders(app: tauri::AppHandle) -> Result<Vec<DiaryFolder>, String> {
+    let folders_path = get_folders_path(&app)?;
+    
+    // If file doesn't exist, return empty vector (will be handled by frontend)
+    if !folders_path.exists() {
+        return Ok(Vec::new());
+    }
+    
+    let folders_data = fs::read_to_string(&folders_path)
+        .map_err(|e| format!("Falha ao ler arquivo de pastas: {}", e))?;
+    
+    let folders: Vec<DiaryFolder> = serde_json::from_str(&folders_data)
+        .map_err(|e| format!("Falha ao desserializar pastas: {}", e))?;
+    
+    Ok(folders)
+}
+
+#[tauri::command]
+pub fn diary_delete_folder(app: tauri::AppHandle, id: String) -> Result<(), String> {
+    // Load folders
+    let mut folders = diary_list_folders(&app)?;
+    
+    // Find folder to delete
+    let folder_index = folders
+        .iter()
+        .position(|f| f.id == id)
+        .ok_or_else(|| "Pasta não encontrada".to_string())?;
+    
+    let folder_to_delete = folders.remove(folder_index);
+    
+    // Protect default "Geral" folder
+    if folder_to_delete.name == "Geral" && folder_to_delete.icon == "📁" {
+        return Err("Não é permitido excluir a pasta Geral padrão".to_string());
+    }
+    
+    // Move entries from deleted folder to "Geral"
+    let geral_folder = folders
+        .iter()
+        .find(|f| f.name == "Geral" && f.icon == "📁")
+        .ok_or_else(|| "Pasta Geral não encontrada".to_string())?;
+    
+    let mut entries = diary_list_entries(&app, None)?;
+    for entry in &mut entries {
+        if entry.folder_id == id {
+            entry.folder_id = geral_folder.id.clone();
+            // Update entry with new folder
+            diary_update_entry(
+                app.clone(),
+                entry.id.clone(),
+                None,
+                None,
+                Some(geral_folder.id.clone())
+            )?;
+        }
+    }
+    
+    // Update orders of remaining folders
+    for (i, folder) in folders.iter_mut().enumerate() {
+        folder.order = i;
+    }
+    
+    // Save updated folder list
+    let folders_path = get_folders_path(&app)?;
+    let folders_json = serde_json::to_string_pretty(&folders)
+        .map_err(|e| format!("Falha ao serializar pastas: {}", e))?;
+    fs::write(&folders_path, folders_json)
+        .map_err(|e| format!("Falha ao salvar pastas: {}", e))?;
+    
+    Ok(())
+}
+
+#[tauri::command]
+pub fn diary_save_tabs(app: tauri::AppHandle, open_ids: Vec<String>, active_id: Option<String>) -> Result<(), String> {
+    let tabs_state = DiaryTabsState {
+        open_tab_ids: open_ids,
+        active_tab_id: active_id,
+    };
+    
+    let tabs_path = get_tabs_path(&app)?;
+    let json = serde_json::to_string_pretty(&tabs_state)
+        .map_err(|e| format!("Falha ao serializar estado das abas: {}", e))?;
+    fs::write(&tabs_path, json)
+        .map_err(|e| format!("Falha ao salvar estado das abas: {}", e))?;
+    
+    Ok(())
+}
+
+#[tauri::command]
+pub fn diary_load_tabs(app: tauri::AppHandle) -> Result<DiaryTabsState, String> {
+    let tabs_path = get_tabs_path(&app)?;
+    
+    // If file doesn't exist, return default state
+    if !tabs_path.exists() {
+        return Ok(DiaryTabsState {
+            open_tab_ids: Vec::new(),
+            active_tab_id: None,
+        });
+    }
+    
+    let tabs_data = fs::read_to_string(&tabs_path)
+        .map_err(|e| format!("Falha ao ler arquivo de abas: {}", e))?;
+    
+    let tabs_state: DiaryTabsState = serde_json::from_str(&tabs_data)
+        .map_err(|e| format!("Falha ao desserializar estado das abas: {}", e))?;
+    
+    Ok(tabs_state)
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_dialog::init())
-        .invoke_handler(tauri::generate_handler![
-            openrouter_chat,
-            ollama_chat,
-            ollama_chat_stream,
-            openrouter_chat_stream,
-            save_history, 
-            load_history,
-            list_chat_sessions,
-            delete_chat_session,
-            get_todoist_tasks,
-            add_todoist_task,
-            delete_todoist_task,
-            toggle_todoist_task,
-            postpone_todoist_task,
-            add_google_event,
-            delete_google_event,
-            send_telegram_message,
-            save_board,
-            load_board,
-            get_sys_info,
-            save_asset,
-            archive_chat,
-            list_archived_chats,
-            load_archived_chat,
-            get_total_tokens,
-            read_text_file,
-            run_astro_engine,
-            list_lab_files,
-            run_agm_engine,
-            get_transit_positions,
-            get_google_events
-        ])
+         .invoke_handler(tauri::generate_handler![
+             openrouter_chat,
+             ollama_chat,
+             ollama_chat_stream,
+             openrouter_chat_stream,
+             save_history, 
+             load_history,
+             list_chat_sessions,
+             delete_chat_session,
+             get_todoist_tasks,
+             add_todoist_task,
+             delete_todoist_task,
+             toggle_todoist_task,
+             postpone_todoist_task,
+             add_google_event,
+             delete_google_event,
+             send_telegram_message,
+             save_board,
+             load_board,
+             get_sys_info,
+             save_asset,
+             archive_chat,
+             list_archived_chats,
+             load_archived_chat,
+             get_total_tokens,
+             read_text_file,
+             run_astro_engine,
+             list_lab_files,
+             run_agm_engine,
+             get_transit_positions,
+             get_google_events,
+             // Diary commands
+             diary_create_entry,
+             diary_update_entry,
+             diary_delete_entry,
+             diary_list_entries,
+             diary_get_entry,
+             diary_create_folder,
+             diary_list_folders,
+             diary_delete_folder,
+             diary_save_tabs,
+             diary_load_tabs
+         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

@@ -72,11 +72,83 @@ function handleCommand<T>(cmd: string, args?: any): T | null {
       return { os: 'Windows', arch: 'x64', memory: '16GB', cpu: 'Mock CPU', uptime: '4d 12h' } as T;
 
     case 'get_total_tokens':
-      return 12500 as T;
+       return 12500 as T;
 
-    default:
-      console.log(`[Mock] No mock for command: ${cmd}`);
-      return null;
+    // Diary command mocks
+    case 'diary_create_entry':
+       return {
+         id: 'mock-entry-' + Date.now(),
+         title: args?.title || 'Nova Entrada',
+         content: '{}',
+         folder_id: args?.folder_id || 'general',
+         created_at: new Date().toISOString(),
+         updated_at: new Date().toISOString(),
+         word_count: 0
+       } as T;
+
+    case 'diary_update_entry':
+       return {
+         id: args?.id || 'mock-entry',
+         title: args?.title || 'Entrada Atualizada',
+         content: args?.content || '{}',
+         folder_id: args?.folder_id || 'general',
+         created_at: new Date().toISOString(),
+         updated_at: new Date().toISOString(),
+         word_count: args?.content ? args?.content.split_whitespace().count() : 0
+       } as T;
+
+    case 'diary_delete_entry':
+       return null as T;
+
+    case 'diary_list_entries':
+       return [] as T;
+
+    case 'diary_get_entry':
+       return {
+         id: args?.id || 'mock-entry',
+         title: args?.title || 'Entrada Mock',
+         content: '{}',
+         folder_id: args?.folder_id || 'general',
+         created_at: new Date().toISOString(),
+         updated_at: new Date().toISOString(),
+         word_count: 0
+       } as T;
+
+    case 'diary_create_folder':
+       return {
+         id: 'mock-folder-' + Date.now(),
+         name: args?.name || 'Nova Pasta',
+         icon: args?.icon || '📁',
+         order: 0,
+         created_at: new Date().toISOString()
+       } as T;
+
+    case 'diary_list_folders':
+       return [
+         {
+           id: 'general',
+           name: 'Geral',
+           icon: '📁',
+           order: 0,
+           created_at: new Date().toISOString()
+         }
+       ] as T;
+
+    case 'diary_delete_folder':
+       return null as T;
+
+    case 'diary_save_tabs':
+       return null as T;
+
+    case 'diary_load_tabs':
+       return {
+         open_tab_ids: [],
+         active_tab_id: null
+       } as T;
+
+     default:
+       console.log(`[Mock] No mock for command: ${cmd}`);
+       return null;
   }
 }
 

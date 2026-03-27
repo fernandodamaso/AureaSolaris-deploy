@@ -1,18 +1,53 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { useAstroData } from '../hooks/useAstroData';
-import { useTransitData } from '../hooks/useTransitData';
-import { calculateTransitAspects } from '../utils/transitAspects';
 import { MandalaChart } from './MandalaChart';
-import { RefreshCw, Compass, User, Users } from 'lucide-react';
+import { RefreshCw, Compass, User, Users, Plus, Edit3 } from 'lucide-react';
 import { useAgendaContext } from '../context/AgendaContext';
+import { BirthForm } from './common/BirthForm';
 
 export const MandalaPage = () => {
-  const { profiles, activeProfileId } = useAgendaContext();
+  const { profiles, activeProfileId, addConnection, updateProfile } = useAgendaContext();
   const [selectedTarget, setSelectedTarget] = useState<'current' | string>('current');
+  const [showForm, setShowForm] = useState(false);
+  const [editingConnectionId, setEditingConnectionId] = useState<string | null>(null);
+  
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [containerWidth, setContainerWidth] = useState(800);
   
   const activeProfile = useMemo(() => 
     profiles.find(p => p.id === activeProfileId) || profiles[0]
   , [profiles, activeProfileId]);
+
+  const handleSaveConnection = (data: any) => {
+    if (editingConnectionId) {
+      const updatedConnections = (activeProfile.connections || []).map((c: any) => 
+        c.id === editingConnectionId ? { ...c, ...data, birthData: data } : c
+      );
+      updateProfile(activeProfile.id, { connections: updatedConnections });
+    } else {
+      addConnection(data.name, data);
+    }
+    setShowForm(false);
+    setEditingConnectionId(null);
+  };
+
+  // Observer para redimensionar dinamicamente
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        setContainerWidth(entry.contentRect.width);
+      }
+    });
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  const chartSize = useMemo(() => {
+    // Calculamos o tamanho ideal (90% da largura, com limites)
+    const idealSize = Math.floor(containerWidth * 0.95);
+    return Math.min(Math.max(idealSize, 400), 1200);
+  }, [containerWidth]);
 
   const birthData = useMemo(() => {
     if (selectedTarget === 'current') return null;
@@ -49,32 +84,6 @@ export const MandalaPage = () => {
   }, [selectedTarget, activeProfile]);
 
   const { data, loading, error, recalculate } = useAstroData(birthData);
-
-  // Transit states
-  const [showTransits, setShowTransits] = useState(false);
-  const [showTransitAspects, setShowTransitAspects] = useState(false);
-
-  // Transit hook — only fetch when transits are shown
-  const transitBirthData = useMemo(() => {
-    if (!showTransits) return null;
-    return selectedTarget === 'current' ? null : birthData;
-  }, [showTransits, selectedTarget, birthData]);
-
-  const { data: transitData, loading: transitLoading } = useTransitData(
-    transitBirthData,
-    false
-  );
-
-  // Memoized transit planets — reused in both aspects and chart props
-  const transitPlanets = useMemo(() => {
-    if (!transitData?.planets) return [];
-    return Object.entries(transitData.planets).map(([name, info]: [string, any]) => ({
-      name,
-      degree: info.degree || 0,
-      sign: info.sign || '',
-      retrograde: info.retrograde || false,
-    }));
-  }, [transitData]);
 
   // Parse data for MandalaChart - includes planets, secondary bodies, and angles
   const chartPlanets = useMemo(() => {
@@ -145,12 +154,6 @@ export const MandalaPage = () => {
     return data?.aspects || [];
   }, [data]);
 
-  // Calculate transit aspects
-  const transitAspects = useMemo(() => {
-    if (!showTransitAspects || transitPlanets.length === 0 || !chartPlanets) return [];
-    return calculateTransitAspects(transitPlanets, chartPlanets);
-  }, [showTransitAspects, transitPlanets, chartPlanets]);
-
   const allTargets = [
     { id: 'current', name: 'Céu Sagrado (Agora)', icon: <Compass size={14}/> },
     { id: 'me', name: `Meu Mapa Natal`, icon: <User size={14}/> },
@@ -162,8 +165,8 @@ export const MandalaPage = () => {
   ];
 
   return (
-    <div className="flex flex-col h-full items-center justify-center gap-6 p-8 overflow-y-auto no-scrollbar">
-      <div className="w-full max-w-2xl flex flex-col md:flex-row items-center justify-between gap-6 bg-white/40 backdrop-blur-md p-6 rounded-[2rem] border border-gold/10 shadow-sm">
+    <div ref={containerRef} className="flex flex-col h-full items-center justify-start gap-8 p-4 md:p-8 overflow-y-auto no-scrollbar transition-all duration-500">
+      <div className="w-full flex flex-col md:flex-row items-center justify-between gap-6 bg-white/40 backdrop-blur-md p-6 rounded-[2rem] border border-gold/10 shadow-sm transition-all">
         <div className="flex items-center gap-4">
           <div className="p-3 bg-[#FCF9F1] rounded-2xl border border-gold/10 text-[#c5a059]">
             {selectedTarget === 'current' ? <Compass size={24} /> : <User size={24} />}
@@ -177,6 +180,17 @@ export const MandalaPage = () => {
         </div>
 
         <div className="flex items-center gap-3">
+          <button
+            onClick={() => {
+              setEditingConnectionId(null);
+              setShowForm(true);
+            }}
+            className="p-3 bg-[#FCF9F1] border border-gold/10 rounded-xl text-[#c5a059] hover:bg-gold/5 transition-all shadow-sm"
+            title="Adicionar Novo Mapa"
+          >
+            <Plus size={16} />
+          </button>
+
           <select 
             value={selectedTarget}
             onChange={(e) => setSelectedTarget(e.target.value)}
@@ -187,6 +201,19 @@ export const MandalaPage = () => {
             ))}
           </select>
 
+          {selectedTarget !== 'current' && selectedTarget !== 'me' && (
+            <button
+              onClick={() => {
+                setEditingConnectionId(selectedTarget);
+                setShowForm(true);
+              }}
+              className="p-3 bg-white border border-gray-100 rounded-xl text-gray-400 hover:text-[#c5a059] shadow-sm transition-all"
+              title="Editar Dados do Mapa"
+            >
+              <Edit3 size={16} />
+            </button>
+          )}
+
           <button
             onClick={recalculate}
             disabled={loading}
@@ -195,32 +222,6 @@ export const MandalaPage = () => {
           >
             <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
           </button>
-
-          <button
-            onClick={() => setShowTransits(v => !v)}
-            className={`p-3 border rounded-xl transition-all shadow-sm text-[10px] font-black uppercase tracking-wider ${
-              showTransits
-                ? 'bg-blue-50 border-blue-200 text-blue-500'
-                : 'bg-white border-gray-100 text-gray-500 hover:text-blue-400 hover:border-blue/20'
-            }`}
-            title="Trânsitos Planetários"
-          >
-            Trânsitos
-          </button>
-
-          {showTransits && (
-            <button
-              onClick={() => setShowTransitAspects(v => !v)}
-              className={`p-3 border rounded-xl transition-all shadow-sm text-[10px] font-black uppercase tracking-wider ${
-                showTransitAspects
-                  ? 'bg-purple-50 border-purple-200 text-purple-500'
-                  : 'bg-white border-gray-100 text-gray-500 hover:text-purple-400 hover:border-purple/20'
-              }`}
-              title="Aspectos de Trânsito"
-            >
-              Aspectos
-            </button>
-          )}
         </div>
       </div>
 
@@ -242,19 +243,12 @@ export const MandalaPage = () => {
       )}
 
       {chartPlanets.length > 0 ? (
-        <div className="animate-in zoom-in-95 duration-700 bg-white/40 backdrop-blur-sm rounded-[2rem] border border-gold/10 p-6 shadow-sm relative">
-          {transitLoading && showTransits && (
-            <div className="absolute top-4 right-4 text-[9px] text-blue-400 animate-pulse">
-              Sincronizando trânsitos...
-            </div>
-          )}
+        <div className="animate-in zoom-in-95 duration-700 bg-white/40 backdrop-blur-sm rounded-[3rem] border border-gold/10 p-4 md:p-10 shadow-lg relative transition-all" style={{ width: chartSize + 80 }}>
           <MandalaChart
-            size={580}
+            size={chartSize}
             planets={chartPlanets}
             houses={chartHouses}
             aspects={chartAspects}
-            transitPlanets={showTransits ? transitPlanets : []}
-            transitAspects={transitAspects}
           />
         </div>
       ) : !loading && !error ? (
@@ -262,6 +256,20 @@ export const MandalaPage = () => {
           Nenhum dado astrológico disponível. Clique em recalcular.
         </div>
       ) : null}
+
+      {showForm && (
+        <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/40 backdrop-blur-md p-4 animate-in fade-in zoom-in-95">
+           <BirthForm 
+             title={editingConnectionId ? "Editar Mapa" : "Adicionar Mapa"}
+             initialData={editingConnectionId ? activeProfile.connections?.find((c: any) => c.id === editingConnectionId)?.birthData : undefined}
+             onSave={handleSaveConnection} 
+             onClose={() => {
+               setShowForm(false);
+               setEditingConnectionId(null);
+             }} 
+           />
+        </div>
+      )}
     </div>
   );
 };

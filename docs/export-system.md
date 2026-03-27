@@ -28,5 +28,4 @@
 
 ## Related Documentation
 
-- [project-structure.md](project-structure.md) (PT) — Component details
-- [estrutura-do-projeto.md](estrutura-do-projeto.md) (PT) — Folder structure
+- [estrutura-do-projeto.md](estrutura-do-projeto.md) (PT) — Component details and folder structure

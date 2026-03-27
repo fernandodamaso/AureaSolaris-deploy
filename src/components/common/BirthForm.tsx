@@ -4,13 +4,22 @@ import { Clock, MapPin, Calendar, Save, UserPlus, X } from 'lucide-react';
 interface BirthFormProps {
   onSave: (data: any) => void;
   onClose: () => void;
+  initialData?: {
+    name: string;
+    date: string;
+    time: string;
+    location: string;
+    lat?: number;
+    lng?: number;
+  };
+  title?: string;
 }
 
-export const BirthForm = ({ onSave, onClose }: BirthFormProps) => {
-  const [name, setName] = useState('');
-  const [date, setDate] = useState('');
-  const [time, setTime] = useState('');
-  const [location, setLocation] = useState('');
+export const BirthForm = ({ onSave, onClose, initialData, title }: BirthFormProps) => {
+  const [name, setName] = useState(initialData?.name || '');
+  const [date, setDate] = useState(initialData?.date || '');
+  const [time, setTime] = useState(initialData?.time || '');
+  const [location, setLocation] = useState(initialData?.location || '');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,11 +40,11 @@ export const BirthForm = ({ onSave, onClose }: BirthFormProps) => {
         <div className="flex justify-between items-center mb-10">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 bg-gold/10 rounded-2xl flex items-center justify-center text-gold shadow-sm">
-              <UserPlus size={24} />
+              {initialData ? <Save size={24} /> : <UserPlus size={24} />}
             </div>
             <div>
               <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-gold">Rafiki Astrologia</h2>
-              <h3 className="text-xl font-black text-gray-800 tracking-tight">Novo Perfil de Nascimento</h3>
+              <h3 className="text-xl font-black text-gray-800 tracking-tight">{title || (initialData ? "Editar Perfil" : "Novo Perfil de Nascimento")}</h3>
             </div>
           </div>
           <button onClick={onClose} className="p-3 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-full transition-all">

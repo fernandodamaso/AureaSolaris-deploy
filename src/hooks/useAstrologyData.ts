@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { safeInvoke } from '../utils/tauri';
 import { calculateFallback } from '../utils/astro-calc';
+import { getAspectOrbs, AspectOrb } from '../utils/astro-settings';
 
 const SIGN_MAP: Record<string, string> = {
   Ari: 'Áries', Tau: 'Touro', Gem: 'Gêmeos', Can: 'Câncer',
@@ -52,6 +53,19 @@ function normalizeAstroData(data: any): any {
     };
   }
   
+  if (normalized.secondary) {
+    normalized.secondary = Object.fromEntries(
+      Object.entries(normalized.secondary).map(([k, v]: [string, any]) => [
+        k,
+        {
+          ...v,
+          sign: SIGN_MAP[v.sign] || v.sign,
+          element: v.element === 'Fire' ? 'Fogo' : v.element === 'Earth' ? 'Terra' : v.element === 'Air' ? 'Ar' : v.element === 'Water' ? 'Água' : v.element
+        }
+      ])
+    );
+  }
+  
   return normalized;
 }
 
@@ -90,6 +104,7 @@ export interface LiveAstroData {
     timestamp: string;
     location: { lat: number, lon: number };
   };
+  secondary?: Record<string, PlanetaryPosition>;
 }
 
 export const useAstrologyData = (natalData?: { Sun: number, Moon: number, ASC: number, Mercury?: number, Venus?: number, Mars?: number }) => {
@@ -160,34 +175,23 @@ export const useAstrologyData = (natalData?: { Sun: number, Moon: number, ASC: n
     return () => clearInterval(interval);
   }, [sunVal, moonVal, ascVal]);
 
-  // Constantes de orbes para aspectos (em graus)
-  const ORB_CONJUNCTION = 8;
-  const ORB_OPPOSITION = 8;
-  const ORB_TRINE = 8;
-  const ORB_SQUARE = 6;
-  const ORB_SEXTILE = 4;
-  const ORB_QUINCUNX = 3;
-  const ORB_QUINTILE = 3;
-  const ORB_SEMI_SEXTILE = 2;
-  const ORB_SEMI_SQUARE = 2;
-
   const getAspect = (d1: number, d2: number) => {
     const diff = Math.abs(d1 - d2) % 360;
     const dist = diff > 180 ? 360 - diff : diff;
-    const orb = Math.round(dist * 100) / 100;
+    const orbValue = Math.round(dist * 100) / 100;
     
-    if (dist < ORB_CONJUNCTION) return { type: 'Conjunção', icon: '☌', desc: `Conjunção (orbe: ${orb}°)`, orb };
-    if (Math.abs(dist - 180) < ORB_OPPOSITION) return { type: 'Oposição', icon: '☍', desc: `Oposição (orbe: ${orb}°)`, orb };
-    if (Math.abs(dist - 120) < ORB_TRINE) return { type: 'Trígono', icon: '△', desc: `Trígono (orbe: ${orb}°)`, orb };
-    if (Math.abs(dist - 90) < ORB_SQUARE) return { type: 'Quadratura', icon: '□', desc: `Quadratura (orbe: ${orb}°)`, orb };
-    if (Math.abs(dist - 60) < ORB_SEXTILE) return { type: 'Sextil', icon: '＊', desc: `Sextil (orbe: ${orb}°)`, orb };
-    // Minor aspects
-    if (Math.abs(dist - 150) < ORB_QUINCUNX) return { type: 'Inconjunto', icon: '☽', desc: `Inconjunto (orbe: ${orb}°)`, orb };
-    if (Math.abs(dist - 72) < ORB_QUINTILE) return { type: 'Quintil', icon: 'ℍ', desc: `Quintil (orbe: ${orb}°)`, orb };
-    if (Math.abs(dist - 144) < ORB_QUINTILE) return { type: 'Bi-Quintil', icon: 'ℎ', desc: `Bi-Quintil (orbe: ${orb}°)`, orb };
-    if (Math.abs(dist - 30) < ORB_SEMI_SEXTILE) return { type: 'Semi-Sextil', icon: '⚹', desc: `Semi-Sextil (orbe: ${orb}°)`, orb };
-    if (Math.abs(dist - 45) < ORB_SEMI_SQUARE) return { type: 'Semi-Quadratura', icon: '∠', desc: `Semi-Quadratura (orbe: ${orb}°)`, orb };
-    if (Math.abs(dist - 135) < ORB_QUINCUNX) return { type: 'Sesqui-Quadratura', icon: '⚼', desc: `Sesqui-Quadratura (orbe: ${orb}°)`, orb };
+    const ASPECT_CONFIG = Object.values(getAspectOrbs()) as AspectOrb[];
+
+    for (const asp of ASPECT_CONFIG) {
+      if (Math.abs(dist - asp.angle) < asp.orb) {
+        return { 
+          type: asp.type, 
+          icon: asp.symbol, 
+          desc: `${asp.type} (orbe: ${orbValue}°)`, 
+          orb: orbValue
+        };
+      }
+    }
     return null;
   };
 

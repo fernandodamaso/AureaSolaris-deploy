@@ -4,6 +4,7 @@ import { Card, SectionTitle, Advice } from './common/UIComponents';
 import { useAstrologyData } from '../hooks/useAstrologyData';
 import { OllamaGuide } from './common/OllamaGuide';
 import { safeInvoke } from '../utils/tauri';
+import { getAspectOrbs, saveAspectOrbs, DEFAULT_ASPECT_ORBS, AspectOrb } from '../utils/astro-settings';
 
 const HardwareRow = ({ label, val, icon }: { label: string, val: string, icon: ReactNode }) => (
   <div className="flex justify-between items-center py-3 border-b border-gray-50 last:border-none px-1">
@@ -21,6 +22,7 @@ export const ControlePanel = () => {
   const [houseSystem, setHouseSystem] = useState(() => localStorage.getItem('aurea_house_system') || 'Regiomontanus');
   const [metrics, setMetrics] = useState({ uptime: '---', latency: '---', memory: '---', cpu: '---', tokens: '0' });
   const [apiStatus] = useState({ todoist: 'online', telegram: 'online', astro: 'online' });
+  const [orbs, setOrbs] = useState<Record<string, AspectOrb>>(DEFAULT_ASPECT_ORBS);
   const { getPlanetaryHour } = useAstrologyData();
 
   useEffect(() => {
@@ -43,7 +45,19 @@ export const ControlePanel = () => {
       }));
     };
     fetchMetrics();
+    setOrbs(getAspectOrbs());
   }, []);
+
+  const handleOrbChange = (type: string, value: number) => {
+    const updated = { ...orbs, [type]: { ...orbs[type], orb: value } };
+    setOrbs(updated);
+    saveAspectOrbs(updated);
+  };
+
+  const resetOrbs = () => {
+    setOrbs(DEFAULT_ASPECT_ORBS);
+    saveAspectOrbs(DEFAULT_ASPECT_ORBS);
+  };
 
   const planetaryHour = getPlanetaryHour();
 
@@ -148,6 +162,35 @@ export const ControlePanel = () => {
                     </div>
                     <p className="text-[10px] text-gray-400 font-medium px-1">O motor Ollama permite que o Dr. Strange e o Stark operem 100% offline.</p>
                  </div>
+              </Card>
+
+              <Card title="Orbes de Aspectos" icon={<Settings size={14}/>}>
+                <div className="mt-4 space-y-4">
+                   <div className="grid grid-cols-2 gap-3">
+                     {(Object.values(orbs) as AspectOrb[]).map(asp => (
+                       <div key={asp.type} className="space-y-1">
+                         <div className="flex justify-between items-center px-1">
+                           <label className="text-[8px] font-black uppercase text-gray-400 tracking-wider">
+                             {asp.symbol} {asp.type}
+                           </label>
+                           <span className="text-[9px] font-bold text-gold">{asp.orb.toFixed(1)}°</span>
+                         </div>
+                         <input 
+                           type="range" min="0" max="15" step="0.5"
+                           value={asp.orb}
+                           onChange={(e) => handleOrbChange(asp.type, parseFloat(e.target.value))}
+                           className="w-full h-1 bg-gold/10 rounded-lg appearance-none cursor-pointer accent-gold"
+                         />
+                       </div>
+                     ))}
+                   </div>
+                   <button 
+                     onClick={resetOrbs}
+                     className="w-full py-2 border border-gold/10 rounded-lg text-[8px] font-black uppercase text-gold hover:bg-gold/5 transition-all"
+                   >
+                     Resetar para Padrões
+                   </button>
+                </div>
               </Card>
           </div>
         </div>
