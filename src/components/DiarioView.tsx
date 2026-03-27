@@ -102,7 +102,6 @@ export const DiarioView = () => {
           setIsAddingFolder={setIsAddingFolder}
           setNewFolderName={setNewFolderName}
           handleCreateFolder={handleCreateFolder}
-          handleCreateEntry={handleCreateEntry}
           searchQuery={searchQuery}
           onSearchChange={handleSearchChange}
         />

@@ -41,11 +41,7 @@ export const DiarioSidebar: React.FC<DiarioSidebarProps> = ({
     return entries.filter(entry => entry.title.toLowerCase().includes(query));
   }, [entries, searchQuery]);
 
-  const folderEntryCounts = useMemo(() => {
-    const counts: Record<string, number> = {};
-    folders.forEach(f => { counts[f.id] = 0; });
-    return counts;
-  }, [folders]);
+
 
   if (sidebarCollapsed) {
     return (
@@ -57,15 +53,15 @@ export const DiarioSidebar: React.FC<DiarioSidebarProps> = ({
         >
           <ChevronRight className="w-5 h-5" />
         </button>
-        <div className="flex flex-col gap-2 mt-4">
+        <div className="flex flex-col gap-[var(--spacing-sm)] mt-[var(--spacing-md)]">
           {folders.map(folder => (
             <button
               key={folder.id}
               onClick={() => selectFolder(folder.id)}
-              className={`p-2 rounded-lg transition-colors ${
+              className={`p-[var(--spacing-sm)] rounded-[var(--radius-md)] transition-colors ${
                 selectedFolderId === folder.id
-                  ? 'text-gold'
-                  : 'text-gray-400 hover:text-gray-600'
+                  ? 'text-[var(--color-accent)]'
+                  : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]'
               }`}
               title={folder.name}
             >
@@ -98,7 +94,7 @@ export const DiarioSidebar: React.FC<DiarioSidebarProps> = ({
             placeholder="buscar..."
             value={searchQuery}
             onChange={onSearchChange}
-            className="w-full pl-7 pr-2 py-1.5 text-xs bg-gray-50 border-none rounded-lg placeholder-gray-300 focus:outline-none focus:ring-1 focus:ring-gold/30"
+            className="w-full pl-[var(--spacing-sm)] pr-[var(--spacing-sm)] py-[var(--spacing-xs)] text-[var(--font-size-xs)] bg-gray-50 border-none rounded-[var(--radius-sm)] placeholder-gray-300 focus:outline-none focus:ring-2 focus-ring-[var(--color-accent)]"
           />
         </div>
       </div>
@@ -109,28 +105,19 @@ export const DiarioSidebar: React.FC<DiarioSidebarProps> = ({
             📁 PASTAS
           </h3>
           <div className="space-y-0.5">
-            {folders.map(folder => (
+            {filteredEntries.map(entry => (
               <button
-                key={folder.id}
-                onClick={() => selectFolder(folder.id)}
-                className={`w-full flex items-center gap-2 px-2 py-1.5 text-sm rounded-lg transition-colors ${
-                  selectedFolderId === folder.id
-                    ? 'bg-gold/10 text-gold font-semibold'
-                    : 'hover:bg-gray-50 text-gray-700'
-                }`}
+                key={entry.id}
+                onClick={() => openTab(entry.id)}
+                className="w-full flex items-center gap-[var(--spacing-sm)] px-[var(--spacing-sm)] py-[var(--spacing-sm)] text-[var(--font-size-xs)] rounded-[var(--radius-sm)] hover:bg-gray-50 text-gray-700 transition-colors text-left"
               >
-                {selectedFolderId === folder.id ? (
-                  <FolderOpen className="w-4 h-4" />
-                ) : (
-                  <Folder className="w-4 h-4" />
-                )}
-                <span className="flex-1 text-left truncate">{folder.icon} {folder.name}</span>
-                <span className="text-xs text-gray-400">({folderEntryCounts[folder.id] || 0})</span>
+                <FileText className="w-4 h-4 text-gray-300" />
+                <span className="flex-1 truncate">{entry.title}</span>
               </button>
             ))}
 
             {isAddingFolder ? (
-              <div className="flex items-center gap-2 px-2 py-1.5">
+              <div className="flex items-center gap-[var(--spacing-sm)] px-[var(--spacing-sm)] py-[var(--spacing-sm)]">
                 <Folder className="w-4 h-4 text-gray-400" />
                 <input
                   type="text"
@@ -145,13 +132,13 @@ export const DiarioSidebar: React.FC<DiarioSidebarProps> = ({
                   }}
                   placeholder="Nome da pasta"
                   autoFocus
-                  className="flex-1 text-sm bg-transparent border-b border-gold focus:outline-none"
+                  className="flex-1 text-sm bg-transparent border-b border-[var(--color-accent)] focus:outline-none"
                 />
               </div>
             ) : (
               <button
                 onClick={() => setIsAddingFolder(true)}
-                className="w-full flex items-center gap-2 px-2 py-1.5 text-sm text-gray-400 hover:text-gold transition-colors"
+                className="w-full flex items-center gap-[var(--spacing-sm)] px-[var(--spacing-sm)] py-[var(--spacing-sm)] text-[var(--font-size-xs)] text-gray-400 hover:text-gold transition-colors"
               >
                 <Plus className="w-4 h-4" />
                 <span>Nova Pasta</span>
