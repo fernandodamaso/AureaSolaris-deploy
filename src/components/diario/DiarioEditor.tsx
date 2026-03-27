@@ -8,6 +8,9 @@ import TextAlign from '@tiptap/extension-text-align';
 import CharacterCount from '@tiptap/extension-character-count';
 import HorizontalRule from '@tiptap/extension-horizontal-rule';
 import CodeBlock from '@tiptap/extension-code-block';
+import { Table } from '@tiptap/extension-table';
+import { Image } from '@tiptap/extension-image';
+import { Link } from '@tiptap/extension-link';
 
 interface DiarioEditorProps {
   entry: any; // Using any for now to avoid type issues, should be DiaryEntry | null
@@ -41,6 +44,9 @@ const DiarioEditor: React.FC<DiarioEditorProps> = ({
         CharacterCount,
         HorizontalRule,
         CodeBlock,
+        Table,
+        Image,
+        Link,
       ],
       editorProps: {
         attributes: {
@@ -266,6 +272,36 @@ const DiarioEditor: React.FC<DiarioEditorProps> = ({
         >
           <svg className="h-4 w-4 stroke-current" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
+          </svg>
+        </button>
+        
+        {/* Table */}
+        <button 
+          className="p-1.5 rounded hover:bg-gold/10 transition-colors"
+          title="Tabela"
+        >
+          <svg className="h-4 w-4 stroke-current" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v18M5 9h14M5 15h14" />
+          </svg>
+        </button>
+        
+        {/* Image */}
+        <button 
+          className="p-1.5 rounded hover:bg-gold/10 transition-colors"
+          title="Imagem"
+        >
+          <svg className="h-4 w-4 stroke-current" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 9h16v10a2 2 0 012 2v2H6a2 2 0 01-2-2v-2zM10 11a2 2 0 10-4 0 2 2 0 004 0z" />
+          </svg>
+        </button>
+        
+        {/* Link */}
+        <button 
+          className="p-1.5 rounded hover:bg-gold/10 transition-colors"
+          title="Link"
+        >
+          <svg className="h-4 w-4 stroke-current" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2v-11z" />
           </svg>
         </button>
       </div>
