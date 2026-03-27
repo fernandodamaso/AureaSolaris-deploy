@@ -14,7 +14,6 @@ interface DiarioSidebarProps {
   setIsAddingFolder: React.Dispatch<React.SetStateAction<boolean>>;
   setNewFolderName: React.Dispatch<React.SetStateAction<string>>;
   handleCreateFolder: () => Promise<void>;
-  handleCreateEntry: () => Promise<void>;
   searchQuery: string;
   onSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
@@ -32,7 +31,6 @@ export const DiarioSidebar: React.FC<DiarioSidebarProps> = ({
   setIsAddingFolder,
   setNewFolderName,
   handleCreateFolder,
-  handleCreateEntry,
   searchQuery,
   onSearchChange
 }) => {
@@ -177,13 +175,6 @@ export const DiarioSidebar: React.FC<DiarioSidebarProps> = ({
                 <span className="flex-1 truncate">{entry.title}</span>
               </button>
             ))}
-            <button
-              onClick={handleCreateEntry}
-              className="w-full flex items-center gap-2 px-2 py-1.5 text-sm text-gray-400 hover:text-gold transition-colors"
-            >
-              <Plus className="w-4 h-4" />
-              <span>Nova Nota</span>
-            </button>
           </div>
         </div>
       </div>
