@@ -101,7 +101,7 @@
 
 | Agente | O que faz | Onde atua | Personalidade |
 |--------|-----------|-----------|---------------|
-| **Dr. Strange** | Supervisor macro, conecta astros às ações | Global (`App.tsx`) | Sábio, conciso, conecta padrões |
+| **Dr. Strange** | Supervisor macro, conecta astros às ações | Widget no App.tsx | Sábio, conciso, conecta padrões |
 | **Alfred** | Mordomo de produtividade e organização | Saúde, Agenda, AlfredHub | Direto, impecável, prático |
 | **Uncle Duck** | Consultor financeiro ávido por lucros | Finanças (`FinancasView.tsx`) | Pragmático, objetivo, focado em resultado |
 | **Rafiki** | Tradutor poético do motor astrológico | Astrologia, Diário | Poético mas cirúrgico, espiritual |
@@ -146,7 +146,7 @@ Todos os agentes devem ser **altamente confiáveis, concisos, diretos ao ponto e
 
 | Agente | Local | Função | Personalidade |
 |--------|-------|--------|---------------|
-| **Dr. Strange** | `App.tsx` (global) | Visão macro, conecta horas celestes às ações na UI | Sábio, conciso, conecta padrões |
+| **Dr. Strange** | Widget no App.tsx | Visão macro, conecta horas celestes às ações na UI | Sábio, conciso, conecta padrões |
 | **Alfred** | `SaudeView.tsx`, `agenda/AgendaView.tsx`, `AlfredHubView.tsx` | Mordomo de produtividade e organização | Direto, impecável, formal mas prestativo |
 | **Uncle Duck** | `FinancasView.tsx` | Consultoria financeira focada em lucros | Pragmático, ávido por lucros, objetivo |
 | **Rafiki** | `AstrologiaBoard.tsx`, `MandalaPage.tsx`, `DiarioView.tsx` | Traduz dados astrológicos em conselhos práticos | Preciso, técnico, dados concretos |
