@@ -76,6 +76,11 @@ Located in `ControlePanel.tsx`, monitored by agent **Stark**:
 
 **Data provided:** Planetary positions (degrees, minutes), exact signs, geometric aspects (trine 120°, square 90°, etc.), natal chart, astrological houses, transits with orbs.
 
+**Mandala Chart Improvements:** 
+- Correção crítica nos Decanatos: Array DECANATE_RULERS expandido de 12 para 36 entradas para suportar todos os 3 decanatos por signo
+- Visibilidade melhorada: Opacidade aumentada para signos (0.08→0.14), decanatos (0.35→0.50) e termos (0.12→0.30)
+- Tamanhos de fonte aumentados para melhor legibilidade em telas de alta densidade
+
 ---
 
 ### Stark — Technical Monitor
