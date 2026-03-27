@@ -5,6 +5,7 @@ import {
   User, Star, Edit3, Eye, Clock,
   Sparkles, X, Activity,
   PanelLeftClose, PanelLeftOpen,
+  PanelRightClose, PanelRightOpen,
   Package
 } from 'lucide-react';
 import { safeInvoke } from './utils/tauri';
@@ -96,6 +97,7 @@ export default function App() {
   const [currentPage, setCurrentPage] = useState('astrologia');
   const [isStrangeOpen, setIsStrangeOpen] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isChatCollapsed, setIsChatCollapsed] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [activeProfileId, setActiveProfileId] = useState<string | null>(localStorage.getItem('aurea_active_id'));
   const [strangeMsgs, setStrangeMsgs] = useState<any[]>([]);
@@ -256,7 +258,7 @@ Sistema: Estável | Agentes: 5 ativos | Memória: Persistente
 
   return (
     <AgendaProvider>
-    <div className="layout-grid font-sans overflow-hidden" style={{ gridTemplateColumns: `${isSidebarCollapsed ? '80px' : '260px'} 1fr ${hasChat ? '360px' : '0px'}` }}>
+    <div className="layout-grid font-sans overflow-hidden" style={{ gridTemplateColumns: `${isSidebarCollapsed ? '80px' : '260px'} 1fr ${hasChat ? (isChatCollapsed ? '0px' : '360px') : '0px'}` }}>
       <style>{globalStyles}</style>
       
       {/* ... rest of the code ... */}
@@ -342,6 +344,17 @@ Sistema: Estável | Agentes: 5 ativos | Memória: Persistente
                 <span className="w-0.5 h-0.5 bg-gold/40 rounded-full" />
                 <span className="text-[9px] font-bold text-white">{currentTime.time}</span>
               </div>
+
+              {/* Chat Toggle Button */}
+              {hasChat && (
+                <button 
+                  onClick={() => setIsChatCollapsed(!isChatCollapsed)}
+                  className="bg-white border border-gray-100 p-1.5 rounded-sm hover:bg-gray-50 text-[#c5a059] transition-colors shadow-sm ml-2"
+                  title="Recolher / Expandir Agente IA"
+                >
+                  {isChatCollapsed ? <PanelRightOpen size={14} /> : <PanelRightClose size={14} />}
+                </button>
+              )}
             </div>
           </header>
           </>
@@ -352,7 +365,7 @@ Sistema: Estável | Agentes: 5 ativos | Memória: Persistente
       </main>
 
       {/* CHAT DIREITO */}
-      <aside className={`h-full shrink-0 z-10 transition-all duration-500 overflow-hidden ${hasChat ? 'w-[360px] opacity-100' : 'w-0 opacity-0'}`}>
+      <aside className={`h-full shrink-0 z-10 transition-all duration-500 overflow-hidden ${hasChat && !isChatCollapsed ? 'w-[360px] opacity-100' : 'w-0 opacity-0'}`}>
           {currentPage === 'astrologia' && <AgentChat agent="Rafiki" />}
           {currentPage === 'saude' && <AgentChat agent="Alfred" />}
           {currentPage === 'agenda' && <AgentChat agent="Alfred" />}

@@ -56,7 +56,6 @@ interface MandalaChartProps {
 
 const SIGN_SYMBOLS = ['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'];
 const SIGN_NAMES = ['Áries','Touro','Gêmeos','Câncer','Leão','Virgem','Libra','Escorpião','Sagitário','Capricórnio','Aquário','Peixes'];
-const SIGN_SHORT = ['Ar','To','Gê','Cn','Le','Vi','Li','Es','Sg','Cp','Aq','Pe'];
 const SIGN_ELEMENTS: ('fire'|'earth'|'air'|'water')[] = ['fire','earth','air','water','fire','earth','air','water','fire','earth','air','water'];
 
 const ELEMENT_COLORS: Record<string, string> = {
