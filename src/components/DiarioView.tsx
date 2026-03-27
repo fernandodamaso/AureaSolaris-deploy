@@ -50,35 +50,38 @@ export const DiarioView = () => {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col bg-[#FCF9F1] min-h-screen">
-        <div className="flex items-center justify-center py-12">
-          <div className="animate-spin rounded-full border-4 border-b-gold h-8 w-8"></div>
-          <span className="ml-3 text-gray-600 font-medium">Carregando suas memórias...</span>
+      <div className="flex flex-col min-h-screen" style={{ backgroundColor: 'var(--color-bg-primary)' }} transition-all duration-300 ease-in-out>
+        <div className="flex flex-col items-center justify-center py-12 space-y-[var(--spacing-sm)] transition-all duration-300 ease-in-out">
+          <div className="relative h-12 w-12 transition-all duration-300 ease-in-out">
+            <div className="absolute inset-0 rounded-full border-4 border-[var(--color-accent)]/20 animate-spin transition-all duration-300 ease-in-out"></div>
+            <div className="absolute inset-0 rounded-full border-[var(--color-accent)] border-t-[var(--color-accent)] border-r-[var(--color-accent)] border-b-[var(--color-accent)/3] border-l-[var(--color-accent)/3] animate-[spin_3s_linear_infinite] transition-all duration-300 ease-in-out"></div>
+          </div>
+          <span className="ml-3 text-[var(--color-text-secondary)] font-medium transition-all duration-300 ease-in-out">Carregando suas memórias...</span>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col bg-[#FCF9F1] min-h-screen">
+    <div className="flex flex-col min-h-screen" style={{ backgroundColor: 'var(--color-bg-primary)' }}>
       {/* Header */}
-      <header className="flex items-center justify-between px-6 py-4 bg-white border-b border-gray-100">
-        <div className="flex items-center gap-3">
+      <header className="flex items-center justify-between px-[var(--spacing-lg)] py-[var(--spacing-md)] bg-[var(--color-bg-secondary)] border-b border-[var(--color-border)]">
+        <div className="flex items-center gap-[var(--spacing-md)]">
           <button 
             onClick={toggleSidebar}
-            className="p-2 hover:bg-gray-50 rounded-lg text-gray-400 hover:text-gold transition-colors"
+            className="p-[var(--spacing-sm)] rounded-[var(--radius-md)] hover:bg-[var(--color-bg-secondary)]/50 text-[var(--color-text-secondary)] hover:text-[var(--color-accent)] transition-colors"
             title="Menu"
           >
             <ChevronLeft size={20} />
           </button>
-          <h1 className="text-[18px] font-black uppercase tracking-[0.2em] text-gray-800">
+          <h1 className="text-[var(--font-size-lg)] font-black uppercase tracking-[0.2em] text-[var(--color-text-primary)]">
             Diário
           </h1>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-[var(--spacing-sm)]">
           <button 
             onClick={handleCreateEntry}
-            className="p-2 hover:bg-gray-50 rounded-lg text-gray-400 hover:text-gold transition-colors"
+            className="p-[var(--spacing-sm)] rounded-[var(--radius-md)] hover:bg-[var(--color-bg-secondary)]/50 text-[var(--color-text-secondary)] hover:text-[var(--color-accent)] transition-colors"
             title="Nova nota"
           >
             <Plus size={18} />
@@ -130,14 +133,21 @@ export const DiarioView = () => {
                 }}
               />
             ) : (
-              <div className="flex flex-col items-center justify-center py-12 text-center">
-                <p className="text-gray-400 mb-4">Selecione uma nota para começar a escrever</p>
-                <button 
-                  onClick={handleCreateEntry}
-                  className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded text-sm"
-                >
-                  Criar primeira nota
-                </button>
+              <div className="flex flex-col items-center justify-center py-[var(--spacing-lg)] text-center">
+                <div className="flex flex-col items-center space-y-[var(--spacing-sm)]">
+                  <div className="flex items-center justify-center">
+                    <svg className="h-12 w-12 text-[var(--color-text-secondary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2 12s1-7 5-7 5 7 5 7M2 12s1 7 5 7 5-7 5-7" />
+                    </svg>
+                  </div>
+                  <p className="text-[var(--color-text-secondary)] mb-[var(--spacing-xs)]">Selecione uma nota para começar a escrever</p>
+                  <button 
+                    onClick={handleCreateEntry}
+                    className="px-[var(--spacing-md)] py-[var(--spacing-xs)] bg-[var(--color-bg-secondary)]/50 hover:bg-[var(--color-bg-secondary)]/30 rounded-[var(--radius-sm)] text-[var(--font-size-xs)] transition-colors"
+                  >
+                    Criar primeira nota
+                  </button>
+                </div>
               </div>
             )}
           </div>
