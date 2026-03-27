@@ -45,20 +45,20 @@ const DiarioTabs: React.FC<DiarioTabsProps> = ({
   };
 
   return (
-    <div className="flex h-[40px] items-center px-3 border-b border-gold/10 bg-white">
-      <div className="flex-1 overflow-x-auto pb-[2px]">
-        <div className="flex space-x-1">
+    <div className="flex h-[var(--spacing-lg)] items-center px-[var(--spacing-sm)] border-b border-[var(--color-accent)]/10 bg-[var(--color-bg-secondary)]">
+      <div className="flex-1 overflow-x-auto pb-[var(--spacing-xs)]">
+        <div className="flex space-x-[var(--spacing-xs)]">
           {openTabs.map((tabId) => (
             <div
               key={tabId}
-              className={`flex h-[36px] items-center px-3 rounded-t-md ${
+              className={`flex h-[var(--spacing-lg)] items-center px-[var(--spacing-sm)] rounded-t-[var(--radius-md)] ${
                 tabId === activeTabId
-                  ? 'border-b-2 border-gold bg-white'
-                  : 'border-b border-transparent hover:bg-gray-50'
+                  ? 'border-b-[var(--spacing-sm)] border-[var(--color-accent)] bg-[var(--color-bg-secondary)]'
+                  : 'border-b-[var(--spacing-xs)] border-transparent hover:bg-[var(--color-bg-secondary)]/50'
               }`}
               onClick={() => handleTabClick(tabId)}
             >
-              <span className="truncate max-w-[120px]">
+              <span className="truncate max-w-[120px] text-[var(--font-size-xs)]">
                 {getEntryTitle(tabId)}
               </span>
               <button
@@ -66,10 +66,10 @@ const DiarioTabs: React.FC<DiarioTabsProps> = ({
                   e.stopPropagation();
                   handleTabClose(tabId);
                 }}
-                className="ml-2 flex h-[18px] w-[18px] items-center justify-center rounded hover:bg-gray-200"
+                className="ml-[var(--spacing-xs)] flex h-[var(--spacing-sm)] w-[var(--spacing-sm)] items-center justify-center rounded-[var(--radius-sm)] hover:bg-[var(--color-bg-secondary)]/50"
                 aria-label="Fechar aba"
               >
-                <svg className="h-[10px] w-[10px] stroke-current" viewBox="0 0 20 20" fill="none" stroke="currentColor">
+                <svg className="h-[var(--spacing-xs)] w-[var(--spacing-xs)] stroke-current" viewBox="0 0 20 20" fill="none" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
@@ -77,9 +77,9 @@ const DiarioTabs: React.FC<DiarioTabsProps> = ({
           ))}
           <button
             onClick={handleNewTab}
-            className="flex h-[36px] w-[36px] items-center justify-center rounded hover:bg-gray-50"
+            className="flex h-[var(--spacing-lg)] w-[var(--spacing-lg)] items-center justify-center rounded-[var(--radius-md)] hover:bg-[var(--color-bg-secondary)]/50"
           >
-            <svg className="h-[18px] w-[18px] stroke-current" viewBox="0 0 20 20" fill="none" stroke="currentColor">
+            <svg className="h-[var(--spacing-sm)] w-[var(--spacing-sm)] stroke-current" viewBox="0 0 20 20" fill="none" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 9v6M6 10h8" />
             </svg>
           </button>
