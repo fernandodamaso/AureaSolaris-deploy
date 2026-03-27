@@ -14,6 +14,7 @@
 | Modificar a área de finanças (Uncle Duck) | `src/components/FinancasView.tsx` |
 | Alterar o mapa astral | `src/components/AstrologiaBoard.tsx` |
 | Modificar a agenda/predictive scheduler | `src/components/agenda/` e `src/hooks/useAgendaTasks.ts` |
+| Modificar o diario (VS Code style editor) | `src/components/diario/` - contém DiarioView, DiarioSidebar, DiarioTabs, DiarioEditor |
 | Ver roteamento principal da aplicação | `src/App.tsx` |
 
 ### 🦀 APIs do Backend Tauri (Rust)
@@ -124,7 +125,12 @@ O Frontend é dividido em Views Modulares:
 5. **Gestão de Ouro (Finanças):** Administração financeira e controle de gastos/receitas (`FinancasView.tsx`).
 6. **Painel de Controle:** Configurações globais e estado geral do sistema (`ControlePanel.tsx`).
 7. **Alfred Central Hub:** Agrupamento rápido de tarefas, links e necessidades corriqueiras (`AlfredHubView.tsx`).
-8. **Diário (Memórias):** Registro diário com percepções integradas (`DiarioView.tsx`, `MemoriasView.tsx`).
+8. **Diário (Memórias):** Registro diário com percepções integradas - agora com editor estilo VS Code, sidebar de pastas e abas para múltiplas notas (`src/components/diario/`):
+   - `DiarioView.tsx` - Container principal
+   - `DiarioSidebar.tsx` - Navegação de pastas e notas
+   - `DiarioTabs.tsx` - Barra de abas para notas abertas
+   - `DiarioEditor.tsx` - Editor rich text com TipTap
+   - `MemoriasView.tsx` - View tradicional de memórias (mantida para compatibilidade)
 9. **Escola do Rafiki:** Módulo educacional interativo (`RafikiEscola.tsx`).
 
 ---

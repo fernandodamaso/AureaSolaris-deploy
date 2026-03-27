@@ -164,10 +164,10 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
   /* radii dos anéis */
   const degreeR   = R;
   const signR     = R * 0.90;
-  const decR      = R * 0.83;
-  const termR     = R * 0.76;
-  const houseR    = R * 0.68;
-  const planetR   = R * 0.52;
+  const decR      = R * 0.84;
+  const termR     = R * 0.78;
+  const houseR    = R * 0.74;
+  const planetR   = R * 0.65;
   const aspectR   = R * 0.18;
   const transitR  = R * 0.95; // Outer ring for transits
 
@@ -241,10 +241,10 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
       if (i % 30 === 0) continue; /* pular limites de signo */
       const sd = i % 30;
       g.append('text')
-        .attr('x', svgX(degreeR - 12, i)).attr('y', svgY(degreeR - 12, i))
+        .attr('x', svgX(degreeR + 6, i)).attr('y', svgY(degreeR + 6, i))
         .attr('text-anchor', 'middle').attr('dominant-baseline', 'central')
-        .attr('font-size', 6).attr('fill', '#b09860').attr('opacity', 0.5)
-        .attr('transform', `rotate(${180 - i}, ${svgX(degreeR - 12, i)}, ${svgY(degreeR - 12, i)})`)
+        .attr('font-size', 6).attr('fill', '#b09860').attr('opacity', 0.7)
+        .attr('transform', `rotate(${180 - i}, ${svgX(degreeR + 6, i)}, ${svgY(degreeR + 6, i)})`)
         .text(`${sd}`);
     }
 
@@ -276,16 +276,9 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
         .attr('x', polarX((signR + degreeR) / 2, midD))
         .attr('y', polarY((signR + degreeR) / 2, midD))
         .attr('text-anchor', 'middle').attr('dominant-baseline', 'central')
-        .attr('font-size', 14).attr('fill', eColor).attr('opacity', 0.85).attr('font-weight', 'bold')
-        .text(SIGN_SYMBOLS[i]);
-
-      /* nome curto */
-      g.append('text')
-        .attr('x', polarX((signR + houseR) / 2, midD))
-        .attr('y', polarY((signR + houseR) / 2, midD))
-        .attr('text-anchor', 'middle').attr('dominant-baseline', 'central')
-        .attr('font-size', 7).attr('fill', eColor).attr('opacity', 0.5).attr('font-weight', '600')
-        .text(SIGN_SHORT[i]);
+        .attr('font-family', '"Segoe UI Symbol", Arial, sans-serif')
+        .attr('font-size', 28).attr('fill', eColor).attr('opacity', 0.85).attr('font-weight', 'normal')
+        .text(SIGN_SYMBOLS[i] + '\uFE0E');
     }
 
     /* ─── 4. Decanate ring (toggle) ─────────────────────────── */
@@ -363,10 +356,10 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
     houses.forEach((h) => {
       const d = h.degree;
       const isMain = [1, 4, 7, 10].includes(h.house);
-      const sw = isMain ? 2.2 : 0.9;
-      const op = isMain ? 0.75 : 0.3;
-      const dash = isMain ? 'none' : '4 3';
-      const color = isMain ? '#1a1a2e' : '#c5a059';
+      const sw = isMain ? 2.2 : 1.2;
+      const op = isMain ? 1.0 : 0.65;
+      const dash = isMain ? 'none' : '4 2';
+      const color = isMain ? '#1a1a2e' : '#B8860B';
 
       g.append('line')
         .attr('x1', polarX(degreeR - 2, d)).attr('y1', polarY(degreeR - 2, d))
@@ -492,8 +485,9 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
 
       /* hit area (invisible larger circle for easier hover) */
       pg.append('circle')
-        .attr('cx', px).attr('cy', py).attr('r', 14)
-        .attr('fill', 'transparent');
+        .attr('cx', px).attr('cy', py).attr('r', 18)
+        .attr('fill', 'none')
+        .attr('pointer-events', 'all');
 
       /* shape: diamond for angles, circle for planets */
       if (isAngle) {
@@ -517,7 +511,7 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
 
       /* degree */
       pg.append('text')
-        .attr('x', px).attr('y', py - 15)
+        .attr('x', px).attr('y', py + 11)
         .attr('text-anchor', 'middle')
         .attr('font-size', 6).attr('fill', '#666').attr('font-weight', '600')
         .text(formatDeg(normDeg(d)));
@@ -531,7 +525,7 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
       }
 
       /* hover events */
-      pg.on('mouseenter', (event: MouseEvent) => {
+      pg.on('mouseenter mousemove', (event: MouseEvent) => {
         const signIdx = getSignIdx(d);
         const motion = p.stationary
           ? 'Estacionário'
