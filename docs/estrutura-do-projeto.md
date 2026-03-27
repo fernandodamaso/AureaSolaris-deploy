@@ -1,3 +1,14 @@
+> ⚠️ **ARCHIVED — See Portuguese Version**
+> 
+> This document is preserved intact. For fast navigation see:
+> - **Navigation Hub:** [index.md](index.md)
+> - **Setup Guide:** [setup-guide.md](setup-guide.md)
+> - **Quick Reference:** [quick-reference.md](quick-reference.md)
+> 
+> Last valid: 2026-03-26
+
+---
+
 # Guia Didático: Estrutura de Pastas do Aurea Solaris
 
 > **Para que serve este documento?**  
@@ -86,6 +97,7 @@ AureaSolaris/
 ├── 📁 docs/                         # 📚 Documentação do projeto
 │   ├── estrutura-do-projeto.md      # 📖 Este guia que você está lendo
 │   ├── arquitetura.md               # 🏗️ Referência técnica da arquitetura
+│   ├── tauri-ipc-api.md             # 🌉 Documentação da API de IPC Tauri
 │   ├── ui-tips-agm.md               # 🎨 Dicas de UI para o AntiGravity Module
 │   ├── design-system.md             # 🎨 Sistema de Design e Tokens
 │   ├── components.md                # 🧩 Documentação de Componentes Reutilizáveis
@@ -159,7 +171,10 @@ Cada view modular do aplicativo tem seu próprio arquivo:
 - `AstrologiaBoard.tsx` — Mapa natal e visualização de trânsitos
 - `AstrologyMap.tsx` — Mapa astrológico interativo
 - `ControlePanel.tsx` — Configurações do sistema e Chave Mestra de IA (Stark supervisiona)
-- `DiarioView.tsx` — Diário com insights astrológicos
+- `DiarioView.tsx` — Container principal do diário (orquestra sidebar + tabs + editor)
+- `DiarioSidebar.tsx` — Sidebar colapsável com pastas e notas
+- `DiarioTabs.tsx` — Barra de abas para notas abertas (estilo VS Code)
+- `DiarioEditor.tsx` - Editor rich text com TipTap
 - `FinancasView.tsx` — Controle financeiro (Uncle Duck)
 - `ImportFinancialView.tsx` — Importação de dados financeiros
 - `LoginView.tsx` — Tela de autenticação
