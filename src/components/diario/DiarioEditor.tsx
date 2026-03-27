@@ -4,6 +4,10 @@ import StarterKit from '@tiptap/starter-kit';
 import TaskList from '@tiptap/extension-task-list';
 import TaskItem from '@tiptap/extension-task-item';
 import Placeholder from '@tiptap/extension-placeholder';
+import TextAlign from '@tiptap/extension-text-align';
+import CharacterCount from '@tiptap/extension-character-count';
+import HorizontalRule from '@tiptap/extension-horizontal-rule';
+import CodeBlock from '@tiptap/extension-code-block';
 
 interface DiarioEditorProps {
   entry: any; // Using any for now to avoid type issues, should be DiaryEntry | null
@@ -17,6 +21,7 @@ const DiarioEditor: React.FC<DiarioEditorProps> = ({
   onSave
 }) => {
   const [wordCount, setWordCount] = useState(0);
+  const [characterCount, setCharacterCount] = useState(0);
   const [lastEdited, setLastEdited] = useState<string>('');
 
   // Initialize editor with extensions
@@ -30,6 +35,12 @@ const DiarioEditor: React.FC<DiarioEditorProps> = ({
           placeholder: 'Deixe sua alma fluir nas palavras...',
           emptyEditorClass: 'is-empty',
         }),
+        TextAlign.configure({
+          types: ['heading', 'paragraph'],
+        }),
+        CharacterCount,
+        HorizontalRule,
+        CodeBlock,
       ],
       editorProps: {
         attributes: {
@@ -40,6 +51,9 @@ const DiarioEditor: React.FC<DiarioEditorProps> = ({
         // Update word count
         const textContent = editor.getText();
         setWordCount(textContent.trim().length > 0 ? textContent.trim().split(/\s+/).length : 0);
+        
+        // Update character count
+        setCharacterCount(textContent.length);
         
         // Update last edited timestamp
         setLastEdited(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
@@ -179,6 +193,22 @@ const DiarioEditor: React.FC<DiarioEditorProps> = ({
           </svg>
         </button>
         
+        {/* Text Alignment */}
+        <div className="relative">
+          <button 
+            className="p-1.5 rounded hover:bg-gold/10 transition-colors"
+            title="Alinhamento do texto"
+            onClick={() => {
+              // Toggle alignment menu
+            }}
+          >
+            <svg className="h-4 w-4 stroke-current" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4h16a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 00-2-2V6z" />
+            </svg>
+          </button>
+          {/* Alignment dropdown would go here in a full implementation */}
+        </div>
+        
         {/* Bullet List */}
         <button 
           className="p-1.5 rounded hover:bg-gold/10 transition-colors"
@@ -209,6 +239,26 @@ const DiarioEditor: React.FC<DiarioEditorProps> = ({
           </svg>
         </button>
         
+        {/* Horizontal Rule */}
+        <button 
+          className="p-1.5 rounded hover:bg-gold/10 transition-colors"
+          title="Linha horizontal"
+        >
+          <svg className="h-4 w-4 stroke-current" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7h18" />
+          </svg>
+        </button>
+        
+        {/* Code Block */}
+        <button 
+          className="p-1.5 rounded hover:bg-gold/10 transition-colors"
+          title="Bloco de código"
+        >
+          <svg className="h-4 w-4 stroke-current" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 12H6a2 2 0 00-2-2v6a2 2 0 002 2v6h12a2 2 0 002 2v-6a2 2 0 002-2v-6z" />
+          </svg>
+        </button>
+        
         {/* Blockquote */}
         <button 
           className="p-1.5 rounded hover:bg-gold/10 transition-colors"
@@ -231,6 +281,7 @@ const DiarioEditor: React.FC<DiarioEditorProps> = ({
       {/* Status Bar */}
       <div className="flex items-center justify-between px-4 py-2 text-[10px] text-gray-400 uppercase tracking-widest border-t border-gold/10 bg-white">
         <span>{wordCount} palavras</span>
+        <span>{characterCount} caracteres</span>
         <span>{lastEdited ? `editado as ${lastEdited}` : ''}</span>
       </div>
     </div>
