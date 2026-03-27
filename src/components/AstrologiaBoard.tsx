@@ -1,13 +1,14 @@
 import { useState } from 'react';
-import { Plus, Info } from 'lucide-react';
+import { Info } from 'lucide-react';
 import { useAstrologyData } from '../hooks/useAstrologyData';
 import { useAgendaTasks } from '../hooks/useAgendaTasks';
-import { Card, SectionTitle, Advice, StarRow, FamilyItem } from './common/UIComponents';
-import { BirthForm } from './common/BirthForm';
+import { Card, Advice, StarRow } from './common/UIComponents';
+import { PLANET_NAMES_PT } from '../utils/astro-dignity';
 
 const PLANET_ICONS: Record<string, string> = {
   Sun: '☉', Moon: '☽', Mercury: '☿', Venus: '♀', Mars: '♂',
-  Jupiter: '♃', Saturn: '♄', Uranus: '♅', Neptune: '♆', Pluto: '♇'
+  Jupiter: '♃', Saturn: '♄', Uranus: '♅', Neptune: '♆', Pluto: '♇',
+  Chiron: '⚷', NorthNode: '☊', PartOfFortune: '⊗'
 };
 
 import { MandalaPage } from './MandalaPage';
@@ -15,12 +16,8 @@ import { RafikiEscola } from './RafikiEscola';
 
 export const AstrologiaPage = () => {
   const { liveData } = useAstrologyData();
-  const { profiles, activeProfileId, addConnection } = useAgendaTasks();
-  const [showForm, setShowForm] = useState(false);
+  useAgendaTasks();
   const [activeTab, setActiveTab] = useState<'list' | 'mandala' | 'escola'>('list');
-
-  const activeProfile = profiles.find(p => p.id === activeProfileId) || profiles[0];
-  const connections = activeProfile?.connections || [];
 
   const planets = liveData?.planets || {};
   const aspects = liveData?.aspects || [];
@@ -69,17 +66,21 @@ export const AstrologiaPage = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card title="As Estrelas Cantam (Efemérides)">
-           <div className="grid grid-cols-2 gap-x-8 mt-4">
-              {Object.entries(PLANET_ICONS).map(([name, icon]) => (
-                 <StarRow 
-                   key={name} 
-                   icon={icon} 
-                   name={name} 
-                   sign={planets[name]?.sign || '---'} 
-                   deg={`${Math.floor(planets[name]?.pos_in_sign || 0)}°`} 
-                 />
-              ))}
-           </div>
+            <div className="grid grid-cols-2 gap-x-8 mt-4">
+              {Object.entries(PLANET_ICONS).map(([name, icon]) => {
+                const pData = planets[name] || liveData?.secondary?.[name];
+                if (!pData) return null;
+                return (
+                  <StarRow 
+                    key={name} 
+                    icon={icon} 
+                    name={PLANET_NAMES_PT[name] || name} 
+                    sign={pData.sign || '---'} 
+                    deg={`${Math.floor(pData.pos_in_sign || 0)}°`} 
+                  />
+                );
+              })}
+            </div>
         </Card>
 
         <Card title="Dança das Esferas (Aspectos)">
@@ -129,33 +130,8 @@ export const AstrologiaPage = () => {
          </Card>
       </div>
 
-      <div className="space-y-6">
-          <SectionTitle rightAction={<button onClick={() => setShowForm(true)} className="p-2 bg-white rounded-lg border border-gold/20 hover:bg-gold/5 transition-all outline-none"><Plus size={14} className="text-gold"/></button>}>Círculo Familiar</SectionTitle>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-             {connections.map((p: any) => (
-               <FamilyItem 
-                 key={p.id} 
-                 name={p.name} 
-                 data={p.birthData ? `${p.birthData.date} • ${p.birthData.time}` : (p.natal ? `☉ ${Math.floor(p.natal.Sun)}° • ☾ ${Math.floor(p.natal.Moon)}°` : "Sintonizando...")} 
-               />
-             ))}
-             {connections.length === 0 && <p className="col-span-full text-center py-10 text-gray-300 text-[11px] font-bold uppercase tracking-widest italic">Nenhum ente registrado ainda...</p>}
-          </div>
-        </div>
       </>
     )}
-
-      {showForm && (
-        <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/40 backdrop-blur-md p-4 animate-in fade-in zoom-in-95">
-           <BirthForm 
-             onSave={(data) => { 
-                addConnection(data.name, data);
-                setShowForm(false); 
-             }} 
-             onClose={() => setShowForm(false)} 
-           />
-        </div>
-      )}
     </div>
   );
 };

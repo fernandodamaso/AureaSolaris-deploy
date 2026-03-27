@@ -21,21 +21,23 @@ Command `run_astro_engine` in `src-tauri/src/lib.rs`:
 async fn run_astro_engine(payload: Option<String>) -> Result<String, String> {
     use std::path::PathBuf;
     use std::process::Command;
-    let project_root = PathBuf::from("C:\\AureaSolaris");
+    let project_root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("..");
     let astro_path = project_root.join("astro_engine.py");
-    let mut cmd = Command::new("python.exe");
+    let mut cmd = Command::new("python");
     cmd.arg(astro_path);
     if let Some(p) = payload {
         cmd.arg(p);
     }
     let output = cmd.output().map_err(|e| format!("Command failed: {}", e))?;
-    // ... process output
+    // Process output: stdout contains JSON result, stderr for logging
+    let result = String::from_utf8_lossy(&output.stdout);
+    Ok(result.to_string())
 }
 ```
 
 **Flow:**
 1. Frontend calls `safeInvoke('run_astro_engine', payload)`
-2. Rust executes `python.exe astro_engine.py` with JSON payload
+2. Rust executes `python astro_engine.py` with JSON payload
 3. Python calculates and prints JSON to stdout
 4. Rust captures stdout and returns to React
 
@@ -63,16 +65,18 @@ Configurable via `house_system` parameter:
 
 ## Celestial Bodies
 
-Beyond the 10 classical planets:
+Calculated via kerykeion library (not simple formulas):
 
-| Body | Description | Formula |
-|------|-------------|---------|
-| North Node (☊) | Lunar North Node | Moon - 180° |
-| South Node (☋) | Lunar South Node | Moon + 180° |
-| Lilith (⚸) | Black Moon Lilith | Moon + 180° |
-| Part of Fortune (⊙) | Fortune Point | ASC + Moon - Sun |
-| Vertex (Vx) | Fictitious Point | ASC + 60° (approx) |
-| Chiron (⚷) | Centaur | Via kerykeion |
+| Body | Description |
+|------|-------------|
+| North Node (☊) | Lunar North Node |
+| South Node (☋) | Lunar South Node |
+| Lilith (⚸) | Black Moon Lilith (lunar apogee) |
+| Part of Fortune (⊙) | ASC + Moon - Sun |
+| Vertex (Vx) | Fictitious Point (ASC + 60° approx) |
+| Chiron (⚷) | Centaur object |
+
+*Note: The Part of Fortune and Vertex use the formulas shown; Nodes and Lilith are computed by kerykeion.*
 
 ## Aspects
 
@@ -113,11 +117,16 @@ When Tauri/Python unavailable, `src/utils/astro-calc.ts` provides approximations
 ```typescript
 import { calculateFallback } from '../utils/astro-calc';
 
+// Example usage with current date/time:
 const result = await calculateFallback(
-  2026, 3, 25, 14, 30,  // year, month, day, hour, minute
-  -15.7833,              // latitude
-  -47.9333,              // longitude
-  'Regiomontanus'        // house system
+  new Date().getFullYear(),
+  new Date().getMonth() + 1, // Months are 0-indexed
+  new Date().getDate(),
+  new Date().getHours(),
+  new Date().getMinutes(),
+  -15.7833,  // latitude (example: Brasília)
+  -47.9333,  // longitude (example: Brasília)
+  'Regiomontanus' // house system
 );
 ```
 

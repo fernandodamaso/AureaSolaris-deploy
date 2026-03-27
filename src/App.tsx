@@ -5,7 +5,6 @@ import {
   User, Star, Edit3, Eye, Clock,
   Sparkles, X, Activity,
   PanelLeftClose, PanelLeftOpen,
-  PanelRightClose, PanelRightOpen,
   Package
 } from 'lucide-react';
 import { safeInvoke } from './utils/tauri';
@@ -16,6 +15,7 @@ import { useAstrologyData } from './hooks/useAstrologyData';
 import { useAgendaTasks } from './hooks/useAgendaTasks';
 import { useFinancas } from './context/FinancasContext';
 import { AgendaProvider } from './context/AgendaContext';
+import { DiarioProvider } from './context/DiarioContext';
 
 // Components
 import { NavItem } from './components/common/UIComponents';
@@ -254,16 +254,15 @@ Sistema: Estável | Agentes: 5 ativos | Memória: Persistente
         }}
       />
     );
-  }
-
-  return (
-    <AgendaProvider>
-    <div className="layout-grid font-sans overflow-hidden" style={{ gridTemplateColumns: `${isSidebarCollapsed ? '80px' : '260px'} 1fr ${hasChat ? (isChatCollapsed ? '0px' : '360px') : '0px'}` }}>
-      <style>{globalStyles}</style>
-      
-      {/* ... rest of the code ... */}
-
-      {/* SIDEBAR - Borda Cósmica */}
+   }
+   
+     return (
+       <AgendaProvider>
+         <DiarioProvider>
+           <div className="layout-grid font-sans overflow-hidden" style={{ gridTemplateColumns: `${isSidebarCollapsed ? '80px' : '260px'} 1fr ${hasChat ? (isChatCollapsed ? '80px' : '360px') : '0px'}` }}>
+             <style>{globalStyles}</style>
+             
+       {/* SIDEBAR - Borda Cósmica */}
       <aside className="bg-white rounded-[1.5rem] border border-[#c5a059]/20 shadow-xl shrink-0 z-30 flex flex-col relative overflow-hidden transition-all duration-300 cosmic-border">
         <div className="flex items-center gap-4 p-8 pb-4 shrink-0">
           <div className="cursor-pointer hover:rotate-12 transition-all shrink-0" onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}>
@@ -345,17 +344,7 @@ Sistema: Estável | Agentes: 5 ativos | Memória: Persistente
                 <span className="text-[9px] font-bold text-white">{currentTime.time}</span>
               </div>
 
-              {/* Chat Toggle Button */}
-              {hasChat && (
-                <button 
-                  onClick={() => setIsChatCollapsed(!isChatCollapsed)}
-                  className="bg-white border border-gray-100 p-1.5 rounded-sm hover:bg-gray-50 text-[#c5a059] transition-colors shadow-sm ml-2"
-                  title="Recolher / Expandir Agente IA"
-                >
-                  {isChatCollapsed ? <PanelRightOpen size={14} /> : <PanelRightClose size={14} />}
-                </button>
-              )}
-            </div>
+              </div>
           </header>
           </>
         )}
@@ -364,14 +353,20 @@ Sistema: Estável | Agentes: 5 ativos | Memória: Persistente
         </div>
       </main>
 
-      {/* CHAT DIREITO */}
-      <aside className={`h-full shrink-0 z-10 transition-all duration-500 overflow-hidden ${hasChat && !isChatCollapsed ? 'w-[360px] opacity-100' : 'w-0 opacity-0'}`}>
-          {currentPage === 'astrologia' && <AgentChat agent="Rafiki" />}
-          {currentPage === 'saude' && <AgentChat agent="Alfred" />}
-          {currentPage === 'agenda' && <AgentChat agent="Alfred" />}
-          {currentPage === 'financas' && <AgentChat agent="Uncle Duck" />}
-          {currentPage === 'hub' && <AgentChat agent="Alfred" />}
-          {currentPage === 'controle' && <AgentChat agent="Stark" />}
+      {/* CHAT DIREITO - Symmetrically Mirrored with Left Sidebar */}
+      <aside className={`h-full shrink-0 z-10 transition-all duration-300 overflow-hidden bg-white rounded-[1.5rem] border border-[#c5a059]/20 shadow-xl flex flex-col relative cosmic-border ${hasChat ? (isChatCollapsed ? 'w-20' : 'w-[360px]') : 'w-0 border-none shadow-none opacity-0'}`}>
+          {hasChat && (
+            <AgentChat 
+              agent={
+                currentPage === 'astrologia' ? "Rafiki" : 
+                ['saude', 'agenda', 'hub'].includes(currentPage) ? "Alfred" :
+                currentPage === 'financas' ? "Uncle Duck" : 
+                currentPage === 'controle' ? "Stark" : "Rafiki"
+              }
+              isCollapsed={isChatCollapsed}
+              onToggle={() => setIsChatCollapsed(!isChatCollapsed)}
+            />
+          )}
       </aside>
 
       {/* STRANGE FAB */}
@@ -425,7 +420,8 @@ Sistema: Estável | Agentes: 5 ativos | Memória: Persistente
           }}
         />
       )}
-    </div>
-    </AgendaProvider>
-  );
+        </div>
+        </DiarioProvider>
+      </AgendaProvider>
+    );
 }

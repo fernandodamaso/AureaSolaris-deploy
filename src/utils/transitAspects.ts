@@ -1,19 +1,12 @@
 import { Planet, Aspect } from '../components/MandalaChart';
-
-const ASPECT_CONFIG = [
-  { type: 'Conjunção', angle: 0, orb: 8.0 },
-  { type: 'Oposição', angle: 180, orb: 8.0 },
-  { type: 'Trígono', angle: 120, orb: 8.0 },
-  { type: 'Quadratura', angle: 90, orb: 6.0 },
-  { type: 'Sextil', angle: 60, orb: 4.0 },
-  { type: 'Quincúncio', angle: 150, orb: 3.0 },
-];
+import { getAspectOrbs } from './astro-settings';
 
 export const calculateTransitAspects = (
   transitPlanets: Planet[],
   natalPlanets: Planet[]
 ): Aspect[] => {
   const aspects: Aspect[] = [];
+  const ASPECT_CONFIG = Object.values(getAspectOrbs());
 
   for (const t of transitPlanets) {
     for (const n of natalPlanets) {
@@ -29,7 +22,7 @@ export const calculateTransitAspects = (
             p1: t.name,
             p2: n.name,
             type: asp.type,
-            symbol: getAspectSymbol(asp.type),
+            symbol: asp.symbol,
             orb: distFromAngle,
           });
           break;
@@ -40,15 +33,3 @@ export const calculateTransitAspects = (
 
   return aspects;
 };
-
-function getAspectSymbol(type: string): string {
-  const symbols: Record<string, string> = {
-    'Conjunção': '☌',
-    'Oposição': '☍',
-    'Trígono': '△',
-    'Quadratura': '□',
-    'Sextil': '＊',
-    'Quincúncio': '⚹',
-  };
-  return symbols[type] || '?';
-}

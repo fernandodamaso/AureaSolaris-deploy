@@ -5,6 +5,9 @@ import {
   calcElements, calcQualities, calcMidpoints,
   calcDominance, calcRegentAsc, calcSenhorGenitura,
   calcAlcocoden, calcAstroSignature, calcHyleg, getDignityState,
+  getTermRuler, getDecanateRuler, getFixedStar, getMansion,
+  getMotionStatus, getVisibilityState, getProximityToSun, isFeral,
+  RETROGRADE_ALLOWED,
   SIGN_SYMBOLS as DIGNITY_SIGNS,
   ELEMENT_COLORS as EL_COLORS, ELEMENT_LABELS, ELEMENT_EMOJIS,
   QUALITY_COLORS, QUALITY_LABELS, PLANET_NAMES_PT, PLANET_SYMBOLS as DIGNITY_PSYMBOLS,
@@ -146,14 +149,15 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
   const svgRef = useRef<SVGSVGElement>(null);
   const [showDecanates, setShowDecanates] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
-  const [showAsteroids, setShowAsteroids] = useState(true);
-  const [showTransits, setShowTransits] = useState(false);
-  const [showTransitAspects, setShowTransitAspects] = useState(false);
+  const [showAsteroids, setShowAsteroids] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [tooltip, setTooltip] = useState<{
     name: string; sign: string; degree: string;
     retrograde: boolean; stationary: boolean;
     motion: string; color: string; x: number; y: number;
+    decanate: string; term: string; mansion: string | null;
+    star: string | null; dignity: string; visibility: string;
+    special: string | null;
   } | null>(null);
 
   const cx = size / 2;
@@ -163,10 +167,10 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
   /* radii dos anéis */
   const degreeR   = R;
   const signR     = R * 0.90;
-  const decR      = R * 0.84;
-  const termR     = R * 0.78;
-  const houseR    = R * 0.74;
-  const planetR   = R * 0.65;
+  const decR      = R * 0.86;
+  const termR     = R * 0.81;
+  const houseR    = R * 0.76;
+  const planetR   = R * 0.70;
   const aspectR   = R * 0.18;
   const transitR  = R * 0.95; // Outer ring for transits
 
@@ -186,7 +190,9 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
   /* planetas filtrados */
   const filteredPlanets = useMemo(() => {
     if (showAsteroids) return planets;
-    return planets.filter(p => !['NorthNode','SouthNode','Lilith','PartOfFortune','Vertex'].includes(p.name));
+    // Oculta corpos secundários (NorthNode, Chiron e PartOfFortune aparecem por padrão como solicitado)
+    const alwaysVisible = ['NorthNode', 'Chiron', 'PartOfFortune'];
+    return planets.filter(p => !['SouthNode', 'Lilith', 'Vertex'].includes(p.name) || alwaysVisible.includes(p.name));
   }, [planets, showAsteroids]);
 
   /* ─── D3 Render ──────────────────────────────────────────────── */
@@ -206,9 +212,6 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
     const eclRad = (deg: number) => toRad(180 - rotDeg(deg));
     const polarX = (r: number, deg: number) => cx + r * Math.cos(eclRad(deg));
     const polarY = (r: number, deg: number) => cy + r * Math.sin(eclRad(deg));
-    // For pure SVG degrees (degree ring tick marks)
-    const svgX = (r: number, svgDeg: number) => cx + r * Math.cos(toRad(180 - svgDeg));
-    const svgY = (r: number, svgDeg: number) => cy + r * Math.sin(toRad(180 - svgDeg));
     // D3 arc angle: SVG→D3 subtract 90°, plus counterclockwise negation
     const arcRad = (deg: number) => toRad(180 - rotDeg(deg) - 90);
 
@@ -230,8 +233,8 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
       const sw = isSignB ? 1.8 : is10 ? 0.8 : 0.4;
       const op = isSignB ? 0.7 : is10 ? 0.4 : 0.2;
       g.append('line')
-        .attr('x1', svgX(degreeR, i)).attr('y1', svgY(degreeR, i))
-        .attr('x2', svgX(degreeR - len, i)).attr('y2', svgY(degreeR - len, i))
+        .attr('x1', polarX(degreeR, i)).attr('y1', polarY(degreeR, i))
+        .attr('x2', polarX(degreeR - len, i)).attr('y2', polarY(degreeR - len, i))
         .attr('stroke', '#c5a059').attr('stroke-width', sw).attr('opacity', op);
     }
 
@@ -239,11 +242,13 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
     for (let i = 0; i < 360; i += 10) {
       if (i % 30 === 0) continue; /* pular limites de signo */
       const sd = i % 30;
+      const px = polarX(degreeR + 6, i);
+      const py = polarY(degreeR + 6, i);
       g.append('text')
-        .attr('x', svgX(degreeR + 6, i)).attr('y', svgY(degreeR + 6, i))
+        .attr('x', px).attr('y', py)
         .attr('text-anchor', 'middle').attr('dominant-baseline', 'central')
         .attr('font-size', 6).attr('fill', '#b09860').attr('opacity', 0.7)
-        .attr('transform', `rotate(${180 - i}, ${svgX(degreeR + 6, i)}, ${svgY(degreeR + 6, i)})`)
+        .attr('transform', `rotate(${180 - rotDeg(i)}, ${px}, ${py})`)
         .text(`${sd}`);
     }
 
@@ -254,9 +259,9 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
       const elem = SIGN_ELEMENTS[i];
       const eColor = ELEMENT_COLORS[elem];
 
-      /* arco do signo */
+      /* arco do signo (anel fino externo) */
       const arcPath = d3.arc()({
-        innerRadius: houseR, outerRadius: signR,
+        innerRadius: signR, outerRadius: degreeR,
         startAngle: arcRad(startD),
         endAngle: arcRad(startD + 30),
       })!;
@@ -264,11 +269,11 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
         .attr('transform', `translate(${cx},${cy})`)
         .attr('fill', eColor).attr('opacity', 0.08);
 
-      /* linha divisória */
+      /* linha divisória do signo */
       g.append('line')
-        .attr('x1', polarX(signR, startD)).attr('y1', polarY(signR, startD))
+        .attr('x1', polarX(degreeR, startD)).attr('y1', polarY(degreeR, startD))
         .attr('x2', polarX(houseR, startD)).attr('y2', polarY(houseR, startD))
-        .attr('stroke', '#c5a059').attr('stroke-width', 0.6).attr('opacity', 0.3);
+        .attr('stroke', '#c5a059').attr('stroke-width', 0.6).attr('opacity', 0.4);
 
       /* símbolo do signo */
       g.append('text')
@@ -276,7 +281,7 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
         .attr('y', polarY((signR + degreeR) / 2, midD))
         .attr('text-anchor', 'middle').attr('dominant-baseline', 'central')
         .attr('font-family', '"Segoe UI Symbol", Arial, sans-serif')
-        .attr('font-size', 28).attr('fill', eColor).attr('opacity', 0.85).attr('font-weight', 'normal')
+        .attr('font-size', 20).attr('fill', eColor).attr('opacity', 0.85).attr('font-weight', 'normal')
         .text(SIGN_SYMBOLS[i] + '\uFE0E');
     }
 
@@ -355,13 +360,13 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
     houses.forEach((h) => {
       const d = h.degree;
       const isMain = [1, 4, 7, 10].includes(h.house);
-      const sw = isMain ? 2.2 : 1.2;
-      const op = isMain ? 1.0 : 0.65;
-      const dash = isMain ? 'none' : '4 2';
-      const color = isMain ? '#1a1a2e' : '#B8860B';
+      const sw = isMain ? 2.8 : 1.4;
+      const op = isMain ? 1.0 : 0.7;
+      const dash = isMain ? 'none' : '4 3';
+      const color = isMain ? '#111111' : '#a08850';
 
       g.append('line')
-        .attr('x1', polarX(degreeR - 2, d)).attr('y1', polarY(degreeR - 2, d))
+        .attr('x1', polarX(degreeR + 8, d)).attr('y1', polarY(degreeR + 8, d))
         .attr('x2', polarX(aspectR + 5, d)).attr('y2', polarY(aspectR + 5, d))
         .attr('stroke', color).attr('stroke-width', sw).attr('opacity', op)
         .attr('stroke-dasharray', dash);
@@ -423,8 +428,8 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
         .attr('stroke', col).attr('stroke-width', 0.8).attr('opacity', op);
     });
 
-    /* ─── 7b. Transit aspect lines (toggle) ──────────────────── */
-    if (showTransitAspects && transitAspects && transitAspects.length > 0) {
+    /* ─── 7b. Transit aspect lines (if provided) ───────────────── */
+    if (transitAspects && transitAspects.length > 0) {
       transitAspects.forEach((asp) => {
         const p1 = filteredPlanets.find(p => p.name === asp.p1) ||
                    (transitPlanets || []).find(p => p.name === asp.p1);
@@ -516,21 +521,35 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
         .text(formatDeg(normDeg(d)));
 
       /* retrograde ℞ */
-      if (p.retrograde) {
+      if (p.retrograde && RETROGRADE_ALLOWED.includes(p.name)) {
         pg.append('text')
           .attr('x', px + 13).attr('y', py - 8)
           .attr('font-size', 7).attr('fill', '#E74C3C').attr('font-weight', 'bold')
           .text('℞');
       }
 
-      /* hover events */
       pg.on('mouseenter mousemove', (event: MouseEvent) => {
         const signIdx = getSignIdx(d);
-        const motion = p.stationary
-          ? 'Estacionário'
-          : p.applying !== undefined
-            ? (p.applying ? 'Aplicativo' : 'Separativo')
-            : (p.speed !== undefined ? (p.speed > 0 ? 'Direto' : 'Retrógrado') : '—');
+        const sun = planets.find(p => p.name === 'Sun');
+        const sunDeg = sun ? sun.degree : 0;
+        
+        const motion = getMotionStatus(p.name, p.speed || 0);
+        const decanRuler = getDecanateRuler(d);
+        const termRuler = getTermRuler(d);
+        const m = getMansion(d);
+        const mansion = `${m.name} ${m.deg}°${String(m.min).padStart(2, '0')}'`;
+        const star = getFixedStar(d);
+        const dignity = getDignityState(p.name, d);
+        const visibility = getVisibilityState(p.name, d, sunDeg);
+        
+        // Special states
+        const proximity = getProximityToSun(p.name, d, sunDeg);
+        const feral = isFeral(p.name, planetsMap);
+        const special = proximity || (feral ? 'Feral' : null);
+
+        const rect = svgRef.current?.getBoundingClientRect();
+        const rx = rect ? event.clientX - rect.left : event.clientX;
+        const ry = rect ? event.clientY - rect.top : event.clientY;
 
         setTooltip({
           name: p.name,
@@ -540,14 +559,21 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
           stationary: !!p.stationary,
           motion,
           color,
-          x: event.clientX,
-          y: event.clientY,
+          x: rx,
+          y: ry,
+          decanate: decanRuler,
+          term: termRuler,
+          mansion,
+          star,
+          dignity: dignity.label || 'Peregrino',
+          visibility,
+          special
         });
       }).on('mouseleave', () => setTooltip(null));
     });
 
-    /* ─── 9. Transit planets (toggle) ──────────────────────────── */
-    if (showTransits && transitPlanets && transitPlanets.length > 0) {
+    /* ─── 9. Transit planets (if provided) ─────────────────────── */
+    if (transitPlanets && transitPlanets.length > 0) {
       const sortedTransits = [...transitPlanets].sort((a, b) => normDeg(a.degree) - normDeg(b.degree));
       const placedTransits: { x: number; y: number; r: number }[] = [];
       const MIN_DIST_TRANSIT = 22;
@@ -593,8 +619,7 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
       });
     }
 
-  }, [size, filteredPlanets, houses, aspects, showDecanates, showTerms, rotOffset,
-      showTransits, showTransitAspects, transitPlanets, transitAspects]);
+  }, [size, filteredPlanets, houses, aspects, showDecanates, showTerms, rotOffset, transitPlanets, transitAspects]);
 
   /* ─── Tabelas abaixo ─────────────────────────────────────────── */
 
@@ -605,7 +630,8 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
       .map(p => {
         const si = getSignIdx(p.degree);
         const namePt = PLANET_NAMES_PT[p.name] || p.name;
-        const motion = p.stationary ? 'Est' : p.retrograde ? 'Rx' : '';
+        const isRetroAllowed = RETROGRADE_ALLOWED.includes(p.name);
+        const motion = (p.stationary && isRetroAllowed) ? 'Est' : (p.retrograde && isRetroAllowed) ? 'Rx' : '';
         const dignity = getDignityState(p.name, p.degree);
         return {
           ...p,
@@ -680,8 +706,6 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
               { label: 'Corpos Secundários', state: showAsteroids, setter: setShowAsteroids },
               { label: 'Decanatos', state: showDecanates, setter: setShowDecanates },
               { label: 'Termos (Egípcios)', state: showTerms, setter: setShowTerms },
-              { label: 'Trânsitos Atuais', state: showTransits, setter: setShowTransits },
-              { label: 'Aspectos de Trânsitos', state: showTransitAspects, setter: setShowTransitAspects },
             ].map(item => (
               <label key={item.label} className="flex items-center gap-3 cursor-pointer group">
                 <input type="checkbox" checked={item.state}
@@ -694,43 +718,78 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
         )}
 
         <svg ref={svgRef} width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="drop-shadow-sm" />
+
+        {/* ─── Tooltip (React overlay) ──────────────────────────── */}
+        {tooltip && (
+          <div
+            className="absolute z-50 bg-white border border-[#c5a059]/30 rounded-xl shadow-xl px-4 py-3 pointer-events-none min-w-[180px]"
+            style={{
+              left: tooltip.x + 16,
+              top: tooltip.y - 20,
+              transform: tooltip.x > size * 0.7 ? 'translateX(-110%)' : 'none' // Evita sair da tela pela direita
+            }}
+          >
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-lg font-bold" style={{ color: tooltip.color }}>
+                {PLANET_SYMBOLS[tooltip.name] || '●'}
+              </span>
+              <span className="text-[11px] font-black uppercase tracking-wider" style={{ color: tooltip.color }}>
+                {tooltip.name}
+              </span>
+            </div>
+            <p className="text-[11px] text-gray-700 font-bold mb-1">{tooltip.sign}</p>
+            
+            <div className="space-y-0.5 mb-2">
+              <p className="text-[9px] text-gray-500 font-medium">
+                <span className="text-gray-400">Decanato:</span> {tooltip.decanate} / <span className="text-gray-400">Termo:</span> {tooltip.term}
+              </p>
+              <p className="text-[9px] text-gray-500 font-medium">
+                <span className="text-gray-400">Dignidade:</span> {tooltip.dignity}
+              </p>
+              <p className="text-[9px] text-gray-500 font-medium capitalize">
+                {tooltip.visibility}
+              </p>
+              {tooltip.mansion && (
+                <p className="text-[9px] text-[#c5a059] font-bold">
+                  {tooltip.mansion}
+                </p>
+              )}
+              {tooltip.star && (
+                <p className="text-[9px] text-amber-600 font-black animate-pulse">
+                  ★ {tooltip.star}
+                </p>
+              )}
+            </div>
+
+            <div className="flex gap-2 mt-1.5 flex-wrap">
+              {tooltip.retrograde && RETROGRADE_ALLOWED.includes(tooltip.name) && (
+                <span className="text-[9px] font-bold px-1.5 py-0.5 bg-red-50 text-red-500 rounded">℞ Retrógrado</span>
+              )}
+              {tooltip.stationary && RETROGRADE_ALLOWED.includes(tooltip.name) && (
+                <span className="text-[9px] font-bold px-1.5 py-0.5 bg-amber-50 text-amber-600 rounded">Estacionário</span>
+              )}
+              {(!tooltip.retrograde || !RETROGRADE_ALLOWED.includes(tooltip.name)) && 
+               (!tooltip.stationary || !RETROGRADE_ALLOWED.includes(tooltip.name)) && (
+                <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${
+                  tooltip.motion === 'Rápido' ? 'bg-green-50 text-green-600' :
+                  tooltip.motion === 'Lento' ? 'bg-orange-50 text-orange-600' :
+                  'bg-gray-50 text-gray-500'
+                }`}>
+                  {tooltip.motion}
+                </span>
+              )}
+              {tooltip.special && (
+                <span className="text-[9px] font-bold px-1.5 py-0.5 bg-purple-50 text-purple-600 rounded uppercase">
+                  {tooltip.special}
+                </span>
+              )}
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* ─── Tooltip (React overlay) ──────────────────────────── */}
-      {tooltip && (
-        <div
-          className="fixed z-50 bg-white border border-[#c5a059]/30 rounded-xl shadow-xl px-4 py-3 pointer-events-none min-w-[180px]"
-          style={{ left: tooltip.x + 16, top: tooltip.y - 20 }}
-        >
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-lg font-bold" style={{ color: tooltip.color }}>
-              {PLANET_SYMBOLS[tooltip.name] || '●'}
-            </span>
-            <span className="text-[11px] font-black uppercase tracking-wider" style={{ color: tooltip.color }}>
-              {tooltip.name}
-            </span>
-          </div>
-          <p className="text-[11px] text-gray-700 font-medium">{tooltip.sign}</p>
-          <div className="flex gap-2 mt-1.5 flex-wrap">
-            {tooltip.retrograde && (
-              <span className="text-[9px] font-bold px-1.5 py-0.5 bg-red-50 text-red-500 rounded">℞ Retrógrado</span>
-            )}
-            {tooltip.stationary && (
-              <span className="text-[9px] font-bold px-1.5 py-0.5 bg-amber-50 text-amber-600 rounded">Estacionário</span>
-            )}
-            <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${
-              tooltip.motion === 'Aplicativo' ? 'bg-blue-50 text-blue-600' :
-              tooltip.motion === 'Separativo' ? 'bg-purple-50 text-purple-600' :
-              'bg-gray-50 text-gray-500'
-            }`}>
-              {tooltip.motion}
-            </span>
-          </div>
-        </div>
-      )}
-
       {/* ─── Tables Below ─────────────────────────────────────── */}
-      <div className="w-full max-w-[620px] grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 transition-all">
         {/* Planet Table */}
         <div className="bg-white/60 backdrop-blur-sm border border-[#c5a059]/10 rounded-xl p-4">
           <h3 className="text-[9px] font-black uppercase tracking-[0.25em] text-[#c5a059] mb-3">Planetas</h3>
@@ -790,10 +849,10 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
            ASTROLOGICAL STATS PANEL
           ═══════════════════════════════════════════════════════════ */}
       {Object.keys(planetsMap).length > 0 && (
-        <div className="w-full max-w-[620px] flex flex-col gap-4">
+        <div className="w-full flex flex-col gap-4">
 
           {/* ─── ROW 1: Elementos + Qualidades ─────────────────── */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
 
             {/* Elementos */}
             <div className="bg-white/60 backdrop-blur-sm border border-[#c5a059]/10 rounded-xl p-4">

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { MessageSquare, Plus, Send, ChevronDown, Clock, Trash2, List } from 'lucide-react';
+import { MessageSquare, Plus, Send, ChevronDown, Clock, Trash2, List, PanelRightClose, PanelRightOpen } from 'lucide-react';
 import { safeInvoke } from '../utils/tauri';
 import { useAstrologyData } from '../hooks/useAstrologyData';
 import { useAgendaContext } from '../context/AgendaContext';
@@ -13,7 +13,7 @@ interface ChatSession {
   preview: string;
 }
 
-export const AgentChat = ({ agent }: { agent: string }) => {
+export const AgentChat = ({ agent, isCollapsed, onToggle }: { agent: string, isCollapsed?: boolean, onToggle?: () => void }) => {
    const [messages, setMessages] = useState<any[]>([]);
    const [input, setInput] = useState('');
    const [loading, setLoading] = useState(false);
@@ -276,33 +276,48 @@ ${context}`;
             <div className="text-center text-[9px] tracking-[6px] text-gold/30 py-1 select-none shrink-0">✦ ✧ ✦</div>
             
             {/* Header with session management */}
-            <div className="p-3 border-b border-gold/10 bg-gradient-to-r from-white to-[#FCF9F1] shrink-0">
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                        <div className="w-7 h-7 rounded-full bg-gold/10 flex items-center justify-center text-gold">
-                            <MessageSquare size={13} />
-                        </div>
-                        <div>
-                            <h3 className="text-[10px] font-bold uppercase tracking-[0.15em] text-gold">{agent}</h3>
-                            <div className="flex items-center gap-1">
-                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                                <span className="text-[7px] text-gray-400 font-bold uppercase tracking-wider">Sintonizado</span>
+            <div className={`p-3 border-b border-gold/10 bg-gradient-to-r from-white to-[#FCF9F1] shrink-0 ${isCollapsed ? 'flex justify-center py-6' : ''}`}>
+                <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'justify-between w-full'}`}>
+                    {!isCollapsed && (
+                        <div className="flex items-center gap-2">
+                            <div className="w-7 h-7 rounded-full bg-gold/10 flex items-center justify-center text-gold">
+                                <MessageSquare size={13} />
+                            </div>
+                            <div>
+                                <h3 className="text-[10px] font-bold uppercase tracking-[0.15em] text-gold">{agent}</h3>
+                                <div className="flex items-center gap-1">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                                    <span className="text-[7px] text-gray-400 font-bold uppercase tracking-wider">Sintonizado</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    )}
                     <div className="flex items-center gap-1">
-                        <button onClick={newChat} title="Novo Chat" className="p-2 text-gray-400 hover:text-gold hover:bg-gold/5 rounded-lg transition-all">
-                            <Plus size={14} />
-                        </button>
-                        <button onClick={() => setShowSessions(!showSessions)} title="Histórico de Chats" className="p-2 text-gray-400 hover:text-gold hover:bg-gold/5 rounded-lg transition-all relative">
-                            <List size={14} />
-                            {sessions.length > 0 && <span className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-gold text-white text-[7px] font-black rounded-full flex items-center justify-center">{sessions.length}</span>}
-                        </button>
+                        {!isCollapsed && (
+                            <>
+                                <button onClick={newChat} title="Novo Chat" className="p-2 text-gray-400 hover:text-gold hover:bg-gold/5 rounded-lg transition-all">
+                                    <Plus size={14} />
+                                </button>
+                                <button onClick={() => setShowSessions(!showSessions)} title="Histórico de Chats" className="p-2 text-gray-400 hover:text-gold hover:bg-gold/5 rounded-lg transition-all relative">
+                                    <List size={14} />
+                                    {sessions.length > 0 && <span className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-gold text-white text-[7px] font-black rounded-full flex items-center justify-center">{sessions.length}</span>}
+                                </button>
+                            </>
+                        )}
+                        {onToggle && (
+                            <button 
+                                onClick={onToggle} 
+                                title={isCollapsed ? "Expandir" : "Recolher"} 
+                                className={`p-2 transition-all hover:bg-gold/5 rounded-lg ${isCollapsed ? 'text-gold' : 'text-gray-400 hover:text-gold'}`}
+                            >
+                                {isCollapsed ? <PanelRightOpen size={24} /> : <PanelRightClose size={14} />}
+                            </button>
+                        )}
                     </div>
                 </div>
                 
                 {/* Sessions dropdown */}
-                {showSessions && (
+                {!isCollapsed && showSessions && (
                     <div className="mt-2 bg-white rounded-lg border border-gray-100 shadow-lg max-h-[200px] overflow-y-auto no-scrollbar animate-in fade-in slide-in-from-top-2">
                         {sessions.length === 0 ? (
                             <p className="p-4 text-[10px] text-gray-400 text-center italic">Nenhuma sessão salva</p>
@@ -332,76 +347,80 @@ ${context}`;
             </div>
 
             {/* Messages */}
-            <div 
-                ref={messagesContainerRef}
-                onScroll={handleScroll}
-                className="flex-1 overflow-y-auto p-3 space-y-3 custom-scrollbar relative"
-            >
-                {messages.length === 0 && (
-                    <div className="h-full flex flex-col items-center justify-center text-center px-4 opacity-40">
-                        <div className="w-10 h-10 rounded-full border border-dashed border-gold/30 mb-3 flex items-center justify-center">
-                            <Plus size={18} className="text-gold/50" />
+            {!isCollapsed && (
+                <div 
+                    ref={messagesContainerRef}
+                    onScroll={handleScroll}
+                    className="flex-1 overflow-y-auto p-3 space-y-3 custom-scrollbar relative"
+                >
+                    {messages.length === 0 && (
+                        <div className="h-full flex flex-col items-center justify-center text-center px-4 opacity-40">
+                            <div className="w-10 h-10 rounded-full border border-dashed border-gold/30 mb-3 flex items-center justify-center">
+                                <Plus size={18} className="text-gold/50" />
+                            </div>
+                            <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-gold/60">Inicie a sintonia</p>
+                            <p className="text-[9px] text-gray-400 mt-1">Clique em + para nova conversa</p>
                         </div>
-                        <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-gold/60">Inicie a sintonia</p>
-                        <p className="text-[9px] text-gray-400 mt-1">Clique em + para nova conversa</p>
-                    </div>
-                )}
-                {messages.map((m, i) => (
-                    <div key={`${chatId}-${i}`} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-2`}>
-                        <div className={`max-w-[88%] p-3 rounded-lg text-[11px] font-medium leading-relaxed ${
-                            m.role === 'user' 
-                                ? 'bg-gold/10 text-gray-700' 
-                                : 'bg-[#FCF9F1] text-gray-600'
-                        }`}>
-                            {m.content}
-                        </div>
-                    </div>
-                ))}
-                {loading && (
-                    <div className="flex justify-start animate-pulse">
-                        <div className="bg-[#FCF9F1] p-3 rounded-lg">
-                            <div className="flex gap-1">
-                                <span className="w-1.5 h-1.5 bg-gold/40 rounded-full animate-bounce"></span>
-                                <span className="w-1.5 h-1.5 bg-gold/40 rounded-full animate-bounce [animation-delay:0.2s]"></span>
-                                <span className="w-1.5 h-1.5 bg-gold/40 rounded-full animate-bounce [animation-delay:0.4s]"></span>
+                    )}
+                    {messages.map((m, i) => (
+                        <div key={`${chatId}-${i}`} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-2`}>
+                            <div className={`max-w-[88%] p-3 rounded-lg text-[11px] font-medium leading-relaxed ${
+                                m.role === 'user' 
+                                    ? 'bg-gold/10 text-gray-700' 
+                                    : 'bg-[#FCF9F1] text-gray-600'
+                            }`}>
+                                {m.content}
                             </div>
                         </div>
-                    </div>
-                )}
-                {error && <div className="text-[10px] text-red-400 font-bold text-center bg-red-50 p-2 rounded-lg border border-red-100">{error}</div>}
-                <div ref={messagesEndRef} />
-                
-                {/* Scroll to bottom button */}
-                {showScrollBtn && (
-                    <button 
-                        onClick={scrollToBottom}
-                        className="sticky bottom-2 left-1/2 -translate-x-1/2 p-1.5 bg-white border border-gold/20 rounded-full text-gold hover:bg-gold/10 transition-all animate-in fade-in"
-                    >
-                        <ChevronDown size={14} />
-                    </button>
-                )}
-            </div>
+                    ))}
+                    {loading && (
+                        <div className="flex justify-start animate-pulse">
+                            <div className="bg-[#FCF9F1] p-3 rounded-lg">
+                                <div className="flex gap-1">
+                                    <span className="w-1.5 h-1.5 bg-gold/40 rounded-full animate-bounce"></span>
+                                    <span className="w-1.5 h-1.5 bg-gold/40 rounded-full animate-bounce [animation-delay:0.2s]"></span>
+                                    <span className="w-1.5 h-1.5 bg-gold/40 rounded-full animate-bounce [animation-delay:0.4s]"></span>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                    {error && <div className="text-[10px] text-red-400 font-bold text-center bg-red-50 p-2 rounded-lg border border-red-100">{error}</div>}
+                    <div ref={messagesEndRef} />
+                    
+                    {/* Scroll to bottom button */}
+                    {showScrollBtn && (
+                        <button 
+                            onClick={scrollToBottom}
+                            className="sticky bottom-2 left-1/2 -translate-x-1/2 p-1.5 bg-white border border-gold/20 rounded-full text-gold hover:bg-gold/10 transition-all animate-in fade-in"
+                        >
+                            <ChevronDown size={14} />
+                        </button>
+                    )}
+                </div>
+            )}
 
             {/* Input */}
-            <div className="p-3 bg-white border-t border-gold/10 shrink-0">
-                <div className="relative flex items-center">
-                    <input 
-                        type="text"
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
-                        onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
-                        placeholder={`Falar com ${agent}...`}
-                        className="w-full bg-[#FCF9F1] border border-gold/10 rounded-lg py-2.5 pl-3 pr-10 text-[11px] placeholder:text-gray-400 focus:outline-none focus:border-gold/30 transition-all font-medium"
-                    />
-                    <button 
-                        onClick={sendMessage}
-                        disabled={loading || !input.trim()}
-                        className="absolute right-1.5 p-1.5 text-gold hover:bg-gold/10 rounded-lg transition-all disabled:opacity-30"
-                    >
-                        <Send size={14} />
-                    </button>
+            {!isCollapsed && (
+                <div className="p-3 bg-white border-t border-gold/10 shrink-0">
+                    <div className="relative flex items-center">
+                        <input 
+                            type="text"
+                            value={input}
+                            onChange={(e) => setInput(e.target.value)}
+                            onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
+                            placeholder={`Falar com ${agent}...`}
+                            className="w-full bg-[#FCF9F1] border border-gold/10 rounded-lg py-2.5 pl-3 pr-10 text-[11px] placeholder:text-gray-400 focus:outline-none focus:border-gold/30 transition-all font-medium"
+                        />
+                        <button 
+                            onClick={sendMessage}
+                            disabled={loading || !input.trim()}
+                            className="absolute right-1.5 p-1.5 text-gold hover:bg-gold/10 rounded-lg transition-all disabled:opacity-30"
+                        >
+                            <Send size={14} />
+                        </button>
+                    </div>
                 </div>
-            </div>
+            )}
         </div>
     );
 };
