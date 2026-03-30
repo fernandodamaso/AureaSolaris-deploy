@@ -50,13 +50,13 @@ export const DiarioView = () => {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col min-h-screen" style={{ backgroundColor: 'var(--color-bg-primary)' }} transition-all duration-300 ease-in-out>
-        <div className="flex flex-col items-center justify-center py-12 space-y-[var(--spacing-sm)] transition-all duration-300 ease-in-out">
-          <div className="relative h-12 w-12 transition-all duration-300 ease-in-out">
-            <div className="absolute inset-0 rounded-full border-4 border-[var(--color-accent)]/20 animate-spin transition-all duration-300 ease-in-out"></div>
-            <div className="absolute inset-0 rounded-full border-[var(--color-accent)] border-t-[var(--color-accent)] border-r-[var(--color-accent)] border-b-[var(--color-accent)/3] border-l-[var(--color-accent)/3] animate-[spin_3s_linear_infinite] transition-all duration-300 ease-in-out"></div>
+      <div className="flex flex-col min-h-screen" style={{ backgroundColor: 'var(--color-bg-primary)' }}>
+        <div className="flex flex-col items-center justify-center py-12 space-y-[var(--spacing-sm)]">
+          <div className="relative h-12 w-12">
+            <div className="absolute inset-0 rounded-full border-4 border-[var(--color-accent)]/20 animate-spin"></div>
+            <div className="absolute inset-0 rounded-full border-[var(--color-accent)] border-t-[var(--color-accent)] border-r-[var(--color-accent)] border-b-[var(--color-accent)/3] border-l-[var(--color-accent)/3] animate-[spin_3s_linear_infinite]"></div>
           </div>
-          <span className="ml-3 text-[var(--color-text-secondary)] font-medium transition-all duration-300 ease-in-out">Carregando suas memórias...</span>
+          <span className="ml-3 text-[var(--color-text-secondary)] font-medium">Carregando suas memórias...</span>
         </div>
       </div>
     );

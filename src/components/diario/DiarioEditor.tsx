@@ -147,164 +147,185 @@ const DiarioEditor: React.FC<DiarioEditorProps> = ({
         </div>
       </div>
 
-      {/* Toolbar */}
-      <div className="flex items-center gap-1 px-4 py-2 bg-white border-b border-gold/10">
-        {/* Bold */}
-        <button 
-          className="p-1.5 rounded hover:bg-gold/10 transition-colors"
-          title="Negrito (Ctrl+B)"
-        >
-          <svg className="h-4 w-4 stroke-current" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 4h8m-4 4v8m4-4v0" />
-          </svg>
-        </button>
-        
-        {/* Italic */}
-        <button 
-          className="p-1.5 rounded hover:bg-gold/10 transition-colors"
-          title="Itálico (Ctrl+I)"
-        >
-          <svg className="h-4 w-4 stroke-current" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 6h14M5 12h10M5 18h12" />
-          </svg>
-        </button>
-        
-        {/* Strikethrough */}
-        <button 
-          className="p-1.5 rounded hover:bg-gold/10 transition-colors"
-          title="Riscado"
-        >
-          <svg className="h-4 w-4 stroke-current" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 15l6-6" />
-          </svg>
-        </button>
-        
-        {/* Heading 1 */}
-        <button 
-          className="p-1.5 rounded hover:bg-gold/10 transition-colors"
-          title="Título 1"
-        >
-          <svg className="h-4 w-4 stroke-current" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
-        
-        {/* Heading 2 */}
-        <button 
-          className="p-1.5 rounded hover:bg-gold/10 transition-colors"
-          title="Título 2"
-        >
-          <svg className="h-4 w-4 stroke-current" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h12M4 12h16M4 18h14" />
-          </svg>
-        </button>
-        
-        {/* Text Alignment */}
-        <div className="relative">
-          <button 
-            className="p-1.5 rounded hover:bg-gold/10 transition-colors"
-            title="Alinhamento do texto"
-            onClick={() => {
-              // Toggle alignment menu
-            }}
-          >
-            <svg className="h-4 w-4 stroke-current" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4h16a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 00-2-2V6z" />
-            </svg>
-          </button>
-          {/* Alignment dropdown would go here in a full implementation */}
-        </div>
-        
-        {/* Bullet List */}
-        <button 
-          className="p-1.5 rounded hover:bg-gold/10 transition-colors"
-          title="Lista com marcadores"
-        >
-          <svg className="h-4 w-4 stroke-current" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12H5a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v14a2 2 0 01-2-2h-3m0-6H5a2 2 0 012-2h14a2 2 0 012 2v2" />
-          </svg>
-        </button>
-        
-        {/* Ordered List */}
-        <button 
-          className="p-1.5 rounded hover:bg-gold/10 transition-colors"
-          title="Lista numerada"
-        >
-          <svg className="h-4 w-4 stroke-current" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
-        </button>
-        
-        {/* Task List */}
-        <button 
-          className="p-1.5 rounded hover:bg-gold/10 transition-colors"
-          title="Lista de tarefas"
-        >
-          <svg className="h-4 w-4 stroke-current" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7 20h10a2 2 0 002-2V6a2 2 0 00-2-2H7a2 2 0 002-2v12a2 2 0 002 2z" />
-          </svg>
-        </button>
-        
-        {/* Horizontal Rule */}
-        <button 
-          className="p-1.5 rounded hover:bg-gold/10 transition-colors"
-          title="Linha horizontal"
-        >
-          <svg className="h-4 w-4 stroke-current" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7h18" />
-          </svg>
-        </button>
-        
-        {/* Code Block */}
-        <button 
-          className="p-1.5 rounded hover:bg-gold/10 transition-colors"
-          title="Bloco de código"
-        >
-          <svg className="h-4 w-4 stroke-current" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 12H6a2 2 0 00-2-2v6a2 2 0 002 2v6h12a2 2 0 002 2v-6a2 2 0 002-2v-6z" />
-          </svg>
-        </button>
-        
-        {/* Blockquote */}
-        <button 
-          className="p-1.5 rounded hover:bg-gold/10 transition-colors"
-          title="Citação"
-        >
-          <svg className="h-4 w-4 stroke-current" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
-          </svg>
-        </button>
-        
-        {/* Table */}
-        <button 
-          className="p-1.5 rounded hover:bg-gold/10 transition-colors"
-          title="Tabela"
-        >
-          <svg className="h-4 w-4 stroke-current" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v18M5 9h14M5 15h14" />
-          </svg>
-        </button>
-        
-        {/* Image */}
-        <button 
-          className="p-1.5 rounded hover:bg-gold/10 transition-colors"
-          title="Imagem"
-        >
-          <svg className="h-4 w-4 stroke-current" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 9h16v10a2 2 0 012 2v2H6a2 2 0 01-2-2v-2zM10 11a2 2 0 10-4 0 2 2 0 004 0z" />
-          </svg>
-        </button>
-        
-        {/* Link */}
-        <button 
-          className="p-1.5 rounded hover:bg-gold/10 transition-colors"
-          title="Link"
-        >
-          <svg className="h-4 w-4 stroke-current" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2v-11z" />
-          </svg>
-        </button>
-      </div>
+       {/* Toolbar */}
+       <div className="flex items-center gap-[var(--spacing-xs)] px-[var(--spacing-sm)] py-[var(--spacing-sm)] bg-[var(--color-bg-secondary)] border-b border-[var(--color-accent)]/10">
+         {/* Text Style Group */}
+         <div className="flex items-center gap-1">
+           {/* Bold */}
+           <button 
+             className="p-1.5 rounded hover:bg-gold/10 transition-colors"
+             title="Negrito (Ctrl+B)"
+           >
+             <svg className="h-4 w-4 stroke-current" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 4h8m-4 4v8m4-4v0" />
+             </svg>
+           </button>
+           
+           {/* Italic */}
+           <button 
+             className="p-1.5 rounded hover:bg-gold/10 transition-colors"
+             title="Itálico (Ctrl+I)"
+           >
+             <svg className="h-4 w-4 stroke-current" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 6h14M5 12h10M5 18h12" />
+             </svg>
+           </button>
+           
+           {/* Strikethrough */}
+           <button 
+             className="p-1.5 rounded hover:bg-gold/10 transition-colors"
+             title="Riscado"
+           >
+             <svg className="h-4 w-4 stroke-current" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 15l6-6" />
+             </svg>
+           </button>
+         </div>
+         
+         {/* Text Structure Group */}
+         <div className="flex items-center gap-1">
+           {/* Heading 1 */}
+           <button 
+             className="p-1.5 rounded hover:bg-gold/10 transition-colors"
+             title="Título 1"
+           >
+             <svg className="h-4 w-4 stroke-current" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+             </svg>
+           </button>
+           
+           {/* Heading 2 */}
+           <button 
+             className="p-1.5 rounded hover:bg-gold/10 transition-colors"
+             title="Título 2"
+           >
+             <svg className="h-4 w-4 stroke-current" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h12M4 12h16M4 18h14" />
+             </svg>
+           </button>
+           
+           {/* Blockquote */}
+           <button 
+             className="p-1.5 rounded hover:bg-gold/10 transition-colors"
+             title="Citação"
+           >
+             <svg className="h-4 w-4 stroke-current" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
+             </svg>
+           </button>
+           
+           {/* Code Block */}
+           <button 
+             className="p-1.5 rounded hover:bg-gold/10 transition-colors"
+             title="Bloco de código"
+           >
+             <svg className="h-4 w-4 stroke-current" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 12H6a2 2 0 00-2-2v6a2 2 0 002 2v6h12a2 2 0 002 2v-6a2 2 0 002-2v-6z" />
+             </svg>
+           </button>
+           
+           {/* Horizontal Rule */}
+           <button 
+             className="p-1.5 rounded hover:bg-gold/10 transition-colors"
+             title="Linha horizontal"
+           >
+             <svg className="h-4 w-4 stroke-current" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7h18" />
+             </svg>
+           </button>
+         </div>
+         
+         {/* Lists Group */}
+         <div className="flex items-center gap-1">
+           {/* Bullet List */}
+           <button 
+             className="p-1.5 rounded hover:bg-gold/10 transition-colors"
+             title="Lista com marcadores"
+           >
+             <svg className="h-4 w-4 stroke-current" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12H5a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012-2h14a2 2 0 01-2-2h-3m0-6H5a2 2 0 012-2h14a2 2 0 012 2v2" />
+             </svg>
+           </button>
+           
+           {/* Ordered List */}
+           <button 
+             className="p-1.5 rounded hover:bg-gold/10 transition-colors"
+             title="Lista numerada"
+           >
+             <svg className="h-4 w-4 stroke-current" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+             </svg>
+           </button>
+           
+           {/* Task List */}
+           <button 
+             className="p-1.5 rounded hover:bg-gold/10 transition-colors"
+             title="Lista de tarefas"
+           >
+             <svg className="h-4 w-4 stroke-current" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7 20h10a2 2 0 002-2V6a2 2 0 00-2-2H7a2 2 0 002-2v12a2 2 0 002 2z" />
+             </svg>
+           </button>
+         </div>
+         
+         {/* Alignment Group */}
+         <div className="flex items-center gap-1">
+           {/* Text Alignment */}
+           <div className="relative">
+             <button 
+               className="p-1.5 rounded hover:bg-gold/10 transition-colors"
+               title="Alinhamento do texto"
+               onClick={() => {
+                 // Toggle alignment menu
+               }}
+             >
+               <svg className="h-4 w-4 stroke-current" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4h16a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 00-2-2V6z" />
+               </svg>
+             </button>
+             {/* Alignment dropdown would go here in a full implementation */}
+           </div>
+         </div>
+         
+         {/* Insert Group */}
+         <div className="flex items-center gap-1">
+           {/* Table */}
+           <button 
+             className="p-1.5 rounded hover:bg-gold/10 transition-colors"
+             title="Tabela"
+           >
+             <svg className="h-4 w-4 stroke-current" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v18M5 9h14M5 15h14" />
+             </svg>
+           </button>
+           
+           {/* Image */}
+           <button 
+             className="p-1.5 rounded hover:bg-gold/10 transition-colors"
+             title="Imagem"
+           >
+             <svg className="h-4 w-4 stroke-current" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 9h16v10a2 2 0 012 2v2H6a2 2 0 01-2-2v-2zM10 11a2 2 0 10-4 0 2 2 0 004 0z" />
+             </svg>
+           </button>
+           
+           {/* Link */}
+           <button 
+             className="p-1.5 rounded hover:bg-gold/10 transition-colors"
+             title="Link"
+           >
+             <svg className="h-4 w-4 stroke-current" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2v-11z" />
+             </svg>
+           </button>
+         </div>
+         
+         {/* Tools Group */}
+         <div className="flex items-center gap-1 ml-auto">
+           {/* Undo/Redo would go here in a full implementation */}
+           {/* Word count is in status bar */}
+         </div>
+       </div>
 
       {/* Editor Content */}
       <div className="flex-1 overflow-auto p-4">
@@ -314,12 +335,14 @@ const DiarioEditor: React.FC<DiarioEditorProps> = ({
         />
       </div>
 
-      {/* Status Bar */}
-      <div className="flex items-center justify-between px-4 py-2 text-[10px] text-gray-400 uppercase tracking-widest border-t border-gold/10 bg-white">
-        <span>{wordCount} palavras</span>
-        <span>{characterCount} caracteres</span>
-        <span>{lastEdited ? `editado as ${lastEdited}` : ''}</span>
-      </div>
+       {/* Status Bar */}
+       <div className="flex items-center justify-between px-[var(--spacing-sm)] py-[var(--spacing-xs)] text-[var(--font-size-xs)] text-[var(--color-text-secondary)] uppercase tracking-widest border-t border-[var(--color-accent)]/10 bg-[var(--color-bg-secondary)]">
+         <span>{wordCount} palavras</span>
+         <span className="mx-[var(--spacing-sm)]">|</span>
+         <span>{characterCount} caracteres</span>
+         <span className="mx-[var(--spacing-sm)]">|</span>
+         <span>{lastEdited ? `editado as ${lastEdited}` : ''}</span>
+       </div>
     </div>
   );
 };
