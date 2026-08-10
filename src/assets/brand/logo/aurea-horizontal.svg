@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 100" width="440" height="100">
+  <defs>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#F2D18A"/>
+      <stop offset="42%" stop-color="#D9A653"/>
+      <stop offset="72%" stop-color="#A96D2D"/>
+      <stop offset="100%" stop-color="#E5B965"/>
+    </linearGradient>
+    <style>
+      .brand-title { font-family: Georgia, 'Times New Roman', serif; font-size: 24px; font-weight: 700; fill: url(#gold); letter-spacing: 3px; }
+      .brand-sub { font-family: Inter, Arial, sans-serif; font-size: 8px; font-weight: 600; fill: #D9A653; letter-spacing: 2px; text-transform: uppercase; }
+    </style>
+  </defs>
+  <g transform="translate(50,50)" fill="none" stroke="url(#gold)" stroke-linecap="round" stroke-linejoin="round">
+    <circle r="7" fill="#D9A653" />
+    <circle r="16" />
+    <circle r="38" />
+    <circle r="45" stroke-dasharray="2 6" />
+    <line x1="0" y1="-62" x2="0" y2="62" />
+    <line x1="-62" y1="0" x2="62" y2="0" />
+    <polygon points="0,66 3,76 0,86 -3,76" fill="url(#gold)" stroke="none" />
+  </g>
+  <text x="96" y="40" class="brand-title">AUREA SOLARIS</text>
+  <text x="96" y="62" class="brand-sub">ASSISTENTE DE ENGENHARIA ASTROLÓGICA</text>
+</svg>

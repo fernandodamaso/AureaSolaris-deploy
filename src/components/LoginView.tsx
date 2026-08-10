@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { 
-  ShieldCheck, Key, 
   ChevronRight, Sparkles, Star,
   Lock, ArrowRight, Eye, EyeOff
 } from 'lucide-react';
@@ -45,12 +44,12 @@ export const LoginView = ({ profiles, onLogin, onSignUp }: LoginViewProps) => {
   };
 
   return (
-    <div className="fixed inset-0 z-[2000] bg-[#FCF9F1] flex items-center justify-center overflow-hidden font-sans">
+    <div className="fixed inset-0 z-[2000] flex items-center justify-center overflow-hidden font-sans" style={{ background: 'var(--aurea-bg)' }}>
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden opacity-40">
-         <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-gold/5 rounded-full blur-[120px]" />
-         <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-gold/5 rounded-full blur-[120px]" />
-         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_#FCF9F1_100%)]" />
+         <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full blur-[120px]" style={{ background: 'var(--aurea-gold-deep)', opacity: 0.25 }} />
+         <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full blur-[120px]" style={{ background: 'var(--aurea-gold-deep)', opacity: 0.25 }} />
+         <div className="absolute inset-0" style={{ background: 'radial-gradient(circle_at_center, transparent 0%, var(--aurea-bg) 100%)' }} />
       </div>
 
       {/* Login Card */}
@@ -59,27 +58,29 @@ export const LoginView = ({ profiles, onLogin, onSignUp }: LoginViewProps) => {
         {/* Logo/Icon */}
         <div className="flex flex-col items-center mb-12 text-center">
            <div className="relative mb-6">
-              <div className="absolute inset-0 bg-gold/10 blur-xl rounded-full" />
-              <div className="relative p-6 bg-white border border-gold/20 rounded-full shadow-lg">
-                 <ShieldCheck size={48} className="text-gold" />
+              <div className="absolute inset-0 rounded-full blur-xl" style={{ background: 'var(--aurea-gold)', opacity: 0.12 }} />
+              <div className="relative p-6 rounded-full shadow-lg" style={{ background: 'var(--aurea-surface)', border: '1px solid rgba(217,166,83,0.25)' }}>
+                 <img src="/src/assets/brand/logo/aurea-symbol.svg" alt="Aurea Solaris" className="w-16 h-16" />
               </div>
            </div>
-           <h1 className="text-3xl font-black uppercase tracking-[0.5em] text-gray-800 mb-2">Aurea Solaris</h1>
-            <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-[var(--color-gold)]/60 italic">Protocolo de Identidade Ativa</p>
+           <h1 className="text-3xl font-black uppercase tracking-[0.5em] mb-2" style={{ color: 'var(--aurea-text)' }}>Aurea Solaris</h1>
+            <p className="text-[10px] font-black uppercase tracking-[0.3em] italic" style={{ color: 'var(--aurea-gold)' }}>Protocolo de Identidade Ativa</p>
         </div>
 
         {/* Tab Switcher */}
         {!selectedProfile && (
-          <div className="flex bg-gold/5 p-1 rounded-full mb-10 border border-gold/10">
+          <div className="flex p-1 rounded-full mb-10" style={{ background: 'rgba(217,166,83,0.08)', border: '1px solid rgba(217,166,83,0.15)' }}>
             <button 
               onClick={() => { setMode('signIn'); setSelectedProfile(null); }} 
-              className={`flex-1 py-3 text-[10px] font-black uppercase tracking-widest rounded-full transition-all ${mode === 'signIn' ? 'bg-[#333333] text-white shadow-md' : 'text-gray-400 hover:text-gold'}`}
+              className={`flex-1 py-3 text-[10px] font-black uppercase tracking-widest rounded-full transition-all ${mode === 'signIn' ? 'text-white shadow-md' : 'hover:opacity-80'}`}
+              style={{ background: mode === 'signIn' ? 'var(--aurea-bg-deep)' : 'transparent', color: mode === 'signIn' ? 'var(--aurea-text)' : 'var(--aurea-text-muted)' }}
             >
               Entrar
             </button>
             <button 
               onClick={() => { setMode('signUp'); setSelectedProfile(null); }} 
-              className={`flex-1 py-3 text-[10px] font-black uppercase tracking-widest rounded-full transition-all ${mode === 'signUp' ? 'bg-[#333333] text-white shadow-md' : 'text-gray-400 hover:text-gold'}`}
+              className={`flex-1 py-3 text-[10px] font-black uppercase tracking-widest rounded-full transition-all ${mode === 'signUp' ? 'text-white shadow-md' : 'hover:opacity-80'}`}
+              style={{ background: mode === 'signUp' ? 'var(--aurea-bg-deep)' : 'transparent', color: mode === 'signUp' ? 'var(--aurea-text)' : 'var(--aurea-text-muted)' }}
             >
               Inscrever-se
             </button>
@@ -89,32 +90,33 @@ export const LoginView = ({ profiles, onLogin, onSignUp }: LoginViewProps) => {
         {!selectedProfile ? (
           mode === 'signIn' ? (
             <div className="space-y-6 animate-in slide-in-from-bottom-4">
-               <h2 className="text-[11px] font-black uppercase tracking-[0.2em] text-gray-400 px-2">Selecionar Identidade</h2>
+               <h2 className="text-[11px] font-black uppercase tracking-[0.2em] px-2" style={{ color: 'var(--aurea-text-muted)' }}>Selecionar Identidade</h2>
                <div className="grid grid-cols-1 gap-4 max-h-[350px] overflow-y-auto no-scrollbar pr-1">
                   {profiles.map(profile => (
                     <button 
                       key={profile.id}
                       onClick={() => setSelectedProfile(profile)}
-                      className="group relative flex items-center gap-4 bg-white border border-gold/5 p-6 rounded-lg hover:bg-[#FCF9F1] hover:border-gold/30 transition-all text-left shadow-sm"
+                      className="group relative flex items-center gap-4 p-6 rounded-lg transition-all text-left shadow-sm"
+                      style={{ background: 'var(--aurea-surface)', border: '1px solid rgba(217,166,83,0.12)' }}
                     >
-                       <div className="w-14 h-14 bg-[#FCF9F1] border border-gold/10 flex items-center justify-center rounded-lg overflow-hidden group-hover:border-gold/30 transition-all shadow-inner">
+                       <div className="w-14 h-14 flex items-center justify-center rounded-lg overflow-hidden shadow-inner" style={{ background: 'var(--aurea-bg)', border: '1px solid rgba(217,166,83,0.15)' }}>
                           {profile.avatar ? (
                             <img src={profile.avatar} className="w-full h-full object-cover" alt="" />
                           ) : (
-                            <Sparkles size={24} className="text-gold/30" />
+                            <Sparkles size={24} style={{ color: 'var(--aurea-gold)', opacity: 0.45 }} />
                           )}
                        </div>
                        <div className="flex-1">
-                          <p className="text-[15px] font-black text-gray-800 tracking-widest uppercase">{profile.name}</p>
-                          <p className="text-[9px] font-bold text-[var(--color-gold)]/50 uppercase tracking-tighter">Sua Identidade Ativa</p>
+                          <p className="text-[15px] font-black tracking-widest uppercase" style={{ color: 'var(--aurea-text)' }}>{profile.name}</p>
+                          <p className="text-[9px] font-bold uppercase tracking-tighter" style={{ color: 'var(--aurea-gold)', opacity: 0.75 }}>Sua Identidade Ativa</p>
                        </div>
-                       <ChevronRight size={18} className="text-gold/20 group-hover:text-gold transition-all" />
+                       <ChevronRight size={18} style={{ color: 'var(--aurea-gold)', opacity: 0.35 }} />
                     </button>
                   ))}
                   {profiles.length === 0 && (
-                    <div className="bg-white/50 border border-dashed border-gold/20 p-12 rounded-[2rem] text-center">
-                        <p className="text-gray-400 text-[11px] font-black uppercase italic tracking-widest leading-relaxed">
-                          Nenhuma identidade detectada.<br/>Inicie seu protocolo na aba &quot;Inscrever-se&quot;.
+                    <div className="p-12 rounded-[2rem] text-center" style={{ background: 'rgba(11,23,34,0.5)', border: '1px dashed rgba(217,166,83,0.25)' }}>
+                        <p className="text-[11px] font-black uppercase italic tracking-widest leading-relaxed" style={{ color: 'var(--aurea-text-muted)' }}>
+                          Nenhuma identidade detectada.<br/>Inicie seu protocolo na aba "Inscrever-se".
                         </p>
                     </div>
                   )}
@@ -122,37 +124,40 @@ export const LoginView = ({ profiles, onLogin, onSignUp }: LoginViewProps) => {
             </div>
           ) : (
             <div className="space-y-8 animate-in slide-in-from-bottom-4">
-               <h2 className="text-[11px] font-black uppercase tracking-[0.2em] text-gray-400 px-2">Iniciar Nova Jornada</h2>
+               <h2 className="text-[11px] font-black uppercase tracking-[0.2em] px-2" style={{ color: 'var(--aurea-text-muted)' }}>Iniciar Nova Jornada</h2>
                <div className="space-y-6">
                   <div>
-                    <label className="text-[9px] font-black uppercase text-gray-400 tracking-widest mb-2 block pl-1">Nome de Batismo</label>
+                    <label className="text-[9px] font-black uppercase tracking-widest mb-2 block pl-1" style={{ color: 'var(--aurea-text-muted)' }}>Nome de Batismo</label>
                     <input 
                       type="text" 
                       autoFocus
                       value={newName}
                       onChange={(e) => setNewName(e.target.value)}
                       placeholder="Ex: Viviane Solaris"
-                      className="w-full bg-white border border-gold/10 p-5 rounded-lg text-gray-800 font-bold outline-none focus:border-gold/40 transition-all shadow-sm"
+                      className="w-full p-5 rounded-lg outline-none transition-all shadow-sm"
+                      style={{ background: 'var(--aurea-surface)', border: '1px solid rgba(217,166,83,0.15)', color: 'var(--aurea-text)' }}
                     />
                   </div>
                   <div>
-                    <label className="text-[9px] font-black uppercase text-gray-400 tracking-widest mb-2 block pl-1">Chave de Proteção (Senha)</label>
+                    <label className="text-[9px] font-black uppercase tracking-widest mb-2 block pl-1" style={{ color: 'var(--aurea-text-muted)' }}>Chave de Proteção (Senha)</label>
                     <div className="relative">
-                       <Key className="absolute left-5 top-1/2 -translate-y-1/2 text-gold/30" size={18} />
+                       <Lock className="absolute left-5 top-1/2 -translate-y-1/2" size={18} style={{ color: 'var(--aurea-gold)', opacity: 0.55 }} />
                        <input 
                          type={showPassword ? "text" : "password"} 
                          value={password}
                          onChange={(e) => setPassword(e.target.value)}
                          placeholder="••••••••"
-                      className="w-full bg-white border border-gold/10 p-5 pl-14 rounded-lg text-gray-800 font-bold outline-none focus:border-gold/40 transition-all shadow-sm"
-                    />
-                    <p className="mt-2 text-[9px] font-bold uppercase tracking-wide text-gray-400">Mínimo de 12 caracteres. A senha nunca é salva em texto aberto.</p>
+                         className="w-full p-5 pl-14 rounded-lg outline-none transition-all shadow-sm"
+                         style={{ background: 'var(--aurea-surface)', border: '1px solid rgba(217,166,83,0.15)', color: 'var(--aurea-text)' }}
+                      />
+                      <p className="mt-2 text-[9px] font-bold uppercase tracking-wide" style={{ color: 'var(--aurea-text-muted)' }}>Mínimo de 12 caracteres. A senha nunca é salva em texto aberto.</p>
                     </div>
                   </div>
                   <RememberAccess checked={rememberAccess} onChange={setRememberAccess} />
                   <button 
                     onClick={handleSignUp}
-                    className="w-full py-6 bg-[#333333] text-white rounded-[2rem] font-black uppercase text-[11px] tracking-[0.4em] hover:bg-gold transition-all shadow-xl flex items-center justify-center gap-3"
+                    className="w-full py-6 rounded-[2rem] font-black uppercase text-[11px] tracking-[0.4em] shadow-xl flex items-center justify-center gap-3 transition-all"
+                    style={{ background: 'var(--aurea-bg-deep)', color: 'var(--aurea-text)', border: '1px solid rgba(217,166,83,0.25)' }}
                   >
                      Selar Identidade <ArrowRight size={16} />
                   </button>
@@ -161,32 +166,34 @@ export const LoginView = ({ profiles, onLogin, onSignUp }: LoginViewProps) => {
           )
         ) : (
           <div className="space-y-8 animate-in slide-in-from-right-4">
-             <div className="flex items-center gap-6 mb-8 bg-gold/5 p-4 rounded-[2rem] border border-gold/10">
-                <button onClick={() => setSelectedProfile(null)} className="p-3 bg-white hover:bg-gold/5 rounded-full text-gold transition-all shadow-sm">
+             <div className="flex items-center gap-6 mb-8 p-4 rounded-[2rem]" style={{ background: 'rgba(217,166,83,0.08)', border: '1px solid rgba(217,166,83,0.15)' }}>
+                <button onClick={() => setSelectedProfile(null)} className="p-3 rounded-full transition-all shadow-sm" style={{ background: 'var(--aurea-surface)', color: 'var(--aurea-gold)', border: '1px solid rgba(217,166,83,0.2)' }}>
                    <Lock size={20} />
                 </button>
                 <div className="flex-1">
-                   <p className="text-[9px] font-black uppercase tracking-[0.3em] text-[var(--color-gold)]/60">Autenticando</p>
-                   <h2 className="text-xl font-black uppercase tracking-[0.1em] text-gray-800">{selectedProfile.name}</h2>
+                   <p className="text-[9px] font-black uppercase tracking-[0.3em]" style={{ color: 'var(--aurea-gold)', opacity: 0.9 }}>Autenticando</p>
+                   <h2 className="text-xl font-black uppercase tracking-[0.1em]" style={{ color: 'var(--aurea-text)' }}>{selectedProfile.name}</h2>
                 </div>
              </div>
 
              <div className="space-y-6">
                 <div className="relative">
-                   <label className="text-[9px] font-black uppercase text-gray-400 tracking-widest mb-2 block pl-1">Chave de Proteção</label>
+                   <label className="text-[9px] font-black uppercase tracking-widest mb-2 block pl-1" style={{ color: 'var(--aurea-text-muted)' }}>Chave de Proteção</label>
                    <div className="relative">
-                      <Key className="absolute left-5 top-1/2 -translate-y-1/2 text-gold/30" size={18} />
+                      <Lock className="absolute left-5 top-1/2 -translate-y-1/2" size={18} style={{ color: 'var(--aurea-gold)', opacity: 0.55 }} />
                       <input 
                         type={showPassword ? "text" : "password"} 
                         autoFocus
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="••••••••"
-                        className="w-full bg-white border border-gold/10 p-5 pl-14 rounded-lg text-gray-800 font-bold outline-none focus:border-gold/40 transition-all shadow-sm"
+                        className="w-full p-5 pl-14 rounded-lg outline-none transition-all shadow-sm"
+                        style={{ background: 'var(--aurea-surface)', border: '1px solid rgba(217,166,83,0.15)', color: 'var(--aurea-text)' }}
                       />
                       <button 
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-300 hover:text-gold transition-all"
+                        className="absolute right-5 top-1/2 -translate-y-1/2 transition-all"
+                        style={{ color: 'var(--aurea-text-muted)' }}
                       >
                          {showPassword ? <EyeOff size={20}/> : <Eye size={20}/>}
                       </button>
@@ -197,20 +204,21 @@ export const LoginView = ({ profiles, onLogin, onSignUp }: LoginViewProps) => {
 
                 <button 
                   onClick={handleLogin}
-                  className="w-full py-6 bg-[#333333] text-white rounded-[2rem] font-black uppercase text-[11px] tracking-[0.4em] hover:bg-gold transition-all shadow-xl flex items-center justify-center gap-3"
+                  className="w-full py-6 rounded-[2rem] font-black uppercase text-[11px] tracking-[0.4em] shadow-xl flex items-center justify-center gap-3 transition-all"
+                  style={{ background: 'var(--aurea-bg-deep)', color: 'var(--aurea-text)', border: '1px solid rgba(217,166,83,0.25)' }}
                 >
                    Acessar Dashboard <ArrowRight size={16} />
                 </button>
-                {error && <p role="alert" className="text-center text-sm font-semibold text-red-700">{error}</p>}
-                {notice && <p role="status" className="text-center text-sm font-semibold text-amber-700">{notice}</p>}
+                {error && <p role="alert" className="text-center text-sm font-semibold" style={{ color: '#EF4444' }}>{error}</p>}
+                {notice && <p role="status" className="text-center text-sm font-semibold" style={{ color: 'var(--aurea-gold)' }}>{notice}</p>}
              </div>
           </div>
         )}
 
         {/* Footer info */}
         <div className="mt-16 text-center">
-           <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em] flex items-center justify-center gap-3">
-              <Star size={12} className="text-gold/20" /> Aurea Solaris v2.8 <span className="w-1 h-1 bg-gold/30 rounded-full" /> Local Encryption <Star size={12} className="text-gold/20" />
+           <p className="text-[10px] font-black uppercase tracking-[0.3em] flex items-center justify-center gap-3" style={{ color: 'var(--aurea-text-muted)' }}>
+              <Star size={12} style={{ color: 'var(--aurea-gold)', opacity: 0.35 }} /> Aurea Solaris v2.8 <span className="w-1 h-1 rounded-full" style={{ background: 'var(--aurea-gold)', opacity: 0.4 }} /> Local Encryption <Star size={12} style={{ color: 'var(--aurea-gold)', opacity: 0.35 }} />
            </p>
         </div>
       </div>

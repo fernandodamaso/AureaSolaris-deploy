@@ -29,7 +29,7 @@ export const MandalaPage = () => {
   const [selectedTarget, setSelectedTarget] = useState<'current' | string>('me');
   const [showForm, setShowForm] = useState(false);
   const [editingConnectionId, setEditingConnectionId] = useState<string | null>(null);
-  const [showDetails, setShowDetails] = useState(false);
+  const [showDetails, setShowDetails] = useState(true);
   
   // O mapa é a visão principal. O Caderno abre apenas por uma ação explícita.
   
@@ -236,11 +236,10 @@ export const MandalaPage = () => {
                 setEditingConnectionId(selectedTarget);
                 setShowForm(true);
               }}
-              className="flex items-center gap-2 rounded-xl border border-gray-100 bg-white px-3 py-2.5 text-gray-500 shadow-sm transition-all hover:-translate-y-px hover:border-gold/20 hover:text-[#c5a059] hover:shadow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c5a059] focus-visible:ring-offset-2 shrink-0"
+              className="flex items-center rounded-xl border border-gray-100 bg-white p-2.5 text-gray-500 shadow-sm transition-all hover:-translate-y-px hover:border-gold/20 hover:text-[#c5a059] hover:shadow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c5a059] focus-visible:ring-offset-2 shrink-0"
               title="Editar Dados do Mapa"
             >
               <Edit3 size={16} />
-              <span className="text-[10px] font-black uppercase tracking-widest">Editar</span>
             </button>
           )}
 
