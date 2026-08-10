@@ -2,50 +2,24 @@
 @import "./styles/variables.css";
 
 @theme {
-  /* Legacy Mystic Theme */
-  --color-mystic-bg: #FCF9F1;
-  --color-mystic-sidebar: #F5F1E6;
-  --color-mystic-accent: #c5a059;
-  --color-mystic-text: #333333;
-  --color-duck-bg: #2C7A7B;
-
-  /* New Global Design System Tokens */
-  --color-primary: #2563EB;
-  --color-secondary: #14B8A6;
+  --color-gold: var(--aurea-gold);
+  --color-text-main: var(--aurea-text);
+  --color-text-muted: var(--aurea-text-muted);
+  --color-surface: var(--aurea-surface);
+  --color-background: var(--aurea-bg-deep);
+  --color-primary: var(--aurea-gold);
+  --color-secondary: var(--aurea-gold-deep);
   --color-success: #10B981;
   --color-warning: #F59E0B;
   --color-danger: #EF4444;
-  --color-surface: #FFFFFF;
-  --color-background: #F7F7FB;
-  --color-text-main: #1F2937;
-  --color-text-muted: #4B5563;
 
-  /* Typography */
-  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-  --font-heading: "Poppins", sans-serif;
+  --font-sans: var(--font-body);
+  --font-display: var(--font-display);
+  --font-heading: var(--font-display);
 
-  /* Radii */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 2.5rem;
-  --radius-2xl: 3.5rem;
-  --radius-3xl: 4rem;
-
-  /* ═══ NOVOS TOKENS DO REDESIGN VISUAL ═══ */
-  /* Fontes Display/Heading/Label */
-  --font-display: "Montserrat", "Poppins", sans-serif;
-  --font-body: "Inter", system-ui, sans-serif;
-  --font-label: "Raleway", sans-serif;
-
-  /* Cores Gold Refinadas */
-  --color-gold: #c5a059;
-  --color-gold-light: rgba(197, 160, 89, 0.15);
-  --color-gold-border: rgba(197, 160, 89, 0.25);
-
-  /* Cores de Fundo */
-  --color-paper: #fdfbf0;
-  --color-cosmic-dark: #0e1120;
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
 }
 
 :root {
@@ -53,9 +27,9 @@
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light;
-  color: var(--color-mystic-text);
-  background-color: var(--color-mystic-bg);
+  color-scheme: dark;
+  color: var(--aurea-text);
+  background-color: var(--aurea-bg-deep);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -86,10 +60,22 @@ body {
   scroll-behavior: smooth;
 }
 
+:where(button, a, select, input, textarea, summary):focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+button:disabled,
+select:disabled,
+input:disabled,
+textarea:disabled {
+  cursor: not-allowed;
+}
+
 @layer base {
   body {
-    background-color: var(--color-mystic-bg);
-    color: var(--color-mystic-text);
+    background-color: var(--aurea-bg-deep);
+    color: var(--aurea-text);
     font-family: var(--font-sans);
   }
 
@@ -100,6 +86,45 @@ body {
   h5,
   h6 {
     font-family: var(--font-sans);
-    color: var(--color-mystic-text);
+    color: var(--aurea-text);
+  }
+}
+
+@media (max-width: 767px) {
+  .layout-grid {
+    grid-template-columns: 72px minmax(0, 1fr) !important;
+    gap: 8px;
+    padding: 8px;
+  }
+
+  .layout-grid > aside {
+    border-radius: 12px;
+  }
+
+  .layout-grid > aside > div:first-child {
+    justify-content: center;
+    padding: 16px 8px;
+  }
+
+  .layout-grid > aside h1,
+  .layout-grid > aside nav button span:last-child,
+  .layout-grid > aside > div:last-child button > div:last-child {
+    display: none;
+  }
+
+  .layout-grid > aside nav {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .layout-grid > aside nav button,
+  .layout-grid > aside > div:last-child button {
+    justify-content: center;
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .main-area {
+    border-radius: 12px;
   }
 }

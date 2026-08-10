@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#F2D18A"/>
+      <stop offset="42%" stop-color="#D9A653"/>
+      <stop offset="72%" stop-color="#A96D2D"/>
+      <stop offset="100%" stop-color="#E5B965"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke="url(#gold)" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="32" cy="32" r="3" fill="#D9A653" />
+    <circle cx="32" cy="32" r="10" />
+    <circle cx="32" cy="32" r="24" />
+    <line x1="32" y1="4" x2="32" y2="60" />
+    <line x1="4" y1="32" x2="60" y2="32" />
+    <polygon points="32,56 34,62 32,68 30,62" fill="url(#gold)" stroke="none" />
+  </g>
+</svg>

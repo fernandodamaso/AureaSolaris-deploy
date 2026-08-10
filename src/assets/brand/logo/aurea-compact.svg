@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 56" width="220" height="56">
+  <defs>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#F2D18A"/>
+      <stop offset="42%" stop-color="#D9A653"/>
+      <stop offset="72%" stop-color="#A96D2D"/>
+      <stop offset="100%" stop-color="#E5B965"/>
+    </linearGradient>
+    <style>
+      .brand-title { font-family: Georgia, 'Times New Roman', serif; font-size: 20px; font-weight: 700; fill: url(#gold); letter-spacing: 3px; }
+    </style>
+  </defs>
+  <g transform="translate(24,28)" fill="none" stroke="url(#gold)" stroke-linecap="round" stroke-linejoin="round">
+    <circle r="6" fill="#D9A653" />
+    <circle r="14" />
+    <circle r="30" />
+    <circle r="36" stroke-dasharray="2 6" />
+    <line x1="0" y1="-50" x2="0" y2="50" />
+    <line x1="-50" y1="0" x2="50" y2="0" />
+    <polygon points="0,56 3,66 0,76 -3,66" fill="url(#gold)" stroke="none" />
+  </g>
+  <text x="76" y="26" class="brand-title">AUREA SOLARIS</text>
+</svg>

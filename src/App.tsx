@@ -18,50 +18,31 @@ import { LoginView } from './components/LoginView';
 import { DiarioView } from './components/DiarioView';
 import { ProfileEditor } from './components/ProfileEditor';
 import { HermesChat } from './components/HermesChat';
+import { BrandView } from './components/BrandView';
 import { safeInvoke } from './utils/tauri';
 
 // --- ESTILOS GLOBAIS ---
 const globalStyles = `
-  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800&family=Raleway:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
-  .font-sans { font-family: 'Inter', sans-serif; }
-  .font-display { font-family: 'Montserrat', sans-serif; }
-  .font-heading { font-family: 'Poppins', sans-serif; }
-  .font-label { font-family: 'Raleway', sans-serif; }
-  .no-scrollbar::-webkit-scrollbar { display: none; }
-  .glass-panel { background: rgba(252, 249, 241, 0.95); backdrop-filter: blur(16px); }
-  .paper-bg { background-color: var(--color-paper); }
-  .panel-light { background-color: #ffffff; border: 1px solid rgba(197, 160, 89, 0.08); border-radius: 12px; }
-  .text-gold { color: var(--color-gold); }
-  .bg-gold { background-color: var(--color-gold); }
-  
-  .layout-grid { display: grid; height: 100vh; width: 100vw; overflow: hidden; background: #0e1120; gap: 16px; padding: 16px; transition: grid-template-columns 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-  .main-area { border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; background: var(--color-paper); position: relative; }
+  @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+  .font-sans { font-family: var(--font-body); }
+  .font-display { font-family: var(--font-display); }
 
-  .cosmic-border {
-    border: 1px solid rgba(197, 160, 89, 0.25);
-  }
-   
-  .chat-panel {
-    border: 1px solid rgba(197, 160, 89, 0.15);
-    overflow: hidden;
-  }
-   
+  .layout-grid { display: grid; height: 100vh; width: 100vw; overflow: hidden; background: var(--aurea-bg-deep); gap: 16px; padding: 16px; transition: grid-template-columns 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+  .main-area { border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; background: var(--aurea-surface); position: relative; }
+
+  .text-gold { color: var(--aurea-gold); }
+  .bg-gold { background-color: var(--aurea-gold); }
+
   .section-title {
-    font-family: 'Montserrat', sans-serif;
+    font-family: var(--font-display);
     font-size: 10px;
     text-transform: uppercase;
     letter-spacing: 4px;
-    color: var(--color-gold);
-    border-bottom: 1px solid rgba(197, 160, 89, 0.3);
+    color: var(--aurea-gold);
+    border-bottom: 1px solid var(--aurea-line);
     padding-bottom: 8px;
     margin-bottom: 15px;
   }
-  .hook-dot {
-    width: 10px; height: 10px; border-radius: 50%; background: var(--color-gold);
-    cursor: crosshair; z-index: 20;
-  }
-  .hook-dot:hover { transform: scale(1.6); background: #B8860B; }
-  .canvas-node { transition: box-shadow 0.2s, border-color 0.2s; }
 `;
 
 const PlanetaryInfo = () => {
@@ -100,6 +81,7 @@ export default function App() {
   const [cadernoIntent, setCadernoIntent] = useState<CadernoIntent | null>(null);
       
   const { agenda } = useGlobalContext();
+  const inTauri = typeof window !== 'undefined' && !!(window as any).__TAURI_INTERNALS__;
   const masterProfile = agenda.activeProfile;
 
   const isMesa = currentPage === 'mesa-criacao';
@@ -174,7 +156,7 @@ export default function App() {
       case 'astrologia': return <AstrologiaPage onOpenCaderno={openCaderno} />;
       case 'saude': return <SaudeView />;
       case 'agenda': return <AgendaView />;
-
+      case 'brand': return <BrandView />;
       
       case 'mesa-criacao': return <MesaCriacao ownerId={masterProfile?.id} intent={cadernoIntent} onIntentHandled={() => setCadernoIntent(null)} />;
       case 'memorias': return <MemoriasView />;
@@ -193,20 +175,26 @@ export default function App() {
   }
 
   if (!isAuthenticated) {
+    const isBrowserDev = !inTauri;
+
     return (
       <LoginView 
         profiles={agenda.profiles} 
         onLogin={async (id, password, rememberAccess) => {
+          if (isBrowserDev) {
+            setIsAuthenticated(true);
+            return { ok: true, notice: 'Modo navegador: acesso local liberado sem sessão privada.' };
+          }
           const result = await agenda.authenticateProfile(id, password);
           if (!result.ok) return result;
           const openedOwner = await safeInvoke<string>('private_session_open', { ownerId: id });
-          if (openedOwner !== id) return { ok: false, error: 'Nao foi possivel abrir sua sessao privada neste computador.' };
+          if (openedOwner !== id) return { ok: false, error: 'Não foi possível abrir sua sessão privada neste computador.' };
           agenda.setActiveProfileId(id);
           localStorage.setItem('aurea_active_id', id);
           let notice: string | undefined;
           if (rememberAccess) {
             const remembered = await safeInvoke('remembered_owner_set', { ownerId: id });
-            if (remembered === null) notice = 'O acesso foi aberto, mas nao pode ser mantido neste Windows.';
+            if (remembered === null) notice = 'O acesso foi aberto, mas não pode ser mantido neste Windows.';
           } else {
             await safeInvoke('remembered_owner_clear');
           }
@@ -214,14 +202,18 @@ export default function App() {
           return { ok: true, notice };
         }}
         onSignUp={async (name, password, rememberAccess) => {
+          if (isBrowserDev) {
+            setIsAuthenticated(true);
+            return { ok: true, notice: 'Modo navegador: acesso local liberado sem sessão privada.' };
+          }
           try {
             const profile = await agenda.addProfile(name, password);
             const openedOwner = await safeInvoke<string>('private_session_open', { ownerId: profile.id });
-            if (openedOwner !== profile.id) return { ok: false, error: 'Seu perfil foi criado, mas a sessao privada nao pode ser aberta. Tente entrar novamente.' };
+            if (openedOwner !== profile.id) return { ok: false, error: 'Seu perfil foi criado, mas a sessão privada não pode ser aberta. Tente entrar novamente.' };
             let notice: string | undefined;
             if (rememberAccess) {
               const remembered = await safeInvoke('remembered_owner_set', { ownerId: profile.id });
-              if (remembered === null) notice = 'Perfil criado, mas o acesso nao pode ser mantido neste Windows.';
+              if (remembered === null) notice = 'Perfil criado, mas o acesso não pode ser mantido neste Windows.';
             }
             setIsAuthenticated(true);
             return { ok: true, notice };
@@ -256,6 +248,7 @@ export default function App() {
         </div>
         
         <nav className="flex-1 space-y-1.5 px-4 overflow-y-auto no-scrollbar pb-6 pt-4">
+          <NavItem icon={<Star size={18} />} label="Bíblia Visual" active={currentPage === 'brand'} onClick={() => setCurrentPage('brand')} collapsed={isSidebarCollapsed} />
           <NavItem icon={<Edit3 size={18} />} label="Caderno Vivo" active={currentPage === 'mesa-criacao'} onClick={() => { setCadernoIntent(null); setCurrentPage('mesa-criacao'); }} collapsed={isSidebarCollapsed} />
           <NavItem icon={<Star size={18} />} label="Astrologia" active={currentPage === 'astrologia'} onClick={() => setCurrentPage('astrologia')} collapsed={isSidebarCollapsed} />
           <NavItem icon={<Activity size={18} />} label="Saúde & Vitalidade" active={currentPage === 'saude'} onClick={() => setCurrentPage('saude')} collapsed={isSidebarCollapsed} />
@@ -280,7 +273,7 @@ export default function App() {
             <PlanetaryInfo />
           </header>
         )}
-        <div className={`flex-1 relative overflow-hidden ${isMesa ? '' : currentPage === 'astrologia' ? 'flex flex-col px-6 pt-6' : 'px-6 pt-8 overflow-y-auto no-scrollbar pb-32'}`}>
+        <div className={`flex-1 relative overflow-hidden ${isMesa ? '' : currentPage === 'astrologia' ? 'flex flex-col px-6 pt-6' : currentPage === 'brand' ? '' : 'px-6 pt-8 overflow-y-auto no-scrollbar pb-32'}`}>
           {currentPage === 'astrologia' ? (
             <div className="flex-1 h-full flex flex-col overflow-hidden">
               {renderPage()}
