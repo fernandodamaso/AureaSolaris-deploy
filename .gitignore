@@ -12,6 +12,24 @@ dist
 dist-ssr
 *.local
 
+# Segredos e dados privados: ficam apenas na máquina da pessoa.
+.env
+.env.*
+!.env.example
+
+# Bancos locais, cofres, sessões e cópias de segurança nunca entram no repositório.
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+*.db
+*.db-shm
+*.db-wal
+*.stronghold
+*.vault
+data/private/
+backups/
+
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

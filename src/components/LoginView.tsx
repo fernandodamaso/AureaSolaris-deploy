@@ -10,14 +10,14 @@ interface Profile {
   name: string;
   avatar?: string;
   connections?: any[];
-  password?: string;
+  passwordVerifier?: unknown;
   natal?: any;
 }
 
 interface LoginViewProps {
   profiles: Profile[];
-  onLogin: (profileId: string, password?: string) => void;
-  onSignUp: (name: string, password?: string) => void;
+  onLogin: (profileId: string, password: string, rememberAccess: boolean) => Promise<{ ok: boolean; error?: string; notice?: string }>;
+  onSignUp: (name: string, password: string, rememberAccess: boolean) => Promise<{ ok: boolean; error?: string; notice?: string }>;
 }
 
 export const LoginView = ({ profiles, onLogin, onSignUp }: LoginViewProps) => {
@@ -26,15 +26,22 @@ export const LoginView = ({ profiles, onLogin, onSignUp }: LoginViewProps) => {
   const [selectedProfile, setSelectedProfile] = useState<Profile | null>(null);
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [rememberAccess, setRememberAccess] = useState(false);
+  const [error, setError] = useState('');
+  const [notice, setNotice] = useState('');
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!selectedProfile) return;
-    onLogin(selectedProfile.id, password);
+    const result = await onLogin(selectedProfile.id, password, rememberAccess);
+    setError(result.error || '');
+    setNotice(result.notice || '');
   };
 
-  const handleSignUp = () => {
+  const handleSignUp = async () => {
     if (!newName.trim()) return;
-    onSignUp(newName, password);
+    const result = await onSignUp(newName, password, rememberAccess);
+    setError(result.error || '');
+    setNotice(result.notice || '');
   };
 
   return (
@@ -58,7 +65,7 @@ export const LoginView = ({ profiles, onLogin, onSignUp }: LoginViewProps) => {
               </div>
            </div>
            <h1 className="text-3xl font-black uppercase tracking-[0.5em] text-gray-800 mb-2">Aurea Solaris</h1>
-           <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#c5a059]/60 italic">Protocolo de Identidade Ativa</p>
+            <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-[var(--color-gold)]/60 italic">Protocolo de Identidade Ativa</p>
         </div>
 
         {/* Tab Switcher */}
@@ -99,7 +106,7 @@ export const LoginView = ({ profiles, onLogin, onSignUp }: LoginViewProps) => {
                        </div>
                        <div className="flex-1">
                           <p className="text-[15px] font-black text-gray-800 tracking-widest uppercase">{profile.name}</p>
-                          <p className="text-[9px] font-bold text-[#c5a059]/50 uppercase tracking-tighter">Sua Identidade Ativa</p>
+                          <p className="text-[9px] font-bold text-[var(--color-gold)]/50 uppercase tracking-tighter">Sua Identidade Ativa</p>
                        </div>
                        <ChevronRight size={18} className="text-gold/20 group-hover:text-gold transition-all" />
                     </button>
@@ -137,10 +144,12 @@ export const LoginView = ({ profiles, onLogin, onSignUp }: LoginViewProps) => {
                          value={password}
                          onChange={(e) => setPassword(e.target.value)}
                          placeholder="••••••••"
-                         className="w-full bg-white border border-gold/10 p-5 pl-14 rounded-lg text-gray-800 font-bold outline-none focus:border-gold/40 transition-all shadow-sm"
-                       />
+                      className="w-full bg-white border border-gold/10 p-5 pl-14 rounded-lg text-gray-800 font-bold outline-none focus:border-gold/40 transition-all shadow-sm"
+                    />
+                    <p className="mt-2 text-[9px] font-bold uppercase tracking-wide text-gray-400">Mínimo de 12 caracteres. A senha nunca é salva em texto aberto.</p>
                     </div>
                   </div>
+                  <RememberAccess checked={rememberAccess} onChange={setRememberAccess} />
                   <button 
                     onClick={handleSignUp}
                     className="w-full py-6 bg-[#333333] text-white rounded-[2rem] font-black uppercase text-[11px] tracking-[0.4em] hover:bg-gold transition-all shadow-xl flex items-center justify-center gap-3"
@@ -157,7 +166,7 @@ export const LoginView = ({ profiles, onLogin, onSignUp }: LoginViewProps) => {
                    <Lock size={20} />
                 </button>
                 <div className="flex-1">
-                   <p className="text-[9px] font-black uppercase tracking-[0.3em] text-[#c5a059]/60">Autenticando</p>
+                   <p className="text-[9px] font-black uppercase tracking-[0.3em] text-[var(--color-gold)]/60">Autenticando</p>
                    <h2 className="text-xl font-black uppercase tracking-[0.1em] text-gray-800">{selectedProfile.name}</h2>
                 </div>
              </div>
@@ -181,8 +190,10 @@ export const LoginView = ({ profiles, onLogin, onSignUp }: LoginViewProps) => {
                       >
                          {showPassword ? <EyeOff size={20}/> : <Eye size={20}/>}
                       </button>
-                   </div>
+                  </div>
                 </div>
+
+                <RememberAccess checked={rememberAccess} onChange={setRememberAccess} />
 
                 <button 
                   onClick={handleLogin}
@@ -190,6 +201,8 @@ export const LoginView = ({ profiles, onLogin, onSignUp }: LoginViewProps) => {
                 >
                    Acessar Dashboard <ArrowRight size={16} />
                 </button>
+                {error && <p role="alert" className="text-center text-sm font-semibold text-red-700">{error}</p>}
+                {notice && <p role="status" className="text-center text-sm font-semibold text-amber-700">{notice}</p>}
              </div>
           </div>
         )}
@@ -197,10 +210,25 @@ export const LoginView = ({ profiles, onLogin, onSignUp }: LoginViewProps) => {
         {/* Footer info */}
         <div className="mt-16 text-center">
            <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em] flex items-center justify-center gap-3">
-              <Star size={12} className="text-gold/20" /> Stark Protocol v2.8 <span className="w-1 h-1 bg-gold/30 rounded-full" /> Local Encryption <Star size={12} className="text-gold/20" />
+              <Star size={12} className="text-gold/20" /> Aurea Solaris v2.8 <span className="w-1 h-1 bg-gold/30 rounded-full" /> Local Encryption <Star size={12} className="text-gold/20" />
            </p>
         </div>
       </div>
     </div>
   );
 };
+
+const RememberAccess = ({ checked, onChange }: { checked: boolean; onChange: (value: boolean) => void }) => (
+  <label className="flex items-start gap-3 cursor-pointer rounded-lg border border-gold/10 bg-white/60 p-4 text-left">
+    <input
+      type="checkbox"
+      checked={checked}
+      onChange={(event) => onChange(event.target.checked)}
+      className="mt-0.5 h-4 w-4 accent-[#b8860b]"
+    />
+    <span>
+      <span className="block text-[10px] font-black uppercase tracking-wider text-gray-700">Manter meu acesso neste Windows</span>
+      <span className="mt-1 block text-[10px] leading-relaxed text-gray-500">Não salva sua senha. Este dispositivo guardará apenas a identidade protegida pelo Windows.</span>
+    </span>
+  </label>
+);
