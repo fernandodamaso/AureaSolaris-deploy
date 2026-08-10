@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { safeInvoke } from '../utils/tauri';
-import { calculateFallback } from '../utils/astro-calc';
 
 const ASPECT_MAP: Record<string, string> = {
   Conjunction: 'Conjunção',
@@ -16,14 +15,15 @@ const ASPECT_MAP: Record<string, string> = {
   SesquiQuadrature: 'Sesqui-Quadratura',
 };
 
-export const useAstroData = (birthData?: any) => {
+export const useAstroData = (birthData?: any, enabled = true) => {
   const [data, setData] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(enabled);
   const [error, setError] = useState<string | null>(null);
 
   const calculate = async () => {
     setLoading(true);
     setError(null);
+    setData(null);
     try {
       const payloadStr = birthData ? JSON.stringify(birthData) : JSON.stringify({
         year: new Date().getFullYear(),
@@ -33,27 +33,25 @@ export const useAstroData = (birthData?: any) => {
         house_system: localStorage.getItem('aurea_house_system') || 'Regiomontanus'
       });
 
-      const result = await safeInvoke<string | null>('run_astro_engine', { payload: payloadStr });
+      let result: string | null = null;
+      
+      // Try direct HTTP to sidecar first (works in both Tauri and browser dev mode)
+      try {
+        const res = await fetch('http://127.0.0.1:9876/natal', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: payloadStr,
+        });
+        if (res.ok) result = await res.text();
+      } catch { /* sidecar not reachable, fall through */ }
+      
+      // Fallback to Tauri invoke
+      if (!result) {
+        result = await safeInvoke<string | null>('run_astro_engine', { payload: payloadStr });
+      }
+
       if (result === null) {
-        // Browser fallback: calcular usando algoritmos JavaScript puros
-        const birthDataParsed = birthData || {
-          year: new Date().getFullYear(),
-          month: new Date().getMonth() + 1,
-          day: new Date().getDate(),
-          hour: new Date().getHours() + (new Date().getMinutes() / 60),
-        };
-        const fallback = await calculateFallback(
-          birthDataParsed.year,
-          birthDataParsed.month,
-          birthDataParsed.day,
-          Math.floor(birthDataParsed.hour),
-          Math.floor((birthDataParsed.hour % 1) * 60),
-          birthDataParsed.lat || -15.7833,
-          birthDataParsed.lon || -47.9333,
-          birthDataParsed.house_system || 'Regiomontanus'
-        );
-        setData(fallback);
-        setLoading(false);
+        setError('Motor astrológico indisponível. O mapa não será estimado. Verifique o serviço local e tente novamente.');
         return;
       }
       const parsed = JSON.parse(result);
@@ -65,6 +63,9 @@ export const useAstroData = (birthData?: any) => {
       }
       if (parsed.error) {
         setError(parsed.error);
+      } else if (!parsed.meta?.receipt) {
+        setData(null);
+        setError('O motor respondeu sem recibo auditável. Nenhuma mandala será exibida.');
       } else {
         setData(parsed);
       }
@@ -76,8 +77,14 @@ export const useAstroData = (birthData?: any) => {
   };
 
   useEffect(() => {
+    if (!enabled) {
+      setData(null);
+      setError(null);
+      setLoading(false);
+      return;
+    }
     calculate();
-  }, [JSON.stringify(birthData)]);
+  }, [JSON.stringify(birthData), enabled]);
 
   return { data, loading, error, recalculate: calculate };
 };

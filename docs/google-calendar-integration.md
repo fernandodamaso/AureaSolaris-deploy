@@ -1,39 +1,14 @@
-# Google Calendar Integration
+# Google Calendar — integração futura
 
-> OAuth2 connection via Composio MCP.
-> **Ownership:** This is the ONLY source for Calendar details.
+Fonte canônica: `EPHEMERIDES_AND_CALENDAR_PLAN.md`.
 
-## Configuration
+## Contrato
 
-1. Obtenha uma API key em [app.composio.dev](https://app.composio.dev)
-2. Adicione ao `.env`:
-   ```
-   VITE_COMPOSIO_API_KEY=sua_chave_aqui
-   ```
-3. Conecte sua conta Google via dashboard do Composio
+1. `private.sqlite` guarda os eventos privados do Aurea Solaris.
+2. Exportação `.ics` é seletiva, unidirecional e não exige credenciais.
+3. Importação externa começa somente leitura.
+4. Tokens OAuth ficam em cofre local e são referenciados por `secret_ref`; nunca entram no React, em `localStorage`, em variáveis `VITE_`, prompts ou logs.
+5. Criar, alterar ou excluir no Google exige ação explícita, prévia e estado visual de sucesso/erro.
+6. Sincronização bidirecional exige UID externo estável, versão/ETag, cursor incremental, idempotência, tombstones, recorrência, fuso IANA e resolução de conflito.
 
-## Service: `src/services/composio.ts`
-
-The wrapper provides functions for basic operations:
-
-| Function | Description |
-|----------|-------------|
-| `connect()` | Conects to Google account via Composio |
-| `listEvents(params)` | Lists events (supports `timeMin`, `timeMax`) |
-| `createEvent(params)` | Creates new event in Google Calendar |
-| `deleteEvent(id)` | Removes event from Google Calendar |
-
-## Frontend Integration
-
-The `AgendaView.tsx` component integrates Google Calendar events:
-- **Button "Google Calendar"** — connects/disconnects
-- **Google Events** — shown with blue badge and `Calendar` icon
-- **Local Events** — shown with gold badge and `Clock` icon
-
-## Token Storage
-
-Tokens managed by Composio MCP (external storage).
-
-## Related Documentation
-
-- [tauri-ipc-api.md](tauri-ipc-api.md) — Command details for `add_google_event`, `delete_google_event`, `get_google_events`
+Os comandos Tauri atuais (`get_google_events`, `add_google_event`, `delete_google_event`) são legado em contenção. Não ampliar esse caminho antes da fundação de dados e segurança.

@@ -41,25 +41,26 @@ export const SaudeProvider: React.FC<{children: React.ReactNode}> = ({ children 
     const storedBio = localStorage.getItem('saude_biometrics');
     const storedDocs = localStorage.getItem('saude_documents');
     
-    if (storedHabits) setHabits(JSON.parse(storedHabits));
-    else {
-      // Default initial habits
-      const today = new Date().toISOString().split('T')[0];
-      setHabits([
-        { id: '1', name: 'Vitamina D (Aurora)', time: '08:00', checked: true, dateStr: today },
-        { id: '2', name: 'Probiótico (Benício)', time: '08:30', checked: false, dateStr: today },
-        { id: '3', name: 'Meditação UDV (30min)', time: '06:00', checked: true, dateStr: today },
-        { id: '4', name: 'Ingestão de Água (3L)', time: 'Ao longo do dia', checked: false, dateStr: today }
+    if (storedHabits) {
+      const generatedNames = new Set([
+        'Vitamina D (Aurora)', 'Probiótico (Benício)',
+        'Meditação UDV (30min)', 'Ingestão de Água (3L)',
       ]);
+      const sanitized = JSON.parse(storedHabits).filter((habit: Habit) => !(
+        ['1', '2', '3', '4'].includes(habit.id) && generatedNames.has(habit.name)
+      ));
+      setHabits(sanitized);
+      localStorage.setItem('saude_habits', JSON.stringify(sanitized));
     }
 
     if (storedBio) setBiometrics(JSON.parse(storedBio));
-    if (storedDocs) setDocuments(JSON.parse(storedDocs));
-    else {
-      setDocuments([
-        { name: "Hemograma_Vivi_Mar.pdf", date: "10 Mar" },
-        { name: "Dieta_Nutri_Puerperio.pdf", date: "05 Mar" }
-      ]);
+    if (storedDocs) {
+      const generatedNames = new Set(['Hemograma_Vivi_Mar.pdf', 'Dieta_Nutri_Puerperio.pdf']);
+      const sanitized = JSON.parse(storedDocs).filter((document: { name?: string }) => !(
+        document.name && generatedNames.has(document.name)
+      ));
+      setDocuments(sanitized);
+      localStorage.setItem('saude_documents', JSON.stringify(sanitized));
     }
   }, []);
 
@@ -100,7 +101,6 @@ export const SaudeProvider: React.FC<{children: React.ReactNode}> = ({ children 
   };
 
   const uploadDocument = (fileData: any) => {
-    // Basic mock for MVP
     setDocuments(prev => [{ name: fileData.name, date: new Date().toLocaleDateString('pt-BR').substring(0, 5) }, ...prev]);
   };
 

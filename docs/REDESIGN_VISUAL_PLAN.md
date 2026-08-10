@@ -91,7 +91,7 @@ Modernizar a identidade visual do Aurea Solaris com elementos cósmicos sutis, m
 | `src/components/SaudeView.tsx` | 2 | 48, 99 |
 | `src/components/FinancasView.tsx` | 2 | 28, 52 |
 | `src/context/FinancasContext.tsx` | 1 | 51 |
-| `src/components/ControlePanel.tsx` | 1 | 11 |
+# Removido do escopo atual
 | **`src/components/AstrologiaBoard.tsx`** | **1** | **109** *(não estava no plano original — adicionado)* |
 | `src/components/AgendaView.tsx` | **0** | ✅ Já está limpo |
 
@@ -119,7 +119,7 @@ Usado quando a página tem agente de IA ativo. O grid aloca 360px para o painel 
 | centralização | horizontal | `mx-auto` | Centraliza na área disponível |
 | padding-x interno | 16px | `px-4` | Evita colar nas bordas |
 
-**Páginas que usam Layout A:** Astrologia, Saúde, Agenda, Finanças, Hub, Controle
+**Páginas que usam Layout A:** Astrologia, Saúde, Agenda, Finanças, Hub
 
 ### Regra: Layout B — Sem Chat (2 colunas do grid)
 
@@ -983,7 +983,7 @@ Linha ~183: <footer className="px-12 py-4 ...">            ← EXCESSIVO: px-12
 ### Layout (Padrões de Espaçamento)
 - [ ] Diário ocupa 2 colunas do grid (hasChat=false)
 - [ ] Diário com max-w-5xl, conteúdo centralizado, sem h-full
-- [ ] Layout A (com chat) usa max-w-5xl: Astrologia, Saúde, Agenda, Finanças, Controle, Hub
+- [ ] Layout A (com chat) usa max-w-5xl: Astrologia, Saúde, Agenda, Finanças, Hub
 - [ ] Layout B (sem chat) usa max-w-7xl: Memórias, Diário
 - [ ] space-y-8 em todos os containers externos de view (não space-y-10, space-y-12)
 - [ ] SectionTitle com mb-4 (não mb-6)
