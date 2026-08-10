@@ -1,5 +1,7 @@
 # Aurea Solaris
 
+> Referência obrigatória de produto e dados: [Constituição do Aurea Solaris](docs/CONSTITUICAO.md).
+
 ## 🌟 O que é o Aurea Solaris?
 
 O **Aurea Solaris** é um aplicativo de desktop que combina **astrologia**, **gestão pessoal** e **inteligência artificial** em uma única ferramenta. Ele foi pensado para ajudá-lo a organizar sua vida cotidiana enquanto considera influências astrológicas, oferecendo uma experiência única e personalizada.
@@ -10,7 +12,6 @@ Imagine ter um assistente virtual que não apenas ajuda com tarefas e finanças,
 
 - **Organização pessoal**: Agenda inteligente que adapta suas tarefas conforme as horas planetárias
 - **Astrologia prática**: Mapas natais, trânsitos e cálculos astrológicos em tempo real
-- **Gestão financeira**: Controle simplificado de receitas, despesas e metas financeiras
 - **Saúde e bem-estar**: Acompanhamento de hábitos saudáveis e vitalidade
 - **Banco de ideias**: Um canvas infinito para conectar conceitos e criar projetos
 - **Diário inteligente**: Registro diário com insights baseados no seu mapa astral
@@ -166,6 +167,8 @@ O projeto utiliza variáveis de ambiente para configurações sensíveis. Elas d
 | `EMAIL_PASSWORD` | Senha de app do email | Para funcionalidades de email |
 | `GOOGLE_CLIENT_ID` | Client ID OAuth2 do Google | Para Google Calendar/Drive |
 
+**Nota de Personalização**: Embora você possa usar o `.env` para valores globais, o Aurea Solaris agora permite **configurações individuais por perfil** (Todoist Token e Composio API Key) diretamente no **Painel de Controle**. Isso permite que cada usuário tenha sua própria sincronia de tarefas e calendários sem mexer em arquivos de sistema.
+
 **Nota**: O Ollama local funciona automaticamente em `http://localhost:11434` se estiver instalado.
 
 ---
@@ -175,16 +178,19 @@ O projeto utiliza variáveis de ambiente para configurações sensíveis. Elas d
 ```
 AureaSolaris/
 ├── src/                    # Frontend React
-│   ├── components/         # Componentes e Views
-│   ├── context/            # Estado global (AgendaContext)
+│   ├── components/         # Componentes e Views (inclui diario/ com subcomponentes)
+│   ├── context/            # Estado global (AgendaContext, DiarioContext, GlobalContext)
 │   ├── hooks/              # Lógica especializada
-│   └── utils/              # Utilitários
-├── src-tauri/              # Backend Rust
-├── docs/                   # Documentação
+│   ├── types/              # Definições TypeScript
+│   ├── services/           # APIs externas (Composio)
+│   └── utils/              # Utilitários (tauri.ts, logger.ts, mockData.ts)
+├── src-tauri/              # Backend Rust (Tauri IPC)
+│   └── src/lib.rs          # Comandos Tauri (IPC API)
+├── docs/                   # Documentação (inclui superpowers/specs/)
 ├── Laboratorio_Stark/      # Área experimental
-├── astro_engine.py         # Motor de astrologia
-├── de421.bsp              # Efemérides NASA
-└── .env                   # Configurações
+├── astro_engine.py         # Motor de astrologia (Python/Kerykeion)
+├── ephe/                 # Efemérides NASA
+└── .env                  # Configurações
 ```
 
 Para uma explicação detalhada de cada pasta e arquivo, consulte o guia completo: [docs/estrutura-do-projeto.md](docs/estrutura-do-projeto.md)
@@ -250,11 +256,10 @@ A interface é dividida em módulos especializados que você pode acessar confor
 2. **Astrologia** — Mapas natais, trânsitos e horas planetárias
 3. **Saúde & Vitalidade** — Controle de bem-estar e hábitos
 4. **Agenda Preditiva** — Cronograma inteligente baseado nas estrelas
-5. **Gestão de Ouro** — Finanças pessoais simplificadas
-6. **Painel de Controle** — Configurações e monitoramento do sistema
-7. **Alfred Hub** — Central de tarefas e links rápidos
-8. **Diário (Memórias)** — Registro diário com insights
-9. **Escola do Rafiki** — Módulo educacional interativo
+5. **Painel de Controle** — Configurações e monitoramento do sistema
+6. **Alfred Hub** — Central de tarefas e links rápidos
+7. **Diário (Memórias)** — Registro diário com insights
+8. **Escola do Rafiki** — Módulo educacional interativo
 
 ---
 

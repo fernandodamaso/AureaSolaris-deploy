@@ -1,581 +1,1394 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { Plus, Edit3, Image as ImageIcon, ZoomIn, ZoomOut, Star, Trash2, ListTodo, ArrowUpRight, Mail, Cloud, FolderOpen, Undo2, Redo2, Download } from 'lucide-react';
+import { useState, useRef, useCallback, useEffect } from 'react';
+import {
+  MousePointer2, Square, StickyNote, Type, CheckSquare, Image as ImageIcon,
+  ZoomIn, ZoomOut, Undo2, Redo2, Download, FolderOpen,
+  Trash2, Plus, Check, AlertCircle, Sparkles, Move, Link2,
+  ChevronLeft, LayoutGrid, Pencil, X, MoreHorizontal, Clock, BookOpen
+} from 'lucide-react';
 import { safeInvoke } from '../utils/tauri';
-import { sendEmail, saveToGoogleDrive } from '../utils/exportUtils';
+import type { CadernoBoard, CadernoEdge, CadernoNode } from '../types/caderno';
 import { AssetPicker } from './mesa/AssetPicker';
+import { StudyPanel } from './mesa/StudyPanel';
 
-type HistoryAction = {
-  type: 'addNode' | 'deleteNode' | 'moveNode' | 'resizeNode' | 'addEdge' | 'deleteEdge' | 'updateNode';
-  payload: any;
-  timestamp: number;
+// ─────────────────────────────────────────────────────────────
+// Types
+// ─────────────────────────────────────────────────────────────
+type Tool = 'select' | 'sticky' | 'text' | 'checklist' | 'image' | 'connect' | 'shape';
+
+export type CadernoIntent =
+  | { type: 'browse' }
+  | { type: 'create-study'; topic: string; seedNote?: string }
+  | { type: 'open-study'; boardId: string; nodeId: number };
+
+type MesaCriacaoProps = {
+  intent?: CadernoIntent | null;
+  onIntentHandled?: () => void;
+  ownerId?: string | null;
 };
 
+type HistoryAction = {
+  type: 'addNode' | 'deleteNode' | 'moveNode' | 'resizeNode' | 'updateNode' | 'addEdge' | 'deleteEdge';
+  payload: any;
+};
+
+// ─────────────────────────────────────────────────────────────
+// Constants
+// ─────────────────────────────────────────────────────────────
+const STICKY_COLORS = ['#FFFDE7', '#E3F2FD', '#F3E5F5', '#E8F5E9', '#FCE4EC', '#FFF3E0', '#E0F7FA', '#EDE9FE'];
 const MAX_HISTORY = 50;
+const GRID_SIZE = 20;
+const LS_ACTIVE = 'aurea_active_board';
 
-export const MesaCriacao = () => {
-  const boardId = useRef(`board_${Date.now()}`);
-  const currentUser = useRef('user_local');
+const snap = (v: number) => Math.round(v / GRID_SIZE) * GRID_SIZE;
+const uid = () => `board_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
 
-  const [nodes, setNodes] = useState<any[]>([]);
-  const [edges, setEdges] = useState<any[]>([]);
-  const [pan, setPan] = useState({ x: 0, y: 0 });
-  const [zoom, setZoom] = useState(1);
-  const [dragNode, setDragNode] = useState<any>(null);
-  const [resizeNode, setResizeNode] = useState<{id: any, corner: string} | null>(null);
-  const [drawingEdge, setDrawingEdge] = useState<any>(null);
-  const [snapToGrid, setSnapToGrid] = useState(true);
-  const [showAssetPicker, setShowAssetPicker] = useState(false);
-
-  const [undoStack, setUndoStack] = useState<HistoryAction[]>([]);
-  const [redoStack, setRedoStack] = useState<HistoryAction[]>([]);
-
-  const nodesRef = useRef<any[]>(nodes);
-  const edgesRef = useRef<any[]>(edges);
-  const nodeRefs = useRef<Map<any, HTMLDivElement>>(new Map());
-  const edgeRefs = useRef<Map<any, SVGLineElement>>(new Map());
-
-  useEffect(() => {
-    nodesRef.current = nodes;
-  }, [nodes]);
-
-  useEffect(() => {
-    edgesRef.current = edges;
-  }, [edges]);
-
-  const pushHistory = useCallback((action: HistoryAction) => {
-    setUndoStack(prev => {
-      const newStack = [...prev, action];
-      if (newStack.length > MAX_HISTORY) {
-        return newStack.slice(newStack.length - MAX_HISTORY);
-      }
-      return newStack;
-    });
-    setRedoStack([]);
+// ─────────────────────────────────────────────────────────────
+// Toast hook
+// ─────────────────────────────────────────────────────────────
+function useToast() {
+  const [toast, setToast] = useState<{ msg: string; ok: boolean } | null>(null);
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const show = useCallback((msg: string, ok = true) => {
+    if (timer.current) clearTimeout(timer.current);
+    setToast({ msg, ok });
+    timer.current = setTimeout(() => setToast(null), 2500);
   }, []);
+  return { toast, show };
+}
 
-  const undo = useCallback(() => {
-    if (undoStack.length === 0) return;
-    const action = undoStack[undoStack.length - 1];
-    setUndoStack(prev => prev.slice(0, -1));
+// ─────────────────────────────────────────────────────────────
+// ROOT COMPONENT — Board Manager or Canvas
+// ─────────────────────────────────────────────────────────────
+export const MesaCriacao = ({ intent = null, onIntentHandled }: MesaCriacaoProps) => {
+  const [activeBoard, setActiveBoard] = useState<CadernoBoard | null>(null);
+  const [requestedStudyNodeId, setRequestedStudyNodeId] = useState<number | null>(null);
+  const [intentError, setIntentError] = useState<string | null>(null);
+  // Uma entrada contextual deve abrir a lista ou o novo caderno pedido, nunca
+  // redirecionar silenciosamente para outro caderno que estava aberto antes.
+  const shouldRestoreLastBoard = useRef(intent === null);
+  const hasHandledIntent = useRef(false);
 
-    switch (action.type) {
-      case 'addNode':
-        setNodes(prev => prev.filter(n => n.id !== action.payload.node.id));
-        break;
-      case 'deleteNode':
-        setNodes(prev => [...prev, action.payload.node]);
-        if (action.payload.edges) {
-          setEdges(prev => [...prev, ...action.payload.edges]);
-        }
-        break;
-      case 'moveNode':
-      case 'resizeNode':
-        setNodes(prev => prev.map(n => n.id === action.payload.nodeId ? { ...n, ...action.payload.oldState } : n));
-        break;
-      case 'addEdge':
-        setEdges(prev => prev.filter(e => e.id !== action.payload.edge.id));
-        break;
-      case 'deleteEdge':
-        setEdges(prev => [...prev, action.payload.edge]);
-        break;
-      case 'updateNode':
-        setNodes(prev => prev.map(n => n.id === action.payload.nodeId ? action.payload.oldState : n));
-        break;
-    }
-
-    setRedoStack(prev => [...prev, action]);
-  }, [undoStack]);
-
-  const redo = useCallback(() => {
-    if (redoStack.length === 0) return;
-    const action = redoStack[redoStack.length - 1];
-    setRedoStack(prev => prev.slice(0, -1));
-
-    switch (action.type) {
-      case 'addNode':
-        setNodes(prev => [...prev, action.payload.node]);
-        break;
-      case 'deleteNode':
-        setNodes(prev => prev.filter(n => n.id !== action.payload.node.id));
-        if (action.payload.edges) {
-          setEdges(prev => prev.filter(e => !action.payload.edges.some((ae: any) => ae.id === e.id)));
-        }
-        break;
-      case 'moveNode':
-      case 'resizeNode':
-        setNodes(prev => prev.map(n => n.id === action.payload.nodeId ? { ...n, ...action.payload.newState } : n));
-        break;
-      case 'addEdge':
-        setEdges(prev => [...prev, action.payload.edge]);
-        break;
-      case 'deleteEdge':
-        setEdges(prev => prev.filter(e => e.id !== action.payload.edge.id));
-        break;
-      case 'updateNode':
-        setNodes(prev => prev.map(n => n.id === action.payload.nodeId ? action.payload.newState : n));
-        break;
-    }
-
-    setUndoStack(prev => [...prev, action]);
-  }, [redoStack]);
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
-        if (e.shiftKey) {
-          e.preventDefault();
-          redo();
-        } else {
-          e.preventDefault();
-          undo();
-        }
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [undo, redo]);
-
-  const addHistory = (action: string) => {
-    const event = new CustomEvent('aurea-vision', { detail: { action, time: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }), id: Date.now() } });
-    window.dispatchEvent(event);
-  };
-
-  useEffect(() => {
-    nodesRef.current = nodes;
-    edgesRef.current = edges;
-  }, [nodes, edges]);
-
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        // Fallback para localStorage para recuperação imediata na navegação
-        const local = localStorage.getItem('aurea_mesa_temp');
-        if (local) {
-          const parsed = JSON.parse(local);
-          setNodes(parsed.nodes || []);
-          setEdges(parsed.edges || []);
-          return;
-        }
-
-        // TODO: não implementado - comando 'load_board' não existe no backend
-        const data = await safeInvoke<any>('load_board').catch(() => null);
-        if (data && data.nodes && data.nodes.length > 0) {
-          setNodes(data.nodes);
-          setEdges(data.edges || []);
-        } else {
-          const initial = [{ id: 1, type: 'text', x: 200, y: 150, w: 160, h: 90, text: 'Alecrim e Flores Brancas', color: '#ffffff' }];
-          setNodes(initial);
-          addHistory('Mesa inicializada');
-        }
-      } catch (e) { /* ignore */ }
-    };
-    loadData();
-  }, []);
-
-  // Auto-save mechanism (debounced)
-  useEffect(() => {
-    if (nodes.length === 0 && edges.length === 0) return;
-    
-    // Salva no localStorage imediatamente para navegação interna
-    localStorage.setItem('aurea_mesa_temp', JSON.stringify({ nodes, edges }));
-
-    const timer = setTimeout(() => {
-      safeInvoke('save_board', { nodes, edges }).catch(console.error);
-    }, 1000);
-    return () => clearTimeout(timer);
-  }, [nodes, edges]);
-
-  const exportJSON = async () => {
+  const openBoard = useCallback(async (meta: any, studyNodeId: number | null = null) => {
     try {
-      const data = { nodes, edges, version: '1.0', timestamp: new Date().toISOString() };
-      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-      // eslint-disable-next-line react-hooks/purity
-      downloadFile(blob, `aurea_board_${Date.now()}.json`);
-      addHistory('Mesa exportada (JSON)');
+      const data: any = await safeInvoke('load_board', { boardId: meta.id });
+      const board: CadernoBoard = {
+        id: meta.id,
+        name: meta.name,
+        updatedAt: meta.updated_at || Date.now(),
+        nodes: data?.nodes || [],
+        edges: data?.edges || []
+      };
+      localStorage.setItem(LS_ACTIVE, board.id);
+      setRequestedStudyNodeId(studyNodeId);
+      setActiveBoard(board);
+    } catch (error) {
+      console.error('Failed to load board', error);
+      setIntentError('Não foi possível abrir este caderno. Seus outros cadernos permanecem preservados.');
+    }
+  }, []);
+
+  const createContextualStudy = useCallback(async (topic: string, seedNote?: string) => {
+    const name = `Estudo — ${topic}`;
+    const newId = uid();
+    const starterNote: CadernoNode = {
+      id: Date.now(),
+      type: 'sticky',
+      x: 120,
+      y: 120,
+      w: 320,
+      h: 180,
+      color: STICKY_COLORS[0],
+      text: seedNote || `Tema do estudo\n${topic}\n\nRegistre aqui sua pergunta, observação ou a próxima conexão.`,
+    };
+
+    try {
+      await safeInvoke('save_board', { boardId: newId, name, nodes: [starterNote], edges: [] });
+      await openBoard({ id: newId, name, updated_at: Date.now() });
+    } catch (error) {
+      console.error('Failed to create contextual study', error);
+      setIntentError('Não foi possível criar o estudo agora. Nenhum caderno existente foi alterado.');
+    }
+  }, [openBoard]);
+
+  // Restore last active board from Tauri
+  useEffect(() => {
+    if (!shouldRestoreLastBoard.current) return;
+    const lastId = localStorage.getItem(LS_ACTIVE);
+    if (lastId) {
+      safeInvoke('load_board', { boardId: lastId }).then((data: any) => {
+        if (data && data.nodes) {
+          // Find the name from the list
+          safeInvoke('list_boards').then((list: any) => {
+             const meta = (list as any[]).find(b => b.id === lastId);
+             if (meta) {
+               setActiveBoard({ id: lastId, name: meta.name, updatedAt: meta.updated_at, nodes: data.nodes, edges: data.edges });
+             } else {
+               localStorage.removeItem(LS_ACTIVE);
+             }
+          });
+        } else {
+          localStorage.removeItem(LS_ACTIVE);
+        }
+      }).catch(() => localStorage.removeItem(LS_ACTIVE));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!intent || hasHandledIntent.current) return;
+    hasHandledIntent.current = true;
+
+    const handleIntent = async () => {
+      if (intent.type === 'create-study') {
+        await createContextualStudy(intent.topic, intent.seedNote);
+      } else if (intent.type === 'open-study') {
+        const list = await safeInvoke<any[]>('list_boards');
+        const meta = list?.find(item => item.id === intent.boardId);
+        if (meta) {
+          await openBoard(meta, intent.nodeId);
+        } else {
+          setIntentError('O caderno deste estudo não foi encontrado. Nenhum dado foi alterado.');
+        }
+      }
+      onIntentHandled?.();
+    };
+
+    void handleIntent();
+  }, [createContextualStudy, intent, onIntentHandled]);
+
+  const closeBoard = async (updatedBoard: CadernoBoard) => {
+    await safeInvoke('save_board', { 
+      boardId: updatedBoard.id, 
+      name: updatedBoard.name, 
+      nodes: updatedBoard.nodes, 
+      edges: updatedBoard.edges 
+    });
+    setRequestedStudyNodeId(null);
+    setActiveBoard(null);
+    localStorage.removeItem(LS_ACTIVE);
+  };
+
+  if (activeBoard) {
+    return (
+      <MesaCanvas
+        board={activeBoard}
+        initialStudyNodeId={requestedStudyNodeId}
+        onBack={closeBoard}
+      />
+    );
+  }
+
+  return <BoardManager onOpen={openBoard} intentError={intentError} />;
+};
+
+// ─────────────────────────────────────────────────────────────
+// BOARD MANAGER — list / create / delete boards
+// ─────────────────────────────────────────────────────────────
+const BoardManager = ({ onOpen, intentError }: { onOpen: (meta: any) => void; intentError: string | null }) => {
+  const [boards, setBoards] = useState<any[]>([]);
+  const [creating, setCreating] = useState(false);
+  const [newName, setNewName] = useState('');
+  const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const loadBoards = async () => {
+    try {
+      const list: any = await safeInvoke('list_boards');
+      // sort by updated_at descending
+      const sorted = (list || []).sort((a: any, b: any) => (b.updated_at || 0) - (a.updated_at || 0));
+      setBoards(sorted);
     } catch (e) {
-      console.error('Falha ao exportar JSON:', e);
+      console.error('Failed to list boards', e);
     }
   };
 
-  const exportSVG = () => {
-    const svgElement = document.querySelector('.mesa-svg-container');
-    if (!svgElement) return;
-    
-    // Clonar para não afetar a UI
-    const clone = svgElement.cloneNode(true) as HTMLElement;
-    clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-    
-    const blob = new Blob([clone.outerHTML], { type: 'image/svg+xml;charset=utf-8' });
-    // eslint-disable-next-line react-hooks/purity
-    downloadFile(blob, `aurea_board_${Date.now()}.svg`);
-    addHistory('Mesa exportada (SVG)');
+  useEffect(() => { loadBoards(); }, []);
+  useEffect(() => { if (creating) setTimeout(() => inputRef.current?.focus(), 50); }, [creating]);
+
+  const create = async () => {
+    const name = newName.trim() || `Caderno ${boards.length + 1}`;
+    const newId = uid();
+    await safeInvoke('save_board', { boardId: newId, name, nodes: [], edges: [] });
+    setCreating(false);
+    setNewName('');
+    onOpen({ id: newId, name, updated_at: Date.now() });
   };
 
-  const downloadFile = (blob: Blob, filename: string) => {
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    a.click();
-    URL.revokeObjectURL(url);
+  const remove = async (id: string) => {
+    await safeInvoke('delete_board', { boardId: id });
+    setConfirmDelete(null);
+    loadBoards();
   };
 
-  // Funções de exportação para email e Google Drive
-  const exportForEmail = () => {
-    const content = nodes.map((n: any) => `- ${n.text}`).join('\n');
-    const subject = 'Mesa de Criação - Aurea Solaris';
-    const body = `Minha Mesa de Criação:\n\n${content}\n\n---\nExportado em ${new Date().toLocaleDateString('pt-BR')}`;
-    sendEmail(subject, body);
-    addHistory('Mesa enviada por email');
-  };
-
-  const exportForDrive = () => {
-    const content = nodes.map((n: any) => `- ${n.text}`).join('\n');
-    const fullContent = `# Mesa de Criação\n\n${content}\n\n---\nExportado do Aurea Solaris em ${new Date().toLocaleDateString('pt-BR')}`;
-    saveToGoogleDrive(fullContent, 'mesa_criacao.md');
-    addHistory('Mesa salva no Google Drive');
-  };
-
-  const updateLine = (edgeId: number, n1: any, n2: any) => {
-    const line = edgeRefs.current.get(edgeId);
-    if (line) {
-      line.setAttribute('x1', (n1.x + n1.w / 2).toString());
-      line.setAttribute('y1', (n1.y + n1.h / 2).toString());
-      line.setAttribute('x2', (n2.x + n2.w / 2).toString());
-      line.setAttribute('y2', (n2.y + n2.h / 2).toString());
-    }
-  };
-
-  const onPointerMoveBoard = (e: any) => {
-    if (dragNode !== null && zoom > 0) {
-      const node = nodesRef.current.find((n: any) => n.id === dragNode);
-      if (node) {
-        node.x += e.movementX / zoom;
-        node.y += e.movementY / zoom;
-
-        const snappedX = Math.round(node.x / 10) * 10;
-        const snappedY = Math.round(node.y / 10) * 10;
-        
-        const displayX = snapToGrid ? snappedX : node.x;
-        const displayY = snapToGrid ? snappedY : node.y;
-
-        const el = nodeRefs.current.get(dragNode);
-        if (el) {
-          el.style.transform = `translate(${displayX}px, ${displayY}px)`;
-        }
-
-        edgesRef.current.forEach((edge: any) => {
-          if (edge.from === dragNode || edge.to === dragNode) {
-            const n1 = nodesRef.current.find((n: any) => n.id === edge.from);
-            const n2 = nodesRef.current.find((n: any) => n.id === edge.to);
-            if (n1 && n2) updateLine(edge.id, n1, n2);
-          }
-        });
-      }
-    }
-    if (resizeNode !== null && zoom > 0) {
-      const node = nodesRef.current.find((n: any) => n.id === resizeNode.id);
-      if (node) {
-        const dx = e.movementX / zoom;
-        const dy = e.movementY / zoom;
-        const minSize = 60;
-        
-        if (resizeNode.corner === 'se') {
-          node.w = Math.max(minSize, node.w + dx);
-          node.h = Math.max(minSize, node.h + dy);
-        } else if (resizeNode.corner === 'sw') {
-          node.w = Math.max(minSize, node.w - dx);
-          node.x += dx;
-          node.h = Math.max(minSize, node.h + dy);
-        } else if (resizeNode.corner === 'ne') {
-          node.w = Math.max(minSize, node.w + dx);
-          node.h = Math.max(minSize, node.h - dy);
-          node.y += dy;
-        } else if (resizeNode.corner === 'nw') {
-          node.w = Math.max(minSize, node.w - dx);
-          node.x += dx;
-          node.h = Math.max(minSize, node.h - dy);
-          node.y += dy;
-        }
-        
-        const el = nodeRefs.current.get(resizeNode.id);
-        if (el) {
-          el.style.width = `${node.w}px`;
-          el.style.height = `${node.h}px`;
-          if (node.type !== 'sticker') {
-            el.style.transform = `translate(${node.x}px, ${node.y}px)`;
-          }
-        }
-        
-        edgesRef.current.forEach((edge: any) => {
-          if (edge.from === resizeNode.id || edge.to === resizeNode.id) {
-            const n1 = nodesRef.current.find((n: any) => n.id === edge.from);
-            const n2 = nodesRef.current.find((n: any) => n.id === edge.to);
-            if (n1 && n2) updateLine(edge.id, n1, n2);
-          }
-        });
-      }
-    }
-    if (drawingEdge) setDrawingEdge({ ...drawingEdge, x2: (e.clientX - pan.x) / zoom, y2: (e.clientY - pan.y) / zoom });
-    if (e.buttons === 1 && !dragNode && !resizeNode && !drawingEdge) setPan(p => ({ x: p.x + e.movementX, y: p.y + e.movementY }));
-  };
-
-  const startEdge = (id: any, e: any) => {
-    e.stopPropagation();
-    const node = nodesRef.current.find((n: any) => n.id === id);
-    if (!node) return;
-    setDrawingEdge({ id1: id, x1: node.x + node.w / 2, y1: node.y + node.h / 2, x2: (e.clientX - pan.x) / zoom, y2: (e.clientY - pan.y) / zoom });
-  };
-
-  const finishEdge = (id: any) => {
-    if (drawingEdge && drawingEdge.id1 !== id) {
-      const edge = { id: Date.now(), from: drawingEdge.id1, to: id, owner: currentUser.current };
-      const newEdges = [...edges, edge];
-      setEdges(newEdges);
-      pushHistory({ type: 'addEdge', payload: { edge }, timestamp: Date.now() });
-    }
-    setDrawingEdge(null);
+  const fmt = (ts: number) => {
+    const normalizedTs = ts > 0 && ts < 1_000_000_000_000 ? ts * 1000 : ts;
+    const d = new Date(normalizedTs);
+    const now = Date.now();
+    const diff = now - normalizedTs;
+    if (diff < 60000) return 'agora mesmo';
+    if (diff < 3600000) return `${Math.floor(diff / 60000)}min atrás`;
+    if (diff < 86400000) return `${Math.floor(diff / 3600000)}h atrás`;
+    return d.toLocaleDateString('pt-BR');
   };
 
   return (
-    <div 
-      className="absolute inset-0 bg-[#FCF9F1] overflow-hidden cursor-grab active:cursor-grabbing z-0" 
-      data-board-id={boardId.current}
-      onPointerMove={onPointerMoveBoard} 
-      onPointerDown={(e) => {
-        if (e.target === e.currentTarget) {
-        }
-      }}
-      onPointerUp={() => { 
-        if (dragNode !== null) {
-          const node = nodesRef.current.find((n: any) => n.id === dragNode);
-          if (node) {
-            const oldState = { x: node.x, y: node.y };
-            if (snapToGrid) {
-              node.x = Math.round(node.x / 10) * 10;
-              node.y = Math.round(node.y / 10) * 10;
-            }
-            const newState = { x: node.x, y: node.y };
-            if (oldState.x !== newState.x || oldState.y !== newState.y) {
-              pushHistory({ type: 'moveNode', payload: { nodeId: dragNode, oldState, newState }, timestamp: Date.now() });
-            }
-            setNodes([...nodesRef.current]);
-          }
-        }
-        if (resizeNode !== null) {
-          const node = nodesRef.current.find((n: any) => n.id === resizeNode.id);
-          if (node) {
-            pushHistory({ type: 'resizeNode', payload: { nodeId: resizeNode.id, oldState: { w: node.w, h: node.h }, newState: { w: node.w, h: node.h } }, timestamp: Date.now() });
-            setNodes([...nodesRef.current]);
-          }
-        }
-        setDragNode(null); 
-        setResizeNode(null);
-        setDrawingEdge(null); 
-      }} 
-      style={{ touchAction: 'none' }}
-    >
-      
-      {/* BACKGROUND DOT GRID */}
-      <div 
-        className="absolute inset-0 pointer-events-none" 
-        style={{ 
-          backgroundImage: `radial-gradient(circle, #c5a059 1px, transparent 1px)`, 
-          backgroundSize: `${24 * zoom}px ${24 * zoom}px`, 
-          opacity: 0.15, 
-          transform: `translate(${pan.x}px, ${pan.y}px)` 
-        }} 
-      />
-      
-      {/* TOOLBAR (Reduced Size) */}
-      <div className="absolute top-6 left-6 flex flex-col gap-3 z-[70] toolbar font-sans animate-in slide-in-from-left-2 duration-500">
-        {/* Header com ícones cósmicos */}
-        <div className="bg-[#FCF9F1] rounded-xl border border-gold/20 p-2">
-          <div className="text-[8px] tracking-[3px] text-gold/40 text-center mb-1">✦ ☉ ✦</div>
-        </div>
-        
-        <div className="bg-[#FCF9F1] rounded-xl border border-gold/20 p-1.5 flex flex-col gap-1">
-            <button title="Post-it" onClick={() => { const node = {id:Date.now(), type:'text', x:100, y:100, w:180, h:100, text:'', color:'#fff', owner: currentUser.current}; const nn = [...nodes, node]; setNodes(nn); pushHistory({ type: 'addNode', payload: { node }, timestamp: Date.now() }); addHistory('Post-it adicionado'); }} className="p-2 text-gray-500 hover:text-gold hover:bg-gold/5 rounded-lg transition-all"><Plus size={16}/></button>
-           <button title="Caixa de Texto" onClick={() => { const node = {id:Date.now(), type:'plain-text', x:120, y:120, w:160, h:40, text:'Novo Pensamento', color:'transparent', owner: currentUser.current}; const nn = [...nodes, node]; setNodes(nn); pushHistory({ type: 'addNode', payload: { node }, timestamp: Date.now() }); addHistory('Caixa de texto criada'); }} className="p-2 text-gray-500 hover:text-gold hover:bg-gold/5 rounded-lg transition-all"><Edit3 size={16}/></button>
-           <button title="Lista de Tarefas" onClick={() => { const node = {id:Date.now(), type:'checklist', x:140, y:140, w:200, h:160, items:[{text:'Item 1', done:false}], color:'#fff', owner: currentUser.current}; const nn = [...nodes, node]; setNodes(nn); pushHistory({ type: 'addNode', payload: { node }, timestamp: Date.now() }); addHistory('Checklist criado'); }} className="p-2 text-gray-500 hover:text-gold hover:bg-gold/5 rounded-lg transition-all"><ListTodo size={16}/></button>
-           <button title="Adesivo Estelar" onClick={() => { const node = {id:Date.now(), type:'sticker', x:160, y:160, w:80, h:80, symbol:'☽', color:'transparent', owner: currentUser.current}; const nn = [...nodes, node]; setNodes(nn); pushHistory({ type: 'addNode', payload: { node }, timestamp: Date.now() }); addHistory('Símbolo adicionado'); }} className="p-2 text-gray-500 hover:text-gold hover:bg-gold/5 rounded-lg transition-all"><Star size={16}/></button>
-           <button title="Imagem" onClick={() => { const url = prompt('URL da Imagem:'); if(url) { const node = {id:Date.now(), type:'image', x:150, y:150, w:200, h:140, url, color:'#fff', owner: currentUser.current}; const nn = [...nodes, node]; setNodes(nn); pushHistory({ type: 'addNode', payload: { node }, timestamp: Date.now() }); addHistory('Imagem anexada'); } }} className="p-2 text-gray-500 hover:text-gold hover:bg-gold/5 rounded-lg transition-all"><ImageIcon size={16}/></button>
-           <div className="w-full h-px bg-gold/10 my-0.5" />
-           <button title="Importar do Servidor" onClick={() => setShowAssetPicker(true)} className="p-2 text-gray-500 hover:text-emerald-500 hover:bg-emerald-50 rounded-lg transition-all"><FolderOpen size={16}/></button>
-         </div>
-        
-        <div className="bg-[#FCF9F1] rounded-xl border border-gold/20 p-1.5 flex flex-col gap-1">
-           <button title="Desfazer (Ctrl+Z)" onClick={undo} disabled={undoStack.length === 0} className={`p-2 rounded-lg transition-all ${undoStack.length === 0 ? 'text-gray-200 cursor-not-allowed' : 'text-gray-500 hover:text-gold hover:bg-gold/5'}`}><Undo2 size={16}/></button>
-           <button title="Refazer (Ctrl+Shift+Z)" onClick={redo} disabled={redoStack.length === 0} className={`p-2 rounded-lg transition-all ${redoStack.length === 0 ? 'text-gray-200 cursor-not-allowed' : 'text-gray-500 hover:text-gold hover:bg-gold/5'}`}><Redo2 size={16}/></button>
-           <div className="w-full h-px bg-gold/10 my-0.5" />
-           <button title="Atrair ao Grid" onClick={() => setSnapToGrid(!snapToGrid)} className={`p-2 rounded-lg transition-all ${snapToGrid ? 'bg-gold text-white' : 'text-gray-500 hover:bg-gold/5'}`}><div className="w-3 h-3 border-2 border-current border-dashed rounded-sm opacity-60" /></button>
-           <button title="Exportar JSON" onClick={exportJSON} className="p-2 text-gray-500 hover:text-gold hover:bg-gold/5 rounded-lg transition-all"><ArrowUpRight size={16}/></button>
-           <button title="Exportar SVG" onClick={exportSVG} className="p-2 text-gray-500 hover:text-gold hover:bg-gold/5 rounded-lg transition-all"><Download size={16}/></button>
-           <button title="Enviar por Email" onClick={exportForEmail} className="p-2 text-gray-500 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-all"><Mail size={16}/></button>
-           <button title="Salvar no Google Drive" onClick={exportForDrive} className="p-2 text-gray-500 hover:text-green-500 hover:bg-green-50 rounded-lg transition-all"><Cloud size={16}/></button>
-        </div>
-        
-        {/* ZOOM CONTROLS */}
-        <div className="bg-[#FCF9F1] rounded-xl border border-gold/20 p-1.5 flex flex-col items-center gap-1">
-           <button onClick={() => setZoom(z => Math.min(z+0.2, 3))} className="p-1.5 text-gold/60 hover:text-gold hover:bg-gold/5 rounded-lg transition-all"><ZoomIn size={14}/></button>
-           <span className="text-[7px] font-bold py-0.5 text-gray-400 tracking-tighter">{Math.round(zoom*100)}%</span>
-           <button onClick={() => setZoom(z => Math.max(z-0.2, 0.4))} className="p-1.5 text-gold/60 hover:text-gold hover:bg-gold/5 rounded-lg transition-all"><ZoomOut size={14}/></button>
-        </div>
-      </div>
-
-      <div style={{ transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`, transformOrigin: '0 0' }} className="w-full h-full absolute top-0 left-0 pointer-events-none mesa-svg-container">
-        <svg className="absolute inset-0 w-full h-full overflow-visible pointer-events-none">
-          {edges.map((edge: any) => {
-            const n1 = nodes.find((n: any)=>n.id===edge.from);
-            const n2 = nodes.find((n: any)=>n.id===edge.to);
-            if(!n1 || !n2) return null;
-            return <line 
-              ref={el => { if (el) edgeRefs.current.set(edge.id, el); }}
-              key={edge.id} 
-              x1={n1.x + n1.w/2} y1={n1.y + n1.h/2} x2={n2.x + n2.w/2} y2={n2.y + n2.h/2} 
-              stroke="#c5a059" strokeWidth="1.5" opacity="0.15" 
-              className="transition-opacity hover:opacity-60"
-            />;
-          })}
-          {drawingEdge && <line x1={drawingEdge.x1} y1={drawingEdge.y1} x2={drawingEdge.x2} y2={drawingEdge.y2} stroke="#c5a059" strokeWidth="2" strokeDasharray="4" opacity="0.4" />}
-        </svg>
-        {nodes.map((node: any) => (
-          <div 
-            ref={el => { if (el) nodeRefs.current.set(node.id, el); }}
-            key={node.id} 
-            className={`canvas-node group absolute shadow-xl border rounded-[1.25rem] z-10 flex flex-col pointer-events-auto border-gold/5 hover:border-gold/20 hover:shadow-2xl bg-white`} 
-            data-node-owner={node.owner || 'unknown'}
-            style={{ 
-              transform: `translate(${node.x}px, ${node.y}px)`, 
-              backgroundColor: node.color, 
-              width: node.w, 
-              height: node.h 
-            }} 
-            onPointerUp={() => finishEdge(node.id)}
+    <div className="absolute inset-0 overflow-y-auto" style={{ background: '#F8F8F7', fontFamily: 'Inter, system-ui, sans-serif' }}>
+      <div className="max-w-5xl mx-auto px-8 py-12">
+        {/* Header */}
+        <div className="flex items-end justify-between mb-10">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <LayoutGrid size={18} style={{ color: 'var(--color-gold)' }} />
+              <span className="text-xs font-bold uppercase tracking-[0.2em]" style={{ color: 'var(--color-gold)' }}>Caderno Vivo</span>
+            </div>
+            <h1 className="text-2xl font-bold text-gray-900">Seus cadernos</h1>
+            <p className="text-sm text-gray-400 mt-1">Cada caderno é um espaço vivo de estudo e criação</p>
+          </div>
+          <button
+            onClick={() => setCreating(true)}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90 active:scale-95"
+            style={{ background: '#1A1A1A' }}
           >
-             <div className="cursor-move p-3 flex justify-between items-center bg-black/5 shrink-0" onPointerDown={(e) => {e.stopPropagation(); setDragNode(node.id); (e.target as HTMLElement).setPointerCapture(e.pointerId)}}>
-               <Star size={10} className="text-gold/40"/>
-               <div className="flex gap-2 items-center">
-                 <div className="w-3.5 h-3.5 bg-white border border-gray-100 rounded-lg cursor-pointer hover:scale-125 transition-all shadow-sm" onClick={() => setNodes(nodes.map(n=>n.id===node.id?{...n, color:'#fff'}:n))} />
-                 <div className="w-3.5 h-3.5 bg-[#FCF9F1] border border-gold/10 rounded-lg cursor-pointer hover:scale-125 transition-all shadow-sm" onClick={() => setNodes(nodes.map(n=>n.id===node.id?{...n, color:'#FCF9F1'}:n))} />
-                  <Trash2 size={12} className="text-gray-300 opacity-0 group-hover:opacity-100 cursor-pointer hover:text-red-500 transition-all ml-1" onClick={() => { const deletedNode = nodes.find(n=>n.id===node.id); const deletedEdges = edges.filter(e=>e.from===node.id || e.to===node.id); setNodes(nodes.filter(n=>n.id!==node.id)); setEdges(edges.filter(e=>e.from!==node.id && e.to!==node.id)); pushHistory({ type: 'deleteNode', payload: { node: deletedNode, edges: deletedEdges }, timestamp: Date.now() }); }} />
-               </div>
-             </div>
-             {node.type === 'image' ? (
-                <div className="flex-1 overflow-hidden"><img src={node.url || ''} className="w-full h-full object-cover pointer-events-none" alt="" /></div>
-             ) : node.type === 'sticker' ? (
-                <div className="flex-1 flex items-center justify-center text-4xl select-none leading-none" onPointerDown={e => e.stopPropagation()}>{node.symbol}</div>
-             ) : node.type === 'checklist' ? (
-                <div className="flex-1 p-5 space-y-2 overflow-y-auto no-scrollbar">
-                  {(node.items || []).map((item: any, idx: number) => (
-                    <div key={idx} className="flex items-center gap-3">
-                      <input 
-                        type="checkbox" 
-                        checked={item.done} 
-                        onChange={() => {
-                          const newItems = [...node.items];
-                          newItems[idx].done = !newItems[idx].done;
-                          setNodes(nodes.map(n => n.id === node.id ? { ...n, items: newItems } : n));
+            <Plus size={16} /> Novo caderno
+          </button>
+        </div>
+
+        {intentError && (
+          <div role="alert" className="mb-6 flex items-start gap-3 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+            <AlertCircle size={18} className="mt-0.5 shrink-0" aria-hidden="true" />
+            <p>{intentError}</p>
+          </div>
+        )}
+
+        {/* Create modal inline */}
+        {creating && (
+          <div className="mb-6 p-5 rounded-2xl border-2 border-dashed bg-white" style={{ borderColor: '#E0E0E0' }}>
+            <p className="text-xs font-semibold text-gray-500 mb-3 uppercase tracking-wider">Nome do novo caderno</p>
+            <div className="flex gap-3">
+              <input
+                ref={inputRef}
+                value={newName}
+                onChange={e => setNewName(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter') create(); if (e.key === 'Escape') setCreating(false); }}
+                placeholder="Ex: Estudo de Mercúrio, Planejamento semanal..."
+                className="flex-1 px-4 py-2.5 rounded-xl border text-sm outline-none focus:border-gray-400 transition-all"
+                style={{ borderColor: '#E0E0E0' }}
+              />
+              <button onClick={create} className="px-5 py-2.5 rounded-xl text-sm font-semibold text-white" style={{ background: '#1A1A1A' }}>Criar</button>
+              <button onClick={() => { setCreating(false); setNewName(''); }} className="px-4 py-2.5 rounded-xl text-sm text-gray-400 hover:text-gray-700 transition-all">Cancelar</button>
+            </div>
+          </div>
+        )}
+
+        {/* Board grid */}
+        {boards.length === 0 && !creating ? (
+          <div className="flex flex-col items-center justify-center py-32 text-center">
+            <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4" style={{ background: '#F3F3F1' }}>
+              <LayoutGrid size={24} style={{ color: '#BDBDBD' }} />
+            </div>
+            <p className="text-sm font-semibold text-gray-400">Nenhum caderno ainda</p>
+            <p className="text-xs text-gray-300 mt-1 mb-6">Crie seu primeiro espaço de estudo e criação</p>
+            <button onClick={() => setCreating(true)} className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white" style={{ background: '#1A1A1A' }}>
+              <Plus size={15} /> Criar primeiro caderno
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-3 gap-4">
+            {boards.map(board => (
+              <div
+                key={board.id}
+                role="button"
+                tabIndex={0}
+                aria-label={`Abrir caderno ${board.name}`}
+                className="group relative bg-white rounded-2xl overflow-hidden cursor-pointer transition-all hover:shadow-lg hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2"
+                style={{ border: '1px solid #EBEBEB', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}
+                onClick={() => onOpen(board)}
+                onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); onOpen(board); } }}
+              >
+                {/* Preview area */}
+                <div className="h-36 relative overflow-hidden" style={{ background: '#F8F8F7' }}>
+                  {/* Mini node previews */}
+                  <div className="absolute inset-3 overflow-hidden">
+                    {(board.nodes || []).slice(0, 6).map((node: any, i: number) => (
+                      <div
+                        key={node.id}
+                        className="absolute rounded text-[7px] font-medium truncate px-2 py-1 shadow-sm"
+                        style={{
+                          left: `${(i % 3) * 32 + 5}%`,
+                          top: `${Math.floor(i / 3) * 45 + 5}%`,
+                          width: '28%',
+                          background: node.color || '#FFFDE7',
+                          color: '#555',
+                          border: '1px solid rgba(0,0,0,0.06)',
                         }}
-                        className="w-4 h-4 accent-gold"
-                      />
-                      <input 
-                        className={`flex-1 bg-transparent text-[12px] font-bold outline-none ${item.done ? 'line-through opacity-40' : 'text-gray-700'}`}
-                        value={item.text}
-                        onChange={(e) => {
-                          const newItems = [...node.items];
-                          newItems[idx].text = e.target.value;
-                          setNodes(nodes.map(n => n.id === node.id ? { ...n, items: newItems } : n));
-                        }}
-                      />
-                    </div>
-                  ))}
-                  <button 
-                    onClick={() => {
-                      const newItems = [...(node.items || []), { text: '', done: false }];
-                      setNodes(nodes.map(n => n.id === node.id ? { ...n, items: newItems } : n));
-                    }}
-                    className="text-[10px] font-black uppercase text-gold/60 hover:text-gold mt-2 tracking-widest"
+                      >
+                        {node.text?.slice(0, 20) || (node.type === 'checklist' ? '☑ Lista' : node.type === 'image' ? '🖼 Img' : '...')}
+                      </div>
+                    ))}
+                    {!(board.nodes?.length > 0) && (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <Sparkles size={20} style={{ color: '#DCDCDC' }} />
+                      </div>
+                    )}
+                  </div>
+                  {/* Delete button */}
+                  <button
+                    type="button"
+                    aria-label={`Apagar caderno ${board.name}`}
+                    title="Apagar caderno"
+                    className="absolute top-2 right-2 w-7 h-7 rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:bg-red-50"
+                    style={{ background: 'rgba(255,255,255,0.9)', border: '1px solid #EBEBEB' }}
+                    onClick={e => { e.stopPropagation(); setConfirmDelete(board.id); }}
                   >
-                    + Item
+                    <Trash2 size={12} style={{ color: '#E57373' }} />
                   </button>
                 </div>
-             ) : node.type === 'plain-text' ? (
-                <textarea className="flex-1 bg-transparent p-5 resize-none outline-none font-sans text-[12px] font-black text-gray-800 no-scrollbar overflow-hidden tracking-tight" value={node.text} onChange={e => setNodes(nodes.map(n=>n.id===node.id?{...n, text:e.target.value}:n))} onPointerDown={e => e.stopPropagation()} />
-             ) : (
-                <textarea className="flex-1 bg-transparent p-3 resize-none outline-none font-sans text-[12px] leading-relaxed text-gray-700 no-scrollbar font-medium placeholder:italic placeholder:opacity-30" value={node.text} onChange={e => setNodes(nodes.map(n=>n.id===node.id?{...n, text:e.target.value}:n))} onPointerDown={e => e.stopPropagation()} placeholder="Transcrição de ideia..." />
-             )}
-             
-             {/* CONNECTORS - Visible on Hover */}
-             <div className="hook-dot -right-1.5 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all" onPointerDown={(e) => startEdge(node.id, e)} />
-             <div className="hook-dot -left-1.5 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all" onPointerDown={(e) => startEdge(node.id, e)} />
-             
-             {/* RESIZE HANDLES - Visible on Hover */}
-             <div className="resize-handle resize-se -right-1.5 -bottom-1.5 opacity-0 group-hover:opacity-100 transition-all cursor-se-resize w-3 h-3 bg-gold/30 hover:bg-gold/60 rounded-bl-sm" onPointerDown={(e) => { e.stopPropagation(); setResizeNode({id: node.id, corner: 'se'}); (e.target as HTMLElement).setPointerCapture(e.pointerId); }} />
-             <div className="resize-handle resize-sw -left-1.5 -bottom-1.5 opacity-0 group-hover:opacity-100 transition-all cursor-sw-resize w-3 h-3 bg-gold/30 hover:bg-gold/60 rounded-br-sm" onPointerDown={(e) => { e.stopPropagation(); setResizeNode({id: node.id, corner: 'sw'}); (e.target as HTMLElement).setPointerCapture(e.pointerId); }} />
-             <div className="resize-handle resize-ne -right-1.5 -top-1.5 opacity-0 group-hover:opacity-100 transition-all cursor-ne-resize w-3 h-3 bg-gold/30 hover:bg-gold/60 rounded-bl-sm" onPointerDown={(e) => { e.stopPropagation(); setResizeNode({id: node.id, corner: 'ne'}); (e.target as HTMLElement).setPointerCapture(e.pointerId); }} />
-             <div className="resize-handle resize-nw -left-1.5 -top-1.5 opacity-0 group-hover:opacity-100 transition-all cursor-nw-resize w-3 h-3 bg-gold/30 hover:bg-gold/60 rounded-br-sm" onPointerDown={(e) => { e.stopPropagation(); setResizeNode({id: node.id, corner: 'nw'}); (e.target as HTMLElement).setPointerCapture(e.pointerId); }} />
-           </div>
-        ))}
+                {/* Info */}
+                <div className="px-4 py-3">
+                  <p className="text-sm font-semibold text-gray-800 truncate">{board.name}</p>
+                  <div className="flex items-center gap-1 mt-1">
+                    <Clock size={10} style={{ color: '#BDBDBD' }} />
+                    <span className="text-xs text-gray-400">{fmt(board.updated_at || board.updatedAt)}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
-      
-      {/* Asset Picker Modal */}
-      {showAssetPicker && (
-        <AssetPicker
-          onClose={() => setShowAssetPicker(false)}
-          onImport={(item) => {
-            const node = {
-              id: Date.now(),
-              type: item.type === 'astro' ? 'text' : item.type === 'calendar' ? 'text' : item.type === 'task' ? 'checklist' : 'text',
-              x: 200 + Math.random() * 200,
-              y: 200 + Math.random() * 200,
-              w: 260,
-              h: item.type === 'task' ? 160 : 120,
-              text: `[${item.type.toUpperCase()}] ${item.title}\n\n${item.preview}`,
-              color: item.type === 'astro' ? '#FFF8E1' : item.type === 'calendar' ? '#E8F5E9' : item.type === 'task' ? '#F3E5F5' : '#E3F2FD',
-              items: item.type === 'task' ? [{ text: item.title, done: item.data?.completed || false }] : undefined,
-              owner: currentUser.current,
-            };
-            setNodes(prev => [...prev, node]);
-            pushHistory({ type: 'addNode', payload: { node }, timestamp: Date.now() });
-            setShowAssetPicker(false);
-            addHistory(`Importado: ${item.title}`);
-          }}
-        />
-      )}
 
+      {/* Confirm delete dialog */}
+      {confirmDelete && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm" onClick={() => setConfirmDelete(null)}>
+           <div role="dialog" aria-modal="true" aria-labelledby="delete-caderno-title" className="bg-white rounded-2xl p-6 w-80 shadow-2xl" onClick={e => e.stopPropagation()}>
+             <h3 id="delete-caderno-title" className="text-sm font-bold text-gray-900 mb-2">Apagar caderno?</h3>
+            <p className="text-xs text-gray-400 mb-5">Esta ação não pode ser desfeita. Todos os cards serão removidos.</p>
+            <div className="flex justify-end gap-2">
+              <button onClick={() => setConfirmDelete(null)} className="px-4 py-2 text-sm text-gray-500 hover:text-gray-700 transition-all">Cancelar</button>
+              <button onClick={() => remove(confirmDelete)} className="px-5 py-2 rounded-xl text-sm font-semibold text-white" style={{ background: '#EF4444' }}>Apagar</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
-/*
-  COLLABORATION_READY:
-  Para implementar colaboração em tempo real via WebSocket:
-  
-  1. Criar hook useCollaboration(boardId) que:
-     - Estabelece conexão WebSocket com servidor
-     - Sincroniza estado via pushHistory
-     - Escuta eventos de outros usuários:
-       - node:created, node:updated, node:deleted
-       - edge:created, edge:deleted
-       - cursor:moved (para indicadores de posição)
-     - Transmite mudanças locais para servidor
-  
-  2. No componente MesaCriacao, substituir pushHistory por:
-     - pushHistoryAndBroadcast(action) que também envia via WebSocket
-  
-  3. Adicionar indicadores visuais de presença:
-     - Cursores coloridos de outros usuários
-     - Borda colorida nos nodes com data-node-owner
-  
-  4. Servidor pode usar: socket.io, WebSocket nativo, ou Supabase Realtime
-  
-  5. Estrutura de mensagem sugerida:
-     {
-       type: 'action',
-       boardId: string,
-       userId: string,
-       action: HistoryAction,
-       timestamp: number
-     }
-*/
+// ─────────────────────────────────────────────────────────────
+// MESA CANVAS — the actual board editor
+// ─────────────────────────────────────────────────────────────
+const MesaCanvas = ({
+  board,
+  initialStudyNodeId,
+  onBack,
+}: {
+  board: CadernoBoard;
+  initialStudyNodeId: number | null;
+  onBack: (b: CadernoBoard) => void;
+}) => {
+  const [nodes, setNodes] = useState<CadernoNode[]>(board.nodes);
+  const [edges, setEdges] = useState<CadernoEdge[]>(board.edges);
+  const [boardName, setBoardName] = useState(board.name);
+  const [editingName, setEditingName] = useState(false);
+  const [pan, setPan] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [tool, setTool] = useState<Tool>('select');
+  const [selected, setSelected] = useState<number | null>(initialStudyNodeId);
+  const [studyPanelOpen, setStudyPanelOpen] = useState(true);
+  const [saveState, setSaveState] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+  const [stickyColor, setStickyColor] = useState(STICKY_COLORS[0]);
+
+  const [dragNode, setDragNode] = useState<{ id: number; prev: { x: number; y: number } } | null>(null);
+  const [resizeNode, setResizeNode] = useState<{ id: number; prev: { w: number; h: number } } | null>(null);
+  const [connectSourceId, setConnectSourceId] = useState<number | null>(null);
+  const [selectedEdgeId, setSelectedEdgeId] = useState<number | null>(null);
+
+  const [undoStack, setUndoStack] = useState<HistoryAction[]>([]);
+  const [redoStack, setRedoStack] = useState<HistoryAction[]>([]);
+  const [showAssetPicker, setShowAssetPicker] = useState(false);
+  const [showImageModal, setShowImageModal] = useState(false);
+  const [imageUrlInput, setImageUrlInput] = useState('');
+  const [focusNodeId, setFocusNodeId] = useState<number | null>(null);
+  const { toast, show: showToast } = useToast();
+
+  const nodesRef = useRef<CadernoNode[]>([]);
+  const edgesRef = useRef<CadernoEdge[]>([]);
+  const nodeRefs = useRef<Map<number, HTMLDivElement>>(new Map());
+  const edgeRefs = useRef<Map<number, SVGLineElement>>(new Map());
+  const nameInputRef = useRef<HTMLInputElement>(null);
+  const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const saveVersion = useRef(0);
+  const isPanning = useRef(false);
+
+  useEffect(() => { nodesRef.current = nodes; }, [nodes]);
+  useEffect(() => { edgesRef.current = edges; }, [edges]);
+  useEffect(() => { if (editingName) setTimeout(() => nameInputRef.current?.focus(), 30); }, [editingName]);
+  useEffect(() => {
+    if (initialStudyNodeId !== null && nodes.some(node => node.id === initialStudyNodeId)) {
+      setSelected(initialStudyNodeId);
+      setStudyPanelOpen(true);
+    }
+  }, [initialStudyNodeId, nodes]);
+
+  // Auto-save with debounce
+  useEffect(() => {
+    if (saveTimer.current) clearTimeout(saveTimer.current);
+    const version = ++saveVersion.current;
+    setSaveState('saving');
+    saveTimer.current = setTimeout(() => {
+      void safeInvoke<number>('save_board', { boardId: board.id, name: boardName, nodes, edges }).then(savedAt => {
+        if (version !== saveVersion.current) return;
+        setSaveState(typeof savedAt === 'number' ? 'saved' : 'error');
+      });
+    }, 800);
+    return () => { if (saveTimer.current) clearTimeout(saveTimer.current); };
+  }, [nodes, edges, boardName, board.id]);
+
+  // ── History ────────────────────────────────────────────────
+  const pushHistory = useCallback((action: HistoryAction) => {
+    setUndoStack(prev => {
+      const s = [...prev, action];
+      return s.length > MAX_HISTORY ? s.slice(-MAX_HISTORY) : s;
+    });
+    setRedoStack([]);
+  }, []);
+
+  const applyAction = useCallback((action: HistoryAction, direction: 'undo' | 'redo') => {
+    const isUndo = direction === 'undo';
+    switch (action.type) {
+      case 'addNode':    isUndo ? setNodes(n => n.filter(x => x.id !== action.payload.node.id)) : setNodes(n => [...n, action.payload.node]); break;
+      case 'deleteNode':
+        if (isUndo) {
+          setNodes(n => [...n, action.payload.node]);
+          setEdges(e => [...e, ...(action.payload.edges || [])]);
+        } else {
+          setNodes(n => n.filter(x => x.id !== action.payload.node.id));
+          setEdges(e => e.filter(x => x.from !== action.payload.node.id && x.to !== action.payload.node.id));
+        }
+        break;
+      case 'addEdge':
+        isUndo ? setEdges(e => e.filter(x => x.id !== action.payload.edge.id)) : setEdges(e => [...e, action.payload.edge]);
+        break;
+      case 'deleteEdge':
+        isUndo ? setEdges(e => [...e, action.payload.edge]) : setEdges(e => e.filter(x => x.id !== action.payload.edge.id));
+        break;
+      case 'moveNode':
+      case 'resizeNode':
+      case 'updateNode': {
+        const state = isUndo ? action.payload.prev : action.payload.next;
+        setNodes(n => n.map(x => x.id === action.payload.id ? { ...x, ...state } : x));
+        break;
+      }
+    }
+  }, []);
+
+  const undo = useCallback(() => {
+    setUndoStack(prev => {
+      if (!prev.length) return prev;
+      const action = prev[prev.length - 1];
+      applyAction(action, 'undo');
+      setRedoStack(r => [...r, action]);
+      return prev.slice(0, -1);
+    });
+  }, [applyAction]);
+
+  const redo = useCallback(() => {
+    setRedoStack(prev => {
+      if (!prev.length) return prev;
+      const action = prev[prev.length - 1];
+      applyAction(action, 'redo');
+      setUndoStack(u => [...u, action]);
+      return prev.slice(0, -1);
+    });
+  }, [applyAction]);
+
+  // ── Keyboard shortcuts ─────────────────────────────────────
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      const typing = document.activeElement instanceof HTMLInputElement || document.activeElement instanceof HTMLTextAreaElement;
+      if (!typing && (e.ctrlKey || e.metaKey) && !e.shiftKey && e.key === 'z') { e.preventDefault(); undo(); }
+      if (!typing && (e.ctrlKey || e.metaKey) && (e.shiftKey && e.key === 'z' || e.key === 'y')) { e.preventDefault(); redo(); }
+      if (!typing) {
+        if (e.key === 'Delete' || e.key === 'Backspace') {
+          if (selectedEdgeId !== null) {
+            const edge = edgesRef.current.find(item => item.id === selectedEdgeId);
+            if (edge) {
+              pushHistory({ type: 'deleteEdge', payload: { edge } });
+              setEdges(items => items.filter(item => item.id !== edge.id));
+            }
+            setSelectedEdgeId(null);
+          } else if (selected !== null) {
+            deleteNode(selected);
+            setSelected(null);
+          }
+        }
+        if (e.key === 'v') setTool('select');
+        if (e.key === 'n') { setTool('sticky'); }
+        if (e.key === 't') setTool('text');
+        if (e.key === 'c') setTool('checklist');
+        if (e.key === 'Escape') {
+          setSelected(null);
+          setSelectedEdgeId(null);
+          setConnectSourceId(null);
+          setTool('select');
+          setFocusNodeId(null);
+        }
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [undo, redo, selected, selectedEdgeId, pushHistory]);
+
+  // ── Node helpers ───────────────────────────────────────────
+  const centerPos = () => ({
+    x: snap((-pan.x + window.innerWidth / 2) / zoom - 100),
+    y: snap((-pan.y + window.innerHeight / 2) / zoom - 60),
+  });
+
+  const addNode = (partial: Partial<CadernoNode>) => {
+    const { x, y } = centerPos();
+    const node: CadernoNode = { id: Date.now(), type: 'sticky', x, y, w: 200, h: 160, text: '', color: stickyColor, ...partial };
+    setNodes(p => [...p, node]);
+    pushHistory({ type: 'addNode', payload: { node } });
+    setSelected(node.id);
+    setFocusNodeId(node.id);
+    setTool('select');
+  };
+
+  const deleteNode = useCallback((id: number) => {
+    const node = nodesRef.current.find(n => n.id === id);
+    if (!node) return;
+    const affectedEdges = edgesRef.current.filter(e => e.from === id || e.to === id);
+    pushHistory({ type: 'deleteNode', payload: { node, edges: affectedEdges } });
+    setNodes(p => p.filter(n => n.id !== id));
+    setEdges(p => p.filter(e => e.from !== id && e.to !== id));
+  }, [pushHistory]);
+
+  const updateNode = (id: number, patch: Partial<CadernoNode>) => {
+    const prev = nodesRef.current.find(n => n.id === id);
+    if (!prev) return;
+    setNodes(p => p.map(n => n.id === id ? { ...n, ...patch } : n));
+  };
+
+  // ── Canvas interaction ─────────────────────────────────────
+  const onPointerMove = (e: React.PointerEvent) => {
+    if (dragNode !== null) {
+      const node = nodesRef.current.find(n => n.id === dragNode.id);
+      if (node) {
+        node.x += e.movementX / zoom;
+        node.y += e.movementY / zoom;
+        const el = nodeRefs.current.get(dragNode.id);
+        if (el) el.style.transform = `translate(${snap(node.x)}px, ${snap(node.y)}px)`;
+        edgesRef.current.forEach(edge => {
+          if (edge.from === dragNode.id || edge.to === dragNode.id) {
+            const n1 = nodesRef.current.find(n => n.id === edge.from);
+            const n2 = nodesRef.current.find(n => n.id === edge.to);
+            const line = edgeRefs.current.get(edge.id);
+            if (n1 && n2 && line) {
+              line.setAttribute('x1', String(n1.x + n1.w / 2));
+              line.setAttribute('y1', String(n1.y + n1.h / 2));
+              line.setAttribute('x2', String(n2.x + n2.w / 2));
+              line.setAttribute('y2', String(n2.y + n2.h / 2));
+            }
+          }
+        });
+      }
+    }
+    if (resizeNode !== null) {
+      const node = nodesRef.current.find(n => n.id === resizeNode.id);
+      if (node) {
+        node.w = Math.max(120, node.w + e.movementX / zoom);
+        node.h = Math.max(80, node.h + e.movementY / zoom);
+        const el = nodeRefs.current.get(resizeNode.id);
+        if (el) { el.style.width = `${node.w}px`; el.style.height = `${node.h}px`; }
+      }
+    }
+    if (isPanning.current && e.buttons === 1 && dragNode === null && resizeNode === null) {
+      setPan(p => ({ x: p.x + e.movementX, y: p.y + e.movementY }));
+    }
+  };
+
+  const onPointerUp = () => {
+    if (dragNode !== null) {
+      const node = nodesRef.current.find(n => n.id === dragNode.id);
+      if (node) {
+        node.x = snap(node.x); node.y = snap(node.y);
+        if (node.x !== dragNode.prev.x || node.y !== dragNode.prev.y) {
+          pushHistory({ type: 'moveNode', payload: { id: node.id, prev: dragNode.prev, next: { x: node.x, y: node.y } } });
+        }
+        setNodes([...nodesRef.current]);
+      }
+    }
+    if (resizeNode !== null) {
+      const node = nodesRef.current.find(n => n.id === resizeNode.id);
+      if (node) {
+        if (node.w !== resizeNode.prev.w || node.h !== resizeNode.prev.h) {
+          pushHistory({ type: 'resizeNode', payload: { id: node.id, prev: resizeNode.prev, next: { w: node.w, h: node.h } } });
+        }
+        setNodes([...nodesRef.current]);
+      }
+    }
+    setDragNode(null);
+    setResizeNode(null);
+    isPanning.current = false;
+  };
+
+  const onCanvasPointerDown = (_e: React.PointerEvent) => {
+    if (tool === 'select') {
+      isPanning.current = true;
+      setSelected(null);
+      setFocusNodeId(null);
+    }
+  };
+
+  const onCanvasClick = (_e: React.MouseEvent) => {
+    if (tool === 'sticky')    { addNode({ type: 'sticky', color: stickyColor }); return; }
+    if (tool === 'text')      { addNode({ type: 'text', w: 200, h: 50, color: 'transparent', text: '' }); return; }
+    if (tool === 'checklist') { addNode({ type: 'checklist', w: 240, h: 180, items: [{ text: '', done: false }], color: '#ffffff' }); return; }
+    if (tool === 'shape')     { addNode({ type: 'shape', w: 180, h: 100, color: '#EDE9FE', text: '' }); return; }
+    if (tool === 'image')     { setShowImageModal(true); return; }
+  };
+
+  const onWheel = (e: React.WheelEvent) => {
+    e.preventDefault();
+    if (e.ctrlKey || e.metaKey) {
+      setZoom(z => Math.min(3, Math.max(0.15, z * (e.deltaY < 0 ? 1.08 : 0.93))));
+    } else {
+      setPan(p => ({ x: p.x - e.deltaX, y: p.y - e.deltaY }));
+    }
+  };
+
+  const connectNode = (id: number, e: React.PointerEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (connectSourceId === null) {
+      setConnectSourceId(id);
+      setSelected(id);
+      setSelectedEdgeId(null);
+      showToast('Agora clique no cartão que deseja conectar.');
+      return;
+    }
+
+    if (connectSourceId === id) {
+      setConnectSourceId(null);
+      showToast('Conexão cancelada.');
+      return;
+    }
+
+    const alreadyConnected = edgesRef.current.some(edge =>
+      (edge.from === connectSourceId && edge.to === id) || (edge.from === id && edge.to === connectSourceId),
+    );
+    if (alreadyConnected) {
+      setConnectSourceId(null);
+      showToast('Esses cartões já estão conectados.', false);
+      return;
+    }
+
+    const edge: CadernoEdge = { id: Date.now(), from: connectSourceId, to: id };
+    setEdges(items => [...items, edge]);
+    pushHistory({ type: 'addEdge', payload: { edge } });
+    setConnectSourceId(null);
+    setSelectedEdgeId(edge.id);
+    showToast('Conexão criada. Use Delete para removê-la.');
+  };
+
+  const deleteEdge = (id: number) => {
+    const edge = edgesRef.current.find(item => item.id === id);
+    if (!edge) return;
+    pushHistory({ type: 'deleteEdge', payload: { edge } });
+    setEdges(items => items.filter(item => item.id !== id));
+    setSelectedEdgeId(null);
+    showToast('Conexão removida.');
+  };
+
+  // ── Export ─────────────────────────────────────────────────
+  const exportJSON = () => {
+    const blob = new Blob([JSON.stringify({ boardName, nodes, edges }, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `${boardName.replace(/\s+/g, '_')}_${Date.now()}.json`;
+    a.click();
+    showToast('Board exportado como JSON');
+  };
+
+  // ── Tool palette ───────────────────────────────────────────
+  const tools: { id: Tool; icon: React.ReactNode; label: string; key?: string }[] = [
+    { id: 'select',    icon: <MousePointer2 size={16} />, label: 'Cursor',    key: 'V' },
+    { id: 'sticky',    icon: <StickyNote    size={16} />, label: 'Post-it',   key: 'N' },
+    { id: 'text',      icon: <Type          size={16} />, label: 'Texto',     key: 'T' },
+    { id: 'checklist', icon: <CheckSquare   size={16} />, label: 'Lista',     key: 'C' },
+    { id: 'shape',     icon: <Square        size={16} />, label: 'Forma',     key: '' },
+    { id: 'connect',   icon: <Link2         size={16} />, label: 'Conectar',  key: '' },
+    { id: 'image',     icon: <ImageIcon     size={16} />, label: 'Imagem',    key: '' },
+  ];
+
+  // ─────────────────────────────────────────────────────────
+  // RENDER
+  // ─────────────────────────────────────────────────────────
+  return (
+    <div className="absolute inset-0 flex flex-col overflow-hidden" style={{ background: '#F8F8F7', fontFamily: 'Inter, system-ui, sans-serif', userSelect: 'none' }}>
+
+      {/* ── Top toolbar ── */}
+      <div className="relative z-50 shrink-0 flex min-w-max items-center gap-3 overflow-x-auto px-3 py-2 no-scrollbar"
+        style={{ background: '#ffffff', borderBottom: '1px solid #EBEBEB', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+
+        {/* Back button */}
+        <button
+          onClick={() => onBack({ ...board, name: boardName, nodes, edges, updatedAt: Date.now() })}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-all"
+        >
+          <ChevronLeft size={14} /> Boards
+        </button>
+
+        <div className="w-px h-5" style={{ background: '#EBEBEB' }} />
+
+        {/* Board name */}
+        {editingName ? (
+          <input
+            ref={nameInputRef}
+            value={boardName}
+            onChange={e => setBoardName(e.target.value)}
+            onBlur={() => setEditingName(false)}
+            onKeyDown={e => { if (e.key === 'Enter' || e.key === 'Escape') setEditingName(false); }}
+            className="text-sm font-semibold text-gray-800 outline-none border-b-2 bg-transparent px-1"
+            style={{ borderColor: '#1A1A1A', minWidth: 120 }}
+          />
+        ) : (
+          <button
+            onClick={() => setEditingName(true)}
+            className="flex items-center gap-1.5 text-sm font-semibold text-gray-800 hover:text-gray-600 transition-all group"
+          >
+            {boardName}
+            <Pencil size={11} className="text-gray-300 group-hover:text-gray-500 transition-all" />
+          </button>
+        )}
+
+        <div className="w-px h-5" style={{ background: '#EBEBEB' }} />
+
+        <button
+          type="button"
+          onClick={() => setStudyPanelOpen(open => !open)}
+          aria-pressed={studyPanelOpen}
+          className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold text-gray-600 transition-all hover:bg-gray-100 hover:text-gray-900"
+          title={studyPanelOpen ? 'Ocultar a área de escrita' : 'Mostrar Board e estudo lado a lado'}
+        >
+          <BookOpen size={14} aria-hidden="true" />
+          {studyPanelOpen ? 'Board + estudo' : 'Abrir estudo'}
+        </button>
+
+        <div className="w-px h-5" style={{ background: '#EBEBEB' }} />
+
+        {/* Undo/Redo */}
+        <button onClick={undo} disabled={undoStack.length === 0} title="Desfazer (Ctrl+Z)"
+          className="p-1.5 rounded-lg transition-all hover:bg-gray-100 disabled:opacity-25 disabled:cursor-not-allowed">
+          <Undo2 size={14} className="text-gray-600" />
+        </button>
+        <button onClick={redo} disabled={redoStack.length === 0} title="Refazer (Ctrl+Y)"
+          className="p-1.5 rounded-lg transition-all hover:bg-gray-100 disabled:opacity-25 disabled:cursor-not-allowed">
+          <Redo2 size={14} className="text-gray-600" />
+        </button>
+
+        <div className="w-px h-5" style={{ background: '#EBEBEB' }} />
+
+        {/* Tool palette */}
+        <div className="flex items-center gap-0.5 px-1.5 py-1 rounded-xl" style={{ background: '#F4F4F2', border: '1px solid #E8E8E8' }}>
+          {tools.map(t => (
+            <button
+              key={t.id}
+              onClick={() => {
+                setTool(t.id);
+                setConnectSourceId(null);
+                setSelectedEdgeId(null);
+              }}
+              title={t.label + (t.key ? ` (${t.key})` : '')}
+              aria-label={t.label}
+              aria-pressed={tool === t.id}
+              className="relative flex flex-col items-center gap-0.5 px-2.5 py-1.5 rounded-lg transition-all"
+              style={{
+                background: tool === t.id ? '#ffffff' : 'transparent',
+                color: tool === t.id ? '#111' : '#888',
+                boxShadow: tool === t.id ? '0 1px 3px rgba(0,0,0,0.10)' : 'none',
+              }}
+            >
+              {t.icon}
+              <span className="text-[8px] font-medium leading-none tracking-tight">{t.label}</span>
+            </button>
+          ))}
+        </div>
+
+        {/* Color palette — shown when sticky/shape is active */}
+        {(tool === 'sticky' || tool === 'shape') && (
+          <>
+            <div className="w-px h-5" style={{ background: '#EBEBEB' }} />
+            <div className="flex items-center gap-1">
+              {STICKY_COLORS.map(c => (
+                <button
+                  key={c}
+                  onClick={() => setStickyColor(c)}
+                  aria-label={`Selecionar cor ${c}`}
+                  aria-pressed={stickyColor === c}
+                  className="w-5 h-5 rounded-full transition-all hover:scale-110"
+                  style={{ background: c, border: stickyColor === c ? '2px solid #333' : '1.5px solid #D8D8D8' }}
+                />
+              ))}
+            </div>
+          </>
+        )}
+
+        {/* Spacer */}
+        <div className="flex-1" />
+
+        {/* Right actions */}
+        <button onClick={() => setShowAssetPicker(true)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-gray-500 hover:bg-gray-100 transition-all">
+          <FolderOpen size={13} /> Importar
+        </button>
+        <button onClick={exportJSON} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-gray-500 hover:bg-gray-100 transition-all">
+          <Download size={13} /> Exportar
+        </button>
+
+        <div className="w-px h-5" style={{ background: '#EBEBEB' }} />
+
+        {/* Zoom */}
+        <div className="flex items-center gap-0.5 px-1.5 py-1 rounded-lg" style={{ background: '#F4F4F2', border: '1px solid #E8E8E8' }}>
+          <button onClick={() => setZoom(z => Math.max(0.15, z - 0.1))} className="p-1 rounded hover:bg-white transition-all" title="Diminuir (-)">
+            <ZoomOut size={13} className="text-gray-500" />
+          </button>
+          <button
+            onClick={() => { setZoom(1); setPan({ x: 0, y: 0 }); }}
+            className="text-[11px] font-bold text-gray-600 hover:text-gray-900 transition-all w-10 text-center"
+            title="Resetar zoom"
+          >
+            {Math.round(zoom * 100)}%
+          </button>
+          <button onClick={() => setZoom(z => Math.min(3, z + 0.1))} className="p-1 rounded hover:bg-white transition-all" title="Aumentar (+)">
+            <ZoomIn size={13} className="text-gray-500" />
+          </button>
+        </div>
+      </div>
+
+      {/* ── Canvas ── */}
+      <div className="relative flex min-h-0 flex-1">
+      <div
+        className="relative min-w-0 flex-1 overflow-hidden"
+        style={{ cursor: tool === 'select' ? (dragNode ? 'grabbing' : 'default') : 'crosshair' }}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+        onPointerDown={onCanvasPointerDown}
+        onWheel={onWheel}
+        onClick={onCanvasClick}
+      >
+        {/* Dot grid */}
+        <div className="absolute inset-0 pointer-events-none" style={{
+          backgroundImage: 'radial-gradient(circle, #C8C8C8 1px, transparent 1px)',
+          backgroundSize: `${GRID_SIZE * zoom}px ${GRID_SIZE * zoom}px`,
+          backgroundPosition: `${pan.x}px ${pan.y}px`,
+          opacity: 0.5,
+        }} />
+
+        {/* SVG edges */}
+        <svg className="absolute inset-0 w-full h-full overflow-visible pointer-events-none">
+          <g transform={`translate(${pan.x} ${pan.y}) scale(${zoom})`}>
+            {edges.map(edge => {
+              const n1 = nodes.find(n => n.id === edge.from);
+              const n2 = nodes.find(n => n.id === edge.to);
+              if (!n1 || !n2) return null;
+              return (
+                <g key={edge.id} className="pointer-events-auto">
+                  <line
+                    ref={el => { if (el) edgeRefs.current.set(edge.id, el); }}
+                    x1={n1.x + n1.w / 2} y1={n1.y + n1.h / 2}
+                    x2={n2.x + n2.w / 2} y2={n2.y + n2.h / 2}
+                    stroke={selectedEdgeId === edge.id ? '#4A9EFF' : '#9CA3AF'}
+                    strokeWidth={selectedEdgeId === edge.id ? 2.5 : 1.5}
+                    strokeDasharray={selectedEdgeId === edge.id ? 'none' : '5 4'}
+                  />
+                  {/* Clickable delete area */}
+                  <line
+                    x1={n1.x + n1.w / 2} y1={n1.y + n1.h / 2}
+                    x2={n2.x + n2.w / 2} y2={n2.y + n2.h / 2}
+                    stroke="transparent" strokeWidth={14} style={{ cursor: 'pointer' }}
+                    onClick={event => {
+                      event.stopPropagation();
+                      setSelectedEdgeId(edge.id);
+                      setSelected(null);
+                    }}
+                  />
+                </g>
+              );
+            })}
+          </g>
+        </svg>
+
+        {/* Nodes */}
+        <div style={{ transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`, transformOrigin: '0 0', position: 'absolute', top: 0, left: 0 }}>
+          {nodes.map(node => (
+            <NodeCard
+              key={node.id}
+              node={node}
+              selected={selected === node.id}
+              tool={tool}
+              autoFocus={focusNodeId === node.id}
+              onFocused={() => setFocusNodeId(null)}
+              onSelect={() => { setSelected(node.id); setFocusNodeId(null); }}
+              onOpenStudy={() => { setSelected(node.id); setStudyPanelOpen(true); }}
+              onDragStart={e => {
+                if (tool !== 'select') return;
+                e.stopPropagation();
+                isPanning.current = false;
+                setDragNode({ id: node.id, prev: { x: node.x, y: node.y } });
+                setSelected(node.id);
+                setSelectedEdgeId(null);
+              }}
+              onResizeStart={e => {
+                e.stopPropagation();
+                isPanning.current = false;
+                setResizeNode({ id: node.id, prev: { w: node.w, h: node.h } });
+              }}
+              onDelete={() => { deleteNode(node.id); setSelected(null); }}
+              onUpdate={patch => updateNode(node.id, patch)}
+              onConnect={e => connectNode(node.id, e)}
+              nodeRef={el => { if (el) nodeRefs.current.set(node.id, el); }}
+            />
+          ))}
+        </div>
+
+        {/* Empty state */}
+        {nodes.length === 0 && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+            <Sparkles size={24} style={{ color: '#D0D0D0' }} className="mb-3" />
+            <p className="text-sm font-medium" style={{ color: '#C0C0C0' }}>Board vazio</p>
+            <p className="text-xs mt-1" style={{ color: '#D0D0D0' }}>Escolha uma ferramenta ou pressione N</p>
+          </div>
+        )}
+
+        {/* Connection guidance */}
+        {tool === 'connect' && (
+          <div className="absolute left-1/2 top-4 z-30 -translate-x-1/2 rounded-full border border-blue-200 bg-white/95 px-4 py-2 text-[11px] font-semibold text-blue-700 shadow-sm" aria-live="polite">
+            {connectSourceId === null ? 'Conectar: clique no primeiro cartão.' : 'Agora clique no cartão de destino — Esc cancela.'}
+          </div>
+        )}
+
+        {selectedEdgeId !== null && (
+          <div className="absolute bottom-4 right-4 z-30 flex items-center gap-2 rounded-xl border border-blue-200 bg-white px-3 py-2 text-[11px] font-semibold text-gray-700 shadow-sm">
+            Conexão selecionada
+            <button
+              type="button"
+              onClick={() => deleteEdge(selectedEdgeId)}
+              className="rounded-md px-2 py-1 text-red-600 transition hover:bg-red-50"
+            >
+              Remover
+            </button>
+          </div>
+        )}
+
+        {/* Status bar */}
+        {nodes.length > 0 && (
+          <div className="absolute bottom-4 left-4 flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-medium pointer-events-none"
+            style={{ background: 'rgba(255,255,255,0.85)', border: '1px solid #EBEBEB', color: '#AAAAAA', backdropFilter: 'blur(4px)' }}>
+            <Move size={10} />
+            {nodes.length} card{nodes.length !== 1 ? 's' : ''} · Scroll para navegar · Ctrl+Scroll para zoom
+          </div>
+        )}
+      </div>
+
+      {studyPanelOpen && (
+        <StudyPanel
+          node={nodes.find(node => node.id === selected) || null}
+          boardName={boardName}
+          saveState={saveState}
+          onUpdate={patch => {
+            if (selected !== null) updateNode(selected, patch);
+          }}
+          onExpandBoard={() => setStudyPanelOpen(false)}
+        />
+      )}
+      </div>
+
+      {/* ── Image modal ── */}
+      {showImageModal && (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/40 backdrop-blur-sm" onClick={() => setShowImageModal(false)}>
+          <div className="bg-white rounded-2xl p-6 w-[440px] shadow-2xl" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="text-sm font-bold text-gray-900">Inserir imagem</h3>
+                <p className="text-xs text-gray-400 mt-0.5">Cole a URL de uma imagem (PNG, JPG, WebP, GIF)</p>
+              </div>
+              <button onClick={() => setShowImageModal(false)} className="p-1.5 text-gray-300 hover:text-gray-600 rounded-lg transition-all"><X size={16} /></button>
+            </div>
+            <input
+              autoFocus type="url"
+              placeholder="https://exemplo.com/imagem.jpg"
+              value={imageUrlInput}
+              onChange={e => setImageUrlInput(e.target.value)}
+              onKeyDown={e => {
+                if (e.key === 'Enter' && imageUrlInput.trim()) {
+                  addNode({ type: 'image', url: imageUrlInput.trim(), w: 260, h: 180, color: '#fff', text: imageUrlInput.trim() });
+                  setShowImageModal(false); setImageUrlInput('');
+                }
+              }}
+              className="w-full px-4 py-2.5 rounded-xl text-sm outline-none transition-all mb-4"
+              style={{ border: '1px solid #E0E0E0', background: '#FAFAFA' }}
+            />
+            <div className="flex justify-end gap-2">
+              <button onClick={() => { setShowImageModal(false); setImageUrlInput(''); }} className="px-4 py-2 text-sm text-gray-400 hover:text-gray-700 transition-all rounded-lg hover:bg-gray-100">Cancelar</button>
+              <button
+                onClick={() => {
+                  if (imageUrlInput.trim()) {
+                    addNode({ type: 'image', url: imageUrlInput.trim(), w: 260, h: 180, color: '#fff', text: imageUrlInput.trim() });
+                    setShowImageModal(false); setImageUrlInput('');
+                  }
+                }}
+                disabled={!imageUrlInput.trim()}
+                className="px-5 py-2 rounded-xl text-sm font-semibold text-white disabled:opacity-30 transition-all"
+                style={{ background: '#1A1A1A' }}
+              >
+                Inserir
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showAssetPicker && (
+        <AssetPicker
+          onClose={() => setShowAssetPicker(false)}
+          onImport={item => {
+            addNode({
+              type: item.type === 'task' ? 'checklist' : 'sticky',
+              w: 240, h: 160,
+              text: item.type !== 'task' ? `${item.title}\n\n${item.preview}` : undefined,
+              items: item.type === 'task' ? [{ text: item.title, done: !!item.data?.completed }] : undefined,
+              color: item.type === 'astro' ? '#FFFDE7' : item.type === 'calendar' ? '#E3F2FD' : STICKY_COLORS[0],
+            });
+            setShowAssetPicker(false);
+            showToast(`Importado: ${item.title}`);
+          }}
+        />
+      )}
+
+      {/* Toast */}
+      {toast && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[300] flex items-center gap-2 px-4 py-2.5 rounded-xl shadow-lg text-xs font-semibold animate-in slide-in-from-bottom-3 fade-in"
+          style={{ background: toast.ok ? '#1A1A1A' : '#EF4444', color: '#fff' }}>
+          {toast.ok ? <Check size={12} /> : <AlertCircle size={12} />}
+          {toast.msg}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ─────────────────────────────────────────────────────────────
+// NODE CARD — clean, Figma/Miro-inspired
+// ─────────────────────────────────────────────────────────────
+interface NodeCardProps {
+  node: CadernoNode;
+  selected: boolean;
+  tool: Tool;
+  autoFocus: boolean;
+  onFocused: () => void;
+  onSelect: () => void;
+  onOpenStudy: () => void;
+  onDragStart: (e: React.PointerEvent) => void;
+  onResizeStart: (e: React.PointerEvent) => void;
+  onDelete: () => void;
+  onUpdate: (patch: Partial<CadernoNode>) => void;
+  onConnect: (e: React.PointerEvent) => void;
+  nodeRef: (el: HTMLDivElement | null) => void;
+}
+
+const NodeCard: React.FC<NodeCardProps> = ({
+  node, selected, tool, autoFocus, onFocused, onSelect,
+  onDragStart, onResizeStart, onDelete, onUpdate, onOpenStudy,
+  onConnect, nodeRef,
+}) => {
+  const isText      = node.type === 'text';
+  const isChecklist = node.type === 'checklist';
+  const isImage     = node.type === 'image';
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [imgError, setImgError] = useState(false);
+  const [showColorPicker, setShowColorPicker] = useState(false);
+
+  // Auto-focus textarea when a new node is created
+  useEffect(() => {
+    if (autoFocus && textareaRef.current) {
+      textareaRef.current.focus();
+      textareaRef.current.setSelectionRange(0, textareaRef.current.value.length);
+      onFocused();
+    }
+  }, [autoFocus, onFocused]);
+
+  const bg    = isText ? 'transparent' : (node.color || '#FFFDE7');
+  const isTransparent = isText;
+
+  const cardStyle: React.CSSProperties = {
+    position: 'absolute',
+    transform: `translate(${node.x}px, ${node.y}px)`,
+    width: node.w,
+    height: node.h,
+    background: bg,
+    borderRadius: isText ? 6 : 12,
+    border: isTransparent
+      ? 'none'
+      : selected
+        ? '1.5px solid #4A9EFF'
+        : '1px solid rgba(0,0,0,0.08)',
+    boxShadow: isTransparent ? 'none' : selected
+      ? '0 0 0 3px rgba(74,158,255,0.15), 0 4px 16px rgba(0,0,0,0.10)'
+      : '0 1px 4px rgba(0,0,0,0.06), 0 2px 8px rgba(0,0,0,0.04)',
+    cursor: tool === 'connect' ? 'crosshair' : 'default',
+    display: 'flex',
+    flexDirection: 'column',
+    overflow: 'hidden',
+    transition: 'box-shadow 0.12s, border-color 0.12s',
+  };
+
+  return (
+    <div
+      ref={nodeRef}
+      style={cardStyle}
+      className="group"
+      onPointerDown={e => {
+        if (tool === 'connect') { onConnect(e); return; }
+        onSelect();
+      }}
+      onDoubleClick={event => {
+        event.stopPropagation();
+        onOpenStudy();
+      }}
+    >
+      {/* ── Header (drag zone + controls) ── */}
+      {!isText && (
+        <div
+          className="shrink-0 flex items-center justify-between px-2 py-1.5 transition-opacity"
+          style={{
+            background: 'rgba(0,0,0,0.025)',
+            borderBottom: '1px solid rgba(0,0,0,0.04)',
+            cursor: 'grab',
+            opacity: selected ? 1 : 0,
+          }}
+          onPointerDown={onDragStart}
+        >
+          {/* Color dot */}
+          <div className="relative" onClick={e => e.stopPropagation()}>
+            <button
+              className="w-3 h-3 rounded-full border border-white/80 shadow-sm hover:scale-125 transition-all"
+              style={{ background: node.color === 'transparent' ? '#E0E0E0' : (node.color || '#FFFDE7') }}
+              onClick={() => setShowColorPicker(p => !p)}
+            />
+            {showColorPicker && (
+              <div
+                className="absolute top-6 left-0 z-50 bg-white rounded-xl shadow-xl border flex gap-1.5 p-2"
+                style={{ border: '1px solid #EBEBEB' }}
+              >
+                {[...STICKY_COLORS, '#ffffff', '#F1F5F9'].map(c => (
+                  <button
+                    key={c}
+                    onClick={() => { onUpdate({ color: c }); setShowColorPicker(false); }}
+                    className="w-5 h-5 rounded-full hover:scale-110 transition-all"
+                    style={{ background: c, border: node.color === c ? '2px solid #333' : '1.5px solid #D0D0D0' }}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              onClick={event => { event.stopPropagation(); onOpenStudy(); }}
+              className="flex h-5 w-5 items-center justify-center rounded text-gray-400 transition-all hover:bg-white hover:text-amber-700"
+              title="Abrir estudo deste card"
+              aria-label="Abrir estudo deste card"
+            >
+              <BookOpen size={10} aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              onClick={event => { event.stopPropagation(); onDelete(); }}
+              className="flex h-5 w-5 items-center justify-center rounded text-gray-300 transition-all hover:bg-red-50 hover:text-red-400"
+              title="Excluir card"
+              aria-label="Excluir card"
+            >
+              <X size={10} aria-hidden="true" />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ── Content ── */}
+      <div className="flex-1 flex flex-col min-h-0">
+        {isImage ? (
+          <div className="flex-1 flex items-center justify-center overflow-hidden">
+            {imgError ? (
+              <div className="flex flex-col items-center gap-2 p-4 text-center">
+                <ImageIcon size={24} style={{ color: '#D0D0D0' }} />
+                <p className="text-[10px] text-gray-300 font-medium">Imagem não carregou</p>
+                <input
+                  className="text-[10px] text-blue-400 underline bg-transparent outline-none w-full text-center"
+                  value={node.url || ''}
+                  onChange={e => { onUpdate({ url: e.target.value }); setImgError(false); }}
+                  onPointerDown={e => e.stopPropagation()}
+                  onClick={e => e.stopPropagation()}
+                  placeholder="Editar URL..."
+                />
+              </div>
+            ) : (
+              <img
+                src={node.url}
+                alt=""
+                className="w-full h-full object-contain pointer-events-none"
+                onError={() => setImgError(true)}
+              />
+            )}
+          </div>
+        ) : isChecklist ? (
+          <div className="flex-1 px-3 pb-3 pt-2 overflow-y-auto space-y-1.5 no-scrollbar">
+            {(node.items || []).map((item, idx) => (
+              <div key={idx} className="flex items-center gap-2 group/item">
+                <button
+                  onClick={e => {
+                    e.stopPropagation();
+                    const items = [...(node.items || [])];
+                    items[idx].done = !items[idx].done;
+                    onUpdate({ items });
+                  }}
+                  className="w-4 h-4 rounded border-2 flex items-center justify-center shrink-0 transition-all"
+                  style={{ borderColor: item.done ? '#4A9EFF' : '#D0D0D0', background: item.done ? '#4A9EFF' : 'transparent' }}
+                >
+                  {item.done && <Check size={9} color="#fff" strokeWidth={3} />}
+                </button>
+                <input
+                  className={`flex-1 text-[12px] bg-transparent outline-none transition-colors ${item.done ? 'line-through text-gray-300' : 'text-gray-700'}`}
+                  style={{ fontFamily: 'inherit' }}
+                  value={item.text}
+                  onChange={e => {
+                    const items = [...(node.items || [])];
+                    items[idx].text = e.target.value;
+                    onUpdate({ items });
+                  }}
+                  onClick={e => e.stopPropagation()}
+                  onPointerDown={e => e.stopPropagation()}
+                  placeholder="Item..."
+                  onKeyDown={e => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      const items = [...(node.items || [])];
+                      items.splice(idx + 1, 0, { text: '', done: false });
+                      onUpdate({ items });
+                    }
+                    if (e.key === 'Backspace' && !item.text && (node.items || []).length > 1) {
+                      e.preventDefault();
+                      const items = (node.items || []).filter((_, i) => i !== idx);
+                      onUpdate({ items });
+                    }
+                  }}
+                />
+                <button
+                  className="w-4 h-4 flex items-center justify-center opacity-0 group-hover/item:opacity-100 text-gray-200 hover:text-red-400 transition-all"
+                  onClick={e => {
+                    e.stopPropagation();
+                    const items = (node.items || []).filter((_, i) => i !== idx);
+                    onUpdate({ items: items.length ? items : [{ text: '', done: false }] });
+                  }}
+                >
+                  <X size={9} />
+                </button>
+              </div>
+            ))}
+            <button
+              className="flex items-center gap-1 text-[11px] font-medium text-gray-300 hover:text-gray-500 transition-all mt-1"
+              onClick={e => {
+                e.stopPropagation();
+                const items = [...(node.items || []), { text: '', done: false }];
+                onUpdate({ items });
+              }}
+            >
+              <Plus size={11} /> Adicionar
+            </button>
+          </div>
+        ) : isText ? (
+          /* Plain text: no header, full area */
+          <div className="relative flex-1">
+            <textarea
+              ref={textareaRef}
+              className="w-full h-full bg-transparent resize-none outline-none text-[13px] font-medium text-gray-800 leading-relaxed"
+              style={{ padding: '6px 8px', fontFamily: 'inherit', cursor: 'text' }}
+              value={node.text || ''}
+              onChange={e => onUpdate({ text: e.target.value })}
+              onClick={e => e.stopPropagation()}
+              onPointerDown={e => e.stopPropagation()}
+              placeholder="Clique para escrever..."
+            />
+            {/* Drag handle for text nodes */}
+            <div
+              className="absolute top-1 right-1 w-5 h-5 rounded flex items-center justify-center cursor-grab opacity-0 group-hover:opacity-100 transition-all"
+              style={{ background: 'rgba(0,0,0,0.05)' }}
+              onPointerDown={onDragStart}
+            >
+              <MoreHorizontal size={10} className="text-gray-400" />
+            </div>
+            {/* Text delete */}
+            {selected && (
+              <button
+                className="absolute top-0.5 left-0.5 w-5 h-5 rounded flex items-center justify-center text-gray-200 hover:text-red-400 hover:bg-red-50 transition-all"
+                onClick={e => { e.stopPropagation(); onDelete(); }}
+              >
+                <X size={10} />
+              </button>
+            )}
+          </div>
+        ) : (
+          /* sticky / shape */
+          <textarea
+            ref={textareaRef}
+            className="flex-1 bg-transparent resize-none outline-none text-[13px] text-gray-800 leading-relaxed"
+            style={{ padding: '10px 14px', fontFamily: 'inherit', cursor: 'text' }}
+            value={node.text || ''}
+            onChange={e => onUpdate({ text: e.target.value })}
+            onClick={e => e.stopPropagation()}
+            onPointerDown={e => e.stopPropagation()}
+            placeholder="Escreva aqui..."
+          />
+        )}
+      </div>
+
+      {/* ── Connection dots — visible on hover or in connect mode ── */}
+      {(tool === 'connect' || selected) && !isText && (
+        <>
+          {[
+            { style: { top: -5, left: '50%', transform: 'translateX(-50%)' } },
+            { style: { bottom: -5, left: '50%', transform: 'translateX(-50%)' } },
+            { style: { left: -5, top: '50%', transform: 'translateY(-50%)' } },
+            { style: { right: -5, top: '50%', transform: 'translateY(-50%)' } },
+          ].map((pos, i) => (
+            <div
+              key={i}
+              onPointerDown={e => {
+                e.stopPropagation();
+                onConnect(e);
+              }}
+              style={{
+                position: 'absolute',
+                ...pos.style,
+                width: 10, height: 10,
+                borderRadius: '50%',
+                background: '#fff',
+                border: '1.5px solid #4A9EFF',
+                cursor: 'crosshair',
+                zIndex: 20,
+              }}
+            />
+          ))}
+        </>
+      )}
+
+      {/* ── Resize handle ── */}
+      {selected && !isText && (
+        <div
+          style={{ position: 'absolute', bottom: -4, right: -4, width: 10, height: 10, borderRadius: 2, background: '#4A9EFF', cursor: 'se-resize', zIndex: 20 }}
+          onPointerDown={e => { e.stopPropagation(); onResizeStart(e); }}
+        />
+      )}
+    </div>
+  );
+};
