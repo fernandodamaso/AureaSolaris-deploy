@@ -23,7 +23,7 @@ export const PdfViewer = ({ url, name, onClose }: PdfViewerProps) => {
             </div>
             <div>
               <h3 className="text-sm font-black uppercase tracking-widest text-gray-800">{name}</h3>
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-tighter">Documento Alfred - Visualizador Seguro</p>
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-tighter">Documento Aurea Solaris - Visualizador Seguro</p>
             </div>
           </div>
           
@@ -68,7 +68,7 @@ export const PdfViewer = ({ url, name, onClose }: PdfViewerProps) => {
         
         {/* FOOTER */}
         <div className="px-8 py-4 bg-white border-t border-gray-100 flex justify-between items-center">
-          <p className="text-[10px] font-bold text-gray-300 uppercase tracking-widest italic">Processado por Alfred Logistics Hub</p>
+          <p className="text-[10px] font-bold text-gray-300 uppercase tracking-widest italic">Processado por Aurea Solaris</p>
           <div className="flex gap-4">
             <span className="text-[10px] font-black text-gold/40 uppercase tracking-tighter">Criptografia Local Ativa</span>
             <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.5)]" />

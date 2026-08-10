@@ -1,36 +1,25 @@
 import { useState, useEffect } from 'react';
-import {
-  Calendar, PieChart,
-  Settings,
-  User, Star, Edit3, Eye, Clock,
-  Sparkles, X, Activity,
-  PanelLeftClose, PanelLeftOpen,
-  Package
-} from 'lucide-react';
-import { safeInvoke } from './utils/tauri';
+import { Edit3, Star, Activity, Calendar, User, PanelLeftOpen, PanelLeftClose, MessageCircle } from 'lucide-react';
 import "./styles.css";
 
-// Hooks
-import { useAstrologyData } from './hooks/useAstrologyData';
-import { useAgendaTasks } from './hooks/useAgendaTasks';
-import { useFinancas } from './context/FinancasContext';
-import { AgendaProvider } from './context/AgendaContext';
-import { DiarioProvider } from './context/DiarioContext';
+// Contexts
+import { useGlobalContext } from './context/GlobalContext.tsx';
 
 // Components
 import { NavItem } from './components/common/UIComponents';
-import { AgentChat } from './components/AgentChat';
 import { AgendaView } from './components/agenda/AgendaView';
 import { AstrologiaPage } from './components/AstrologiaBoard';
 import { SaudeView } from './components/SaudeView';
-import { FinancasView } from './components/FinancasView';
-import { ControlePanel } from './components/ControlePanel';
+
 import { MesaCriacao } from './components/MesaCriacao';
+import type { CadernoIntent } from './components/MesaCriacao';
 import { MemoriasView } from './components/MemoriasView';
-import { AlfredHubView } from './components/AlfredHubView';
 import { LoginView } from './components/LoginView';
 import { DiarioView } from './components/DiarioView';
 import { ProfileEditor } from './components/ProfileEditor';
+import { HermesChat } from './components/HermesChat';
+import { safeInvoke } from './utils/tauri';
+
 // --- ESTILOS GLOBAIS ---
 const globalStyles = `
   @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800&family=Raleway:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
@@ -40,388 +29,294 @@ const globalStyles = `
   .font-label { font-family: 'Raleway', sans-serif; }
   .no-scrollbar::-webkit-scrollbar { display: none; }
   .glass-panel { background: rgba(252, 249, 241, 0.95); backdrop-filter: blur(16px); }
-  .paper-bg { background-color: #FCF9F1; }
+  .paper-bg { background-color: var(--color-paper); }
   .panel-light { background-color: #ffffff; border: 1px solid rgba(197, 160, 89, 0.08); border-radius: 12px; }
-  .text-gold { color: #c5a059; }
-  .bg-gold { background-color: #c5a059; }
+  .text-gold { color: var(--color-gold); }
+  .bg-gold { background-color: var(--color-gold); }
   
   .layout-grid { display: grid; height: 100vh; width: 100vw; overflow: hidden; background: #0e1120; gap: 16px; padding: 16px; transition: grid-template-columns 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-  .main-area { border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; background: #FCF9F1; position: relative; }
+  .main-area { border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; background: var(--color-paper); position: relative; }
 
-  .hook-dot { position: absolute; width: 8px; height: 8px; background: #c5a059; border: 1.5px solid white; border-radius: 50%; opacity: 0; transition: 0.2s; cursor: crosshair; z-index: 40; }
-  .canvas-node:hover .hook-dot { opacity: 1; }
-  .hook-dot:hover { transform: scale(1.5); box-shadow: 0 0 8px rgba(197, 160, 89, 0.3); }
-
-  /* Moldura Cósmica Sutil */
   .cosmic-border {
     border: 1px solid rgba(197, 160, 89, 0.25);
   }
-  
-  /* Moldura Cósmica com Azul */
-  .cosmic-border-blue {
-    border: 1px solid rgba(37, 99, 235, 0.2);
-    border-top-color: rgba(37, 99, 235, 0.4);
-  }
-  
-  /* Chat Panel - sem sombra exagerada */
+   
   .chat-panel {
     border: 1px solid rgba(197, 160, 89, 0.15);
     overflow: hidden;
   }
-  
+   
   .section-title {
     font-family: 'Montserrat', sans-serif;
     font-size: 10px;
     text-transform: uppercase;
     letter-spacing: 4px;
-    color: #c5a059;
+    color: var(--color-gold);
     border-bottom: 1px solid rgba(197, 160, 89, 0.3);
     padding-bottom: 8px;
     margin-bottom: 15px;
   }
-  
-  .pill-cosmic {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 10px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: #c5a059;
-    border: 1px solid #c5a059;
-    padding: 4px 12px;
-    border-radius: 2px;
+  .hook-dot {
+    width: 10px; height: 10px; border-radius: 50%; background: var(--color-gold);
+    cursor: crosshair; z-index: 20;
   }
+  .hook-dot:hover { transform: scale(1.6); background: #B8860B; }
+  .canvas-node { transition: box-shadow 0.2s, border-color 0.2s; }
 `;
+
+const PlanetaryInfo = () => {
+  const { astro } = useGlobalContext();
+  return (
+    <div className="flex items-center gap-2 flex-nowrap">
+      {/* Moon Phase */}
+      <div title={astro.error || 'Valor astronômico recebido do motor'} className="flex items-center gap-1.5 bg-mystic-bg border border-gold/20 px-2 py-1 rounded-sm">
+        <span className="text-gold text-[10px]">{astro.liveData?.moon_phase?.icon || '—'}</span>
+        <span className="text-[10px] font-bold uppercase tracking-wider text-gold">{astro.loading ? 'calculando' : astro.liveData?.moon_phase?.phase || 'indisponível'}</span>
+      </div>
+
+      {/* Regent Pill */}
+      <div title="Regra tradicional baseada no dia da semana; não é um valor astronômico calculado." className="flex items-center gap-2 bg-white border border-gray-100 px-2 py-1 rounded-sm">
+        <span className="text-gold text-[10px]">{astro.dayRegent.icon}</span>
+        <span className="text-[9px] font-bold uppercase text-gray-400 tracking-wider">Regra do dia: {astro.dayRegent.name}</span>
+      </div>
+
+      {/* Planetary Hour */}
+      <div title={astro.error || 'Valor astronômico recebido do motor'} className="flex items-center gap-1.5 bg-[#171c31] text-gold px-2 py-1 rounded-sm border border-gold/30">
+        <span className="text-[10px] opacity-80">{astro.planetaryHour.icon}</span>
+        <span className="text-[10px] font-bold text-white">{astro.loading ? '...' : astro.planetaryHour.time}</span>
+      </div>
+    </div>
+  );
+};
 
 export default function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(() => !!localStorage.getItem('aurea_active_id'));
+  // Identificador de perfil não é sessão autenticada. Sempre exigir a senha ao abrir.
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isRestoringAccess, setIsRestoringAccess] = useState(true);
   const [currentPage, setCurrentPage] = useState('astrologia');
-  const [isStrangeOpen, setIsStrangeOpen] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-  const [isChatCollapsed, setIsChatCollapsed] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [activeProfileId, setActiveProfileId] = useState<string | null>(localStorage.getItem('aurea_active_id'));
-  const [strangeMsgs, setStrangeMsgs] = useState<any[]>([]);
-  const [strangeInput, setStrangeInput] = useState('');
-  const [loadingStrange, setLoadingStrange] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [cadernoIntent, setCadernoIntent] = useState<CadernoIntent | null>(null);
+      
+  const { agenda } = useGlobalContext();
+  const masterProfile = agenda.activeProfile;
 
-  const { profiles, tasks, updateProfile, addProfile: addRootProfile, getMetrics, getPlanetRegency, getAlfredInsights } = useAgendaTasks();
-  const { stats: financeStats, goals } = useFinancas();
-  const masterProfile = profiles.find(p => p.id === activeProfileId) || profiles[0];
-
-  const { liveData, getPlanetaryHour, transits } = useAstrologyData(masterProfile?.natal);
-  const [currentTime, setCurrentTime] = useState(getPlanetaryHour());
-
-  useEffect(() => {
-    const timer = setInterval(() => setCurrentTime(getPlanetaryHour()), 60000);
-    return () => clearInterval(timer);
-  }, [getPlanetaryHour]);
-
-  const hasChat = !['mesa-criacao', 'memorias', 'diario'].includes(currentPage);
   const isMesa = currentPage === 'mesa-criacao';
 
+  const openCaderno = (intent: CadernoIntent) => {
+    setCadernoIntent(intent);
+    setCurrentPage('mesa-criacao');
+  };
+
   useEffect(() => {
-    const load = async () => {
-      const h = await safeInvoke<any[]>('load_history', { agent: 'Strange' });
-      if (h) setStrangeMsgs(h);
-      else setStrangeMsgs([{ role: 'assistant', content: 'Olho de Agamotto detecta estabilidade dimensional.' }]);
+    let active = true;
+    const restoreRememberedAccess = async () => {
+      const rememberedOwner = await safeInvoke<string | null>('remembered_owner_get');
+      if (!active || !rememberedOwner) {
+        if (active) setIsRestoringAccess(false);
+        return;
+      }
+
+      const profile = agenda.profiles.find(candidate => candidate.id === rememberedOwner);
+      if (!profile) {
+        await safeInvoke('remembered_owner_clear');
+        if (active) setIsRestoringAccess(false);
+        return;
+      }
+
+      const openedOwner = await safeInvoke<string>('private_session_open', { ownerId: rememberedOwner });
+      if (!active) return;
+      if (openedOwner === rememberedOwner) {
+        agenda.setActiveProfileId(rememberedOwner);
+        localStorage.setItem('aurea_active_id', rememberedOwner);
+        setIsAuthenticated(true);
+      } else {
+        await safeInvoke('remembered_owner_clear');
+      }
+      if (active) setIsRestoringAccess(false);
     };
-    load();
+    void restoreRememberedAccess();
+    return () => { active = false; };
+  }, [agenda]);
+
+  const handleLogout = async () => {
+    await safeInvoke('private_session_close');
+    await safeInvoke('remembered_owner_clear');
+    localStorage.removeItem('aurea_active_id');
+    agenda.setActiveProfileId('');
+    setIsAuthenticated(false);
+    setIsProfileOpen(false);
+  };
+
+  useEffect(() => {
+    const handleOpen = () => setIsChatOpen(true);
+    const handleOpenCaderno = (event: Event) => {
+      const intent = (event as CustomEvent<CadernoIntent>).detail;
+      if (!intent || !['browse', 'create-study', 'open-study'].includes(intent.type)) return;
+      setCadernoIntent(intent);
+      setCurrentPage('mesa-criacao');
+    };
+    window.addEventListener('open-hermes-chat', handleOpen);
+    window.addEventListener('open-caderno-vivo', handleOpenCaderno);
+    return () => {
+      window.removeEventListener('open-hermes-chat', handleOpen);
+      window.removeEventListener('open-caderno-vivo', handleOpenCaderno);
+    };
   }, []);
 
-  const handleStrange = async () => {
-    if (!strangeInput.trim() || loadingStrange) return;
-    const ut = [...strangeMsgs, { role: 'user', content: strangeInput }];
-    setStrangeMsgs(ut);
-    setStrangeInput('');
-    setLoadingStrange(true);
+  
 
-    try {
-      const planetaryHour = getPlanetaryHour();
-      const regency = getPlanetRegency(new Date());
-      const metrics = getMetrics();
-      const insights = getAlfredInsights();
-      const pendingTasks = tasks.filter((t: any) => !t.completed && !t.is_completed);
-      const completedTasks = tasks.filter((t: any) => t.completed || t.is_completed);
-      
-      const planets = liveData?.planets || {};
-      const aspects = liveData?.aspects || [];
-      const retrogradePlanets = Object.entries(planets)
-        .filter(([_, v]: any) => v?.retrograde)
-        .map(([k]) => k);
-      
-      const planetPositions = Object.entries(planets)
-        .map(([k, v]: any) => `${k}: ${v?.pos_in_sign?.toFixed(1) || 0}° ${v?.sign || '?'}`)
-        .join(', ');
-      
-      const skyAspects = aspects.slice(0, 5).map((a: any) => `${a.p1} ${a.symbol} ${a.p2}`).join(', ') || 'Nenhum';
-      const transitSummary = transits.slice(0, 5).map((t: any) => `${t.p} ${t.icon} ${t.n}`).join(', ') || 'Nenhum';
-
-      const systemContext = `
-═══════════════════════════════════════════════════
-VISÃO MACRO DR. STRANGE — AUREA SOLARIS
-═══════════════════════════════════════════════════
-
---- TEMPORAL ---
-Data: ${new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })}
-Hora Planetária: ${planetaryHour.icon} ${planetaryHour.name} (${planetaryHour.time})
-Regente do Dia: ${regency.icon} ${regency.name}
-Página Ativa: ${currentPage}
-
---- PERFIL ---
-Nome: ${masterProfile?.name || 'Não configurado'}
-
---- ASTROLOGIA (RESUMO) ---
-Planetas: ${planetPositions}
-Aspectos no céu: ${skyAspects}
-Trânsitos pessoais: ${transitSummary}
-Retrogradações: ${retrogradePlanets.length > 0 ? retrogradePlanets.join(', ') : 'Nenhuma'}
-
---- TAREFAS ---
-Pendentes: ${pendingTasks.length} | Completas: ${completedTasks.length} | Progresso: ${metrics.done}%
-${pendingTasks.slice(0, 3).map((t: any) => `- ${t.content || t.title}`).join('\n') || '- Nenhuma pendente'}
-
---- FINANÇAS ---
-Saldo: R$ ${financeStats.balance.toLocaleString('pt-BR')}
-Entradas: R$ ${financeStats.incomes.toLocaleString('pt-BR')} | Saídas: R$ ${financeStats.expenses.toLocaleString('pt-BR')}
-Metas ativas: ${goals.length}
-
---- INSIGHTS DO ALFRED ---
-${insights.map(i => `- [${i.type}] ${i.content}`).join('\n') || '- Nenhum insight gerado'}
-
---- STATUS ---
-Sistema: Estável | Agentes: 5 ativos | Memória: Persistente
-`;
-
-      const aiMode = localStorage.getItem('ai_master_switch') || 'ollama';
-      let res: string | null = null;
-      
-      if (aiMode === 'ollama') {
-        res = await safeInvoke<string>('ollama_chat', {
-          messages: [
-            { role: 'system', content: `Você é Dr. Strange, o mestre supremo do sistema Aurea Solaris. Você tem visão MACRO de TUDO: astrologia, tarefas, finanças, saúde, horários planetários. Conecte padrões entre os dados e dê visão estratégica. Seja sábio, conciso, místico e proativa. Quando apropriado, sugira ações concretas (criar tarefa, verificar finanças, etc.).\n\n${systemContext}` },
-            ...ut.slice(-6)
-          ]
-        });
-      } else {
-        res = await safeInvoke<string>('openrouter_chat', {
-          model: 'google/gemini-2.0-pro-exp-02-05',
-          messages: [
-            { role: 'system', content: `Você é Dr. Strange, o mestre supremo do sistema Aurea Solaris. Você tem visão MACRO de TUDO: astrologia, tarefas, finanças, saúde, horários planetários. Conecte padrões entre os dados e dê visão estratégica. Seja sábio, conciso, místico e proativa. Quando apropriado, sugira ações concretas (criar tarefa, verificar finanças, etc.).\n\n${systemContext}` },
-            ...ut.slice(-6)
-          ]
-        });
-      }
-      
-      if (res) {
-        const f = [...ut, { role: 'assistant', content: res }];
-        setStrangeMsgs(f);
-        await safeInvoke('save_history', { agent: 'Strange', history: f, chat_id: null });
-      }
-    } catch (err) {
-      console.error("Strange error:", err);
-    }
-    setLoadingStrange(false);
-  };
+  
 
   const renderPage = () => {
     switch (currentPage) {
-      case 'astrologia': return <AstrologiaPage />;
+      case 'astrologia': return <AstrologiaPage onOpenCaderno={openCaderno} />;
       case 'saude': return <SaudeView />;
       case 'agenda': return <AgendaView />;
-      case 'financas': return <FinancasView />;
-      case 'controle': return <ControlePanel />;
-      case 'mesa-criacao': return <MesaCriacao />;
+
+      
+      case 'mesa-criacao': return <MesaCriacao ownerId={masterProfile?.id} intent={cadernoIntent} onIntentHandled={() => setCadernoIntent(null)} />;
       case 'memorias': return <MemoriasView />;
-      case 'hub': return <AlfredHubView />;
-      case 'diario': return <DiarioView />;
-      default: return <AstrologiaPage />;
+      
+      case 'diario': return (
+        <DiarioView
+          onOpenStudy={(boardId, nodeId) => openCaderno({ type: 'open-study', boardId, nodeId })}
+        />
+      );
+      default: return <AstrologiaPage onOpenCaderno={openCaderno} />;
     }
   };
 
-
+  if (isRestoringAccess) {
+    return <div className="fixed inset-0 bg-[#FCF9F1]" aria-label="Restaurando acesso" />;
+  }
 
   if (!isAuthenticated) {
     return (
       <LoginView 
-        profiles={profiles} 
-        onLogin={(id) => {
-          setActiveProfileId(id);
+        profiles={agenda.profiles} 
+        onLogin={async (id, password, rememberAccess) => {
+          const result = await agenda.authenticateProfile(id, password);
+          if (!result.ok) return result;
+          const openedOwner = await safeInvoke<string>('private_session_open', { ownerId: id });
+          if (openedOwner !== id) return { ok: false, error: 'Nao foi possivel abrir sua sessao privada neste computador.' };
+          agenda.setActiveProfileId(id);
           localStorage.setItem('aurea_active_id', id);
+          let notice: string | undefined;
+          if (rememberAccess) {
+            const remembered = await safeInvoke('remembered_owner_set', { ownerId: id });
+            if (remembered === null) notice = 'O acesso foi aberto, mas nao pode ser mantido neste Windows.';
+          } else {
+            await safeInvoke('remembered_owner_clear');
+          }
           setIsAuthenticated(true);
+          return { ok: true, notice };
         }}
-        onSignUp={(name) => {
-          addRootProfile(name);
+        onSignUp={async (name, password, rememberAccess) => {
+          try {
+            const profile = await agenda.addProfile(name, password);
+            const openedOwner = await safeInvoke<string>('private_session_open', { ownerId: profile.id });
+            if (openedOwner !== profile.id) return { ok: false, error: 'Seu perfil foi criado, mas a sessao privada nao pode ser aberta. Tente entrar novamente.' };
+            let notice: string | undefined;
+            if (rememberAccess) {
+              const remembered = await safeInvoke('remembered_owner_set', { ownerId: profile.id });
+              if (remembered === null) notice = 'Perfil criado, mas o acesso nao pode ser mantido neste Windows.';
+            }
+            setIsAuthenticated(true);
+            return { ok: true, notice };
+          } catch (error) {
+            return { ok: false, error: error instanceof Error ? error.message : 'Não foi possível criar o perfil.' };
+          }
         }}
       />
     );
-   }
-   
-     return (
-       <AgendaProvider>
-         <DiarioProvider>
-           <div className="layout-grid font-sans overflow-hidden" style={{ gridTemplateColumns: `${isSidebarCollapsed ? '80px' : '260px'} 1fr ${hasChat ? (isChatCollapsed ? '80px' : '360px') : '0px'}` }}>
-             <style>{globalStyles}</style>
-             
-       {/* SIDEBAR - Borda Cósmica */}
-      <aside className="bg-white rounded-[1.5rem] border border-[#c5a059]/20 shadow-xl shrink-0 z-30 flex flex-col relative overflow-hidden transition-all duration-300 cosmic-border">
+  }
+
+  return (
+    <div className="layout-grid font-sans overflow-hidden" 
+      style={{ gridTemplateColumns: `${isSidebarCollapsed ? "80px" : "260px"} 1fr` }}>
+      <style>{globalStyles}</style>
+      
+      {/* SIDEBAR */}
+      <aside className="bg-white rounded-[1.5rem] border border-(--color-gold)/20 shadow-xl shrink-0 z-30 flex flex-col relative overflow-hidden transition-all duration-300 cosmic-border">
         <div className="flex items-center gap-4 p-8 pb-4 shrink-0">
-          <div className="cursor-pointer hover:rotate-12 transition-all shrink-0" onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}>
+          <button type="button" aria-label={isSidebarCollapsed ? 'Expandir menu lateral' : 'Recolher menu lateral'} aria-expanded={!isSidebarCollapsed} className="p-1 hover:rotate-12 focus-visible:outline-2 focus-visible:outline-gold rounded transition-all shrink-0" onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}>
             {isSidebarCollapsed ? <PanelLeftOpen size={24} className="text-gold"/> : <PanelLeftClose size={24} className="text-gold"/>}
-          </div>
-          {/* SVG sempre visível — texto condicional */}
+          </button>
           <svg width="28" height="28" viewBox="0 0 130 130" fill="none">
-            <circle cx="65" cy="65" r="18" stroke="#c5a059" strokeWidth="1.5"/>
-            <circle cx="65" cy="65" r="24" stroke="#c5a059" strokeWidth="0.8" strokeDasharray="3 4" opacity="0.5"/>
-            <circle cx="65" cy="65" r="6" fill="#c5a059" opacity="0.25"/>
-            <circle cx="65" cy="65" r="3" fill="#c5a059"/>
-            <line x1="65" y1="6" x2="65" y2="20" stroke="#c5a059" strokeWidth="1.5" strokeLinecap="round"/>
-            <line x1="65" y1="110" x2="65" y2="124" stroke="#c5a059" strokeWidth="1.5" strokeLinecap="round"/>
-            <line x1="6" y1="65" x2="20" y2="65" stroke="#c5a059" strokeWidth="1.5" strokeLinecap="round"/>
-            <line x1="110" y1="65" x2="124" y2="65" stroke="#c5a059" strokeWidth="1.5" strokeLinecap="round"/>
-            <line x1="22" y1="22" x2="32" y2="32" stroke="#c5a059" strokeWidth="1" strokeLinecap="round" opacity="0.6"/>
-            <line x1="98" y1="98" x2="108" y2="108" stroke="#c5a059" strokeWidth="1" strokeLinecap="round" opacity="0.6"/>
-            <line x1="108" y1="22" x2="98" y2="32" stroke="#c5a059" strokeWidth="1" strokeLinecap="round" opacity="0.6"/>
-            <line x1="22" y1="108" x2="32" y2="98" stroke="#c5a059" strokeWidth="1" strokeLinecap="round" opacity="0.6"/>
+            <circle cx="65" cy="65" r="18" stroke="var(--color-gold)" strokeWidth="1.5"/>
+            <circle cx="65" cy="65" r="3" fill="var(--color-gold)"/>
+            <line x1="65" y1="6" x2="65" y2="20" stroke="var(--color-gold)" strokeWidth="1.5" strokeLinecap="round"/>
+            <line x1="65" y1="110" x2="65" y2="124" stroke="var(--color-gold)" strokeWidth="1.5" strokeLinecap="round"/>
+            <line x1="6" y1="65" x2="20" y2="65" stroke="var(--color-gold)" strokeWidth="1.5" strokeLinecap="round"/>
+            <line x1="110" y1="65" x2="124" y2="65" stroke="var(--color-gold)" strokeWidth="1.5" strokeLinecap="round"/>
           </svg>
-          {!isSidebarCollapsed && <h1 className="text-[11px] font-black tracking-[0.2em] text-[#c5a059] uppercase">Aurea Solaris</h1>}
+          {!isSidebarCollapsed && <h1 className="text-[12px] font-black tracking-[0.2em] text-[var(--color-gold)] uppercase">Aurea Solaris</h1>}
         </div>
+        
         <nav className="flex-1 space-y-1.5 px-4 overflow-y-auto no-scrollbar pb-6 pt-4">
-          <NavItem icon={<Edit3 size={18} />} label="Mesa de Criação" active={currentPage === 'mesa-criacao'} onClick={() => setCurrentPage('mesa-criacao')} collapsed={isSidebarCollapsed} />
+          <NavItem icon={<Edit3 size={18} />} label="Caderno Vivo" active={currentPage === 'mesa-criacao'} onClick={() => { setCadernoIntent(null); setCurrentPage('mesa-criacao'); }} collapsed={isSidebarCollapsed} />
           <NavItem icon={<Star size={18} />} label="Astrologia" active={currentPage === 'astrologia'} onClick={() => setCurrentPage('astrologia')} collapsed={isSidebarCollapsed} />
           <NavItem icon={<Activity size={18} />} label="Saúde & Vitalidade" active={currentPage === 'saude'} onClick={() => setCurrentPage('saude')} collapsed={isSidebarCollapsed} />
           <NavItem icon={<Calendar size={18} />} label="Agenda Preditiva" active={currentPage === 'agenda'} onClick={() => setCurrentPage('agenda')} collapsed={isSidebarCollapsed} />
-          <NavItem icon={<PieChart size={18} />} label="Gestão de Ouro" active={currentPage === 'financas'} onClick={() => setCurrentPage('financas')} collapsed={isSidebarCollapsed} />
-          <NavItem icon={<Settings size={18} />} label="Painel de Controle" active={currentPage === 'controle'} onClick={() => setCurrentPage('controle')} collapsed={isSidebarCollapsed} />
-          <NavItem icon={<Package size={18} />} label="Alfred Hub" active={currentPage === 'hub'} onClick={() => setCurrentPage('hub')} collapsed={isSidebarCollapsed} />
-          <NavItem icon={<Edit3 size={18} />} label="Diário" active={currentPage === 'diario'} onClick={() => setCurrentPage('diario')} collapsed={isSidebarCollapsed} />
+
+          <NavItem icon={<Edit3 size={18} />} label="Histórico & Notas" active={currentPage === 'diario'} onClick={() => setCurrentPage('diario')} collapsed={isSidebarCollapsed} />
         </nav>
+
         <div className="p-4 pt-2 border-t border-gray-100 shrink-0">
-          <button onClick={() => setIsProfileOpen(true)} className="w-full flex items-center gap-4 p-4 rounded-2xl bg-[#FCF9F1] hover:bg-white border border-transparent transition-all group shadow-sm">
-            <div className="w-10 h-10 rounded-full border-2 border-white shadow-md bg-white text-[#c5a059] flex items-center justify-center shrink-0"><User size={16} /></div>
-            {!isSidebarCollapsed && <div className="text-left overflow-hidden"><p className="text-[11px] font-bold uppercase truncate text-gray-800 leading-none">{masterProfile?.name || 'Viviane'}</p></div>}
+          <button onClick={() => setIsProfileOpen(true)} className="w-full flex items-center gap-4 p-4 rounded-2xl bg-mystic-bg hover:bg-white border border-transparent transition-all group shadow-sm">
+            <div className="w-10 h-10 rounded-full border-2 border-white shadow-md bg-white text-[var(--color-gold)] flex items-center justify-center shrink-0"><User size={16} /></div>
+            {!isSidebarCollapsed && <div className="text-left overflow-hidden"><p className="text-[12px] font-bold uppercase truncate text-gray-800 leading-none">{masterProfile?.name || 'Perfil indisponível'}</p></div>}
           </button>
         </div>
       </aside>
 
       {/* CONTEÚDO PRINCIPAL */}
       <main className="main-area cosmic-border">
-        {!isMesa && (
-          <>
-          {/* Símbolos cósmicos decorativos */}
-          <div className="text-center text-[9px] tracking-[10px] text-gold/15 py-1 select-none">☉ ✦ ☽ ✧ ★</div>
-          
+        {!isMesa && currentPage !== 'astrologia' && (
           <header className="px-6 py-3 flex justify-between items-center glass-panel shrink-0 border-b border-gold/10 z-20">
-            <h2 className="text-sm font-black tracking-[0.25em] uppercase text-gray-800 truncate mr-3">{currentPage === 'hub' ? 'Alfred Central Hub' : currentPage.replace('-', ' ')}</h2>
-              <div className="flex items-center gap-2 flex-nowrap">
-              {/* Moon Phase Pill - Estilo Rafiki */}
-              <div className="flex items-center gap-1.5 bg-[#FCF9F1] border border-gold/20 px-2 py-1 rounded-sm">
-                <span className="text-gold text-[10px]">{liveData?.moon_phase?.icon || '☽'}</span>
-                <span className="text-[8px] font-bold uppercase tracking-wider text-[#c5a059]">{liveData?.moon_phase?.phase || '...'}</span>
-                {liveData?.planets?.Moon?.sign && (
-                  <span className="text-[7px] text-gray-400 border-l border-gold/15 pl-1.5">{liveData.planets.Moon.sign}</span>
-                )}
-              </div>
-
-              {/* Date & Regent Pill */}
-              <div className="flex items-center gap-2 bg-white border border-gray-100 px-2 py-1 rounded-sm">
-                <div className="flex items-center gap-1 border-r border-gray-100 pr-2">
-                  <Clock size={10} className="text-gray-400"/>
-                  <span className="text-[8px] font-bold uppercase tracking-tighter text-gray-500 whitespace-nowrap">
-                    {new Date().toLocaleDateString('pt-BR', { weekday: 'short', day: 'numeric', month: 'short' }).toUpperCase()}
-                  </span>
-                </div>
-                <div className="flex items-center gap-1" title="Regente do Dia">
-                  <span className="text-gold text-[10px]">{getPlanetRegency(new Date()).icon}</span>
-                  <span className="text-[7px] font-bold uppercase text-gray-400 tracking-wider">{getPlanetRegency(new Date()).name}</span>
-                </div>
-              </div>
-
-              {/* Planetary Hour Pill - Estilo Rafiki */}
-              <div className="flex items-center gap-1.5 bg-[#171c31] text-gold px-2 py-1 rounded-sm border border-gold/30">
-                <span className="text-[10px] opacity-80">{currentTime.icon}</span>
-                <span className="text-[7px] font-bold uppercase tracking-wider text-gold/80">{currentTime.name}</span>
-                <span className="w-0.5 h-0.5 bg-gold/40 rounded-full" />
-                <span className="text-[9px] font-bold text-white">{currentTime.time}</span>
-              </div>
-
-              </div>
+            <h2 className="text-sm font-black tracking-[0.25em] uppercase text-gray-800 truncate mr-3">{currentPage.replace('-', ' ')}</h2>
+            <PlanetaryInfo />
           </header>
-          </>
         )}
-        <div className={`flex-1 relative ${isMesa ? '' : 'px-6 pt-8 overflow-y-auto no-scrollbar pb-32'}`}>
-          {renderPage()}
+        <div className={`flex-1 relative overflow-hidden ${isMesa ? '' : currentPage === 'astrologia' ? 'flex flex-col px-6 pt-6' : 'px-6 pt-8 overflow-y-auto no-scrollbar pb-32'}`}>
+          {currentPage === 'astrologia' ? (
+            <div className="flex-1 h-full flex flex-col overflow-hidden">
+              {renderPage()}
+            </div>
+          ) : (
+            renderPage()
+          )}
         </div>
       </main>
 
-      {/* CHAT DIREITO - Symmetrically Mirrored with Left Sidebar */}
-      <aside className={`h-full shrink-0 z-10 transition-all duration-300 overflow-hidden bg-white rounded-[1.5rem] border border-[#c5a059]/20 shadow-xl flex flex-col relative cosmic-border ${hasChat ? (isChatCollapsed ? 'w-20' : 'w-[360px]') : 'w-0 border-none shadow-none opacity-0'}`}>
-          {hasChat && (
-            <AgentChat 
-              agent={
-                currentPage === 'astrologia' ? "Rafiki" : 
-                ['saude', 'agenda', 'hub'].includes(currentPage) ? "Alfred" :
-                currentPage === 'financas' ? "Uncle Duck" : 
-                currentPage === 'controle' ? "Stark" : "Rafiki"
-              }
-              isCollapsed={isChatCollapsed}
-              onToggle={() => setIsChatCollapsed(!isChatCollapsed)}
-            />
-          )}
-      </aside>
-
-      {/* STRANGE FAB */}
-      {isStrangeOpen && (
-        <div className="fixed inset-0 z-40" onClick={() => setIsStrangeOpen(false)} />
+      {/* HERMES CHAT PANEL */}
+      <HermesChat isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
+      
+      {/* CHAT FAB BUTTON */}
+      {!isChatOpen && (
+        <button
+          onClick={() => setIsChatOpen(true)}
+          className="fixed bottom-6 right-6 z-50 flex h-12 w-12 items-center justify-center rounded-full border-2 border-gold/30 bg-[#171c31] text-gold shadow-xl transition-all hover:scale-110"
+          aria-label="Abrir conversa com Hermes"
+          title="Perguntar ao Hermes"
+        >
+          <MessageCircle size={21} />
+        </button>
       )}
-      <div className="fixed bottom-10 right-10 z-50 flex flex-col items-end gap-6 pointer-events-none">
-        {isStrangeOpen && (
-          <div className="w-[380px] max-h-[560px] bg-white rounded-xl flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-10 pointer-events-auto chat-panel" onClick={e => e.stopPropagation()}>
-            {/* Símbolos cósmicos */}
-            <div className="text-center text-[9px] tracking-[6px] text-gold/30 py-1 select-none bg-[#FCF9F1] shrink-0">✦ ✧ ✦ ✧ ✦</div>
-            
-            <div className="px-4 py-3 bg-[#FCF9F1] border-b border-gold/10 flex justify-between items-center shrink-0">
-               <div className="flex items-center gap-2.5">
-                  <div className="p-2 bg-white rounded-lg text-[#c5a059] border border-gold/20"><Eye size={18}/></div>
-                  <div><p className="text-[11px] font-bold uppercase tracking-wider text-gray-800 leading-tight">Dr. Strange</p><p className="text-[7px] font-bold text-[#c5a059] uppercase tracking-wider leading-none">Supervisor Macro</p></div>
-               </div>
-               <X onClick={() => setIsStrangeOpen(false)} className="cursor-pointer text-gray-400 hover:text-red-400 p-1.5 rounded-lg transition-all"/>
-            </div>
-            <div className="flex-1 p-3 space-y-3 overflow-y-auto no-scrollbar bg-white">
-               {strangeMsgs.map((m, i) => (
-                   <div key={i} className={`p-3 rounded-lg text-[11px] text-gray-600 font-medium leading-relaxed ${m.role === 'user' ? 'bg-gold/10 ml-auto' : 'bg-[#FCF9F1] mr-auto'}`}>
-                     {m.content}
-                   </div>
-                ))}
-               {loadingStrange && <div className="text-[10px] opacity-50 animate-pulse text-center text-gold/60">Consultando linhas temporais...</div>}
-            </div>
-            <div className="p-3 bg-[#FCF9F1] border-t border-gold/10 shrink-0">
-               <div className="flex gap-2 bg-white p-1.5 rounded-lg border border-gold/10">
-                  <input className="flex-1 bg-transparent text-[#333333] font-medium text-[11px] px-3 outline-none" placeholder="Consultar o Olho..." value={strangeInput} onChange={e => setStrangeInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleStrange()} />
-                   <button onClick={handleStrange} className="p-1.5 bg-[#171c31] text-gold rounded-md hover:bg-gold hover:text-white transition-all"><Sparkles size={13}/></button>
-               </div>
-            </div>
-          </div>
-        )}
-        <button onClick={() => setIsStrangeOpen(!isStrangeOpen)} className="pointer-events-auto w-20 h-20 rounded-full shadow-2xl bg-white border-4 border-[#c5a059]/30 flex items-center justify-center hover:scale-110 transition-all"><Eye size={40} className="text-[#c5a059]"/></button>
-      </div>
 
-      {isProfileOpen && (
+      {isProfileOpen && masterProfile && (
         <ProfileEditor
           profile={masterProfile}
           onSave={(updates) => {
-            updateProfile(masterProfile.id, updates);
+            agenda.updateProfile(masterProfile.id, updates);
             setIsProfileOpen(false);
           }}
           onClose={() => setIsProfileOpen(false)}
-          onLogout={() => {
-            localStorage.removeItem('aurea_active_id');
-            setIsAuthenticated(false);
-            setIsProfileOpen(false);
-          }}
+          onLogout={() => { void handleLogout(); }}
         />
       )}
-        </div>
-        </DiarioProvider>
-      </AgendaProvider>
-    );
+    </div>
+  );
 }

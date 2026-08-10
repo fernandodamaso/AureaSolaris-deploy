@@ -502,6 +502,7 @@ const MesaCanvas = ({
   }, [applyAction]);
 
   // ── Keyboard shortcuts ─────────────────────────────────────
+  const [spaceHeld, setSpaceHeld] = useState(false);
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       const typing = document.activeElement instanceof HTMLInputElement || document.activeElement instanceof HTMLTextAreaElement;
@@ -525,24 +526,44 @@ const MesaCanvas = ({
         if (e.key === 'n') { setTool('sticky'); }
         if (e.key === 't') setTool('text');
         if (e.key === 'c') setTool('checklist');
+        if (e.key === ' ') {
+          e.preventDefault();
+          setSpaceHeld(true);
+        }
         if (e.key === 'Escape') {
           setSelected(null);
           setSelectedEdgeId(null);
           setConnectSourceId(null);
           setTool('select');
           setFocusNodeId(null);
+          setSpaceHeld(false);
         }
       }
     };
+    const up = (e: KeyboardEvent) => { if (e.key === ' ') setSpaceHeld(false); };
     window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
+    window.addEventListener('keyup', up);
+    return () => {
+      window.removeEventListener('keydown', handler);
+      window.removeEventListener('keyup', up);
+    };
   }, [undo, redo, selected, selectedEdgeId, pushHistory]);
 
+  const canvasRef = useRef<HTMLDivElement | null>(null);
+
   // ── Node helpers ───────────────────────────────────────────
-  const centerPos = () => ({
-    x: snap((-pan.x + window.innerWidth / 2) / zoom - 100),
-    y: snap((-pan.y + window.innerHeight / 2) / zoom - 60),
-  });
+  const centerPos = () => {
+    const canvas = canvasRef.current;
+    const rect = canvas
+      ? canvas.getBoundingClientRect()
+      : { x: 0, y: 0, width: window.innerWidth, height: window.innerHeight };
+    const cx = rect.x + rect.width / 2;
+    const cy = rect.y + rect.height / 2;
+    return {
+      x: snap((cx - pan.x) / zoom - 100),
+      y: snap((cy - pan.y) / zoom - 60),
+    };
+  };
 
   const addNode = (partial: Partial<CadernoNode>) => {
     const { x, y } = centerPos();
@@ -569,7 +590,37 @@ const MesaCanvas = ({
     setNodes(p => p.map(n => n.id === id ? { ...n, ...patch } : n));
   };
 
-  // ── Canvas interaction ─────────────────────────────────────
+  // Wheel: must be non-passive so we can preventDefault on touchpad gestures.
+  useEffect(() => {
+    const canvas = document.getElementById('aurea-board-canvas');
+    if (!canvas) return;
+    const handler = (e: WheelEvent) => {
+      const target = e.target as HTMLElement;
+      const inInput = !!target.closest('input, textarea, select');
+      if (inInput) return;
+
+      const ctrl = e.ctrlKey || e.metaKey;
+
+      // Normalize delta for touchpads: some browsers report line/page units.
+      const modeFactor = e.deltaMode === 1 ? 40 : e.deltaMode === 2 ? window.innerWidth / 0.75 : 1;
+      const dx = e.deltaX * modeFactor;
+      const dy = e.deltaY * modeFactor;
+
+      if (ctrl) {
+        e.preventDefault();
+        const zoomFactor = e.deltaY < 0 ? 1.08 : 0.93;
+        setZoom(z => Math.min(3, Math.max(0.15, z * zoomFactor)));
+        return;
+      }
+
+      e.preventDefault();
+      setPan(p => ({ x: p.x - dx, y: p.y - dy }));
+    };
+
+    canvas.addEventListener('wheel', handler, { passive: false });
+    return () => canvas.removeEventListener('wheel', handler);
+  }, []);
+
   const onPointerMove = (e: React.PointerEvent) => {
     if (dragNode !== null) {
       const node = nodesRef.current.find(n => n.id === dragNode.id);
@@ -633,7 +684,7 @@ const MesaCanvas = ({
   };
 
   const onCanvasPointerDown = (_e: React.PointerEvent) => {
-    if (tool === 'select') {
+    if (tool === 'select' || spaceHeld) {
       isPanning.current = true;
       setSelected(null);
       setFocusNodeId(null);
@@ -646,15 +697,6 @@ const MesaCanvas = ({
     if (tool === 'checklist') { addNode({ type: 'checklist', w: 240, h: 180, items: [{ text: '', done: false }], color: '#ffffff' }); return; }
     if (tool === 'shape')     { addNode({ type: 'shape', w: 180, h: 100, color: '#EDE9FE', text: '' }); return; }
     if (tool === 'image')     { setShowImageModal(true); return; }
-  };
-
-  const onWheel = (e: React.WheelEvent) => {
-    e.preventDefault();
-    if (e.ctrlKey || e.metaKey) {
-      setZoom(z => Math.min(3, Math.max(0.15, z * (e.deltaY < 0 ? 1.08 : 0.93))));
-    } else {
-      setPan(p => ({ x: p.x - e.deltaX, y: p.y - e.deltaY }));
-    }
   };
 
   const connectNode = (id: number, e: React.PointerEvent) => {
@@ -724,6 +766,9 @@ const MesaCanvas = ({
   // ─────────────────────────────────────────────────────────
   // RENDER
   // ─────────────────────────────────────────────────────────
+  const canvasCursor =
+    spaceHeld ? 'grab' : tool === 'select' ? (dragNode ? 'grabbing' : 'default') : 'crosshair';
+
   return (
     <div className="absolute inset-0 flex flex-col overflow-hidden" style={{ background: '#F8F8F7', fontFamily: 'Inter, system-ui, sans-serif', userSelect: 'none' }}>
 
@@ -837,7 +882,6 @@ const MesaCanvas = ({
         {/* Spacer */}
         <div className="flex-1" />
 
-        {/* Right actions */}
         <button onClick={() => setShowAssetPicker(true)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-gray-500 hover:bg-gray-100 transition-all">
           <FolderOpen size={13} /> Importar
         </button>
@@ -862,18 +906,26 @@ const MesaCanvas = ({
           <button onClick={() => setZoom(z => Math.min(3, z + 0.1))} className="p-1 rounded hover:bg-white transition-all" title="Aumentar (+)">
             <ZoomIn size={13} className="text-gray-500" />
           </button>
+          <div className="w-px h-3 mx-1" style={{ background: '#E8E8E8' }} />
+          <button onClick={() => setZoom(z => Math.min(3, z + 0.1))} className="px-1.5 py-0.5 rounded text-[10px] font-bold text-gray-500 hover:bg-white transition-all" title="Aumentar zoom">
+            +
+          </button>
+          <button onClick={() => setZoom(z => Math.max(0.15, z - 0.1))} className="px-1.5 py-0.5 rounded text-[10px] font-bold text-gray-500 hover:bg-white transition-all" title="Diminuir zoom">
+            -
+          </button>
         </div>
       </div>
 
       {/* ── Canvas ── */}
       <div className="relative flex min-h-0 flex-1">
       <div
+        id="aurea-board-canvas"
+        ref={canvasRef}
         className="relative min-w-0 flex-1 overflow-hidden"
-        style={{ cursor: tool === 'select' ? (dragNode ? 'grabbing' : 'default') : 'crosshair' }}
+        style={{ cursor: canvasCursor }}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
         onPointerDown={onCanvasPointerDown}
-        onWheel={onWheel}
         onClick={onCanvasClick}
       >
         {/* Dot grid */}

@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { 
   X, Save, User, 
   CalendarDays, 
-  Eye, EyeOff, Key, Palette, Camera
+  Key, Palette, Camera
 } from 'lucide-react';
 import { safeInvoke } from '../utils/tauri';
 
@@ -14,55 +14,97 @@ interface ProfileEditorProps {
 }
 
 const BRAZILIAN_CITIES = [
-  { name: 'São Paulo', lat: -23.5505, lon: -46.6333 },
-  { name: 'Rio de Janeiro', lat: -22.9068, lon: -43.1729 },
-  { name: 'Belo Horizonte', lat: -19.9167, lon: -43.9345 },
-  { name: 'Brasília', lat: -15.7975, lon: -47.8919 },
-  { name: 'Salvador', lat: -12.9714, lon: -38.5124 },
-  { name: 'Curitiba', lat: -25.4284, lon: -49.2733 },
-  { name: 'Recife', lat: -8.0476, lon: -34.8770 },
-  { name: 'Porto Alegre', lat: -30.0346, lon: -51.2177 },
-  { name: 'Manaus', lat: -3.1190, lon: -60.0217 },
-  { name: 'Fortaleza', lat: -3.7172, lon: -38.5433 },
+  { name: 'São Paulo', lat: -23.5505, lon: -46.6333, timezone: 'America/Sao_Paulo' },
+  { name: 'Rio de Janeiro', lat: -22.9068, lon: -43.1729, timezone: 'America/Sao_Paulo' },
+  { name: 'Belo Horizonte', lat: -19.9167, lon: -43.9345, timezone: 'America/Sao_Paulo' },
+  { name: 'Brasília', lat: -15.7975, lon: -47.8919, timezone: 'America/Sao_Paulo' },
+  { name: 'Salvador', lat: -12.9714, lon: -38.5124, timezone: 'America/Bahia' },
+  { name: 'Curitiba', lat: -25.4284, lon: -49.2733, timezone: 'America/Sao_Paulo' },
+  { name: 'Recife', lat: -8.0476, lon: -34.8770, timezone: 'America/Recife' },
+  { name: 'Porto Alegre', lat: -30.0346, lon: -51.2177, timezone: 'America/Sao_Paulo' },
+  { name: 'Manaus', lat: -3.1190, lon: -60.0217, timezone: 'America/Manaus' },
+  { name: 'Fortaleza', lat: -3.7172, lon: -38.5433, timezone: 'America/Fortaleza' },
 ];
+
+function formatBirthDate(isoDate?: string): string {
+  if (!isoDate) return '';
+  const match = isoDate.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  return match ? `${match[3]}/${match[2]}/${match[1]}` : isoDate;
+}
+
+function parseBirthDate(value: string): string | null {
+  const match = value.trim().match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if (!match) return null;
+  const [, dayText, monthText, yearText] = match;
+  const day = Number(dayText);
+  const month = Number(monthText);
+  const year = Number(yearText);
+  const candidate = new Date(Date.UTC(year, month - 1, day));
+  if (candidate.getUTCFullYear() !== year || candidate.getUTCMonth() !== month - 1 || candidate.getUTCDate() !== day) return null;
+  return `${yearText}-${monthText}-${dayText}`;
+}
 
 export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEditorProps) => {
   const [name, setName] = useState(profile.name || '');
-  const [birthDate, setBirthDate] = useState(profile.birthDate || '');
+  const [birthDateInput, setBirthDateInput] = useState(() => formatBirthDate(profile.birthDate));
+  const [birthDateError, setBirthDateError] = useState('');
   const [birthTime, setBirthTime] = useState(profile.birthTime || '');
-  const [birthCity, setBirthCity] = useState(profile.birthCity || 'São Paulo');
+  const [birthCity, setBirthCity] = useState(profile.birthCity || '');
   const [context, setContext] = useState(profile.context || '');
   const [dialogStyle, setDialogStyle] = useState(profile.dialogStyle || 'Inteligente e Poética');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
   const [natalPreview, setNatalPreview] = useState<string>('');
   const [loadingNatal, setLoadingNatal] = useState(false);
   const [avatar, setAvatar] = useState<string>(profile.avatar || '');
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const birthDate = parseBirthDate(birthDateInput);
 
   // Calculate natal preview when birth data changes
   useEffect(() => {
-    if (!birthDate || !birthTime) return;
+    if (!birthDate || !birthTime || !birthCity) {
+      setNatalPreview('');
+      setLoadingNatal(false);
+      return;
+    }
     const calculatePreview = async () => {
       setLoadingNatal(true);
       try {
         const [y, m, d] = birthDate.split('-').map(Number);
         const [h, min] = birthTime.split(':').map(Number);
-        const city = BRAZILIAN_CITIES.find(c => c.name === birthCity) || BRAZILIAN_CITIES[0];
+        const city = BRAZILIAN_CITIES.find(c => c.name === birthCity);
+        if (!city) {
+          setNatalPreview('Selecione uma cidade com coordenadas verificadas.');
+          return;
+        }
         
-        const payload = JSON.stringify({
-          year: y, month: m, day: d,
-          hour: h + (min / 60),
-          lat: city.lat, lon: city.lon
-        });
+        const payload = { year: y, month: m, day: d, hour: h + (min / 60), lat: city.lat, lon: city.lon, timezone: city.timezone };
+        let result: string | null = null;
         
-        const result = await safeInvoke<string>('run_astro_engine', { payload });
+        // Try direct HTTP to sidecar first (works in both Tauri and browser dev mode)
+        try {
+          const res = await fetch('http://127.0.0.1:9876/natal', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+          if (res.ok) result = await res.text();
+        } catch { /* sidecar not reachable, fall through to Tauri invoke */ }
+        
+        // Fallback to Tauri invoke if direct HTTP failed
+        if (!result) {
+          result = await safeInvoke<string>('run_astro_engine', { payload: JSON.stringify(payload) });
+        }
+        
         if (result) {
           const data = JSON.parse(result);
           if (data.planets) {
             const summary = Object.entries(data.planets)
+              .filter(([name]) => !['ASC', 'MC', 'DSC', 'IC', 'Chiron'].includes(name))
               .slice(0, 6)
-              .map(([name, info]: [string, any]) => `${name}: ${info.pos_in_sign?.toFixed(0) || 0}° ${info.sign || '?'}`)
+              .map(([name, info]: [string, any]) => {
+                const deg = Math.floor(info.pos_in_sign ?? 0);
+                const min = Math.round(((info.pos_in_sign ?? 0) % 1) * 60);
+                return `${name}: ${deg}°${min > 0 ? `${String(min).padStart(2, '0')}'` : ''} ${info.sign_full || info.sign || '?'}`;
+              })
               .join(' | ');
             setNatalPreview(summary);
           }
@@ -90,11 +132,24 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEdi
   };
 
   const handleSave = () => {
-    const city = BRAZILIAN_CITIES.find(c => c.name === birthCity) || BRAZILIAN_CITIES[0];
+    if (birthDateInput.trim() && !birthDate) {
+      setBirthDateError('Use a data no formato DD/MM/AAAA. O conteúdo digitado não foi alterado.');
+      return;
+    }
+    setBirthDateError('');
+    if ((birthDate || birthTime) && (!birthDate || !birthTime)) {
+      alert('Informe data e hora de nascimento antes de salvar o mapa.');
+      return;
+    }
+    const city = BRAZILIAN_CITIES.find(c => c.name === birthCity);
+    if ((birthDate || birthTime) && !city) {
+      alert('Selecione a cidade de nascimento. O Aurea não presume coordenadas.');
+      return;
+    }
     
     // Build natal data for the system
     let natal = profile.natal;
-    if (birthDate && birthTime) {
+    if (birthDate && birthTime && city) {
       // Store birth data for future calculations
       natal = {
         ...profile.natal,
@@ -103,6 +158,7 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEdi
         birthCity,
         lat: city.lat,
         lon: city.lon,
+        timezone: city.timezone,
       };
     }
 
@@ -112,10 +168,10 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEdi
       birthDate,
       birthTime,
       birthCity,
+      birthTimezone: city?.timezone,
       context,
       dialogStyle,
       natal,
-      ...(password ? { password } : {}),
     });
   };
 
@@ -192,11 +248,23 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEdi
                 <div>
                   <label className="text-[8px] font-black uppercase text-gray-400 tracking-widest block mb-1">Data</label>
                   <input 
-                    type="date"
+                    type="text"
+                    inputMode="numeric"
+                    autoComplete="bday"
+                    maxLength={10}
                     className="w-full bg-gray-50 p-3 rounded-lg border border-gray-100 text-[12px] font-bold text-gray-800 outline-none focus:border-gold/30"
-                    value={birthDate}
-                    onChange={e => setBirthDate(e.target.value)}
+                    value={birthDateInput}
+                    aria-invalid={Boolean(birthDateError)}
+                    aria-describedby={birthDateError ? 'profile-birth-date-error' : undefined}
+                    onChange={e => { setBirthDateInput(e.target.value); setBirthDateError(''); }}
+                    onBlur={() => {
+                      if (birthDateInput.trim() && !parseBirthDate(birthDateInput)) {
+                        setBirthDateError('Use DD/MM/AAAA. O conteúdo digitado foi preservado.');
+                      }
+                    }}
+                    placeholder="DD/MM/AAAA"
                   />
+                  {birthDateError && <p id="profile-birth-date-error" role="alert" className="mt-1 text-[10px] font-bold text-red-600">{birthDateError}</p>}
                 </div>
                 <div>
                   <label className="text-[8px] font-black uppercase text-gray-400 tracking-widest block mb-1">Hora</label>
@@ -216,10 +284,14 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEdi
                   value={birthCity}
                   onChange={e => setBirthCity(e.target.value)}
                 >
+                  <option value="">Selecione a cidade...</option>
                   {BRAZILIAN_CITIES.map(c => (
                     <option key={c.name} value={c.name}>{c.name}</option>
                   ))}
                 </select>
+                <p className="mt-2 text-[9px] font-semibold text-gray-500">
+                  Fuso IANA: <span className="font-mono text-gray-700">{BRAZILIAN_CITIES.find(c => c.name === birthCity)?.timezone || 'selecione a cidade'}</span>
+                </p>
               </div>
 
               {/* Natal Preview */}
@@ -230,7 +302,7 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEdi
                 ) : natalPreview ? (
                   <p className="text-[11px] font-bold text-gray-700 leading-relaxed">{natalPreview}</p>
                 ) : (
-                  <p className="text-[10px] text-gray-400 italic">Preencha data e hora para ver o mapa</p>
+                  <p className="text-[10px] text-gray-400 italic">Preencha data, hora e cidade para calcular o mapa</p>
                 )}
               </div>
             </div>
@@ -250,21 +322,23 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEdi
               />
             </div>
 
-            {/* Dialog Style */}
+            {/* Agent Preferences */}
             <div>
-              <label className="text-[9px] font-black uppercase text-gray-400 pl-2 tracking-widest block mb-2 flex items-center gap-2">
-                <Palette size={10}/> Estilo de Diálogo
-              </label>
-              <select 
-                className="w-full bg-white p-4 rounded-lg border border-gold/10 text-[13px] font-bold outline-none cursor-pointer focus:border-gold/30 transition-all"
-                value={dialogStyle}
-                onChange={e => setDialogStyle(e.target.value)}
-              >
-                <option>Inteligente e Poética</option>
-                <option>Direta e Técnica</option>
-                <option>Mística e Oracular</option>
-                <option>Maternal e Acolhedora</option>
-              </select>
+              <div>
+                <label className="text-[9px] font-black uppercase text-gray-400 pl-2 tracking-widest block mb-1 flex items-center gap-2">
+                  <Palette size={10}/> Tom de Voz
+                </label>
+                <select 
+                  className="w-full bg-white p-3 rounded-lg border border-gold/10 text-[12px] font-bold outline-none cursor-pointer focus:border-gold/30 transition-all"
+                  value={dialogStyle}
+                  onChange={e => setDialogStyle(e.target.value)}
+                >
+                  <option>Inteligente e Poética</option>
+                  <option>Direta e Técnica</option>
+                  <option>Mística e Oracular</option>
+                  <option>Maternal e Acolhedora</option>
+                </select>
+              </div>
             </div>
 
             {/* Security */}
@@ -272,29 +346,9 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEdi
               <h4 className="text-[9px] font-black uppercase tracking-[0.3em] text-gray-400 flex items-center gap-2 pb-3 border-b border-gray-100">
                 <Key size={12}/> Segurança & Acesso
               </h4>
-              <div>
-                <label className="text-[8px] font-black uppercase text-red-400/60 tracking-widest block mb-1">Senha</label>
-                <div className="relative">
-                  <input 
-                    type={showPassword ? "text" : "password"} 
-                    placeholder="••••••••" 
-                    value={password}
-                    onChange={e => setPassword(e.target.value)}
-                    className="w-full bg-white p-4 rounded-lg border border-gold/5 font-bold text-gray-800 outline-none focus:border-gold/30 transition-all pr-12" 
-                  />
-                  <button 
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-300 hover:text-gold transition-all"
-                  >
-                    {showPassword ? <EyeOff size={16}/> : <Eye size={16}/>}
-                  </button>
-                </div>
-              </div>
-              <div>
-                <label className="text-[8px] font-black uppercase text-gray-400 tracking-widest block mb-1">Email de Recuperação</label>
-                <input className="w-full bg-white p-4 rounded-lg border border-gold/5 font-bold text-gray-800 text-[12px] outline-none focus:border-gold/30 transition-all" placeholder="email@exemplo.com" />
-              </div>
+              <p className="text-[11px] leading-relaxed text-gray-500">A senha é definida somente no acesso inicial. Alteração de senha e recuperação serão liberadas junto ao cofre local criptografado.</p>
             </div>
+
           </div>
         </div>
 

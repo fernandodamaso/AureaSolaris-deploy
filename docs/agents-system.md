@@ -1,114 +1,55 @@
-# Agents System
+# AI Assistant System — Hermes
 
-> Complete reference for AI agent personas, configuration, and integration.
-> **Ownership:** This file is the ONLY source for persona details. Do not duplicate elsewhere.
+> **Single assistant architecture.** All previous multi-agent personas (Dr. Strange, Alfred, Uncle Duck, Rafiki, Stark) have been removed. Hermes handles everything.
 
 ## Overview
 
-Aurea Solaris integrates 5 AI agents, each with distinct personality and scope. Agents operate via:
-- **OpenRouter** — Cloud LLMs (GPT-4o, Gemini, Claude)
-- **Ollama** — Local models (default: llama3.2)
+Aurea Solaris uses **Hermes** as its sole AI assistant, accessible through the **HermesChat** sidebar panel. Hermes has context-aware access to the app's astrological data, diary, calendar, and tasks.
 
-The Master AI Key in `ControlePanel.tsx` allows switching between cloud and local processing.
+## Architecture
 
-## Master AI Key
+- **Chat Panel:** `src/components/HermesChat.tsx` — sidebar panel, toggle from any screen
+- **Backend:** Chat goes through Tauri IPC → processed locally
+- **No external AI APIs:** All inference runs on the user's machine
 
-Located in `ControlePanel.tsx`, monitored by agent **Stark**:
+## Hermes's Capabilities
 
-| Mode | Source | Privacy | Power |
-|------|--------|---------|-------|
-| **Ollama (Default)** | localhost:11434 | Private | Limited |
-| **OpenRouter** | Cloud API | Shared | High |
+| Area | How Hermes Helps |
+|------|-----------------|
+| **Astrology** | Interprets natal charts, analyzes transits, explains planetary hours, teaches techniques |
+| **Diary** | Helps write entries, reflects on themes, connects to astrological context |
+| **Productivity** | Manages Todoist tasks, schedules events, organizes priorities |
+| **Calendar** | Reviews Google Calendar events, suggests optimal timing based on transits |
+| **Obsidian** | Reads/writes to Obsidian vault for second-brain organization |
+| **Learning** | Teaches astrology concepts, chart reading, house systems, aspect patterns |
 
-## Agent Personas
+## Personality
 
-### Dr. Strange — Supervisor Macro
+- **Concise and direct** — no verbosity
+- **Astrology-first** — always considers planetary context
+- **Respectful of privacy** — all processing local
+- **Educational** — explains concepts when asked, like a teacher
+- **Portuguese-native** — communicates primarily in Portuguese
 
-| Attribute | Value |
-|-----------|-------|
-| **Scope** | Global (floating button in `App.tsx`) |
-| **Personality** | Wise, concise, mystical. Connects planetary patterns to daily actions. |
-| **Default Model** | `google/gemini-2.0-pro-exp-02-05` |
-| **When Active** | Always available via floating button |
+## Rules
 
-**Function:** Provides macro perspective, linking celestial hours to current UI activities.
+1. **Privacy absolute** — no data leaves the machine for AI inference
+2. **Astrology guides everything** — every interaction considers the astrological moment
+3. **Less is more** — efficiency over feature bloat
+4. **Consistency** — same tone and approach across all views
 
----
+## Migration from 5-Agent System
 
-### Alfred — Productivity Butler
+The previous system had 5 separate AI personas:
+- **Dr. Strange** → Global astrological supervisor → **Merged into Hermes**
+- **Alfred** → Productivity butler → **Merged into Hermes**
+- **Uncle Duck** → Financial consultant → **Merged into Hermes**
+- **Rafiki** → Technical astrologer → **Merged into Hermes**
+- **Stark** → Technical monitor → **Removed** (system monitoring via native Tauri)
 
-| Attribute | Value |
-|-----------|-------|
-| **Scope** | `SaudeView.tsx`, `AgendaView.tsx`, `AlfredHubView.tsx` |
-| **Personality** | Direct, impeccable, formal but helpful. British efficiency. |
-| **Default Model** | `openai/gpt-4o-mini` |
-| **When Active** | Health, Agenda, and Alfred Hub views |
+All their responsibilities are now handled by Hermes through context-aware prompting in the chat panel.
 
-**Function:** Manages tasks, appointments, and wellness with maximum efficiency.
+## Related
 
----
-
-### Uncle Duck — Financial Consultant
-
-| Attribute | Value |
-|-----------|-------|
-| **Scope** | `FinancasView.tsx` (Gestão de Ouro) |
-| **Personality** | Pragmatic, profit-hungry, objective. Speaks directly to the point. |
-| **Default Model** | Ollama `llama3.2` → Fallback: OpenRouter `openai/gpt-4o-mini` |
-| **When Active** | Finance view |
-
-**Function:** Analyzes expenses, suggests savings, monitors investments.
-
----
-
-### Rafiki — Technical Astrologer
-
-| Attribute | Value |
-|-----------|-------|
-| **Scope** | `AstrologiaBoard.tsx`, `MandalaPage.tsx`, `DiarioView.tsx` |
-| **Personality** | Precise, technical, data-driven. No metaphors, concrete data only. |
-| **Default Model** | `openai/gpt-4o-mini` |
-| **When Active** | Astrology, Mandala, and Diary views |
-
-**Function:** Translates raw astrological data into practical advice.
-
-**Response Format:** `[Planet] at [exact position]. Aspect: [type] with [planet/point]. Direct interpretation: [suggested action].`
-
-**Data provided:** Planetary positions (degrees, minutes), exact signs, geometric aspects (trine 120°, square 90°, etc.), natal chart, astrological houses, transits with orbs.
-
-**Mandala Chart Improvements:** 
-- Correção crítica nos Decanatos: Array DECANATE_RULERS expandido de 12 para 36 entradas para suportar todos os 3 decanatos por signo
-- Visibilidade melhorada: Opacidade aumentada para signos (0.08→0.14), decanatos (0.35→0.50) e termos (0.12→0.30)
-- Tamanhos de fonte aumentados para melhor legibilidade em telas de alta densidade
-
----
-
-### Stark — Technical Monitor
-
-| Attribute | Value |
-|-----------|-------|
-| **Scope** | `ControlePanel.tsx` |
-| **Personality** | Highly technical, sarcastic, concise. Speaks in technical jargon. |
-| **Default Model** | `anthropic/claude-3.5-sonnet` |
-| **When Active** | Control Panel view |
-
-**Function:** Monitors system health, Tauri-React bridge stability, provides technical data.
-
-## Agent Injection Points
-
-| Agent | Component | Views |
-|-------|-----------|-------|
-| Dr. Strange | `App.tsx` | All (global) |
-| Alfred | `SaudeView.tsx` | Health |
-| Alfred | `AgendaView.tsx` | Agenda |
-| Alfred | `AlfredHubView.tsx` | Hub |
-| Uncle Duck | `FinancasView.tsx` | Finance |
-| Rafiki | `AstrologiaBoard.tsx` | Astrology |
-| Rafiki | `MandalaPage.tsx` | Mandala |
-| Rafiki | `DiarioView.tsx` | Diary |
-| Stark | `ControlePanel.tsx` | Control |
-
-## Related Documentation
-
-- [tauri-ipc-api.md](tauri-ipc-api.md) — Chat commands (openrouter_chat, ollama_chat)
-- [quick-reference.md](quick-reference.md) — Fast agent lookup
+- [../AGENTS.md](../AGENTS.md) — Hermes guide (project root)
+- [arquitetura.md](arquitetura.md) — Full architecture reference

@@ -1,158 +1,117 @@
 import React, { useState } from 'react';
+import { DiarioProvider, useDiario } from '../context/DiarioContext';
 import { DiarioSidebar } from './diario/DiarioSidebar';
-import DiarioTabs from './diario/DiarioTabs';
 import DiarioEditor from './diario/DiarioEditor';
-import { useDiario } from '../context/DiarioContext';
-import { ChevronLeft, Plus } from 'lucide-react';
+import { StudyArchive } from './diario/StudyArchive';
+import { History, PenLine, Plus } from 'lucide-react';
 
-export const DiarioView = () => {
-  const {
-    folders,
-    entries,
-    openTabs,
-    activeTabId,
-    selectedFolderId,
-    sidebarCollapsed,
-    activeEntry,
-    createEntry,
-    createFolder,
-    selectFolder,
-    openTab,
-    closeTab,
-    setActiveTab,
-    toggleSidebar,
-    updateEntry,
-    isLoading
-  } = useDiario();
+type DiarioViewProps = {
+  onOpenStudy?: (boardId: string, nodeId: number) => void;
+};
 
-  const [searchQuery, setSearchQuery] = useState('');
-  const [isAddingFolder, setIsAddingFolder] = useState(false);
-  const [newFolderName, setNewFolderName] = useState('');
+const DiarioViewInner: React.FC<DiarioViewProps> = ({ onOpenStudy = () => undefined }) => {
+  const { activeEntry, createEntry, isLoading } = useDiario();
+  const [mode, setMode] = useState<'history' | 'notes'>('history');
 
-  const filteredEntries = entries.filter(entry => 
-    entry.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  const handleCreateFolder = async () => {
-    if (!newFolderName.trim()) return;
-    await createFolder(newFolderName.trim(), '📁');
-    setNewFolderName('');
-    setIsAddingFolder(false);
-  };
-
-  const handleCreateEntry = async () => {
-    await createEntry('Nova Nota', selectedFolderId);
-  };
-
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
+  const createPersonalNote = async () => {
+    setMode('notes');
+    await createEntry();
   };
 
   if (isLoading) {
     return (
-      <div className="flex flex-col min-h-screen" style={{ backgroundColor: 'var(--color-bg-primary)' }}>
-        <div className="flex flex-col items-center justify-center py-12 space-y-[var(--spacing-sm)]">
-          <div className="relative h-12 w-12">
-            <div className="absolute inset-0 rounded-full border-4 border-[var(--color-accent)]/20 animate-spin"></div>
-            <div className="absolute inset-0 rounded-full border-[var(--color-accent)] border-t-[var(--color-accent)] border-r-[var(--color-accent)] border-b-[var(--color-accent)/3] border-l-[var(--color-accent)/3] animate-[spin_3s_linear_infinite]"></div>
-          </div>
-          <span className="ml-3 text-[var(--color-text-secondary)] font-medium">Carregando suas memórias...</span>
+      <div className="flex h-full items-center justify-center bg-[#F8F8F7]">
+        <div className="flex items-center gap-3 text-gray-500">
+          <div className="h-5 w-5 animate-spin rounded-full border-2 border-amber-600 border-t-transparent" />
+          <span className="text-xs font-medium uppercase tracking-wider">Carregando registros locais…</span>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col min-h-screen" style={{ backgroundColor: 'var(--color-bg-primary)' }}>
-      {/* Header */}
-      <header className="flex items-center justify-between px-[var(--spacing-lg)] py-[var(--spacing-md)] bg-[var(--color-bg-secondary)] border-b border-[var(--color-border)]">
-        <div className="flex items-center gap-[var(--spacing-md)]">
-          <button 
-            onClick={toggleSidebar}
-            className="p-[var(--spacing-sm)] rounded-[var(--radius-md)] hover:bg-[var(--color-bg-secondary)]/50 text-[var(--color-text-secondary)] hover:text-[var(--color-accent)] transition-colors"
-            title="Menu"
-          >
-            <ChevronLeft size={20} />
-          </button>
-          <h1 className="text-[var(--font-size-lg)] font-black uppercase tracking-[0.2em] text-[var(--color-text-primary)]">
-            Diário
-          </h1>
+    <div className="flex h-full min-h-0 flex-col overflow-hidden bg-[#F8F8F7] font-sans text-gray-800">
+      <header className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-gray-200 bg-white px-5 py-3">
+        <div>
+          <h1 className="text-xs font-bold uppercase tracking-[0.22em] text-gray-700">Histórico & registros</h1>
+          <p className="mt-1 text-[11px] text-gray-400">Notas pessoais e estudos dos Cadernos Vivos</p>
         </div>
-        <div className="flex items-center gap-[var(--spacing-sm)]">
-          <button 
-            onClick={handleCreateEntry}
-            className="p-[var(--spacing-sm)] rounded-[var(--radius-md)] hover:bg-[var(--color-bg-secondary)]/50 text-[var(--color-text-secondary)] hover:text-[var(--color-accent)] transition-colors"
-            title="Nova nota"
+
+        <div className="flex items-center gap-2">
+          <div className="flex rounded-lg bg-gray-100 p-1" aria-label="Modo do histórico">
+            <button
+              type="button"
+              onClick={() => setMode('history')}
+              aria-pressed={mode === 'history'}
+              className={`flex items-center gap-2 rounded-md px-3 py-1.5 text-[11px] font-semibold transition ${mode === 'history' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-800'}`}
+            >
+              <History size={13} aria-hidden="true" />
+              Histórico
+            </button>
+            <button
+              type="button"
+              onClick={() => setMode('notes')}
+              aria-pressed={mode === 'notes'}
+              className={`flex items-center gap-2 rounded-md px-3 py-1.5 text-[11px] font-semibold transition ${mode === 'notes' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-800'}`}
+            >
+              <PenLine size={13} aria-hidden="true" />
+              Notas pessoais
+            </button>
+          </div>
+          <button
+            type="button"
+            onClick={createPersonalNote}
+            className="flex items-center gap-1.5 rounded-lg bg-gray-900 px-3 py-2 text-[11px] font-semibold text-white transition hover:bg-gray-700"
           >
-            <Plus size={18} />
+            <Plus size={13} aria-hidden="true" />
+            Nova nota
           </button>
         </div>
       </header>
 
-      {/* Main Content */}
-      <div className="flex-1 overflow-hidden">
-        {/* Sidebar */}
-        <DiarioSidebar 
-          sidebarCollapsed={sidebarCollapsed}
-          toggleSidebar={toggleSidebar}
-          folders={folders}
-          selectedFolderId={selectedFolderId}
-          selectFolder={selectFolder}
-          entries={filteredEntries}
-          openTab={openTab}
-          isAddingFolder={isAddingFolder}
-          newFolderName={newFolderName}
-          setIsAddingFolder={setIsAddingFolder}
-          setNewFolderName={setNewFolderName}
-          handleCreateFolder={handleCreateFolder}
-          searchQuery={searchQuery}
-          onSearchChange={handleSearchChange}
-        />
-
-        {/* Tabs and Editor */}
-        <div className="flex-1 flex flex-col overflow-hidden">
-          {/* Tabs Bar */}
-          <DiarioTabs 
-            openTabs={openTabs}
-            activeTabId={activeTabId}
-            setActiveTab={setActiveTab}
-            closeTab={closeTab}
-            createEntry={createEntry}
-            entries={entries}
-          />
-
-          {/* Editor */}
-          <div className="flex-1 overflow-hidden">
-            {activeTabId ? (
-              <DiarioEditor 
-                entry={activeEntry}
-                updateEntry={updateEntry}
-                onSave={(_entry) => {
-                  // Entry is already saved via updateEntry in onUpdate callback
-                  // This is just for additional handling if needed
-                }}
-              />
-            ) : (
-              <div className="flex flex-col items-center justify-center py-[var(--spacing-lg)] text-center">
-                <div className="flex flex-col items-center space-y-[var(--spacing-sm)]">
-                  <div className="flex items-center justify-center">
-                    <svg className="h-12 w-12 text-[var(--color-text-secondary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2 12s1-7 5-7 5 7 5 7M2 12s1 7 5 7 5-7 5-7" />
-                    </svg>
-                  </div>
-                  <p className="text-[var(--color-text-secondary)] mb-[var(--spacing-xs)]">Selecione uma nota para começar a escrever</p>
-                  <button 
-                    onClick={handleCreateEntry}
-                    className="px-[var(--spacing-md)] py-[var(--spacing-xs)] bg-[var(--color-bg-secondary)]/50 hover:bg-[var(--color-bg-secondary)]/30 rounded-[var(--radius-sm)] text-[var(--font-size-xs)] transition-colors"
-                  >
-                    Criar primeira nota
-                  </button>
+      <div className="min-h-0 flex-1">
+        {mode === 'history' ? (
+          <StudyArchive onOpenStudy={onOpenStudy} />
+        ) : (
+          <div className="flex h-full min-h-0 overflow-hidden">
+            <DiarioSidebar />
+            <div className="min-w-0 flex-1 bg-[#F8F8F7] p-4 lg:p-6">
+              {activeEntry ? (
+                <div className="mx-auto flex h-full w-full max-w-5xl flex-col">
+                  <DiarioEditor key={activeEntry.id} entry={activeEntry} />
                 </div>
-              </div>
-            )}
+              ) : (
+                <EmptyState onCreate={createPersonalNote} />
+              )}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
 };
+
+const EmptyState = ({ onCreate }: { onCreate: () => Promise<void> }) => (
+  <div className="flex h-full w-full flex-col items-center justify-center px-4 text-center">
+    <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-gray-100 bg-white shadow-sm">
+      <PenLine size={22} className="text-gray-300" aria-hidden="true" />
+    </div>
+    <p className="text-sm font-semibold text-gray-700">Selecione uma nota pessoal</p>
+    <p className="mb-4 mt-1 max-w-sm text-xs leading-5 text-gray-400">
+      As notas pessoais ficam no Diário; os estudos ligados a cards permanecem no Caderno Vivo e aparecem no histórico.
+    </p>
+    <button
+      type="button"
+      onClick={() => void onCreate()}
+      className="rounded-lg border border-gray-200 bg-white px-4 py-2 text-[11px] font-bold uppercase tracking-wider text-gray-700 shadow-sm transition hover:bg-gray-50"
+    >
+      Escrever nota pessoal
+    </button>
+  </div>
+);
+
+export const DiarioView: React.FC<DiarioViewProps> = props => (
+  <DiarioProvider>
+    <DiarioViewInner {...props} />
+  </DiarioProvider>
+);

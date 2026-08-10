@@ -1,15 +1,37 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { useAstroData } from '../hooks/useAstroData';
 import { MandalaChart } from './MandalaChart';
-import { RefreshCw, Compass, User, Users, Plus, Edit3 } from 'lucide-react';
+import { RefreshCw, Compass, User, Users, Plus, Edit3, MessageSquare, FileText } from 'lucide-react';
 import { useAgendaContext } from '../context/AgendaContext';
 import { BirthForm } from './common/BirthForm';
+import { CalculationEvidence } from './common/CalculationEvidence';
+
+type BirthInput = { year: number; month: number; day: number; hour: number; lat: number; lon: number; timezone: string };
+
+// Sem dados confirmados, não há mapa: nunca completar data, hora ou local fictícios.
+function readBirthInput(profile: any): BirthInput | null {
+  const natal = profile?.natal || {};
+  const source = profile?.birthData || natal;
+  const date = profile?.birthDate || source?.birthDate || source?.date;
+  const time = profile?.birthTime || source?.birthTime || source?.time;
+  const lat = Number(source?.lat ?? profile?.lat);
+  const lon = Number(source?.lon ?? source?.lng ?? profile?.lon ?? profile?.lng);
+  const timezone = source?.timezone ?? source?.birthTimezone ?? profile?.birthTimezone;
+  if (typeof date !== 'string' || typeof time !== 'string') return null;
+  const [year, month, day] = date.split('-').map(Number);
+  const [hours, minutes] = time.split(':').map(Number);
+  if (!Number.isInteger(year) || !Number.isInteger(month) || !Number.isInteger(day) || !Number.isInteger(hours) || !Number.isInteger(minutes) || month < 1 || month > 12 || day < 1 || day > 31 || hours < 0 || hours > 23 || minutes < 0 || minutes > 59 || !Number.isFinite(lat) || !Number.isFinite(lon) || lat < -90 || lat > 90 || lon < -180 || lon > 180 || typeof timezone !== 'string' || (timezone !== 'UTC' && !timezone.includes('/'))) return null;
+  return { year, month, day, hour: hours + (minutes / 60), lat, lon, timezone };
+}
 
 export const MandalaPage = () => {
   const { profiles, activeProfileId, addConnection, updateProfile } = useAgendaContext();
-  const [selectedTarget, setSelectedTarget] = useState<'current' | string>('current');
+  const [selectedTarget, setSelectedTarget] = useState<'current' | string>('me');
   const [showForm, setShowForm] = useState(false);
   const [editingConnectionId, setEditingConnectionId] = useState<string | null>(null);
+  const [showDetails, setShowDetails] = useState(false);
+  
+  // O mapa é a visão principal. O Caderno abre apenas por uma ação explícita.
   
   const containerRef = useRef<HTMLDivElement>(null);
   const [containerWidth, setContainerWidth] = useState(800);
@@ -44,46 +66,22 @@ export const MandalaPage = () => {
   }, []);
 
   const chartSize = useMemo(() => {
-    // Calculamos o tamanho ideal (90% da largura, com limites)
-    const idealSize = Math.floor(containerWidth * 0.95);
-    return Math.min(Math.max(idealSize, 400), 1200);
+    // Mantém margem para o painel sem cortar os rótulos externos da mandala.
+    const idealSize = Math.floor(containerWidth * 0.92);
+    return Math.min(Math.max(idealSize, 280), 500);
   }, [containerWidth]);
 
-  const birthData = useMemo(() => {
+  const birthData = useMemo<BirthInput | null>(() => {
     if (selectedTarget === 'current') return null;
     if (selectedTarget === 'me') {
-       const bd = activeProfile?.birthData;
-       if (bd) {
-         const [y, m, d] = String(bd.date || '1989-12-21').split('-').map(Number);
-         const [h, min] = String(bd.time || '10:32').split(':').map(Number);
-         return {
-           year: y || 1989,
-           month: m || 12,
-           day: d || 21,
-           hour: (h || 10) + ((min || 32) / 60),
-           lat: bd.lat ?? -15.7833,
-           lon: bd.lng ?? -47.9333,
-         };
-       }
-       return {
-         year: 1989, month: 12, day: 21, hour: 10.533,
-         lat: -15.7833, lon: -47.9333
-       };
+       return readBirthInput(activeProfile);
      }
     const conn = activeProfile.connections?.find((c: any) => c.id === selectedTarget);
-    if (conn && conn.birthData) {
-       const [y, m, d] = conn.birthData.date.split('-').map(Number);
-       const [h, min] = conn.birthData.time.split(':').map(Number);
-       return {
-         year: y, month: m, day: d,
-         hour: h + (min / 60),
-         lat: conn.birthData.lat, lon: conn.birthData.lng
-       };
-    }
-    return null;
+    return readBirthInput(conn);
   }, [selectedTarget, activeProfile]);
 
-  const { data, loading, error, recalculate } = useAstroData(birthData);
+  const calculationEnabled = Boolean(birthData);
+  const { data, loading, error, recalculate } = useAstroData(birthData, calculationEnabled);
 
   // Parse data for MandalaChart - includes planets, secondary bodies, and angles
   const chartPlanets = useMemo(() => {
@@ -164,9 +162,35 @@ export const MandalaPage = () => {
     }))
   ];
 
+  const activeTargetLabel = allTargets.find(t => t.id === selectedTarget)?.name || 'Mapa selecionado';
+
+  const openHermesForCurrentMap = () => {
+    window.dispatchEvent(new Event('open-hermes-chat'));
+    window.dispatchEvent(new CustomEvent('send-hermes-msg', {
+      detail: {
+        prompt: `Quero estudar ${activeTargetLabel}. Separe com clareza: valores calculados, regra interpretativa, fonte disponível e sua inferência.`,
+      },
+    }));
+  };
+
+  const openCadernoForCurrentMap = () => {
+    const auditReceipt = data?.meta?.receipt;
+    const receipt = data?.meta
+      ? `Cálculo astronômico recebido\n• UTC: ${auditReceipt?.resolved_time?.utc || data.meta.timestamp || 'não informado'}\n• Fuso IANA: ${auditReceipt?.resolved_time?.iana_timezone || 'não informado'}\n• Local: ${data.meta.location?.lat ?? '—'}, ${data.meta.location?.lon ?? '—'}\n• Motor: ${auditReceipt?.engine?.name || 'não informado'} ${auditReceipt?.engine?.version || ''}\n• Hash da entrada: ${auditReceipt?.input_hash || 'não informado'}`
+      : 'Cálculo astronômico: indisponível — não registrar interpretação como fato.';
+    window.dispatchEvent(new CustomEvent('open-caderno-vivo', {
+      detail: {
+        type: 'create-study',
+        topic: activeTargetLabel,
+        seedNote: `Origem: ${activeTargetLabel}\n\n${receipt}\n\nRegra interpretativa: a selecionar\nFonte: a selecionar\nInferência Hermes: a solicitar\n\nMinha anotação:`,
+      },
+    }));
+  };
+
   return (
-    <div ref={containerRef} className="flex flex-col h-full items-center justify-start gap-8 p-4 md:p-8 overflow-y-auto no-scrollbar transition-all duration-500">
-      <div className="w-full flex flex-col md:flex-row items-center justify-between gap-6 bg-white/40 backdrop-blur-md p-6 rounded-[2rem] border border-gold/10 shadow-sm transition-all">
+    <div className="flex h-full min-w-0 overflow-hidden w-full">
+      <div ref={containerRef} className="flex flex-1 min-w-0 flex-col h-full items-center justify-start gap-6 p-4 md:p-8 overflow-y-auto no-scrollbar transition-all duration-500">
+        <div className="w-full flex flex-wrap items-center justify-between gap-4 bg-white/40 backdrop-blur-md p-5 rounded-[2rem] border border-gold/10 shadow-sm transition-all">
         <div className="flex items-center gap-4">
           <div className="p-3 bg-[#FCF9F1] rounded-2xl border border-gold/10 text-[#c5a059]">
             {selectedTarget === 'current' ? <Compass size={24} /> : <User size={24} />}
@@ -179,27 +203,32 @@ export const MandalaPage = () => {
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center justify-center gap-2 shrink-0" aria-label="Ações do mapa">
           <button
             onClick={() => {
               setEditingConnectionId(null);
               setShowForm(true);
             }}
-            className="p-3 bg-[#FCF9F1] border border-gold/10 rounded-xl text-[#c5a059] hover:bg-gold/5 transition-all shadow-sm"
+            className="flex items-center gap-2 rounded-xl border border-gold/10 bg-[#FCF9F1] px-3 py-2.5 text-[#c5a059] shadow-sm transition-all hover:-translate-y-px hover:bg-gold/5 hover:shadow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c5a059] focus-visible:ring-offset-2 shrink-0"
             title="Adicionar Novo Mapa"
           >
             <Plus size={16} />
+            <span className="text-[10px] font-black uppercase tracking-widest">Mapa</span>
           </button>
 
-          <select 
-            value={selectedTarget}
-            onChange={(e) => setSelectedTarget(e.target.value)}
-            className="bg-white border border-gray-100 rounded-xl px-4 py-2 text-[10px] font-black uppercase tracking-widest text-gray-600 outline-none focus:border-gold/30 shadow-sm transition-all"
-          >
-            {allTargets.map(t => (
-              <option key={t.id} value={t.id}>{t.name}</option>
-            ))}
-          </select>
+          <label className="flex flex-col gap-0.5 rounded-xl border border-gray-100 bg-white px-3 py-1.5 shadow-sm transition-colors focus-within:border-gold/40 focus-within:ring-2 focus-within:ring-[#c5a059]/20 shrink-0">
+            <span className="text-[8px] font-black uppercase tracking-[0.14em] text-gray-400">Mapa em foco</span>
+            <select 
+              value={selectedTarget}
+              onChange={(e) => setSelectedTarget(e.target.value)}
+              className="bg-transparent text-[10px] font-black uppercase tracking-widest text-gray-700 outline-none"
+              aria-label="Mapa em foco"
+            >
+              {allTargets.map(t => (
+                <option key={t.id} value={t.id}>{t.name}</option>
+              ))}
+            </select>
+          </label>
 
           {selectedTarget !== 'current' && selectedTarget !== 'me' && (
             <button
@@ -207,29 +236,60 @@ export const MandalaPage = () => {
                 setEditingConnectionId(selectedTarget);
                 setShowForm(true);
               }}
-              className="p-3 bg-white border border-gray-100 rounded-xl text-gray-400 hover:text-[#c5a059] shadow-sm transition-all"
+              className="flex items-center gap-2 rounded-xl border border-gray-100 bg-white px-3 py-2.5 text-gray-500 shadow-sm transition-all hover:-translate-y-px hover:border-gold/20 hover:text-[#c5a059] hover:shadow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c5a059] focus-visible:ring-offset-2 shrink-0"
               title="Editar Dados do Mapa"
             >
               <Edit3 size={16} />
+              <span className="text-[10px] font-black uppercase tracking-widest">Editar</span>
             </button>
           )}
 
           <button
+            onClick={openCadernoForCurrentMap}
+            className="flex items-center gap-2 rounded-xl border border-gray-100 bg-white px-3 py-2.5 text-gray-500 shadow-sm transition-all hover:-translate-y-px hover:border-gold/20 hover:text-gold hover:shadow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c5a059] focus-visible:ring-offset-2 shrink-0"
+            title="Criar estudo no Caderno Vivo a partir deste mapa"
+          >
+            <FileText size={16} />
+            <span className="text-[10px] font-black uppercase tracking-widest">Estudar no Caderno</span>
+          </button>
+
+          <button
+            onClick={openHermesForCurrentMap}
+            className="flex items-center gap-2 rounded-xl border border-gray-100 bg-white px-3 py-2.5 text-gray-500 shadow-sm transition-all hover:-translate-y-px hover:border-gold/20 hover:text-gold hover:shadow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c5a059] focus-visible:ring-offset-2 shrink-0"
+            title="Abrir Hermes com este mapa em foco"
+          >
+            <MessageSquare size={16} />
+            <span className="text-[10px] font-black uppercase tracking-widest">Tutor IA</span>
+          </button>
+
+          <button
             onClick={recalculate}
-            disabled={loading}
-            className="p-3 bg-white border border-gray-100 rounded-xl text-gray-500 hover:text-[#c5a059] hover:border-gold/20 transition-all shadow-sm disabled:opacity-40"
-            title="Sincronizar Estrelas"
+            disabled={loading || !birthData}
+            aria-label={loading ? 'Calculando mapa' : birthData ? 'Atualizar cálculo do mapa' : 'Complete os dados de nascimento para calcular'}
+            className="flex items-center gap-2 rounded-xl border border-gray-100 bg-white px-3 py-2.5 text-gray-500 shadow-sm transition-all hover:-translate-y-px hover:border-gold/20 hover:text-[#c5a059] hover:shadow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c5a059] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none shrink-0"
+            title={birthData ? 'Atualizar cálculo' : 'Data, hora, coordenadas e fuso são obrigatórios'}
           >
             <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
+            <span className="text-[10px] font-black uppercase tracking-widest">{loading ? 'Calculando' : 'Atualizar'}</span>
           </button>
         </div>
+      </div>
+
+      <div className="w-full max-w-3xl">
+        <CalculationEvidence meta={data?.meta} loading={loading} error={error} />
       </div>
 
       {error && (
         <div className="text-[11px] text-red-500 bg-red-50 border border-red-100 rounded-xl px-6 py-4 font-medium max-w-md text-center animate-in shake duration-500">
           ⚠️ {error}
           <br />
-          <span className="text-[10px] text-red-400">Verifique se o Python e o kerykeion estão instalados.</span>
+           <span className="text-[10px] text-red-400">Confira o serviço local e os dados declarados no recibo.</span>
+        </div>
+      )}
+
+       {!birthData && !loading && (
+        <div className="max-w-md rounded-xl border border-amber-200 bg-amber-50 px-5 py-4 text-center text-[11px] font-medium text-amber-900">
+           Este mapa não foi calculado: faltam dados de nascimento confirmados. Informe data, hora, local, coordenadas e fuso IANA antes de gerar uma mandala.
         </div>
       )}
 
@@ -242,18 +302,27 @@ export const MandalaPage = () => {
         </div>
       )}
 
-      {chartPlanets.length > 0 ? (
-        <div className="animate-in zoom-in-95 duration-700 bg-white/40 backdrop-blur-sm rounded-[3rem] border border-gold/10 p-4 md:p-10 shadow-lg relative transition-all" style={{ width: chartSize + 80 }}>
+       {chartPlanets.length > 0 && birthData ? (
+        <div className="w-full max-w-[580px] animate-in zoom-in-95 duration-700 bg-white/40 backdrop-blur-sm rounded-[2rem] border border-gold/10 p-2 sm:p-5 shadow-lg relative transition-all">
           <MandalaChart
             size={chartSize}
             planets={chartPlanets}
             houses={chartHouses}
             aspects={chartAspects}
+            showPanel={showDetails}
           />
+          <button
+            type="button"
+            onClick={() => setShowDetails(value => !value)}
+            className="mx-auto mt-4 flex rounded-xl border border-gold/20 bg-white px-4 py-2 text-[10px] font-black uppercase tracking-widest text-gray-600 transition hover:border-gold/50 hover:text-[#c5a059]"
+            aria-expanded={showDetails}
+          >
+            {showDetails ? 'Ocultar dados técnicos' : 'Ver dados técnicos do mapa'}
+          </button>
         </div>
       ) : !loading && !error ? (
         <div className="text-[11px] text-gray-400 font-medium">
-          Nenhum dado astrológico disponível. Clique em recalcular.
+           Nenhum dado astrológico disponível para este mapa.
         </div>
       ) : null}
 
@@ -270,6 +339,8 @@ export const MandalaPage = () => {
            />
         </div>
       )}
+      </div>
+
     </div>
   );
 };

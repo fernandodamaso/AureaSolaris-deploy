@@ -1,19 +1,63 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode, useMemo } from 'react';
 import { safeInvoke } from '../utils/tauri';
+import { createPasswordVerifier, PasswordVerifier, validatePassword, verifyPassword } from '../utils/auth';
+
+export interface AureaProfile {
+  id: string;
+  name: string;
+  active: boolean;
+  natal?: any;
+  connections?: any[];
+  /** Nunca é uma senha; é somente um verificador derivado. */
+  passwordVerifier?: PasswordVerifier;
+  birthDate?: string;
+  birthTime?: string;
+  birthCity?: string;
+  birthTimezone?: string;
+  avatar?: string;
+  context?: string;
+  dialogStyle?: string;
+  }
+
+export interface AureaTask {
+  id: string;
+  content: string;
+  completed: boolean;
+  is_completed?: boolean;
+  profileId?: string;
+}
+
+export interface AureaEvent {
+  id: string;
+  title: string;
+  start: string;
+  type?: string;
+}
+
+export interface AureaDocument {
+  id: string;
+  name: string;
+  type: string;
+  size: string;
+  path?: string;
+  date?: string;
+}
 
 interface AgendaContextType {
-  profiles: any[];
+  profiles: AureaProfile[];
+  activeProfile: AureaProfile | null;
   activeProfileId: string;
   setActiveProfileId: (id: string) => void;
-  addProfile: (name: string, password?: string) => void;
-  addConnection: (name: string, birthData: { date: string, time: string, location: string, lat?: number, lng?: number }) => void;
-  updateProfile: (id: string, updates: any) => void;
+  addProfile: (name: string, password: string) => Promise<AureaProfile>;
+  authenticateProfile: (id: string, password: string) => Promise<{ ok: boolean; error?: string }>;
+  addConnection: (name: string, birthData: { date: string, time: string, location: string, lat: number, lng: number, timezone: string }) => void;
+  updateProfile: (id: string, updates: Partial<AureaProfile>) => void;
   houseSystem: string;
   setHouseSystem: (hs: string) => void;
-  documents: any[];
-  addDocument: (doc: { name: string, type: string, size: string, path?: string }) => void;
-  tasks: any[];
-  events: any[];
+  documents: AureaDocument[];
+  addDocument: (doc: Omit<AureaDocument, 'id' | 'date'>) => void;
+  tasks: AureaTask[];
+  events: AureaEvent[];
   selectedDay: Date;
   setSelectedDay: (date: Date) => void;
   weekStart: Date;
@@ -30,44 +74,62 @@ interface AgendaContextType {
   getMetrics: () => { done: number, pending: number, notDone: number };
   getPlanetaryHour: (date: Date) => { icon: string, name: string, hour: string };
   getPlanetaryDayRegent: (date: Date) => { icon: string, name: string };
-  getPlanetRegency: (date: Date) => { icon: string, name: string }; // Alias para getPlanetaryDayRegent
-  getAlfredInsights: () => any[];
+  getPlanetRegency: (date: Date) => { icon: string, name: string };
+  getHermesInsights: (transits?: any[]) => any[];
   refreshTasks: () => Promise<void>;
 }
 
 const AgendaContext = createContext<AgendaContextType | undefined>(undefined);
 
 export const AgendaProvider = ({ children }: { children: ReactNode }) => {
-  const [profiles, setProfiles] = useState<any[]>(() => {
+  const [profiles, setProfiles] = useState<AureaProfile[]>(() => {
     const saved = localStorage.getItem('aurea_profiles');
     if (saved) {
       const parsed = JSON.parse(saved);
-      // Clean up and ensure 'damiao' is not a root profile, but migrated to viviane if needed
-      let filtered = parsed.filter((p: any) => p.id !== 'damiao' && p.name !== 'Damiao');
+      const filtered = parsed.filter((p: any) => {
+        if (p.id === 'damiao' || p.name === 'Damiao') return false;
+        // Remove only the exact profile old builds created without user action.
+        const isGeneratedVivianeSeed = p.id === 'viviane' && p.name === 'Viviane'
+          && !p.passwordVerifier && !p.birthDate && !p.birthTime && !p.birthCity && !p.natal
+          && (!Array.isArray(p.connections) || p.connections.length === 0);
+        return !isGeneratedVivianeSeed;
+      });
       
-      return filtered.map((p: any) => ({
-        ...p,
-        natal: p.natal || { Sun: 269.6, Moon: 196.2, ASC: 321.8 },
-        connections: p.connections || []
-      }));
+      const sanitized = filtered.map((p: any) => {
+        const { password: _legacyPassword, todoistToken: _legacyTodoist, composioKey: _legacyComposio, ...safeProfile } = p;
+        return {
+          ...safeProfile,
+          connections: p.connections || []
+        };
+      });
+      // Contenção imediata: segredos e senhas legados saem de localStorage na primeira abertura.
+      localStorage.setItem('aurea_profiles', JSON.stringify(sanitized));
+      return sanitized;
     }
-    return [{ id: 'viviane', name: 'Viviane', active: true, natal: { Sun: 269.6, Moon: 196.2, ASC: 321.8 }, connections: [] }];
+    return [];
   });
   
   const [activeProfileId, setActiveProfileId] = useState(() => {
-    return localStorage.getItem('aurea_active_id') || 'viviane';
-  });
-  
-  const [documents, setDocuments] = useState<any[]>(() => {
-    const saved = localStorage.getItem('aurea_documents');
-    return saved ? JSON.parse(saved) : [
-      { id: 'd1', name: 'Exame_Sangue_Março.pdf', path: '#', size: '1.2 MB', date: '2026-03-01', type: 'health' },
-      { id: 'd2', name: 'Laudo_Astrologico_Natal.pdf', path: '#', size: '840 KB', date: '2026-02-15', type: 'astrology' }
-    ];
+    return localStorage.getItem('aurea_active_id') || '';
   });
 
-  const [tasks, setTasks] = useState<any[]>([]);
-  const [events, setEvents] = useState<any[]>([]);
+  const activeProfile = useMemo(() => 
+    profiles.find(p => p.id === activeProfileId) || null
+  , [profiles, activeProfileId]);
+  
+  const [documents, setDocuments] = useState<AureaDocument[]>(() => {
+    const saved = localStorage.getItem('aurea_documents');
+    if (!saved) return [];
+    const generatedIds = new Set(['d1', 'd2']);
+    const sanitized = JSON.parse(saved).filter((document: AureaDocument) => !(
+      generatedIds.has(document.id) && document.path === '#'
+    ));
+    localStorage.setItem('aurea_documents', JSON.stringify(sanitized));
+    return sanitized;
+  });
+
+  const [tasks, setTasks] = useState<AureaTask[]>([]);
+  const [events, setEvents] = useState<AureaEvent[]>([]);
   const [selectedDay, setSelectedDay] = useState(new Date());
   const [houseSystem, setHouseSystem] = useState(
     () => localStorage.getItem('aurea_house_system') || 'Regiomontanus'
@@ -78,35 +140,73 @@ export const AgendaProvider = ({ children }: { children: ReactNode }) => {
     return d;
   });
 
-  const addProfile = (name: string, password?: string) => {
-    const newProfile = { 
+  const addProfile = async (name: string, password: string): Promise<AureaProfile> => {
+    const passwordError = validatePassword(password);
+    if (passwordError) throw new Error(passwordError);
+    const newProfile: AureaProfile = { 
       id: name.toLowerCase().replace(/\s+/g, '_') + '_' + Date.now(), 
       name, 
       active: true,
-      natal: { Sun: 0, Moon: 0, ASC: 0 },
       connections: [],
-      password: password || ''
+      passwordVerifier: await createPasswordVerifier(password)
     };
     const updated = [...profiles, newProfile];
     setProfiles(updated);
     localStorage.setItem('aurea_profiles', JSON.stringify(updated));
     setActiveProfileId(newProfile.id);
     localStorage.setItem('aurea_active_id', newProfile.id);
+    return newProfile;
   };
 
-  const addConnection = (name: string, birthData: { date: string, time: string, location: string, lat?: number, lng?: number }) => {
-    const activeProfile = profiles.find(p => p.id === activeProfileId);
-    if (!activeProfile) return;
+  const authenticateProfile = async (id: string, password: string) => {
+    const profile = profiles.find((candidate: any) => candidate.id === id) as (AureaProfile & { password?: string }) | undefined;
+    if (!profile) return { ok: false, error: 'Perfil não encontrado.' };
 
-    // Default lat/lng (São Paulo) if not provided
-    const lat = birthData.lat ?? -23.5505;
-    const lng = birthData.lng ?? -46.6333;
+    if (profile.passwordVerifier) {
+      return (await verifyPassword(password, profile.passwordVerifier))
+        ? { ok: true }
+        : { ok: false, error: 'Senha incorreta.' };
+    }
+
+    // Migração única de perfis legados: a senha antiga não sobrevive após uma entrada válida.
+    if (typeof profile.password === 'string' && profile.password.length > 0) {
+      if (profile.password !== password) return { ok: false, error: 'Senha incorreta.' };
+      const passwordVerifier = await createPasswordVerifier(password);
+      const updated = profiles.map((candidate: any) => {
+        if (candidate.id !== id) return candidate;
+        const { password: _legacyPassword, ...safeProfile } = candidate;
+        return { ...safeProfile, passwordVerifier };
+      });
+      setProfiles(updated);
+      localStorage.setItem('aurea_profiles', JSON.stringify(updated));
+      return { ok: true };
+    }
+
+    const passwordError = validatePassword(password);
+    if (passwordError) return { ok: false, error: `Defina a senha inicial deste perfil. ${passwordError}` };
+    const passwordVerifier = await createPasswordVerifier(password);
+    const updated = profiles.map(candidate => candidate.id === id ? { ...candidate, passwordVerifier } : candidate);
+    setProfiles(updated);
+    localStorage.setItem('aurea_profiles', JSON.stringify(updated));
+    return { ok: true };
+  };
+
+  const addConnection = (name: string, birthData: { date: string, time: string, location: string, lat: number, lng: number, timezone: string }) => {
+    if (!activeProfile) return;
+    if (!Number.isFinite(birthData.lat) || !Number.isFinite(birthData.lng) || birthData.lat < -90 || birthData.lat > 90 || birthData.lng < -180 || birthData.lng > 180) {
+      console.warn('[AgendaContext] Conexão não salva: coordenadas de nascimento inválidas.');
+      return;
+    }
+    if (!birthData.timezone || (birthData.timezone !== 'UTC' && !birthData.timezone.includes('/'))) {
+      console.warn('[AgendaContext] Conexão não salva: fuso IANA de nascimento ausente.');
+      return;
+    }
 
     const newConn = { 
       id: name.toLowerCase().replace(/\s+/g, '_') + '_' + Date.now(), 
       name, 
-      birthData: { ...birthData, lat, lng },
-      natal: null // Will be calculated when first viewed
+      birthData,
+      natal: null
     };
     
     const updated = profiles.map(p => 
@@ -119,14 +219,14 @@ export const AgendaProvider = ({ children }: { children: ReactNode }) => {
     localStorage.setItem('aurea_profiles', JSON.stringify(updated));
   };
 
-  const updateProfile = (id: string, updates: any) => {
+  const updateProfile = (id: string, updates: Partial<AureaProfile>) => {
     const updated = profiles.map(p => p.id === id ? { ...p, ...updates } : p);
     setProfiles(updated);
     localStorage.setItem('aurea_profiles', JSON.stringify(updated));
   };
 
-  const addDocument = (doc: { name: string, type: string, size: string, path?: string }) => {
-    const newDoc = {
+  const addDocument = (doc: Omit<AureaDocument, 'id' | 'date'>) => {
+    const newDoc: AureaDocument = {
       ...doc,
       id: 'doc_' + Date.now(),
       date: new Date().toISOString().split('T')[0]
@@ -137,73 +237,40 @@ export const AgendaProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const fetchTasks = async () => {
-    console.log('[AgendaContext] fetchTasks() called');
-    console.log('[AgendaContext] isTauri:', !!(window as any).__TAURI_INTERNALS__);
-    
-    let tRes = await safeInvoke<string>('get_todoist_tasks');
-    console.log('[AgendaContext] Todoist result type:', typeof tRes, tRes ? 'HAS DATA' : 'NULL/EMPTY');
-    
-    // Browser Fallback for Todoist
-    // @ts-expect-error - Tauri internal check
-    if (!tRes && !window.__TAURI_INTERNALS__) {
-      console.log('[AgendaContext] Applying Todoist browser fallback mock');
-      tRes = JSON.stringify([
-        { id: 't1', content: 'Estudar trânsitos de Netuno', is_completed: false },
-        { id: 't2', content: 'Revisão mensal de finanças', is_completed: false },
-        { id: 't3', content: 'Sessão UDV às 20h', is_completed: false },
-        { id: 't4', content: 'Organizar Mesa de Criação', is_completed: true }
-      ]);
-    }
-
+    // Never read integration credentials from browser storage.
+    let tRes = await safeInvoke<any>('get_todoist_tasks', {});
     if (tRes) {
       try {
-        const parsed = JSON.parse(tRes);
-        console.log('[AgendaContext] Todoist tasks count:', parsed.length);
+        const parsed = typeof tRes === 'string' ? JSON.parse(tRes) : tRes;
         setTasks(parsed);
-        console.log('[AgendaContext] setTasks called with', parsed.length, 'items');
       } catch (e) {
         console.error("[AgendaContext] Error parsing tasks", e);
       }
-    } else {
-      console.warn('[AgendaContext] WARNING: No Todoist data!');
     }
 
-    let eRes = await safeInvoke<string>('get_google_events');
-    console.log('[AgendaContext] Google events result type:', typeof eRes, eRes ? 'HAS DATA' : 'NULL/EMPTY');
-
-    // Browser Fallback for Google Events
-    // @ts-expect-error - Tauri internal check
-    if (!eRes && !window.__TAURI_INTERNALS__) {
-      console.log('[AgendaContext] Applying Google events browser fallback mock');
-      const today = new Date().toISOString().split('T')[0];
-      eRes = JSON.stringify([
-        { id: 'g1', title: 'Sessão UDV', start: `${today}T20:00:00Z`, type: 'spiritual' },
-        { id: 'g2', title: 'Almoço em Família', start: `${today}T12:00:00Z`, type: 'social' },
-        { id: 'g3', title: 'Consulta Médica', start: `${today}T14:30:00Z`, type: 'health' }
-      ]);
-    }
-
+    let eRes = await safeInvoke<any>('get_google_events', {});
     if (eRes) {
       try {
-        const parsed = JSON.parse(eRes);
-        console.log('[AgendaContext] Google events count:', parsed.length);
-        setEvents(parsed);
-        console.log('[AgendaContext] setEvents called with', parsed.length, 'items');
+        const parsed = typeof eRes === 'string' ? JSON.parse(eRes) : eRes;
+        // Transformar se necessário (Composio retorna campos específicos)
+        const formatted = Array.isArray(parsed) ? parsed.map((e: any) => ({
+          id: e.id || Math.random().toString(),
+          title: e.summary || e.title || 'Sem título',
+          start: e.start?.dateTime || e.start || '',
+          type: 'google'
+        })) : [];
+        setEvents(formatted);
       } catch (e) {
         console.error("[AgendaContext] Error parsing events", e);
       }
-    } else {
-      console.warn('[AgendaContext] WARNING: No Google events data!');
     }
   };
 
   useEffect(() => {
-    console.log('[AgendaContext] useEffect mounted - calling fetchTasks()');
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchTasks();
-    const interval = setInterval(fetchTasks, 60000); // Refresh every minute
+    const interval = setInterval(fetchTasks, 60000);
     return () => clearInterval(interval);
-  }, []);
+  }, [activeProfileId]);
 
   const weekDays = Array.from({ length: 7 }, (_, i) => {
     const d = new Date(weekStart);
@@ -224,7 +291,8 @@ export const AgendaProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const addTask = async (content: string) => {
-    await safeInvoke('add_todoist_task', { content });
+    const created = await safeInvoke('add_todoist_task', { content });
+    if (created === null) throw new Error('Não foi possível criar a tarefa. A integração está indisponível.');
     await fetchTasks();
   };
 
@@ -234,17 +302,20 @@ export const AgendaProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const toggleTask = async (id: string, completed: boolean) => {
-    await safeInvoke('toggle_todoist_task', { id, completed });
+    const toggled = await safeInvoke('toggle_todoist_task', { id, completed });
+    if (toggled === null) throw new Error('Não foi possível atualizar a tarefa.');
     await fetchTasks();
   };
 
   const postponeTask = async (id: string) => {
-    await safeInvoke('postpone_todoist_task', { id });
+    const postponed = await safeInvoke('postpone_todoist_task', { id });
+    if (postponed === null) throw new Error('Não foi possível adiar a tarefa.');
     await fetchTasks();
   };
 
   const addEvent = async (title: string, start: string) => {
-    await safeInvoke('add_google_event', { title, start });
+    const created = await safeInvoke('add_google_event', { title, start });
+    if (created === null) throw new Error('Não foi possível criar o compromisso. A integração está indisponível.');
     await fetchTasks();
   };
 
@@ -279,7 +350,7 @@ export const AgendaProvider = ({ children }: { children: ReactNode }) => {
   const PLANET_NAMES_PT: Record<string, string> = { 'Sun': 'Sol', 'Moon': 'Lua', 'Mercury': 'Mercúrio', 'Venus': 'Vênus', 'Mars': 'Marte', 'Jupiter': 'Júpiter', 'Saturn': 'Saturno' };
 
   const getPlanetaryHour = (date: Date) => {
-    const dayOfWeek = (date.getDay() + 1) % 7;
+    const dayOfWeek = date.getDay();
     const dayRegent = DAY_REGENTS[dayOfWeek];
     const startIdx = CHALDEAN_ORDER.indexOf(dayRegent);
     const hourIdx = (startIdx + date.getHours()) % 7;
@@ -287,50 +358,26 @@ export const AgendaProvider = ({ children }: { children: ReactNode }) => {
     const ptName = PLANET_NAMES_PT[regentEng] || regentEng;
     return { icon: PLANET_ICONS[regentEng] || '?', name: ptName, hour: date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) };
   };
-
+  
   const getPlanetaryDayRegent = (date: Date) => {
-    const dayOfWeek = (date.getDay() + 1) % 7;
+    const dayOfWeek = date.getDay();
     const dayRegent = DAY_REGENTS[dayOfWeek];
     return { icon: PLANET_ICONS[dayRegent] || '?', name: PLANET_NAMES_PT[dayRegent] || dayRegent };
   };
 
-  const getAlfredInsights = () => {
-    const activeProfile = profiles.find(p => p.id === activeProfileId);
-    if (!activeProfile) return [];
-    
-    // Logic: In a real app we'd use useAstrologyData here if we could, 
-    // but context can't use hooks that depend on it. 
-    // We'll use a simplified version for the MVP that feels real.
-    const insights = [
-      { 
-        id: 1, 
-        type: 'move', 
-        content: `A regência de ${getPlanetaryDayRegent(new Date()).name} sugere foco em organização. Vamos realocar 'Redação'?`,
-        suggestion: 'Finalizar Redação do Mês'
-      },
-      { 
-        id: 2, 
-        type: 'focus', 
-        content: 'Marte em aspecto tenso detectado. Alfred recomenda cautela em comunicações hoje.',
-        suggestion: 'Revisar e-mails importantes'
-      },
-      { 
-        id: 3, 
-        type: 'opportunity', 
-        content: 'Vênus favorece conexões agora. Ótimo momento para aquela reunião social.',
-        suggestion: 'Marcar café com a equipe'
-      }
-    ];
-    return insights;
+  const getHermesInsights = (_transits?: any[]) => {
+    // Do not publish interpretations before they can carry rule, source and
+    // a visible "Hermes inference" label in the certified vertical.
+    return [];
   };
 
   return (
     <AgendaContext.Provider value={{
-      profiles, activeProfileId, setActiveProfileId, addProfile, addConnection, updateProfile,
+      profiles, activeProfile, activeProfileId, setActiveProfileId, addProfile, authenticateProfile, addConnection, updateProfile,
       tasks, events, selectedDay, setSelectedDay, weekStart, weekDays, nextWeek, prevWeek,
       addTask, deleteTask, toggleTask, postponeTask, addEvent, deleteEvent, executeInsight,
       documents, addDocument,
-      getMetrics, getPlanetaryHour, getPlanetaryDayRegent, getPlanetRegency: getPlanetaryDayRegent, getAlfredInsights, refreshTasks: fetchTasks,
+      getMetrics, getPlanetaryHour, getPlanetaryDayRegent, getPlanetRegency: getPlanetaryDayRegent, getHermesInsights, refreshTasks: fetchTasks,
       houseSystem,
       setHouseSystem: (hs: string) => {
         setHouseSystem(hs);

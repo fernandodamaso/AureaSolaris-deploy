@@ -1,137 +1,137 @@
 import { useState } from 'react';
-import { Info } from 'lucide-react';
-import { useAstrologyData } from '../hooks/useAstrologyData';
-import { useAgendaTasks } from '../hooks/useAgendaTasks';
-import { Card, Advice, StarRow } from './common/UIComponents';
-import { PLANET_NAMES_PT } from '../utils/astro-dignity';
+import { ArrowRight, BookOpen, FolderOpen, Plus } from 'lucide-react';
+import { MandalaPage } from './MandalaPage';
+import type { CadernoIntent } from './MesaCriacao';
 
-const PLANET_ICONS: Record<string, string> = {
-  Sun: '☉', Moon: '☽', Mercury: '☿', Venus: '♀', Mars: '♂',
-  Jupiter: '♃', Saturn: '♄', Uranus: '♅', Neptune: '♆', Pluto: '♇',
-  Chiron: '⚷', NorthNode: '☊', PartOfFortune: '⊗'
+type AstrologiaPageProps = {
+  onOpenCaderno: (intent: CadernoIntent) => void;
 };
 
-import { MandalaPage } from './MandalaPage';
-import { RafikiEscola } from './RafikiEscola';
+type CadernoVivoPortalProps = {
+  onOpenCaderno: (intent: CadernoIntent) => void;
+};
 
-export const AstrologiaPage = () => {
-  const { liveData } = useAstrologyData();
-  useAgendaTasks();
-  const [activeTab, setActiveTab] = useState<'list' | 'mandala' | 'escola'>('list');
+/**
+ * Esta não é uma segunda ferramenta de estudo. Ela deixa explícito que estudar
+ * acontece no Caderno Vivo e só encaminha a pessoa para a mesma mesa persistida.
+ */
+const CadernoVivoPortal = ({ onOpenCaderno }: CadernoVivoPortalProps) => {
+  const [topic, setTopic] = useState('');
+  const normalizedTopic = topic.trim();
 
-  const planets = liveData?.planets || {};
-  const aspects = liveData?.aspects || [];
+  const createStudy = () => {
+    if (!normalizedTopic) return;
+    onOpenCaderno({ type: 'create-study', topic: normalizedTopic });
+  };
 
   return (
-    <div className="space-y-8 pb-24 animate-in fade-in">
-      <div className="flex items-center justify-between border-b border-gold/10 pb-4 mb-4 gap-4">
-        <div className="flex gap-6">
-          <button 
-            onClick={() => setActiveTab('list')}
-            className={`text-[11px] font-black uppercase tracking-[0.2em] transition-all pb-2 border-b-2 ${activeTab === 'list' ? 'text-gold border-gold' : 'text-gray-400 border-transparent'}`}
-          >
-            Efemérides Técnicas
-          </button>
-          <button 
+    <section className="flex-1 min-h-0 overflow-y-auto py-6" aria-labelledby="caderno-vivo-title">
+      <div className="mx-auto w-full max-w-3xl">
+        <div className="rounded-3xl border border-gold/20 bg-white px-7 py-8 shadow-sm">
+          <div className="flex items-start gap-4">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gold/10 text-gold">
+              <BookOpen size={23} aria-hidden="true" />
+            </div>
+            <div className="min-w-0">
+              <p className="mb-1 text-[10px] font-black uppercase tracking-[0.22em] text-gold">Caderno Vivo</p>
+              <h3 id="caderno-vivo-title" className="text-xl font-bold text-gray-900">O estudo acontece no seu caderno.</h3>
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-gray-500">
+                Um estudo é um espaço que você constrói: notas, conexões, imagens, perguntas e respostas do Hermes.
+                A mesa e as páginas serão duas leituras desse mesmo material.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-8 rounded-2xl border border-gold/15 bg-mystic-bg/40 p-5">
+            <label htmlFor="study-topic" className="block text-[10px] font-black uppercase tracking-[0.18em] text-gray-600">
+              O que você quer estudar agora?
+            </label>
+            <p className="mt-1 text-xs leading-5 text-gray-400">
+              Ex.: Mercúrio na 8ª casa, Lua e rotina, uma fonte ou uma pergunta sua.
+            </p>
+            <div className="mt-4 flex flex-col gap-3 sm:flex-row">
+              <input
+                id="study-topic"
+                value={topic}
+                onChange={(event) => setTopic(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') createStudy();
+                }}
+                placeholder="Dê um nome ao seu estudo"
+                className="min-w-0 flex-1 rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-800 outline-none transition focus:border-gold focus:ring-2 focus:ring-gold/20"
+              />
+              <button
+                type="button"
+                onClick={createStudy}
+                disabled={!normalizedTopic}
+                title={normalizedTopic ? 'Criar estudo no Caderno Vivo' : 'Escreva primeiro o tema do estudo'}
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#171c31] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#252b49] focus:outline-none focus:ring-2 focus:ring-gold/60 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-45"
+              >
+                <Plus size={16} aria-hidden="true" />
+                Criar estudo
+              </button>
+            </div>
+          </div>
+
+          <div className="mt-5 flex flex-col justify-between gap-4 border-t border-gray-100 pt-5 sm:flex-row sm:items-center">
+            <p className="text-xs leading-5 text-gray-400">
+              Seus cadernos já existentes continuam intactos e podem ser abertos a qualquer momento.
+            </p>
+            <button
+              type="button"
+              onClick={() => onOpenCaderno({ type: 'browse' })}
+              className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm font-semibold text-gray-700 transition hover:border-gold/40 hover:text-gold focus:outline-none focus:ring-2 focus:ring-gold/50 focus:ring-offset-2"
+            >
+              <FolderOpen size={16} aria-hidden="true" />
+              Abrir meus cadernos
+              <ArrowRight size={15} aria-hidden="true" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export const AstrologiaPage = ({ onOpenCaderno }: AstrologiaPageProps) => {
+  const [activeTab, setActiveTab] = useState<'mandala' | 'caderno'>('mandala');
+
+  return (
+    <div className="flex h-full flex-col overflow-hidden">
+      <div className="mb-4 flex shrink-0 items-center justify-between gap-4 border-b border-gold/10 pb-4">
+        <div className="flex gap-6" role="tablist" aria-label="Ferramentas de astrologia">
+          <button
+            type="button"
+            role="tab"
+            aria-selected={activeTab === 'mandala'}
+            aria-controls="painel-mandala"
             onClick={() => setActiveTab('mandala')}
-            className={`text-[11px] font-black uppercase tracking-[0.2em] transition-all pb-2 border-b-2 ${activeTab === 'mandala' ? 'text-gold border-gold' : 'text-gray-400 border-transparent'}`}
+            className={`border-b-2 pb-2 text-[11px] font-black uppercase tracking-[0.2em] transition-all focus:outline-none focus:ring-2 focus:ring-gold/50 focus:ring-offset-2 ${activeTab === 'mandala' ? 'border-gold text-gold' : 'border-transparent text-gray-400 hover:text-gray-700'}`}
           >
-            Mandala Visual
+            Mandala visual
           </button>
-          <button 
-            onClick={() => setActiveTab('escola')}
-            className={`text-[11px] font-black uppercase tracking-[0.2em] transition-all pb-2 border-b-2 ${activeTab === 'escola' ? 'text-gold border-gold' : 'text-gray-400 border-transparent'}`}
+          <button
+            type="button"
+            role="tab"
+            aria-selected={activeTab === 'caderno'}
+            aria-controls="painel-caderno-vivo"
+            onClick={() => setActiveTab('caderno')}
+            className={`border-b-2 pb-2 text-[11px] font-black uppercase tracking-[0.2em] transition-all focus:outline-none focus:ring-2 focus:ring-gold/50 focus:ring-offset-2 ${activeTab === 'caderno' ? 'border-gold text-gold' : 'border-transparent text-gray-400 hover:text-gray-700'}`}
           >
-            Escola de Astrologia
+            Caderno Vivo
           </button>
         </div>
       </div>
 
-      <Advice 
-        agent="Rafiki" 
-        content={planets.Sun ? `O céu diz: ${planets.Sun.sign} iluminando seu caminho. Foco em ${planets.Mercury?.sign} para comunicação.` : "Rafiki sintonizando as esferas..."} 
-      />
-      
       {activeTab === 'mandala' ? (
-         <div className="animate-in slide-in-from-right-10 duration-500">
-           <MandalaPage />
-         </div>
-      ) : activeTab === 'escola' ? (
-         <div className="animate-in slide-in-from-right-10 duration-500">
-           <RafikiEscola />
-         </div>
+        <div id="painel-mandala" role="tabpanel" className="flex-1 overflow-hidden">
+          <MandalaPage />
+        </div>
       ) : (
-        <>
-          {/* Visualização da Mandala removida desta aba (agora exclusiva na sub-aba Mandala) */}
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card title="As Estrelas Cantam (Efemérides)">
-            <div className="grid grid-cols-2 gap-x-8 mt-4">
-              {Object.entries(PLANET_ICONS).map(([name, icon]) => {
-                const pData = planets[name] || liveData?.secondary?.[name];
-                if (!pData) return null;
-                return (
-                  <StarRow 
-                    key={name} 
-                    icon={icon} 
-                    name={PLANET_NAMES_PT[name] || name} 
-                    sign={pData.sign || '---'} 
-                    deg={`${Math.floor(pData.pos_in_sign || 0)}°`} 
-                  />
-                );
-              })}
-            </div>
-        </Card>
-
-        <Card title="Dança das Esferas (Aspectos)">
-          <div className="space-y-3 mt-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
-            {aspects.length > 0 ? aspects.map((asp, i) => {
-              const isMinor = ['Inconjunto', 'Quintil', 'Bi-Quintil', 'Semi-Sextil', 'Semi-Quadratura', 'Sesqui-Quadratura'].includes(asp.type);
-              const applyingIndicator = asp.applying !== undefined ? (asp.applying ? '→' : '←') : null;
-              return (
-                <div key={i} className={`flex items-center justify-between p-3 rounded-lg transition-all ${isMinor ? 'bg-white/30 border border-gray-100/50 hover:border-gray-300/50' : 'bg-white/50 border border-gold/5 hover:border-gold/20'}`}>
-                  <div className="flex items-center gap-3">
-                    <span className={`${isMinor ? 'text-gray-400' : 'text-gold'} text-lg`}>{asp.symbol}</span>
-                    <div className="flex flex-col">
-                      <span className="text-[10px] font-bold text-gray-700 uppercase tracking-wider">{asp.type}</span>
-                      <span className="text-[11px] text-gray-500">{asp.p1} e {asp.p2}{applyingIndicator && <span className="ml-1 text-gold/60">{applyingIndicator}</span>}</span>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <span className={`text-[10px] px-2 py-0.5 rounded font-bold ${isMinor ? 'bg-gray-100 text-gray-500' : 'bg-gold/10 text-gold'}`}>Orb {asp.orb.toFixed(1)}°</span>
-                  </div>
-                </div>
-              );
-            }) : <p className="text-center py-10 text-gray-300 text-[11px] italic">Nenhum aspecto sintonizado...</p>}
-          </div>
-        </Card>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-         <Card title="Pílulas de Sabedoria Astral">
-            <div className="space-y-4 pt-2">
-               <div className="p-5 bg-[#FCF9F1]/60 border border-gold/10 rounded-xl shadow-xs transition-all hover:bg-[#FCF9F1]/80 group">
-                  <h5 className="flex items-center justify-between text-[9px] font-black uppercase text-[#c5a059] mb-2 tracking-[0.2em] opacity-80">
-                    Dignidades Essenciais <Info size={10} className="opacity-0 group-hover:opacity-100 transition-opacity"/>
-                  </h5>
-                  <p className="text-[12px] text-gray-700 leading-relaxed font-bold">
-                    {planets.Venus?.sign === 'Touro' || planets.Venus?.sign === 'Libra' ? "Vênus está em domicílio, favorecendo as artes e o equilíbrio hoje." : "A posição de Vênus pede atenção às relações e valores materiais."}
-                  </p>
-               </div>
-               <div className="p-5 bg-white border border-gray-50 rounded-xl shadow-xs transition-all hover:border-gold/20 group">
-                  <h5 className="flex items-center justify-between text-[9px] font-black uppercase text-gray-400 mb-2 tracking-[0.2em] opacity-80">
-                    Ciclo Lunar <Info size={10} className="opacity-0 group-hover:opacity-100 transition-opacity"/>
-                  </h5>
-                  <p className="text-[12px] text-gray-600 leading-relaxed font-bold">
-                    {planets.Moon?.sign === 'Câncer' || planets.Moon?.sign === 'Touro' ? "Lua em posição forte: as emoções fluem com proteção." : `Lua em ${planets.Moon?.sign || 'sincronizando'}... foco na introspecção.`}
-                  </p>
-               </div>
-            </div>
-         </Card>
-      </div>
-
-      </>
-    )}
+        <div id="painel-caderno-vivo" role="tabpanel" className="flex min-h-0 flex-1 animate-in slide-in-from-right-4 duration-300">
+          <CadernoVivoPortal onOpenCaderno={onOpenCaderno} />
+        </div>
+      )}
     </div>
   );
 };

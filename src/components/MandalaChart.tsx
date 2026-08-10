@@ -13,6 +13,7 @@ import {
   QUALITY_COLORS, QUALITY_LABELS, PLANET_NAMES_PT, PLANET_SYMBOLS as DIGNITY_PSYMBOLS,
   formatDeg as dignityFormatDeg,
 } from '../utils/astro-dignity';
+import { getPlanetSignKeyword, getAspectKeyword, ASPECT_MEANINGS } from '../utils/astro-dictionary';
 
 
 
@@ -53,6 +54,7 @@ interface MandalaChartProps {
   aspects: Aspect[];
   transitPlanets?: Planet[];
   transitAspects?: Aspect[];
+  showPanel?: boolean;
 }
 
 /* ─── Constants ────────────────────────────────────────────────── */
@@ -145,7 +147,7 @@ const getSignIdx = (deg: number) => Math.floor(normDeg(deg) / 30);
 
 /* ─── Component ────────────────────────────────────────────────── */
 
-export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlanets, transitAspects }: MandalaChartProps) => {
+export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlanets, transitAspects, showPanel = true }: MandalaChartProps) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const [showDecanates, setShowDecanates] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
@@ -158,6 +160,17 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
     decanate: string; term: string; mansion: string | null;
     star: string | null; dignity: string; visibility: string;
     special: string | null;
+  } | null>(null);
+  const [aspectTooltip, setAspectTooltip] = useState<{
+    type: string;
+    p1: string;
+    p2: string;
+    orb: number;
+    general: string;
+    specific: string;
+    x: number;
+    y: number;
+    color: string;
   } | null>(null);
 
   const cx = size / 2;
@@ -422,10 +435,67 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
       if (!p1 || !p2) return;
       const col = ASPECT_COLORS[asp.type] || '#ccc';
       const op = ASPECT_OPACITY[asp.type] || 0.3;
+      const x1 = polarX(planetR, p1.degree);
+      const y1 = polarY(planetR, p1.degree);
+      const x2 = polarX(planetR, p2.degree);
+      const y2 = polarY(planetR, p2.degree);
+
+      // Visible aspect line
       g.append('line')
-        .attr('x1', polarX(planetR, p1.degree)).attr('y1', polarY(planetR, p1.degree))
-        .attr('x2', polarX(planetR, p2.degree)).attr('y2', polarY(planetR, p2.degree))
+        .attr('class', `aspect-line aspect-p1-${asp.p1} aspect-p2-${asp.p2}`)
+        .attr('data-default-opacity', op)
+        .attr('x1', x1).attr('y1', y1)
+        .attr('x2', x2).attr('y2', y2)
         .attr('stroke', col).attr('stroke-width', 0.8).attr('opacity', op);
+
+      // Hidden hit area line for easier mouse hovering
+      const hitArea = g.append('line')
+        .attr('class', 'aspect-hit-area')
+        .attr('x1', x1).attr('y1', y1)
+        .attr('x2', x2).attr('y2', y2)
+        .attr('stroke', 'white')
+        .attr('stroke-width', 12)
+        .attr('opacity', 0.0001)
+        .style('cursor', 'pointer')
+        .attr('pointer-events', 'stroke');
+
+      hitArea.on('mouseenter mousemove', function(event: MouseEvent) {
+        // Dim other aspect lines
+        d3.selectAll('.aspect-line').transition().duration(200).style('opacity', 0.05);
+        // Highlight current aspect line
+        d3.selectAll(`.aspect-line.aspect-p1-${asp.p1}.aspect-p2-${asp.p2}`).transition().duration(100)
+          .style('opacity', 1.0)
+          .attr('stroke-width', 2.5);
+
+        const rect = svgRef.current?.getBoundingClientRect();
+        const rx = rect ? event.clientX - rect.left : event.clientX;
+        const ry = rect ? event.clientY - rect.top : event.clientY;
+
+        const p1Pt = PLANET_NAMES_PT[asp.p1] || asp.p1;
+        const p2Pt = PLANET_NAMES_PT[asp.p2] || asp.p2;
+
+        const specDesc = getAspectKeyword(asp.type, p1Pt, p2Pt);
+        const genDesc = ASPECT_MEANINGS[asp.type] || "Aspecto geométrico ligando os planetas.";
+
+        setAspectTooltip({
+          type: asp.type,
+          p1: p1Pt,
+          p2: p2Pt,
+          orb: asp.orb,
+          general: genDesc,
+          specific: specDesc,
+          x: rx,
+          y: ry,
+          color: '#B8860B'
+        });
+      }).on('mouseleave', function() {
+        // Restore opacity
+        d3.selectAll('.aspect-line').transition().duration(200)
+          .style('opacity', function() { return d3.select(this).attr('data-default-opacity'); })
+          .attr('stroke-width', 0.8);
+
+        setAspectTooltip(null);
+      });
     });
 
     /* ─── 7b. Transit aspect lines (if provided) ───────────────── */
@@ -643,7 +713,7 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
           motion,
           dignity,
           namePt,
-          house: p.house || 1,
+          house: p.house ?? null,
         };
       });
   }, [filteredPlanets]);
@@ -786,39 +856,80 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
             </div>
           </div>
         )}
+
+        {/* ─── Aspect Tooltip (React overlay) ────────────────────── */}
+        {aspectTooltip && (
+          <div
+            className="absolute z-50 bg-[#171c31] border border-[#c5a059]/30 rounded-xl shadow-xl px-4 py-3 pointer-events-none max-w-[240px] text-white animate-in fade-in duration-200"
+            style={{
+              left: aspectTooltip.x + 16,
+              top: aspectTooltip.y - 20,
+              transform: aspectTooltip.x > size * 0.7 ? 'translateX(-110%)' : 'none'
+            }}
+          >
+            <div className="flex items-center gap-2 mb-1.5 border-b border-white/10 pb-1">
+              <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: aspectTooltip.color }} />
+              <span className="text-[10px] font-black uppercase tracking-wider">
+                {aspectTooltip.type} ({aspectTooltip.orb.toFixed(1)}°)
+              </span>
+            </div>
+            <p className="text-[11px] font-bold text-[#c5a059] mb-1">
+              {aspectTooltip.p1} e {aspectTooltip.p2}
+            </p>
+            <div className="space-y-1">
+              <p className="text-[9.5px] text-white/80 leading-relaxed">
+                <span className="text-[#c5a059] font-bold">Geral:</span> {aspectTooltip.general}
+              </p>
+              <p className="text-[9.5px] text-white/80 leading-relaxed">
+                <span className="text-[#c5a059] font-bold">Específico:</span> {aspectTooltip.specific}
+              </p>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* ─── Tables Below ─────────────────────────────────────── */}
-      <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 transition-all">
+      {showPanel && <div className="w-full flex flex-col gap-4 transition-all">
         {/* Planet Table */}
         <div className="bg-white/60 backdrop-blur-sm border border-[#c5a059]/10 rounded-xl p-4">
           <h3 className="text-[9px] font-black uppercase tracking-[0.25em] text-[#c5a059] mb-3">Planetas</h3>
           <div className="space-y-1.5">
-            {planetTable.map((p, i) => (
-              <div key={i} className="flex items-center justify-between text-[10px] py-1 border-b border-gray-50 last:border-0">
-                <div className="flex items-center gap-2">
-                  <span className="font-bold w-5" style={{ color: p.color }}>{p.symbol}</span>
-                  <span className="font-semibold text-gray-700 w-16">{p.namePt}</span>
+            {planetTable.map((p, i) => {
+              const kw = getPlanetSignKeyword(p.name, p.signName);
+              return (
+                <div key={i} className="flex flex-col py-1 border-b border-gray-50 last:border-0">
+                  <div className="flex items-center justify-between text-[10px]">
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold w-5" style={{ color: p.color }}>{p.symbol}</span>
+                      <span className="font-semibold text-gray-700 w-24 truncate">{p.namePt} em {p.signName}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <span
+                        className="text-[10px] text-gray-400 font-semibold w-6 text-center"
+                        title={p.house == null ? 'Casa indisponível' : `Casa ${p.house}`}
+                      >
+                        {p.house == null ? 'C—' : `C${p.house}`}
+                      </span>
+                      {p.dignity.state !== 'peregrine' && (
+                        <span className={`text-[7px] font-bold px-1 py-0.5 rounded ${p.dignity.bg}`}>
+                          {p.dignity.label}
+                        </span>
+                      )}
+                      <span className="text-gray-400">{p.signSymbol}</span>
+                      <span className="text-gray-600 font-medium tabular-nums w-14 text-right">{p.signDeg}</span>
+                      {p.motion && (
+                        <span className={`text-[8px] font-bold px-1 rounded ${
+                          p.motion === 'Rx' ? 'bg-red-50 text-red-500' :
+                          p.motion === 'Est' ? 'bg-amber-50 text-amber-600' :
+                          'text-gray-400'
+                        }`}>{p.motion}</span>
+                      )}
+                    </div>
+                  </div>
+                  <span className="text-[8.5px] text-gray-400 italic ml-7 font-medium">({kw})</span>
                 </div>
-                <div className="flex items-center gap-1.5">
-                  <span className="text-[10px] text-gray-400 font-semibold w-6 text-center" title={`Casa ${p.house}`}>C{p.house}</span>
-                  {p.dignity.state !== 'peregrine' && (
-                    <span className={`text-[7px] font-bold px-1 py-0.5 rounded ${p.dignity.bg}`}>
-                      {p.dignity.label}
-                    </span>
-                  )}
-                  <span className="text-gray-400">{p.signSymbol}</span>
-                  <span className="text-gray-600 font-medium tabular-nums w-14 text-right">{p.signDeg}</span>
-                  {p.motion && (
-                    <span className={`text-[8px] font-bold px-1 rounded ${
-                      p.motion === 'Rx' ? 'bg-red-50 text-red-500' :
-                      p.motion === 'Est' ? 'bg-amber-50 text-amber-600' :
-                      'text-gray-400'
-                    }`}>{p.motion}</span>
-                  )}
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
@@ -843,16 +954,16 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
             )}
           </div>
         </div>
-      </div>
+      </div>}
 
       {/* ═══════════════════════════════════════════════════════════
            ASTROLOGICAL STATS PANEL
           ═══════════════════════════════════════════════════════════ */}
-      {Object.keys(planetsMap).length > 0 && (
+      {showPanel && Object.keys(planetsMap).length > 0 && (
         <div className="w-full flex flex-col gap-4">
 
           {/* ─── ROW 1: Elementos + Qualidades ─────────────────── */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div className="flex flex-col gap-4">
 
             {/* Elementos */}
             <div className="bg-white/60 backdrop-blur-sm border border-[#c5a059]/10 rounded-xl p-4">
@@ -916,7 +1027,7 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
           </div>
 
           {/* ─── ROW 2: Midpoints + Dominância ─────────────────── */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="flex flex-col gap-4">
 
             {/* Midpoints */}
             <div className="bg-white/60 backdrop-blur-sm border border-[#c5a059]/10 rounded-xl p-4">

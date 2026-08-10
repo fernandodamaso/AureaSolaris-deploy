@@ -1,149 +1,113 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { 
   ChevronLeft, ChevronRight, 
-  Plus, Clock, 
-  Trash2, Sparkles, ListTodo, ArrowUpRight,
-  Calendar, CheckCircle2
+  Clock, 
+  Trash2, ListTodo
 } from 'lucide-react';
-import { useAgendaTasks } from '../../hooks/useAgendaTasks';
-import { useAstrologyData } from '../../hooks/useAstrologyData';
-import { Card, Advice, TodoRow } from '../common/UIComponents';
-import { googleCalendarService, GoogleCalendarEvent } from '../../services/composio';
+import { useAgendaContext } from '../../context/AgendaContext';
+import { Card } from '../common/UIComponents';
 
 export const AgendaView = () => {
   const {
     profiles,
     activeProfileId,
     setActiveProfileId,
-    addProfile,
     tasks, 
     events,
     selectedDay, setSelectedDay, weekDays, 
     nextWeek, prevWeek, addTask, deleteTask, toggleTask, 
-    postponeTask, addEvent, deleteEvent, executeInsight, getMetrics, 
-    getPlanetRegency, getAlfredInsights 
-  } = useAgendaTasks();
+    addEvent, deleteEvent, 
+    getPlanetRegency
+  } = useAgendaContext();
 
-  const activeProfile = profiles.find((p: any) => p.id === activeProfileId);
-  const alfredInsights = getAlfredInsights();
-  const { transits, forecast } = useAstrologyData(activeProfile?.natal);
-
-  const [activeTab, setActiveTab] = useState('resumo');
   const [showEventModal, setShowEventModal] = useState(false);
   const [showTaskModal, setShowTaskModal] = useState(false);
   const [modalText, setModalText] = useState('');
-  const [googleConnected, setGoogleConnected] = useState(false);
-  const [googleEvents, setGoogleEvents] = useState<GoogleCalendarEvent[]>([]);
-  const [googleLoading, setGoogleLoading] = useState(false);
-
-  useEffect(() => {
-    if (googleConnected) {
-      loadGoogleEvents();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedDay, googleConnected]);
-
-  const handleConnectGoogle = async () => {
-    setGoogleLoading(true);
-    try {
-      const success = await googleCalendarService.connect();
-      setGoogleConnected(success);
-      if (success) {
-        await loadGoogleEvents();
-      }
-    } finally {
-      setGoogleLoading(false);
-    }
-  };
-
-  const handleDisconnectGoogle = () => {
-    googleCalendarService.disconnect();
-    setGoogleConnected(false);
-    setGoogleEvents([]);
-  };
-
-  const loadGoogleEvents = async () => {
-    const dayStart = new Date(selectedDay);
-    dayStart.setHours(0, 0, 0, 0);
-    const dayEnd = new Date(selectedDay);
-    dayEnd.setHours(23, 59, 59, 999);
-
-    const events = await googleCalendarService.listEvents({
-      timeMin: dayStart.toISOString(),
-      timeMax: dayEnd.toISOString(),
-    });
-    setGoogleEvents(events);
-  };
-
-  const metrics = getMetrics();
+  const [eventTime, setEventTime] = useState('');
+  const [eventAction, setEventAction] = useState<{ status: 'idle' | 'loading' | 'success' | 'error'; message?: string }>({ status: 'idle' });
+  const [taskAction, setTaskAction] = useState<{ status: 'idle' | 'loading' | 'success' | 'error'; message?: string }>({ status: 'idle' });
 
   const handleAddEvent = async () => {
-    if (modalText.trim()) {
-      addEvent(modalText, selectedDay.toISOString());
+    if (!modalText.trim()) {
+      setEventAction({ status: 'error', message: 'Informe o título do compromisso.' });
+      return;
+    }
+    if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(eventTime)) {
+      setEventAction({ status: 'error', message: 'Informe o horário local do compromisso.' });
+      return;
+    }
+    setEventAction({ status: 'loading', message: 'Salvando compromisso…' });
+    try {
+      const [hours, minutes] = eventTime.split(':').map(Number);
+      const localStart = new Date(selectedDay);
+      localStart.setHours(hours, minutes, 0, 0);
+      await addEvent(modalText.trim(), localStart.toISOString());
+      setEventAction({ status: 'success', message: 'Compromisso criado com sucesso.' });
       setModalText('');
-      setShowEventModal(false);
+    } catch (error) {
+      setEventAction({ status: 'error', message: error instanceof Error ? error.message : 'Não foi possível criar o compromisso.' });
     }
   };
 
-  const handleTaskSubmit = () => {
-    if (modalText.trim()) {
-      addTask(modalText);
+  const handleAddTask = async () => {
+    if (!modalText.trim()) {
+      setTaskAction({ status: 'error', message: 'Informe o texto da tarefa.' });
+      return;
+    }
+    setTaskAction({ status: 'loading', message: 'Salvando tarefa…' });
+    try {
+      await addTask(modalText.trim());
+      setTaskAction({ status: 'success', message: 'Tarefa criada com sucesso.' });
       setModalText('');
-      setShowTaskModal(false);
+    } catch (error) {
+      setTaskAction({ status: 'error', message: error instanceof Error ? error.message : 'Não foi possível criar a tarefa.' });
     }
   };
+
+  const masterProfile = profiles.find(p => p.id === activeProfileId);
 
   return (
-    <div className="space-y-8 pb-32 animate-in fade-in max-w-6xl mx-auto px-4 font-sans text-gray-800">
-      
-      {/* 1. HEADER - AGENDA + INFO ASTRO (MOVIDO PARA GLOBAL) */}
-
-      {/* 2. ADVICE (ALFRED) */}
-      <div className="animate-in slide-in-from-top-4 duration-700">
-        <Advice 
-          agent="Alfred" 
-          content={`${activeProfile?.name || 'Viviane'}, hoje é dia de ${getPlanetRegency(new Date()).name}. Sua energia planetária sugere foco em ${getPlanetRegency(new Date()).name === 'Lua' ? 'introspecção e cuidado' : 'ação e clareza'}.`} 
-        />
+    <div className="space-y-8">
+      {/* 1. HEADER COM PERFIL */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-[11px] font-black uppercase tracking-[0.3em] text-gray-800">
+            Agenda {masterProfile ? `- ${masterProfile.name}` : ''}
+          </h2>
+          <p className="text-[10px] text-gold/60 font-bold mt-1">
+            {tasks.filter(t => t.completed || t.is_completed).length} tarefas concluídas · {tasks.filter(t => !t.completed && !t.is_completed).length} pendentes
+          </p>
+        </div>
+        <div className="flex gap-2">
+          {profiles.map(p => (
+            <button
+              key={p.id}
+              onClick={() => setActiveProfileId(p.id)}
+              className={`px-3 py-1 rounded-md text-[10px] font-black uppercase tracking-widest transition-all ${
+                activeProfileId === p.id 
+                  ? 'bg-[#333333] text-white' 
+                  : 'text-gray-400 hover:text-gold'
+              }`}
+            >
+              {p.name}
+            </button>
+          ))}
+        </div>
       </div>
 
-      {/* 3. CALENDÁRIO SEMANAL + PERFIS */}
-      <div className="bg-white/40 p-6 rounded-xl border border-gold/10 backdrop-blur-sm shadow-sm">
-        <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4 border-b border-gray-50 pb-4">
-          <div className="flex items-center gap-4">
-            <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-gold">Ritmos do Ciclo</h2>
-            {/* Perfis de Família mais discretos */}
-            <div className="flex items-center gap-1 bg-gray-50 p-1 rounded-lg border border-gray-100">
-               {profiles.map(p => (
-                 <button 
-                   key={p.id} 
-                   onClick={() => setActiveProfileId(p.id)}
-                   className={`px-3 py-1 rounded-md text-[9px] font-black uppercase tracking-widest transition-all ${activeProfileId === p.id ? 'bg-[#333333] text-white' : 'text-gray-400 hover:text-gold'}`}
-                 >
-                   {p.name}
-                 </button>
-               ))}
-               <button onClick={() => { const n = prompt('Nome:'); if(n) addProfile(n); }} className="px-2 text-gold hover:bg-white rounded-md transition-all text-[12px]"><Plus size={12}/></button>
-            </div>
-          </div>
+      {/* 2. CALENDAR SEMANAL */}
+      <div className="bg-white rounded-2xl border border-gold/10 p-6 shadow-sm">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-400">
+            {selectedDay.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })}
+          </h3>
           <div className="flex gap-1.5">
-            {!googleConnected ? (
-              <button 
-                onClick={handleConnectGoogle}
-                disabled={googleLoading}
-                className="flex items-center gap-2 px-3 py-2 bg-white border border-gold/20 text-gold text-[9px] font-black uppercase tracking-widest rounded-lg hover:bg-gold/5 transition-all disabled:opacity-50"
-              >
-                <Calendar size={14}/> {googleLoading ? 'Conectando...' : 'Google Calendar'}
-              </button>
-            ) : (
-              <button 
-                onClick={handleDisconnectGoogle}
-                className="flex items-center gap-2 px-3 py-2 bg-emerald-50 border border-emerald-200 text-emerald-600 text-[9px] font-black uppercase tracking-widest rounded-lg hover:bg-emerald-100 transition-all"
-              >
-                <CheckCircle2 size={14}/> Conectado
-              </button>
-            )}
-            <button onClick={prevWeek} className="p-2 hover:bg-white rounded-lg text-gold border border-gold/5 transition-all shadow-sm"><ChevronLeft size={16}/></button>
-            <button onClick={nextWeek} className="p-2 hover:bg-white rounded-lg text-gold border border-gold/5 transition-all shadow-sm"><ChevronRight size={16}/></button>
+            <button type="button" aria-label="Semana anterior" onClick={prevWeek} className="p-2 hover:bg-white focus-visible:outline-2 focus-visible:outline-gold rounded-lg text-gold border border-gold/5 transition-all shadow-sm">
+              <ChevronLeft size={16}/>
+            </button>
+            <button type="button" aria-label="Próxima semana" onClick={nextWeek} className="p-2 hover:bg-white focus-visible:outline-2 focus-visible:outline-gold rounded-lg text-gold border border-gold/5 transition-all shadow-sm">
+              <ChevronRight size={16}/>
+            </button>
           </div>
         </div>
 
@@ -154,241 +118,205 @@ export const AgendaView = () => {
             const regency = getPlanetRegency(d);
             
             return (
-               <div 
-                 key={d.getTime()} 
-                 onClick={() => setSelectedDay(d)} 
-                 className={`relative flex flex-col items-center p-3 rounded-xl cursor-pointer transition-all border ${isSelected ? 'bg-[#333333] text-white border-[#333333] shadow-lg scale-[1.02]' : 'bg-white text-gray-800 border-gray-100 hover:border-gold/20'}`}
-               >
-                  <span className={`text-[9px] font-black uppercase mb-1 tracking-widest ${isSelected ? 'text-gold' : 'text-gray-400'}`}>{d.toLocaleDateString('pt-BR', { weekday: 'short' })}</span>
-                  <span className="text-xl font-black leading-none">{d.getDate()}</span>
-                  <div className="mt-2 flex gap-1.5 items-center">
-                    <span className={`text-[12px] ${isSelected ? 'opacity-100' : 'opacity-30'}`} title={`Regente: ${regency.icon}`}>{regency.icon}</span>
-                  </div>
-                  {isToday && !isSelected && <div className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-gold rounded-full shadow-[0_0_8px_rgba(184,134,11,0.6)]" />}
-               </div>
+              <button
+                type="button"
+                key={d.getTime()} 
+                onClick={() => setSelectedDay(d)} 
+                aria-pressed={isSelected}
+                aria-label={`Selecionar ${d.toLocaleDateString('pt-BR')}`}
+                className={`relative flex flex-col items-center p-3 rounded-xl transition-all border focus-visible:outline-2 focus-visible:outline-gold ${
+                  isSelected 
+                    ? 'bg-[#333333] text-white border-[#333333] shadow-lg scale-[1.02]' 
+                    : 'bg-white text-gray-800 border-gray-100 hover:border-gold/20'
+                }`}
+              >
+                <span className={`text-[10px] font-black uppercase mb-1 tracking-widest ${
+                  isSelected ? 'text-gold' : 'text-gray-400'
+                }`}>
+                  {d.toLocaleDateString('pt-BR', { weekday: 'short' })}
+                </span>
+                <span className="text-xl font-black leading-none">{d.getDate()}</span>
+                <div className="mt-2 flex gap-1.5 items-center">
+                  <span className={`text-[12px] ${isSelected ? 'opacity-100' : 'opacity-30'}`} title={`Regente: ${regency.icon}`}>
+                    {regency.icon}
+                  </span>
+                </div>
+                {isToday && !isSelected && (
+                  <div className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-gold rounded-full shadow-[0_0_8px_rgba(184,134,11,0.6)]" />
+                )}
+              </button>
             );
           })}
         </div>
       </div>
 
-      {/* 4. GRID DE TRABALHO - REORDENADO */}
+      {/* 3. GRID: COMPROMISSOS + TAREFAS */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
         
-        {/* COLUNA ESQUERDA: EVENTOS -> PREVISÕES */}
-        <div className="space-y-8">
-            <Card title={`Compromissos - ${selectedDay.toLocaleDateString('pt-BR')}`} icon={<Clock size={14}/>}>
-              <div className="space-y-3 mt-4">
-                 {[...events.filter(e => {
-                   const eDate = new Date(e.start).toDateString();
-                   const sDate = selectedDay.toDateString();
-                   return eDate === sDate;
-                 }), ...googleEvents.filter(e => {
-                   const eDate = new Date(e.start).toDateString();
-                   const sDate = selectedDay.toDateString();
-                   return eDate === sDate;
-                 })].map(e => (
-                   <div key={e.id} className={`p-4 border rounded-xl flex justify-between items-center group transition-all hover:bg-[#FCF9F1]/60 shadow-xs ${'source' in e && e.source === 'google' ? 'bg-blue-50/40 border-blue-100' : 'bg-[#FCF9F1]/40 border-gold/5'}`}>
-                      <div className="flex gap-4 items-center">
-                         <div className={`p-2 rounded-lg shadow-xs border ${'source' in e && e.source === 'google' ? 'bg-blue-100 text-blue-600 border-blue-200' : 'bg-white text-gold border-gold/5'}`}>
-                           {'source' in e && e.source === 'google' ? <Calendar size={12}/> : <Clock size={12}/>}
-                         </div>
-                         <div>
-                           <p className="text-[12px] font-black text-gray-800 tracking-tight">{e.title}</p>
-                           <p className="text-[10px] text-gold/60 font-bold">
-                             {new Date(e.start).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
-                             {'source' in e && e.source === 'google' && <span className="ml-2 text-blue-400/60">Google</span>}
-                           </p>
-                         </div>
-                      </div>
-                      {!('source' in e) && (
-                        <Trash2 onClick={() => deleteEvent(e.id)} size={14} className="text-gray-200 group-hover:text-red-400 cursor-pointer transition-all opacity-0 group-hover:opacity-100"/>
-                      )}
-                   </div>
-                 ))}
-                 {events.filter(e => new Date(e.start).toDateString() === selectedDay.toDateString()).length === 0 && googleEvents.filter(e => new Date(e.start).toDateString() === selectedDay.toDateString()).length === 0 && (
-                   <p className="text-[11px] text-gray-400 italic text-center py-6 opacity-50 font-medium">Silêncio profundo na agenda...</p>
-                 )}
-                 <button onClick={() => setShowEventModal(true)} className="w-full py-3 border border-dashed border-gold/20 text-gold text-[9px] font-black uppercase tracking-[0.2em] rounded-xl hover:bg-gold/5 transition-all shadow-xs">+ Agendar no Fluxo</button>
-              </div>
-           </Card>
-
-           {/* FORECAST TABS ABAIXO DOS EVENTOS */}
-           <div className="bg-white rounded-xl border border-gold/10 p-2 shadow-sm">
-              <div className="flex p-1 bg-gray-50 rounded-lg mb-4">
-                {['resumo', 'transitos', 'futuro'].map(t => (
-                  <button 
-                    key={t}
-                    onClick={() => setActiveTab(t)}
-                    className={`flex-1 py-2 rounded-md text-[9px] font-black uppercase tracking-[0.2em] transition-all ${activeTab === t ? 'bg-gold text-white shadow-md' : 'text-gray-400 hover:text-gold'}`}
-                  >
-                    {t}
+        {/* COLUNA ESQUERDA: EVENTOS */}
+        <Card title={`Compromissos - ${selectedDay.toLocaleDateString('pt-BR')}`} icon={<Clock size={14}/>}>
+          <div className="space-y-3 mt-4">
+            {events
+              .filter(e => new Date(e.start).toDateString() === selectedDay.toDateString())
+              .map(e => (
+                <div key={e.id} className="p-4 border rounded-xl flex justify-between items-center group transition-all hover:bg-[#FCF9F1]/60 shadow-xs bg-[#FCF9F1]/40 border-gold/5">
+                  <div className="flex gap-4 items-center">
+                    <div className="p-2 rounded-lg shadow-xs border bg-white text-gold border-gold/5">
+                      <Clock size={12}/>
+                    </div>
+                    <div>
+                      <p className="text-[12px] font-black text-gray-800 tracking-tight">{e.title}</p>
+                      <p className="text-[10px] text-gold/60 font-bold">
+                        {new Date(e.start).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+                      </p>
+                    </div>
+                  </div>
+                  <button type="button" aria-label={`Excluir compromisso ${e.title}`} onClick={() => void deleteEvent(e.id)} className="p-2 text-gray-300 hover:text-red-500 focus-visible:text-red-500 focus-visible:outline-2 focus-visible:outline-red-400 transition-all">
+                    <Trash2 size={14} />
                   </button>
-                ))}
-              </div>
-
-              <div className="px-4 py-2">
-                {activeTab === 'resumo' && (
-                  <div className="grid grid-cols-2 gap-8 animate-in fade-in slide-in-from-bottom-2">
-                    <div className="space-y-3">
-                      <p className="text-[9px] font-black uppercase text-emerald-600 mb-3 bg-emerald-50 w-fit px-2 py-1 rounded-md tracking-widest">Influências ↑</p>
-                      <ul className="space-y-2">
-                         <li className="text-[12px] font-bold text-gray-700 flex gap-2 items-center"><span className="text-gold">✨</span> Reflexão financeira</li>
-                         <li className="text-[12px] font-bold text-gray-700 flex gap-2 items-center"><span className="text-gold">✨</span> Conexões amorosas</li>
-                      </ul>
-                    </div>
-                    <div className="space-y-3">
-                      <p className="text-[9px] font-black uppercase text-red-500 mb-3 bg-red-50 w-fit px-2 py-1 rounded-md tracking-widest">Atenção !</p>
-                      <ul className="space-y-2">
-                         <li className="text-[12px] font-bold text-gray-700 flex gap-2 items-center"><span>⚠️</span> Decisões impulsivas</li>
-                         <li className="text-[12px] font-bold text-gray-700 flex gap-2 items-center"><span>⚠️</span> Conflitos pessoais</li>
-                      </ul>
-                    </div>
-                  </div>
-                )}
-
-                {activeTab === 'transitos' && (
-                  <div className="space-y-2 animate-in fade-in slide-in-from-bottom-2">
-                     {transits.length > 0 ? transits.map((t: any, i: number) => (
-                       <div key={i} className="flex justify-between items-center py-4 px-4 hover:bg-gold/5 rounded-xl transition-all border border-transparent hover:border-gold/10 group">
-                          <div className="flex items-center gap-4">
-                             <div className="text-center border-r border-gold/10 pr-4">
-                               <p className="text-[11px] font-black text-gold tracking-widest leading-none mb-1">HOJE</p>
-                               <p className="text-[8px] font-bold text-gray-300 uppercase leading-none">AGORA</p>
-                             </div>
-                             <div>
-                               <p className="text-[12px] font-black text-gray-800 leading-tight">{t.p} em {t.type} ao seu {t.n}</p>
-                               <p className="text-[9px] text-gray-400 font-medium italic">{t.desc}</p>
-                             </div>
-                          </div>
-                          <span className="text-gold text-lg opacity-40 group-hover:opacity-100 transition-all font-black">{t.icon}</span>
-                       </div>
-                     )) : <p className="text-[11px] text-gray-400 italic text-center py-6 opacity-50 font-medium">Sincronizando trânsitos...</p>}
-                  </div>
-                )}
-
-                {activeTab === 'futuro' && (
-                  <div className="space-y-2 animate-in fade-in slide-in-from-bottom-2">
-                     {forecast.map((ev: any, i: number) => (
-                       <div key={i} className="flex justify-between items-center py-4 px-4 hover:bg-gold/5 rounded-xl transition-all border border-transparent hover:border-gold/10 group">
-                          <div className="flex items-center gap-4">
-                             <div className="text-center border-r border-gold/10 pr-4">
-                               <p className="text-[11px] font-black text-gold tracking-widest leading-none mb-1">{ev.date}</p>
-                               <p className="text-[8px] font-bold text-gray-300 uppercase leading-none">{ev.hour}</p>
-                             </div>
-                             <div>
-                               <p className="text-[12px] font-black text-gray-800 leading-tight">{ev.event}</p>
-                               <p className="text-[9px] text-gray-400 font-medium italic">{ev.desc}</p>
-                             </div>
-                          </div>
-                          <span className="text-gold text-lg opacity-40 group-hover:opacity-100 transition-all font-black">{ev.aspect || ev.icon}</span>
-                       </div>
-                     ))}
-                  </div>
-                )}
-              </div>
-           </div>
-        </div>
-
-        {/* COLUNA DIREITA: TAREFAS -> PROGRESSO */}
-        <div className="space-y-8">
-           <Card title="Células de Tarefas" icon={<ListTodo size={14}/>}>
-              <div className="space-y-2 mt-4">
-                 {tasks.length > 0 ? tasks.slice(0, 5).map((t: any) => (
-                   <div key={t.id} className="flex items-center gap-3 group p-2 hover:bg-[#FCF9F1]/40 rounded-xl transition-all border border-transparent hover:border-gold/5">
-                      <div className="flex-1" onClick={() => toggleTask(t.id, !(t.completed || t.is_completed))}>
-                         <TodoRow label={t.content} checked={t.completed || t.is_completed} />
-                      </div>
-                      <div className="flex gap-1.5 opacity-0 group-hover:opacity-100 transition-all">
-                         <button onClick={() => postponeTask(t.id)} title="Adiar" className="p-1.5 text-gold hover:bg-gold/10 rounded-lg"><ArrowUpRight size={12}/></button>
-                         <button onClick={() => deleteTask(t.id)} title="Excluir" className="p-1.5 text-red-300 hover:bg-red-50 rounded-lg"><Trash2 size={12}/></button>
-                      </div>
-                   </div>
-                 )) : <p className="text-[11px] text-gray-400 italic text-center py-6 opacity-50 font-medium">Sincronizando trilhas...</p>}
-                 <button onClick={() => setShowTaskModal(true)} className="w-full py-3 border border-dashed border-gray-200 text-gray-400 text-[9px] font-black uppercase tracking-[0.2em] rounded-xl hover:border-gold hover:text-gold transition-all shadow-xs">+ Novo Todoist</button>
-              </div>
-           </Card>
-
-           {/* PROGRESSO ÉTICO ABAIXO DAS TAREFAS */}
-           <Card title="Progresso Ético" icon={<TrendingUp size={12}/>}>
-              <div className="mt-4 space-y-6">
-                <div className="flex justify-between items-baseline">
-                   <div className="flex items-baseline gap-2">
-                      <span className="text-4xl font-black text-[#333333] tracking-tighter">{(metrics.done || 0)}%</span>
-                      <span className="text-[10px] font-black text-gold uppercase tracking-[0.2em] animate-pulse">Ativo</span>
-                   </div>
-                   <span className="text-[9px] font-black text-gray-400 uppercase tracking-[0.3em]">Integridade do Fluxo</span>
                 </div>
-                
-                <div className="relative pt-1">
-                   <div className="overflow-hidden h-2.5 text-xs flex rounded-full bg-gray-50 border border-gray-100 shadow-inner">
-                      <div 
-                        style={{ width: `${metrics.done}%` }} 
-                        className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-gold transition-all duration-1000 relative"
-                      >
-                         <div className="absolute inset-0 bg-white/20 animate-pulse" />
-                      </div>
-                   </div>
-                   <div className="absolute -top-4 w-full flex justify-between px-1">
-                      <div className="w-[1px] h-2 bg-gray-100" />
-                      <div className="w-[1px] h-2 bg-gray-100" />
-                      <div className="w-[1px] h-2 bg-gray-100" />
-                      <div className="w-[1px] h-2 bg-gray-100" />
-                   </div>
-                </div>
+              ))
+            }
+            {events.filter(e => new Date(e.start).toDateString() === selectedDay.toDateString()).length === 0 && (
+              <p className="text-[10px] text-gray-300 font-bold uppercase tracking-[0.3em] text-center py-8">
+                Nenhum compromisso
+              </p>
+            )}
+            <button 
+              onClick={() => { setModalText(''); setEventTime(''); setEventAction({ status: 'idle' }); setShowEventModal(true); }}
+              className="w-full p-3 border border-dashed border-gold/20 rounded-xl text-[10px] font-black uppercase tracking-widest text-gold/40 hover:text-gold hover:border-gold/40 focus-visible:outline-2 focus-visible:outline-gold transition-all"
+            >
+              + Novo Compromisso
+            </button>
+          </div>
+        </Card>
 
-                <div className="flex justify-between text-[8px] font-black uppercase text-gray-400 tracking-[0.2em] pt-2">
-                  <div className="flex items-center gap-2 group cursor-help"><div className="w-2 h-2 bg-gold rounded-sm group-hover:scale-125 transition-all shadow-xs"/> Feitos</div>
-                  <div className="flex items-center gap-2 group cursor-help"><div className="w-2 h-2 bg-emerald-100 rounded-sm group-hover:scale-125 transition-all shadow-xs"/> Em Fluxo</div>
-                  <div className="flex items-center gap-2 group cursor-help"><div className="w-2 h-2 bg-red-100 rounded-sm group-hover:scale-125 transition-all shadow-xs"/> Pausados</div>
-                </div>
+        {/* COLUNA DIREITA: TAREFAS */}
+        <Card title="Tarefas do Dia" icon={<ListTodo size={14}/>}>
+          <div className="space-y-2 mt-4">
+            {tasks.map(task => (
+              <div key={task.id} className="flex items-center gap-4 p-4 panel-light hover:border-gold/30 transition-all group shadow-sm">
+                <button
+                  type="button"
+                  aria-label={`${(task.completed || task.is_completed) ? 'Reabrir' : 'Concluir'} tarefa ${task.content}`}
+                  aria-pressed={Boolean(task.completed || task.is_completed)}
+                  onClick={() => void toggleTask(task.id, !(task.completed || task.is_completed))}
+                  className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-colors shrink-0 focus-visible:outline-2 focus-visible:outline-gold ${(task.completed || task.is_completed) ? 'bg-gold border-gold text-white' : 'border-gray-200 text-transparent group-hover:border-gold/50'}`}
+                >
+                  ✓
+                </button>
+                <span className={`flex-1 text-[13px] font-medium ${(task.completed || task.is_completed) ? 'line-through text-gray-400' : 'text-[#333333]'}`}>
+                  {task.content}
+                </span>
+                <button 
+                  onClick={() => deleteTask(task.id)}
+                  className="opacity-0 group-hover:opacity-100 text-gray-300 hover:text-red-400 transition-all"
+                >
+                  <Trash2 size={12}/>
+                </button>
               </div>
-           </Card>
-        </div>
+            ))}
+            {tasks.length === 0 && (
+              <p className="text-[10px] text-gray-300 font-bold uppercase tracking-[0.3em] text-center py-8">
+                Nenhuma tarefa
+              </p>
+            )}
+            <button 
+              onClick={() => { setModalText(''); setTaskAction({ status: 'idle' }); setShowTaskModal(true); }}
+              className="w-full p-3 border border-dashed border-gold/20 rounded-xl text-[10px] font-black uppercase tracking-widest text-gold/40 hover:text-gold hover:border-gold/40 focus-visible:outline-2 focus-visible:outline-gold transition-all"
+            >
+              + Nova Tarefa
+            </button>
+          </div>
+        </Card>
       </div>
 
-      {/* MODALS */}
-      {(showTaskModal || showEventModal) && (
-        <div className="fixed inset-0 z-[700] flex items-center justify-center bg-black/20 backdrop-blur-sm p-4 animate-in fade-in zoom-in-95">
-           <div className="bg-white rounded-xl p-8 w-full max-w-sm shadow-2xl border border-gold/10">
-              <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-gold mb-6 border-b border-gray-50 pb-4">{showEventModal ? 'Gravar no Google' : 'Novo Todoist'}</h4>
-              <input 
-                autoFocus 
-                className="w-full p-4 bg-gray-50 border border-gray-100 rounded-xl outline-none text-[13px] font-bold text-gray-800 mb-8 focus:border-gold/30 transition-all placeholder:text-gray-300 shadow-inner" 
-                placeholder="Insira o conteúdo do fluxo..." value={modalText} 
-                onChange={e => setModalText(e.target.value)} 
-                onKeyDown={e => e.key === 'Enter' && (showEventModal ? handleAddEvent() : handleTaskSubmit())} 
-              />
-              <div className="flex gap-4">
-                 <button onClick={() => { setShowTaskModal(false); setShowEventModal(false); setModalText(''); }} className="flex-1 py-4 text-gray-400 font-black uppercase text-[10px] tracking-[0.3em] hover:text-gray-600 transition-all">Recuar</button>
-                 <button onClick={showEventModal ? handleAddEvent : handleTaskSubmit} className="flex-1 py-4 bg-[#333333] text-white rounded-xl font-black uppercase text-[10px] tracking-[0.3em] hover:bg-gold transition-all shadow-lg">Confirmar</button>
-              </div>
-           </div>
+      {/* MODAL: NOVO COMPROMISSO */}
+      {showEventModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => setShowEventModal(false)}>
+          <div className="bg-white rounded-2xl p-6 w-96 shadow-2xl" onClick={e => e.stopPropagation()}>
+            <h3 className="text-[11px] font-black uppercase tracking-[0.3em] text-gray-800 mb-4">Novo Compromisso</h3>
+            <label htmlFor="agenda-event-title" className="text-[10px] font-bold text-gray-500">Título</label>
+            <input
+              id="agenda-event-title"
+              className="w-full p-3 border border-gold/20 rounded-xl text-[12px] font-bold outline-none focus:border-gold transition-all"
+              placeholder="Ex: Reunião com cliente"
+              value={modalText}
+              disabled={eventAction.status === 'loading' || eventAction.status === 'success'}
+              aria-invalid={eventAction.status === 'error'}
+              onChange={e => { setModalText(e.target.value); setEventAction({ status: 'idle' }); }}
+              onKeyDown={e => e.key === 'Enter' && handleAddEvent()}
+              autoFocus
+            />
+            <label htmlFor="agenda-event-time" className="mt-3 block text-[10px] font-bold text-gray-500">Horário local</label>
+            <input
+              id="agenda-event-time"
+              type="time"
+              className="w-full p-3 border border-gold/20 rounded-xl text-[12px] font-bold outline-none focus:border-gold transition-all"
+              value={eventTime}
+              disabled={eventAction.status === 'loading' || eventAction.status === 'success'}
+              onChange={event => { setEventTime(event.target.value); setEventAction({ status: 'idle' }); }}
+            />
+            {eventAction.message && <p role="status" className={`mt-3 text-[11px] font-bold ${eventAction.status === 'error' ? 'text-red-600' : eventAction.status === 'success' ? 'text-green-700' : 'text-gold'}`}>{eventAction.message}</p>}
+            <div className="flex gap-3 mt-4">
+              <button 
+                onClick={() => setShowEventModal(false)}
+                disabled={eventAction.status === 'loading'}
+                className="flex-1 py-3 text-gray-400 font-black uppercase text-[10px] tracking-[0.3em] hover:text-gray-600 transition-all"
+              >
+                Cancelar
+              </button>
+              <button 
+                onClick={eventAction.status === 'success' ? () => setShowEventModal(false) : handleAddEvent}
+                disabled={eventAction.status === 'loading'}
+                className="flex-1 py-3 bg-[#333333] text-white rounded-xl font-black uppercase text-[10px] tracking-[0.3em] hover:bg-gold transition-all shadow-lg"
+              >
+                {eventAction.status === 'loading' ? 'Salvando…' : eventAction.status === 'success' ? 'Concluído' : 'Confirmar'}
+              </button>
+            </div>
+          </div>
         </div>
       )}
-      {/* ALFRED INSIGHTS PANEL */}
-      <div className="mt-12 bg-white border border-gold/10 p-8 shadow-sm">
-        <div className="flex items-center gap-4 mb-6">
-           <div className="w-10 h-10 bg-gold/5 rounded-none flex items-center justify-center text-gold"><Sparkles size={18}/></div>
-           <h4 className="text-[12px] font-black uppercase tracking-[0.3em] text-gray-800">Insights do Alfred (Proativo)</h4>
+
+      {/* MODAL: NOVA TAREFA */}
+      {showTaskModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => setShowTaskModal(false)}>
+          <div className="bg-white rounded-2xl p-6 w-96 shadow-2xl" onClick={e => e.stopPropagation()}>
+            <h3 className="text-[11px] font-black uppercase tracking-[0.3em] text-gray-800 mb-4">Nova Tarefa</h3>
+            <label htmlFor="agenda-task-title" className="text-[10px] font-bold text-gray-500">Tarefa</label>
+            <input
+              id="agenda-task-title"
+              className="w-full p-3 border border-gold/20 rounded-xl text-[12px] font-bold outline-none focus:border-gold transition-all"
+              placeholder="Ex: Estudar mapas astrais"
+              value={modalText}
+              disabled={taskAction.status === 'loading' || taskAction.status === 'success'}
+              aria-invalid={taskAction.status === 'error'}
+              onChange={e => { setModalText(e.target.value); setTaskAction({ status: 'idle' }); }}
+              onKeyDown={e => e.key === 'Enter' && handleAddTask()}
+              autoFocus
+            />
+            {taskAction.message && <p role="status" className={`mt-3 text-[11px] font-bold ${taskAction.status === 'error' ? 'text-red-600' : taskAction.status === 'success' ? 'text-green-700' : 'text-gold'}`}>{taskAction.message}</p>}
+            <div className="flex gap-3 mt-4">
+              <button 
+                onClick={() => setShowTaskModal(false)}
+                disabled={taskAction.status === 'loading'}
+                className="flex-1 py-3 text-gray-400 font-black uppercase text-[10px] tracking-[0.3em] hover:text-gray-600 transition-all"
+              >
+                Cancelar
+              </button>
+              <button 
+                onClick={taskAction.status === 'success' ? () => setShowTaskModal(false) : handleAddTask}
+                disabled={taskAction.status === 'loading'}
+                className="flex-1 py-3 bg-[#333333] text-white rounded-xl font-black uppercase text-[10px] tracking-[0.3em] hover:bg-gold transition-all shadow-lg"
+              >
+                {taskAction.status === 'loading' ? 'Salvando…' : taskAction.status === 'success' ? 'Concluído' : 'Confirmar'}
+              </button>
+            </div>
+          </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-           {alfredInsights.map((ins: any) => (
-             <div key={ins.id} className="p-5 bg-gray-50 border border-gray-100 rounded-none hover:border-gold/30 transition-all group">
-                <p className="text-[11px] font-bold text-gray-600 leading-relaxed italic">&quot;{ins.content}&quot;</p>
-                <button 
-                  onClick={() => executeInsight(ins)}
-                  className="mt-4 text-[9px] font-black uppercase tracking-widest text-gold opacity-0 group-hover:opacity-100 transition-all"
-                >
-                  Executar Recomendação
-                </button>
-             </div>
-           ))}
-        </div>
-      </div>
+      )}
     </div>
   );
 };
 
-const TrendingUp = ({ size }: { size: number }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
-);
+export default AgendaView;

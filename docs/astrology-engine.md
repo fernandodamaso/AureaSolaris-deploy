@@ -1,136 +1,120 @@
-# Astrology Engine
+# Motor Astrológico — Aurea Solaris
 
-> Python-based calculations using kerykeion and NASA ephemeris.
-> **Ownership:** This is the ONLY source for engine details.
+## Visão Geral
 
-## Overview
+O motor astrológico é o coração do Aurea Solaris. Ele calcula mapas natais, trânsitos, aspectos, casas e posições planetárias com precisão profissional. Refatorado em 2026-06-11 para máxima performance e precisão.
 
-The astrology engine is a Python script (`astro_engine.py`) that runs as a subprocess called by Rust via Tauri.
+## Arquitetura
 
-**Key files:**
-- `astro_engine.py` — Main engine script
-- `de421.bsp` — NASA Swiss Ephemeris data
-- `astro_data.json` — Cache of latest calculations
+```
+Frontend (React)
+  → safeInvoke('run_astro_engine', { type: 'natal', ... })
+    → Tauri IPC → lib.rs
+      → HTTP POST localhost:9876/natal (ou /transit)
+        → main_api.py (FastAPI)
+          → astro_engine.py (motor)
+            → Swiss Ephemeris (precisão)
+            → Kerykeion (fallback)
+```
 
-## Rust-Python Integration
+## Motor Python (astro_engine.py)
 
-Command `run_astro_engine` in `src-tauri/src/lib.rs`:
+### Dependências
+- **swisseph (swe)** — cálculo astronômico de precisão profissional
+- **kerykeion** — fallback quando swisseph não está disponível
+- **fastapi + uvicorn** — servidor HTTP
 
-```rust
-#[tauri::command]
-async fn run_astro_engine(payload: Option<String>) -> Result<String, String> {
-    use std::path::PathBuf;
-    use std::process::Command;
-    let project_root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("..");
-    let astro_path = project_root.join("astro_engine.py");
-    let mut cmd = Command::new("python");
-    cmd.arg(astro_path);
-    if let Some(p) = payload {
-        cmd.arg(p);
-    }
-    let output = cmd.output().map_err(|e| format!("Command failed: {}", e))?;
-    // Process output: stdout contains JSON result, stderr for logging
-    let result = String::from_utf8_lossy(&output.stdout);
-    Ok(result.to_string())
+### Funções Principais
+
+| Função | Descrição |
+|--------|-----------|
+| `calculate_natal(data)` | Mapa natal completo: planetas, casas, aspectos |
+| `calculate_transits(data)` | Trânsitos atuais vs mapa natal |
+| `get_moon_phase(date)` | Fase lunar |
+| `get_day_regent(date)` | Regente do dia |
+| `get_planetary_hour(date)` | Hora planetária |
+
+### Precisão e Otimizações (Refatoração 2026-06-11)
+
+1. **Cálculo direto de trânsitos** — sem loops de interpolação; cálculo planetário por posição
+2. **Orbs dinâmicos por planeta** — cada planeta tem orb próprio, com multiplicadores por tipo de aspecto
+3. **Part of Fortune noturno** — fórmula diferente para mapa diurno vs noturno
+4. **Iluminação cosseno (Duffet)** — em vez de média aritmética, usa cálculo de iluminação real
+5. **LRU cache** — cacheia cálculos repetidos para performance
+6. **Pre-calculated house ranges** — busca binária em vez de linear
+
+### Corpo Celeste
+
+O motor calcula posição para:
+
+- ☉ Sol, ☽ Lua, ☿ Mercúrio, ♀ Vênus, ♂ Marte
+- ♃ Júpiter, ♄ Saturno, ♅ Urano, ♆ Netuno, ♇ Plutão
+- ☊ Nó Lunar, ⊕ Part of Fortune
+- ⚸ Quíron
+
+### Sistemas de Casas
+
+Suporta todos os sistemas clássicos:
+- Placidus (padrão)
+- Koch
+- Whole Sign
+- Equal House
+- Regiomontanus
+
+### Aspectos
+
+| Aspecto | Ângulo | Orb Padrão |
+|---------|--------|------------|
+| Conjunção | 0° | 8° |
+| Sextil | 60° | 6° |
+| Quadratura | 90° | 8° |
+| Trígono | 120° | 8° |
+| Oposição | 180° | 8° |
+
+Orbs são ajustados por planeta (ex: Lua usa orbs maiores, Plutão usa menores).
+
+## Sidecar FastAPI (main_api.py)
+
+### Endpoints
+
+```
+GET  /health     → {"status": "ok", "engine": "swisseph", "port": 9876}
+POST /natal      → Mapa natal completo
+POST /transit    → Trânsitos atuais
+```
+
+### Exemplo de Request (natal)
+
+```json
+{
+  "date": "1990-05-15",
+  "time": "14:30",
+  "lat": -15.78,
+  "lon": -47.93,
+  "houses": "placidus"
 }
 ```
 
-**Flow:**
-1. Frontend calls `safeInvoke('run_astro_engine', payload)`
-2. Rust executes `python astro_engine.py` with JSON payload
-3. Python calculates and prints JSON to stdout
-4. Rust captures stdout and returns to React
+### Exemplo de Response
 
-## Calculation Functions
-
-| Function | Description |
-|----------|-------------|
-| `calculate_astrology` | Calculates planets, aspects, and rulers |
-| `calculate_transit_positions` | Current planetary positions (no houses/aspects) |
-| `get_aspects` | Dynamic aspect detection with configurable orbs |
-| `get_planetary_hour` | Chaldean order planetary hours (24 hours) |
-
-## House Systems
-
-Configurable via `house_system` parameter:
-
-| Code | System | Description |
-|------|--------|-------------|
-| `R` | Regiomontanus | Default. Cusps at meridian-equator intersection |
-| `P` | Placidus | Most common worldwide |
-| `K` | Koch | Based on diurnal motions |
-| `O` | Porphyrius | Equal zodiac arc divisions |
-| `C` | Campanus | Based on quadrant divisions |
-| `W` | Whole Sign | Houses defined by complete sign |
-
-## Celestial Bodies
-
-Calculated via kerykeion library (not simple formulas):
-
-| Body | Description |
-|------|-------------|
-| North Node (☊) | Lunar North Node |
-| South Node (☋) | Lunar South Node |
-| Lilith (⚸) | Black Moon Lilith (lunar apogee) |
-| Part of Fortune (⊙) | ASC + Moon - Sun |
-| Vertex (Vx) | Fictitious Point (ASC + 60° approx) |
-| Chiron (⚷) | Centaur object |
-
-*Note: The Part of Fortune and Vertex use the formulas shown; Nodes and Lilith are computed by kerykeion.*
-
-## Aspects
-
-| Aspect | Angle | Orb | Type |
-|--------|-------|-----|------|
-| Conjunction ☌ | 0° | 8° | Major |
-| Opposition ☍ | 180° | 8° | Major |
-| Trine △ | 120° | 8° | Major |
-| Square □ | 90° | 6° | Major |
-| Sextile ＊ | 60° | 4° | Minor |
-| Inconjunct ☽ | 150° | 3° | Minor |
-| Quintil ℍ | 72° | 3° | Minor |
-| Bi-Quintil ℎ | 144° | 3° | Minor |
-| Semi-Sextil ⚹ | 30° | 2° | Minor |
-| Semi-Square ∠ | 45° | 2° | Minor |
-
-Each aspect includes `applying` (converging) or `separating` (diverging) indicator.
-
-## Zodiac Wheel Convention
-
-Western astrology standard (compatible with AstroChart, astro-seek.com, Solar Fire):
-
-| Point | Position |
-|-------|----------|
-| 0° Aries | 9 o'clock (left) |
-| 0° Cancer | 12 o'clock (top) |
-| 0° Libra | 3 o'clock (right) |
-| 0° Capricorn | 6 o'clock (bottom) |
-
-- **Direction:** Counter-clockwise (Western standard)
-- **Conversion formula:** `(180 - angle) * PI/180`
-- **ASC rotation:** In `MandalaChart.tsx`, wheel rotates so ASC is always at 9 o'clock
-
-## Fallback Engine (TypeScript)
-
-When Tauri/Python unavailable, `src/utils/astro-calc.ts` provides approximations (±1-2°):
-
-```typescript
-import { calculateFallback } from '../utils/astro-calc';
-
-// Example usage with current date/time:
-const result = await calculateFallback(
-  new Date().getFullYear(),
-  new Date().getMonth() + 1, // Months are 0-indexed
-  new Date().getDate(),
-  new Date().getHours(),
-  new Date().getMinutes(),
-  -15.7833,  // latitude (example: Brasília)
-  -47.9333,  // longitude (example: Brasília)
-  'Regiomontanus' // house system
-);
+```json
+{
+  "planets": [
+    {"name": "Sun", "sign": "Taurus", "degree": 24.5, "house": 10},
+    {"name": "Moon", "sign": "Scorpio", "degree": 12.3, "house": 4}
+  ],
+  "houses": [...],
+  "aspects": [...],
+  "mc": {"sign": "Aquarius", "degree": 15.2},
+  "asc": {"sign": "Leo", "degree": 8.7}
+}
 ```
 
-## Related Documentation
+## Fallback TypeScript (astro-calc.ts)
 
-- [tauri-ipc-api.md](tauri-ipc-api.md) — run_astro_engine command
-- [estrutura-do-projeto.md](estrutura-do-projeto.md) (PT) — Folder structure
+Quando o sidecar não está disponível, o frontend tem cálculos básicos em TypeScript. Esses são menos precisos mas funcionam como demonstração:
+
+- Posições aproximadas dos planetas
+- Casas por Placidus simplificado
+- Aspectos com orbs fixas
+- Para uso profissional, sempre usar o sidecar Python
