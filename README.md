@@ -167,7 +167,7 @@ O projeto utiliza variáveis de ambiente para configurações sensíveis. Elas d
 | `EMAIL_PASSWORD` | Senha de app do email | Para funcionalidades de email |
 | `GOOGLE_CLIENT_ID` | Client ID OAuth2 do Google | Para Google Calendar/Drive |
 
-**Nota de Personalização**: Embora você possa usar o `.env` para valores globais, o Aurea Solaris agora permite **configurações individuais por perfil** (Todoist Token e Composio API Key) diretamente no **Painel de Controle**. Isso permite que cada usuário tenha sua própria sincronia de tarefas e calendários sem mexer em arquivos de sistema.
+**Nota de Personalização**: Embora você possa usar o `.env` para valores globais, o Aurea Solaris agora permite configurações individuais por perfil para integrações, sem mexer em arquivos de sistema.
 
 **Nota**: O Ollama local funciona automaticamente em `http://localhost:11434` se estiver instalado.
 
@@ -187,7 +187,7 @@ AureaSolaris/
 ├── src-tauri/              # Backend Rust (Tauri IPC)
 │   └── src/lib.rs          # Comandos Tauri (IPC API)
 ├── docs/                   # Documentação (inclui superpowers/specs/)
-├── Laboratorio_Stark/      # Área experimental
+
 ├── astro_engine.py         # Motor de astrologia (Python/Kerykeion)
 ├── ephe/                 # Efemérides NASA
 └── .env                  # Configurações
@@ -232,7 +232,7 @@ A interface é dividida em módulos especializados que você pode acessar confor
 2. **Astrologia** — Mapas natais, trânsitos e horas planetárias
 3. **Saúde & Vitalidade** — Controle de bem-estar e hábitos
 4. **Agenda Preditiva** — Cronograma inteligente baseado nas estrelas
-5. **Painel de Controle** — Configurações e monitoramento do sistema
+
 6. **Diário (Memórias)** — Registro diário com insights
 
 ---

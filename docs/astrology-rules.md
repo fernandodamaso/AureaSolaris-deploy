@@ -40,7 +40,7 @@ O sistema utiliza o esquema de dignidades de Ptolomeu/Hellenístico para os plan
 - **Retrógrado**: Quando o movimento aparente do planeta é inverso ao zodíaco.
 - **Lento**: Velocidade inferior a 90% da velocidade média diária.
 
-## 3. Orbes de Aspectos (Editáveis no Painel de Controle)
+## 3. Orbes de Aspectos
 
 Os aspectos são conexões geométricas entre os planetas. As orbes definem a margem de tolerância para que um aspecto seja considerado ativo.
 

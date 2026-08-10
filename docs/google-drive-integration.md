@@ -26,7 +26,7 @@ Tokens saved to `google_tokens.json` in the app data directory.
 
 ## UI Integration
 
-Accessible through Control Panel (`ControlePanel.tsx`) — monitored by agent **Stark**.
+Accessible through the app’s profile/integration settings.
 
 ## Related Documentation
 
