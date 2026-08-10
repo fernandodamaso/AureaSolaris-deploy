@@ -10,7 +10,7 @@
 | UI Preferences | `localStorage` | React State + useEffect |
 | Profiles & Agenda | `localStorage` | AgendaContext |
 | Health & Habits | `localStorage` | SaudeContext |
-| Transactions & Goals | `localStorage` | FinancasContext |
+# Removido do escopo atual
 | Chat History | `memory/{agent}.json` | Tauri FS API (`save_history`) |
 | Assets (Images) | `assets/` | Tauri FS API (`save_asset`) |
 | Board State | `memory/board.json` | Tauri FS API (`save_board/load_board`) |

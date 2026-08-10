@@ -216,35 +216,11 @@ Para validar a precisão, o mapa natal de referência está em `natal_charts/viv
 
 O diferencial do Aurea Solaris é sua equipe de 5 agentes de IA, cada um com personalidade e função específica:
 
-### 🧙‍♂️ Dr. Strange — O Supervisor Macro
+### 🧙‍♂️ Hermes — O Tutor Pessoal
 
-- **Atua**: Globalmente, como visão geral do sistema
-- **Personalidade**: Sábio e conciso, conecta padrões entre astrologia e ações do dia
-- **Função**: Oferece perspectivas macro, ligando horas celestes às suas atividades
-
-### 🎩 Alfred — O Mordomo Produtivo
-
-- **Atua**: Agenda, Saúde e Hub Central
-- **Personalidade**: Organizado, direto e impecável
-- **Função**: Gerencia tarefas, compromissos e bem-estar com eficiência britânica
-
-### 🦆 Uncle Duck — O Consultor Financeiro
-
-- **Atua**: Gestão de Ouro (Finanças)
-- **Personalidade**: Pragmático, ávido por lucros e direto
-- **Função**: Analisa gastos, sugere economias e monitora investimentos
-
-### 🐒 Rafiki — O Astrólogo Técnico
-
-- **Atua**: Astrologia e Diário
-- **Personalidade**: Preciso, técnico, dados concretos
-- **Função**: Traduz dados brutos do motor astrológico em conselhos práticos e orientações
-
-### ⚙️ Stark — O Monitor Técnico
-
-- **Atua**: Painel de Controle
-- **Personalidade**: Altamente técnico, direto e conciso
-- **Função**: Monitora a estabilidade do sistema e integridade da ponte entre tecnologias
+- **Atua**: Globalmente, como visão geral do sistema e guia de estudo
+- **Personalidade**: Sábio, direto e empático, conecta padrões entre astrologia e ações do dia
+- **Função**: Oferece perspectivas macro, ligando horas celestes às suas atividades, além de organização, saúde e estudo
 
 ---
 
@@ -257,9 +233,7 @@ A interface é dividida em módulos especializados que você pode acessar confor
 3. **Saúde & Vitalidade** — Controle de bem-estar e hábitos
 4. **Agenda Preditiva** — Cronograma inteligente baseado nas estrelas
 5. **Painel de Controle** — Configurações e monitoramento do sistema
-6. **Alfred Hub** — Central de tarefas e links rápidos
-7. **Diário (Memórias)** — Registro diário com insights
-8. **Escola do Rafiki** — Módulo educacional interativo
+6. **Diário (Memórias)** — Registro diário com insights
 
 ---
 
