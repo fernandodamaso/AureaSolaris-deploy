@@ -102,6 +102,8 @@ export const MandalaPage = () => {
         sign: info.sign || '',
         retrograde: info.retrograde || false,
         isAngle: ['ASC', 'MC'].includes(name),
+        speed: info.speed ?? 0,
+        stationary: info.stationary || false,
       });
     });
 
