@@ -1,169 +1,81 @@
-> ⚠️ **ARCHIVED — See Quick Reference**
-> 
-> This document is preserved intact. For fast navigation see:
-> - **Quick Reference:** [docs/quick-reference.md](docs/quick-reference.md)
-> - **Agents System:** [docs/agents-system.md](docs/agents-system.md)
-> - **Navigation Hub:** [docs/index.md](docs/index.md)
-> 
-> Last valid: 2026-03-26
+# AGENTS.md — Aurea Solaris
 
----
-# 🤖 Mapa de Navegação AI — Guia Rápido para Agentes
+Este arquivo orienta pessoas, IDEs e agentes de IA. Leia-o antes de alterar código, dados, documentação ou configuração. Em caso de conflito, prevalecem segurança e privacidade; depois [`docs/CONSTITUICAO.md`](docs/CONSTITUICAO.md); depois este arquivo. Planos antigos e telas existentes não definem o produto.
 
-> **Use este índice para encontrar onde trabalhar em segundos.** Este mapa é para você, agente de IA, que precisa navegar rapidamente pelo projeto.
+## Propósito e fronteiras
 
-## Navegação Rápida: "Se você precisa fazer X, vá para Y"
+O **Aurea Solaris** é um aplicativo desktop local-first para estudo astrológico, organização pessoal e reflexão. O produto central é um **Caderno Vivo**: quadro visual espacial e caderno de notas são duas visões dos mesmos dados, não módulos duplicados.
 
-### 🎨 Componentes e Interface do Usuário
-| Se você precisa... | Vá para... |
-|-------------------|------------|
-| Modificar um componente de tela (UI) | `src/components/` — cada arquivo é uma view modular |
-| Alterar botões, inputs ou elementos reutilizáveis | `src/components/common/UIComponents.tsx` |
-| Modificar o chat dos agentes de IA | `src/components/AgentChat.tsx` |
-| Alterar o painel de controle (Stark) | `src/components/ControlePanel.tsx` |
-| Modificar a área de finanças (Uncle Duck) | `src/components/FinancasView.tsx` |
-| Alterar o mapa astral | `src/components/AstrologiaBoard.tsx` |
-| Modificar a agenda/predictive scheduler | `src/components/agenda/` e `src/hooks/useAgendaTasks.ts` |
-| Modificar o diario (VS Code style editor) | `src/components/diario/` - contém DiarioView, DiarioSidebar, DiarioTabs, DiarioEditor |
-| Ver roteamento principal da aplicação | `src/App.tsx` |
+A **Enciclopédia Visual** incorpora o acervo da Engenharia Astrológica como referência interna. Ela preserva fontes, escolas, divergências e versões; não simplifica apagando tradições. Finanças está fora do escopo atual.
 
-### 🦀 APIs do Backend Tauri (Rust)
-| Se você precisa... | Vá para... |
-|-------------------|------------|
-| Adicionar ou modificar comando Tauri | `src-tauri/src/lib.rs` — procure `#[tauri::command]` |
-| Usar invoke no frontend | `src/utils/tauri.ts` — função `safeInvoke()` |
-| Alterar configurações nativas (janela, ícones) | `src-tauri/tauri.conf.json` |
-| Modificar persistência de chat | Comandos `save_history`, `load_history`, `archive_chat` em `lib.rs` |
-| Alterar integrações (Telegram, Todoist) | Comandos `send_telegram_message`, `get_todoist_tasks` em `lib.rs` |
+O corpus não neutraliza crenças, correspondências ou interpretações para fazê-las parecer consenso. Aparência física, linguagem cármica, arquétipos, mitos, magia, medicina histórica e demais visões antigas ou atuais devem ser descritos como suas fontes realmente os apresentam, com autor, obra, escola/período, lógica interna, variantes e discordâncias. Contextualizar não significa apagar; e nenhuma fonte, citação ou genealogia pode ser inventada.
 
-### 🔮 Motor de Astrologia (Python)
-| Se você precisa... | Vá para... |
-|-------------------|------------|
-| Modificar cálculos astrológicos | `astro_engine.py` — usa biblioteca `kerykeion` |
-| Alterar efemérides NASA | `de421.bsp` — dados de posição planetária |
-| Ver cache de dados astrais | `astro_data.json` |
-| Modificar integração Rust-Python | Comando `run_astro_engine` em `src-tauri/src/lib.rs` |
-| Saber mais sobre a arquitetura do motor | `docs/arquitetura.md` seção "Motor de Astrologia" |
+**Axioma editorial:** rigor significa atribuição e contexto, não higienização.
 
-### 📅 Google Calendar (Composio MCP)
-| Se você precisa... | Vá para... |
-|-------------------|------------|
-| Modificar serviço de calendário | `src/services/composio.ts` |
-| Alterar tipos de eventos | `src/types/googleCalendar.ts` |
-| Ver integração na agenda | `src/components/agenda/AgendaView.tsx` |
-| Configurar API key Composio | Variável `VITE_COMPOSIO_API_KEY` no `.env` |
+O primeiro alvo é Windows desktop, confortável para notebook. A arquitetura deve ser responsiva e compatível com futura adaptação a tablet/mobile, sem sacrificar o desktop.
 
-### 🤖 Agentes de IA (Personas)
-| Se você precisa... | Vá para... |
-|-------------------|------------|
-| Modificar prompt/system de um agente | `src/components/AgentChat.tsx` — configuração de personas |
-| Alterar modelos IA (OpenRouter/Ollama) | `src/components/AgentChat.tsx` — seção `model` e `safeInvoke` |
-| Ver qual agente atua em qual view | Consulte as personas abaixo e `docs/arquitetura.md` |
-| Adicionar novo agente | Crie entrada em `AgentChat.tsx` + atualize `docs/arquitetura.md` |
-| Regras de comportamento dos agentes | Seção "Personas dos Agentes" abaixo |
+## Duas bases de dados, dois limites
 
-### ⚙️ Configuração do Sistema
-| Se você precisa... | Vá para... |
-|-------------------|------------|
-| Alterar configuração do app Tauri | `src-tauri/tauri.conf.json` |
-| Modificar dependências frontend | `package.json` |
-| Alterar variáveis de ambiente | `.env` ou `.env.local` |
-| Configurar Vite (build, proxy) | `vite.config.ts` |
-| Configurar ESLint | `eslint.config.js` |
-| Executar testes | `npm test` (Vitest) ou `npm run test:watch` para modo contínuo |
+1. **Base editorial astrológica** — conteúdo impessoal: documentos brutos, fontes, citações, conceitos, claims, tradições, relações, versões e resultados de cálculo. Deve ter proveniência, hash e possibilidade de divergência.
+2. **Base privada por pessoa** — perfis, mapas autorizados, diário, notas, tarefas, agenda, biblioteca pessoal, preferências, consentimentos e memória aprovada do Hermes. Todo registro privado tem `owner_id` e nunca é misturado à base editorial.
 
-### 📚 Documentação de Referência
-| Se você precisa... | Consulte... |
-|-------------------|------------|
-| Visão completa da estrutura de pastas | `docs/estrutura-do-projeto.md` |
-| Arquitetura técnica e fluxos | `docs/arquitetura.md` |
-| Guia rápido do projeto (README) | `README.md` |
-| Conhecimento para agentes (variáveis, arquitetura, testes) | `.factory/library/` |
+Não apague, sobrescreva ou “deduplique” conteúdo editorial sem preservar o original, a fonte e a decisão de revisão. Não migre nem registre segredos em dados de projeto.
 
----
+## Regras inegociáveis
 
-## ⚠️ Regras Globais para Agentes de IA
+- **Precisão astrológica:** cálculos devem registrar UTC, fuso IANA, local, zodíaco, ayanamsa quando houver, sistema de casas, orbes, pontos, versão de efeméride/motor e hash de entrada. Sem valores inventados ou fallback silencioso. Alterações do motor exigem testes de referência e relatório de diferenças.
+- **Privacidade:** nunca armazenar senha, chave de API, refresh token ou token de integração em `localStorage`, logs, prompts, `.env` versionado ou dados editoriais. Senhas usam Argon2id; segredos locais usam cofre criptografado/Stronghold por `secret_ref`; integrações futuras usam OAuth e consentimento explícito.
+- **Saúde:** anexos e exames são privados e só são processados após ação explícita da pessoa. Astrologia médica é estudo e observação; jamais diagnóstico ou prescrição.
+- **Ações revisáveis:** Hermes não cria memória, tarefa, evento, interpretação permanente ou ação externa silenciosamente. Toda sugestão nasce como proposta, informa fontes e incerteza, e pode ser aprovada, recusada, desfeita ou exportada.
+- **Arquivos do usuário:** alterações destrutivas exigem escopo explícito, backup verificável e confirmação humana. Nunca apagar a Engenharia Astrológica durante a migração; primeiro criar snapshot, manifesto e validação de hashes/contagens.
 
-> **🚨 OBRIGATÓRIO — SEMPRE atualize a documentação.**
-> Todo arquivo que você criar, modificar ou deletar DEVE ter sua documentação atualizada. Não é opcional. Não é "fazer depois". É **agora, na mesma sessão de trabalho**. Se você mudou um componente, atualize os docs. Se adicionou um arquivo, atualize os docs. Sempre.
+## Hermes
 
-### 🎓 Regra Didática — Explique como se eu estivesse aprendendo
-> **Você está conversando com alguém que está aprendendo tecnologia.** Ao explicar conceitos técnicos (React, Tauri, Python, APIs), use analogias simples, evite jargão desnecessário, e quando usar termos técnicos, explique o que significam. Exemplo: em vez de "O hook useAstrologyData faz fetch dos dados", diga "O useAstrologyData é como um assistente que busca informações sobre os planetas e entrega para a tela." **Concisos, mas educativos.**
+Hermes é um tutor, assistente astrológico, secretário de organização e parceiro de estudo. Ele separa cálculo, fonte, inferência e opinião; ensina e corrige com respeito.
 
-### 📝 Regra de Documentação — Código muda, docs atualizam
-> **Toda mudança no código DEVE atualizar a documentação correspondente. Sem exceção. Sempre.**
->
-> **Antes de fazer commit de qualquer alteração**, verifique se os docs foram atualizados. Se você criou um arquivo novo e não atualizou os docs, **não finalize** -- volte e atualize primeiro.
+Hermes é independente do provedor de IA. ChatGPT pode ser o provedor inicial, mas cada conta pode escolher outro servidor/modelo autorizado. A mudança de provedor não transfere senha, token, histórico completo nem dados privados automaticamente. A memória e o método interpretativo pertencem à pessoa e ao Aurea, nunca ao provedor.
 
-| Tipo de mudança | Documento para atualizar |
-|-----------------|-------------------------|
-| Novo componente UI ou alteração visual | `docs/estrutura-do-projeto.md` |
-| Novo comando Tauri ou alteração na ponte IPC | `docs/arquitetura.md` |
-| Mudança no motor de astrologia Python | `docs/arquitetura.md` |
-| Nova persona/agemte de IA | `docs/arquitetura.md` e `AGENTS.md` |
-| Nova pasta ou reestruturação | `docs/estrutura-do-projeto.md` e `README.md` |
-| Mudança de configuração (variáveis, .env) | `README.md` e `docs/estrutura-do-projeto.md` |
-| Novos testes ou infraestrutura de testes | `docs/estrutura-do-projeto.md` e `README.md` |
+Pesquisa externa só ocorre dentro dos filtros de fontes configurados e com transparência sobre origem, data e limites. Primeiro consultar a enciclopédia e a biblioteca pessoal autorizada; depois, se necessário, pesquisa externa.
 
----
+## Integrações e fonte de verdade
 
-## Personas dos Agentes — Resumo Rápido
+- Agenda, tarefas, trânsitos e reflexões seguem: `mapa → janela → intenção → plano → tarefa/evento → reflexão → aprendizado`.
+- O banco privado do Aurea é a fonte de verdade. Google Calendar, Todoist e Drive são adaptadores opcionais, com sincronização idempotente, vínculo rastreável e resolução de conflito. Gmail não faz parte do escopo atual.
+- Drive pode vincular pastas da biblioteca astrológica mediante autorização. Não copiar, indexar ou enviar arquivos sem escolha explícita.
 
-| Agente | O que faz | Onde atua | Personalidade |
-|--------|-----------|-----------|---------------|
-| **Dr. Strange** | Supervisor macro, conecta astros às ações | Widget no App.tsx | Sábio, conciso, conecta padrões |
-| **Alfred** | Mordomo de produtividade e organização | Saúde, Agenda, AlfredHub | Direto, impecável, prático |
-| **Uncle Duck** | Consultor financeiro ávido por lucros | Finanças (`FinancasView.tsx`) | Pragmático, objetivo, focado em resultado |
-| **Rafiki** | Tradutor poético do motor astrológico | Astrologia, Diário | Poético mas cirúrgico, espiritual |
-| **Stark** | Monitor técnico da ponte Tauri-React | Controle (`ControlePanel.tsx`) | Técnico, sarcástico, conciso |
+## Forma de trabalhar no repositório
 
-> 💡 **Dica:** Para detalhes completos de cada persona, veja `docs/arquitetura.md` seção "Sistema de Agentes de IA".
+- Trate o repositório aberto como unidade de trabalho. Use caminhos relativos e não codifique `C:\AureaSolaris` ou dados pessoais no código/documentação.
+- Antes de alterações amplas, examine o estado do Git e preserve mudanças existentes. Faça mudanças pequenas, testáveis e documentadas; não use reset/checkout destrutivo.
+- Documentação, migração e teste são parte da entrega. Atualize a Constituição quando a decisão muda o produto; atualize docs técnicas quando muda a implementação.
+- Prefira comandos não interativos e valide de forma proporcional: TypeScript, Rust, testes do motor, testes de migração e teste manual do instalador quando aplicável.
+- Não use `npm audit fix --force` nem atualizações de dependência em massa sem revisão.
 
----
+## Mapa de código atual
 
-# Aurea Solaris — Módulos Core e Integração Multi-Agentes
+| Área | Pontos de entrada |
+| --- | --- |
+| Interface React | `src/App.tsx`, `src/components/`, `src/context/` |
+| Caderno/Mesa | `src/components/MesaCriacao.tsx`, `src/components/DiarioView.tsx` |
+| Motor e API local | `astro_engine.py`, `main_api.py` |
+| Desktop/Rust | `src-tauri/src/lib.rs`, `src-tauri/tauri.conf.json` |
+| Migrações de dados | `src-tauri/migrations/knowledge/`, `src-tauri/migrations/private/` |
+| Constituição | `docs/CONSTITUICAO.md` |
+| Domínios de dados | `docs/data/DOMINIOS_DE_DADOS.md` |
 
-> Para a arquitetura técnica completa, comandos Tauri e fluxos de dados, consulte [`docs/arquitetura.md`](docs/arquitetura.md).
+## Comandos usuais (Windows)
 
-## Módulos Core do Frontend
+Execute a partir da raiz do projeto:
 
-O Frontend é dividido em Views Modulares:
-1. **Mesa de Criação:** Canvas infinito interativo com nós conceituais conectáveis (`MesaCriacao.tsx`).
-2. **Astrologia:** Mapas natais, horas planetárias em tempo real e mandala zodiacal (`AstrologiaBoard.tsx`, `MandalaPage.tsx`, `MandalaView.tsx`).
-3. **Saúde & Vitalidade:** Gestão plena de bem-estar corporal (`SaudeView.tsx`).
-4. **Agenda Preditiva:** Cronograma adaptável às estrelas (`agenda/AgendaView.tsx`).
-5. **Gestão de Ouro (Finanças):** Administração financeira e controle de gastos/receitas (`FinancasView.tsx`).
-6. **Painel de Controle:** Configurações globais e estado geral do sistema (`ControlePanel.tsx`).
-7. **Alfred Central Hub:** Agrupamento rápido de tarefas, links e necessidades corriqueiras (`AlfredHubView.tsx`).
-8. **Diário (Memórias):** Registro diário com percepções integradas - agora com editor estilo VS Code, sidebar de pastas e abas para múltiplas notas (`src/components/diario/`):
-   - `DiarioView.tsx` - Container principal
-   - `DiarioSidebar.tsx` - Navegação de pastas e notas
-   - `DiarioTabs.tsx` - Barra de abas para notas abertas
-   - `DiarioEditor.tsx` - Editor rich text com TipTap
-   - `MemoriasView.tsx` - View tradicional de memórias (mantida para compatibilidade)
-9. **Escola do Rafiki:** Módulo educacional interativo (`RafikiEscola.tsx`).
+```powershell
+npm run build
+npm run test
+npm run tauri -- build
+cargo check --manifest-path .\src-tauri\Cargo.toml
+```
 
----
+O build do instalador requer o sidecar astrológico empacotado em `src-tauri/binaries/astro-engine-x86_64-pc-windows-msvc.exe`. Nunca dependa de uma instalação global de Python no computador da pessoa usuária.
 
-## Integração Inteligente Multi-Agentes (Diretrizes e Personas)
+## Comunicação de agentes
 
-O diferencial arquitetônico está enraizado na injeção modular de Agentes IA (via OpenRouter e Ollama Local), interligados no `AgentChat.tsx` e injetados de acordo com o módulo visualizado.
-
-**A Diretriz Global e Inquebrável:**
-Todos os agentes devem ser **altamente confiáveis, concisos, diretos ao ponto e evitar verbosidade excessiva.**
-
-### Personas dos Agentes
-
-| Agente | Local | Função | Personalidade |
-|--------|-------|--------|---------------|
-| **Dr. Strange** | Widget no App.tsx | Visão macro, conecta horas celestes às ações na UI | Sábio, conciso, conecta padrões |
-| **Alfred** | `SaudeView.tsx`, `agenda/AgendaView.tsx`, `AlfredHubView.tsx` | Mordomo de produtividade e organização | Direto, impecável, formal mas prestativo |
-| **Uncle Duck** | `FinancasView.tsx` | Consultoria financeira focada em lucros | Pragmático, ávido por lucros, objetivo |
-| **Rafiki** | `AstrologiaBoard.tsx`, `MandalaPage.tsx`, `DiarioView.tsx` | Traduz dados astrológicos em conselhos práticos | Preciso, técnico, dados concretos |
-| **Stark** | `ControlePanel.tsx` | Monitora estabilidade da ponte Tauri-React | Técnico, sarcástico, conciso |
-
-> Para detalhes completos de cada persona (modelos, prompts, escopo), veja [`docs/arquitetura.md`](docs/arquitetura.md) seção "Sistema de Agentes de IA".
-
----
-
-> **📖 Para visão completa da arquitetura, comandos Tauri disponíveis, fluxos de dados e sistema de persistência, consulte [`docs/arquitetura.md`](docs/arquitetura.md).**
+Declare de forma breve: objetivo, arquivos afetados, risco para dados e como foi validado. Peça autorização antes de ações externas, destrutivas ou que alterem contas/integrações. Não invente conclusão de teste, fonte ou cálculo. Ao concluir, registre pendências reais e entregue caminhos/artefatos verificáveis.
