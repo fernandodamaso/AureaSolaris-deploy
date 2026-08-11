@@ -12,6 +12,29 @@ dist
 dist-ssr
 *.local
 
+# Ambientes Python locais
+.venv/
+venv/
+.env-venv/
+.aurea-build-venv/
+.build-venv/
+.sidecar-venv/
+__pycache__/
+*.py[cod]
+
+# Saídas locais de compilação, análise e ferramentas de agentes
+/build/
+/work/
+/.opencode/
+*.tsbuildinfo
+*.bak
+/contexts.txt
+/src-tauri/errors.txt
+
+# Metadados acidentais do Windows
+desktop.ini
+/nul
+
 # Segredos e dados privados: ficam apenas na máquina da pessoa.
 .env
 .env.*
@@ -28,6 +51,17 @@ dist-ssr
 *.vault
 data/private/
 backups/
+
+# Snapshot editorial impessoal exigido pelo build do sidecar.
+!knowledge/engenharia_astrologica/knowledge/build/editorial_current.sqlite
+
+# Espelho local redundante; a fonte canônica vendorizada fica em /knowledge.
+/docs/knowledge/
+
+# Saídas legadas do motor; podem conter dados de uma pessoa/local.
+/astro_data.json
+/astro_history.json
+/public/astro_data.json
 
 
 # Editor directories and files
