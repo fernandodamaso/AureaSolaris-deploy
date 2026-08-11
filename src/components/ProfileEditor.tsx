@@ -1,10 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
-import { 
-  X, Save, User, 
-  CalendarDays, 
+import {
+  X, Save, User,
+  CalendarDays,
   Key, Palette, Camera
 } from 'lucide-react';
 import { safeInvoke } from '../utils/tauri';
+import { readCertifiedCalculation } from '../utils/certifiedCalculation';
 
 interface ProfileEditorProps {
   profile: any;
@@ -75,10 +76,10 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEdi
           setNatalPreview('Selecione uma cidade com coordenadas verificadas.');
           return;
         }
-        
+
         const payload = { year: y, month: m, day: d, hour: h + (min / 60), lat: city.lat, lon: city.lon, timezone: city.timezone };
         let result: string | null = null;
-        
+
         // Try direct HTTP to sidecar first (works in both Tauri and browser dev mode)
         try {
           const res = await fetch('http://127.0.0.1:9876/natal', {
@@ -88,15 +89,17 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEdi
           });
           if (res.ok) result = await res.text();
         } catch { /* sidecar not reachable, fall through to Tauri invoke */ }
-        
+
         // Fallback to Tauri invoke if direct HTTP failed
         if (!result) {
           result = await safeInvoke<string>('run_astro_engine', { payload: JSON.stringify(payload) });
         }
-        
+
         if (result) {
           const data = JSON.parse(result);
-          if (data.planets) {
+          if (!readCertifiedCalculation(data, 'natal')) {
+            setNatalPreview('Cálculo recebido sem recibo auditável. Nenhum valor astrológico será exibido.');
+          } else if (data.planets) {
             const summary = Object.entries(data.planets)
               .filter(([name]) => !['ASC', 'MC', 'DSC', 'IC', 'Chiron'].includes(name))
               .slice(0, 6)
@@ -110,7 +113,7 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEdi
           }
         }
       } catch (e) {
-        setNatalPreview('Erro ao calcular mapa');
+        setNatalPreview('Cálculo indisponível. Nenhum valor foi estimado.');
       } finally {
         setLoadingNatal(false);
       }
@@ -146,7 +149,7 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEdi
       alert('Selecione a cidade de nascimento. O Aurea não presume coordenadas.');
       return;
     }
-    
+
     // Build natal data for the system
     let natal = profile.natal;
     if (birthDate && birthTime && city) {
@@ -181,36 +184,36 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEdi
   };
 
   return (
-    <div 
+    <div
       className="fixed inset-0 z-[600] flex items-center justify-center bg-black/50 backdrop-blur-md px-4 animate-in fade-in font-sans"
       onClick={(e) => { if(e.target === e.currentTarget) onClose(); }}
     >
-      <div className="background: var(--aurea-surface) rounded-2xl p-8 w-full max-w-5xl shadow-2xl border border-color: rgba(217,166,83,0.35) max-h-[90vh] overflow-y-auto no-scrollbar" onClick={e => e.stopPropagation()}>
-        
+      <div className="aurea-modal rounded-2xl p-8 w-full max-w-5xl shadow-2xl max-h-[90vh] overflow-y-auto no-scrollbar" onClick={e => e.stopPropagation()}>
+
         {/* Header */}
-        <div className="flex justify-between items-center mb-8 pb-6 border-b border-color: rgba(217,166,83,0.18)">
+        <div className="flex justify-between items-center mb-8 pb-6 border-b" style={{ borderColor: 'var(--aurea-line)' }}>
           <div className="flex items-center gap-4">
-            <div className="p-3 background: rgba(217,166,83,0.12) rounded-lg color: var(--aurea-gold)"><User size={24}/></div>
+            <div className="p-3 rounded-lg text-[var(--aurea-gold-deep)]" style={{ background: 'var(--aurea-gold-soft)' }}><User size={24}/></div>
             <div>
-              <h2 className="text-lg font-black uppercase tracking-[0.2em] color: var(--aurea-text)">Sua Identidade</h2>
-              <p className="text-[9px] font-bold color: var(--aurea-gold) uppercase tracking-widest">Configurações do Perfil</p>
+              <h2 className="aurea-page-title text-lg uppercase">Sua Identidade</h2>
+              <p className="aurea-eyebrow mt-1">Configurações do Perfil</p>
             </div>
           </div>
-          <button onClick={onClose} className="p-3 hover:bg-red-50 color: var(--aurea-text-muted) hover:text-red-500 rounded-lg transition-all">
+          <button type="button" aria-label="Fechar configurações" onClick={onClose} className="aurea-button-icon p-2 hover:bg-red-50 hover:text-red-700 rounded-lg transition-all">
             <X size={20}/>
           </button>
         </div>
 
-        <div className="grid grid-cols-12 gap-8">
-          
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-12">
+
           {/* LEFT: Identity */}
-          <div className="col-span-5 space-y-6">
-            
+          <div className="space-y-6 md:col-span-5">
+
             {/* Avatar + Name */}
             <div className="flex flex-col items-center gap-4">
               <div className="relative group">
-                <div 
-                  className="w-28 h-28 rounded-full background: var(--aurea-surface-light) shadow-xl border-4 border-white overflow-hidden flex items-center justify-center color: var(--aurea-gold)/20 cursor-pointer hover:opacity-80 transition-opacity"
+                <div
+                  className="w-28 h-28 rounded-full bg-[var(--aurea-surface-warm)] shadow-xl border-4 border-white overflow-hidden flex items-center justify-center text-[var(--aurea-gold)]/20 cursor-pointer hover:opacity-80 transition-opacity"
                   onClick={() => fileInputRef.current?.click()}
                 >
                   {avatar ? (
@@ -219,45 +222,48 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEdi
                     <User size={48} />
                   )}
                 </div>
-                <button 
+                <button
+                  type="button"
+                  aria-label="Escolher imagem de perfil"
                   onClick={() => fileInputRef.current?.click()}
-                  className="absolute bottom-1 right-1 p-2 background: var(--aurea-gold) text-white rounded-full box-shadow: 0 10px 30px rgba(0,0,0,0.4) hover:scale-110 transition-all"
+                  className="absolute bottom-1 right-1 p-2 text-white rounded-full shadow-lg hover:scale-110 transition-all"
+                  style={{ background: 'var(--aurea-gold-deep)' }}
                 >
                   <Camera size={12} />
                 </button>
-                <input 
+                <input
                   ref={fileInputRef}
-                  type="file" 
-                  accept="image/*" 
-                  className="hidden" 
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
                   onChange={handleAvatarChange}
                 />
               </div>
               <div className="w-full">
-                <label className="text-[9px] font-black uppercase color: var(--aurea-text-muted) pl-2 tracking-widest block mb-2">Nome</label>
-                <input 
-                  className="w-full background: var(--aurea-surface-light) p-4 rounded-lg border border-color: rgba(217,166,83,0.18) font-bold color: var(--aurea-text) outline-none focus:border-color: rgba(217,166,83,0.35) transition-all" 
-                  value={name} 
+                <label className="aurea-field-label pl-2 block mb-2">Nome</label>
+                <input
+                  className="w-full p-4 font-bold outline-none transition-all"
+                  value={name}
                   onChange={e => setName(e.target.value)}
                 />
               </div>
             </div>
 
             {/* Birth Data - Structured */}
-            <div className="background: var(--aurea-surface-light)/60 p-6 rounded-[1.5rem] border border-color: rgba(217,166,83,0.18) space-y-4">
-              <h4 className="text-[9px] font-black uppercase tracking-[0.3em] color: var(--aurea-gold) flex items-center gap-2">
+            <div className="aurea-card-soft p-6 rounded-[1.5rem] space-y-4">
+              <h4 className="aurea-eyebrow flex items-center gap-2">
                 <CalendarDays size={12}/> Dados de Nascimento
               </h4>
-              
+
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-[8px] font-black uppercase color: var(--aurea-text-muted) tracking-widest block mb-1">Data</label>
-                  <input 
+                  <label className="aurea-field-label block mb-1">Data</label>
+                  <input
                     type="text"
                     inputMode="numeric"
                     autoComplete="bday"
                     maxLength={10}
-                    className="w-full background: rgba(3,10,17,0.35) p-3 rounded-lg border border-color: rgba(38,54,66,0.7) text-[12px] font-bold color: var(--aurea-text) outline-none focus:border-color: rgba(217,166,83,0.35)"
+                    className="w-full p-3 text-[12px] font-bold outline-none"
                     value={birthDateInput}
                     aria-invalid={Boolean(birthDateError)}
                     aria-describedby={birthDateError ? 'profile-birth-date-error' : undefined}
@@ -272,20 +278,20 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEdi
                   {birthDateError && <p id="profile-birth-date-error" role="alert" className="mt-1 text-[10px] font-bold text-red-600">{birthDateError}</p>}
                 </div>
                 <div>
-                  <label className="text-[8px] font-black uppercase color: var(--aurea-text-muted) tracking-widest block mb-1">Hora</label>
-                  <input 
+                  <label className="aurea-field-label block mb-1">Hora</label>
+                  <input
                     type="time"
-                    className="w-full background: rgba(3,10,17,0.35) p-3 rounded-lg border border-color: rgba(38,54,66,0.7) text-[12px] font-bold color: var(--aurea-text) outline-none focus:border-color: rgba(217,166,83,0.35)"
+                    className="w-full p-3 text-[12px] font-bold outline-none"
                     value={birthTime}
                     onChange={e => setBirthTime(e.target.value)}
                   />
                 </div>
               </div>
-              
+
               <div>
-                <label className="text-[8px] font-black uppercase color: var(--aurea-text-muted) tracking-widest block mb-1">Cidade</label>
-                <select 
-                  className="w-full background: rgba(3,10,17,0.35) p-3 rounded-lg border border-color: rgba(38,54,66,0.7) text-[12px] font-bold color: var(--aurea-text) outline-none focus:border-color: rgba(217,166,83,0.35) cursor-pointer"
+                <label className="aurea-field-label block mb-1">Cidade</label>
+                <select
+                  className="w-full p-3 text-[12px] font-bold outline-none cursor-pointer"
                   value={birthCity}
                   onChange={e => setBirthCity(e.target.value)}
                 >
@@ -294,33 +300,33 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEdi
                     <option key={c.name} value={c.name}>{c.name}</option>
                   ))}
                 </select>
-                <p className="mt-2 text-[9px] font-semibold text-gray-500">
-                  Fuso IANA: <span className="font-mono text-gray-700">{BRAZILIAN_CITIES.find(c => c.name === birthCity)?.timezone || 'selecione a cidade'}</span>
+                <p className="mt-2 text-[10px] font-semibold text-[var(--aurea-text-muted)]">
+                  Fuso IANA: <span className="font-mono text-[var(--aurea-text)]">{BRAZILIAN_CITIES.find(c => c.name === birthCity)?.timezone || 'selecione a cidade'}</span>
                 </p>
               </div>
 
               {/* Natal Preview */}
-              <div className="background: var(--aurea-surface) p-4 rounded-lg border border-color: rgba(217,166,83,0.18)">
-                <p className="text-[8px] font-black uppercase color: var(--aurea-text-muted) tracking-widest mb-2">Preview do Mapa Natal</p>
+              <div className="aurea-card-soft p-4 rounded-lg">
+                <p className="aurea-field-label mb-2">Preview do Mapa Natal</p>
                 {loadingNatal ? (
-                  <p className="text-[10px] color: var(--aurea-gold) animate-pulse italic">Calculando posições...</p>
+                  <p className="text-[10px] text-[var(--aurea-gold)] animate-pulse italic">Calculando posições...</p>
                 ) : natalPreview ? (
-                  <p className="text-[11px] font-bold text-gray-700 leading-relaxed">{natalPreview}</p>
+                  <p className="text-[11px] font-bold text-[var(--aurea-text)] leading-relaxed">{natalPreview}</p>
                 ) : (
-                  <p className="text-[10px] color: var(--aurea-text-muted) italic">Preencha data, hora e cidade para calcular o mapa</p>
+                  <p className="text-[10px] text-[var(--aurea-text-muted)] italic">Preencha data, hora e cidade para calcular o mapa</p>
                 )}
               </div>
             </div>
           </div>
 
           {/* RIGHT: Preferences + Security */}
-          <div className="col-span-7 space-y-6">
-            
+          <div className="space-y-6 md:col-span-7">
+
             {/* Context */}
             <div>
-              <label className="text-[9px] font-black uppercase color: var(--aurea-text-muted) pl-2 tracking-widest block mb-2">Contexto Pessoal</label>
-              <textarea 
-                className="w-full h-28 background: var(--aurea-surface-light) p-4 rounded-lg outline-none border border-color: rgba(217,166,83,0.18) resize-none text-[13px] text-gray-600 font-medium leading-relaxed focus:border-color: rgba(217,166,83,0.35) transition-all" 
+              <label className="aurea-field-label pl-2 block mb-2">Contexto Pessoal</label>
+              <textarea
+                className="w-full h-28 p-4 outline-none resize-none text-[13px] text-[var(--aurea-text)] font-medium leading-relaxed transition-all"
                 value={context}
                 onChange={e => setContext(e.target.value)}
                 placeholder="Conte sobre você: rotina, filhos, estudos, foco atual..."
@@ -330,11 +336,11 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEdi
             {/* Agent Preferences */}
             <div>
               <div>
-                <label className="text-[9px] font-black uppercase color: var(--aurea-text-muted) pl-2 tracking-widest block mb-1 flex items-center gap-2">
+                <label className="aurea-field-label pl-2 block mb-1 flex items-center gap-2">
                   <Palette size={10}/> Tom de Voz
                 </label>
-                <select 
-                  className="w-full background: var(--aurea-surface-light) p-3 rounded-lg border border-color: rgba(217,166,83,0.18) text-[12px] font-bold outline-none cursor-pointer focus:border-color: rgba(217,166,83,0.35) transition-all"
+                <select
+                  className="w-full p-3 text-[12px] font-bold outline-none cursor-pointer transition-all"
                   value={dialogStyle}
                   onChange={e => setDialogStyle(e.target.value)}
                 >
@@ -347,27 +353,27 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEdi
             </div>
 
             {/* Security */}
-            <div className="background: var(--aurea-surface-light)/40 p-6 rounded-[1.5rem] border border-gold/5 shadow-inner space-y-4">
-              <h4 className="text-[9px] font-black uppercase tracking-[0.3em] color: var(--aurea-text-muted) flex items-center gap-2 pb-3 border-b border-color: rgba(38,54,66,0.7)">
+            <div className="aurea-card-soft p-6 rounded-[1.5rem] shadow-inner space-y-4">
+              <h4 className="aurea-eyebrow flex items-center gap-2 pb-3 border-b" style={{ borderColor: 'var(--aurea-line)' }}>
                 <Key size={12}/> Segurança & Acesso
               </h4>
-              <p className="text-[11px] leading-relaxed text-gray-500">A senha é definida somente no acesso inicial. Alteração de senha e recuperação serão liberadas junto ao cofre local criptografado.</p>
+              <p className="text-[11px] leading-relaxed text-[var(--aurea-text-muted)]">A senha é definida somente no acesso inicial. Alteração de senha e recuperação serão liberadas junto ao cofre local criptografado.</p>
             </div>
 
           </div>
         </div>
 
         {/* Footer */}
-        <div className="mt-8 flex justify-between items-center border-t border-color: rgba(217,166,83,0.18) pt-6">
-          <button 
-            onClick={onLogout} 
+        <div className="mt-8 flex justify-between items-center border-t pt-6" style={{ borderColor: 'var(--aurea-line)' }}>
+          <button
+            onClick={onLogout}
             className="px-6 py-3 bg-red-500/10 text-red-500 rounded-lg font-black uppercase text-[10px] tracking-[0.2em] hover:bg-red-500 hover:text-white transition-all flex items-center gap-2"
           >
             <X size={12} /> Sair
           </button>
           <div className="flex gap-4">
-            <button onClick={onClose} className="px-8 py-3 color: var(--aurea-text-muted) font-black uppercase text-[10px] tracking-[0.2em] hover:text-gray-600 transition-all">Cancelar</button>
-            <button onClick={handleSave} className="px-10 py-3 bg-[#333333] text-white rounded-lg font-black uppercase text-[10px] tracking-[0.2em] hover:background: var(--aurea-gold) transition-all box-shadow: 0 10px 30px rgba(0,0,0,0.4) flex items-center gap-2">
+            <button onClick={onClose} className="aurea-button-secondary px-8 py-3 font-black uppercase text-[10px] tracking-[0.2em] transition-all">Cancelar</button>
+            <button onClick={handleSave} className="aurea-button-primary px-10 py-3 rounded-lg font-black uppercase text-[10px] tracking-[0.2em] transition-all flex items-center gap-2">
               <Save size={12} /> Salvar
             </button>
           </div>

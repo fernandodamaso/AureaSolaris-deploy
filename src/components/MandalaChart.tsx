@@ -6,7 +6,7 @@ import {
   calcDominance, calcRegentAsc, calcSenhorGenitura,
   calcAlcocoden, calcAstroSignature, calcHyleg, getDignityState,
   getTermRuler, getDecanateRuler, getFixedStar, getMansion,
-  getMotionStatus, getVisibilityState, getProximityToSun, isFeral,
+  getMotionStatus, getVisibilityState, getProximityToSun, isFeral, FERAL_RULE,
   RETROGRADE_ALLOWED,
   SIGN_SYMBOLS as DIGNITY_SIGNS,
   ELEMENT_COLORS as EL_COLORS, ELEMENT_LABELS, ELEMENT_EMOJIS,
@@ -55,6 +55,7 @@ interface MandalaChartProps {
   transitPlanets?: Planet[];
   transitAspects?: Aspect[];
   showPanel?: boolean;
+  calculationCertified?: boolean;
 }
 
 /* ─── Constants ────────────────────────────────────────────────── */
@@ -147,7 +148,7 @@ const getSignIdx = (deg: number) => Math.floor(normDeg(deg) / 30);
 
 /* ─── Component ────────────────────────────────────────────────── */
 
-export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlanets, transitAspects, showPanel = true }: MandalaChartProps) => {
+export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlanets, transitAspects, showPanel = true, calculationCertified = false }: MandalaChartProps) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const [showDecanates, setShowDecanates] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
@@ -160,6 +161,7 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
     decanate: string; term: string; mansion: string | null;
     star: string | null; dignity: string; visibility: string;
     special: string | null;
+    specialRule?: typeof FERAL_RULE;
   } | null>(null);
   const [aspectTooltip, setAspectTooltip] = useState<{
     type: string;
@@ -603,7 +605,13 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
         const sun = planets.find(p => p.name === 'Sun');
         const sunDeg = sun ? sun.degree : 0;
         
-        const motion = getMotionStatus(p.name, p.speed || 0);
+        // A missing speed is not a zero speed.  Zero had been classified as
+        // "Lento", which made otherwise valid certified planets misleading.
+        // Motion labels are only derived when the engine supplied a finite
+        // velocity in the same calculation receipt.
+        const motion = typeof p.speed === 'number' && Number.isFinite(p.speed)
+          ? getMotionStatus(p.name, p.speed)
+          : 'Indisponível';
         const decanRuler = getDecanateRuler(d);
         const termRuler = getTermRuler(d);
         const m = getMansion(d);
@@ -614,8 +622,11 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
         
         // Special states
         const proximity = getProximityToSun(p.name, d, sunDeg);
-        const feral = isFeral(p.name, planetsMap);
-        const special = proximity || (feral ? 'Feral' : null);
+        // Feral is a declared interpretation rule, not an astronomical value.
+        // It is evaluated only after MandalaPage has accepted a certified
+        // calculation, and it is visibly separated from the motor result.
+        const feral = calculationCertified && isFeral(p.name, planetsMap);
+        const special = proximity || (feral ? `${FERAL_RULE.label} · ${FERAL_RULE.layer}` : null);
 
         const rect = svgRef.current?.getBoundingClientRect();
         const rx = rect ? event.clientX - rect.left : event.clientX;
@@ -637,7 +648,8 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
           star,
           dignity: dignity.label || 'Peregrino',
           visibility,
-          special
+          special,
+          specialRule: feral ? FERAL_RULE : undefined,
         });
       }).on('mouseleave', () => setTooltip(null));
     });
@@ -839,7 +851,8 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
                 <span className="text-[9px] font-bold px-1.5 py-0.5 bg-amber-50 text-amber-600 rounded">Estacionário</span>
               )}
               {(!tooltip.retrograde || !RETROGRADE_ALLOWED.includes(tooltip.name)) && 
-               (!tooltip.stationary || !RETROGRADE_ALLOWED.includes(tooltip.name)) && (
+              tooltip.motion !== 'Indisponível' &&
+              (!tooltip.stationary || !RETROGRADE_ALLOWED.includes(tooltip.name)) && (
                 <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${
                   tooltip.motion === 'Rápido' ? 'bg-green-50 text-green-600' :
                   tooltip.motion === 'Lento' ? 'bg-orange-50 text-orange-600' :
@@ -854,6 +867,14 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
                 </span>
               )}
             </div>
+            {tooltip.specialRule && (
+              <p className="mt-1 text-[8px] leading-relaxed text-purple-700/80">
+                {(() => {
+                  const rule = tooltip.specialRule;
+                  return `${rule.school} · ${rule.criterion} · aspectos ${rule.aspects.join('°/')}° · orbes: ${rule.aspects.map(a => `${a}°=${rule.orbs[a as keyof typeof rule.orbs]}°`).join(', ')}.`;
+                })()}
+              </p>
+            )}
           </div>
         )}
 

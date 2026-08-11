@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { safeInvoke } from '../utils/tauri';
+import { readCertifiedCalculation } from '../utils/certifiedCalculation';
 
 const ASPECT_MAP: Record<string, string> = {
   Conjunction: 'Conjunção',
@@ -14,6 +15,42 @@ const ASPECT_MAP: Record<string, string> = {
   SemiSquare: 'Semi-Quadratura',
   SesquiQuadrature: 'Sesqui-Quadratura',
 };
+
+const STARTUP_RETRY_DELAYS_MS = [0, 250, 750, 1500, 2500];
+
+const wait = (milliseconds: number) => new Promise<void>((resolve) => window.setTimeout(resolve, milliseconds));
+
+async function requestNatalFromSidecar(payload: string): Promise<string | null> {
+  // The packaged FastAPI sidecar starts alongside the desktop application and
+  // can take a few seconds to unpack on first launch.  Retrying the service
+  // never manufactures a chart: it only waits for the certified local engine.
+  for (const delay of STARTUP_RETRY_DELAYS_MS) {
+    if (delay) await wait(delay);
+    try {
+      const response = await fetch('http://127.0.0.1:9876/natal', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: payload,
+      });
+      if (response.ok) return await response.text();
+    } catch {
+      // Tauri IPC is attempted below for desktop-origin restrictions.
+    }
+  }
+  return null;
+}
+
+function hasDisplayableNatalShape(value: any): boolean {
+  const requiredPoints = ['Sun', 'Moon', 'ASC', 'MC'];
+  const hasDegree = (point: unknown) => {
+    const degree = (point as { degree?: unknown } | null)?.degree;
+    return typeof degree === 'number' && Number.isFinite(degree) && degree >= 0 && degree < 360;
+  };
+
+  return requiredPoints.every((name) => hasDegree(value?.planets?.[name])) &&
+    Array.isArray(value?.houses) && value.houses.length === 12 &&
+    value.houses.every((house: unknown) => hasDegree(house));
+}
 
 export const useAstroData = (birthData?: any, enabled = true) => {
   const [data, setData] = useState<any>(null);
@@ -35,15 +72,8 @@ export const useAstroData = (birthData?: any, enabled = true) => {
 
       let result: string | null = null;
       
-      // Try direct HTTP to sidecar first (works in both Tauri and browser dev mode)
-      try {
-        const res = await fetch('http://127.0.0.1:9876/natal', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: payloadStr,
-        });
-        if (res.ok) result = await res.text();
-      } catch { /* sidecar not reachable, fall through */ }
+      // Try direct HTTP first (works in both Tauri and browser dev mode).
+      result = await requestNatalFromSidecar(payloadStr);
       
       // Fallback to Tauri invoke
       if (!result) {
@@ -63,9 +93,12 @@ export const useAstroData = (birthData?: any, enabled = true) => {
       }
       if (parsed.error) {
         setError(parsed.error);
-      } else if (!parsed.meta?.receipt) {
+      } else if (!readCertifiedCalculation(parsed, 'natal')) {
         setData(null);
         setError('O motor respondeu sem recibo auditável. Nenhuma mandala será exibida.');
+      } else if (!hasDisplayableNatalShape(parsed)) {
+        setData(null);
+        setError('O recibo natal não contém os pontos e casas necessários para desenhar uma mandala confiável.');
       } else {
         setData(parsed);
       }

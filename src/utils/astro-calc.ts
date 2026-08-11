@@ -59,19 +59,55 @@ function getMoonLongitude(jd: number): number {
   return (L + corr + 360) % 360;
 }
 
-function getPlanetLongitude(name: string, n: number): number {
-  const formulas: Record<string, (n: number) => number> = {
-    Mercury: (n) => (48.3313 + 4.0932377 * n / 36525) % 360,
-    Venus: (n) => (118.6770 + 1.602130 * n / 36525) % 360,
-    Mars: (n) => (355.4330 + 0.9856474 * n / 36525) % 360,
-    Jupiter: (n) => (34.3515 + 0.083091 * n / 36525) % 360,
-    Saturn: (n) => (50.0774 + 0.033444 * n / 36525) % 360,
-    Uranus: (n) => (314.0550 + 0.051834 * n / 36525) % 360,
-    Neptune: (n) => (304.3487 + 0.021028 * n / 36525) % 360,
-    Pluto: (n) => (220.0 + 0.00397 * n / 36525) % 360,
-    Chiron: (n) => (190.0 + 0.008 * n / 36525) % 360,
+/**
+ * Planetary position using mean longitude + Kepler equation.
+ * Constants from JPL/Meeus: mean longitude at J2000, mean motion (°/century),
+ * longitude of perihelion, semi-major axis (AU), and eccentricity.
+ * Solves Kepler's equation for the equation of center.
+ * Returns [heliocentric longitude (°), distance (AU)].
+ */
+function getPlanetPosition(name: string, T: number): [number, number] {
+  // [L0, rate °/century, omega, a (AU), e]
+  const data: Record<string, [number, number, number, number, number]> = {
+    Mercury: [252.2509, 149472.6746, 77.4561, 0.387, 0.2056],
+    Venus:   [181.9798, 58517.8157,  131.5330, 0.723, 0.0068],
+    Mars:    [355.4533, 19140.3027,  336.0602, 1.524, 0.0934],
+    Jupiter: [34.3515,  3034.9057,   14.7285,  5.203, 0.0485],
+    Saturn:  [49.9449,  1222.1138,   92.4319,  9.537, 0.0556],
+    Uranus:  [313.2321, 428.4669,    170.9642, 19.19, 0.0463],
+    Neptune: [304.8800, 218.4862,    44.9713,  30.07, 0.0095],
+    Pluto:   [238.9288, 145.2060,    224.0689, 39.48, 0.2488],
+    Chiron:  [190.0,    727.0,       208.0,    13.7,  0.073],
   };
-  return formulas[name] ? formulas[name](n) : 0;
+  const d = data[name];
+  if (!d) return [0, 0];
+  const [L0, rate, omega, a, e] = d;
+  const meanLon = (L0 + rate * T) % 360;
+  // Mean anomaly
+  let M = ((meanLon - omega) % 360 + 360) % 360;
+  const Mrad = M * Math.PI / 180;
+  // Solve Kepler's equation iteratively: M = E - e*sin(E)
+  let E = Mrad;
+  for (let i = 0; i < 10; i++) {
+    E = Mrad + e * Math.sin(E);
+  }
+  // True anomaly from eccentric anomaly
+  const sinV = Math.sqrt(1 - e * e) * Math.sin(E) / (1 - e * Math.cos(E));
+  const cosV = (Math.cos(E) - e) / (1 - e * Math.cos(E));
+  const v = Math.atan2(sinV, cosV) * 180 / Math.PI;
+  // Heliocentric longitude and distance
+  const lon = ((v + omega + 360) % 360);
+  const r = a * (1 - e * Math.cos(E));
+  return [lon, r];
+}
+
+/** Convert heliocentric to geocentric longitude given Earth's ecliptic longitude. */
+function toGeocentric(helioLon: number, helioR: number, earthLon: number): number {
+  const helioRad = helioLon * Math.PI / 180;
+  const earthRad = earthLon * Math.PI / 180;
+  const px = helioR * Math.cos(helioRad) - Math.cos(earthRad);
+  const py = helioR * Math.sin(helioRad) - Math.sin(earthRad);
+  return ((Math.atan2(py, px) * 180 / Math.PI) + 360) % 360;
 }
 
 function calculateHouses(ascDeg: number): number[] {
@@ -143,15 +179,24 @@ export interface AstroCalcResult {
   meta: { timestamp: string; location: { lat: number; lon: number }; house_system: string };
 }
 
+function getPlanetLongitude(name: string, n: number): number {
+  const T = n / 36525.0;
+  const [helioLon, helioR] = getPlanetPosition(name, T);
+  const jd = n + 2451545.0;
+  const sunLon = getSunLongitude(jd);
+  const earthLon = (sunLon + 180) % 360;
+  return toGeocentric(helioLon, helioR, earthLon);
+}
+
 export async function calculateFallback(
   year: number,
   month: number,
   day: number,
   hour: number,
   minute: number,
-  lat: number = -15.7833,
-  lon: number = -47.9333,
-  houseSystem: string = 'Regiomontanus'
+  lat: number,
+  lon: number,
+  houseSystem: string = 'Equal'
 ): Promise<AstroCalcResult> {
   const jd = toJulianDay(year, month, day, hour + minute / 60);
   const n = jd - 2451545.0;
@@ -164,18 +209,21 @@ export async function calculateFallback(
     Moon: { ...getSign(moonLon), degree: moonLon, element: getElement(getSign(moonLon).sign), retrograde: false },
   };
 
-  const retrogradePlanets = ['Saturn', 'Uranus', 'Neptune', 'Pluto'];
-  for (const name of ['Mercury', 'Venus', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Pluto', 'Chiron']) {
-    const deg = getPlanetLongitude(name, n);
-    const sign = getSign(deg);
-    planets[name] = {
-      sign: sign.sign,
-      pos_in_sign: sign.pos_in_sign,
-      degree: deg,
-      element: getElement(sign.sign),
-      retrograde: retrogradePlanets.includes(name)
-    };
-  }
+   // List of bodies that can potentially be retrograde (excluding Sun and Moon)
+   const potentiallyRetrograde = ['Mercury', 'Venus', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Pluto', 'Chiron'];
+   for (const name of potentiallyRetrograde) {
+     const deg = getPlanetLongitude(name, n);
+     const sign = getSign(deg);
+     // In fallback without speed data, we cannot accurately determine retrograde status
+     // The Python engine handles this correctly using actual planetary speeds
+     planets[name] = {
+       sign: sign.sign,
+       pos_in_sign: sign.pos_in_sign,
+       degree: deg,
+       element: getElement(sign.sign),
+       retrograde: false // Placeholder - actual calculation done in Python engine
+     };
+   }
 
   const ascDeg = calculateAscendant(lat, lon, jd);
   const mcDeg = (ascDeg + 90) % 360;
@@ -184,11 +232,17 @@ export async function calculateFallback(
 
   const houses = calculateHouses(ascDeg);
 
+  const sunAscDiff = (sunLon - ascDeg + 360) % 360;
+  const diurnal = sunAscDiff > 180;
+  const pofDeg = diurnal ? (ascDeg + moonLon - sunLon + 360) % 360 : (ascDeg + sunLon - moonLon + 360) % 360;
+  const posDeg = diurnal ? (ascDeg + sunLon - moonLon + 360) % 360 : (ascDeg + moonLon - sunLon + 360) % 360;
+
   const secondary = {
     NorthNode: { ...getSign((moonLon + 180) % 360), degree: (moonLon + 180) % 360, element: getElement(getSign((moonLon + 180) % 360).sign) },
     SouthNode: { ...getSign(moonLon), degree: moonLon, element: getElement(getSign(moonLon).sign) },
     Lilith: { ...getSign((moonLon - 180 + 360) % 360), degree: (moonLon - 180 + 360) % 360, element: getElement(getSign((moonLon - 180 + 360) % 360).sign) },
-    PartOfFortune: { ...getSign((ascDeg + moonLon - sunLon + 360) % 360), degree: (ascDeg + moonLon - sunLon + 360) % 360, element: getElement(getSign((ascDeg + moonLon - sunLon + 360) % 360).sign) },
+    PartOfFortune: { ...getSign(pofDeg), degree: pofDeg, element: getElement(getSign(pofDeg).sign) },
+    ParsSpiritus: { ...getSign(posDeg), degree: posDeg, element: getElement(getSign(posDeg).sign) },
     Vertex: { ...getSign((ascDeg + 60) % 360), degree: (ascDeg + 60) % 360, element: getElement(getSign((ascDeg + 60) % 360).sign) },
   };
 

@@ -161,6 +161,12 @@ interface TermBound {
   end: number;
 }
 
+interface RawTerm {
+  p: string;
+  s: number;
+  e: number;
+}
+
 const TERMS: TermBound[][] = [
   // Aries
   [{p:'Jupiter',s:0,e:6},{p:'Venus',s:6,e:12},{p:'Mercury',s:12,e:20},{p:'Mars',s:20,e:25},{p:'Saturn',s:25,e:30}],
@@ -186,19 +192,15 @@ const TERMS: TermBound[][] = [
   [{p:'Mercury',s:0,e:7},{p:'Venus',s:7,e:13},{p:'Jupiter',s:13,e:20},{p:'Mars',s:20,e:25},{p:'Saturn',s:25,e:30}],
   // Pisces
   [{p:'Venus',s:0,e:12},{p:'Jupiter',s:12,e:16},{p:'Mercury',s:16,e:19},{p:'Mars',s:19,e:28},{p:'Saturn',s:28,e:30}],
-].map(terms =>
-  terms.map((t: any) => ({ planet: t.p, start: t.s, end: t.e }))
+].map((terms: RawTerm[]) =>
+  terms.map(({p: planet, s: start, e: end}): TermBound => ({ planet, start, end }))
 );
-
-// Ugly hack just to satisfy TS strict mode on the inline type above
-// (no actual runtime impact):
-const _TERMS_TYPED: TermBound[][] = TERMS;
 
 /** Get the Egyptian Term ruler for a planet at a given absolute degree */
 export function getTermRuler(deg: number): string {
   const si = getSignIdx(deg);
   const pos = normDeg(deg) % 30;
-  const terms = _TERMS_TYPED[si];
+  const terms = TERMS[si];
   const term = terms.find(t => pos >= t.start && pos < t.end);
   return term?.planet ?? '';
 }
@@ -275,14 +277,14 @@ export function getMansion(deg: number): { name: string, deg: number, min: numbe
 
 // ─── Motion Status (Fast/Slow) ───────────────────────────────────────────────
 export const RETROGRADE_ALLOWED = [
-  'Mercury', 'Venus', 'Mars', 'Jupiter', 'Saturn', 
-  'Uranus', 'Neptune', 'Pluto', 
+  'Mercury', 'Venus', 'Mars', 'Jupiter', 'Saturn',
+  'Uranus', 'Neptune', 'Pluto',
   'Chiron', 'NorthNode', 'SouthNode', 'Lilith'
 ];
 
 export const LENTO_ALLOWED = [
-  'Mercury', 'Venus', 'Mars', 'Jupiter', 'Saturn', 
-  'Uranus', 'Neptune', 'Pluto', 
+  'Mercury', 'Venus', 'Mars', 'Jupiter', 'Saturn',
+  'Uranus', 'Neptune', 'Pluto',
   'Chiron', 'NorthNode', 'SouthNode', 'Lilith'
 ];
 
@@ -298,7 +300,7 @@ export function getMotionStatus(planet: string, speed: number): string {
 
   const mSpeed = MEAN_SPEEDS[planet];
   if (!mSpeed) return 'Direto';
-  
+
   const ratio = Math.abs(speed) / mSpeed;
   if (ratio > 1.1) return 'Rápido';
   if (ratio < 0.9) return 'Lento';
@@ -325,32 +327,95 @@ export function getProximityToSun(planet: string, deg: number, sunDeg: number): 
   return null;
 }
 
-// ─── Feral (Wild) ──────────────────────────────────────────────────────────── 
-const MAIN_PLANETS = ['Sun','Moon','Mercury','Venus','Mars','Jupiter','Saturn','Uranus','Neptune','Pluto'];
+/**
+ * A declared, non-astronomical reading rule for the traditional ``feral``
+ * designation.  It belongs to the interpretation layer, never to an engine
+ * receipt.  The current rule is intentionally narrow until the encyclopedia
+ * can attach a selected author/source to each school variant.
+ */
+export const FERAL_RULE = {
+  id: 'traditional-feral-major-aspects-v1',
+  label: 'Feral',
+  layer: 'regra interpretativa',
+  school: 'Tradicional',
+  criterion: 'planeta elegível sem aspecto maior com outro planeta elegível',
+  aspects: [0, 60, 90, 120, 180],
+  // Per-aspect orbs (professional astrological standard):
+  // Conjunction: 8°, Opposition: 8°, Trine: 7°, Square: 6°, Sextile: 5°
+  orbs: {
+    0: 8.0,
+    60: 5.0,
+    90: 6.0,
+    120: 7.0,
+    180: 8.0,
+  },
+  // Bodies traditionally considered eligible for feral status.
+  // The caller must pass all relevant bodies; the engine does not filter.
+  eligibleBodies: [
+    'Sun', 'Moon', 'Mercury', 'Venus', 'Mars', 'Jupiter', 'Saturn',
+    'ASC', 'MC',
+  ],
+} as const;
 
-export function isFeral(planet: string, planets: Record<string, { degree: number }>): boolean {
-  if (!MAIN_PLANETS.includes(planet)) return false;
-  
-  // Feral = no major aspect (0, 60, 90, 120, 180) to any OTHER main planet
-  const p1_deg = planets[planet]?.degree;
-  if (p1_deg === undefined) return false;
-  
-  const MAJOR_ANGLES = [0, 60, 90, 120, 180];
-  const ORB = 5; // Standard orb for feral check
+export interface FeralPlanetMapEntry {
+  degree: number;
+  house?: number;
+  isAngle?: boolean;
+}
 
-  for (const other of MAIN_PLANETS) {
+/**
+ * Evaluates the feral condition on a certified calculation.
+ *
+ * This is NOT an astronomical output — it is an interpretive rule that must
+ * be shown separately from motor data.  The caller must ensure positions
+ * originated in a certified calculation receipt.
+ *
+ * @param planet - canonical planet/body name (e.g., 'Jupiter')
+ * @param planets - map of ALL bodies present in the chart, including angles
+ *                  and any modern bodies the user includes.
+ * @param eligibleBodiesOverride - optional override for the eligibility list.
+ *                  When omitted, uses FERAL_RULE.eligibleBodies.
+ * @param orbsOverride - optional override for aspect orbs.
+ * @returns true only when the planet has no major aspect within orbs.
+ */
+export function isFeral(
+  planet: string,
+  planets: Record<string, FeralPlanetMapEntry>,
+  eligibleBodiesOverride?: readonly string[],
+  orbsOverride?: Record<number, number>,
+): boolean {
+  const eligibleBodies = eligibleBodiesOverride ?? FERAL_RULE.eligibleBodies;
+  const orbs = orbsOverride ?? FERAL_RULE.orbs;
+
+  if (!eligibleBodies.includes(planet)) return false;
+
+  // Sun is never feral in this corpus, even if the caller includes it.
+  if (planet === 'Sun') return false;
+
+  const ownEntry = planets[planet];
+  if (!ownEntry) return false;
+  const ownDegree = ownEntry.degree;
+  if (typeof ownDegree !== 'number' || !Number.isFinite(ownDegree)) return false;
+
+  for (const other of eligibleBodies) {
     if (other === planet) continue;
-    const p2_data = planets[other];
-    if (!p2_data) continue;
-    
-    const p2_deg = p2_data.degree;
-    const diff = Math.abs(p1_deg - p2_deg) % 360;
-    const dist = diff > 180 ? 360 - diff : diff;
-    
-    for (const target of MAJOR_ANGLES) {
-      if (Math.abs(dist - target) <= ORB) return false;
+    const otherEntry = planets[other];
+    if (!otherEntry) continue;
+    const otherDegree = otherEntry.degree;
+    if (typeof otherDegree !== 'number' || !Number.isFinite(otherDegree)) continue;
+
+    const separation = Math.abs(normDeg(ownDegree) - normDeg(otherDegree));
+    const distance = separation > 180 ? 360 - separation : separation;
+
+    for (const aspect of FERAL_RULE.aspects) {
+      const orb = orbs[aspect];
+      if (typeof orb !== 'number') continue;
+      if (Math.abs(distance - aspect) <= orb) {
+        return false;
+      }
     }
   }
+
   return true;
 }
 
@@ -368,7 +433,7 @@ export const PLANET_SYMBOLS: Record<string, string> = {
   Chiron: '⚷', ASC: 'Asc', MC: 'MC',
 };
 
-// ─── Dignity State per Planet ─────────────────────────────────────────────── 
+// ─── Dignity State per Planet ───────────────────────────────────────────────
 
 export type DignityState =
   | 'domicile'
@@ -549,24 +614,43 @@ export interface DignityScore {
   decanate: number;
   detriment: number;
   fall: number;
+  mutualReception: number;
+  accidental: number;
   totalTrad: number;  // classical only, for traditional score
   totalModern: number; // includes modern rulerships
 }
 
+function hasMutualReception(name: string, degree: number, planets: Record<string, { degree: number }>, useModern: boolean): boolean {
+  const si1 = getSignIdx(degree);
+  for (const other of Object.keys(planets)) {
+    if (other === name || !planets[other]) continue;
+    const si2 = getSignIdx(planets[other].degree);
+
+    const otherRulesSi1 = (useModern ? MODERN_DOMICILE[si1] : TRAD_DOMICILE[si1]) === other ||
+                          (useModern ? (MODERN_EXALTATION_SIGN[other] ?? EXALTATION_SIGN[other]) : EXALTATION_SIGN[other]) === si1;
+
+    const nameRulesSi2 = (useModern ? MODERN_DOMICILE[si2] : TRAD_DOMICILE[si2]) === name ||
+                         (useModern ? (MODERN_EXALTATION_SIGN[name] ?? EXALTATION_SIGN[name]) : EXALTATION_SIGN[name]) === si2;
+
+    if (otherRulesSi1 && nameRulesSi2) return true;
+  }
+  return false;
+}
+
 function isDiurnal(planets: Record<string, { degree: number }>): boolean {
-  // Chart is diurnal if Sun is above horizon (houses 7–12 approximately)
-  // Simplified: Sun degree > ASC degree means above horizon
+  // Chart is diurnal if Sun is above horizon
   const sun = planets['Sun']?.degree ?? 0;
   const asc = planets['ASC']?.degree ?? 0;
   const diff = normDeg(sun - asc);
-  return diff < 180; // Sun in eastern hemisphere = diurnal
+  // Degrees 180 to 360 relative to ASC are above the horizon (DSC -> MC -> ASC)
+  return diff > 180;
 }
 
-/** Score a single planet across all five essential dignities */
+/** Score a single planet across all five essential dignities plus accidental */
 function scorePlanet(
   name: string,
   degree: number,
-  planets: Record<string, { degree: number }>,
+  planets: Record<string, { degree: number; house?: number; speed?: number }>,
   useModern: boolean,
 ): DignityScore {
   const si = getSignIdx(degree);
@@ -606,10 +690,39 @@ function scorePlanet(
   // Decanate (+1)
   if (getDecanateRuler(degree) === name) decanate = 1;
 
-  const totalTrad = domicile + exaltation + triplicity + terms + decanate + detriment + fall;
+  // Mutual Reception (+5 bonus to mitigate detriment/fall)
+  let mutualReception = 0;
+  if (hasMutualReception(name, degree, planets, useModern)) {
+    mutualReception = 5;
+  }
+
+  // Accidental Dignities
+  let accidental = 0;
+  const pData = planets[name];
+  if (pData) {
+    if (pData.house) {
+      if ([1,4,7,10].includes(pData.house)) accidental += 5;
+      else if ([2,5,8,11].includes(pData.house)) accidental += 4;
+      else if ([3,6,9,12].includes(pData.house)) accidental += 3;
+    }
+
+    if (pData.speed !== undefined && pData.speed < 0 && name !== 'Sun' && name !== 'Moon') {
+      accidental -= 5;
+    }
+    if (pData.speed !== undefined && getMotionStatus(name, pData.speed) === 'Rápido') {
+      accidental += 2;
+    }
+  }
+
+  const sunDeg = planets['Sun']?.degree ?? 0;
+  const prox = getProximityToSun(name, degree, sunDeg);
+  if (prox === 'Cazimi') accidental += 5;
+  if (prox === 'Combusto') accidental -= 5;
+
+  const totalTrad = domicile + exaltation + triplicity + terms + decanate + detriment + fall + mutualReception + accidental;
   const totalModern = totalTrad; // same formula; modern is resolved by useModern flag
 
-  return { name, domicile, exaltation, triplicity, terms, decanate, detriment, fall, totalTrad, totalModern };
+  return { name, domicile, exaltation, triplicity, terms, decanate, detriment, fall, mutualReception, accidental, totalTrad, totalModern };
 }
 
 const TRAD_7 = ['Sun','Moon','Mercury','Venus','Mars','Jupiter','Saturn'];
@@ -621,7 +734,7 @@ export interface DominanceEntry {
   namePt: string;
   scoreTrad: number;
   scoreModern: number;
-  breakdown: { d: number; e: number; tri: number; ter: number; dec: number; det: number; fall: number };
+  breakdown: { d: number; e: number; tri: number; ter: number; dec: number; det: number; fall: number; mut: number; acc: number };
   dignity: DignityInfo;
 }
 
@@ -652,6 +765,8 @@ export function calcDominance(
         dec: trad.decanate,
         det: trad.detriment,
         fall: trad.fall,
+        mut: trad.mutualReception,
+        acc: trad.accidental,
       },
       dignity,
     });
@@ -739,9 +854,10 @@ export function calcAlcocoden(
   planets: Record<string, { degree: number }>,
 ): AlcododenInfo {
   const diurnal = isDiurnal(planets);
-  const hylegName = diurnal ? 'Sun' : 'Moon';
-  const hylegDeg = planets[hylegName]?.degree ?? 0;
-  const hylegSign = getSignIdx(hylegDeg);
+  const hylegInfo = calcHyleg(planets);
+  const hylegName = hylegInfo.planet;
+  const hylegDeg = hylegInfo.degree;
+  const hylegSign = hylegInfo.signIdx;
 
   // Score each classical planet's dignity IN the Hyleg's sign
   // (evaluate as if the planet were there — i.e. count domicile/exaltation/terms there)
@@ -883,5 +999,98 @@ export function calcAstroSignature(
     label:     dominantSign,
     desc:      `energia de ${elPt.toLowerCase()} ${qPt.toLowerCase()}`,
     color:     ELEMENT_COLORS[elKey],
+  };
+}
+
+// ─── Temperamento (Humores) ─────────────────────────────────────────────────
+
+export interface TemperamentScore {
+  colerico: number;     // Fogo
+  sanguineo: number;    // Ar
+  melancolico: number;  // Terra
+  fleumatico: number;   // Água
+  dominante: string;
+}
+
+export function calcTemperament(
+  planets: Record<string, { degree: number }>,
+  ascDeg: number,
+  moonPhaseStr: string
+): TemperamentScore {
+  const scores = { colerico: 0, sanguineo: 0, melancolico: 0, fleumatico: 0 };
+  let total = 0;
+
+  const addScore = (element: string, points: number) => {
+    if (element === 'fire') scores.colerico += points;
+    else if (element === 'air') scores.sanguineo += points;
+    else if (element === 'earth') scores.melancolico += points;
+    else if (element === 'water') scores.fleumatico += points;
+    total += points;
+  };
+
+  // 1. Ascendant Sign (3 pts)
+  const ascSi = getSignIdx(ascDeg);
+  const ascEl = ELEMENTS[ascSi];
+  addScore(ascEl, 3);
+
+  // 2. Lord of Ascendant (3 pts)
+  const lordAsc = TRAD_DOMICILE[ascSi];
+  const lordAscData = planets[lordAsc];
+  if (lordAscData) {
+    const lordEl = ELEMENTS[getSignIdx(lordAscData.degree)];
+    addScore(lordEl, 3);
+  }
+
+  // 3. Moon Sign (3 pts)
+  const moon = planets['Moon'];
+  if (moon) {
+    const moonSi = getSignIdx(moon.degree);
+    const moonEl = ELEMENTS[moonSi];
+    addScore(moonEl, 3);
+
+    // Lord of Moon Sign (2 pts)
+    const lordMoon = TRAD_DOMICILE[moonSi];
+    const lordMoonData = planets[lordMoon];
+    if (lordMoonData) {
+      const lordMoonEl = ELEMENTS[getSignIdx(lordMoonData.degree)];
+      addScore(lordMoonEl, 2);
+    }
+  }
+
+  // 4. Sun Sign (2 pts)
+  const sun = planets['Sun'];
+  if (sun) {
+    const sunEl = ELEMENTS[getSignIdx(sun.degree)];
+    addScore(sunEl, 2);
+  }
+
+  // 5. Moon Phase (3 pts)
+  // Nova -> 1Q (Quarto Crescente): Sanguine (Air)
+  // 1Q -> Cheia: Choleric (Fire)
+  // Cheia -> 3Q (Quarto Minguante): Melancholic (Earth)
+  // 3Q -> Nova: Phlegmatic (Water)
+  const p = moonPhaseStr.toLowerCase();
+  if (p.includes('nova') || p === 'crescente') addScore('air', 3);
+  else if (p.includes('quarto crescente') || p === 'gibosa crescente') addScore('fire', 3);
+  else if (p.includes('cheia') || p === 'gibosa minguante') addScore('earth', 3);
+  else if (p.includes('quarto minguante') || p.includes('minguante')) addScore('water', 3);
+
+  const entries = Object.entries(scores);
+  entries.sort((a, b) => b[1] - a[1]);
+
+  // Convert to percentages
+  if (total > 0) {
+    scores.colerico = Math.round((scores.colerico / total) * 100);
+    scores.sanguineo = Math.round((scores.sanguineo / total) * 100);
+    scores.melancolico = Math.round((scores.melancolico / total) * 100);
+    scores.fleumatico = Math.round((scores.fleumatico / total) * 100);
+  }
+
+  let dominanteLabel = entries[0][0];
+  dominanteLabel = dominanteLabel.charAt(0).toUpperCase() + dominanteLabel.slice(1);
+
+  return {
+    ...scores,
+    dominante: dominanteLabel
   };
 }
