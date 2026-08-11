@@ -32,7 +32,7 @@ Double-click [`launch_chrome.bat`](../launch_chrome.bat), or run it from a termi
 
 The launcher starts:
 
-- FastAPI local runtime: `http://127.0.0.1:9876`
+- FastAPI local runtime: `http://127.0.0.1:9876` by default
 - the already-built frontend from `dist/`
 - Chrome at the local interface URL
 
@@ -62,7 +62,10 @@ Windows machine.
 
 ### Port in use
 
-The release-style launcher uses only `127.0.0.1:9876`. Check and stop only the process owning that port, then run the launcher again. Do not terminate unrelated Python or Node processes.
+The release-style launcher prefers `127.0.0.1:9876`. If that port is occupied
+by an incompatible process, it selects a free loopback port between `9877` and
+`9899`. Check and stop only an old Aurea process if you want to return to the
+default port; do not terminate unrelated Python or Node processes.
 
 ### API does not start
 
