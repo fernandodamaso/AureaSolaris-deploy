@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aureasolaris.local/schemas/engine-reference-fixture.v1.json",
+  "title": "Aurea Solaris Engine Reference Fixture",
+  "description": "A comparative-certification fixture. A fixture becomes executable evidence only after an approved external reference is attached.",
+  "type": "object",
+  "required": ["schema_version", "id", "status", "calculation", "input", "reference"],
+  "properties": {
+    "schema_version": {
+      "const": "engine-reference-fixture.v1"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]*$"
+    },
+    "status": {
+      "enum": ["pending_reference", "approved_reference", "rejected_reference"]
+    },
+    "calculation": {
+      "enum": ["natal", "transit"]
+    },
+    "input": {
+      "type": "object",
+      "required": ["year", "month", "day", "hour", "timezone"],
+      "properties": {
+        "year": { "type": "integer" },
+        "month": { "type": "integer", "minimum": 1, "maximum": 12 },
+        "day": { "type": "integer", "minimum": 1, "maximum": 31 },
+        "hour": { "type": "number", "minimum": 0, "exclusiveMaximum": 24 },
+        "timezone": { "type": "string", "minLength": 1 },
+        "utc_offset_minutes": { "type": ["integer", "null"] },
+        "lat": { "type": "number", "minimum": -90, "maximum": 90 },
+        "lon": { "type": "number", "minimum": -180, "maximum": 180 },
+        "house_system": { "type": "string" },
+        "include_asteroids": { "type": "boolean" }
+      }
+    },
+    "reference": {
+      "type": "object",
+      "properties": {
+        "provider": { "type": "string", "minLength": 1 },
+        "reference_url_or_id": { "type": "string", "minLength": 1 },
+        "captured_at": { "type": "string", "format": "date-time" },
+        "approved_by": { "type": "string" },
+        "approved_at": { "type": "string", "format": "date-time" },
+        "pending_reason": { "type": "string", "minLength": 1 },
+        "expected": {
+          "type": "object",
+          "properties": {
+            "planets": { "type": "object" },
+            "houses": { "type": "object" },
+            "aspects": { "type": "array" }
+          }
+        }
+      }
+    },
+    "tolerances": {
+      "type": "object",
+      "properties": {
+        "degree": { "type": "number", "exclusiveMinimum": 0 },
+        "house": { "type": "number", "exclusiveMinimum": 0 },
+        "orb": { "type": "number", "exclusiveMinimum": 0 }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "calculation": { "const": "natal" } } },
+      "then": { "properties": { "input": { "required": ["lat", "lon", "house_system"] } } }
+    },
+    {
+      "if": { "properties": { "status": { "const": "approved_reference" } } },
+      "then": { "properties": { "reference": { "required": ["provider", "reference_url_or_id", "captured_at", "expected", "approved_by", "approved_at"] } } }
+    },
+    {
+      "if": { "properties": { "status": { "const": "pending_reference" } } },
+      "then": { "properties": { "reference": { "required": ["pending_reason"] } } }
+    }
+  ],
+  "additionalProperties": false
+}

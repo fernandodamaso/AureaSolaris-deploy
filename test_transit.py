@@ -18,7 +18,8 @@ def test_transit_basic():
     result = calculate_transit_positions(
         year=2026, month=3, day=26, hour=15.5,
         lat=-15.7833, lon=-47.9333,
-        include_asteroids=False
+        include_asteroids=False,
+        timezone_name="America/Sao_Paulo",
     )
     
     # Should not have error
@@ -29,6 +30,18 @@ def test_transit_basic():
     assert "secondary" in result, "Missing 'secondary' key"
     assert "moon_phase" in result, "Missing 'moon_phase' key"
     assert "meta" in result, "Missing 'meta' key"
+    receipt = result["meta"].get("receipt", {})
+    assert receipt.get("schema_version") == "calculation-receipt.v1", "Missing calculation receipt"
+    assert receipt.get("input_hash"), "Missing deterministic input hash"
+    assert receipt.get("resolved_time", {}).get("iana_timezone") == "America/Sao_Paulo"
+
+    repeated = calculate_transit_positions(
+        year=2026, month=3, day=26, hour=15.5,
+        lat=-15.7833, lon=-47.9333,
+        include_asteroids=False,
+        timezone_name="America/Sao_Paulo",
+    )
+    assert repeated["meta"]["receipt"]["input_hash"] == receipt["input_hash"], "Input hash must be stable"
     
     # Must NOT have these keys (no houses, aspects, angles)
     assert "houses" not in result, "Unexpected 'houses' key"
@@ -50,9 +63,9 @@ def test_transit_basic():
     for planet_name, planet_data in planets.items():
         assert "house" not in planet_data, f"Planet {planet_name} should not have 'house' field"
     
-    # Secondary should contain only NorthNode when include_asteroids=False
+    # With asteroids off, the lunar nodes remain available as a paired point.
     secondary = result["secondary"]
-    allowed = {"NorthNode"}
+    allowed = {"NorthNode", "SouthNode"}
     for key in secondary:
         assert key in allowed, f"Unexpected secondary body '{key}' when include_asteroids=False"
     
@@ -70,7 +83,8 @@ def test_transit_with_asteroids():
     result = calculate_transit_positions(
         year=2026, month=3, day=26, hour=15.5,
         lat=-15.7833, lon=-47.9333,
-        include_asteroids=True
+        include_asteroids=True,
+        timezone_name="America/Sao_Paulo",
     )
     
     assert "error" not in result
@@ -98,7 +112,18 @@ def test_transit_with_asteroids():
     
     print("PASS test_transit_with_asteroids")
 
+
+def test_transit_rejects_unspecified_timezone():
+    """An explicit civil time is not reproducible without an IANA timezone."""
+    result = calculate_transit_positions(
+        year=2026, month=3, day=26, hour=15.5,
+    )
+    assert "error" in result
+    assert "timezone" in result["error"].lower()
+    print("PASS test_transit_rejects_unspecified_timezone")
+
 if __name__ == "__main__":
     test_transit_basic()
     test_transit_with_asteroids()
+    test_transit_rejects_unspecified_timezone()
     print("\nAll tests passed!")
