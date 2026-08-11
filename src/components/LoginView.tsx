@@ -73,14 +73,14 @@ export const LoginView = ({ profiles, onLogin, onSignUp }: LoginViewProps) => {
             <button 
               onClick={() => { setMode('signIn'); setSelectedProfile(null); }} 
               className={`flex-1 py-3 text-[10px] font-black uppercase tracking-widest rounded-full transition-all ${mode === 'signIn' ? 'text-white shadow-md' : 'hover:opacity-80'}`}
-              style={{ background: mode === 'signIn' ? 'var(--aurea-bg-deep)' : 'transparent', color: mode === 'signIn' ? 'var(--aurea-text)' : 'var(--aurea-text-muted)' }}
+              style={{ background: mode === 'signIn' ? 'var(--aurea-bg-deep)' : 'transparent', color: mode === 'signIn' ? 'var(--aurea-text-on-dark)' : 'var(--aurea-text-muted)' }}
             >
               Entrar
             </button>
             <button 
               onClick={() => { setMode('signUp'); setSelectedProfile(null); }} 
               className={`flex-1 py-3 text-[10px] font-black uppercase tracking-widest rounded-full transition-all ${mode === 'signUp' ? 'text-white shadow-md' : 'hover:opacity-80'}`}
-              style={{ background: mode === 'signUp' ? 'var(--aurea-bg-deep)' : 'transparent', color: mode === 'signUp' ? 'var(--aurea-text)' : 'var(--aurea-text-muted)' }}
+              style={{ background: mode === 'signUp' ? 'var(--aurea-bg-deep)' : 'transparent', color: mode === 'signUp' ? 'var(--aurea-text-on-dark)' : 'var(--aurea-text-muted)' }}
             >
               Inscrever-se
             </button>
@@ -157,7 +157,7 @@ export const LoginView = ({ profiles, onLogin, onSignUp }: LoginViewProps) => {
                   <button 
                     onClick={handleSignUp}
                     className="w-full py-6 rounded-[2rem] font-black uppercase text-[11px] tracking-[0.4em] shadow-xl flex items-center justify-center gap-3 transition-all"
-                    style={{ background: 'var(--aurea-bg-deep)', color: 'var(--aurea-text)', border: '1px solid rgba(217,166,83,0.25)' }}
+                    style={{ background: 'var(--aurea-bg-deep)', color: 'var(--aurea-text-on-dark)', border: '1px solid rgba(217,166,83,0.25)' }}
                   >
                      Selar Identidade <ArrowRight size={16} />
                   </button>
@@ -205,7 +205,7 @@ export const LoginView = ({ profiles, onLogin, onSignUp }: LoginViewProps) => {
                 <button 
                   onClick={handleLogin}
                   className="w-full py-6 rounded-[2rem] font-black uppercase text-[11px] tracking-[0.4em] shadow-xl flex items-center justify-center gap-3 transition-all"
-                  style={{ background: 'var(--aurea-bg-deep)', color: 'var(--aurea-text)', border: '1px solid rgba(217,166,83,0.25)' }}
+                  style={{ background: 'var(--aurea-bg-deep)', color: 'var(--aurea-text-on-dark)', border: '1px solid rgba(217,166,83,0.25)' }}
                 >
                    Acessar Dashboard <ArrowRight size={16} />
                 </button>
