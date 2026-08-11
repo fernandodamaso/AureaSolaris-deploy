@@ -1,6 +1,6 @@
 # Aurea Solaris
 
-Aurea Solaris is a local-first Windows desktop application for astrological study, personal organization, and reflection. It is maintained through AI agents, so the repository's documentation is optimized for machine task routing and safe, small changes.
+Aurea Solaris is a local-first application for astrological study, personal organization, and reflection. Its current primary experience is a local web app opened in Chrome by a one-click Windows launcher. Tauri remains available as a deferred native compatibility path. It is maintained through AI agents, so the repository's documentation is optimized for machine task routing and safe, small changes.
 
 ## Start here as an AI agent
 
@@ -28,7 +28,8 @@ Do not read the entire `docs/` tree by default. Use the domain document relevant
 | React interface | `src/App.tsx`, `src/components/`, `src/context/` |
 | Caderno Vivo/journal | `src/components/MesaCriacao.tsx`, `src/components/DiarioView.tsx` |
 | Astrology engine/API | `astro_engine.py`, `main_api.py` |
-| Tauri/native desktop | `src-tauri/src/lib.rs`, `src-tauri/tauri.conf.json` |
+| Chrome/local runtime | `vite.config.ts`, `main_api.py`, `launch_chrome.bat` |
+| Tauri/native compatibility | `src-tauri/src/lib.rs`, `src-tauri/tauri.conf.json` |
 | Data migrations | `src-tauri/migrations/knowledge/`, `src-tauri/migrations/private/` |
 | Editorial corpus | `knowledge/engenharia_astrologica/` |
 
@@ -49,7 +50,7 @@ The Python sidecar uses the isolated `.aurea-build-venv`; do not depend on a glo
 
 `build.bat` rebuilds the PyInstaller sidecar, copies it into `src-tauri/binaries/`, and creates the NSIS installer. The current release evidence, artifact hashes, technical checks, and remaining manual acceptance are recorded in [`docs/RELEASE_VALIDATION_2026-08-10.md`](docs/RELEASE_VALIDATION_2026-08-10.md).
 
-Current state: release `0.1.1` has a passing technical build and sidecar smoke test; native Windows installer acceptance and repository push/merge remain pending.
+Current state: release `0.1.1` has a passing technical build and sidecar smoke test; Chrome-first launcher/runtime work is now the active focus. Native Windows installer work is paused.
 
 ## Change discipline
 

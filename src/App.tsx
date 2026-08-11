@@ -80,7 +80,6 @@ export default function App() {
   const [cadernoIntent, setCadernoIntent] = useState<CadernoIntent | null>(null);
       
   const { agenda } = useGlobalContext();
-  const inTauri = typeof window !== 'undefined' && !!(window as any).__TAURI_INTERNALS__;
   const masterProfile = agenda.activeProfile;
 
   const isMesa = currentPage === 'mesa-criacao';
@@ -162,16 +161,10 @@ export default function App() {
   }
 
   if (!isAuthenticated) {
-    const isBrowserDev = !inTauri;
-
     return (
       <LoginView 
         profiles={agenda.profiles} 
         onLogin={async (id, password, rememberAccess) => {
-          if (isBrowserDev) {
-            setIsAuthenticated(true);
-            return { ok: true, notice: 'Modo navegador: acesso local liberado sem sessão privada.' };
-          }
           const profile = agenda.profiles.find(candidate => candidate.id === id);
           if (!profile) return { ok: false, error: 'Perfil não encontrado.' };
           const openedOwner = await safeInvoke<string>('private_session_open', {
@@ -189,10 +182,6 @@ export default function App() {
           return { ok: true, notice };
         }}
         onSignUp={async (name, password, rememberAccess) => {
-          if (isBrowserDev) {
-            setIsAuthenticated(true);
-            return { ok: true, notice: 'Modo navegador: acesso local liberado sem sessão privada.' };
-          }
           try {
             const accountId = crypto.randomUUID();
             const openedOwner = await safeInvoke<string>('private_account_register', {

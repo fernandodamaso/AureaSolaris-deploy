@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { safeInvoke } from '../utils/tauri';
 import { readCertifiedCalculation } from '../utils/certifiedCalculation';
+import { LOCAL_API_URL } from '../utils/api';
 
 const ASPECT_MAP: Record<string, string> = {
   Conjunction: 'Conjunção',
@@ -27,7 +28,7 @@ async function requestNatalFromSidecar(payload: string): Promise<string | null> 
   for (const delay of STARTUP_RETRY_DELAYS_MS) {
     if (delay) await wait(delay);
     try {
-      const response = await fetch('http://127.0.0.1:9876/natal', {
+      const response = await fetch(`${LOCAL_API_URL}/natal`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: payload,

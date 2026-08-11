@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { safeInvoke } from '../utils/tauri';
+import { LOCAL_API_URL } from '../utils/api';
 import { getAspectOrbs, AspectOrb } from '../utils/astro-settings';
 import { astroLogger } from '../utils/logger';
 import { readCertifiedCalculation } from '../utils/certifiedCalculation';
@@ -125,7 +126,7 @@ export const useAstrologyData = (natalData?: NatalPositions) => {
       let response: string | null = null;
 
       try {
-        const result = await fetch('http://127.0.0.1:9876/transit', {
+        const result = await fetch(`${LOCAL_API_URL}/transit`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({}),

@@ -4,8 +4,9 @@
  */
 
 import { safeInvoke } from '../utils/tauri';
+import { LOCAL_API_URL } from '../utils/api';
 
-const SIDECAR_URL = 'http://127.0.0.1:9876';
+const SIDECAR_URL = LOCAL_API_URL;
 
 export interface ChatMessage {
   role: 'system' | 'user' | 'assistant';

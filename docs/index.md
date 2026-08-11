@@ -11,7 +11,8 @@ Use this as a routing map, not as a reading list. The canonical agent path is:
 
 | Domain | Source of truth |
 |---|---|
-| Architecture/native app | [`arquitetura.md`](arquitetura.md), [`tauri-ipc-api.md`](tauri-ipc-api.md) |
+| Browser/local runtime | [`AI_WORKING_GUIDE.md`](AI_WORKING_GUIDE.md), [`setup-guide.md`](setup-guide.md), [`arquitetura.md`](arquitetura.md) |
+| Native compatibility | [`arquitetura.md`](arquitetura.md), [`tauri-ipc-api.md`](tauri-ipc-api.md) |
 | React/UI/accessibility | [`estrutura-do-projeto.md`](estrutura-do-projeto.md), [`components.md`](components.md), [`accessibility.md`](accessibility.md), [`design-system.md`](design-system.md) |
 | Astrology engine | [`astrology-engine.md`](astrology-engine.md), [`ENGINE_CERTIFICATION_PLAN.md`](ENGINE_CERTIFICATION_PLAN.md), [`astrology-knowledge-contract.md`](astrology-knowledge-contract.md) |
 | Editorial corpus/library | [`BIBLIOTECA_VISUAL.md`](BIBLIOTECA_VISUAL.md), [`data/ENGENHARIA_SYNC_PLAYBOOK.md`](data/ENGENHARIA_SYNC_PLAYBOOK.md) |
@@ -24,7 +25,8 @@ Use this as a routing map, not as a reading list. The canonical agent path is:
 ## Current project state
 
 - Release `0.1.1` technical build and generated-sidecar smoke: documented as passed in the release record.
-- Native Windows installer acceptance: pending human verification.
+- Chrome-first launcher/runtime: active implementation focus.
+- Native Windows installer acceptance: paused while the Chrome-first path is implemented.
 - Branch push/merge: not performed.
 
 ## What is not canonical

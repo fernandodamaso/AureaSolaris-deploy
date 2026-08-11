@@ -1,128 +1,83 @@
-# Aurea Solaris — Arquitetura
+# Aurea Solaris — Architecture
 
-## Visão Geral
+## Current target
 
-Aurea Solaris é um app desktop construído com **Tauri 2** (Rust backend + React frontend) e um **sidecar Python FastAPI** para cálculos astrológicos de precisão profissional. A arquitetura segue o princípio "menos é mais" — uma única IA (Hermes) substituiu os 5 agentes anteriores.
+The primary experience is a local web app opened in Chrome on Windows by `launch_chrome.bat`. It remains local-first: the browser talks to services bound to loopback, and private/editorial data stays on the computer. Tauri is retained as a native compatibility path while Chrome is the active focus.
 
-## Stack
+## Runtime layers
 
-```
-┌─────────────────────────────────────────────────┐
-│  Frontend (React + TypeScript + Vite)            │
-│  • 7 páginas via useState routing               │
-│  • Sidebar + Header + HermesChat (FAB)           │
-│  • Design system: gold/navy, Montserrat/Inter    │
-├─────────────────────────────────────────────────┤
-│  Backend Rust (Tauri 2 — lib.rs)                 │
-│  • 21+ comandos IPC: Diário, Calendário, Astrologia │
-│  • Sidecar管理: inicia Python via HTTP           │
-│  • AppState: reqwest client compartilhado        │
-│  • Tray Icon: minimiza para bandeja              │
-├─────────────────────────────────────────────────┤
-│  Sidecar Python (FastAPI — main_api.py :9876)    │
-│  • Swiss Ephemeris (swisseph) — cálculo direto   │
-│  • Kerykeion — fallback quando SWE indisponível  │
-│  • Endpoints: /health, /natal, /transit          │
-│  • Cálculos: planetas, casas, aspectos, orbs     │
-│  • Part of Fortune noturno, iluminação cosseno   │
-├─────────────────────────────────────────────────┤
-│  Obsidian Vault (C:\Users\vivic\Documents\       │
-│  AureaSolarisDiary)                              │
-│  • Diário pessoal em markdown                    │
-│  • Sincroniza com Obsidian (abre/edita lá)       │
-│  • Separado do vault de trabalho (Lightfarm)     │
-└─────────────────────────────────────────────────┘
+```text
+Chrome
+  └─ React + TypeScript + Vite
+       ├─ local HTTP API: FastAPI / Uvicorn at 127.0.0.1:9876
+       │    ├─ Swiss Ephemeris / Kerykeion fallback
+       │    ├─ SQLite editorial and private storage
+       │    └─ Hermes/local services
+       └─ browser adapter for operations previously exposed by Tauri IPC
+
+Optional native path:
+Tauri 2 + Rust ── starts/coordinates the same Python sidecar
 ```
 
-## Fluxo de Dados
+## Source map
 
-```
-User clica no app
-  → React renderiza página
-  → Usuário interage
-  → Frontend chama safeInvoke('comando', dados)
-    → Tauri IPC → lib.rs processa
-      → Se astrologia: HTTP POST localhost:9876/natal
-      → Se diário: lê/escreve vault Obsidian
-      → Se Calendar externo: HTTP API externa
-    → Resultado volta ao frontend
-  → React atualiza estado
-```
+| Layer | Entry points |
+|---|---|
+| UI | `src/App.tsx`, `src/components/`, `src/context/` |
+| Browser startup | `launch_chrome.bat`, `vite.config.ts`, `start-dev.bat` |
+| Local API | `main_api.py`, `local_storage.py` |
+| Astrology | `astro_engine.py` |
+| Native compatibility | `src-tauri/src/lib.rs`, `src-tauri/tauri.conf.json` |
+| Migrations | `src-tauri/migrations/private/`, `src-tauri/migrations/knowledge/` |
+| Editorial corpus | `knowledge/engenharia_astrologica/` |
 
-## Princípios de Design
+## Data flow
 
-1. **Astrologia guia tudo** — o mapa natal é o coração, trânsitos orientam decisões
-2. **UX > Features** — menos é mais, eficiência e usabilidade
-3. **Dados locais** — tudo fica na máquina do usuário
-4. **Hermes é tudo** — um assistente que assume todos os papéis (professor, secretário, diarista)
-5. **Obsidian como hub** — markdown é o formato universal, Obsidian é a interface de edição
-
-## Comandos Rust (lib.rs)
-
-### Diário (10 comandos)
-- `diary_create_entry`, `diary_update_entry`, `diary_delete_entry`
-- `diary_list_entries`, `diary_get_entry`
-- `diary_create_folder`, `diary_list_folders`, `diary_delete_folder`
-- `diary_save_tabs`, `diary_load_tabs`
-
-### Obsidian (5 comandos)
-- `obsidian_diary_list_entries`, `obsidian_diary_read_entry`
-- `obsidian_diary_save_entry`, `obsidian_diary_delete_entry`
-- `obsidian_diary_get_vault_path`
-
-### Mesa de Criação (2 comandos)
-- `save_board`, `load_board`
-
-### Integrações (4+ comandos)
-- `run_astro_engine` — chama sidecar Python
-- `add_google_event`, `delete_google_event`, `list_google_calendar_events`
-- `get_google_events` — alias para listagem de eventos
-
-### Sistema (3 comandos)
-- `get_sys_info`, `get_key`, `save_app_setting`
-
-## Motor Astrológico (astro_engine.py)
-
-Refatorado em 2026-06-11. Características:
-- **Swiss Ephemeris** para precisão profissional
-- **Kerykeion** como fallback
-- **Orbs dinâmicos** por planeta com multiplicadores por tipo de aspecto
-- **Part of Fortune noturno** (formula diferente para dia/noite)
-- **Iluminação cosseno** (Duffet) em vez de média aritmética
-- **Cálculo direto de trânsitos** (sem loops de interpolação)
-- **LRU cache** para performance
-- **Pre-calculated house ranges** para busca binária
-
-## Frontend — Componentes
-
-| Componente | Arquivo | Descrição |
-|-----------|---------|-----------|
-| App.tsx | src/App.tsx | Shell principal, sidebar, header, routing |
-| AstrologiaPage | AstrologiaBoard.tsx | Mapa natal + mandala SVG |
-| DiarioView | DiarioView.tsx | Diário com sidebar + editor |
-| MesaCriacao | MesaCriacao.tsx | Board tipo Miro (post-its, texto, imagens) |
-| AgendaView | agenda/AgendaView.tsx | Calendário + tarefas locais |
-| SaudeView | SaudeView.tsx | Saúde e vitalidade |
-| FinancasView | FinancasView.tsx | Gestão financeira |
-| HermesChat | HermesChat.tsx | Chat flutuante com Hermes |
-| ProfileEditor | ProfileEditor.tsx | Editor de perfil do usuário |
-
-## Rodando
-
-```bash
-# Terminal 1: Sidecar Python
-cd C:\AureaSolaris
-python main_api.py
-
-# Terminal 2: App Tauri
-cd C:\AureaSolaris
-npm run tauri dev
-
-# Ou usar o script de inicio automático:
-# C:\AureaSolaris\start_aurea.bat
+```text
+User clicks launcher
+  → local FastAPI runtime starts (or is reused)
+  → FastAPI serves the compiled frontend from dist/
+  → Chrome opens 127.0.0.1:9876
+  → React calls local HTTP endpoints
+  → FastAPI validates owner/session and performs local work
+  → SQLite/files/ephemeris are read or written locally
+  → JSON result and provenance return to React
 ```
 
-## Atalho de Inicialização
+The browser must not receive passwords, API keys, refresh tokens, or private provider credentials. The API binds to loopback only. Any external provider call requires the configured consent and provenance rules in `AGENTS.md` and `docs/CONSTITUICAO.md`.
 
-O app inicia automaticamente com o Windows via atalho em:
-`C:\Users\vivic\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\Aurea Solaris.lnk`
+## Release-style local launcher
+
+`launch_chrome.bat` calls `launch_chrome.ps1`. The script checks for the
+compiled `dist/index.html`, prepares it once when running from a source
+checkout, starts only `main_api.py`, waits for `/health` and the compiled
+frontend, and opens Chrome. It does not start Vite for normal use and does not
+move to an external or hosted API. If `9876` is occupied, it chooses another
+loopback port and the compiled frontend follows its own local page origin.
+
+## Browser migration rule
+
+`src/utils/tauri.ts` is an adapter boundary, not a reason to keep the browser incomplete. When a feature currently calls `safeInvoke`, implement an equivalent authenticated local HTTP operation or a deliberate browser-safe alternative. Do not silently return `null` for a private feature and call the feature complete.
+
+The browser adapter must preserve:
+
+- `owner_id` isolation;
+- Argon2id account authentication;
+- private/editorial separation;
+- explicit receipts for calculations;
+- reversible Hermes actions;
+- backup and migration behavior.
+
+## Native compatibility
+
+The Rust/Tauri path remains available for native-only capabilities and future packaging. It is not the primary acceptance path during the Chrome-first phase. Do not remove it or redesign around it until the browser runtime covers the required user flows.
+
+## Validation
+
+```powershell
+npm run build
+npm run test
+& .\.aurea-build-venv\Scripts\python.exe -m unittest discover -s tests -p 'test_*.py'
+```
+
+For the Chrome path, additionally verify launcher startup, browser login, natal calculation, Caderno Vivo, journal, Hermes, persistence after restart, and clean shutdown. The Windows installer record remains historical in `docs/RELEASE_VALIDATION_2026-08-10.md` while native work is paused.

@@ -35,7 +35,7 @@ Cada conta também possui uma biblioteca pessoal: livros, PDFs, artigos, links e
 
 ## Escala de produto
 
-Hoje, o Aurea é um aplicativo de computador local, projetado primeiro para a tela de um notebook como o Galaxy Book 4 Ultra. A arquitetura deve permanecer responsiva e preparada para tablet/mobile no futuro, mas não comprometer a clareza e profundidade da experiência desktop. O mesmo instalador deve poder atender pessoas distintas: cada conta possui dados, preferências, integrações, consentimentos e memória Hermes isolados.
+Hoje, a experiência primária do Aurea é uma aplicação web local aberta no Chrome por um atalho de clique único no Windows, projetada primeiro para a tela de um notebook como o Galaxy Book 4 Ultra. A interface deve permanecer responsiva e preparada para tablet/mobile no futuro. O Tauri continua como caminho nativo compatível e poderá voltar ao foco depois, mas não deve bloquear o navegador local. Cada conta possui dados, preferências, integrações, consentimentos e memória Hermes isolados.
 
 ## Privacidade e acesso
 

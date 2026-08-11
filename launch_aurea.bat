@@ -1,3 +1,2 @@
 @echo off
-call "%~dp0run_tauri.bat"
-pause
+call "%~dp0launch_chrome.bat"

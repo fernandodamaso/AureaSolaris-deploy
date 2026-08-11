@@ -14,7 +14,7 @@ If sources conflict, use: safety/privacy → Constitution → `AGENTS.md` → th
 
 ## Product invariant
 
-Aurea Solaris is a local-first Windows desktop app. The Caderno Vivo board and journal are two views of the same data. The editorial astrology database is separate from each person's private database. Hermes proposes reversible actions; it never silently creates memory, tasks, events, interpretations, or external effects.
+Aurea Solaris is a local-first Windows application whose primary experience is currently a local web app opened in Chrome by a one-click launcher. Tauri remains a deferred native compatibility path. The Caderno Vivo board and journal are two views of the same data. The editorial astrology database is separate from each person's private database. Hermes proposes reversible actions; it never silently creates memory, tasks, events, interpretations, or external effects.
 
 ## Task routing
 
@@ -22,7 +22,8 @@ Aurea Solaris is a local-first Windows desktop app. The Caderno Vivo board and j
 |---|---|
 | React screens/components | `src/App.tsx`, `src/components/`, `src/context/` |
 | Caderno Vivo / journal | `src/components/MesaCriacao.tsx`, `src/components/DiarioView.tsx` |
-| Tauri commands/window/native behavior | `src-tauri/src/lib.rs`, `src-tauri/tauri.conf.json`, `docs/tauri-ipc-api.md` |
+| Browser/Chrome runtime | `vite.config.ts`, `main_api.py`, `launch_chrome.bat` |
+| Tauri commands/window/native compatibility | `src-tauri/src/lib.rs`, `src-tauri/tauri.conf.json`, `docs/tauri-ipc-api.md` |
 | Astrology calculations/API | `astro_engine.py`, `main_api.py`, `docs/astrology-engine.md` |
 | Private/editorial storage | `local_storage.py`, `src-tauri/migrations/`, `docs/data-persistence.md`, `docs/data/DOMINIOS_DE_DADOS.md` |
 | Knowledge corpus/import | `knowledge/engenharia_astrologica/`, `docs/astrology-knowledge-contract.md`, `docs/data/ENGENHARIA_SYNC_PLAYBOOK.md` |
@@ -46,7 +47,7 @@ Every calculation must preserve UTC, IANA timezone, location, zodiac, ayanamsa w
 
 ## Release state
 
-Release `0.1.1` has a successful technical build and source-generated sidecar smoke test. The generated installer is recorded in `docs/RELEASE_VALIDATION_2026-08-10.md`. Manual Windows acceptance is still pending. Do not claim the release fully accepted until native install, scaling, navigation, Hermes, persistence, and uninstall are checked by a person.
+Release `0.1.1` has a successful technical build and source-generated sidecar smoke test. The Chrome-first local runtime now serves the compiled frontend from the local API and has automated bridge coverage; native installer work remains paused. Do not claim the browser release fully accepted until launcher startup, login, navigation, calculation, Hermes, persistence, and shutdown are checked by a person.
 
 ## Documentation policy
 

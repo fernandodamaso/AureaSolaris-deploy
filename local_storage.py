@@ -40,6 +40,22 @@ _PROVENANCE_KINDS = frozenset(
 )
 _EMBEDDED_EDITORIAL_RELATIVE_PATH = Path("knowledge") / "engenharia_astrologica" / "knowledge" / "build" / "editorial_current.sqlite"
 _EDITORIAL_IMPORTER_VERSION = "engenharia-astrologica-snapshot-v1"
+
+# The first private bootstrap was initialized once before its migration file
+# was committed. This exact historical checksum is accepted as a read-only
+# compatibility marker; arbitrary migration changes still fail closed.
+_LEGACY_MIGRATION_CHECKSUMS = {
+    "private": {
+        "0001_initial": frozenset({
+            "3373188b0984d86a86b9842256d4bcff64aad47daa1c1f2ebaf93826fe51fbf6",
+        }),
+    },
+    "knowledge": {
+        "0001_initial": frozenset({
+            "45865ce0463c8a4e1262f0573e5bd620bb7ef4e13cb8bc97d17b5af82fe611b1",
+        }),
+    },
+}
 _EDITORIAL_ORIGIN_LABEL = "Engenharia Astrológica vendorizada"
 
 
@@ -1178,6 +1194,9 @@ class LocalStorage:
                 (migration.version,),
             ).fetchone()
             if row and row["checksum"] != migration.checksum:
+                legacy_checksums = _LEGACY_MIGRATION_CHECKSUMS.get(database, {}).get(migration.version, frozenset())
+                if row["checksum"] in legacy_checksums:
+                    continue
                 raise RuntimeError(
                     f"Migração imutável alterada em {database}.sqlite: {migration.version}"
                 )
