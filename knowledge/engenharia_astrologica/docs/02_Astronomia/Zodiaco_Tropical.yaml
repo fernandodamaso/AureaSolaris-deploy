@@ -1,0 +1,59 @@
+status: review
+id: "zodiaco_tropical"
+nome: "Zodíaco Tropical"
+tipo: "fundamento astronômico-astrológico"
+tradicao_primaria: ["ocidental", "tradicional", "moderna"]
+
+escopo:
+  definicao_operacional: "Sistema zodiacal de doze setores iguais de 30°, medidos na eclíptica a partir do equinócio vernal; 0° de Áries é esse ponto de referência, não a constelação de Áries."
+  inclui:
+    - "Longitudes eclípticas geocêntricas usadas no cálculo tropical."
+    - "A divisão de 360° em doze signos de 30°."
+  nao_inclui:
+    - "Constelações astronômicas como limites dos signos."
+    - "Zodíaco sideral como escola de estudo deste corpus."
+  exclusoes_do_projeto: ["Astrologia sideral/Jyotisha como sistema interpretativo."]
+
+fundamento:
+  descricao: "O ponto de partida do zodíaco tropical é definido pela relação entre eclíptica e equador celeste. A longitude do Sol no equinócio vernal é aproximadamente 0°; os signos seguintes ocupam setores convencionais de 30° na eclíptica."
+  contexto_historico: "A terminologia dos signos se relaciona historicamente às constelações, mas o cálculo tropical contemporâneo usa o equinócio como referência."
+
+procedimento:
+  pre_requisitos:
+    - "Data, hora, fuso e local de nascimento/evento registrados sem suposições."
+    - "Efeméride, escala de tempo e convenção geocêntrica declaradas."
+  passos:
+    - "Obter a longitude eclíptica tropical de cada corpo para o instante calculado."
+    - "Normalizar a longitude no intervalo 0°–360°."
+    - "Classificar em setores consecutivos de 30°, iniciados em 0° de Áries."
+  parametros_de_calculo:
+    - "zodíaco: tropical"
+    - "referência: equinócio da data/convenção declarada pela efeméride"
+    - "posição: geocêntrica, salvo indicação explícita em contrário"
+
+uso_interpretativo:
+  pergunta_que_ajuda_a_responder:
+    - "Qual signo tropical ocupa a longitude calculada de um corpo ou ponto?"
+  como_ponderar: "O signo é uma camada do julgamento; deve ser lido com planeta, casa, dignidade, aspectos, regência e técnica empregada."
+  limites:
+    - "Não confundir signo tropical com constelação observada."
+    - "Não alternar referências tropical/sideral dentro da mesma leitura sem declarar a mudança de sistema."
+
+divergencias_de_tradicao:
+  consenso: "A astrologia ocidental de escopo deste projeto utiliza o zodíaco tropical."
+  divergencias:
+    - "Sistemas siderais adotam outra referência zodiacal e ficam fora do recorte do corpus."
+  decisao_editorial: "Toda ficha de cálculo deve declarar zodíaco tropical e a convenção de efeméride usada."
+
+referencias:
+  primarias: []
+  secundarias:
+    - "U.S. Naval Observatory. Astronomical Applications Department Glossary: equinox e ecliptic longitude. https://aa.usno.navy.mil/faq/asa_glossary (acesso em 2026-08-10)."
+  tecnicas:
+    - "Swiss Ephemeris. swephprg programming interface, seção sobre cálculo de posições e casas. https://www.astro.com/swisseph-download/doc/swephprg.2.10.htm (acesso em 2026-08-10)."
+
+relacoes:
+  depende_de: ["esfera_celeste_coordenadas", "protocolo_calculo_reproduzivel"]
+  ver_tambem: ["signos", "ecliptica", "precessao"]
+
+anotacoes_pessoais: []

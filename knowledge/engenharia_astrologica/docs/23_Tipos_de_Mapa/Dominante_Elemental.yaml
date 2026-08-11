@@ -1,0 +1,61 @@
+status: review
+
+id: "dominante_elemental"
+nome: "Dominante Elemental"
+tradicoes:
+  - "editorial"
+  - "multiescola"
+tema: "Qual dos 4 elementos pesa mais no mapa"
+
+essencia:
+  - "Fogo (vontade/impulso)"
+  - "Terra (corpo/realidade)"
+  - "Ar (mente/relação)"
+  - "Água (emoção/intuição)"
+
+origens_e_divergencias:
+  tradicional: "Elementos e qualidades são categorias cosmológicas antigas; autores divergem sobre seu peso no julgamento."
+  moderna: "A noção de 'elemento dominante' como perfil sintético é uma heurística contemporânea e depende do método de contagem."
+  nota: "Declarar se a contagem inclui luminárias, ângulos, casas, dignidades e pesos. Não apresentar o resultado como regra universal de personalidade."
+
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "fonte primária"
+    localizador: "Livro I, qualidades e natureza dos signos"
+  - autor: "John Frawley"
+    obra: "The Real Astrology"
+    ano: 2001
+    natureza: "fonte moderna tradicional"
+    localizador: "Qualidades e síntese; distinguir convenção contemporânea de fonte antiga"
+
+regras_de_calculo:
+  entrada: "Lista de fatores, pesos e tabela elemento-signo explicitamente escolhidos."
+  saida: "Relatar distribuição e empates; não reduzir a carta ao maior total."
+atlas_simbolico:
+  pessoas_arquetipos: "O foguista, o terroso, o aéreo, o aquático"
+  lugares_fisicos: "Lugares de elemento: fogo, terra, ar, água"
+  objetos_materia: "Instrumentos de elemento: fogo, terra, ar, água"
+  eventos_tipicos: "Eventos de elemento: queimadas, terremotos, ventos, inundações"
+  animais: "Leão (fogo), touro (terra), borboleta (ar), peixe (água)"
+  plantas_ervas: "Girassol (fogo), trigo (terra), lavanda (ar), lótus (água)"
+  metais_pedras: "Ouro (fogo), cobre (terra), mercúrio (ar), prata (água)"
+  cores_sons: "Vermelho (fogo), verde (terra), amarelo (ar), azul (água)"
+  numeros: "1 (fogo), 2 (terra), 3 (ar), 4 (água)"
+  dias_semana: "Domingo (fogo), sexta-feira (terra), quarta-feira (ar), segunda-feira (água)"
+  doencas_corpo: "Coração (fogo), sistema digestivo (terra), pulmões (ar), sistema linfático (água)"
+  arquetipos_mitologicos: "Apolo (fogo), Deméter (terra), Hermes (ar), Netuno (água)"
+  mitos_historias: "Mitologias dos elementos"
+  sonhos_simbolos_inconsciente: "Fogo, terra, ar, água"
+  expressao_elevada_sombra: "Elevada: elemento consciente, integrado | Sombra: elemento descontrolado, extremo"
+
+camada_energetica:
+  campo_mental: "A mente tende a operar pelo elemento dominante. Fogo=age, Terra=foca, Ar=relaciona, Água=sente."
+  permeacao_emocional: "Falta de elemento = campo emocional desafinado naquela frequência."
+  manifestacao_externa: "Eventos prováveis seguem a cor do elemento forte; o fraco traz 'azar' percebido onde há só desequilíbrio."
+  como_guiar: "Oriente a pessoa a desenvolver o elemento em falta (não suprimir o forte). Ex.: muito Fogo + pouca Água → ensinar a sentir antes de agir."
+
+foco_especial:
+  infantil: "Crianca com elemento em falta precisa de estímulo naquela área desde cedo (ex.: pouca Terra = ajudar na organização do corpo/materia)."
+  familiar: "O 'clima' do lar tem elemento dominante também — entender isso explica atritos geracionais."
+

@@ -1,0 +1,58 @@
+﻿status: review
+id: "septil"
+nome: "Septil"
+angulo: "51°26' (1/7 do zodíaco)"
+natureza: "mistério / destino sutil"
+
+origens_e_divergencias:
+  tradicional: "O septil não integra os cinco aspectos maiores de Ptolomeu. É uma divisão harmônica posterior, usada seletivamente por escolas de harmônicos e autores modernos."
+  moderna: "Palavras como destino, mistério ou vocação podem aparecer em leituras modernas, mas são interpretações atribuídas, não propriedades demonstradas do ângulo."
+  nota: "O valor exato é 360°/7 = aproximadamente 51°25'43''. O cálculo deve usar precisão adequada e nunca arredondar a ponto de confundir o aspecto."
+escopo_documental:
+  significado: "Aspecto harmônico por longitude correspondente a um sétimo do círculo."
+  porque: "A série de sete é tratada simbolicamente ou harmonicamente por certas escolas; tal leitura não é consenso tradicional."
+  origem: "Pós-ptolomaico, em desenvolvimento moderno de aspectos harmônicos."
+  uso: "Aplicar apenas com perfil de harmônicos e orbe estreito explicitamente configurado."
+  divergencia: "A importância do septil e seu orbe variam amplamente; muitas escolas não o calculam."
+referencias:
+  - autor: "Johannes Kepler"
+    obra: "Harmonices Mundi"
+    natureza: "primária histórica"
+    localizador: "Contexto de proporções harmônicas; conferir edição/tradução."
+  - autor: "John Addey"
+    obra: "Harmonics in Astrology"
+    natureza: "secundária moderna"
+    localizador: "Método harmônico; conferir edição."
+validacao_de_fontes:
+  base: "A ficha trata o septil como escolha de método harmônico, não como marcador objetivo de destino."
+  limite: "Não exibir leitura fatalista se a pessoa usuária não tiver escolhido essa escola."
+atlas_simbolico:
+  pessoas_arquetipos: "O místico, o sacerdote, o conselheiro"
+  lugares_fisicos: "Templos, conventos, locais de retiro"
+  objetos_materia: "Velas, incenso, livros sagrados"
+  eventos_tipicos: "Iniciações, revelações, crises espirituais"
+  animais: "Cisne, baleia, golfinho"
+  plantas_ervas: "Lótus, papoula, jasmim"
+  metais_pedras: "Estanho, ametista, pérola"
+  cores_sons: "Azul-mar, roxo; notas Lá e Dó"
+  numeros: "7 (espiritualidade), 9 (transcendência), 3 (trindade)"
+  dias_semana: "Quinta-feira (Júpiter), segunda-feira (Lua/Netuno)"
+  doencas_corpo: "Pés, sistema linfático, imunidade"
+  arquetipos_mitologicos: "Netuno, Hécate, Anúbis"
+  mitos_historias: "Dioniso e a iniciação; Jesus e a ressurreição"
+  sonhos_simbolos_inconsciente: "Águas profundas, névoa, barcos, música"
+  expressao_elevada_sombra: "Elevada: serviço espiritual, compaixão | Sombra: escape, vícios, confusão"
+
+camada_energetica:
+  impressao_mental: "Toque ligado ao 'inesperado do destino' — a mente sente algo 'maior' operando, sem racionalizar."
+  permeacao_emocional: "Fascínio ou estranhamento sagrado."
+  manifestacao_externa: "Eventos PROVÁVEIS de encontros 'destinados' ou aberturas misteriosas. Arquétipos: a Roda do Destino, o Segredo. Inclinação, não destino."
+  como_guiar_o_astral: "Reconhecer como 'porta do mistério' — não forçar explicação, apenas acolher."
+
+consenso_tradicional: "Ligado a destino e eventos não-causais (escola de aspectos de 7 e 9 divisões)."
+arquetipos_simbolicos: ["A Roda do Destino", "O Segredo que se abre"]
+
+aplicativo_separativo: "Aplicativa: o destino se ANUNCIA sutilmente. Separativa: a porta do mistério se fechaa."
+
+exemplo_pratico: "Lua septil Nodo Norte: momentos em que a emoção aponta para a direção de crescimento 'sem razão' — a pessoa 'sente que devia' ir por aquele caminho. Leitura: 'essa atração sem explicação é sua bússola de jornada'."
+

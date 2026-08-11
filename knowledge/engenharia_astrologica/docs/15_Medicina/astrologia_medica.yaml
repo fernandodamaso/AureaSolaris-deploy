@@ -1,0 +1,63 @@
+status: review
+id: "astrologia_medica"
+nome: "Astrologia Médica"
+tradicoes:
+  - "medica historica ocidental"
+  - "moderna simbolica"
+tipo: "Especial"
+subtema: "Correspondências planeta/signo → corpo/órgão"
+
+origens_e_divergencias:
+  tradicional: "Hipócrates, Dioscórides, Culpeper, Agrippa — astrologia médica ocidental tradicional."
+  moderna: "Overlay moderno (psicológico) — doença como linguagem simbólica."
+  nota: "No estudo, preservar juízos e correspondências médicas atribuídos às fontes; na disseminação contemporânea, separar documento histórico, símbolo e aconselhamento clínico."
+
+referencias:
+  - autor: "Nicholas Culpeper"
+    obra: "Semeiotica Uranica"
+    ano: 1651
+    natureza: "fonte histórica de astrologia médica"
+    localizador: "Documento de período; não equivale a evidência médica contemporânea"
+  - autor: "Paulus Alexandrinus"
+    obra: "Introductory Matters"
+    edicao_ou_traducao: "Dorian Gieseler Greenbaum, tradução inglesa"
+    natureza: "fonte primária tardia"
+    localizador: "Correspondências tradicionais; conferir edição"
+
+limites_de_uso: ["Material histórico e simbólico; não diagnostica, prevê doença ou prescreve conduta.", "Qualquer tema de saúde requer cuidado clínico apropriado, sem inferência astrológica."]
+
+atlas_simbolico:
+  pessoas_arquetipos: "O curador, o médico, o herbalista"
+  lugares_fisicos: "Hospitais, clínicas, herbários"
+  objetos_materia: "Instrumentos cirúrgicos, ervas, livros médicos"
+  eventos_tipicos: "Diagnósticos, curas, crises de saúde"
+  animais: "Coruja (sabedoria), formiga (organização)"
+  plantas_ervas: "Sálvia (memória), hera (permanência)"
+  metais_pedras: "Prata (lua), cristal de rocha (clareza)"
+  cores_sons:
+    cores: ["Prata", "azul-claro"]
+    sons: ["Dó", "lá"]
+  numeros: [3, 6, 9]
+  dias_semana: ["Quarta-feira"]
+  doencas_corpo:
+    doencas: ["Cada planeta rege doenças específicas (ver atlas do planeta)"]
+    partes_corpo: ["Cada planeta rege partes do corpo (ver atlas do planeta)"]
+  arquetipos_mitologicos:
+    - "Hermes (comunicação)"
+    - "Atena (sabedoria)"
+  mitos_historias: "Hermes e a escrita; Atena e a organização"
+  expressao_elevada_sombra: "Elevada: estrutura viva que serve | Sombra: rigidez, burocracia"
+
+camada_energetica:
+  impressao_mental: "A saúde é a MANIFESTAÇÃO da harmonia (ou desarmonia) entre mente e corpo."
+  permeacao_emocional: "Doença como linguagem simbólica — o corpo 'fala' o que a mente não processa."
+  manifestacao_externa: "Eventos prováveis de crises de saúde quando o planeta ativado está em tensão. Inclinação, não destino."
+  como_guiar_o_astral: "Ler como ALERTA simbólico, não como sentença. O planeta em tensão aponta onde a pessoa precisa mudar hábito."
+
+base_canonica: "Atribuições tradicionais: Hipócrates ('Astros e Corpos'), Dioscórides, Culpeper, Agrippa (Doutrina das Assinaturas), Paulus Alexandrinus."
+linha_tradicao: "Astrologia médica ocidental tradicional (helenística, medieval, renascentista) + overlay moderno (psicológico)."
+aviso_etica: "Camada ética separada: preservar o conteúdo histórico no corpus e diferenciar sua comunicação pública de qualquer orientação clínica contemporânea."
+como_usar: |
+  Ler o planeta/signo em tensão + Casa 6 (saúde/rotina) + Casa 1 (corpo).
+  Registrar se a inferência vem de melotésia histórica, de correspondência simbólica ou de overlay moderno antes de formular o sentido.
+

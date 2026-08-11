@@ -1,0 +1,105 @@
+status: review
+id: "mapeamento_sistemico_familiar"
+nome: "Mapeamento Sistêmico Familiar"
+tipo: "procedimento de astrologia sistêmica"
+tradicao_primaria: ["sistêmica", "relacional", "psicológica", "tradicional"]
+
+escopo:
+  definicao_operacional: "Procedimento para organizar papéis familiares como significadores simbólicos na carta e formular perguntas sobre vínculos. Um 'personagem' é um papel no sistema e pode ser estudado por diferentes técnicas e escolas."
+  inclui:
+    - "Carta natal da pessoa atendida como mapa de sua experiência e posição simbólica no sistema."
+    - "Casas, regentes, luminares, planetas e casas derivadas como candidatos a significadores de papéis."
+    - "Sinastria ou composto somente quando há dados consentidos e uma pergunta relacional delimitada."
+  nao_inclui:
+    - "Reduzir uma função familiar a um único planeta, casa ou significador."
+    - "Usar gênero, sexo ou estrutura familiar presumidos para fixar automaticamente pai, mãe ou cuidador."
+  exclusoes_do_projeto: []
+
+fundamento:
+  descricao: "A leitura sistêmica começa pela posição da pessoa no sistema: como ela percebe, organiza e responde aos vínculos. Casas e planetas funcionam como linguagem simbólica; o estudo pode comparar essa linguagem com relato, documentação e experiência."
+  contexto_historico: "Casas e casas derivadas pertencem ao repertório tradicional; a leitura de dinâmica familiar como sistema é uma aplicação contemporânea. A combinação não cria uma equivalência histórica entre as duas tradições."
+
+mapa_de_papeis:
+  regra_geral: "Escolher significadores por função e declarar a convenção. O mesmo papel pode ter mais de um significador; nenhuma equivalência é universal."
+  pessoa_atendida:
+    candidatos: ["Ascendente", "regente do Ascendente", "Sol e Lua quando a pergunta envolve identidade e experiência subjetiva"]
+    sentido: "Posição, agência e modo como a pessoa organiza a experiência do sistema."
+  cuidadores_e_figuras_parentais:
+    candidatos:
+      - "Casa 4 e seu regente; Casa 10 e seu regente, com a convenção explicitada."
+      - "Lua, Sol e Saturno como símbolos adicionais quando a pergunta e a escola os justificarem."
+    sentido: "Funções de origem, cuidado, autoridade, reconhecimento e pertencimento; não uma identificação automática de mãe/pai."
+  irmaos_e_pares_de_origem:
+    candidatos: ["Casa 3 e seu regente", "planetas presentes na Casa 3", "casas derivadas quando a pergunta especificar o ponto de vista de outro membro"]
+    sentido: "Vínculos horizontais, comunicação, comparação e circulação no grupo de origem."
+  filhos_e_dependentes:
+    candidatos: ["Casa 5 e seu regente"]
+    sentido: "Cuidado, criação, continuidade e relação com quem depende da pessoa."
+  parceiros_e_socios:
+    candidatos: ["Casa 7 e seu regente", "Vênus ou outros significadores definidos pela pergunta"]
+    sentido: "Relação de paridade, contrato, alteridade e negociação."
+  linhagem_e_ancestralidade:
+    candidatos: ["Casas 4 e 10, seus regentes e ciclos que as ativem"]
+    sentido: "Temas de origem e transmissão percebida; não prova de fatos sobre ancestrais."
+  casas_derivadas:
+    regra: "Para encontrar a casa N de um referente representado pela casa R, contar R como a primeira: resultado = ((R + N - 2) mod 12) + 1."
+    exemplo: "A quarta casa de um parceiro representado pela Casa 7 é a Casa 10 radical."
+    limite: "Usar apenas se a pergunta exige o ponto de vista do referente; não multiplicar derivações sem necessidade."
+
+procedimento:
+  pre_requisitos:
+    - "Pergunta relacional e fatos conhecidos separados das hipóteses simbólicas."
+    - "Dados natais da pessoa atendida com precisão declarada."
+    - "Para sinastria ou composto: dados dos envolvidos e parâmetros de cálculo declarados."
+  passos:
+    - "Delimitar sistema e pergunta: por exemplo, vínculo com um cuidador, irmãos, parceiro ou posição na família."
+    - "Registrar um mapa factual mínimo: membros relevantes, períodos, eventos conhecidos e limites de privacidade."
+    - "Escolher os significadores de papel e escrever por que foram escolhidos."
+    - "Ler cada significador por signo, casa, regência, dignidade e condição antes de comparar relações."
+    - "Examinar relações entre significadores: aspectos, aplicação/separação, recepção, disposição e repetição simbólica."
+    - "Se houver dados consentidos, acrescentar sinastria ou composto como camada relacional distinta, não como confirmação de fatos."
+    - "Converter a síntese em hipóteses, perguntas e possibilidades de leitura; registrar convergências e contradições."
+  parametros_de_calculo:
+    - "zodíaco, casas, orbes e convenções de significador"
+    - "dados consentidos e precisão de cada carta"
+    - "período/ciclo analisado"
+
+leitura_das_relacoes:
+  casas_e_regentes: "A casa define o campo funcional; seu regente descreve como a função se conecta ao restante da carta. Planetas na casa acrescentam temas, mas não identificam literalmente pessoas."
+  aspectos: "Aspectos descrevem forma de ligação simbólica entre funções. A leitura deve informar se é por signo, por orbe, aplicativo ou separativo e evitar rótulos de harmonia/conflito absolutos."
+  dignidade_e_condicao: "Dignidade, casa, movimento e recepção qualificam recursos, limites e meios de expressão do significador; não medem o valor de um familiar."
+  repeticao: "Quando a mesma dinâmica aparece em mais de uma camada, ela vira hipótese de investigação, não confirmação de uma história."
+  ciclos: "Trânsitos, profecções ou revoluções podem situar o período em que uma questão relacional ganha atenção; não provam que outro membro agirá de determinada forma."
+
+uso_interpretativo:
+  pergunta_que_ajuda_a_responder:
+    - "Que papel a pessoa percebe ocupar neste vínculo e que alternativas de resposta ela reconhece?"
+    - "Que padrões de limite, cuidado, comunicação, autoridade ou pertencimento merecem conversa cuidadosa?"
+  como_ponderar: "Usar a sequência fato/contexto → símbolo → hipótese → pergunta. O sentido é avaliado por convergência entre significadores, técnica usada e material do caso."
+  limites:
+    - "Não confundir a função simbólica de um personagem com sua biografia total."
+    - "Não abandonar casas, regentes e técnica em favor de uma narrativa atraente, porém sem repetição simbólica."
+
+divergencias_de_tradicao:
+  consenso: "Casas e significadores podem estruturar perguntas sobre parentes; a atribuição exata de figuras parentais e o uso sistêmico variam."
+  divergencias:
+    - "Tradições divergem sobre Casa 4/Casa 10 e sobre Sol, Lua e Saturno para funções parentais."
+    - "Abordagens sistêmicas contemporâneas variam entre leitura psicológica, familiar, constelações e prática relacional."
+  decisao_editorial: "A carta da pessoa atendida descreve sua experiência simbólica. Toda convenção parental, técnica relacional e hipótese deve ser declarada e revista com ela."
+
+referencias:
+  primarias:
+    - "Lilly, William. Christian Astrology. Londres, 1647. Consultar a edição utilizada para casas e casas derivadas."
+  secundarias:
+    - "Faculty of Astrological Studies. The Astrology of the Family: An Astrological Overview of the Family. https://astrology.org.uk/extract-from-the-astrology-of-the-family-part-module-article-1-1/ (acesso em 2026-08-10)."
+    - "Nakata, Elizabeth. Untangling Client Issues with a Systemic Constellations Approach. The Career Astrologer, 2022. https://www.astro.com/astrology/opa_article221208_e.htm (acesso em 2026-08-10)."
+  tecnicas: []
+
+relacoes:
+  depende_de: ["casas_derivadas", "hierarquia_de_julgamento", "dignidades_essenciais_acidentais"]
+  ver_tambem: ["astrologia_sistemica", "sinastria", "mapa_composto", "profeccoes"]
+
+orientacao_de_disseminacao_futura:
+  nota: "Aplicável somente fora do estudo pessoal: separar hipótese simbólica de afirmação factual sobre terceiros, registrar consentimento para dados relacionais e encaminhar temas clínicos, jurídicos ou de segurança quando necessário."
+
+anotacoes_pessoais: []

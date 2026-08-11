@@ -1,0 +1,65 @@
+status: review
+id: "debilidades"
+nome: "Debilidades"
+tradicoes:
+  - "helenística"
+  - "medieval"
+  - "tradicional"
+  - "moderna ocidental (camada interpretativa separada)"
+tipo: "dignidade e condição debilitada"
+escopo_documental:
+  tecnica_historica:
+    - "debilidades essenciais e acidentais"
+    - "distinção entre queda, exílio/detrimento, peregrino e aflições acidentais"
+    - "efeito condicionado por recepção, aspecto, casa, secta e contexto"
+  calculo_e_regra: "O motor deve separar debilidade essencial de debilidade acidental e evitar colapsar tudo em uma única nota de 'planeta fraco'."
+  divergencias_de_escola: "Autores modernos frequentemente reinterpretam debilidade como desafio psicológico; na tradição, ela é antes uma questão de capacidade, propriedade ou adequação funcional."
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "primária"
+    localizador: "Livro I, dignidades e debilidades"
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    natureza: "primária/secundária histórica"
+    localizador: "Tabelas e capítulos introdutórios de dignidades e debilidades"
+  - autor: "Guido Bonatti"
+    obra: "Liber Astronomiae"
+    natureza: "primária histórica"
+    localizador: "Julgamento planetário e condições de impedimento"
+validacao_de_fontes:
+  base: "As refer?ncias estruturadas sustentam a terminologia de dignidade, debilidade, recep??o e condi??o dentro das linhagens declaradas."
+  escopo: "Diferen?as entre autores permanecem vis?veis e n?o devem ser convertidas em regra ?nica do motor sem sele??o expl?cita de escola."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+definicao_tecnica: "Debilidades são condições que reduzem a capacidade de um planeta de agir conforme sua natureza ou de entregar seus significados com plenitude."
+familias:
+  essenciais:
+    - "exílio ou detrimento"
+    - "queda"
+    - "peregrinação"
+  acidentais:
+    - "cadência ou posição fraca conforme a técnica"
+    - "combustão e outras aflições solares"
+    - "retrogradação, lentidão, aflição por maléficos ou impedimentos contextuais"
+notas_tecnicas:
+  exilio_ou_detrimento: "Planeta em signo oposto ao(s) seu(s) domicílio(s)."
+  queda: "Planeta em signo oposto ao signo de sua exaltação."
+  peregrino: "Planeta sem dignidade essencial própria no lugar em que se encontra, segundo a tabela usada."
+  observacao: "Debilidade não significa inexistência de efeito; muitas vezes significa atuação desordenada, difícil, imprópria, dependente ou custosa."
+camada_moderna:
+  uso_psicologico: "Pode ser lida como área de compensação, insegurança, esforço ou elaboração subjetiva."
+  regra_documental: "Essa camada não deve apagar a distinção técnica entre dano essencial, dano acidental e condição mitigada."
+mitigacoes_possiveis:
+  - "recepção"
+  - "boa dignidade acidental"
+  - "aspecto ou testemunho benéfico"
+  - "secta favorável"
+  - "cazimi, quando aplicável"
+nao_confundir_com:
+  - "debilidade não é mal absoluto"
+  - "planeta forte e maléfico pode causar dano; planeta débil pode carecer de potência para agir"
+camada_energetica:
+  impressao_mental: "A debilidade mostra falta de propriedade, estabilidade ou autoridade do planeta em certo contexto."
+  permeacao_emocional: "Na linguagem moderna, pode ser sentida como tema inseguro, reativo ou pouco integrado."
+  manifestacao_externa: "Em técnicas tradicionais, costuma apontar dificuldade de entregar o que promete ou de sustentar sua função."
+  como_guiar_o_astral: "Sempre identificar de que tipo de debilidade se trata e se há mitigação real antes de concluir algo."

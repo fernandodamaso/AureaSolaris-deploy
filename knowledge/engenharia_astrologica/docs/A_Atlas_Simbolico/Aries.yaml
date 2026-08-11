@@ -1,0 +1,118 @@
+﻿status: review
+id: "aries_atlas"
+nome: "Áries — Atlas Simbólico"
+tradicoes:
+  - "atlas simbolico editorial"
+  - "sintese multiescola"
+tipo: "Atlas Simbólico"
+subtema: "Correspondências de Áries"
+
+origens_e_divergencias:
+  tradicional: "Marte — guerra, impulso, avanço, iniciação."
+  moderna: "Marte (mesmo). Sem divergência significativa."
+  nota: "Regência unânime."
+
+atlas_simbolico:
+  pessoas_arquetipos:
+    - "Guerreiro"
+    - "Pioneiro"
+    - "Líder espontâneo"
+    - "Atleta"
+    - "Soldado"
+    - "Competidor"
+  lugares_fisicos:
+    - "Campos de batalha"
+    - "Arenas"
+    - "Lugares altos"
+    - "Regiões quentes e secas"
+    - "Forjas"
+  objetos_materia:
+    - "Espadas"
+    - "Machados"
+    - "Capacetes"
+    - "Fogo"
+    - "Aço"
+    - "Artefatos de guerra"
+  eventos_tipicos:
+    - "Guerras"
+    - "Nascimentos"
+    - "Competições"
+    - "Inaugurações"
+    - "Explosões"
+    - "Acidentes por pressa"
+  animais:
+    - "Carneiro"
+    - "Touro"
+    - "Cavalo de guerra"
+    - "Lobo"
+    - "Leão"
+    - "Águia"
+  plantas_ervas:
+    - "Alecrim"
+    - "Pimenta"
+    - "Urtiga"
+    - "Plantas espinhosas"
+    - "Hera"
+  metais_pedras:
+    - "Ferro"
+    - "Aço"
+    - "Rubi"
+    - "Jaspe"
+    - "Diamante"
+    - "Granada"
+  cores_sons:
+    cores: ["Vermelho", "Laranja", "Dourado"]
+    sons: ["Notas Si e Dó", "Instrumentos de percussão"]
+  numeros: [1, 7, 11]
+  dias_semana: ["Terça-feira (dia de Marte)"]
+  doencas_corpo:
+    doencas: ["Cefaleias", "Febres", "Inflamações", "Cortes", "Queimaduras"]
+    partes_corpo: ["Olhos", "Cabeça", "Sistema nervoso central"]
+  arquetipos_mitologicos:
+    - "Ares/Marte"
+    - "Perseu"
+    - "Jasão"
+    - "Ulisses"
+    - "Hércules (início da jornada)"
+  mitos_historias:
+    - "Mit grego: Ares na Guerra de Troia"
+    - "Jasão e os Argonautas"
+    - "O Velocino de Ouro"
+  sonhos_simbolos_inconsciente:
+    - "Fogo"
+    - "Espadas"
+    - "Guerra"
+    - "Corridas"
+    - "Nascimentos"
+    - "Montanhas"
+  expressao_elevada_sombra: "Elevada: coragem autêntica, liderança inspiradora, iniciativa justa | Sombra: agressividade destrutiva, impulsividade violenta, egoísmo guerreiro"
+
+revisao_editorial:
+  origem_e_linguagem: "Áries vem do latim aries, 'carneiro'; o signo tropical de 30° e a constelação de Áries são referências distintas e não devem ser confundidos."
+  mito_arquetipo_e_porque: "Carneiro, impulso inaugural e imagens de guerreiro/primavera formam um mapa simbólico multitradição; descrevem uma linguagem de estudo, não uma identidade fixa."
+  limite_tecnico: "O signo colore um fator somente no contexto de zodíaco, grau, casa, regente, condição e aspectos declarados."
+referencias:
+  primarias:
+    - "Ptolomeu. Tetrabiblos, livro I: signos e qualidades, conforme edição declarada."
+  secundarias:
+    - "Rudhyar, Dane. The Astrological Signs: The Pulse of Life. Harper & Row, 1971."
+  tecnicas:
+    - "Ver 02_Astronomia/Zodiaco_Tropical.yaml para a distinção entre signo tropical e constelação."
+camada_energetica:
+  impressao_mental: "A mente que parte primeiro. Impulso, 'vamos lá', urgência de começar. Quando atrito: pressa sem meta, teimosia."
+  permeacao_emocional: "Entusiasmo quente e rápido que esfria fácil. Paixão de estouro, não de sustentação."
+  manifestacao_externa: "Eventos PROVÁVEIS de começos, disputas, acidentes de pressa, liderança espontânea. Arquétipos: o Guerreiro, a Faísca. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a mirar antes de disparar. Áries precisa de causa, não de corrida vazia."
+
+tarot_relacionado:
+  carta: "O Carro"
+  conexao: "Carta 7 — vontade pura, direção, impulso controlado. O Carro tem dois cavalos = dualidade do impulso."
+
+foco_especial:
+  infantil: "A criança Áries é quem chega primeiro, a pioneira. Precisa de desafio e movimento, não de contenção excessiva."
+  familiar: "O membro que puxa a família para a ação. Conflitos diretos, mas que passam rápido."
+  carmico_espiritual: "Áries indica a LIÇÃO DE INICIAÇÃO. Casa Áries = onde a pessoa aprende a começar sem medo."
+
+ver_mais:
+  - "../03_Signos/Aries.yaml"
+

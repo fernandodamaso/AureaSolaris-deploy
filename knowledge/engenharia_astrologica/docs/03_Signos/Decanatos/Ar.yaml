@@ -1,0 +1,66 @@
+﻿status: draft
+id: "decanatos_ar"
+nome: "Decanatos do Elemento Ar (Gêmeos, Libra, Aquário)"
+tradicoes:
+  - "convenção por signos da mesma triplicidade"
+  - "releitura moderna transaturnina explicitada"
+elemento: "Ar"
+tema: "Os 9 decanatos de Ar (3 por signo)"
+
+origens_e_divergencias:
+  sistema_adotado: "Convenção posterior/moderna que percorre Gêmeos, Libra e Aquário dentro do elemento Ar. Não equivale às faces caldaicas."
+  regencias: "Mercúrio, Vênus e Saturno correspondem aos regentes tradicionais dos três signos; Urano é releitura moderna de Aquário."
+  faces_caldaicas: "Possuem sequência própria por signo e devem ser calculadas por tabela independente."
+  nota: "A lista não é dignidade essencial nem consenso helenístico único."
+atlas_simbolico:
+  pessoas_arquetipos: "O aéreo, o comunicador, o mensageiro"
+  lugares_fisicos: "Mercados, escolas, bibliotecas, estações"
+  objetos_materia: "Livros, cartas, instrumentos de comunicação"
+  eventos_tipicos: "Visitas, aulas, negociações, notícias"
+  animais: "Borboleta, macaco, raposa"
+  plantas_ervas: "Lavanda, menta, verbena"
+  metais_pedras: "Mercúrio, ágata, citrino, olivina"
+  cores_sons: "Amarelo, cinza, verde-claro; notas Mi e Lá"
+  numeros: "3 (comunicação), 5 (oportunidade), 8 (duplicidade)"
+  dias_semana: "Quarta-feira (Mercúrio)"
+  doencas_corpo: "Pulmões, braços, mãos, sistema nervoso"
+  arquetipos_mitologicos: "Hermes/Mercúrio, Atena, Apolo"
+  mitos_historias: "Hermes mensageiro; Atena e a sabedoria"
+  sonhos_simbolos_inconsciente: "Cartas, bilhetes, estradas, crianças"
+  expressao_elevada_sombra: "Elevada: comunicação clara, aprendizado | Sombra: fofoca, superficialidade"
+
+camada_energetica:
+  campo_mental: "Ar puro (Gêmeos 0-10°) = comunicação crua. Ar matizado (Libra 10-20°) = comunicação com relação. Ar amadurecido (Aquário 20-30°) = comunicação com coletivo."
+  permeacao_emocional: "Da curiosidade leve à busca de justiça."
+  manifestacao_externa: "Eventos PROVÁVEIS de encontros, ideias e trocas. Inclinação, não destino."
+  como_guiar_o_astral: "Usar o decanato para entender COMO a pessoa pensa e se relaciona (Gêmeos = troca; Libra = equilíbrio; Aquário = grupo)."
+
+decanatos:
+  - "Gemeos 1 (0-10°): Mercúrio — Gêmeos puro / o Curioso"
+  - "Gêmeos 2 (10-20°): Vênus — Gêmeos matizado por Libra / o Relacional"
+  - "Gêmeos 3 (20-30°): Urano/Saturno — Gêmeos amadurecido por Aquário / o Inovador"
+  - "Libra 1 (0-10°): Vênus — Libra puro / o Equilibrista"
+  - "Libra 2 (10-20°): Saturno — Libra matizado por Aquário / o Justo"
+  - "Libra 3 (20-30°): Mercúrio — Libra amadurecida por Gêmeos / o Negociador"
+  - "Aquario 1 (0-10°): Urano/Saturno — Aquário puro / o Original"
+  - "Aquário 2 (10-20°): Mercúrio — Aquário matizado por Gêmeos / o Comunicador"
+  - "Aquário 3 (20-30°): Vênus — Aquário amadurecido por Libra / o Humanitário"
+
+foco_especial:
+  relacional_familiar: "Libra em decanatos mostra como a pessoa negocia na família; Aquário, como pertence ao grupo."
+calculo_e_escopo:
+  calculo: "Usar longitude tropical, intervalo de 10° e a convenção por triplicidade selecionada."
+  simbolismo: "Comunicação, justiça e coletivo são associações atribuídas; não descrevem automaticamente a pessoa."
+  divergencia: "Urano só deve aparecer se o perfil moderno estiver selecionado; não o inserir em faces tradicionais."
+referencias:
+  - autor: "Engenharia Astrológica"
+    obra: "Decanatos"
+    natureza: "fonte editorial"
+    localizador: "Distinção de sistemas em 03_Signos/Decanatos.yaml."
+  - autor: "Cláudio Ptolomeu"
+    obra: "Tetrabiblos"
+    natureza: "primária histórica"
+    localizador: "Faces tradicionais como tabela alternativa."
+limite_documental: "Permanece draft até a convenção por triplicidade e suas leituras receberem fonte específica."
+
+

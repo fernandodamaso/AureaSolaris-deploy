@@ -1,0 +1,56 @@
+﻿status: draft
+id: "decanato_touro_2"
+nome: "Decanato 2 de Touro (10°–20°) — Touro matizado por Virgem"
+tradicoes:
+  - "convenção por signos da mesma triplicidade"
+  - "camada simbólica moderna atribuída"
+regente: "Mercúrio (Virgem/Mercúrio na convenção por triplicidade; face caldaica correspondente: Lua)"
+
+origens_e_divergencias:
+  sistema_adotado: "Convenção posterior/moderna por signos da mesma triplicidade: 10°–<20° de Touro recebe a cor de Virgem/Mercúrio."
+  faces_caldaicas: "A face caldaica de 10°–<20° de Touro é Lua; as tabelas divergem."
+  decanos_egipcios: "Sistema distinto; exige tabela própria."
+  nota: "Método, seleção e construção são associações de estudo atribuídas à convenção."
+
+calculo_e_escopo:
+  intervalo: "Touro tropical 10°–<20°; 20° exatos iniciam o terceiro decanato."
+  uso: "Refinamento opcional; Mercúrio não transforma automaticamente o intervalo em índice de trabalho ou inteligência."
+  camada_simbolica: "Construtor e selecionador são imagens interpretativas, não diagnóstico."
+referencias:
+  - autor: "Engenharia Astrológica"
+    obra: "Decanatos"
+    natureza: "fonte editorial"
+    localizador: "Tabela comparativa em 03_Signos/Decanatos.yaml."
+  - autor: "Cláudio Ptolomeu"
+    obra: "Tetrabiblos"
+    natureza: "primária histórica"
+    localizador: "Faces; a faixa caldaica é Lua."
+limite_documental: "Permanece draft: a convenção por triplicidade requer fonte própria antes de promoção."
+atlas_simbolico:
+  pessoas_arquetipos: "O Rocha, o que expressa Terra Fixo"
+  lugares_fisicos: "Lugares de Terra Fixo"
+  objetos_materia: "Objetos de Terra Fixo"
+  eventos_tipicos: "Eventos de Terra Fixo"
+  animais: "Animais de Terra Fixo"
+  plantas_ervas: "Plantas de Terra Fixo"
+  metais_pedras: "Metais de Terra Fixo"
+  cores_sons: "Cores de Terra Fixo"
+  numeros: "Números de Terra Fixo"
+  dias_semana: "Dias de Terra Fixo"
+  doencas_corpo: "Partes do corpo de Terra Fixo"
+  arquetipos_mitologicos: "Arquétipos de Terra Fixo"
+  mitos_historias: "Mitologias de Terra Fixo"
+  sonhos_simbolos_inconsciente: "Símbolos de Terra Fixo"
+  expressao_elevada_sombra: "Elevada: Terra Fixo consciente | Sombra: Terra Fixo descontrolado"
+
+camada_energetica:
+  impressao_mental: "Touro + análise — a mente agora DISTINGUE o que é valioso. Prazer com critério."
+  permeacao_emocional: "Apego refinado — 'o que é meu e bom', não só 'o que é meu'."
+  manifestacao_externa: "Eventos PROVÁVEIS de escolha criteriosa, cuidado com detalhes materiais. Arquétipos: o Curador, o Selecionador. Inclinação, não destino."
+  como_guiar_o_astral: "Canalizar para 'escolher bem' — o 2º decanato de Touro pode ficar 'perdido em detalhes'."
+
+porque_simbolico: "Virgem matiza Touro com Terra mutável: o PRAZER ganha MÉTODO. Mercúrio em Virgem = mente que classifica — daí o 'curador' que escolhe o que vale a pena."
+foco_especial:
+  familiar: "Decanato 2 de Touro em Casa 4 = pessoa que 'cuida da casa como se fosse uma marca' — apreciação estética do lar."
+
+

@@ -1,0 +1,72 @@
+id: ciclos_e_saros
+nome: Ciclos planetários, lunares e série Saros
+tipo: fundamento_ciclico_de_previsao
+tradicoes:
+- astronomia de apoio
+- astrologia mundana e moderna ocidental
+status: review
+definicao: 'Ciclo é uma repetição mensurável de uma relação celeste: retorno à longitude
+  natal, conjunção sinódica, fase Sol–Lua, estação ou série de eclipses. Saros é,
+  antes de tudo, uma periodicidade astronômica de eclipses; qualquer interpretação
+  astrológica de uma série deve ser tratada como regra de escola posterior, não como
+  definição do ciclo.'
+tipos_de_ciclo:
+  retorno: Um corpo retorna à longitude natal de referência.
+  sinodico: Dois corpos retornam à mesma relação geométrica, especialmente à conjunção
+    que inicia uma série de fases.
+  lunar: Ciclos sinódico, dracônico e sideral da Lua têm definições diferentes e não
+    podem ser usados como sinônimos.
+  estacionario: Mudança aparente de movimento direto para retrógrado ou inversamente;
+    requer data e coordenada exatas.
+  saros: Recorrência de eclipses ligada à combinação de meses sinódico, dracônico
+    e anômalo.
+saros_astronomico:
+  periodo: 223 meses sinódicos, aproximadamente 18 anos, 11 dias e 8 horas; a fração
+    de dia desloca a faixa de visibilidade terrestre entre ocorrências.
+  serie: Eclipses de uma mesma série compartilham geometria análoga, mas não são idênticos
+    em localização, magnitude ou duração.
+  calculo: Usar catálogos astronômicos para número da série, tipo, instante, magnitude,
+    duração, nodos e visibilidade.
+  distincao_historica: O uso moderno do termo Saros para 223 lunações tem uma história
+    terminológica própria; não se deve projetar automaticamente uma interpretação
+    contínua desde a Antiguidade.
+uso_astrologico_documentado:
+- Em astrologia mundana, eclipses podem ser comparados a ingressos, sizígias e cartas
+  territoriais conforme tradição adotada.
+- Algumas escolas modernas acompanham famílias Saros por grau, signo ou temas recorrentes.
+  Essa é uma extensão interpretativa que precisa de autor, método e exemplos, não
+  um dado da astronomia.
+- Ciclos Saturno–Júpiter, retornos e lunações devem ter fichas individuais para que
+  fórmulas e simbolismos não se misturem.
+camada_simbolica:
+  imagem: Ciclos fazem o céu retornar sem repetir tudo do mesmo modo; a recorrência
+    convive com variação de contexto, local e figura.
+  linguistica: Saros é hoje o nome convencional de uma periodicidade eclipse; a palavra
+    e sua história não garantem uma técnica astrológica única.
+referencias:
+- autor: NASA
+  obra: Eclipses and the Saros
+  natureza: fonte astronômica para duração e estrutura do Saros
+  url: https://eclipse.gsfc.nasa.gov/SEsaros/SEsaros.html
+- autor: NASA
+  obra: Periodicity of Solar Eclipses
+  natureza: dados e relações de periodicidade
+  url: https://eclipse.gsfc.nasa.gov/SEsaros/SEperiodicity.html
+- autor: Ptolemaeus
+  obra: Tetrabiblos, Livro II
+  natureza: fonte histórica para eclipses/sizígias em julgamento universal; não para
+    a técnica moderna de série Saros
+validacao_de_fontes:
+  base: "As refer?ncias estruturadas identificam a linhagem hist?rica, moderna ou astron?mica pertinente a esta t?cnica preditiva."
+  escopo: "Uma implementa??o deve declarar edi??o, algoritmo, efem?ride, escala de tempo e variante de escola; esta exig?ncia ? uma regra de reprodu??o, n?o uma lacuna de fonte."
+  limite: "A ficha permanece em review e n?o converte hip?tese, aproxima??o pedag?gica ou releitura moderna em previs?o determinista."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+origens_e_divergencias:
+  tradicional: Conceito/técnica presente na tradição astrológica ocidental.
+  moderna: Possível ressignificação contemporânea.
+  nota: Rotular a escola quando divergir.
+camada_energetica:
+  impressao_mental: Campo conceitual do tema/técnica.
+  permeacao_emocional: Como o tema toca a experiência subjetiva.
+  manifestacao_externa: Como aparece em comportamentos e eventos.
+  como_guiar_o_astral: Como usar este conhecimento na leitura prática.

@@ -1,0 +1,46 @@
+﻿status: draft
+id: "lote_morte"
+nome: "Parte da Morte"
+tradicoes:
+  - "helenistica"
+  - "arabe-medieval"
+formula_diurna: "Asc + Casa 8 − Lua"
+formula_noturna: "— (tradicionalmente diurna)"
+tema: "Limite, transformação, fim e renascimento"
+
+sentido_do_calculo: |
+  Casa 8 (transformação/fim) menos Lua (emoción/nutrição) a partir do Ascendente.
+  Mede onde a emoção encontra o 'fim que transforma' — o ponto da RENOVAÇÃO por dissolução.
+
+origens_e_divergencias:
+  tradicional: "Helenística (Ptolomeu, Vettius Valens) — lotes como pontos matemáticos."
+  moderna: "Evolutiva/moderna (Steven Forrest, Jeffrey Green) — lotes como 'pontos sensíveis da jornada'."
+  nota: "Revisar ao citar — marca a escola usada."
+atlas_simbolico:
+  pessoas_arquetipos: "O transformado, o renascido, o herdeiro"
+  lugares_fisicos: "Lugares profundos, subterrâneos, cemitérios"
+  objetos_materia: "Faca de cirurgia, espada, veneno, elixir"
+  eventos_tipicos: "Mortes, transformações, heranças, renascimentos"
+  animais: "Escorpião, serpente, phoenix"
+  plantas_ervas: "Papoula, açafrão, mandrágora, heléboro"
+  metais_pedras: "Ferro, obsidiana, granada, rubi"
+  cores_sons: "Vermelho-escuro, preto; notas Dó e Sol"
+  numeros: "4 (morte/renascimento), 8 (transformação), 13 (morte tarot)"
+  dias_semana: "Terça-feira (Marte/Plutão)"
+  doencas_corpo: "Órgãos sexuais, bexiga, intestino grosso, próstata"
+  arquetipos_mitologicos: "Hades/Plutão, Hécate, Esculápio"
+  mitos_historias: "Rapto de Perséfone; Esculápio e a ressurreição"
+  sonhos_simbolos_inconsciente: "Águas profundas, escorpiões, morte, renascimento"
+  expressao_elevada_sombra: "Elevada: regeneração, cura pelo confronto | Sombra: vingança, manipulação"
+
+camada_energetica:
+  impressao_mental: "Onde a mente encara o fim e a transformação — o que precisa 'morrer' para renovar."
+  permeacao_emocional: "Medo e também alívio de soltar. Profundo e sensível."
+  manifestacao_externa: "Eventos prováveis de crises e renovações. Arquétipos: a Fênix, a Porta. Inclinação, não destino (não é 'previsão de morte')."
+  como_guiar_o_astral: "Ler como eixo de transformação, não como fatalidade. Cuidado: oferecer apenas a quem ressoa (cármico)."
+
+como_usar: "Ler como ponto de TRANSFORMAÇÃO (não morte literal). Trânsitos aqui costumam marcar 'finais que abrem'."
+foco_especial:
+  carmico: "Lido com tato — é sobre transformação, não sobre fim literal."
+regente: "Regente do signo onde cai; lido por casa e aspectos."
+

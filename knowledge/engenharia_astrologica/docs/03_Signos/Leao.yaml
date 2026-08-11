@@ -1,0 +1,86 @@
+status: review
+id: "leao"
+nome: "Leão"
+tradicoes:
+  - "helenística"
+  - "medieval"
+  - "renascentista"
+  - "moderna (somente camadas explicitamente modernas)"
+escopo_documental:
+  tecnica_historica:
+    - "elemento, modalidade, regência, dignidade e estrutura zodiacal"
+    - "divergências modernas de regência ou leitura entram como nota explícita, sem substituir silenciosamente a camada histórica"
+  camadas_modernas: "Atlas simbólico, Tarot, correspondências médicas e releituras contemporâneas permanecem separados da regra histórica e devem ser apresentados como camada interpretativa rotulada."
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "primária"
+    localizador: "Livro I, capítulos sobre signos, qualidades e regências"
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    natureza: "primária"
+    localizador: "Livros I–II, passagens sobre signos e regentes"
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    natureza: "primária"
+    localizador: "Livro I, descrição dos signos e significadores"
+validacao_de_fontes:
+  base: "A regra zodiacal hist?rica ? sustentada por Ptolomeu, Valens e Lilly, nas refer?ncias estruturadas da ficha."
+  escopo: "Tarot, Atlas simb?lico, mitologia, correspond?ncias m?dicas e psicologia s?o camadas de estudo rotuladas; n?o s?o consenso nem substituem a regra hist?rica."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+elemento: "Fogo"
+modalidade: "Fixo"
+regente: "Sol"
+
+origens_e_divergencias:
+  tradicional: "Sol (identidade, brilho, centro)."
+  moderna: "Sol (mesmo). Sem divergência significativa."
+  nota: "Regência unânime."
+
+essencia:
+  - "Brilho"
+  - "Autoridade"
+  - "Coração"
+
+simbologia_elemento:
+  elemento: "Fogo"
+  modalidade: "Fixo"
+  simbolo: "Fornalha / Sol do meio-dia"
+  analogia: "Fogo Fixo — como uma fornalha que queima estável e radiante."
+  porque: "Fogo Fixo é o fogo SUSTENTADO: criatividade, brilho, centro. Leão é o quinto signo, onde a energia se expressa com identidade própria. A fornalha representa o fogo que não precisa ser aceso — já está aceso e irradia."
+atlas_simbolico:
+  pessoas_arquetipos: "Rei, rainha, artista, líder carismático, criança, performer, comandante"
+  lugares_fisicos: "Palácios, teatros, estádios, lugares de poder, tronos, circos"
+  objetos_materia: "Coroas, cetros, joias, arte, música, teatros, espelhos"
+  eventos_tipicos: "Coroações, casamentos reais, estreias, festas, nascimentos de filhos"
+  animais: "Leão, tigre, leopardo, falcão, pavão, cavalo nobre"
+  plantas_ervas: "Girassol, heliotropo, rosa, laranjeira, olmo, carvalho"
+  metais_pedras: "Ouro, âmbar, topázio, citrino, diamante, rubi"
+  cores_sons: "Amarelo-dourado, laranja, roxo; notas Dó e Sol; trombeta, órgão, tambor"
+  numeros: "1 (liderança), 5 (expressão criativa), 9 (completude solar)"
+  dias_semana: "Domingo (dia do Sol)"
+  doencas_corpo: "Coração, coluna dorsal, olhos, pressão arterial, costas, artérias"
+  arquetipos_mitologicos: "Hércules, Apolo, Dioniso, Zeus/Júpiter, Hera/Juno"
+  mitos_historias: "Hércules e os 12 trabalhos; Apolo e a Pítia; Midas e o toque de ouro"
+  sonhos_simbolos_inconsciente: "Sóis, coroas, teatros, leões, ouro, festas, aplausos"
+  expressao_elevada_sombra: "Elevada: generosidade radiante, liderança inspiradora, criatividade magnânima | Sombra: arrogância, vaidade, ego inflado, dominação"
+
+tarot:
+  carta: "A Força"
+  explicacao: "Carta 8 — força suave, coragem, domínio do instinto. Leão é a Força porque ambos representam o fogo que não agride, domina: a mulher que abre a jaula do leão com calma, não com força bruta."
+
+camada_energetica:
+  impressao_mental: "A mente que quer ser centro e criar. Generosidade declarada. Quando atrito: vaidade, necessidade de aplauso, autoritarismo."
+  permeacao_emocional: "Afeto quente, leal e dramático. Vive o sentimento em grande escala."
+  manifestacao_externa: "Eventos prováveis de reconhecimento, criação, romance, liderança. Trânsitos tendem a ampliar a visibilidade."
+  como_guiar_o_astral: "Ajudar a pessoa a brilhar sem dominar. Leão floresce quando autoriza os outros a brilhar também."
+
+decanatos:
+  - "0-10: Leão (Sol) — centro e criatividade"
+  - "10-20: Sagitário (Júpiter) — expansão e fé"
+  - "20-30: Áries (Marte) — impulso e coragem"
+
+foco_especial:
+  infantil: "A criança Leão quer ser vista. Precisa de elogio autêntico, não de plateia falsa."
+  familiar: "O membro que dá calor e protagonismo ao lar. Lealdade familiar declarada."
+

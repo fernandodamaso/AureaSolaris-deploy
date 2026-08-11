@@ -1,0 +1,48 @@
+﻿status: review
+id: "seesaw"
+nome: "Seesaw (Gangorra)"
+formato: "Dois grupos de planetas em oposição um ao outro (duas 'bandas' do zodíaco)"
+
+origens_e_divergencias:
+  tradicional: "Não é configuração ptolomaica; integra a tipologia moderna de distribuição planetária de Marc Edmund Jones."
+  moderna: "A metáfora de alternância entre polos é interpretativa. Ela não autoriza concluir conflito psicológico sem examinar oposições reais e significadores."
+  nota: "Gangorra não equivale a ter uma única oposição; exige dois grupos discerníveis e critério de agrupamento declarado."
+atlas_simbolico:
+  pessoas_arquetipos: "O equilibrista, o mediador, o que balança"
+  lugares_fisicos: "Balanças, fronteiras, tribunais"
+  objetos_materia: "Balanças, contratos, espelhos"
+  eventos_tipicos: "Equilíbrios, mediações, oscilações"
+  animais: "Cervo, cisne, pomba"
+  plantas_ervas: "Rosa, violeta, madressilva"
+  metais_pedras: "Cobre, ouro rosa, diamante"
+  cores_sons: "Rosa, verde-claro; notas Lá e Ré"
+  numeros: "2 (equilíbrio), 6 (harmonia), 8 (oscilação)"
+  dias_semana: "Sexta-feira (Vênus)"
+  doencas_corpo: "Rins, pele, adrenais"
+  arquetipos_mitologicos: "Themis, Hera/Juno, Afrodite/Vênus"
+  mitos_historias: "A balança de Themis; O julgamento de Páris"
+  sonhos_simbolos_inconsciente: "Balanças, oscilações, mediações"
+  expressao_elevada_sombra: "Elevada: equilíbrio consciente, mediação | Sombra: indecisão, oscilação paralisante"
+
+camada_energetica:
+  impressao_mental: "A mente balança entre DOIS polos — alterna focos opostos, como gangorra."
+  permeacao_emocional: "Oscilação emocional entre os dois grupos; 'agora um, agora outro'."
+  manifestacao_externa: "Eventos PROVÁVEIS vêm em 'idas e voltas'. Arquétipos: a Gangorra, o Pêndulo Duplo. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a integrar os dois polos em vez de oscilar — o seesaw pede síntese dos dois lados."
+
+consenso_tradicional: "Não existe consenso tradicional para este padrão. A alternância entre polos é uma hipótese interpretativa moderna."
+arquetipos_simbolicos: ["A Gangorra", "O Pêndulo Duplo", "Os Dois Polos"]
+definicao_tecnica: "Identificar dois grupos separados e declarar corpos, arcos e eventuais oposições entre grupos. Caso haja ampla dispersão, classificar como Splash, não Gangorra."
+referencias:
+  - autor: "Marc Edmund Jones"
+    obra: "The Guide to Horoscope Interpretation"
+    natureza: "primária moderna"
+    localizador: "Tipologias de distribuição planetária; conferir edição."
+  - autor: "Dane Rudhyar"
+    obra: "The Astrology of Personality"
+    natureza: "secundária moderna"
+    localizador: "Leitura de padrões e polaridades do mapa; conferir edição."
+validacao_de_fontes:
+  base: "A origem moderna e a diferença entre padrão de distribuição e aspecto de oposição estão declaradas."
+  limite: "Não converter a metáfora da gangorra em fato clínico, diagnóstico ou destino."
+

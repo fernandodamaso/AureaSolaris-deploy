@@ -1,0 +1,53 @@
+﻿status: review
+id: "estrela_de_davi"
+nome: "Estrela de Davi (Grande Sextil)"
+formato: "Seis fatores em pontos sucessivos de um hexágono: sextis entre vizinhos, dois grandes trígonos alternados e três oposições entre vértices opostos."
+
+origens_e_divergencias:
+  tradicional: "Sextil, trígono e oposição são aspectos tradicionais; a Estrela de Davi como configuração de seis fatores não é figura técnica canônica de Ptolomeu ou Valens."
+  moderna: "A leitura de integração, malha ou equilíbrio é moderna. A associação simbólica ao hexagrama judaico/cabalístico é uma camada cultural distinta da geometria astrológica."
+  nota: "Não dizer que os seis fatores estão em sextil mútuo: fatores opostos estão a 180°, e fatores alternados compõem trígonos."
+escopo_documental:
+  significado: "Hexagrama de aspectos formado por dois grandes trígonos interlaçados."
+  porque: "A leitura de rede decorre da combinação de aspectos componentes; o simbolismo do hexagrama é nota cultural, não prova de regra astrológica."
+  origem: "A geometria de aspectos é moderna; o nome remete ao uso cultural do hexagrama e exige distinção histórica."
+  uso: "Verificar os seis sextis adjacentes, seis trígonos internos e três oposições segundo a política de orbe."
+  divergencia: "Muitas escolas não usam a figura; outras podem ler apenas os aspectos individuais."
+referencias:
+  - autor: "Dane Rudhyar"
+    obra: "The Astrology of Personality"
+    natureza: "secundária moderna"
+    localizador: "Padrões e gestalt do mapa; conferir edição."
+  - autor: "Gershom Scholem"
+    obra: "Kabbalah"
+    natureza: "secundária historiográfica"
+    localizador: "Contexto histórico do simbolismo cabalístico; não é fonte de regra astrológica."
+validacao_de_fontes:
+  base: "A ficha distingue geometria, interpretação moderna e associação simbólica judaica/cabalística."
+  limite: "Não inferir proteção, harmonia garantida ou autoridade cabalística apenas pela forma visual."
+atlas_simbolico:
+  pessoas_arquetipos: "O unificado, o reconciliado, o mestre das polaridades"
+  lugares_fisicos: "Templos, locais de união, espaços sagrados"
+  objetos_materia: "Estrelas de seis pontas, símbolos de união"
+  eventos_tipicos: "Uniões, reconciliações, sínteses"
+  animais: "Águia, leão, touro"
+  plantas_ervas: "Rosa, lírio, oliveira"
+  metais_pedras: "Ouro, prata, esmeralda"
+  cores_sons: "Azul, branco; notas Lá e Dó"
+  numeros: "6 (união), 7 (espiritualidade), 10 (completude)"
+  dias_semana: "Sexta-feira (Vênus), quinta-feira (Júpiter)"
+  doencas_corpo: "Coração, sistema circulatório"
+  arquetipos_mitologicos: "Salomão, Davi, Hermes/Mercúrio"
+  mitos_historias: "Davi e a estrela; Salomão e o templo"
+  sonhos_simbolos_inconsciente: "Estrelas de seis pontas, uniões, reconciliações"
+  expressao_elevada_sombra: "Elevada: união consciente, síntese | Sombra: polarização cega, separação"
+
+camada_energetica:
+  impressao_mental: "Malha de afinidades — a mente tem múltiplas 'portas entreabertas' se apoiando. Harmonia estrutural rara."
+  permeacao_emocional: "Equilíbrio e versatilidade emocional — mas risco de dispersão se não houver foco."
+  manifestacao_externa: "Eventos PROVÁVEIS de oportunidades encadeadas e rede de apoio. Arquétipos: a Estrela de Davi, a Malha, o Equilíbrio. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a escolher UM eixo para aprofundar — a malha é rica, mas pede direção."
+
+consenso_tradicional: "Vista como proteção e equilíbrio; na cabala, a 'estrela de David' como integração dos opostos."
+arquetipos_simbolicos: ["A Estrela de Davi", "A Malha de afinidades", "O Equilíbrio"]
+

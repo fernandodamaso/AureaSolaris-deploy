@@ -1,0 +1,66 @@
+﻿status: review
+id: "almuten_hyleg_alcocoden"
+nome: "Almuten, Hyleg e Alcocoden"
+tradicoes:
+  - "tradicional"
+  - "helenistica"
+  - "medieval"
+tema: "Técnicas tradicionais de vitalidade e longevidade no mapa natal."
+
+essencia:
+  - "Almuten: planeta com maior dignidade essencial num ponto."
+  - "Hyleg: indicador de vitalidade e período de vida."
+  - "Alcocoden: signo/casa que preserva a vida; ligado ao hyleg."
+
+origens_e_divergencias:
+  tradicional: "Almuten é técnica de ponderação de dignidades; hyleg/aphēta e alcocoden pertencem a famílias helenísticas e medievais de julgamento vital, com critérios que variam entre autores e traduções."
+  moderna: "A maior parte da astrologia moderna não usa cálculo de longevidade. O estudo histórico pode ser preservado sem transformar métodos antigos em prognóstico médico ou de duração de vida."
+  nota: "Não há um algoritmo único canônico. O motor deve exigir uma tradição/tabela, candidatos, pesos e edição de fonte antes de calcular."
+
+camada_energetica:
+  impressao_mental: "O mapa como termômetro de vitalidade e tempo de vida."
+  permeacao_emocional: "Ansiedade ou serenidade diante dos limites do tempo."
+  manifestacao_externa: "No contexto histórico, os autores buscavam avaliar aptidão vital e períodos; a base registra isso como objeto de estudo, não como previsão de saúde ou morte."
+  como_guiar_o_astral: "Explicar a técnica, sua época e seus limites. Não diagnosticar, prescrever, estimar longevidade ou emitir sentença pessoal."
+
+tecnicas:
+  almuten:
+    definicao: "Planeta que obtém a maior pontuação segundo uma tabela explícita de dignidades essenciais aplicada a um grau ou significador."
+    uso: "Serve para comparar participação essencial; pesos, triplicidades, termos e empates dependem do método."
+  hyleg:
+    definicao: "Apheta/hyleg é um dador de vida selecionado entre candidatos tradicionais (luminares, Ascendente e outros, conforme autor) por regras de seita, casas e condição."
+    uso: "Estudar o procedimento histórico com fonte declarada; não converter o resultado em duração individual de vida."
+  alcocoden:
+    definicao: "Planeta que, em certos métodos medievais, possui dignidade sobre o hyleg e participa do cálculo de anos vitais. Não é signo nem casa."
+    uso: "Não implementar sem especificar autor, dignidades, aspectos e regras de anos maiores/menores/médios."
+
+procedimento:
+  - "Selecionar tradição, tabela de dignidades e regime de seita."
+  - "Identificar candidatos ao hyleg segundo o autor escolhido; registrar exclusões."
+  - "Calcular almuten apenas para o ponto definido, guardando os pontos por dignidade."
+  - "Se a escola usar alcocoden, documentar sua seleção e deixar o resultado em modo histórico/estudo."
+
+referencias:
+  - autor: "Cláudio Ptolomeu"
+    obra: "Tetrabiblos"
+    natureza: "primária histórica"
+    localizador: "Livro III; prorrogadores e temas de duração da vida, conferir edição."
+  - autor: "Abū Maʿshar"
+    obra: "The Abbreviation of the Introduction to Astrology"
+    natureza: "primária histórica"
+    localizador: "Dignidades e técnicas de julgamento; conferir tradução/edição."
+  - autor: "Guido Bonatti"
+    obra: "Liber Astronomiae"
+    natureza: "primária histórica"
+    localizador: "Tratados sobre hyleg/alcocoden e anos vitais; conferir tradução/edição."
+
+validacao_de_fontes:
+  base: "A ficha distingue almuten, hyleg e alcocoden e não apresenta suas variantes como algoritmo único."
+  limite: "Nenhum cálculo de vitalidade ou longevidade deve ser entregue como diagnóstico, prognóstico de morte ou orientação de saúde."
+
+ver_mais:
+  - "../15_Medicina/astrologia_medica.yaml"
+  - "../15_Medicina/temperamentos_humores.yaml"
+
+## ✏️ Minhas Anotações
+

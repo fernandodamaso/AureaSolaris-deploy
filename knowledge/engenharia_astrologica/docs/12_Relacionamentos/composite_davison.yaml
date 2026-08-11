@@ -1,0 +1,84 @@
+status: review
+id: "composite_davison"
+nome: "Composite e Davison (Quadro Comparativo)"
+tradicoes:
+  - "moderna ocidental"
+  - "relacional"
+tipo: "comparativo de métodos"
+escopo_documental:
+  tecnica_historica:
+    - "distinção entre composite por midpoint planetário e Davison por midpoint real de tempo e lugar"
+  origem_do_metodo: "Ambos são métodos modernos de astrologia relacional e não devem ser retroprojetados à tradição clássica."
+  camada_simbolica: "A linguagem psicológica ou cármica depende da escola escolhida e não faz parte do cálculo em si."
+subtema: "Mapas de relacionamento"
+
+referencias:
+  - autor: "John Townley"
+    obra: "Composite Charts: The Astrology of Relationships"
+    natureza: "moderna de referência"
+    localizador: "história e método do composite; Llewellyn, 2000"
+  - autor: "Robert Hand"
+    obra: "Planets in Composite"
+    natureza: "moderna"
+    localizador: "interpretação do composite; edição originalmente de 1975/1976"
+  - autor: "Ronald C. Davison"
+    obra: "Synastry: Understanding Human Relations Through Astrology"
+    natureza: "moderna de referência"
+    localizador: "relationship horoscope e métodos de comparação; Aurora Press, 1983"
+
+validacao_de_fontes:
+  base: "As refer?ncias estruturadas identificam autores e m?todos modernos de compara??o, composto e mapa Davison."
+  escopo: "Sinastria, composite e Davison permanecem m?todos distintos; a falta de precedente id?ntico na Antiguidade n?o autoriza retroproje??o hist?rica."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+origens_e_divergencias:
+  tradicional: "Nem composite nem Davison pertencem à técnica astrológica clássica."
+  moderna: "Composite e Davison são métodos relacionais modernos, com cálculos e usos distintos."
+  nota: "Composite não é Davison; ambos podem coexistir com sinastria, mas não devem ser fundidos."
+
+atlas_simbolico:
+  pessoas_arquetipos: "O casal, a entidade relacional, o filho do relacionamento"
+  lugares_fisicos: "Locais de encontro, tribunais"
+  objetos_materia: "Alianças, contratos, mapas sobrepostos"
+  eventos_tipicos: "Casamentos, divórcios, sociedades"
+  animais: "Pomba, cisne, golfinho"
+  plantas_ervas: "Rosa, violeta, maçã (flor)"
+  metais_pedras: "Cobre, bronze, esmeralda, jade"
+  cores_sons:
+    cores: ["Verde-esmeralda", "rosa", "dourado claro"]
+    sons: ["Harpa", "canto coral"]
+  numeros: [2, 6, 7]
+  dias_semana: ["Sexta-feira"]
+  doencas_corpo:
+    doencas: ["Problemas renais", "dor lombar"]
+    partes_corpo: ["Rins", "região lombar", "pele"]
+  arquetipos_mitologicos:
+    - "Afrodite (amor)"
+    - "Hera (casamento)"
+    - "Hermes (aliança)"
+  mitos_historias: "Hera e Zeus; Afrodite e Eros"
+  expressao_elevada_sombra: "Elevada: relação autêntica | Sombra: dependência, manipulação"
+
+camada_energetica:
+  impressao_mental: "O quadro comparativo pergunta que tipo de relação cada método descreve melhor."
+  permeacao_emocional: "Composite tende a descrever a terceira entidade simbólica; Davison, uma carta relacional situada."
+  manifestacao_externa: "O valor maior está em comparar pressupostos antes de comparar interpretações."
+  como_guiar_o_astral: "Ensinar a escolher o método, não apenas a interpretar o resultado."
+
+como_usar: |
+  Composite:
+  1. Calcular midpoint planetário entre fatores equivalentes dos dois mapas.
+  2. Ler a carta resultante como entidade simbólica do vínculo.
+
+  Davison:
+  1. Calcular midpoint real de tempo e de lugar entre os dois nascimentos.
+  2. Erguer uma carta relacional própria para esse instante e local medianos.
+
+  Regra editorial:
+  - Escolher conscientemente qual pergunta cada método responde.
+  - Não usar Davison como substituto improvisado de composite nem o contrário.
+
+relacoes:
+  ver_tambem:
+    - "sinastria"
+    - "davison"
+    - "composite"

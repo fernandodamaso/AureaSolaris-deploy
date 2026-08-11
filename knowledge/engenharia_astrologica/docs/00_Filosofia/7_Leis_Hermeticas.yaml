@@ -1,0 +1,56 @@
+status: review
+id: "sete_leis_hermeticas"
+nome: "7 Princípios Herméticos (Kybalion)"
+tipo: "filosofia hermética moderna"
+tradicoes:
+  - "hermetismo moderno"
+  - "editorial"
+tema: "Os sete princípios popularizados pelo Kybalion, adotados pelo caderno como filtro filosófico pessoal e distinguidos do Corpus Hermeticum histórico."
+
+essencia:
+  - "Mentalismo: o Universo é mental."
+  - "Correspondência: o que está em cima é como o que está embaixo."
+  - "Vibração: tudo vibra."
+  - "Polaridade: tudo é duplo."
+  - "Ritmo: tudo tem fluxo e refluxo."
+  - "Causa e Efeito: nada é casual."
+  - "Gênero: tudo tem princípio masculino e feminino."
+
+origens_e_divergencias:
+  tradicional: "O Corpus Hermeticum e o hermetismo tardo-antigo oferecem a moldura clássica de correspondência, intelecto cósmico e ascensão; eles não apresentam, nessa forma, o esquema dos sete princípios do Kybalion."
+  moderna: "O Kybalion (1908) sistematiza sete princípios e se tornou uma formulação moderna influente no ocultismo ocidental posterior."
+  nota: "Neste corpus, os sete princípios permanecem como filtro pessoal de leitura, mas devem ser nomeados como camada moderna/editorial, não como doutrina textual do Corpus Hermeticum."
+
+camada_energetica:
+  impressao_mental: "A mente que reconhece padrões universais atrás dos eventos."
+  permeacao_emocional: "Tranquilidade ao ver o caos como ritmo, não como injustiça."
+  manifestacao_externa: "Eventos PROVÁVEIS que seguem padrão previsível, não aleatório."
+  como_guiar_o_astral: "Usar as 7 Leis para explicar timing e reação: mudar a vibração muda o evento provável."
+
+aplicacao_astrologica:
+  mentalismo: "Mapa = estrutura mental que se projeta em emoção e acontecimento."
+  correspondencia: "Céu/Terra = macrocosmo/microcosmo; zodíaco = modelo mental coletivo."
+  vibracao: "Planetas = frequências; aspectos = ressonância."
+  polaridade: "Cada planeta/casa tem sombra e luz; polaridade não é 'bom/mau', é fluxo."
+  ritmo: "Fases da Lua, ciclos de Saturno/Júpiter, retrogradações = ritmo visível."
+  causa_efeito: "Trânsitos/progressões = causa provável; resposta = livre-arbítrio."
+  genero: "Planetas masculinos/femininos; signos positivos/negativos = princípio gerador duplo."
+
+ver_mais:
+  - "../00_Filosofia/Macrocosmo_Microcosmo.yaml"
+  - "../00_Filosofia/Sincronicidade.yaml"
+  - "../00_Manual_Editorial/Camadas_de_Conhecimento_e_Disseminacao.yaml"
+
+referencias:
+  primarias:
+    - "Three Initiates. The Kybalion. Yogi Publication Society, 1908."
+    - "Hermetica: The Greek Corpus Hermeticum and the Latin Asclepius. Tradução de Brian P. Copenhaver. Cambridge University Press, 1992."
+  secundarias:
+    - "Hanegraaff, Wouter J. Western Esotericism: A Guide for the Perplexed. Bloomsbury, 2013."
+  tecnicas: []
+
+validacao_de_fontes:
+  base: "As obras citadas distinguem explicitamente o Kybalion moderno do hermetismo antigo."
+  limite: "A compara??o ? hist?rica e cr?tica; n?o afirma identidade textual entre os dois corpora."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+## ✏️ Minhas Anotações

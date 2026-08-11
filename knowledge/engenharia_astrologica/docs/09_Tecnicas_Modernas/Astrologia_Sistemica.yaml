@@ -1,0 +1,66 @@
+status: review
+id: "astrologia_sistemica"
+nome: "Astrologia Sistêmica"
+tipo: "lente aplicada contemporânea"
+tradicao_primaria: ["sistêmica", "psicológica", "relacional"]
+
+escopo:
+  definicao_operacional: "Lente contemporânea que observa o mapa e técnicas relacionais em diálogo com padrões de família, vínculos, contexto e posição da pessoa em sistemas. Não constitui uma tradição histórica única; reúne autores e práticas que devem ser identificados."
+  inclui:
+    - "Perguntas sobre dinâmicas familiares, relacionais e contextuais trazidas voluntariamente pela pessoa."
+    - "Uso delimitado de mapa natal, sinastria, composto, casas derivadas e cronologia, sempre como linguagem simbólica."
+  nao_inclui:
+    - "Confundir o relato de uma escola sistêmica com consenso de toda a astrologia ocidental."
+    - "Reduzir a técnica a uma única modalidade contemporânea, como constelações familiares ou psicoterapia."
+  exclusoes_do_projeto: []
+
+fundamento:
+  descricao: "O uso sistêmico parte da ideia prática de que a pessoa vive em redes de relação. O mapa é tratado como instrumento simbólico de perguntas e reflexão, não como prova sobre terceiros nem como ferramenta diagnóstica."
+  contexto_historico: "Há aplicações contemporâneas de astrologia a temas de família e sistemas. Elas são plurais, sem cânone histórico comparável ao da astrologia helenística ou medieval, e precisam declarar autor, método e limites."
+
+procedimento:
+  pre_requisitos:
+    - "Pergunta e consentimento explícitos da pessoa atendida."
+    - "Separação entre fatos relatados, hipóteses simbólicas e recomendações de cuidado."
+    - "Separação entre material histórico/técnico e a camada de disseminação ética futura."
+  passos:
+    - "Definir a questão relacional sem inferir fatos ausentes."
+    - "Construir um mapa de papéis simbólicos a partir da carta da pessoa atendida, declarando convenções e significadores."
+    - "Escolher técnica compatível: natal, casas derivadas, sinastria consentida, composto ou ciclos, declarando a escolha."
+    - "Formular possibilidades em linguagem condicional e verificável pela experiência da pessoa."
+    - "Evitar atribuir intenção, patologia ou responsabilidade a familiares que não participam da leitura."
+  parametros_de_calculo:
+    - "técnica relacional usada"
+    - "dados consentidos e grau de precisão"
+    - "sistema de casas, zodíaco e orbes"
+
+uso_interpretativo:
+  pergunta_que_ajuda_a_responder:
+    - "Que padrões de vínculo, papéis, limites ou lealdades a pessoa reconhece e deseja explorar de maneira não determinista?"
+  como_ponderar: "A leitura privilegia perguntas, linguagem condicional e autonomia. Um símbolo não confirma um acontecimento nem substitui escuta, contexto, terapia ou suporte profissional."
+  limites:
+    - "Uma carta não elimina a necessidade de contexto, relato, documentação e comparação de técnicas."
+    - "A técnica deve declarar qual autor, convenção de casas e método relacional está sendo usado."
+
+divergencias_de_tradicao:
+  consenso: "É uma aplicação contemporânea, não uma escola histórica unificada."
+  divergencias:
+    - "Autores diferem quanto ao uso de mapa natal, sinastria, composto, constelações familiares e linguagem terapêutica."
+    - "A prática tradicional pode tratar significadores familiares sem adotar pressupostos sistêmicos ou psicológicos."
+  decisao_editorial: "Classificar como lente aplicada; documentar autor e método antes de apresentar qualquer técnica como sistêmica."
+
+referencias:
+  primarias: []
+  secundarias:
+    - "Faculty of Astrological Studies. The Astrology of the Family: An Astrological Overview of the Family. https://astrology.org.uk/extract-from-the-astrology-of-the-family-part-module-article-1-1/ (acesso em 2026-08-10)."
+    - "Nakata, Elizabeth. Untangling Client Issues with a Systemic Constellations Approach. The Career Astrologer, 2022. https://www.astro.com/astrology/opa_article221208_e.htm (acesso em 2026-08-10)."
+  tecnicas: []
+
+relacoes:
+  depende_de: ["mapeamento_sistemico_familiar", "casas_derivadas", "hierarquia_de_julgamento"]
+  ver_tambem: ["sinastria", "mapa_composto", "astrologia_psicologica", "astrologia_carmica_evolutiva"]
+
+orientacao_de_disseminacao_futura:
+  nota: "Aplicável somente quando o material for oferecido a outras pessoas. Registrar consentimento, diferenciar hipótese simbólica de relato factual e encaminhar questões clínicas, jurídicas ou de segurança ao profissional competente."
+
+anotacoes_pessoais: []

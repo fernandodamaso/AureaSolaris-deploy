@@ -1,0 +1,111 @@
+status: review
+id: "saturno_atlas"
+nome: "Saturno — Atlas Simbólico"
+tradicoes:
+  - "atlas simbolico editorial"
+  - "sintese multiescola"
+tipo: "Atlas Simbólico"
+subtema: "Correspondências de Saturno"
+
+origens_e_divergencias:
+  tradicional: "Saturno rege Capricórnio e Aquário e exalta-se em Libra. Frio e seco, significa tempo, limite, velhice, trabalho, isolamento e permanência; secto, dignidade, casa e recepção modulam o juízo."
+  moderna: "Linhas psicológicas enfatizam medo, autoridade, responsabilidade e amadurecimento; karma estruturante é formulação moderna/esotérica."
+  nota: "Correção: Aquário é domicílio tradicional, não exaltação. Cronos e Saturnus foram identificados, mas a divindade romana também guarda semeadura e Idade do Ouro."
+
+origem_linguistica_mito_glifo:
+  etimologia: "Saturnus tem etimologia discutida; a associação com satus, semeadura, é tradicional, mas não consenso filológico."
+  mito: "Cronos devora os filhos e é deposto; Saturno preside uma Idade do Ouro. Hades e Anúbis são analogias, não identidades saturninas."
+  glifo: "♄ vem da tradição gráfica planetária; foice ou cruz sobre matéria são leituras posteriores."
+  porque: "Como planeta visível mais lento e limite do cosmos clássico, Saturno tornou-se imagem de duração, fronteira, necessidade e maturação."
+
+atlas_simbolico:
+  pessoas_arquetipos:
+    - "O velho sábio"
+    - "O estruturante"
+    - "O responsável"
+    - "O recluso"
+    - "O trabalhador"
+    - "O juiz implacável"
+  lugares_fisicos:
+    - "Montanhas"
+    - "Ruínas"
+    - "Fazendas"
+    - "Escritórios"
+    - "Lugares frios, inverno"
+    - "Igrejas antigas"
+  objetos_materia:
+    - "Relógios"
+    - "Pedras"
+    - "Ferro frio"
+    - "Tijolos"
+    - "Estruturas"
+  eventos_tipicos:
+    - "Contratos"
+    - "Limitações"
+    - "Separações"
+    - "Envelhecimento"
+    - "Morte"
+    - "Concretização"
+  animais:
+    - "Crocodilo"
+    - "Serpente"
+    - "Corvo"
+    - "Galo"
+    - "Cabra"
+    - "Tartaruga"
+  plantas_ervas:
+    - "Hera"
+    - "Samambaia"
+    - "Raízes"
+    - "Cardo"
+    - "Pinheiro"
+  metais_pedras:
+    - "Chumbo"
+    - "Ônix"
+    - "Jade negro"
+    - "Ágata negra"
+    - "Sardônica"
+  cores_sons:
+    cores: ["Preto", "Marrom-escuro", "Azul-petróleo", "Cinza-chumbo"]
+    sons: ["Tambor lento", "Sino fúnebre", "Gongo"]
+  numeros: [3, 8, 15]
+  dias_semana: ["Sábado"]
+  doencas_corpo:
+    doencas: ["Problemas ósseos", "Artrite", "Rigidez"]
+    partes_corpo: ["Ossos", "Joelhos", "Pele seca", "Dentes"]
+  arquetipos_mitologicos:
+    - "Cronos/Saturno"
+    - "Anúbis"
+    - "Hades/Plutão"
+    - "Matusalém"
+  mitos_historias:
+    - "Cronos devorando os filhos"
+    - "Saturno e a Idade do Ouro"
+    - "Hades e Perséfone"
+  expressao_elevada_sombra: "Elevada: estrutura, maturidade, responsabilidade | Sombra: rigidez, depressão, medo, pessimismo"
+
+camada_energetica:
+  impressao_mental: "A mente que ESTRUTURA e LIMITA. Tempo, regra, maturidade, 'o que dura'."
+  permeacao_emocional: "Medo e responsabilidade. Quando saudável: serenidade. Quando ferido: depressão, isolamento."
+  manifestacao_externa: "Eventos PROVÁVEIS de concretização, limitações, contratos, maturidade. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a CONSTRUIR COM REALISMO. Saturno é a prova: o que aguenta o tempo, aguenta tudo."
+
+tarot_relacionado:
+  carta: "A Roda da Fortuna no aspecto sombra / O Eremita (IX)"
+  conexao: "O Eremita é Saturno: tempo, solitude, sabedoria que vem com idade."
+
+foco_especial:
+  infantil: "A criança Saturno é precocemente responsável. Precisa de limites CLAROS, não de abandono."
+  familiar: "O patriarca/matriarca que estrutura. O que ensina a lidar com tempo e realidade."
+  carmico_espiritual: "Saturno indica a LIÇÃO DE MATURIDADE. Casa Saturno = onde a pessoa aprende a crescer pelo esforço."
+
+camada_tecnica_e_limites:
+  regra: "Julgar Saturno por secto, dignidade, casa, velocidade, relação solar, recepção e aspectos; não produzir automaticamente morte, depressão ou punição."
+  limites: "Correspondências corporais são históricas, não diagnóstico. Tarot, karma, pedras e mitos comparados não são regra computável."
+referencias:
+  primarias: ["Ptolemeu, Tetrabiblos, I.4 e I.17-19.", "William Lilly, Christian Astrology (1647), pp. 57-61.", "Agrippa, De occulta philosophia, I.23-24 e II.10."]
+  secundarias: ["Liz Greene, Saturn: A New Look at an Old Devil (1976), recepção psicológica moderna."]
+anotacoes_pessoais: []
+ver_mais:
+  - "../04_Planetas/Saturno.yaml"
+

@@ -1,0 +1,51 @@
+# Use este modelo para técnica, condição planetária, princípio astronômico ou escola.
+# Remova os campos que não se aplicarem; não preencha com texto genérico.
+status: draft
+id: "conceito_tecnico_exemplo"
+nome: "Nome do conceito"
+tipo: "conceito técnico"
+tradicao_primaria: ["tradicional"]
+
+escopo:
+  definicao_operacional: "O que o termo designa neste caderno."
+  inclui: []
+  nao_inclui: []
+  exclusoes_do_projeto: []
+
+fundamento:
+  descricao: "Princípio técnico, histórico ou simbólico que sustenta o conceito."
+  contexto_historico: "Quando aplicável, separar fonte histórica de uso contemporâneo."
+
+procedimento:
+  pre_requisitos: []
+  passos: []
+  parametros_de_calculo: []
+
+uso_interpretativo:
+  pergunta_que_ajuda_a_responder: []
+  como_ponderar: "Nunca usar isoladamente nem como determinação factual."
+  limites: []
+
+divergencias_de_tradicao:
+  consenso: ""
+  divergencias: []
+  decisao_editorial: ""
+
+referencias:
+  - autor: ""
+    obra: ""
+    edicao_ou_traducao: ""
+    localizador: ""
+    ano: null
+    url: ""
+    natureza: "primária | secundária | técnica"
+
+pendencias_de_fonte:
+  - "Descrever a fonte que ainda precisa ser confirmada ou remover este item."
+
+relacoes:
+  depende_de: []
+  ver_tambem: []
+
+## ✏️ Minhas Anotações
+anotacoes_pessoais: []

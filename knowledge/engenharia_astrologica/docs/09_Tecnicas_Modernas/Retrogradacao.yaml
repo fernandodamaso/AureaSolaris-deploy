@@ -1,0 +1,50 @@
+status: complete
+id: "retrogradacao"
+nome: "Retrogradação"
+tradicoes:
+  - "helenística"
+  - "medieval"
+  - "tradicional"
+  - "moderna ocidental"
+tipo: "condição de movimento aparente (fundamento tradicional; alojamento editorial de legado)"
+classificacao_editorial:
+  nucleo_conceitual: "Astronomia aplicada e condição planetária acidental"
+  localizacao_atual: "09_Tecnicas_Modernas por legado de organização; não é técnica moderna de origem"
+  regra_de_apresentacao: "A condição calculada precede a releitura moderna de revisão ou interiorização."
+escopo_documental:
+  tecnica_historica:
+    - "movimento longitudinal aparente retrógrado"
+    - "diferença entre retrogradação natal, transitória e técnica"
+    - "relação com força acidental e periodicidade sinódica"
+  calculo_e_regra: "O motor deve detectar retrogradação por velocidade longitudinal aparente negativa, não por simplificações simbólicas."
+  divergencias_de_escola: "Na tradição, retrogradação costuma ser debilidade acidental. Na modernidade, muitas escolas lhe atribuem revisão, interiorização ou retorno; essas leituras devem ser rotuladas."
+referencias:
+  - autor: "William Lilly"
+    obra: "Christian Astrology, 1647, Livro I (condições de movimento dos planetas)."
+    natureza: "fonte primária histórica"
+    localizador: "Livro I, estado direto e retrógrado"
+  - autor: "Swiss Ephemeris"
+    obra: "Swiss Ephemeris Programmer's Documentation."
+    natureza: "referência técnica"
+    localizador: "https://www.astro.com/swisseph/swephprg.htm; velocidade longitudinal e opções de referencial"
+definicao_tecnica: "Retrogradação é o movimento aparente para trás no zodíaco visto da Terra, decorrente da geometria relativa entre Terra, planeta e referencial adotado."
+regras_importantes:
+  - "não é movimento físico real para trás"
+  - "não ocorre para Sol e Lua no mesmo sentido em que ocorre para os planetas"
+  - "exige distinção entre fase retrógrada, sombra e estações, se a escola usar essas categorias"
+referencial_e_motor:
+  regra_canonica: "Para a astrologia geocêntrica ocidental do corpus, retrogradação é velocidade longitudinal eclíptica geocêntrica negativa."
+  topocentrico: "Uma posição topocêntrica pode ser útil para observação local, mas não substitui silenciosamente o referencial geocêntrico do julgamento."
+  sol_e_lua: "Sol e Lua não recebem o rótulo de retrógrados no modelo geocêntrico usual; o motor deve bloquear essa classificação."
+uso_interpretativo:
+  tradicional: "Condição de menor liberdade, reversão, atraso, retorno ou debilidade acidental."
+  moderna: "Pode ser lida como revisão, internalização, reprocessamento ou experiência não linear."
+  regra_documental: "O sistema não deve impor automaticamente leitura psicológica moderna quando a técnica pedida for tradicional."
+nao_confundir_com:
+  - "estação planetária"
+  - "lentidão sem retrogradação"
+camada_energetica:
+  impressao_mental: "O tema planetário parece voltar sobre si mesmo."
+  permeacao_emocional: "Na modernidade, pode ser vivido como revisão ou reintegração."
+  manifestacao_externa: "Em previsão, frequentemente coincide com retornos, atrasos, reaberturas ou reformulações."
+  como_guiar_o_astral: "Especificar sempre se a leitura é natal, transitória, horária ou outra, porque o peso técnico muda."

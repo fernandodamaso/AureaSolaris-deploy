@@ -1,0 +1,64 @@
+meta:
+  status: "proposta_reversível"
+  objetivo: "Definir uma ficha técnica principal sem apagar atlas, resumos ou versões históricas."
+  regra: "Nenhuma entrada é removida; alias_of/summary_of/source_layer preservam caminho, hash e conteúdo."
+
+consolidacoes:
+  - conceito: "Antíscia e Contra-antíscia"
+    canonical_id: antiscia_contraantiscia
+    canonical_path: docs/06_Aspectos/Antiscia_e_Contraantiscia.yaml
+    aliases:
+      - id: antiscia_contraantiscia_atlas
+        path: docs/A_Atlas_Simbolico/Antiscia_e_Contraantiscia.yaml
+        relationship: source_layer
+    rationale: "A ficha em 06_Aspectos é a técnica; o Atlas conserva simbolismo e correspondências."
+
+  - conceito: "Casa 1 — A Procissão / O Eu"
+    canonical_id: casa_1
+    canonical_path: docs/05_Casas/Casa_1.yaml
+    aliases:
+      - id: casa_1_atlas
+        path: docs/A_Atlas_Simbolico/casa_1.yaml
+        relationship: source_layer
+    rationale: "A ficha em 05_Casas é a entrada estrutural; o Atlas é camada simbólica vinculada."
+
+  - conceito: "Graus Astrológicos"
+    canonical_id: graus_astrologicos
+    canonical_path: docs/24_Graus_Astrologicos/Graus.yaml
+    aliases:
+      - id: graus_geral
+        path: docs/24_Graus_Astrologicos/graus_astrologicos.yaml
+        relationship: summary_of
+    rationale: "Manter um índice técnico único e conservar o arquivo geral como resumo rastreável."
+
+  - conceito: "Progressões"
+    canonical_id: progressoes
+    canonical_path: docs/11_Previsao/Progressoes.yaml
+    aliases:
+      - id: progressoes_eng
+        path: docs/D_Engenharia_da_Previsao/progressoes.yaml
+        relationship: summary_of
+    rationale: "A pasta 11_Previsao é a fonte técnica; D_ é engenharia pedagógica e não deve duplicar fórmula."
+
+  - conceito: "Revolução Solar"
+    canonical_id: revolucao_solar
+    canonical_path: docs/11_Previsao/Revolucao_Solar.yaml
+    aliases:
+      - id: revolucao_solar_eng
+        path: docs/D_Engenharia_da_Previsao/revolucao_solar.yaml
+        relationship: summary_of
+    rationale: "A pasta 11_Previsao é a fonte técnica; D_ aponta para ela e preserva explicação de estudo."
+
+politica_familias_auxiliares:
+  A_Atlas_Simbolico: "source_layer; não criar regra técnica paralela"
+  B_Linguagem_Astrologica: "interpretive_layer; relações para conceitos canônicos"
+  C_Engenharia_da_Interpretacao: "method_layer; não substituir fontes de escolas"
+  D_Engenharia_da_Previsao: "method_layer; fórmulas vivem em 11_Previsao"
+  E_Astrologia_Aplicada: "application_layer; apontar para técnica e escola"
+  F_Curiosidades_e_Etimologias: "etymology_layer; preservar integralmente e vincular ao conceito"
+
+aceite:
+  - "Todos os aliases permanecem recuperáveis por nome, caminho e hash."
+  - "O compilador ingere uma regra técnica por canonical_id."
+  - "Variantes incompatíveis permanecem como variantes, não como fusão textual."
+  - "A auditoria não encontra colisões semânticas não decididas."

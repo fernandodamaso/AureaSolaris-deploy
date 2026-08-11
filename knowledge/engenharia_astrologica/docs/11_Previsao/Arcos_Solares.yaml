@@ -1,0 +1,121 @@
+id: arcos_solares
+nome: Arcos solares (direções de arco solar)
+tipo: tecnica_preditiva_simbolica
+tradicoes:
+- moderna ocidental
+status: review
+definicao: Método em que o arco percorrido pelo Sol progredido desde o nascimento
+  é aplicado igualmente a todos os fatores natais. Assim, os corpos conservam entre
+  si as distâncias natais e se deslocam pelo mesmo arco. Embora seja chamado de 'direção',
+  não é direção primária.
+formula_e_parametros:
+  arco_solar: Longitude do Sol progredido menos longitude do Sol natal, normalizada
+    no círculo de 360°.
+  aplicacao: Somar o mesmo arco, no sentido escolhido, a planetas, ângulos e pontos
+    natais admitidos pela escola.
+  equivalencia: Muitas implementações obtêm o Sol progredido pela regra dia-por-ano
+    e então aplicam seu arco a todos os fatores.
+  configuracao: Declarar zodíaco, progressão solar usada, direção direta/conversa,
+    ângulos, aspectos e orbes.
+variantes_e_linhagem:
+  arco_solar_verdadeiro: Usa o deslocamento real do Sol progredido na efeméride pós-natal.
+    A variação diária do movimento solar é preservada.
+  arco_medio_naibodico: Usa uma chave média. Se for adotado 0°59′08,33″, registrar
+    se o programa a aplica como arco eclíptico médio ou como chave de ascensão reta;
+    esses usos têm genealogias técnicas diferentes.
+  arco_simbolico: Um grau por ano é aproximação simbólica de baixa resolução. Não
+    o rotular como arco solar verdadeiro nem como direção primária.
+formula_reproduzivel:
+  arco: A = normalizar(λSol_progredido − λSol_natal) no intervalo escolhido de 0°–360°
+    ou −180°–180°, declarado no resultado. Para arco verdadeiro, λSol_progredido vem
+    da progressão secundária especificada; para arco médio, a chave e sua unidade
+    devem ser declaradas.
+  fatores_dirigidos: Para cada fator natal F, calcular F_dirigido = normalizar(F_natal
+    + A), no sentido declarado. Todos os fatores dirigidos preservam suas separações
+    natais; planetas não seguem movimentos individuais.
+  angulos_e_casas: O MC pode ser dirigido segundo a variante solar adotada e as cúspides
+    derivadas pelo método de casas escolhido. Não usar cúspides recalculadas sem informar
+    como se obtiveram.
+  datacao: Registrar aspecto dirigido–radical, orbe estreito, instante de exatidão
+    e algoritmo de busca. Não chamar aspecto entre dois fatores igualmente dirigidos
+    de gatilho novo, porque a distância natal é preservada.
+dados_reproduziveis:
+  obrigatorios:
+  - Instante natal em UTC, fuso histórico, precisão e localidade para os ângulos.
+  - Data/idade de referência, regra de progressão do Sol ou chave média, zodíaco e
+    geocentria.
+  - Efeméride/motor e versão, orbes, pontos/ângulos dirigidos e método de casas.
+  saida_minima: Exibir Sol natal/progredido, arco usado, variante, fatores dirigidos
+    e data/idade calculada.
+procedimento:
+- Calcular o Sol progredido e o arco solar para a idade/data de referência.
+- Dirigir todos os fatores selecionados pelo mesmo arco, sem recalcular seus movimentos
+  individuais.
+- Examinar aspectos entre fator dirigido e fator natal, com orbe estreito declarado.
+- Diferenciar planeta dirigido a fator natal de trânsito ou aspecto entre dois fatores
+  progredidos.
+- Registrar a incerteza da hora natal, sobretudo para ângulos dirigidos.
+regras_para_motor:
+  saida_minima_obrigatoria:
+  - Variante adotada, Sol natal, Sol progredido, arco calculado, fatores dirigidos,
+    aspecto dirigido-radical, orbe e data/idade.
+  guardrails:
+  - Não recalcular movimentos individuais dos demais planetas como se fossem progressões secundárias.
+  - Não chamar arco solar de direção primária.
+  - Exigir variante declarada para ângulos e cúspides antes de produzir resultados.
+nao_confundir_com:
+- Direções primárias, baseadas no movimento diurno e em arcos de ascensão/tempo.
+- Progressões secundárias, nas quais cada planeta segue sua posição real na efeméride
+  pós-natal.
+- Arco simbólico de um grau por ano; há aproximações, mas a definição técnica é o
+  arco do Sol progredido.
+camada_simbolica:
+  imagem: O Sol fornece uma única medida anual de deslocamento para toda a figura
+    natal.
+  linguagem: O adjetivo solar qualifica a origem do arco, não uma leitura exclusiva
+    de temas solares.
+divergencias_e_limites:
+- Escolas divergem sobre o uso de orbes, casas, ângulos e pontos hipotéticos.
+- A aproximação 1° por ano não substitui, para estudo rigoroso, o cálculo do arco
+  solar real adotado pela ferramenta.
+- É uma técnica moderna de direção simbólica; não deve receber automaticamente as
+  regras históricas de Ptolomeu ou Morin.
+referencias:
+- autor: Astrodienst
+  obra: Solar Arc
+  natureza: definição técnica e distinções de cálculo
+  url: https://www.astro.com/astrowiki/en/Solar_Arc
+- autor: Noel Tyl
+  obra: 'Solar Arcs: Astrology''s Most Successful Predictive System'
+  editora: Llewellyn
+  ano: 2001
+  natureza: obra moderna especializada
+- autor: Martin Gansten
+  obra: 'Primary Directions: Astrology''s Old Master Technique'
+  natureza: referência de contraste com direções primárias
+- autor: Astrodienst
+  obra: Solar Arc
+  edicao_ou_traducao: Astrowiki, versão consultada em 2026-08-10
+  localizador: Arco verdadeiro, arco médio, ângulos e orbe estreito
+  url: https://www.astro.com/astrowiki/en/Solar_Arc_Direction
+  natureza: técnica — distinção de variantes modernas
+- autor: Astrodienst
+  obra: Naibod Key
+  edicao_ou_traducao: Astrowiki, versão consultada em 2026-08-10
+  localizador: Valor 0°59′08,33″ e distinção entre chave e movimento solar real
+  url: https://www.astro.com/astrowiki/en/Naibod_Key
+  natureza: técnica — chave média e sua genealogia
+notas_de_implementacao:
+- A convenção de cálculo de ângulos deve ser declarada pelo software ou protocolo
+  que implementar a técnica.
+- A primeira implementação do projeto deve fixar uma variante de arco solar e guardar
+  um caso-teste versionado.
+origens_e_divergencias:
+  tradicional: Conceito/técnica presente na tradição astrológica ocidental.
+  moderna: Possível ressignificação contemporânea.
+  nota: Rotular a escola quando divergir.
+camada_energetica:
+  impressao_mental: Campo conceitual do tema/técnica.
+  permeacao_emocional: Como o tema toca a experiência subjetiva.
+  manifestacao_externa: Como aparece em comportamentos e eventos.
+  como_guiar_o_astral: Como usar este conhecimento na leitura prática.

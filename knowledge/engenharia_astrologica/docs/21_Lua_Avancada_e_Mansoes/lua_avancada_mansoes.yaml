@@ -1,0 +1,61 @@
+status: review
+id: "lua_avancada"
+nome: "Lua Avançada e Mansões Lunares"
+tradicoes:
+  - "lunar avancada"
+  - "arabes ocidentais"
+tipo: "Aprofundamento"
+subtema: "Ciclo lunar detalhado"
+
+origens_e_divergencias:
+  tradicional: "No recorte do projeto, estudar as 28 manāzil al-qamar transmitidas por fontes árabes/latinas medievais e suas adaptações ocidentais."
+  moderna: "'Estágios da alma' é releitura contemporânea; não é regra técnica universal das mansões árabes."
+  nota: "A mansão requer zodíaco, tabela de limites, época e fonte declarados. Não importar sistemas indianos, chineses ou siderais como escola de estudo."
+
+referencias:
+  - autor: "Dan Attrell e David Porreca (trad.)"
+    obra: "Picatrix: A Grimoire of Astrological Magic"
+    ano: 2019
+    natureza: "fonte primária traduzida"
+    localizador: "Passagens sobre mansões lunares, eleições e imagens"
+  - autor: "Christopher Warnock"
+    obra: "Mansions of the Moon"
+    ano: 2012
+    natureza: "secundária contemporânea"
+    localizador: "Reconstrução ocidental moderna; comparar tabelas com a fonte medieval"
+
+atlas_simbolico:
+  pessoas_arquetipos: "A viajante, a nutridora, a fase"
+  lugares_fisicos: "Céu noturno, caminhos lunares"
+  objetos_materia: "Calendários lunares, mapas de fases"
+  eventos_tipicos: "Ciclos, fases, mudanças emocionais"
+  animais: "Caranguejo, gato, lebre, cisne"
+  plantas_ervas: "Lírio, jasmim noturno, alface"
+  metais_pedras: "Prata, pedra da lua, pérola"
+  cores_sons:
+    cores: ["Prata", "branco luar", "azul-prateado"]
+    sons: ["Flauta", "murmúrio d'água"]
+  numeros: [28, 13, 7]
+  dias_semana: ["Segunda-feira"]
+  doencas_corpo:
+    doencas: ["Problemas digestivos", "ansiedade"]
+    partes_corpo: ["Estômago", "útero", "seios"]
+  arquetipos_mitologicos:
+    - "Artemis"
+    - "Hécate"
+    - "Selene"
+  mitos_historias: "Lua e Endimion; Artemis e Actaeon"
+  expressao_elevada_sombra: "Elevada: ciclo consciente | Sombra: ciclo inconsciente"
+
+camada_energetica:
+  impressao_mental: "A Lua tem 28 casas (mansões). Cada uma é um ESTÁGIO do ciclo emocional."
+  permeacao_emocional: "Ciclo emocional completo. Quando saudável: ritmo. Quando ferido: descompasso."
+  manifestacao_externa: "Eventos prováveis de mudança emocional por fase lunar. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a MAPEAR SEU CICLO LUNAR. Lua avançada é relógio emocional."
+
+como_usar: |
+  Use a tabela individual somente quando a fonte, a transliteração e os limites
+  tiverem sido conferidos. Nomes de estrelas modernas não substituem a sequência
+  histórica das mansões. Cada ficha individual deve informar a fonte da tabela,
+  intervalo zodiacal, contexto eletivo/mágico e divergências de transliteração.
+

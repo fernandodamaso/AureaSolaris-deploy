@@ -1,0 +1,65 @@
+status: review
+id: "casa_2"
+tradicoes:
+  - "helenística"
+  - "medieval"
+  - "renascentista"
+  - "moderna (camadas psicológica e sistêmica explicitamente separadas)"
+tipo: "conceito técnico de casa astrológica"
+escopo_documental:
+  tecnica_historica:
+    - "significação tradicional da casa, sua relação com ângulos, casas sucedentes/cadentes e tópicos derivados"
+  camadas_modernas: "Atlas simbólico, Tarot, medicina, arquétipos e leitura sistêmica permanecem separados da regra histórica."
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "primária"
+    localizador: "Livro IV e passagens sobre configuração e significação dos lugares"
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    natureza: "primária"
+    localizador: "Livros II–IV, tópicos das casas e julgamento natal"
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    natureza: "primária"
+    localizador: "Livro I, significações das casas e regras de julgamento"
+validacao_de_fontes:
+  base: "A significa??o hist?rica dos lugares ? sustentada por Ptolomeu, Valens e Lilly, nas refer?ncias estruturadas da ficha."
+  escopo: "Tarot, Atlas simb?lico, medicina, psicologia e leitura sist?mica s?o camadas de estudo rotuladas; n?o substituem a t?cnica hist?rica de casas."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+numero: 2
+nome: "Casa 2 — Os Bens / O Valor"
+tema: "O que é meu e quanto valho"
+
+origens_e_divergencias:
+  tradicional: "Ptolomeu (Tetrabiblos) — significados tradicionais das 12 casas."
+  moderna: "Astrologia psicológica/sistêmica (Liz Greene, escola de relações familiares)."
+  nota: "Revisar ao citar — marca a escola usada."
+atlas_simbolico:
+  pessoas_arquetipos: "O possuidor, o banqueiro, o artesão, o colecionador"
+  lugares_fisicos: "Bancos, tesouros, jardins, locais de valor"
+  objetos_materia: "Moedas, jóias, instrumentos de trabalho, coleções"
+  eventos_tipicos: "Ganhos, perdas, heranças, aquisições, valorização"
+  animais: "Touro, vaca, cavalo de carga"
+  plantas_ervas: "Videira, trigo, oliveira, hera"
+  metais_pedras: "Cobre, bronze, esmeralda, turquesa"
+  cores_sons: "Verde, rosa; notas Lá e Ré"
+  numeros: "2 (dualidade material), 6 (harmonia terrena)"
+  dias_semana: "Sexta-feira (Vênus)"
+  doencas_corpo: "Garganta, pescoço, tireoide"
+  arquetipos_mitologicos: "Ceres/Deméter (colheita), Héstia/Vesta (lar)"
+  mitos_historias: "Deméter e a colheita; Midas e o toque de ouro"
+  sonhos_simbolos_inconsciente: "Tesouros, comida, jardins, música"
+  expressao_elevada_sombra: "Elevada: auto-valor, generosidade | Sombra: possessividade, avareza"
+
+camada_energetica:
+  campo_mental: "Foco em posse, segurança e autoavaliação. 'O que é meu?' e 'quanto valho?'"
+  permeacao_emocional: "Apego ao que é próprio, medo de perder."
+  manifestacao_externa: "Eventos prováveis de ganho/perda material. Arquétipos: o Tesouro, o Cofre. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a valorizar o que REALMENTE é seu (não só dinheiro)."
+
+significados_derivados:
+  dinheiro_parceiro: false
+  heranca: "Casa 2 em tensão com 8 = herança disputada."
+  autoestima: "Casa 2 = autoestima material — 'o que tenho' = 'o que valho'."
+  recursos_proprios: "Ganhos próprios, não-partilhados (diferente da 8 que é 'dinheiro do outro')."

@@ -1,0 +1,109 @@
+﻿status: review
+id: "touro_atlas"
+nome: "Touro — Atlas Simbólico"
+tradicoes:
+  - "atlas simbolico editorial"
+  - "sintese multiescola"
+tipo: "Atlas Simbólico"
+subtema: "Correspondências de Touro"
+
+origens_e_divergencias:
+  tradicional: "Vênus — terra, sensualidade, possessividade, fertilidade."
+  moderna: "Vênus (mesmo). Sem divergência."
+  nota: "Regência unânime."
+
+atlas_simbolico:
+  pessoas_arquetipos:
+    - "O cultivador"
+    - "O artesão"
+    - "O amante sensual"
+    - "O conservador"
+    - "O possuidor"
+    - "O estável"
+  lugares_fisicos:
+    - "Fazendas"
+    - "Jardins"
+    - "Minas"
+    - "Lugares de luxo"
+    - "Caveiras, adegas"
+    - "Lugares estáticos"
+  objetos_materia:
+    - "Moedas"
+    - "Ouro"
+    - "Instrumentos musicais"
+    - "Tecidos"
+    - "Esculturas"
+    - "Tesouros"
+  eventos_tipicos:
+    - "Casamentos"
+    - "Aquisições"
+    - "Colheitas"
+    - "Concordias"
+    - "Mudanças lentas"
+    - "Ganhos"
+  animais:
+    - "Touro"
+    - "Cavalo"
+    - "Touro de guerra"
+    - "Boi"
+    - "Veado"
+  plantas_ervas:
+    - "Videira"
+    - "Trigo"
+    - "Oliveira"
+    - "Hera"
+    - "Rosa"
+    - "Maçã"
+  metais_pedras:
+    - "Cobre"
+    - "Bronze"
+    - "Esmeralda"
+    - "Turquesa"
+    - "Pedra-sabão"
+  cores_sons:
+    cores: ["Verde", "Rosa", "Azul-esverdeado", "Marrom-terra"]
+    sons: ["Tambor grave", "Flauta doce", "Canto de pássaro"]
+  numeros: [2, 6, 15]
+  dias_semana: ["Sexta-feira (dia de Vênus)"]
+  doencas_corpo:
+    doencas: ["Problemas de garganta", "Problemas de pescoço", "Obesidade"]
+    partes_corpo: ["Garganta", "Pescoço", "Tireoide", "Região lombar"]
+  arquetipos_mitologicos:
+    - "Zeus como touro (sequestro de Europa)"
+    - "Dioniso (fertilidade)"
+    - "Deméter (agricultura)"
+  mitos_historias:
+    - "Zeus como touro"
+    - "O touro de Creta"
+    - "Midas e o toque de ouro"
+  expressao_elevada_sombra: "Elevada: estabilidade, sensualidade saudável, construção | Sombra: possessividade, preguiça, apego material"
+
+revisao_editorial:
+  origem_e_linguagem: "Touro vem do latim taurus, 'touro'; o signo tropical de 30° não é a constelação de Touro."
+  mito_arquetipo_e_porque: "Corpo, fertilidade, solo, ruminação e valor fazem uma rede simbólica; o touro aparece em mitos distintos, que devem conservar atribuição cultural."
+  limite_tecnico: "Vênus é regente tradicional. Recursos, prazer e estabilidade não se concluem de um signo isolado nem substituem casas, dignidade e aspectos."
+referencias:
+  primarias:
+    - "Ptolomeu. Tetrabiblos, livro I: signos e qualidades, conforme edição declarada."
+  secundarias:
+    - "Rudhyar, Dane. The Astrological Signs: The Pulse of Life. Harper & Row, 1971."
+  tecnicas:
+    - "Ver 02_Astronomia/Zodiaco_Tropical.yaml e 04_Planetas/Venus.yaml."
+camada_energetica:
+  impressao_mental: "A mente que CONSTRUI e VALORIZA. Pensamento lento, sensorial, pragmático."
+  permeacao_emocional: "Segurança emocional através do corpo e dos sentidos. Quando saudável: prazer. Quando ferido: apego, medo de perder."
+  manifestacao_externa: "Eventos PROVÁVEIS de ganhos, construções, casamentos, aquisições. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a CONSTRUIR SEM APEGAR. Touro é a terra, não a prisão."
+
+tarot_relacionado:
+  carta: "O Ás de Ouros"
+  conexao: "Touro é o Ás de Ouros: início material, semente de prosperidade, estabilidade que cresce."
+
+foco_especial:
+  infantil: "A criança Touro precisa de rotina, conforto, toque, alimentação boa. Mudanças bruscas a assustam."
+  familiar: "O membro que sustenta a família financeiramente. O que traz estabilidade. Conflitos: possessividade."
+  carmico_espiritual: "Touro indica a LIÇÃO DE VALOR. Casa Touro = onde a pessoa aprende a construir recursos e prazer."
+
+ver_mais:
+  - "../03_Signos/Touro.yaml"
+

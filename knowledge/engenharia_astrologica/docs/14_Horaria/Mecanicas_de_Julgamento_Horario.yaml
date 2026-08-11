@@ -1,0 +1,62 @@
+status: review
+id: "mecanicas_julgamento_horario"
+nome: "Mecânicas de Julgamento Horário"
+tipo: "técnica horária tradicional"
+tradicao_primaria: ["medieval", "renascentista", "tradicional"]
+
+escopo:
+  definicao_operacional: "Conjunto de relações entre significadores usado por algumas linhas de astrologia horária: aplicação e separação, tradução e coleção de luz, proibição, refreação e frustração."
+  inclui:
+    - "Definições técnicas atribuídas a autores/escolas."
+    - "Avaliação de condição, recepção, velocidade, casas e contexto da pergunta."
+  nao_inclui:
+    - "Uma lista de regras automáticas que dispense a radicalidade, os significadores e a pergunta."
+    - "Promessa de resultado factual ou aconselhamento médico, jurídico, financeiro ou de segurança."
+  exclusoes_do_projeto: []
+
+fundamento:
+  descricao: "Em horária tradicional, relações de luz descrevem como significadores aplicam, se se separam ou se conectam por intermédio de outro planeta. Impedimentos só têm sentido dentro da pergunta, da condição dos significadores e das regras da escola."
+  contexto_historico: "A terminologia e os requisitos variam entre autores medievais e renascentistas. Esta ficha estabelece um mapa de estudo, não um algoritmo universal."
+
+procedimento:
+  pre_requisitos:
+    - "Pergunta clara, contexto conhecido e carta erigida segundo a escola adotada."
+    - "Significadores selecionados antes de investigar mecânicas auxiliares."
+  passos:
+    - "Examinar aplicação/separação e a condição dos significadores principais."
+    - "Verificar se um planeta transporta ou reúne luz entre significadores, declarando velocidade, ordem de aplicação e recepção."
+    - "Verificar proibição, refreação ou frustração segundo a definição da fonte utilizada."
+    - "Sintetizar com casas, dignidade, aspecto por signo e testemunhos contrários."
+  parametros_de_calculo:
+    - "sistema de casas"
+    - "regências e significadores"
+    - "orbes, aplicação e separação"
+    - "velocidade, direção e recepção"
+
+uso_interpretativo:
+  pergunta_que_ajuda_a_responder:
+    - "Que relações técnicas qualificam a possibilidade, a mediação ou o impedimento na pergunta horária?"
+  como_ponderar: "Essas mecânicas são secundárias à identificação correta de pergunta e significadores. Relatar também testemunhos contrários e incertezas."
+  limites:
+    - "Não aplicar a terminologia fora de uma escola declarada."
+    - "Não emitir orientação de alto impacto com base em uma carta horária."
+
+divergencias_de_tradicao:
+  consenso: "Autores tradicionais descrevem aplicação, recepção e impedimentos, mas não sempre com a mesma regra."
+  divergencias:
+    - "Há desacordo sobre orbes, ordem de aplicação, papel da recepção e o alcance de cada impedimento."
+  decisao_editorial: "Fichas futuras separarão cada mecânica, trarão exemplos calculados e citarão autor/edição; esta é apenas ficha-mãe."
+
+referencias:
+  primarias:
+    - "Lilly, William. Christian Astrology. Londres, 1647."
+    - "Bonatti, Guido. Book of Astronomy. Tradução de Benjamin Dykes. Cazimi Press, 2007."
+  secundarias:
+    - "Skyscript. Christian Astrology by William Lilly: texto e índice de estudo. https://www.skyscript.co.uk/CA/ (acesso em 2026-08-10)."
+  tecnicas: []
+
+relacoes:
+  depende_de: ["hierarquia_de_julgamento", "dignidades_essenciais_acidentais", "recepcao"]
+  ver_tambem: ["radicalidade_horaria", "traducao_de_luz", "colecao_de_luz", "proibicao", "refreacao", "frustracao"]
+
+anotacoes_pessoais: []

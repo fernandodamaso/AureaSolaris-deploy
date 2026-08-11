@@ -1,0 +1,57 @@
+status: review
+id: "contraparalelo"
+nome: "Contraparalelo de declinação"
+tradicoes:
+  - "moderna ocidental"
+  - "tradição inglesa"
+  - "astronomia matemática"
+tipo: "relação por declinação"
+angulo: "declinações de magnitude semelhante em hemisférios opostos"
+natureza: "polaridade e tensão por coordenada equatorial"
+escopo_documental:
+  tecnica_historica:
+    - "comparação de declinações com sinais opostos"
+    - "distinção entre contraparalelo, oposição zodiacal e antíscia"
+    - "analogia interpretativa com oposição como hipótese de escola, não identidade geométrica literal"
+  calculo_e_orbes: "O motor deve comparar magnitudes de declinação e confirmar hemisférios opostos com efeméride identificada e orbe explícito."
+  divergencias_de_escola: "Muitos autores modernos o tratam como análogo à oposição; essa equivalência não é consenso universal e deve ser rotulada como leitura de escola."
+referencias:
+  - autor: "Astrodienst"
+    obra: "Parallel"
+    natureza: "secundária de referência"
+    localizador: "Verbete sobre paralelos e contraparalelos"
+  - autor: "Charles E. O. Carter"
+    obra: "The Astrological Aspects"
+    natureza: "secundária/moderna"
+    localizador: "Capítulos sobre declinação; conferir edição"
+  - autor: "Faculty of Astrological Studies"
+    obra: "Materiais de ensino sobre aspectos e declinação"
+    natureza: "secundária pedagógica"
+    localizador: "Unidade/edição a localizar"
+validacao_de_fontes:
+  base: "As refer?ncias estruturadas sustentam as distin??es hist?ricas e t?cnicas; signo, grau, partil, paralelo e contraparalelo n?o s?o tratados como sin?nimos."
+  escopo: "Orbes permanecem par?metros de escola e corpo, declarados pela t?cnica escolhida; a ficha n?o imp?e um valor universal."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+definicao_tecnica: "Dois fatores apresentam declinações de magnitude igual ou muito próxima, mas um está ao norte e outro ao sul do equador celeste."
+calculo:
+  regra: "Comparar os valores absolutos das declinações e confirmar sinais opostos."
+  exemplo: "Se um corpo está em +16°40' e outro em -16°55', a diferença entre as magnitudes é 0°15'; dentro do orbe declarado, há contraparalelo."
+  aplicativo: "O vínculo é aplicativo quando a diferença de magnitude diminui enquanto os corpos permanecem em hemisférios opostos."
+  separativo: "O vínculo é separativo quando a diferença aumenta após a perfeição."
+julgamento_tecnico:
+  regra_geral: "Em muitas escolas modernas, o contraparalelo é lido como tensão ou polaridade análoga à oposição."
+  nota: "Essa leitura deve ser exibida como analogia interpretativa de escola e não como substituto automático de um aspecto por longitude."
+nao_confundir_com:
+  - "Oposição zodiacal: 180° em longitude eclíptica."
+  - "Paralelo: declinações semelhantes no mesmo hemisfério."
+  - "Antíscia e contra-antíscia: simetrias pelo eixo solsticial."
+origens_e_divergencias:
+  tradicional: "A classificação histórica exata precisa ser consolidada com fontes adicionais."
+  moderna: "Uso frequente como aspecto complementar de polaridade por declinação."
+  nota: "Se o motor usar contraparalelo, deve declarar a escola, o orbe e o estatuto interpretativo adotados."
+camada_energetica:
+  impressao_mental: "Há ligação forte por polaridade, mas fora da geometria zodiacal comum."
+  permeacao_emocional: "Pode ser vivida como tensão, eco inverso ou complementaridade inquieta."
+  manifestacao_externa: "Age como vínculo adicional de polarização e não substitui a leitura dos aspectos principais."
+  como_guiar_o_astral: "Usar como refinamento técnico secundário, sem inflar sua importância acima dos aspectos por longitude quando a escola não o exige."
+exemplo_pratico: "Lua em contraparalelo com Saturno pode ser lida, em escolas que usam declinação, como reforço de tensão afetiva e contenção; o peso final depende do restante do mapa."

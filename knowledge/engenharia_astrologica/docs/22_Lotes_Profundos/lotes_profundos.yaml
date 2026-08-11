@@ -1,0 +1,59 @@
+status: review
+id: "lotes_profundos"
+nome: "Lotes Profundos"
+tradicoes:
+  - "helenistica"
+  - "arabe-medieval"
+tipo: "Aprofundamento"
+subtema: "Partes arábicas com sentido do cálculo"
+
+origens_e_divergencias:
+  tradicional: "Lotes (klêroi) são pontos calculados presentes na astrologia helenística e desenvolvidos em transmissões árabe-medievais; fórmula, inversão diurna/noturna e sentido variam por fonte."
+  moderna: "Linguagem psicológica ou evolutiva posterior deve ser atribuída e não substitui a doutrina histórica dos lotes."
+  nota: "Registrar a fórmula, a regra de sect, zodíaco, casas e regência. A Parte da Fortuna e a Parte do Espírito são centrais, mas não autorizam atribuir fórmulas tardias a Valens ou Ptolomeu sem fonte."
+
+referencias:
+  - autor: "Vettius Valens"
+    obra: "The Anthology"
+    edicao_ou_traducao: "Mark Riley, tradução inglesa"
+    natureza: "fonte primária helenística"
+    localizador: "Livro II, Fortuna, Espírito e lotes relacionados"
+  - autor: "Paulus Alexandrinus"
+    obra: "Introductory Matters"
+    edicao_ou_traducao: "Dorian Gieseler Greenbaum, tradução inglesa"
+    natureza: "fonte primária helenística"
+    localizador: "Capítulos sobre lotes e condições do mapa"
+
+atlas_simbolico:
+  pessoas_arquetipos: "O afortunado, o felizardo, o que tem sorte"
+  lugares_fisicos: "Lugares de sorte, tesouros, locais de abundância"
+  objetos_materia: "Moedas, jóias, objetos de valor"
+  eventos_tipicos: "Ganhos inesperados, sorte, prosperidade"
+  animais: "Touro, cavalo de carga, cisne"
+  plantas_ervas: "Videira, trigo, oliveira, hera"
+  metais_pedras: "Cobre, bronze, esmeralda, turquesa"
+  cores_sons:
+    cores: ["Verde", "rosa"]
+    sons: ["Lá", "Ré"]
+  numeros: [1, 6, 8]
+  dias_semana: ["Sexta-feira", "Domingo"]
+  doencas_corpo:
+    doencas: ["Problemas de garganta", "problemas de pescoço"]
+    partes_corpo: ["Garganta", "pescoço", "tireoide"]
+  arquetipos_mitologicos:
+    - "Fortuna/Tyche"
+    - "Hermes/Mercúrio"
+  mitos_historias: "Fortuna e a roda da sorte"
+  expressao_elevada_sombra: "Elevada: sorte consciente, generosidade | Sombra: ganância, superficialidade"
+
+camada_energetica:
+  impressao_mental: "Cada lote é um PONTO MATEMÁTICO com SENTIDO. 'O que esta fórmula calcula?'."
+  permeacao_emocional: "Sorte ligada a cálculo. Quando saudável: sorte como dom. Quando ferido: sorte como capricho."
+  manifestacao_externa: "Eventos prováveis de ganho, sorte, prosperidade. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a ENTENDER A FÓRMULA. Lote não é mágica — é matemática simbólica."
+
+foco_especial:
+  infantil: "A criança lotes aprende matemática como linguagem simbólica."
+  familiar: "O membro que traz sorte ou recursos."
+  carmico_espiritual: "Lotes indicam os PONTOS FORTES da jornada."
+

@@ -1,0 +1,63 @@
+status: review
+id: "sextil"
+nome: "Sextil"
+tradicoes:
+  - "helenística"
+  - "medieval"
+  - "renascentista"
+  - "tradicional"
+  - "moderna ocidental"
+tipo: "aspecto por longitude eclíptica"
+angulo: "60°"
+natureza: "cooperação, abertura e oportunidade utilizável"
+escopo_documental:
+  tecnica_historica:
+    - "configuração por signo e por grau"
+    - "aplicação e separação"
+    - "beneficência moderada e condicionada"
+  calculo_e_orbes: "O motor deve calcular a proximidade de 60° segundo orbe declarado e distinguir sextil por signo de sextil partil."
+  divergencias_de_escola: "Na tradição, o sextil é benéfico, mas geralmente menos forte que o trígono. Em escolas modernas, costuma receber linguagem de oportunidade, recurso ou talento acionável."
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "primária"
+    localizador: "Livro I, capítulos sobre aspectos, configurações e orbes"
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    natureza: "primária"
+    localizador: "Livros I-II, julgamentos configuracionais"
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    natureza: "primária/secundária histórica"
+    localizador: "Livro I, aspectos e orbes; conferir edição"
+validacao_de_fontes:
+  base: "As refer?ncias estruturadas sustentam as distin??es hist?ricas e t?cnicas; signo, grau, partil, paralelo e contraparalelo n?o s?o tratados como sin?nimos."
+  escopo: "Orbes permanecem par?metros de escola e corpo, declarados pela t?cnica escolhida; a ficha n?o imp?e um valor universal."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+definicao_tecnica: "Dois fatores se encontram em signos de polaridade complementar e elemento compatível ou a aproximadamente 60° de distância em longitude eclíptica."
+por_signo_vs_por_grau:
+  por_signo: "O sextil zodiacal testemunha afinidade e colaboração possível entre signos que não pertencem ao mesmo elemento."
+  por_grau: "A exatidão aumenta a força do testemunho."
+aplicativo_separativo:
+  aplicativo: "A oportunidade e a cooperação estão se formando."
+  separativo: "O contato exato já ocorreu e o recurso pode estar mais internalizado ou já ter passado pelo ponto máximo."
+julgamento_tradicional:
+  regra_geral: "O sextil tende a significar auxílio, abertura, cooperação e viabilização, com menor robustez que o trígono."
+  nota: "Não deve ser lido como promessa automática; depende da condição dos significadores e do contexto."
+camada_moderna:
+  uso_psicologico: "Frequentemente lido como chance, talento acionável, habilidade que floresce quando usada."
+  regra_documental: "Essa camada pode ser mostrada como nota moderna, sem substituir o juízo técnico."
+nao_confundir_com:
+  - "Semissextil: aspecto moderno distinto, de 30°."
+  - "Boa vontade abstrata: sextil não elimina impedimentos fortes de outros fatores."
+atlas_simbolico:
+  pessoas_arquetipos: "aprendiz hábil, mensageiro útil, colaborador"
+  objetos_materia: "ferramenta prática, ponte menor, chave"
+  eventos_tipicos: "chance, cooperação, abertura, aprendizado aplicável"
+  arquetipos_mitologicos: "atalho útil, ocasião favorável"
+camada_energetica:
+  impressao_mental: "Os princípios cooperam com relativa facilidade, mas pedem acionamento."
+  permeacao_emocional: "Há leveza e disponibilidade, não necessariamente abundância total."
+  manifestacao_externa: "Tende a oferecer portas viáveis, ajudas práticas e conexão produtiva."
+  como_guiar_o_astral: "Ler o sextil como possibilidade operacional: existe via de saída, mas alguém precisa usá-la."
+exemplo_pratico: "Marte em sextil com Saturno pode favorecer ação disciplinada e execução metódica, desde que o contexto técnico confirme que os planetas conseguem agir."

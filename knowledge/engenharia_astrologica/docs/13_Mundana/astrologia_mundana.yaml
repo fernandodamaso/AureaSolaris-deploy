@@ -1,0 +1,63 @@
+status: review
+id: "astrologia_mundana"
+nome: "Astrologia Mundana"
+tradicoes:
+  - "mundana tradicional"
+  - "moderna quando explicitada"
+tipo: "Aprofundamento"
+subtema: "Eventos coletivos e nações"
+
+origens_e_divergencias:
+  tradicional: "Ptolomeu e autores medievais tratam povos, climas, cidades, reinos, ingressos e eclipses em regras próprias."
+  moderna: "A astrologia mundial contemporânea usa mapas de fundação, ingressos, eclipses e ciclos, com convenções variadas de data e local."
+  nota: "Um mapa nacional exige evento fundador e local documentados; não há carta única consensual para toda coletividade. Não tratar correlação simbólica como previsão factual."
+
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "fonte primária"
+    localizador: "Livro II, assuntos de povos, regiões, climas e fenômenos coletivos"
+  - autor: "Abu Ma'shar"
+    obra: "On Historical Astrology: The Book of Religions and Dynasties"
+    natureza: "fonte primária traduzida"
+    localizador: "Astrologia histórica e mundana medieval; usar edição/tradução identificada"
+  - autor: "Nicholas Campion"
+    obra: "The Book of World Horoscopes"
+    natureza: "secundária / repertório documental"
+    localizador: "Datas e incertezas de cartas de coletividades"
+
+atlas_simbolico:
+  pessoas_arquetipos: "O povo, a nação, o coletivo"
+  lugares_fisicos: "Países, cidades, regiões"
+  objetos_materia: "Bandeiras, mapas geográficos, efemérides mundanas"
+  eventos_tipicos: "Eleições, crises, mudanças políticas, desastres"
+  animais: "Águia (nação), lobo (povo), touro (economia)"
+  plantas_ervas: "Carvalho (nação), videira (economia)"
+  metais_pedras: "Ouro (economia), ferro (guerra)"
+  cores_sons:
+    cores: ["Cores da bandeira", "preto (crise)", "dourado (prosperidade)"]
+    sons: ["Hino nacional", "tambor de guerra", "celebração"]
+  numeros: [1, 4, 7, 10]
+  dias_semana: ["Domingo"]
+  doencas_corpo:
+    doencas: ["Crises econômicas", "guerras"]
+    partes_corpo: ["Economia", "política", "coração coletivo"]
+  arquetipos_mitologicos:
+    - "Zeus (autoridade)"
+    - "Atena (estratégia)"
+    - "Ares (guerra)"
+  mitos_historias: "Guerras, fundações de cidades"
+  expressao_elevada_sombra: "Elevada: coletividade consciente | Sombra: manipulação de massa"
+
+camada_energetica:
+  impressao_mental: "A nação é um SER COLETIVO. O mapa da fundação é o 'mapa natal' do país."
+  permeacao_emocional: "Sentimento coletivo. Quando saudável: união. Quando ferido: divisão, crise."
+  manifestacao_externa: "Eventos prováveis de crises, eleições, mudanças políticas. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a ENTENDER O COLETIVO. Astrologia mundana é a leitura do 'corpo social'."
+
+como_usar: |
+  1. Calcule o mapa da fundação do país.
+  2. Acompanhe trânsitos e progressões sobre o mapa.
+  3. Leia por casas angulares (1, 4, 7, 10).
+  4. SEMPRE como tendência, não como profecia.
+

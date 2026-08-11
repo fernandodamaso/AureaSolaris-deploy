@@ -1,0 +1,46 @@
+﻿status: draft
+id: "algol_atlas"
+nome: "Algol — Atlas Simbólico"
+tradicoes:
+  - "atlas simbolico editorial"
+  - "sintese multiescola"
+tipo: "Atlas Simbólico"
+subtema: "Correspondências de Algol"
+
+origens_e_divergencias:
+  tradicional: "Ptolomeu, Al-Battani — Algol = Demônio/Cabeça da Medusa; estrela mais perigosa."
+  moderna: "Astrologia moderna mantém; acrescenta trauma, violência, morte violenta."
+  nota: "Interpretar com cuidado; não é sentença, é alerta para padrão sombra."
+
+atlas_simbolico:
+  pessoas_arquetipos: "Vilão, monstro, pessoa ferida, vingadora"
+  lugares_fisicos: "Cavernas, masmorras, lugares abandonados, cemitérios"
+  objetos_materia: "Machado, máscara, espada ensanguentada, correntes"
+  eventos_tipicos: "Violência, trauma, morte súbita, vingança, perda radical"
+  animais: "Cobra peçonhenta, escorpião, morcego, corvo preto"
+  plantas_ervas: "Ervas daninhas, mandrágora, cicuta, noz-moscada"
+  metais_pedras: "Ferro negro, obsidiana, turmalina negra, hematita"
+  cores_sons:
+    cores: ["Preto", "vermelho-sangue", "roxo profundo"]
+    sons: ["Grito", "trovão", "sussurro cortante"]
+  numeros: [9, 13, 26]
+  dias_semana: ["Terça-feira (Marte)", "Sábado (Saturno)"]
+  doencas_corpo:
+    doencas: ["Ferimentos", "infecções graves", "histeria"]
+    partes_corpo: ["Cabeça", "olhos", "sistema reprodutor"]
+  arquetipos_mitologicos: ["Medusa", "Hidra de Lerna", "Cérbero", "Deméter/Prosérpina sombra"]
+  mitos_historias: "Perseu decapitando Medusa; cabeça que petrifica; trauma coletivo"
+  sonhos_simbolos_inconsciente: "Cabeças cortadas, olhos injetados, monstros, sangue"
+  expressao_elevada_sombra: "Elevada: cirurgiã da sombra, confronto com o trauma, transformação radical | Sombra: violência, vingança, compulsão"
+
+camada_energetica:
+  impressao_mental: "Ver o horror sem desviar o olhar; tendência a enfrentar extremos."
+  permeacao_emocional: "Densidade, trauma armazenado. Quando sombra: obsessão por dor/própria ou alheia."
+  manifestacao_externa: "Eventos PROVÁVEIS de confronto com violência, trauma, morte súbita."
+  como_guiar_o_astral: "Oferecer leitura como 'olhar para a Medusa com espelho' — entender a sombra sem se petrificar."
+
+ver_mais:
+  - "../07_Estrelas_Fixas/README.yaml"
+
+## ✏️ Minhas Anotações
+

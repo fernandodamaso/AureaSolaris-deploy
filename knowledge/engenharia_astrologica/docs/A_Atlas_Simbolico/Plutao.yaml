@@ -1,0 +1,109 @@
+status: review
+id: "plutao_atlas"
+nome: "Plutão — Atlas Simbólico"
+tradicoes:
+  - "atlas simbolico editorial"
+  - "sintese multiescola"
+tipo: "Atlas Simbólico"
+subtema: "Correspondências de Plutão"
+
+origens_e_divergencias:
+  tradicional: "Plutão foi descoberto em 1930 e não integra a tradição dos sete planetas. Escorpião permanece domicílio de Marte no esquema tradicional."
+  moderna: "Astrologias moderna, psicológica e evolutiva associam Plutão a Escorpião, poder, compulsão, crise, destruição/regeneração e processos coletivos; autores e escolas divergem sobre regência, peso e uso natal."
+  nota: "Astronomicamente classificado como planeta anão desde 2006; isso não elimina seu uso astrológico moderno. Plutônio é correspondência posterior à descoberta do elemento e não tradicional."
+
+origem_linguistica_mito_glifo:
+  etimologia: "Plutão vem de Ploutōn, 'o rico', título grego ligado às riquezas subterrâneas; o nome astronômico foi adotado em 1930."
+  mito: "Hades/Plutão governa o mundo dos mortos; Perséfone articula descida e retorno. Hécate, Cronos e Dioniso aproximam temas, mas não são equivalentes."
+  glifo: "♇ combina P e L, iniciais de Pluto e também de Percival Lowell; outros glifos circulam em escolas astrológicas."
+  porque: "Nome ctônico, distância, invisibilidade a olho nu e contexto do século XX sustentaram profundidade, massa, poder e transformação coletiva."
+
+atlas_simbolico:
+  pessoas_arquetipos:
+    - "O cirurgião"
+    - "O detetive"
+    - "O mago"
+    - "O manipulador"
+    - "O renascido"
+    - "O guerreiro sombrio"
+  lugares_fisicos:
+    - "Subterrâneos"
+    - "Mina de ouro"
+    - "Hospitais psiquiátricos"
+    - "Delegacias"
+    - "Locais de transformação radical"
+  objetos_materia:
+    - "Ferramentas cirúrgicas"
+    - "Relíquias"
+    - "Moedas antigas"
+    - "Espadas"
+    - "Chaves"
+  eventos_tipicos:
+    - "Mortes e renascimentos"
+    - "Crises profundas"
+    - "Transformações"
+    - "Descobertas de segredos"
+    - "Poder"
+  animais:
+    - "Escorpião"
+    - "Aguia"
+    - "Lobo negro"
+    - "Cobra"
+    - "Fênix"
+    - "Hiena"
+  plantas_ervas:
+    - "Erva-moura"
+    - "Raízes profundas"
+    - "Narciso"
+    - "Papoula"
+    - "Hortelã-pimenta"
+  metais_pedras:
+    - "Plutônio (teórico)"
+    - "Obsidiana"
+    - "Granada"
+    - "Rubi"
+    - "Esmeralda escura"
+  cores_sons:
+    cores: ["Preto", "Roxo-escuro", "Vermelho-sangue", "Verde-escuro"]
+    sons: ["Trovão", "Tambor profundo", "Grito"]
+  numeros: [8, 4]
+  dias_semana: ["Terça-feira (Marte como regente tradicional)"]
+  doencas_corpo:
+    doencas: ["Problemas reprodutivos", "Câncer", "Infecções profundas"]
+    partes_corpo: ["Órgãos reprodutivos", "Intestinos", "Sangue"]
+  arquetipos_mitologicos:
+    - "Hades/Plutão"
+    - "Perséfone (renascimento)"
+    - "Hécate"
+    - "Cronos (devorador)"
+  mitos_historias:
+    - "Rapto de Perséfone"
+    - "Hércules no inferno"
+    - "Morte e renascimento de Dioniso"
+  expressao_elevada_sombra: "Elevada: transformação, regeneração, poder | Sombra: manipulação, controle, violência, fanatismo"
+
+camada_energetica:
+  impressao_mental: "A mente que TRANSFORMA e RENASCE. Profundidade, morte do antigo, renascimento."
+  permeacao_emocional: "Intensidade emocional extrema. Quando saudável: regeneração. Quando ferido: obsessão, medo de perder o controle."
+  manifestacao_externa: "Eventos PROVÁVEIS de crise, morte, renascimento, poder. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a SOLTAR o que já morreu. Plutão é a metamorfose, não a destruição."
+
+tarot_relacionado:
+  carta: "A Morte (XIII)"
+  conexao: "A Morte é Plutão: fim do que já não serve, renascimento, transformação radical."
+
+foco_especial:
+  infantil: "A criança Plutão é intensa, silenciosa, percebe o invisível. Precisa de respeito pela sua profundidade."
+  familiar: "O membro que carrega segredos familiares. O que transforma a família através de crise."
+  carmico_espiritual: "Plutão indica a LIÇÃO DE PODER. Casa Plutão = onde a pessoa aprende a morrer para renascer."
+
+camada_tecnica_e_limites:
+  regra: "O motor só deve usar Plutão quando habilitado e registrar se Escorpião segue Marte tradicional, Plutão moderno ou co-regência; nenhuma opção pode ser silenciosa."
+  limites: "Câncer, infecções, morte e trauma não podem ser diagnosticados ou previstos por Plutão isolado. Tarot, pedras e leitura cármica são camadas atribuídas."
+referencias:
+  primarias: ["Clyde Tombaugh, relatório de descoberta de Pluto no Lowell Observatory (1930); fonte histórica astronômica."]
+  secundarias: ["Richard Tarnas, Cosmos and Psyche (2006), uso histórico-arquetípico moderno.", "Liz Greene, The Astrology of Fate (1984), recepção psicológica de Plutão."]
+anotacoes_pessoais: []
+ver_mais:
+  - "../04_Planetas/Plutao.yaml"
+

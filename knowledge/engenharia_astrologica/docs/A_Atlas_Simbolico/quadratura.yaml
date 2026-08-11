@@ -1,0 +1,54 @@
+﻿status: draft
+id: "quadratura_atlas"
+nome: "Quadratura — Atlas Simbólico"
+tradicoes:
+  - "atlas simbolico editorial"
+  - "sintese multiescola"
+tipo: "Atlas Simbólico"
+subtema: "Correspondências da Quadratura"
+
+origens_e_divergencias:
+  tradicional: "Ptolomeu (Tetrabiblos) — aspectos ptolomaicos e orbes."
+  moderna: "Astrologia psicológica — quadratura como tensão de crescimento."
+  nota: "Revisar ao citar — marca a escola usada."
+
+atlas_simbolico:
+  pessoas_arquetipos: "Par em tensão, desafio, obstáculo, catalisador"
+  lugares_fisicos: "Lugares de tensão, estradas difíceis, fronteiras"
+  objetos_materia: "Espadas cruzadas, ferramentas de trabalho"
+  eventos_tipicos: "Desafios, obstáculos, tensões que geram crescimento"
+  animais: "Touros em luta, lobos rivais"
+  plantas_ervas: "Plantas espinhosas, ervas amargas"
+  metais_pedras: "Ferro, aço, jaspe, diamante (corte)"
+  cores_sons:
+    cores: ["Vermelho e preto", "cinza", "marrom"]
+    sons: ["Tambor de tensão", "grito", "ruído de fundo"]
+  numeros: [4, 10]
+  dias_semana: ["Terça-feira"]
+  doencas_corpo:
+    doencas: ["Problemas de tensão muscular", "conflitos emocionais"]
+    partes_corpo: ["Coluna", "quadris", "músculos"]
+  arquetipos_mitologicos:
+    - "Hércules e os trabalhos"
+    - "Marte em tensão"
+  mitos_historias: "Hércules e os 12 trabalhos"
+  sonhos_simbolos_inconsciente: "Obstáculos, lutas, provações"
+  expressao_elevada_sombra: "Elevada: tensão que gera crescimento | Sombra: conflito destrutivo, resistência"
+
+camada_energetica:
+  impressao_mental: "A mente que ENFRENTA TENSÃO. Desafio como catalisador."
+  permeacao_emocional: "Tensão emocional que gera movimento. Quando saudável: crescimento. Quando ferido: estresse."
+  manifestacao_externa: "Eventos prováveis de desafios, tensões, provações. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a VER O DESAFIO COMO PORTAL. Quadratura é o martelo que forja."
+
+consenso_tradicional: "Aspecto de tensão angular; os planetas exigem integração ativa."
+
+arquetipos_simbolicos: ["O martelo", "a forja", "o desafio"]
+
+aplicativo_separativo: "Aplicativo: a quadratura se FORMANDO — tensão crescente. Separativa: quadratura se DISSOLVENDO — a pressão diminui."
+
+exemplo_pratico: "Sol quadratura Lua: 'você brilha mas se sente inseguro' — tensão entre identidade e emoção que gera crescimento."
+
+ver_mais:
+  - "../06_Aspectos/Quadratura.yaml"
+

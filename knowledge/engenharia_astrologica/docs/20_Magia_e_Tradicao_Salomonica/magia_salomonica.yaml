@@ -1,0 +1,65 @@
+status: review
+id: "magia_tradicao_salomonica"
+nome: "Magia e Tradição Salomônica"
+tradicoes:
+  - "renascentista"
+  - "salomonica"
+  - "hermetica"
+tipo: "Aprofundamento"
+subtema: "Magia cerimonial e tradição salomônica"
+
+origens_e_divergencias:
+  tradicional: "'Salomônica' designa famílias textuais medievais e modernas atribuídas a Salomão; Goetia, grimórios, magia cerimonial e hermetismo têm sobreposições, mas não são sinônimos."
+  moderna: "Releituras psicológicas e ocultistas contemporâneas devem ser datadas e não legitimam uma genealogia direta para a maçonaria."
+  nota: "Conteúdo histórico e simbólico, não manual de prática. Qualquer relação com correntes iniciáticas ou maçonaria deve indicar transmissão documental específica, não apenas semelhança de símbolos."
+
+referencias:
+  - autor: "Stephen Skinner e David Rankine (eds.)"
+    obra: "The Goetia of Dr Rudd"
+    ano: 2007
+    natureza: "edição moderna de fonte histórica"
+    localizador: "Introdução histórica e aparato editorial; distinguir manuscrito, edição e prática contemporânea"
+  - autor: "Owen Davies"
+    obra: "Grimoires: A History of Magic Books"
+    ano: 2009
+    natureza: "secundária historiográfica"
+    localizador: "História dos grimórios e atribuições salomônicas"
+
+atlas_simbolico:
+  pessoas_arquetipos: "O mago, o sacerdote, o invocador, o protetor"
+  lugares_fisicos: "Templos, círculos mágicos, sinagogas, igrejas"
+  objetos_materia: "Pentáculos, selos, velas, incenso, espadas"
+  eventos_tipicos: "Invocações, proteções, selamentos, rituais"
+  animais: "Leão (força), touro (estabilidade), águia (elevação), serpente (sabedoria)"
+  plantas_ervas: "Louro, sálvia, alecrim, ervas de proteção"
+  metais_pedras: "Ouro, prata, ferro, cristal"
+  cores_sons:
+    cores: ["Branco", "dourado", "preto", "roxo"]
+    sons: ["Canto gregoriano", "tambor", "sino"]
+  numeros: [1, 3, 4, 7, 12]
+  dias_semana: ["Domingo", "Quinta-feira", "Sábado"]
+  doencas_corpo:
+    doencas: ["Problemas nervosos", "exaustão"]
+    partes_corpo: ["Sistema nervoso", "coração"]
+  arquetipos_mitologicos:
+    - "Salomão"
+    - "Hermes Trismegisto"
+    - "Anjo"
+  mitos_historias: "Salomão e os demônios; Hermes e a magia"
+  expressao_elevada_sombra: "Elevada: transformação consciente | Sombra: manipulação, abuso de poder"
+
+camada_energetica:
+  impressao_mental: "A magia é a ARTE DE DIRIGIR A ENERGIA. Não é 'fazer acontecer' — é alinhar vontade com cosmos."
+  permeacao_emocional: "Poder como responsabilidade. Quando saudável: serviço. Quando ferido: manipulação."
+  manifestacao_externa: "Eventos prováveis de transformação, proteção, invocação. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a USAR A MAGIA COM ÉTICA. Magia não é controle — é cooperação."
+
+como_usar: |
+  Referências:
+  - "Pentáculo de Salomão = selo de proteção"
+  - "Os 72 nomes de Deus = 72 energias"
+  - "Círculo mágico = espaço sagrado"
+  - "Pentagrama = proteção dos 5 elementos"
+
+  AVISO: NÃO é manual de prática. É referência simbólica para o estudante de astrologia.
+

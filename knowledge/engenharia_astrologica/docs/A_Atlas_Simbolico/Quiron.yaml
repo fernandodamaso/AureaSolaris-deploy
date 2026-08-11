@@ -1,0 +1,107 @@
+status: review
+id: "quiron_atlas"
+nome: "Quíron — Atlas Simbólico"
+tradicoes:
+  - "atlas simbolico editorial"
+  - "sintese multiescola"
+tipo: "Atlas Simbólico"
+subtema: "Correspondências de Quíron"
+
+origens_e_divergencias:
+  tradicional: "Quíron não pertence ao cânone dos sete planetas. O corpo 2060 Chiron foi descoberto por Charles Kowal em 1977 e hoje é classificado como pequeno corpo/centauro."
+  moderna: "A recepção astrológica posterior desenvolveu 'curador ferido', mentor, ponte e ferida que ensina; Al H. Morrison ajudou a divulgar efemérides e o novo símbolo, mas não deve ser apresentado sozinho como introdutor incontroverso da interpretação."
+  nota: "Não há regência, exaltação, dia, metal, cor, corpo ou número universalmente aceitos para Quíron. Forrest, Melanie Reinhart e linhas evolutivas/psicológicas desenvolvem variantes."
+
+origem_linguistica_mito_glifo:
+  etimologia: "Chiron translitera o grego Cheírōn; associações populares com cheír, 'mão', são sugestivas, mas a etimologia exata merece cautela."
+  mito: "O centauro sábio instrui heróis, domina medicina e música, é ferido por seta envenenada e troca sua imortalidade pela libertação de Prometeu."
+  glifo: "⚷ parece uma chave sobre círculo e foi adotado na recepção astrológica moderna; não é símbolo antigo."
+  porque: "A combinação mítica de mestre, medicina, ferida incurável e renúncia fundamenta o arquétipo moderno do curador ferido."
+
+atlas_simbolico:
+  pessoas_arquetipos:
+    - "O curador ferido"
+    - "O professor sábio"
+    - "O gênio incompreendido"
+    - "O mentor"
+    - "O místico"
+    - "O buscador"
+  lugares_fisicos:
+    - "Escolas"
+    - "Clínicas"
+    - "Florestas"
+    - "Montanhas"
+    - "Lugares de cura"
+    - "Lugares onde 'dói e se aprende'"
+  objetos_materia:
+    - "Flechas"
+    - "Arco"
+    - "Herbal"
+    - "Livros de cura"
+    - "Instrumentos cirúrgicos"
+  eventos_tipicos:
+    - "Crises de cura"
+    - "Encontros com mestres"
+    - "Início de jornada de cura"
+    - "Surtos de sabedoria"
+  animais:
+    - "Cavalo"
+    - "Cobra"
+    - "Águia"
+    - "Lobo"
+    - "Cervo"
+  plantas_ervas:
+    - "Erva-de-São-João"
+    - "Valeriana"
+    - "Camomila"
+    - "Hortelã"
+    - "Aloe vera"
+  metais_pedras:
+    - "Prata"
+    - "Cobre"
+    - "Ametista"
+    - "Obsidiana"
+    - "Cristal"
+  cores_sons:
+    cores: ["Verde-esmeralda", "Azul-escuro", "Roxo", "Marrom-terra"]
+    sons: ["Flauta de pã", "Canto xamânico", "Tambor de cura"]
+  numeros: [6]
+  dias_semana: ["Quarta-feira"]
+  doencas_corpo:
+    doencas: ["Feridas que não cicatrizam", "Problemas articulares", "Crises nervosas"]
+    partes_corpo: ["Quadril", "Coxas", "Sistema nervoso", "Coração emocional"]
+  arquetipos_mitologicos:
+    - "Quíron (centauro curador)"
+    - "Asclépio (deus da medicina)"
+    - "Hermes psicopompo"
+  mitos_historias:
+    - "Quíron educando Aquiles, Jasão, Hércules"
+    - "Ferida de Quíron por flecha envenenada"
+    - "Quíron trocando imortalidade com Prometeu"
+  expressao_elevada_sombra: "Elevada: mestria por meio da ferida, curador autêntico | Sombra: vitimização, marcença, ferida como identidade"
+
+camada_energetica:
+  impressao_mental: "A mente que APRENDE PELA FERIDA. Sabedoria que vem da dor, ensino através do exemplo."
+  permeacao_emocional: "Compressão da dor que vira compaixão. Quando saudável: curador. Quando ferido: vitimizado."
+  manifestacao_externa: "Eventos PROVÁVEIS de cura, encontro com mestres, acidentes que geram sabedoria. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a PERCEBER que sua ferida é a ponte para o outro. Quíron não é a dor — é o que a dor ensina."
+
+tarot_relacionado:
+  carta: "O Sacerdote (Ás de Ouros) / O Eremita (IX)"
+  conexao: "O Eremita é Quíron: luz que ilumina por dentro, ferida que ensina, sabedoria que vem da solidão."
+
+foco_especial:
+  infantil: "A criança Quíron pode ser precoce, ferida, diferente. Precisa de espaço para curar, não de julgamento."
+  familiar: "O membro que cura a família através da própria dor."
+  carmico_espiritual: "Quíron indica a LIÇÃO DE CURA. Casa Quíron = onde a pessoa aprende a transformar dor em serviço."
+
+camada_tecnica_e_limites:
+  regra: "O motor deve tratar Quíron como ponto moderno opcional, calculado por efeméride, sem dignidades ou regências implícitas."
+  limites: "Ferida, crise nervosa e cura são linguagem simbólica, não diagnóstico. Dia, metal, tarot, plantas e partes do corpo são propostas modernas divergentes."
+referencias:
+  primarias: ["Charles T. Kowal, 'The Discovery and Orbit of /2060/ Chiron', Dynamics of the Solar System (1979), registro astronômico.", "Pseudo-Apolodoro, Biblioteca, II.5; tradição mítica de Quíron e Héracles."]
+  secundarias: ["Melanie Reinhart, Chiron and the Healing Journey (1989), formulação astrológica moderna."]
+anotacoes_pessoais: []
+ver_mais:
+  - "../04_Planetas/Quiron.yaml"
+

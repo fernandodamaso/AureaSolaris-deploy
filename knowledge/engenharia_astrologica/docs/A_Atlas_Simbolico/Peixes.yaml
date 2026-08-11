@@ -1,0 +1,104 @@
+﻿status: review
+id: "peixes_atlas"
+nome: "Peixes — Atlas Simbólico"
+tradicoes:
+  - "atlas simbolico editorial"
+  - "sintese multiescola"
+tipo: "Atlas Simbólico"
+subtema: "Correspondências de Peixes"
+
+origens_e_divergencias:
+  tradicional: "Júpiter (antiga) / Netuno (moderna) — água mutável, transcendência."
+  moderna: "Netuno (mesmo). Sem divergência significativa."
+  nota: "Júpiter como regência tradicional antiga, Netuno na moderna."
+
+atlas_simbolico:
+  pessoas_arquetipos:
+    - "O místico"
+    - "O poeta"
+    - "O sonhador"
+    - "O médium"
+    - "O artista"
+    - "O viciado"
+  lugares_fisicos:
+    - "Mosteiros"
+    - "Mar alto"
+    - "Hospitais psiquiátricos"
+    - "Cinemas"
+    - "Igrejas"
+  objetos_materia:
+    - "Velas"
+    - "Incenso"
+    - "Instrumentos musicais"
+    - "Câmera"
+    - "Drogas/álcool"
+  eventos_tipicos:
+    - "Inspiração artística"
+    - "Encontros espirituais"
+    - "Ilusões"
+    - "Dissoluções"
+    - "Mistérios"
+  animais:
+    - "Cavalo-marinho"
+    - "Golfinho"
+    - "Peixe"
+    - "Cisne branco"
+    - "Borboleta"
+  plantas_ervas:
+    - "Lótus"
+    - "Papoula"
+    - "Violeta"
+    - "Lavanda"
+    - "Hortelã-pimenta"
+  metais_pedras:
+    - "Platina"
+    - "Cristal"
+    - "Ametista"
+    - "Água-marinha"
+    - "Opala de fogo"
+  cores_sons:
+    cores: ["Azul-marinho", "Verde-água", "Violeta", "Branco transparente"]
+    sons: ["Ópera", "Canto gregoriano", "Sino aquático"]
+  numeros: [7, 12]
+  dias_semana: ["Quinta-feira", "Segunda-feira"]
+  doencas_corpo:
+    doencas: ["Vícios", "Alergias", "Problemas mentais"]
+    partes_corpo: ["Pés", "Glândulas", "Sistema linfático"]
+  arquetipos_mitologicos:
+    - "Netuno/Posídon"
+    - "Dioniso/Baco"
+    - "Oceano"
+  mitos_historias:
+    - "Netuno e Anfitrite"
+    - "Dioniso e as bacantes"
+  expressao_elevada_sombra: "Elevada: compaixão, arte, espiritualidade | Sombra: ilusão, vício, confusão, fuga"
+
+revisao_editorial:
+  origem_e_linguagem: "Peixes vem do latim pisces, 'peixes'. A dupla de peixes é figura zodiacal antiga; não se confunde com a constelação nem com um significado psicológico único."
+  mito_arquetipo_e_porque: "Água, dissolução, travessia e peixes ligados são imagens de estudo; mitos de Afrodite/Eros e releituras espirituais precisam de fonte e cultura declaradas."
+  limite_tecnico: "Júpiter é regente tradicional e Netuno é regente moderno. A escolha de escola deve ser configurável e o signo não determina espiritualidade, vício ou sensibilidade."
+referencias:
+  primarias:
+    - "Ptolomeu. Tetrabiblos, livro I: signos e qualidades, conforme edição declarada."
+  secundarias:
+    - "Greene, Liz. The Astrological Neptune and the Quest for Redemption. Samuel Weiser, 1992."
+  tecnicas:
+    - "Ver 04_Planetas/Jupiter.yaml, 04_Planetas/Netuno.yaml e regras de regência."
+camada_energetica:
+  impressao_mental: "A mente que TRANSCENDE e DISSOLVE. Fronteiras tênues, imaginação pura."
+  permeacao_emocional: "Amor universal e compaixão. Quando saudável: criatividade. Quando ferido: vitimização."
+  manifestacao_externa: "Eventos PROVÁVEIS de inspiração, encontros com o invisível. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a DAR NOME ao invisível. Peixes precisa de canal (arte, serviço)."
+
+tarot_relacionado:
+  carta: "O Louco (alternativa) / O Mago da fantasia"
+  conexao: "Peixes dissolve fronteiras — arte, compaixão, transcendência."
+
+foco_especial:
+  infantil: "A criança Peixes é sensível, artística, vê o invisível. Precisa de proteção."
+  familiar: "O membro que traz arte ou sofrimento oculto."
+  carmico_espiritual: "Peixes indica a LIÇÃO DE ENTREGA. Casa Peixes = onde a pessoa aprende a confiar no invisível."
+
+ver_mais:
+  - "../03_Signos/Peixes.yaml"
+

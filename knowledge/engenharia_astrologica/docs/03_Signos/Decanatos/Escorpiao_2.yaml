@@ -1,0 +1,56 @@
+﻿status: draft
+id: "decanato_escorpiao_2"
+nome: "Decanato 2 de Escorpião (10°–20°) — Escorpião matizado por Peixes"
+tradicoes:
+  - "convenção por signos da mesma triplicidade"
+  - "releitura moderna transaturnina explicitada"
+regente: "Júpiter (Peixes/Júpiter na convenção por triplicidade; Netuno somente em releitura moderna; face caldaica: Sol)"
+
+origens_e_divergencias:
+  sistema_adotado: "Convenção posterior/moderna por signos da mesma triplicidade: 10°–<20° de Escorpião recebe a cor de Peixes/Júpiter."
+  releitura_moderna: "Netuno pode ser incorporado por escola moderna; não é regente de face caldaica tradicional."
+  faces_caldaicas: "A face caldaica de 10°–<20° de Escorpião é Sol, não Júpiter/Netuno."
+  nota: "Linguagens de xamã, missão e dívida emocional são simbólicas/contemporâneas, não origem da tabela."
+
+calculo_e_escopo:
+  intervalo: "Escorpião tropical 10°–<20°; 20° exatos iniciam o terceiro decanato."
+  uso: "Exibir Júpiter/Netuno apenas se a convenção por triplicidade e o perfil moderno forem escolhidos."
+  camada_simbolica: "Cura e absorção de sofrimento são imagens de estudo, não diagnóstico de vida ou família."
+referencias:
+  - autor: "Engenharia Astrológica"
+    obra: "Decanatos"
+    natureza: "fonte editorial"
+    localizador: "Tabela comparativa em 03_Signos/Decanatos.yaml."
+  - autor: "Cláudio Ptolomeu"
+    obra: "Tetrabiblos"
+    natureza: "primária histórica"
+    localizador: "Faces; a faixa caldaica é Sol."
+limite_documental: "Permanece draft: requer fonte específica para a convenção por triplicidade antes de promoção."
+atlas_simbolico:
+  pessoas_arquetipos: "O Água congelada, o que expressa Água Fixo"
+  lugares_fisicos: "Lugares de Água Fixo"
+  objetos_materia: "Objetos de Água Fixo"
+  eventos_tipicos: "Eventos de Água Fixo"
+  animais: "Animais de Água Fixo"
+  plantas_ervas: "Plantas de Água Fixo"
+  metais_pedras: "Metais de Água Fixo"
+  cores_sons: "Cores de Água Fixo"
+  numeros: "Números de Água Fixo"
+  dias_semana: "Dias de Água Fixo"
+  doencas_corpo: "Partes do corpo de Água Fixo"
+  arquetipos_mitologicos: "Arquétipos de Água Fixo"
+  mitos_historias: "Mitologias de Água Fixo"
+  sonhos_simbolos_inconsciente: "Símbolos de Água Fixo"
+  expressao_elevada_sombra: "Elevada: Água Fixo consciente | Sombra: Água Fixo descontrolado"
+
+camada_energetica:
+  impressao_mental: "Escorpião + transcendência — a mente agora BUSCA O SENTIDO da dor. Profundidade vira espiritualidade."
+  permeacao_emocional: "Compaixão pela dor alheia; risco de 'absorver o sofrimento do mundo'."
+  manifestacao_externa: "Eventos PROVÁVEIS de cura, missão espiritual, encontros de alma. Arquétipos: o Xamã, o Místico. Inclinação, não destino."
+  como_guiar_o_astral: "Canalizar para 'transformar através da compaixão' — o 2º decanato de Escorpião tem talento de cura."
+
+porque_simbolico: "Peixes matiza Escorpião com Água mutável: a INTENSIDADE ganha UNIDADE. Netuno = dissolução — daí o 'xamã' que dissolve a dor no amor."
+foco_especial:
+  carmico: "Decanato 2 de Escorpião é o 'curador da família' — tende a assumir dívidas emocionais alheias."
+
+

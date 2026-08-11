@@ -1,0 +1,71 @@
+status: review
+id: "antares"
+tradicoes:
+  - "helenística"
+  - "árabe/medieval"
+  - "renascentista"
+  - "moderna (catálogos e interpretações explicitamente separados)"
+tipo: "estrela fixa"
+escopo_documental:
+  astronomia: "Nome próprio, designação Bayer, constelação, magnitude e longitude eclíptica devem registrar época, sistema de coordenadas e fonte astronômica."
+  tecnica_historica: "Natureza estelar, uso por conjunção e critérios de orbe pertencem à linhagem astrológica identificada."
+  camadas_modernas: "Correspondências psicológicas, mitológicas e do Atlas permanecem notas de estudo, não equivalem automaticamente à natureza de Ptolomeu."
+calculo_e_orbes: "Registrar longitude tropical/sistema adotado, época de referência, precessão, posição aparente ou média e orbe por escola."
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "primária"
+    localizador: "Livro I, capítulo 9, naturezas das estrelas fixas"
+  - autor: "Claudius Ptolemy"
+    obra: "Almagest"
+    natureza: "primária astronômica"
+    localizador: "Livros VII–VIII, catálogo e coordenadas; conferir edição"
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    natureza: "secundária histórica"
+    localizador: "Livro I, estrelas fixas e conjunções; conferir edição"
+  - autor: "Vivian E. Robson"
+    obra: "The Fixed Stars and Their Interpretation"
+    natureza: "secundária moderna"
+    localizador: "Compilação moderna; não substituir a fonte histórica"
+validacao_de_fontes:
+  base: "A natureza tradicional est? atribu?da ?s obras citadas; cat?logo, coordenada, ?poca e orbe devem ser escolhidos e registrados pela implementa??o."
+  escopo: "Magnitude e longitude textuais s?o indicadores editoriais dependentes de ?poca; n?o s?o uma efem?ride vigente. O Atlas e releituras modernas permanecem separados da camada hist?rica."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+nome: "Antares (α Scorpii — Coração do Escorpião)"
+magnitude: 1.09
+constelacao: "Escorpião"
+coordenadas: "9°47' Sagitário (na eclíptica)"
+
+origens_e_divergencias:
+  tradicional: "Ptolomeu (Tetrabiblos) + tradição árabe."
+  moderna: "None"
+  nota: "Revisar ao citar — marca a escola usada."
+atlas_simbolico:
+  pessoas_arquetipos: "O mago, o transformador, o que morre/renasce"
+  lugares_fisicos: "Lugares profundos, subterrâneos, penínsulas"
+  objetos_materia: "Faca de cirurgia, espada, veneno, elixir"
+  eventos_tipicos: "Mortes, renascimentos, transformações, cirurgias"
+  animais: "Escorpião, serpente, phoenix"
+  plantas_ervas: "Papoula, açafrão, mandrágora"
+  metais_pedras: "Ferro, obsidiana, granada, rubi"
+  cores_sons: "Vermelho-escuro, preto; notas Dó e Sol"
+  numeros: "4 (morte), 8 (transformação), 13 (morte tarot)"
+  dias_semana: "Terça-feira (Marte/Plutão)"
+  doencas_corpo: "Órgãos sexuais, bexiga, intestino grosso"
+  arquetipos_mitologicos: "Hades/Plutão, Hécate, Esculápio"
+  mitos_historias: "Rapto de Perséfone; Esculápio e a ressurreição"
+  sonhos_simbolos_inconsciente: "Águas profundas, escorpiões, morte, renascimento"
+  expressao_elevada_sombra: "Elevada: regeneração, cura | Sombra: vingança, manipulação"
+
+camada_energetica:
+  impressao_mental: "Antares = INTENSIDADE e CRISE — a mente 'desce ao fundo' ou 'explode para fora'."
+  permeacao_emocional: "Paixão extrema, magnetismo, medo da própria intensidade."
+  manifestacao_externa: "Eventos PROVÁVEIS de transformação forçada, 'tudo ou nada'. Arquétipos: o Fênix, a Serpente. Inclinação, não destino."
+  como_guiar_o_astral: "Antares pede ENTREGA — a pessoa 'não controla' esta estrela; ela CONTROLA a pessoa. Ajudar a canalizar a intensidade."
+
+porque_simbolico: |
+  Antares = 'RIVAL DE ARES' (árabe/grego) — compete com Marte (o planeta da guerra). É o 'anti-Marte': mesma intensidade, mas mais profunda.
+  CORAÇÃO DO ESCORPIÃO = o ponto onde a 'picada' acontece — onde a dor vira transformação.
+
+linha_tradicao: "Ptolomeu: Antares = natureza de Marte + Saturno (intensidade perigosa)."

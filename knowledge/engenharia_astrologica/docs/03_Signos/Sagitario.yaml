@@ -1,0 +1,86 @@
+status: review
+id: "sagitario"
+nome: "Sagitário"
+tradicoes:
+  - "helenística"
+  - "medieval"
+  - "renascentista"
+  - "moderna (somente camadas explicitamente modernas)"
+escopo_documental:
+  tecnica_historica:
+    - "elemento, modalidade, regência, dignidade e estrutura zodiacal"
+    - "divergências modernas de regência ou leitura entram como nota explícita, sem substituir silenciosamente a camada histórica"
+  camadas_modernas: "Atlas simbólico, Tarot, correspondências médicas e releituras contemporâneas permanecem separados da regra histórica e devem ser apresentados como camada interpretativa rotulada."
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "primária"
+    localizador: "Livro I, capítulos sobre signos, qualidades e regências"
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    natureza: "primária"
+    localizador: "Livros I–II, passagens sobre signos e regentes"
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    natureza: "primária"
+    localizador: "Livro I, descrição dos signos e significadores"
+validacao_de_fontes:
+  base: "A regra zodiacal hist?rica ? sustentada por Ptolomeu, Valens e Lilly, nas refer?ncias estruturadas da ficha."
+  escopo: "Tarot, Atlas simb?lico, mitologia, correspond?ncias m?dicas e psicologia s?o camadas de estudo rotuladas; n?o s?o consenso nem substituem a regra hist?rica."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+elemento: "Fogo"
+modalidade: "Mutável"
+regente: "Júpiter"
+
+origens_e_divergencias:
+  tradicional: "Júpiter (expansão, fé, filosofia, viagens longas)."
+  moderna: "Júpiter (mesmo). Sem divergência significativa."
+  nota: "Regência unânime."
+
+essencia:
+  - "Sentido"
+  - "Expansão"
+  - "Liberdade"
+
+simbologia_elemento:
+  elemento: "Fogo"
+  modalidade: "Mutável"
+  simbolo: "Seta / Fogo que se espalha pelo vento"
+  analogia: "Fogo Mutável — como uma flecha que voa longe ou fogo de palha que se espalha."
+  porque: "Fogo Mutável é o fogo em EXPANSÃO: busca, viagem, filosofia. Sagitário é o nono signo, onde a energia se expande em direção ao horizonte. A seta representa a direção do fogo — não fica parado, tem destino."
+atlas_simbolico:
+  pessoas_arquetipos: "Filósofo, viajante, professor, aventureiro, cavaleiro, missionário"
+  lugares_fisicos: "Montanhas, estradas, universidades, templos, países distantes, fronteiras"
+  objetos_materia: "Livros de filosofia, mapas, flechas, selas, malas de viagem, títulos"
+  eventos_tipicos: "Viagens longas, formaturas, publicações, aventuras, descobertas"
+  animais: "Cavalo, centauro, águia, cão de caça, camelo, falcão"
+  plantas_ervas: "Nogueira, oliveira, cedro, sálvia, mirra, açafrão"
+  metais_pedras: "Estanho, turquesa, topázio azul, safira, lápis-lazúli"
+  cores_sons: "Azul-royal, roxo, índigo; notas Dó e Lá; trombeta, címbalo"
+  numeros: "3 (trindade filosófica), 7 (espiritualidade), 9 (completude)"
+  dias_semana: "Quinta-feira (dia de Júpiter)"
+  doencas_corpo: "Quadris, coxas, fígado, sistema nervoso central, excesso, inflamação crônica"
+  arquetipos_mitologicos: "Zeus/Júpiter, Héracles/Hércules, Quirón, Atena"
+  mitos_historias: "Os Argonautas; Quirón e a educação de Hércules; A busca do Cálice Sagrado"
+  sonhos_simbolos_inconsciente: "Montanhas, viagens, livros, setas, festas, templos"
+  expressao_elevada_sombra: "Elevada: sabedoria generosa, viagem como busca, fé que liberta | Sombra: fanatismo, exagero, arrogância filosófica, superficialidade"
+
+tarot:
+  carta: "O Sol"
+  explicacao: "Carta 19 — clareza, expansão, sucesso, iluminação. Sagitário é o Sol porque ambos representam a luz que expande sem esconder: viagem, filosofia, o cavaleiro que chega à montanha dourada."
+
+camada_energetica:
+  impressao_mental: "A mente que busca o horizonte e a verdade. Otimismo, fé, 'mais'. Quando atrito: exagero, dogmatismo, promessa vazia."
+  permeacao_emocional: "Esperança e alívio de se sentir parte de algo maior. Evita o apequenamento."
+  manifestacao_externa: "Eventos prováveis de viagens, estudos, encontros com o estrangeiro, expansão. Trânsitos ampliam o mundo."
+  como_guiar_o_astral: "Ajudar a pessoa a ancorar a fé no real. Sagitário guia bem quando inspira sem fugir."
+
+decanatos:
+  - "0-10: Sagitário (Júpiter) — fé e expansão"
+  - "10-20: Áries (Marte) — iniciativa e coragem"
+  - "20-30: Leão (Sol) — brilho e liderança"
+
+foco_especial:
+  infantil: "A criança Sagitário precisa de sentido e aventura. Pergunta 'por quê?' sem parar."
+  familiar: "O membro que traz crenças e horizontes novos para o lar. Otimismo familiar, às vezes disperso."
+

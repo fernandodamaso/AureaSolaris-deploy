@@ -1,0 +1,86 @@
+status: review
+id: "capricornio"
+nome: "Capricórnio"
+tradicoes:
+  - "helenística"
+  - "medieval"
+  - "renascentista"
+  - "moderna (somente camadas explicitamente modernas)"
+escopo_documental:
+  tecnica_historica:
+    - "elemento, modalidade, regência, dignidade e estrutura zodiacal"
+    - "divergências modernas de regência ou leitura entram como nota explícita, sem substituir silenciosamente a camada histórica"
+  camadas_modernas: "Atlas simbólico, Tarot, correspondências médicas e releituras contemporâneas permanecem separados da regra histórica e devem ser apresentados como camada interpretativa rotulada."
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "primária"
+    localizador: "Livro I, capítulos sobre signos, qualidades e regências"
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    natureza: "primária"
+    localizador: "Livros I–II, passagens sobre signos e regentes"
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    natureza: "primária"
+    localizador: "Livro I, descrição dos signos e significadores"
+validacao_de_fontes:
+  base: "A regra zodiacal hist?rica ? sustentada por Ptolomeu, Valens e Lilly, nas refer?ncias estruturadas da ficha."
+  escopo: "Tarot, Atlas simb?lico, mitologia, correspond?ncias m?dicas e psicologia s?o camadas de estudo rotuladas; n?o s?o consenso nem substituem a regra hist?rica."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+elemento: "Terra"
+modalidade: "Cardinal"
+regente: "Saturno"
+
+origens_e_divergencias:
+  tradicional: "Saturno (tempo, estrutura, responsabilidade, autoridade)."
+  moderna: "Saturno (mesmo). Sem divergência significativa."
+  nota: "Regência unânime."
+
+essencia:
+  - "Estrutura"
+  - "Responsabilidade"
+  - "Tempo"
+
+simbologia_elemento:
+  elemento: "Terra"
+  modalidade: "Cardinal"
+  simbolo: "Montanha / Terra que se ergue"
+  analogia: "Terra Cardinal — como uma montanha que se ergue do chão."
+  porque: "Terra Cardinal é a PRIMEIRA estrutura da matéria: iniciativa, construção, autoridade. Capricórnio é o décimo signo, onde a energia se estrutura em forma duradoura. A montanha representa o esforço de subir — não é dada, é conquistada camada por camada."
+atlas_simbolico:
+  pessoas_arquetipos: "Rei, ancião, construtor, executivo, pai, estrategista, trabalhador"
+  lugares_fisicos: "Montanhas, cumes, castelos, prédios, estruturas de pedra, subsolo"
+  objetos_materia: "Coroas, cetros, ferramentas de construção, livros de lei, relógios"
+  eventos_tipicos: "Ascensão profissional, construções, mortes de autoridades, invernos, estruturas"
+  animais: "Cabra, crocodilo, abutre, caracol, serpente de terra"
+  plantas_ervas: ": Alecrim, mirra, sálvia, heléboro negro, hera, pinheiro"
+  metais_pedras: "Chumbo, ferro, ônix, granada, turquesa escura, lápis-lazúli"
+  cores_sons: "Preto, marrom, cinza-escuro, roxo-escuro; notas Lá e Sol; sino, órgão"
+  numeros: "4 (estrutura), 8 (materialidade), 10 (completude social)"
+  dias_semana: "Sábado (dia de Saturno)"
+  doencas_corpo: "Ossos, joelhos, dentes, pele, sistema esquelético, articulações"
+  arquetipos_mitologicos: "Cronos/Saturno, Héstia/Vesta, Janus, Pã, Rhea"
+  mitos_historias: "Cronos devorando os filhos; Saturno e a idade de ouro; Prometeu e o fogo"
+  sonhos_simbolos_inconsciente: "Montanhas, castelos, pedras, estruturas, coroas, inverno"
+  expressao_elevada_sombra: "Elevada: estrutura que serve, autoridade responsável, tempo como aliado | Sombra: rigidez, autoritarismo, pessimismo, medo do fracasso"
+
+tarot:
+  carta: "O Diabo"
+  explicacao: "Carta 15 — estrutura, limite, materialidade, sombra. Capricórnio é o Diabo porque ambos representam a prisão que nós mesmos construímos: a cadeia no pescoço não é invisível, é feita de trabalho e ambição. O Diabo lembra: a prisão é real, mas você segura a chave."
+
+camada_energetica:
+  impressao_mental: "A mente que planeja e sustenta. 'Como se constrói?'. Seriedade e ambição. Quando atrito: rigidez, pessimismo, controle."
+  permeacao_emocional: "Sentimento filtrado pela utilidade a longo prazo. Ama o realizado; sofre com o que parece 'fútil'."
+  manifestacao_externa: "Eventos prováveis de conquista por esforço, autoridade, limites. Trânsitos testam a estrutura e a maturidade."
+  como_guiar_o_astral: "Ajudar a pessoa a permitir leveza. Capricórnio realiza melhor quando não carrega o mundo sozinho."
+
+decanatos:
+  - "0-10: Capricórnio (Saturno) — estrutura e método"
+  - "10-20: Touro (Vênus) — valor e sustância"
+  - "20-30: Virgem (Mercúrio) — refinamento e serviço"
+
+foco_especial:
+  infantil: "A criança Capricórnio amadurece cedo. Precisa de reconhecimento por competência, não de pressão excessiva."
+  familiar: "O membro que dá sustento e ordem ao lar. Responsabilidade familiar, mas risco de ser o 'adulto' pequeno."
+

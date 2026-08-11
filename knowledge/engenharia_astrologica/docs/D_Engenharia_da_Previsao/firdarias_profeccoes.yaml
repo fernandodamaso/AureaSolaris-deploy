@@ -1,0 +1,61 @@
+﻿status: draft
+id: "firdarias_profeccoes"
+nome: "Firdárias e Profeções"
+tradicoes:
+  - "editorial"
+  - "multiescola"
+tipo: "Engenharia da Previsão"
+subtema: "Timing anual e mensal tradicional"
+
+origens_e_divergencias:
+  tradicional: "Hellenística — firdárias e profeções como divisão do tempo de vida."
+  moderna: "Astrologia tradicional contemporânea — firdárias como 'governo planetário por período'."
+  nota: "Revisar ao citar — marca a escola usada."
+
+atlas_simbolico:
+  pessoas_arquetipos: "O temporizador, o governante, o ciclico"
+  lugares_fisicos: "Relógios, calendários, mapas temporais"
+  objetos_materia: "Relógios, ampulhetas, calendários"
+  eventos_tipicos: "Mudanças de ciclo, governos planetários, timing"
+  animais: "Gato (Saturno), águia (Jupiter), lobo (Marte)"
+  plantas_ervas: "Hera (Saturno), carvalho (Jupiter), alecrim (Marte)"
+  metais_pedras: "Chumbo (Saturno), estanho (Jupiter), ferro (Marte)"
+  cores_sons:
+    cores: ["Preto (Saturno)", "azul-royal (Jupiter)", "vermelho (Marte)"]
+    sons: ["Gongo (Saturno)", "órgão (Jupiter)", "tambor (Marte)"]
+  numeros: [7, 12, 30]
+  dias_semana: ["Sábado", "Quinta-feira", "Terça-feira"]
+  doencas_corpo:
+    doencas: ["Problemas de timing", "ansiedade por resultados"]
+    partes_corpo: ["Cérebro", "sistema nervoso"]
+  arquetipos_mitologicos:
+    - "Cronos (tempo)"
+    - "Zeus (governo)"
+    - "Ares (ação)"
+  mitos_historias: "Cronos devorando os filhos; Zeus governando o Olimpo"
+  expressao_elevada_sombra: "Elevada: timing consciente | Sombra: obsessão por ciclos"
+
+camada_energetica:
+  impressao_mental: "Firdárias = 'qual planeta governa agora?'. Cada período tem um regente."
+  permeacao_emocional: "Ritmo de vida por governos planetários. Quando saudável: sincronia. Quando ferido: descompasso."
+  manifestacao_externa: "Eventos prováveis de mudança de ciclo, governos planetários. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a SINCRONIZAR COM O CICLO. Firdária é o tempo, não a prisão."
+
+como_usar: |
+  Ordem das firdárias (vida):
+  1. Saturno (0-10 anos)
+  2. Júpiter (10-20)
+  3. Marte (20-30)
+  4. Sol (30-40)
+  5. Vênus (40-50)
+  6. Mercúrio (50-60)
+  7. Lua (60-70)
+  8. Saturno (ciclo reinicia)
+
+  Profeções anuais:
+  - Cada ano = uma casa do mapa (começa pela Casa 1 no ano 1)
+  - Ano 2 = Casa 2, Ano 3 = Casa 3, etc.
+
+  Profeções mensais:
+  - Cada mês = uma sub-casa do ano
+

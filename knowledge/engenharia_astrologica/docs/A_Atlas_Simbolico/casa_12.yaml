@@ -1,0 +1,47 @@
+﻿status: draft
+id: "casa_12_atlas"
+nome: "Casa 12 — O Invisível / O Além"
+tradicoes:
+  - "atlas simbolico editorial"
+  - "sintese multiescola"
+tipo: "Atlas Simbólico"
+subtema: "Correspondências da Casa 12"
+
+origens_e_divergencias:
+  tradicional: "Ptolomeu (Tetrabiblos) — significados tradicionais das 12 casas."
+  moderna: "Astrologia psicológica/evolutiva — casa 12 como inconsciente coletivo."
+  nota: "Revisar ao citar — marca a escola usada."
+
+atlas_simbolico:
+  pessoas_arquetipos: "O místico, o recluso, o enfermo, o prisioneiro, o santo"
+  lugares_fisicos: "Mosteiros, prisões, hospitais psiquiátricos, ilhas"
+  objetos_materia: "Velas, incenso, correntes, cadeados, relicários"
+  eventos_tipicos: "Retiros, internações, reclusão, inspiração súbita"
+  animais: "Morcego, cisne branco, borboleta, peixe abissal"
+  plantas_ervas: "Lótus, papoula, lavanda, hortelã-pimenta"
+  metais_pedras: "Platina, cristal, ametista, água-marinha, opala"
+  cores_sons:
+    cores: ["Azul-marinho", "verde-água", "violeta", "branco transparente"]
+    sons: ["Ópera", "canto gregoriano", "sino aquático"]
+  numeros: [12]
+  dias_semana: ["Quinta-feira", "Segunda-feira"]
+  doencas_corpo:
+    doencas: ["Vícios", "alergias", "problemas mentais"]
+    partes_corpo: ["Pés", "glândulas", "sistema linfático"]
+  arquetipos_mitologicos:
+    - "Netuno (profundidade)"
+    - "Dioniso (êxtase)"
+    - "Hécate (invisível)"
+  mitos_historias: "Dioniso e as bacantes; Netuno e a profundidade"
+  sonhos_simbolos_inconsciente: "Invisível, invisibilidade, loucura, sagrado oculto"
+  expressao_elevada_sombra: "Elevada: compaixão, arte, espiritualidade | Sombra: fuga, vício, ilusão, vitimização"
+
+camada_energetica:
+  impressao_mental: "A mente que TRANSCENDE e DISSOLVE. 'O que não se vê me toca'."
+  permeacao_emocional: "Compaixão infinita ou vitimização. Quando saudável: serviço. Quando ferido: fuga."
+  manifestacao_externa: "Eventos prováveis de retiro, inspiração, confinamento. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a DAR NOME ao invisível. Casa 12 é a transcendência, não a fuga."
+
+ver_mais:
+  - "../05_Casas/Casa_12.yaml"
+

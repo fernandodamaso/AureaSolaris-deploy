@@ -1,0 +1,58 @@
+id: pontos_medios
+nome: 'Pontos médios: cálculo circular, usos e limites de escola'
+tipo: ponto_formulaico
+tradicoes:
+- astrologia moderna ocidental
+status: review
+definicao: 'Um ponto médio é o ponto equidistante entre duas posições zodiacais. Como
+  o zodíaco é um círculo, todo par produz dois pontos opostos. A escolha do algoritmo
+  e do arco deve ser declarada: fazer uma média aritmética simples de longitudes falha
+  na passagem de 0° de Áries.'
+calculo_circular:
+  entradas: Longitudes normalizadas A e B no intervalo [0°, 360°).
+  arco_curto: d = ((B - A + 180°) mod 360°) - 180°.
+  primeiro_ponto: M1 = (A + d/2) mod 360°.
+  segundo_ponto: M2 = (M1 + 180°) mod 360°.
+  caso_de_oposicao: Em 180° exatos, há duas soluções igualmente válidas; o software
+    deve indicar a convenção aplicada em vez de sugerir que existe apenas uma.
+  exemplo: 'A = 359° e B = 1°: M1 = 0°, não 180°.'
+aplicacoes_documentaveis:
+- Avaliar planetas, ângulos ou outros pontos em conjunção/oposição a M1/M2, com orbe
+  explicitamente declarado.
+- Usar em pesquisa de estrutura, sinastria ou técnicas modernas somente após a leitura
+  dos fatores básicos do mapa.
+- Distinguir ponto médio natal, ponto médio composto e ponto médio ativado por trânsito/progressão/direção.
+nao_confundir_com:
+- 'Ponto médio não é lote/parte: lotes possuem fórmulas orientadas e, em várias tradições,
+  regras de seita.'
+- 'Ponto médio não é antíscia: a antíscia é uma simetria solsticial, não uma média
+  de longitudes.'
+- O cálculo de pontos médios não obriga a adotar astrologia Uraniana/Hamburgo, cosmobiologia
+  ou dial de 90°, escolas excluídas deste corpus.
+historia_e_escopo:
+- A formalização e a ampla popularização moderna de técnicas de ponto médio têm linhagens
+  próprias; não devem ser projetadas como método padrão da astrologia antiga.
+- Quando uma autora ou autor atribuir significado a um par específico, registrar a
+  obra e não converter a associação em regra universal.
+referencias:
+- autor: Reinhold Ebertin
+  obra: The Combination of Stellar Influences
+  natureza: obra moderna influente de pontos médios; usar criticamente e sem incorporar
+    a escola Uraniana/Hamburgo ao escopo
+- autor: Swiss Ephemeris
+  obra: General Documentation
+  natureza: normalização de graus e coordenadas necessárias ao cálculo reprodutível
+  url: https://www.astro.com/swisseph/swisseph.htm
+validacao_de_fontes:
+  base: "As refer?ncias estruturadas distinguem defini??o geom?trica, c?lculo reprodut?vel e uso interpretativo moderno."
+  escopo: "Pontos calculados e seus orbes dependem de conven??o declarada; interpreta??es modernas s?o notas de estudo, n?o consenso universal."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+origens_e_divergencias:
+  tradicional: Conceito/técnica presente na tradição astrológica ocidental.
+  moderna: Possível ressignificação contemporânea.
+  nota: Rotular a escola quando divergir.
+camada_energetica:
+  impressao_mental: Campo conceitual do tema/técnica.
+  permeacao_emocional: Como o tema toca a experiência subjetiva.
+  manifestacao_externa: Como aparece em comportamentos e eventos.
+  como_guiar_o_astral: Como usar este conhecimento na leitura prática.

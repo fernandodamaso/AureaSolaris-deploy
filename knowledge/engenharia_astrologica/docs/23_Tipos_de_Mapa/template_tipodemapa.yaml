@@ -1,0 +1,35 @@
+id: "tipo_mapa"
+nome: "Tipo de Mapa"
+tema: "Como classificar o temperamento geral do mapa"
+
+# === CAMADA ENERGÉTICA (o coração operante do projeto) ===
+atlas_simbolico:
+  pessoas_arquetipos: "Estrutura organizadora, catálogo, guia de consulta"
+  lugares_fisicos: "Arquivos, bibliotecas, bases de conhecimento"
+  objetos_materia: "Documentos estruturados, tabelas, índices"
+  eventos_tipicos: "Organização, catalogação, revisão, atualização"
+  animais: "Coruja (sabedoria), formiga (organização)"
+  plantas_ervas: "Sálvia (memória), hera (permanência)"
+  metais_pedras: "Prata (lua/arquivo), cristal de rocha (clareza)"
+  cores_sons: "Prata, azul-claro; notas Dó e Lá"
+  numeros: "3 (estrutura), 6 (organização), 9 (completude)"
+  dias_semana: "Quarta-feira (Mercúrio)"
+  doencas_corpo: "Sistema nervoso, olhos (leitura)"
+  arquetipos_mitologicos: "Hermes/Mercúrio (comunicação), Atena (sabedoria)"
+  mitos_historias: "Hermes e a escrita; Atena e a organização"
+  sonhos_simbolos_inconsciente: "Arquivos, bibliotecas, estruturas, ordem"
+  expressao_elevada_sombra: "Elevada: estrutura viva que serve | Sombra: rigidez, burocracia excessiva"
+
+camada_energetica:
+  campo_mental: "O tipo de mapa indica por onde a mente TENDE a canalizar a vida (luz vs sombra, fogo vs água, etc.)."
+  permeacao_emocional: "Define o tom emocional de base do consulente."
+  manifestacao_externa: "Eventos PROVÁVEIS tendem a seguir a dominância do mapa (inclinação, não destino)."
+  como_guiar: "Ajudar a pessoa a reconhecer sua dominantE e equilibrar o que falta."
+
+categorias:
+  - "Diurno / Noturno (Sect)"
+  - "Dominante Elemental (Fogo/Terra/Ar/Água)"
+  - "Dominante Modal (Cardinal/Fixo/Mutável)"
+  - "Padrão de Aspectos (Stellium, Grande Trígono, T-Square, Yod, etc.)"
+  - "Regente do Mapa e Dispositores"
+  - "Mapa de Relacionamento (Sinastria/Composite)"

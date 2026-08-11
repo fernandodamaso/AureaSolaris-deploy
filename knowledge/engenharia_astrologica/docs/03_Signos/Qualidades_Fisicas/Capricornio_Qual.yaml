@@ -1,0 +1,53 @@
+status: review
+id: capricornio_qualidades
+nome: Capricórnio — Qualidades Físicas
+cor: Preto, cinza-chumbo, marrom-escuro, azul-marinho
+tradicoes: [tradicional, médica histórica, moderna, editorial]
+parte_do_corpo: Joelhos; ossos, dentes e pele pertencem sobretudo à cadeia geral de Saturno, não à melothesia exclusiva de Capricórnio
+elemento_fisico: Terra (frio, seco)
+qualidade_termica: Fria e seca
+origens_e_divergencias:
+  tradicional: "A sequência anatômica atribui os joelhos a Capricórnio. Ossos, dentes, pele, chumbo e tons escuros derivam mais amplamente das correspondências de Saturno."
+  moderna: "Estrutura, autoridade e tempo são desenvolvimentos psicológicos modernos apoiados na imagem saturnina; não constituem anatomia nem fenótipo."
+  nota: "Separar regência zodiacal dos joelhos de significações planetárias gerais de Saturno."
+atlas_simbolico:
+  pessoas_arquetipos: Rei, ancião, construtor, executivo, pai, estrategista, trabalhador
+  lugares_fisicos: Montanhas, cumes, castelos, prédios, estruturas de pedra, subsolo
+  objetos_materia: Coroas, cetros, ferramentas de construção, livros de lei, relógios
+  eventos_tipicos: Ascensão profissional, construções, mortes de autoridades, invernos, estruturas
+  animais: Cabra, crocodilo, abutre, caracol, serpente de terra
+  plantas_ervas: ': Alecrim, mirra, sálvia, heléboro negro, hera, pinheiro'
+  metais_pedras: Chumbo, ferro, ônix, granada, turquesa escura, lápis-lazúli
+  cores_sons: Preto, marrom, cinza-escuro, roxo-escuro; notas Lá e Sol; sino, órgão
+  numeros: 4 (estrutura), 8 (materialidade), 10 (completude social)
+  dias_semana: Sábado (dia de Saturno)
+  doencas_corpo: "Na medicina astrológica histórica: joelhos por melothesia; ossos, dentes, pele e condições crônicas por Saturno. Não usar para diagnóstico."
+  arquetipos_mitologicos: Cronos/Saturno, Héstia/Vesta, Janus, Pã, Rhea
+  mitos_historias: Cronos devorando os filhos; Saturno e a idade de ouro; Prometeu e o fogo
+  sonhos_simbolos_inconsciente: Montanhas, castelos, pedras, estruturas, coroas, inverno
+  expressao_elevada_sombra: 'Elevada: estrutura que serve, autoridade responsável, tempo como aliado | Sombra: rigidez, autoritarismo, pessimismo, medo do fracasso'
+camada_energetica:
+  impressao_mental: A cor preta/cinza no mapa = 'mente que estrutura'.
+  permeacao_emocional: Responsabilidade, medo de falhar, 'preciso aguentar'.
+  manifestacao_externa: "O Estruturante é um arquétipo interpretativo; ossatura, postura e estilo não se inferem de Capricórnio isoladamente."
+  como_guiar_o_astral: "Usar joelhos, chumbo e tempo para estudar a cadeia saturnina, sem atribuir poder terapêutico às cores."
+porque_simbolico: 'Capricórnio = OSSOS/COLUNA — são a ESTRUTURA do corpo (Saturno = estrutura). A coluna é o ''eixo do tempo'' (cresce com a idade).
+
+  PRETO = cor do TEMPO (noite, envelhecimento, solidez). CINZA-CHUMBO = cor do ''peso'' (Saturno = carga).
+
+  '
+leitura_corporal:
+  regra: "Capricórnio corresponde aos joelhos; a associação com todo o esqueleto resulta da sobreposição com Saturno."
+  uso: "Estudo comparado da melothesia zodiacal e das correspondências planetárias."
+aparencia_nas_tradicoes:
+  descricao: "Descrições saturninas/capricornianas falam em ossatura evidente, feições sóbrias, corpo seco ou anguloso e postura contida."
+  porque: "A construção simbólica liga Saturno ao frio, à secura, ao tempo e à estrutura óssea."
+  variantes: "O tipo saturnino pode ser atribuído a Saturno dominante, Ascendente, regente ou signo; os critérios mudam por autor."
+  limite: "Registrar a doutrina sem tratá-la como fenótipo obrigatório, prognóstico de envelhecimento ou diagnóstico."
+referencias:
+  - {autor: "Claudius Ptolemy", obra: "Tetrabiblos", natureza: "primária histórica", localizador: "Livro I; signos, Saturno e membros do corpo."}
+  - {autor: "Nicholas Culpeper", obra: "Astrological Judgement of Diseases from the Decumbiture of the Sick", natureza: "primária histórica", localizador: "Correspondências saturninas e médico-astrológicas."}
+  - {autor: "Heinrich Cornelius Agrippa", obra: "De occulta philosophia", natureza: "primária histórica", localizador: "Livro I; chumbo, cores e qualidades de Saturno."}
+validacao_de_fontes:
+  base: "A revisão distingue melothesia zodiacal de correspondência planetária."
+  limite: "Não usar como diagnóstico, prognóstico de envelhecimento ou descrição corporal."

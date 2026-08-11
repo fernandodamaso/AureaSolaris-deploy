@@ -1,0 +1,108 @@
+status: review
+id: "netuno_atlas"
+nome: "Netuno — Atlas Simbólico"
+tradicoes:
+  - "atlas simbolico editorial"
+  - "sintese multiescola"
+tipo: "Atlas Simbólico"
+subtema: "Correspondências de Netuno"
+
+origens_e_divergencias:
+  tradicional: "Netuno foi observado como planeta em 1846 e não integra os sete planetas da astrologia helenística, medieval ou renascentista. Peixes permanece domicílio de Júpiter no esquema tradicional."
+  moderna: "Autores modernos associam Netuno a Peixes, imaginação, dissolução, ideal, êxtase, engano, arte e espiritualidade; o uso e a regência não são unânimes."
+  nota: "Não existe dia da semana planetário tradicional para Netuno; quinta-feira pertence a Júpiter. Correspondências minerais, vegetais e corporais são repertórios modernos variáveis."
+
+origem_linguistica_mito_glifo:
+  etimologia: "O planeta recebeu o nome do romano Neptunus, assimilado ao grego Poseidon, por convenção astronômica moderna."
+  mito: "Poseidon/Netuno governa mares, terremotos e cavalos; Dioniso e Oceano são analogias de êxtase ou vastidão, não identidades com Netuno."
+  glifo: "♆ estiliza o tridente de Netuno/Poseidon."
+  porque: "O nome marítimo, a cor azul observada e a recepção romântica/espiritualista favoreceram água, indistinção, inspiração e dissolução."
+
+atlas_simbolico:
+  pessoas_arquetipos:
+    - "O místico"
+    - "O poeta"
+    - "O sonhador"
+    - "O médium"
+    - "O viciado"
+    - "O artista transcendente"
+  lugares_fisicos:
+    - "Mosteiros"
+    - "Mar alto"
+    - "Hospitais psiquiátricos"
+    - "Cinemas, teatros"
+    - "Igrejas"
+    - "Lugares de retiro"
+  objetos_materia:
+    - "Velas"
+    - "Incenso"
+    - "Instrumentos musicais"
+    - "Câmera fotográfica"
+    - "Drogas/álcool"
+  eventos_tipicos:
+    - "Inspiração artística"
+    - "Encontros espirituais"
+    - "Ilusões"
+    - "Dissoluções"
+    - "Mistérios"
+  animais:
+    - "Cavalo-marinho"
+    - "Golfinho"
+    - "Peixe"
+    - "Cisne branco"
+    - "Borboleta"
+  plantas_ervas:
+    - "Lótus"
+    - "Papoula"
+    - "Violeta"
+    - "Lavanda"
+    - "Hortelã-pimenta"
+  metais_pedras:
+    - "Platina"
+    - "Cristal"
+    - "Ametista"
+    - "Água-marinha"
+    - "Opala de fogo"
+  cores_sons:
+    cores: ["Azul-marinho", "Verde-água", "Violeta", "Branco transparente"]
+    sons: ["Ópera", "Canto gregoriano", "Sino aquático", "Ruído branco"]
+  numeros: [7, 12]
+  dias_semana: ["Quinta-feira"]
+  doencas_corpo:
+    doencas: ["Vícios", "Alergias", "Problemas mentais"]
+    partes_corpo: ["Pés", "Glândulas", "Sistema linfático"]
+  arquetipos_mitologicos:
+    - "Netuno/Posídon"
+    - "Dioniso/Baco"
+    - "Oceano"
+  mitos_historias:
+    - "Netuno e Anfitrite"
+    - "Dioniso e as bacantes"
+    - "O delírio de Hércules (Netuno provocando loucura)"
+  expressao_elevada_sombra: "Elevada: compaixão, arte, espiritualidade, transcendência | Sombra: ilusão, vício, confusão, fuga"
+
+camada_energetica:
+  impressao_mental: "A mente que TRANSCENDE e DISSOLVE. Fronteiras tênues, imaginação pura, 'o que não se vê'."
+  permeacao_emocional: "Amor universal e compaixão infinita. Quando saudável: criatividade. Quando ferido: vitimização, vazio."
+  manifestacao_externa: "Eventos PROVÁVEIS de inspiração, encontros com o invisível, dissoluções. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a DAR NOME ao que é invisível. Netuno precisa de canal (arte, serviço), senão causa ilusão."
+
+tarot_relacionado:
+  carta: "O Louco (alternativa) / O Mago da fantasia"
+  conexao: "Netuno dissolve fronteiras — o Louco pula sem ver, Netuno deixa de ver para crer."
+
+foco_especial:
+  infantil: "A criança Netuno é sensível, artística, vê o invisível. Precisa de proteção contra 'dureza' prematura."
+  familiar: "O membro que traz arte, espiritualidade ou sofrimento oculto."
+  carmico_espiritual: "Netuno indica a LIÇÃO DE ENTREGA. Casa Netuno = onde a pessoa aprende a confiar no invisível."
+
+camada_tecnica_e_limites:
+  regra: "O motor só deve usar Netuno quando a escola/configuração o habilitar; deve preservar Júpiter como regente tradicional de Peixes e registrar a variante moderna."
+  limites: "Vícios, alergias e saúde mental são correspondências astrológicas modernas, não diagnóstico. Tarot, oitavas, pedras e experiências do invisível exigem atribuição."
+referencias:
+  primarias: ["Urbain Le Verrier, carta de 31 de agosto de 1846 e comunicações sobre a posição do novo planeta; fonte histórica da descoberta, não texto astrológico."]
+  secundarias: ["James Holden, A History of Horoscopic Astrology (1996), contexto histórico dos planetas modernos.", "Robert Hand, Horoscope Symbols (1981), recepção astrológica moderna de Netuno."]
+anotacoes_pessoais: []
+ver_mais:
+  - "../04_Planetas/Netuno.yaml"
+

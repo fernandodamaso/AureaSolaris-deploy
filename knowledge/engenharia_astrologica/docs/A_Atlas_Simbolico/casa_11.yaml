@@ -1,0 +1,47 @@
+﻿status: draft
+id: "casa_11_atlas"
+nome: "Casa 11 — O Clã / O Futuro Coletivo"
+tradicoes:
+  - "atlas simbolico editorial"
+  - "sintese multiescola"
+tipo: "Atlas Simbólico"
+subtema: "Correspondências da Casa 11"
+
+origens_e_divergencias:
+  tradicional: "Ptolomeu (Tetrabiblos) — significados tradicionais das 12 casas."
+  moderna: "Astrologia moderna — casa 11 como grupos e futuro."
+  nota: "Revisar ao citar — marca a escola usada."
+
+atlas_simbolico:
+  pessoas_arquetipos: "O amigo, o grupo, o visionário, o inovador coletivo"
+  lugares_fisicos: "Clubes, associações, redes, comunidades"
+  objetos_materia: "Bandeiras, símbolos de grupo, redes, computadores"
+  eventos_tipicos: "Fundações de grupos, amizades, projetos coletivos"
+  animais: "Abelha, formiga, lobo (alcateia), ave migratória"
+  plantas_ervas: "Trevo de quatro folhas, hera, orquídea rara"
+  metais_pedras: "Urânio, zircônio, ametista, fluorita"
+  cores_sons:
+    cores: ["Azul-elétrico", "violeta", "prata-luz"]
+    sons: ["Zumbido eléctrico", "vento forte", "bip"]
+  numeros: [11]
+  dias_semana: ["Sábado"]
+  doencas_corpo:
+    doencas: ["Problemas nervosos", "choques eléctricos"]
+    partes_corpo: ["Sistema nervoso autônomo", "cérebro", "panturrilhas"]
+  arquetipos_mitologicos:
+    - "Prometeu (revolucionário)"
+    - "Urano (céu)"
+    - "Atlas (sustentação do grupo)"
+  mitos_historias: "Prometeu roubando o fogo; Atlas carregando o céu"
+  sonhos_simbolos_inconsciente: "Grupos, amizades, futuros coletivos"
+  expressao_elevada_sombra: "Elevada: amizade autêntica, visão coletiva | Sombra: tribo exclusiva, rebeldia de grupo, fuga da individualidade"
+
+camada_energetica:
+  impressao_mental: "A mente que VÊ O FUTURO COLETIVO. 'O que nós construímos?'."
+  permeacao_emocional: "Amizade como pertencimento. Quando saudável: comunidade. Quando ferido: exclusão, solidão em grupo."
+  manifestacao_externa: "Eventos prováveis de encontros de grupo, projetos coletivos, inovações. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a PERTENCER SEM PERDER A SI. Casa 11 é o clã, não a manada."
+
+ver_mais:
+  - "../05_Casas/Casa_11.yaml"
+

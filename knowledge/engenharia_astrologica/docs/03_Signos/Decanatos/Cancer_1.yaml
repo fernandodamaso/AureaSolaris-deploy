@@ -1,0 +1,56 @@
+﻿status: draft
+id: "decanato_cancer_1"
+nome: "Decanato 1 de Câncer (0°–10°) — Câncer puro"
+tradicoes:
+  - "convenção por signos da mesma triplicidade"
+  - "camada simbólica moderna atribuída"
+regente: "Lua (Câncer/Lua na convenção por triplicidade; face caldaica correspondente: Vênus)"
+
+origens_e_divergencias:
+  sistema_adotado: "Convenção posterior/moderna por signos da mesma triplicidade: 0°–<10° de Câncer recebe a cor de Câncer/Lua."
+  faces_caldaicas: "A face caldaica de 0°–<10° de Câncer é Vênus; as tabelas divergem."
+  decanos_egipcios: "Sistema distinto, a ser consultado em tabela própria."
+  nota: "A Lua aqui não deve ser apresentada como regente de face caldaica."
+
+calculo_e_escopo:
+  intervalo: "Câncer tropical 0°–<10°; 10° exatos iniciam o segundo decanato."
+  uso: "Refinamento opcional; não transforma a Lua em significador único de família ou corpo."
+  camada_simbolica: "Solstício, ninho e imagens maternas são notas de estudo atribuídas, não conclusões automáticas."
+referencias:
+  - autor: "Engenharia Astrológica"
+    obra: "Decanatos"
+    natureza: "fonte editorial"
+    localizador: "Tabela comparativa em 03_Signos/Decanatos.yaml."
+  - autor: "Cláudio Ptolomeu"
+    obra: "Tetrabiblos"
+    natureza: "primária histórica"
+    localizador: "Faces; tabela caldaica da faixa é Vênus."
+limite_documental: "Permanece draft: a convenção por triplicidade e suas associações exigem fonte específica."
+atlas_simbolico:
+  pessoas_arquetipos: "O Nascente, o que expressa Água Cardinal"
+  lugares_fisicos: "Lugares de Água Cardinal"
+  objetos_materia: "Objetos de Água Cardinal"
+  eventos_tipicos: "Eventos de Água Cardinal"
+  animais: "Animais de Água Cardinal"
+  plantas_ervas: "Plantas de Água Cardinal"
+  metais_pedras: "Metais de Água Cardinal"
+  cores_sons: "Cores de Água Cardinal"
+  numeros: "Números de Água Cardinal"
+  dias_semana: "Dias de Água Cardinal"
+  doencas_corpo: "Partes do corpo de Água Cardinal"
+  arquetipos_mitologicos: "Arquétipos de Água Cardinal"
+  mitos_historias: "Mitologias de Água Cardinal"
+  sonhos_simbolos_inconsciente: "Símbolos de Água Cardinal"
+  expressao_elevada_sombra: "Elevada: Água Cardinal consciente | Sombra: Água Cardinal descontrolado"
+
+camada_energetica:
+  impressao_mental: "Câncer cru — necessidade de segurança emocional imediata. A mente opera por 'sou acolhido ou não'."
+  permeacao_emocional: "Acolhimento e medo da perda do ninho."
+  manifestacao_externa: "Eventos PROVÁVEIS ligados a família, casa, raízes. Arquétipos: o Ninho, a Mãe. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a construir ninho SEM prender — o 1º decanato de Câncer pode confundir proteção com prisão."
+
+porque_simbolico: "Lua rege Câncer = corpo emocional. 0° de Câncer = solstício de verão (hemisfério norte) — a luz é máxima, a natureza é MATERNA. O ninho é o símbolo do aconchego."
+foco_especial:
+  infantil: "Criança com Sol/ASC/Lua em Câncer 1 = criança que sente o clima emocional da casa como 'seu próprio clima'."
+
+

@@ -1,0 +1,140 @@
+id: retornos_planetarios
+nome: Retornos planetários
+tipo: familia_de_tecnicas_de_retorno
+tradicoes:
+- tradicional e moderna ocidental
+status: review
+definicao: Família de cartas ou momentos calculados quando um planeta retorna à mesma
+  longitude eclíptica natal. Revoluções solar e lunar são membros dessa família, mas
+  têm fichas próprias por sua importância histórica e cadência. Um retorno é um fato
+  calculável; sua interpretação depende de escola, localidade e relação com o mapa
+  natal.
+calculo:
+  criterio: Encontrar o instante em que a longitude geocêntrica tropical do corpo
+    coincide com sua longitude natal, na mesma convenção de efeméride.
+  ocorrencias: Numerar a ocorrência após o nascimento e registrar se há aproximação
+    anterior/posterior; retrogradação pode exigir verificar múltiplas passagens.
+  localidade: A posição dos planetas no retorno é global para o instante; ângulos
+    e casas dependem da localidade escolhida para levantar a carta.
+  parametros: Corpo, longitude natal, data aproximada, ocorrência, efeméride, zodíaco,
+    localidade, fuso e sistema de casas.
+algoritmo_reproduzivel:
+  funcao: Para o corpo P, resolver λP(t) − λP_natal = 0 mod 360° dentro da janela
+    de ciclo. Usar diferença angular desenrolada ou método equivalente que não confunda
+    a passagem por 0° de Áries com um retorno.
+  busca: Procurar todas as raízes dentro da janela, inclusive retornos próximos a
+    estações. Uma busca só por mudança de sinal pode perder toque tangencial; registrar
+    a estratégia de amostragem e refinamento.
+  retrogradacao: Numerar cada passagem direta/retrógrada/direta, registrar velocidade
+    e estado estacionário. Não eleger automaticamente uma passagem como 'principal'
+    sem regra de escola citada.
+  carta: O instante planetário é global; casas e ângulos exigem localidade declarada.
+    Manter a igualdade de longitude como critério de retorno e aspecto por orbe como
+    critério separado.
+linhagens_e_variantes:
+  nucleo_historico: Revoluções solar e lunar possuem linhagens históricas próprias.
+    Retornos dos cinco planetas tradicionais podem ser estudados em escolas posteriores,
+    mas não devem receber por analogia a mesma regra de uma revolução anual.
+  extensoes_modernas: Retornos de Urano, Netuno, Plutão, nodos, asteroides e pontos
+    são usos modernos ou especializados e requerem ficha/escopo próprio.
+  cartas_ou_momentos: Algumas escolas interpretam o instante, outras erguem uma carta
+    de retorno. A ficha de resultado deve indicar qual objeto está sendo julgado.
+dados_reproduziveis:
+  obrigatorios:
+  - Corpo/objeto, longitude natal, instante natal, zodíaco, geocentria, época e efeméride/motor
+    com versão.
+  - Janela de busca, todas as ocorrências encontradas, tolerância, escala de tempo,
+    ΔT quando aplicável, velocidade e estado de movimento.
+  - Localidade, coordenadas, fuso legal/histórico e sistema de casas somente quando
+    houver carta de retorno.
+  saida_minima: 'Para cada ocorrência: instante UTC/local, longitude residual, passagem
+    direta/retrógrada/estacionária, variante interpretativa e parâmetros do motor.'
+familias_de_retorno:
+  luminares: Solar e lunar; ver fichas específicas.
+  planetas_tradicionais: Mercúrio, Vênus, Marte, Júpiter e Saturno, com ciclos e problemas
+    de retrogradação próprios.
+  planetas_modernos: Urano, Netuno e Plutão podem ser usados por escolas modernas;
+    não têm estatuto tradicional idêntico.
+  outros_pontos: Alguns programas erguem retornos de nodos, asteroides e pontos; cada
+    caso requer escopo e fonte próprios.
+procedimento_de_julgamento:
+- Confirmar a longitude natal e o instante do retorno com efeméride documentada.
+- Declarar a localidade e a tradição de casas antes de ler os ângulos.
+- 'Examinar o planeta retornante no mapa natal: casa, regências, condição, aspectos
+  e seita quando pertinente.'
+- Avaliar a figura de retorno na relação com natal e com a técnica anual/período principal,
+  sem atribuir autonomia total à carta.
+- Para planetas retrógrados, registrar todos os contatos relevantes em vez de forçar
+  uma única data de retorno.
+regras_para_motor:
+  saida_minima_obrigatoria:
+  - Corpo retornante, longitude natal, todas as ocorrências encontradas na janela,
+    instante UTC/local, velocidade, direção, estado estacionário, localidade e sistema
+    de casas da carta.
+  guardrails:
+  - Não promover uma passagem como principal sem regra escolar declarada.
+  - Para Mercúrio e Vênus, auditar com especial cuidado a busca de múltiplas passagens
+    em torno da retrogradação e da elongação solar.
+  leitura:
+  - "Subordinar a leitura do retorno à condição natal do planeta e ao ciclo principal em uso, em vez de tratá-lo como mapa soberano por padrão."
+nao_confundir_com:
+- Retorno de fase sinódica entre dois planetas, que é um ciclo de conjunção e não
+  retorno de uma longitude natal individual.
+- 'Trânsito próximo por orbe: retorno exige igualdade longitudinal segundo a convenção
+  escolhida.'
+- 'Aniversário civil: aproxima o retorno solar, mas não substitui o instante astronômico.'
+camada_simbolica:
+  imagem: O corpo reencontra sua longitude natal; a figura compara recorrência cíclica
+    e configuração de origem.
+  linguistica: Retorno é a tradução direta de reditus/return; revolução enfatiza o
+    giro completo ou recorrente.
+divergencias_e_limites:
+- Autores divergem sobre localidade, casas, orbes e sobre se a figura de retorno deve
+  ser lida com autonomia ou subordinada à natal.
+- Não há uma única significação por planeta retornante; a condição natal e o método
+  são decisivos dentro da leitura.
+- Retrogradação torna essencial documentar algoritmo e ocorrência, sobretudo para
+  corpos rápidos.
+referencias:
+- autor: Astrodienst
+  obra: Return Chart
+  natureza: definição e cálculo de cartas de retorno
+  url: https://www.astro.com/astrowiki/en/Return_Chart
+- autor: Astrodienst
+  obra: Solar Return Chart
+  natureza: princípio de que outros planetas também admitem cartas de retorno
+  url: https://www.astro.com/astrowiki/en/Solar_Return
+- autor: Jean-Baptiste Morin de Villefranche
+  obra: Astrologia Gallica, Livro XXIII
+  natureza: fonte histórica para revoluções solar e lunar, não para todas as extensões
+    modernas
+- autor: Astrodienst
+  obra: Return Chart
+  edicao_ou_traducao: Astrowiki, versão consultada em 2026-08-10
+  localizador: Cartas de retorno e tratamento de múltiplas passagens retrógradas
+  url: https://www.astro.com/astrowiki/en/Return_Chart
+  natureza: técnica — definição contemporânea e precauções de cálculo
+- autor: Astrodienst
+  obra: Swiss Ephemeris Programmer's Documentation
+  edicao_ou_traducao: Documentação técnica do motor Swiss Ephemeris
+  localizador: Posições planetárias, velocidade e escala de tempo; registrar versão
+    efetivamente utilizada
+  url: https://www.astro.com/swisseph/swephprg.htm
+  natureza: técnica — reprodução numérica
+validacao_de_fontes:
+  base: "As refer?ncias estruturadas identificam a linhagem hist?rica, moderna ou astron?mica pertinente a esta t?cnica preditiva."
+  escopo: "Uma implementa??o deve declarar edi??o, algoritmo, efem?ride, escala de tempo e variante de escola; esta exig?ncia ? uma regra de reprodu??o, n?o uma lacuna de fonte."
+  limite: "A ficha permanece em review e n?o converte hip?tese, aproxima??o pedag?gica ou releitura moderna em previs?o determinista."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+notas_de_implementacao:
+- Definir algoritmo de busca que detecte retornos em estação e validar cada planeta
+  rápido contra casos de múltiplas passagens.
+origens_e_divergencias:
+  tradicional: Conceito/técnica presente na tradição astrológica ocidental.
+  moderna: Possível ressignificação contemporânea.
+  nota: Rotular a escola quando divergir.
+camada_energetica:
+  impressao_mental: Campo conceitual do tema/técnica.
+  permeacao_emocional: Como o tema toca a experiência subjetiva.
+  manifestacao_externa: Como aparece em comportamentos e eventos.
+  como_guiar_o_astral: Como usar este conhecimento na leitura prática.

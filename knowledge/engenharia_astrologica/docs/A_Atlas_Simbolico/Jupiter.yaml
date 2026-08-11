@@ -1,0 +1,108 @@
+status: review
+id: "jupiter_atlas"
+nome: "Júpiter — Atlas Simbólico"
+tradicoes:
+  - "atlas simbolico editorial"
+  - "sintese multiescola"
+tipo: "Atlas Simbólico"
+subtema: "Correspondências de Júpiter"
+
+origens_e_divergencias:
+  tradicional: "Na astrologia helenística, medieval e renascentista, Júpiter rege Sagitário e Peixes e exalta-se em Câncer; significa lei, fé, honra, conselho, abundância e proteção, condicionado por secto, dignidade, casa e aspectos. Agrippa registra estanho e repertórios naturais jupiterianos."
+  moderna: "Linhas psicológicas enfatizam busca de sentido, confiança e visão de mundo; linhas evolutivas podem chamá-lo de bússola moral da alma. São desenvolvimentos modernos, não regras técnicas universais."
+  nota: "Correção: Peixes é domicílio tradicional, não exaltação. Pedras, plantas, números e tarot variam entre autores e permanecem como correspondências atribuídas."
+
+origem_linguistica_mito_glifo:
+  etimologia: "Iuppiter remonta à fórmula indo-europeia do 'Pai-Céu luminoso'."
+  mito: "Zeus/Júpiter governa, distribui honras e guarda juramentos; Thor e Odin são analogias comparativas, não identidades históricas."
+  glifo: "♃ deriva da tradição gráfica planetária; explicações como inicial de Zeus ou curva sobre a cruz são exegeses posteriores."
+  porque: "A natureza tradicional moderadamente quente e úmida e a imagem do soberano benéfico explicam fertilidade, expansão, justiça e proteção."
+
+atlas_simbolico:
+  pessoas_arquetipos:
+    - "O filósofo"
+    - "O professor"
+    - "O juiz"
+    - "O viajante"
+    - "O sacerdote"
+    - "O benfeitor"
+  lugares_fisicos:
+    - "Universidades"
+    - "Templos"
+    - "Tribunais"
+    - "Bibliotecas grandes"
+    - "Estradas"
+    - "Montanhas sagradas"
+  objetos_materia:
+    - "Livros sagrados"
+    - "Cetro"
+    - "Coroas"
+    - "Estatuas"
+    - "Mapas"
+  eventos_tipicos:
+    - "Formatura"
+    - "Casamento"
+    - "Viagens longas"
+    - "Promoção"
+    - "Sucesso"
+  animais:
+    - "Cavalo"
+    - "Cão de caça"
+    - "Águia (asas largas)"
+    - "Touro"
+    - "Cervo"
+  plantas_ervas:
+    - "Carvalho"
+    - "Nogueira"
+    - "Hera"
+    - "Sálvia"
+    - "Rosmaninho"
+  metais_pedras:
+    - "Estanho"
+    - "Lápis-lazúli"
+    - "Topázio"
+    - "Turquesa"
+    - "Safira"
+  cores_sons:
+    cores: ["Azul-royal", "Roxo", "Dourado", "Verde-escuro"]
+    sons: ["Órgão", "Tambor distante", "Canto gregoriano"]
+  numeros: [3, 9, 12]
+  dias_semana: ["Quinta-feira"]
+  doencas_corpo:
+    doencas: ["Problemas hepáticos", "Problemas de quadril", "Excesso"]
+    partes_corpo: ["Fígado", "Quadril", "Coxas", "Sangue"]
+  arquetipos_mitologicos:
+    - "Zeus/Júpiter"
+    - "Thor"
+    - "Odín"
+  mitos_historias:
+    - "Zeus e os deuses do Olimpo"
+    - "Thor e o martelo"
+    - "A expansão do Império Romano (Jove Optimus Maximus)"
+  expressao_elevada_sombra: "Elevada: generosidade, sabedoria, expansão | Sombra: excesso, fanatismo, dogmatismo, exagero"
+
+camada_energetica:
+  impressao_mental: "A mente que EXPANDE e BUSCA SENTIDO. Filosofia, fé, verdade maior."
+  permeacao_emocional: "Esperança, otimismo, confiança. Quando saudável: generosidade. Quando ferido: exagero, fuga."
+  manifestacao_externa: "Eventos PROVÁVEIS de expansão, viagens, sucesso, estudos. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a ENCONTRAR SUA PRÓPRIA VERDADE. Júpiter é a bússola, não o mapa."
+
+tarot_relacionado:
+  carta: "A Roda da Fortuna (X)"
+  conexao: "Júpiter é a Roda: expansão, sorte, ciclos, o grande jogo da vida."
+
+foco_especial:
+  infantil: "A criança Júpiter adora histórias, viagens, aprender. Precisa de fé, otimismo, horizontes amplos."
+  familiar: "O professor/avô da família. O que expande horizontes. Conflitos: excesso, opinião forte."
+  carmico_espiritual: "Júpiter indica a LIÇÃO DE FÉ. Casa Júpiter = onde a pessoa cresce e expande."
+
+camada_tecnica_e_limites:
+  regra: "Julgar Júpiter por signo, casa, secto, dignidades, velocidade, relação solar, recepções e aspectos; nunca converter 'expansão' em sorte automática."
+  limites: "Corpo e doenças são correspondências históricas, não diagnóstico. Tarot, cores, pedras, mitos comparados e leituras cármicas não são parâmetros computáveis por si."
+referencias:
+  primarias: ["Ptolemeu, Tetrabiblos, I.4 e I.17-19.", "William Lilly, Christian Astrology (1647), pp. 61-63.", "Agrippa, De occulta philosophia, I.23-24 e II.10."]
+  secundarias: ["Robert Hand, Horoscope Symbols (1981), capítulo sobre Júpiter."]
+anotacoes_pessoais: []
+ver_mais:
+  - "../04_Planetas/Jupiter.yaml"
+

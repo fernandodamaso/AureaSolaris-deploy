@@ -1,0 +1,67 @@
+﻿status: review
+id: "historico_conceitos"
+nome: "Histórico de Conceitos Astrológicos"
+tradicoes:
+  - "historica"
+  - "etimologica"
+  - "editorial"
+tema: "Evolução histórica de termos e técnicas astrológicas."
+
+essencia:
+  - "Cada conceito tem história: origem, ressignificação, uso atual."
+  - "Entender a história evita confundir escolas."
+  - "Marcar quando um conceito mudou de escola para escola."
+
+origens_e_divergencias:
+  tradicional: "Vários períodos históricos."
+  moderna: "Resignificações contemporâneas."
+  nota: "Usar como guia de leitura crítica do material. 'Origem' abaixo aponta linhagens de transmissão, não um inventor único, salvo quando houver fonte explícita."
+
+limites_de_uso:
+  - "Não atribuir a Ptolomeu a criação das doze casas, dos aspectos ou do zodíaco; ele é uma fonte importante de sistematização e transmissão, não a única origem dessas práticas."
+  - "'Função psíquica' e 'arquétipo' pertencem a releituras modernas/psicológicas e não descrevem automaticamente o vocabulário helenístico ou medieval."
+
+camada_energetica:
+  impressao_mental: "Ver conceitos como organismos vivos, não como definições fixas."
+  permeacao_emocional: "Respeito pela tradição; curiosidade pela evolução."
+  manifestacao_externa: "Estudo, escrita, ensino."
+  como_guiar_o_astral: "Mostrar ao consulente que astrologia evolui; não é dogma, é ferramenta."
+
+conceitos:
+  - termo: "Planeta"
+    origem: "Grego planētēs = errante."
+    evolucao: "De 'estrela que vaga' para 'função psíquica' (Jung)."
+    observacao: "Incluir corpo celeste e função simbólica."
+  - termo: "Casa"
+    origem: "Lugares/casas aparecem em tradições helenísticas e posteriores; Ptolomeu é uma fonte antiga relevante, mas não o inventor único do esquema."
+    evolucao: "De setores físicos para áreas psicológicas (moderna)."
+    observacao: "Casa = área de experiência, não predição fatal."
+  - termo: "Aspecto"
+    origem: "Aspectos fazem parte do vocabulário helenístico transmitido por autores como Ptolomeu; suas regras e orbes variam por escola."
+    evolucao: "De orbes rigorosos para orbes ampliados (moderna)."
+    observacao: "Aspecto = conversação entre planetas, não sentença."
+  - termo: "Signo"
+    origem: "Zodíaco babilônico → grego → renascentista."
+    evolucao: "De zona celeste a arquétipo psicológico."
+    observacao: "Signo = filtro, não destino."
+  - termo: "Lote/Fortuna"
+    origem: "Hellenística; cálculo por Sol e Lua + Asc."
+    evolucao: "Tradicional mantém cálculo; moderna usa como ponto simbólico."
+    observacao: "Fortuna = sorte como inclinação, não como azar."
+
+referencias:
+  primarias:
+    - "Ptolomeu. Tetrabiblos, livro I."
+    - "Vettius Valens. Anthology, especialmente materiais sobre lotes e lugares; consultar tradução/edição declarada."
+  secundarias:
+    - "Holden, James H. A History of Horoscopic Astrology. American Federation of Astrologers, 1996."
+    - "Brennan, Chris. Hellenistic Astrology: The Study of Fate and Fortune. Amor Fati Publications, 2017."
+  tecnicas:
+    - "Manter a data, a escola e a edição ao acrescentar novos marcos históricos."
+
+ver_mais:
+  - "../F_Curiosidades_e_Etimologias/etimologias.yaml"
+  - "../F_Curiosidades_e_Etimologias/Frases_Celebres.yaml"
+
+## ✏️ Minhas Anotações
+

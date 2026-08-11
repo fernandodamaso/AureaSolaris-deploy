@@ -1,0 +1,58 @@
+status: review
+id: "mapa_infantil"
+nome: "Leitura de Mapa Infantil"
+tipo: "Astrologia Aplicada"
+subtema: "Temperamento, necessidades, vínculos e potenciais em desenvolvimento"
+tradicoes: ["psicológica", "humanista", "aplicada contemporânea", "tradicional quando explicitada"]
+
+escopo:
+  definicao: "Aplicação do mapa natal ao estudo respeitoso de uma criança em desenvolvimento, dirigida principalmente a responsáveis e educadores autorizados."
+  objetivo: "Ampliar repertório de observação e cuidado sem transformar símbolos em rótulos fixos."
+  nao_inclui: ["diagnóstico", "prognóstico de doença", "sentença de personalidade", "decisão escolar ou clínica automática"]
+
+fundamentos_e_linhagens:
+  tradicional: "Temperamento, luminares, Ascendente, regentes e condição dos significadores podem ser estudados quando o método e suas fontes forem declarados."
+  psicologica_humanista: "Enfatiza potenciais, necessidades emocionais e modos de expressão em desenvolvimento; deve evitar projetar expectativas adultas sobre a criança."
+  sistemica: "Pode observar narrativas familiares e papéis atribuídos, mas o mapa da criança não identifica sozinho um membro da família nem prova segredo, trauma ou lealdade invisível."
+  carmica_esoterica: "Algumas escolas trabalham temas de continuidade da alma, dons e aprendizados. Devem ser apresentados integralmente dentro de sua linguagem, como visão da escola e nunca como dívida que limite a criança."
+
+hierarquia_de_leitura:
+  - "Qualidade dos dados natais; declarar incerteza da hora."
+  - "Sol, Lua, Ascendente e regente do Ascendente como eixos, sem reduzir a criança a três fatores."
+  - "Mercúrio para formas simbólicas de aprender e comunicar; observar experiência real."
+  - "Vênus e Marte para vínculos, prazer, iniciativa e limites, sem estereótipos de gênero."
+  - "Casas, aspectos, elementos, modalidades e repetições do mapa."
+  - "Trânsitos/progressões apenas como ciclos de acompanhamento, não previsão catastrófica."
+
+procedimento:
+  pre_requisitos:
+    - "Consentimento do responsável e finalidade clara."
+    - "Dados mínimos necessários; proteção do nome, data, local e mapa."
+    - "Perguntas formuladas como observações abertas, não confirmação de rótulos."
+  entrega:
+    - "Separar cálculo, tradição, inferência e exemplos observáveis."
+    - "Oferecer mais de uma manifestação possível para cada símbolo."
+    - "Usar linguagem de potencial: 'pode precisar', 'pode experimentar', 'observe se'."
+    - "Indicar que a voz e a experiência da criança prevalecem sobre a leitura."
+
+simbolismo_e_curiosidades:
+  arquetipos: ["criança divina", "aprendiz", "semente", "mensageiro", "guardião"]
+  nota: "Mitos de infâncias divinas podem enriquecer o estudo de nascimento e potencial; não autorizam comparar uma criança a destino heroico ou sofrimento mítico."
+
+limites_eticos:
+  - "Não comunicar previsões de morte, abuso, doença, fracasso ou destino relacional."
+  - "Não decidir medicação, terapia, diagnóstico, escola ou guarda por astrologia."
+  - "Não publicar o mapa ou dados identificáveis sem autorização adequada."
+  - "Não orientar somente os pais quando a idade e o contexto permitem participação da própria criança."
+
+referencias:
+  primarias: []
+  secundarias:
+    - "Greene, Liz; Sasportas, Howard. The Development of the Personality. Weiser, 1987."
+    - "Sasportas, Howard. The Twelve Houses. Thorsons, edição consultada."
+    - "Faculty of Astrological Studies. Código de ética e materiais de formação vigentes; registrar versão/data consultada."
+  tecnicas: []
+
+relacoes:
+  depende_de: ["mapa_natal", "metodologia_de_leitura", "etica_astrologica"]
+  ver_tambem: ["temperamento", "astrologia_psicologica", "astrologia_sistemica", "astrologia_carmica"]

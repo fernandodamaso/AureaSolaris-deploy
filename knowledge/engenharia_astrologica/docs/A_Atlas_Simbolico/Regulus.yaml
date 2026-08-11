@@ -1,0 +1,46 @@
+﻿status: draft
+id: "regulus_atlas"
+nome: "Regulus — Atlas Simbólico"
+tradicoes:
+  - "atlas simbolico editorial"
+  - "sintese multiescola"
+tipo: "Atlas Simbólico"
+subtema: "Correspondências de Regulus"
+
+origens_e_divergencias:
+  tradicional: "Ptolomeu, Al-Battani — Regulus = coração do Leão; rei, vitória, honra."
+  moderna: "Astrologia moderna mantém associações tradicionais; acrescenta liderança espiritual."
+  nota: "Revisar citações ao citar esta estrela."
+
+atlas_simbolico:
+  pessoas_arquetipos: "Rei, soberano, campeão, protetor"
+  lugares_fisicos: "Palácios, tronos, arenas, teatros, tribunais"
+  objetos_materia: "Coroa, cetro, espada de honra, medalha"
+  eventos_tipicos: "Coroações, vitórias, reconhecimento público, celebrações"
+  animais: "Leão, águia real, cavalo branco"
+  plantas_ervas: "Louro (vitória), girassol (luz), rosa amarela (honra)"
+  metais_pedras: "Ouro, rubi, topázio imperial, diamante"
+  cores_sons:
+    cores: ["Dourado real", "vermelho régio", "branco"]
+    sons: ["Trombeta real", "canto coral", "tambor triunfal"]
+  numeros: [1, 5, 21]
+  dias_semana: ["Domingo (Sol)"]
+  doencas_corpo:
+    doencas: ["Problemas coronários", "dor nas costas"]
+    partes_corpo: ["Coração", "coluna dorsal"]
+  arquetipos_mitologicos: ["Hércules (primeiro trabalho)", "Apolo (luz)", "Rei Arthur"]
+  mitos_historias: "Hércules matando o Leão de Nemeia; Regulus = domínio do leão interior"
+  sonhos_simbolos_inconsciente: "Vitória, coroas, espadas, luzes, tronos"
+  expressao_elevada_sombra: "Elevada: liderança justa, coragem nobre, generosidade régia | Sombra: tirania, orgulho excessivo, crueldade"
+
+camada_energetica:
+  impressao_mental: "Mentalidade de líder nato; quer comandar, mas deve aprender a servir."
+  permeacao_emocional: "Vitalidade, coragem. Quando sombra: arrogância, vaidade excessiva."
+  manifestacao_externa: "Eventos PROVÁVEIS de reconhecimento, promoção, vitória pública."
+  como_guiar_o_astral: "Canalizar a liderança para serviço; não para dominação."
+
+ver_mais:
+  - "../07_Estrelas_Fixas/Regulus.yaml"
+
+## ✏️ Minhas Anotações
+

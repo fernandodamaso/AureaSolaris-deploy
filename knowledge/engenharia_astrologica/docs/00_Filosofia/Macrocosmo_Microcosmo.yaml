@@ -1,0 +1,54 @@
+﻿status: review
+id: "macrocosmo_microcosmo"
+nome: "Macrocosmo e Microcosmo"
+tradicoes:
+  - "hermetica"
+  - "editorial"
+tema: "A astrologia como leitura do macrocosmo refletido no microcosmo humano."
+
+essencia:
+  - "O que está em cima (céu) é como o que está embaixo (Terra)."
+  - "O ser humano é um microcosmo do Universo."
+  - "Mapa natal = mandala do tempo no momento do nascimento."
+
+origens_e_divergencias:
+  tradicional: "A analogia macrocosmo–microcosmo é recorrente em correntes herméticas, neoplatônicas e renascentistas. Em autores como Agrippa, ela organiza correspondências; não equivale a uma regra única ou compartilhada por toda a astrologia antiga."
+  moderna: "Leituras psicológicas podem aproximar o tema de arquétipos e sincronicidade, mas isso é uma reinterpretação moderna, não uma tradução literal das fontes herméticas."
+  nota: "Nesta base, é apresentado como modelo cosmológico e linguagem de correspondências de tradições declaradas; o motor não deve convertê-lo em causalidade física nem em regra automática de interpretação."
+
+camada_energetica:
+  impressao_mental: "Sentir-se representado no cosmos; não pequeno, não separado."
+  permeacao_emocional: "Pertencimento cósmico, reverência, responsabilidade."
+  manifestacao_externa: "Busca por sentido nos ciclos; sintonia com horários, estações, idades."
+  como_guiar_o_astral: "Mostrar o mapa como mandala pessoal do cosmos; cada casa = ponto do universo em você."
+
+aplicacao_astrologica:
+  zodíaco: "12 signos = 12 qualidades universais projetadas em escala humana."
+  planetas: "7 planetas = 7 princípios operativos no microcosmo."
+  casas: "12 casas = 12 áreas onde o macro se expressa no micro."
+  correspondencias: "Cada signo rege partes do corpo, metais, dias da semana — ligando o todo."
+
+referencias:
+  - autor: "Corpus Hermeticum"
+    obra: "Asclepius e tratados herméticos"
+    natureza: "primária histórica"
+    localizador: "Conferir tradução/edição utilizada; contexto cosmológico e antropológico."
+  - autor: "Heinrich Cornelius Agrippa"
+    obra: "De occulta philosophia"
+    natureza: "primária histórica"
+    localizador: "Livro I; doutrina de correspondências e mundo elementar/celeste."
+  - autor: "Frances A. Yates"
+    obra: "Giordano Bruno and the Hermetic Tradition"
+    natureza: "secundária historiográfica"
+    localizador: "Contextualização do hermetismo renascentista; não usar como fonte de regra técnica."
+
+validacao_de_fontes:
+  base: "As fontes sustentam a existência histórica de linguagens de correspondência; não sustentam uma equivalência universal entre qualquer símbolo e qualquer evento."
+  limite: "Correspondências anatômicas, metálicas e planetárias devem remeter às fichas específicas e à tradição citada."
+
+ver_mais:
+  - "../00_Filosofia/7_Leis_Hermeticas.yaml"
+  - "../00_Filosofia/Sincronicidade.yaml"
+
+## ✏️ Minhas Anotações
+

@@ -1,0 +1,65 @@
+status: review
+id: "casa_1"
+tradicoes:
+  - "helenística"
+  - "medieval"
+  - "renascentista"
+  - "moderna (camadas psicológica e sistêmica explicitamente separadas)"
+tipo: "conceito técnico de casa astrológica"
+escopo_documental:
+  tecnica_historica:
+    - "significação tradicional da casa, sua relação com ângulos, casas sucedentes/cadentes e tópicos derivados"
+  camadas_modernas: "Atlas simbólico, Tarot, medicina, arquétipos e leitura sistêmica permanecem separados da regra histórica."
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "primária"
+    localizador: "Livro IV e passagens sobre configuração e significação dos lugares"
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    natureza: "primária"
+    localizador: "Livros II–IV, tópicos das casas e julgamento natal"
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    natureza: "primária"
+    localizador: "Livro I, significações das casas e regras de julgamento"
+validacao_de_fontes:
+  base: "A significa??o hist?rica dos lugares ? sustentada por Ptolomeu, Valens e Lilly, nas refer?ncias estruturadas da ficha."
+  escopo: "Tarot, Atlas simb?lico, medicina, psicologia e leitura sist?mica s?o camadas de estudo rotuladas; n?o substituem a t?cnica hist?rica de casas."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+numero: 1
+nome: "Casa 1 — A Procissão / O Eu"
+tema: "Como me apresento e inicio o mundo"
+
+origens_e_divergencias:
+  tradicional: "Ptolomeu (Tetrabiblos) — significados tradicionais das 12 casas."
+  moderna: "Astrologia psicológica/sistêmica (Liz Greene, escola de relações familiares)."
+  nota: "Revisar ao citar — marca a escola usada."
+atlas_simbolico:
+  pessoas_arquetipos: "O Eu, a primeira impressão, a identidade pura, o espelho"
+  lugares_fisicos: "Lares, lugares de nascimento, frente de casas, espelhos"
+  objetos_materia: "Espelhos, fotografias, crachás, documentos de identidade"
+  eventos_tipicos: "Nascimentos, novos começos, mudanças de aparência, identidade"
+  animais: "Cão de guarda, falcão, águia, carneiro"
+  plantas_ervas: "Alecrim, menta, urtiga, plantas espinhosas"
+  metais_pedras: "Ferro, aço, diamante, jaspe"
+  cores_sons: "Vermelho, dourado; notas Dó e Si"
+  numeros: "1 (início, identidade)"
+  dias_semana: "Domingo (Sol)"
+  doencas_corpo: "Cabeça, olhos, face, sistema nervoso central"
+  arquetipos_mitologicos: "Janus (portas), Hermes (mensageiro), Apolo (luz)"
+  mitos_historias: "Janus e as duas faces; Apolo e a luz do dia"
+  sonhos_simbolos_inconsciente: "Espelhos, nascimentos, máscaras, rostos"
+  expressao_elevada_sombra: "Elevada: identidade autêntica, iniciativa corajosa | Sombra: ego inflado, máscaras, identidade frágil"
+
+camada_energetica:
+  campo_mental: "Foco na própria identidade e iniciativa. 'Como eu parto?'"
+  permeacao_emocional: "Autoimagem, 'como eu me sinto sendo eu'."
+  manifestacao_externa: "Eventos prováveis de 'novo começo', identidade. Arquétipos: o Espelho, o Primeiro. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a 'ser sem máscara' — Casa 1 é o EU sem filtro."
+
+significados_derivados:
+  dinheiro_parceiro: false
+  corpo: "Casa 1 = corpo físico (primeira casa = pele/cabeça)."
+  identidade: "Quem eu sou, como me apresento, 'a máscara que uso' (no bom sentido)."
+  primeira_impressao: "Como o mundo te vê na primeira olhada (diferente de Casa 10 que é reputação consolidada)."

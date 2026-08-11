@@ -1,0 +1,88 @@
+status: review
+id: "astrologia_carmica_evolutiva"
+nome: "Astrologia Cármica e Evolutiva"
+tipo: "lente espiritual contemporânea"
+tradicao_primaria: ["cármica", "evolutiva", "moderna"]
+
+escopo:
+  definicao_operacional: "Lente moderna que interpreta o mapa como linguagem para padrões de desenvolvimento, propósito e, em algumas escolas, reencarnação e karma. Esses pressupostos espirituais/filosóficos precisam ser declarados junto com a escola adotada."
+  inclui:
+    - "Leituras contemporâneas dos Nodos, de Plutão e de suas relações, com escola declarada."
+    - "Uso condicional de Saturno, Casa 12, retrogradação e ciclos, quando a fonte escolhida os justificar."
+  nao_inclui:
+    - "Confundir uma formulação evolutiva moderna com o uso histórico dos Nodos em toda tradição ocidental."
+    - "Tratar escolas cármicas diferentes como se adotassem os mesmos significadores e pressupostos."
+  exclusoes_do_projeto: []
+
+fundamento:
+  descricao: "O termo reúne abordagens modernas e não homogêneas. A astrologia evolutiva associada a Jeffrey Wolf Green e Steven Forrest enfatiza Plutão e o eixo nodal; outras linhas cármicas priorizam os Nodos ou outros fatores. O corpus as trata como lentes interpretativas, não como fatos históricos ou científicos."
+  contexto_historico: "Nodos existem em tradições antigas como pontos de eclipse e timing. A leitura dos Nodos como roteiro de encarnações e a centralidade de Plutão pertencem a formulações modernas específicas."
+
+mapa_de_fatores:
+  eixo_nodal:
+    leitura_base: "Nodo Sul pode descrever hábitos, repertórios e respostas familiares na linguagem evolutiva; Nodo Norte pode descrever experiências a desenvolver. A referência a vidas passadas só é usada se a pessoa compartilhar esse pressuposto."
+    procedimento: "Ler eixo, signos, casas, regentes e aspectos antes de resumir em 'passado' e 'futuro'."
+  regentes_dos_nodos:
+    leitura_base: "Os regentes conectam cada polo nodal a outras áreas da carta. Declarar a tabela de regências adotada."
+    procedimento: "Avaliar dignidade, casa, aspectos e disposição dos dois regentes."
+  planetas_em_aspecto_ou_conjuncao:
+    leitura_base: "Podem qualificar como uma função planetária participa do tema nodal. Não descrevem automaticamente uma pessoa, contrato ou evento de outra vida."
+    procedimento: "Diferenciar conjunção, aspecto por signo e aspecto por orbe; dar precedência aos aspectos mais próximos e relevantes."
+  plutao:
+    leitura_base: "Em astrologia evolutiva, Plutão é um significador central de desejo, padrões repetitivos e transformação. Fora dessa escola, seu uso e peso variam."
+    procedimento: "Ler Plutão por signo, casa, aspectos e relação com o eixo nodal, sempre rotulando a lente evolutiva."
+  saturno_e_casa_12:
+    leitura_base: "Podem ser usados por algumas escolas como linguagem de responsabilidade, limite, recolhimento ou conteúdos pouco conscientes; não são provas de karma."
+    procedimento: "Incluir somente com fonte e pergunta que justifiquem seu peso."
+
+procedimento:
+  pre_requisitos:
+    - "Declaração da lente espiritual/evolutiva e de seus pressupostos."
+    - "Dados natais e parâmetros de cálculo reproduzíveis."
+    - "Escola/autores declarados e distinção entre técnica tradicional e lente evolutiva."
+  passos:
+    - "Começar pela pergunta e pela experiência presente, não por uma narrativa de vidas passadas."
+    - "Localizar eixo nodal, casas, signos, regentes e aspectos relevantes."
+    - "Avaliar Plutão conforme a escola adotada e só então integrar fatores auxiliares, como Saturno ou Casa 12."
+    - "Confrontar a hipótese com dignidades, casas, relações e repetição simbólica do mapa inteiro."
+    - "Converter a síntese em opções de aprendizagem, escolha e cuidado, usando linguagem condicional."
+    - "Separar claramente fatos relatados, pressupostos espirituais e interpretação simbólica."
+  parametros_de_calculo:
+    - "nós verdadeiros ou médios"
+    - "zodíaco, casas e regências"
+    - "orbes e regra de aspecto"
+    - "escola/autores de referência"
+
+uso_interpretativo:
+  pergunta_que_ajuda_a_responder:
+    - "Que padrões familiares ou repetitivos a pessoa reconhece e que formas de resposta deseja desenvolver?"
+    - "Como uma lente evolutiva pode organizar uma reflexão sobre escolha, propósito e responsabilidade sem fatalismo?"
+  como_ponderar: "A leitura deve começar pelo presente e terminar em agência. 'Cármico' é uma linguagem opcional de significado, não explicação suficiente para o que aconteceu nem obrigação de permanecer em uma situação."
+  limites:
+    - "A interpretação deve separar o que a fonte ensina, a hipótese do leitor e a experiência relatada."
+    - "Nodos e Plutão não dispensam a análise integral da carta, das casas, dignidades, aspectos e técnica selecionada."
+
+divergencias_de_tradicao:
+  consenso: "As escolas cármicas/evolutivas são modernas e plurais; reencarnação é pressuposto, não requisito de toda astrologia ocidental."
+  divergencias:
+    - "A astrologia tradicional usa Nodos de modo diferente e não possui consenso sobre Plutão, descoberto em 1930."
+    - "Jeffrey Wolf Green e Steven Forrest compartilham ênfase em Plutão e Nodos, mas não esgotam as abordagens cármicas."
+  decisao_editorial: "Apresentar a lente com seus pressupostos, fontes e limites. Nunca converter metáfora evolutiva em fato biográfico, diagnóstico ou julgamento moral."
+
+referencias:
+  primarias: []
+  secundarias:
+    - "Green, Jeffrey Wolf. Pluto: The Evolutionary Journey of the Soul. Llewellyn Publications, 1985."
+    - "Forrest, Steven. Yesterday's Sky: Astrology and Reincarnation. Seven Paws Press, 2008."
+    - "Schulman, Martin. Karmic Astrology: The Moon's Nodes and Reincarnation. Samuel Weiser, 1975."
+    - "Forrest Astrology. What Is Evolutionary Astrology? https://www.forrestastrology.com/pages/what-is-evolutionary-astrology (acesso em 2026-08-10)."
+  tecnicas: []
+
+relacoes:
+  depende_de: ["nodos", "plutao", "hierarquia_de_julgamento", "protocolo_calculo_reproduzivel"]
+  ver_tambem: ["astrologia_sistemica", "lua_prenatal_syzygy", "sinastria", "mapa_draconico"]
+
+orientacao_de_disseminacao_futura:
+  nota: "Aplicável somente quando a leitura for oferecida a outra pessoa: explicitar o caráter espiritual da lente, evitar linguagem de culpa ou inevitabilidade e distinguir interpretação simbólica de fato biográfico."
+
+anotacoes_pessoais: []

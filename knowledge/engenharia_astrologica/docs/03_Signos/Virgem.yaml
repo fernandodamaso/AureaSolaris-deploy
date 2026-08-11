@@ -1,0 +1,86 @@
+status: review
+id: "virgem"
+nome: "Virgem"
+tradicoes:
+  - "helenística"
+  - "medieval"
+  - "renascentista"
+  - "moderna (somente camadas explicitamente modernas)"
+escopo_documental:
+  tecnica_historica:
+    - "elemento, modalidade, regência, dignidade e estrutura zodiacal"
+    - "divergências modernas de regência ou leitura entram como nota explícita, sem substituir silenciosamente a camada histórica"
+  camadas_modernas: "Atlas simbólico, Tarot, correspondências médicas e releituras contemporâneas permanecem separados da regra histórica e devem ser apresentados como camada interpretativa rotulada."
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "primária"
+    localizador: "Livro I, capítulos sobre signos, qualidades e regências"
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    natureza: "primária"
+    localizador: "Livros I–II, passagens sobre signos e regentes"
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    natureza: "primária"
+    localizador: "Livro I, descrição dos signos e significadores"
+validacao_de_fontes:
+  base: "A regra zodiacal hist?rica ? sustentada por Ptolomeu, Valens e Lilly, nas refer?ncias estruturadas da ficha."
+  escopo: "Tarot, Atlas simb?lico, mitologia, correspond?ncias m?dicas e psicologia s?o camadas de estudo rotuladas; n?o s?o consenso nem substituem a regra hist?rica."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+elemento: "Terra"
+modalidade: "Mutável"
+regente: "Mercúrio"
+
+origens_e_divergencias:
+  tradicional: "Mercúrio (análise, método, serviço)."
+  moderna: "Mercúrio (mesmo). Sem divergência significativa."
+  nota: "Regência unânime."
+
+essencia:
+  - "Refinamento"
+  - "Serviço"
+  - "Análise"
+
+simbologia_elemento:
+  elemento: "Terra"
+  modalidade: "Mutável"
+  simbolo: "Adubo / Areia movediça"
+  analogia: "Terra Mutável — como a terra que se move para cultivar."
+  porque: "Terra Mutável é a terra em PROCESSO: análise, cultivo, melhoria. Virgem é o sexto signo, onde a energia se organiza em detalhes. O adubo representa a matéria que se transforma para servir — não é rocha, é solo vivo que se adapta."
+atlas_simbolico:
+  pessoas_arquetipos: "Servo, cuidador, analista, médico, professor, artesão, inventor"
+  lugares_fisicos: "Hospitais, escritórios, laboratórios, bibliotecas, jardins, locais de trabalho"
+  objetos_materia: "Instrumentos de medição, livros técnicos, ferramentas, plantas medicinais"
+  eventos_tipicos: "Cura, recuperação, processos seletivos, exames, organização, rotinas"
+  animais: "Galinha, cão de caça, abutre, formiga, abelha, esquilo"
+  plantas_ervas: "Trigo, centeio, hortelã, camomila, sabugueiro, carqueja"
+  metais_pedras: "Mercúrio (metal), jaspe, ágata, cristal de rocha, esmeralda"
+  cores_sons: "Verde-claro, cinza, marrom-claro; notas Mi e Dó; flauta, órgão"
+  numeros: "5 (cinco sentidos), 6 (serviço), 8 (análise)"
+  dias_semana: "Quarta-feira (dia de Mercúrio)"
+  doencas_corpo: "Intestinos, aparelho digestivo, baço, pâncreas, sistema nervoso"
+  arquetipos_mitologicos: "Atena (sabedoria prática), Deméter/Ceres (colheita), Héstia/Vesta (serviço)"
+  mitos_historias: "Atena e a Aegis; Deméter e a colheita; Héstia e o fogo sagrado"
+  sonhos_simbolos_inconsciente: "Ferramentas, jardins, livros, médicos, análise, limpeza"
+  expressao_elevada_sombra: "Elevada: serviço desapegado, análise precisa, cura pelo detalhe | Sombra: crítica destrutiva, perfeccionismo paralisante, hipocondria"
+
+tarot:
+  carta: "A Imperatriz"
+  explicacao: "Carta 3 — fertilidade, cultivo, serviço, abundância material. Virgem é a Imperatriz porque ambos representam a terra que cultiva detalhes: o trigo maduro, a análise que gera colheita, o corpo como jardim."
+
+camada_energetica:
+  impressao_mental: "A mente que organiza e corrige. Detalhe, utilidade, o 'como fazer direito'. Quando atrito: crítica, ansiedade de perfeição, hipocondria."
+  permeacao_emocional: "Sentimento filtrado pela utilidade. Ama quem ajuda; sofre com o que parece 'errado'."
+  manifestacao_externa: "Eventos prováveis de trabalho, saúde, ajuste, rotina. Trânsitos mexem no corpo e no ofício."
+  como_guiar_o_astral: "Ajudar a pessoa a aceitar o 'bom o suficiente'. Virgem serve melhor quando se serve também."
+
+decanatos:
+  - "0-10: Virgem (Mercúrio) — análise e serviço"
+  - "10-20: Capricórnio (Saturno) — estrutura e método"
+  - "20-30: Touro (Vênus) — valor e sustância"
+
+foco_especial:
+  infantil: "A criança Virgem precisa de ordem e elogio por competência. Ansiedade escolar se sentir 'errado'."
+  familiar: "O membro que cuida organizando. Saúde e rotina da família passam por ele."
+

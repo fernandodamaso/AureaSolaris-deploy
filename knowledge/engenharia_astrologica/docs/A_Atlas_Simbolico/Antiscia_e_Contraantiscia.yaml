@@ -1,0 +1,73 @@
+status: review
+id: antiscia_contraantiscia_atlas
+nome: Antíscia e Contra-antíscia
+tipo: relação zodiacal tradicional
+tradicao_primaria:
+- helenística
+- medieval
+- tradicional
+escopo:
+  definicao_operacional: Antíscia é a reflexão de uma longitude em torno do eixo solsticial
+    Câncer–Capricórnio; contra-antíscia é a reflexão em torno do eixo equinocial Áries–Libra.
+  inclui:
+  - Cálculo por longitude tropical normalizada.
+  - Distinção entre relação zodiacal de espelho e aspecto ptolomaico.
+  nao_inclui:
+  - Aspecto maior automático ou substituto de conjunção, oposição, quadratura, trígono
+    e sextil.
+  - Uso de zodíaco sideral neste corpus.
+  exclusoes_do_projeto: []
+fundamento:
+  descricao: Pontos antisciais preservam igual distância dos solstícios; os contra-antisciais
+    preservam igual distância dos equinócios. A técnica aparece em fontes tradicionais
+    como relação de simetria zodiacal, mas sua ponderação varia entre escolas.
+  contexto_historico: A interpretação de antíscia e contra-antíscia deve ser atribuída
+    à fonte e não confundida com a classificação moderna de aspectos menores.
+procedimento:
+  pre_requisitos:
+  - Longitudes tropicais normalizadas entre 0° e 360°.
+  passos:
+  - 'Calcular a antíscia: (180° − longitude) mod 360°.'
+  - 'Calcular a contra-antíscia: (−longitude) mod 360°.'
+  - Comparar o ponto obtido com planetas, ângulos ou lotes e aplicar orbe declarado.
+  - Registrar se a relação é por grau exato, por orbe ou somente por signo.
+  parametros_de_calculo:
+  - zodíaco tropical
+  - longitude eclíptica
+  - orbe de antíscia
+  - corpos e pontos considerados
+uso_interpretativo:
+  pergunta_que_ajuda_a_responder:
+  - Existe uma simetria zodiacal relevante entre este planeta/ponto e outro fator
+    da figura?
+  como_ponderar: Tratar como fator auxiliar. Avaliar primeiro significadores, dignidades,
+    casas e aspectos principais; só então verificar se a simetria reforça uma hipótese
+    já sustentada.
+  limites:
+  - Não usar antíscia sem informar eixo, fórmula e orbe.
+  - Não tratar a ausência de antíscia como ausência de vínculo astrológico.
+divergencias_de_tradicao:
+  consenso: A técnica depende de longitude zodiacal e de uma regra de espelhamento.
+  divergencias:
+  - Autores diferem sobre força, orbe, uso em horária/natal e equiparação a conjunção
+    ou oposição.
+  decisao_editorial: O corpus apresentará a geometria separada da interpretação e
+    atribuirá todo peso técnico a uma escola/fonte declarada.
+referencias:
+  primarias:
+  - Lilly, William. Christian Astrology. Londres, 1647.
+  secundarias:
+  - 'Houlding, Deborah. The Houses: Temples of the Sky. Ascella Publications, 2006.'
+  tecnicas: []
+relacoes:
+  depende_de:
+  - zodiaco_tropical
+  - esfera_celeste_coordenadas
+  - protocolo_calculo_reproduzivel
+  ver_tambem:
+  - aspectos
+  - pontos_medios
+  - signos_comandantes_obedientes
+anotacoes_pessoais: []
+ver_mais:
+- ../06_Aspectos/Antiscia_e_Contraantiscia.yaml

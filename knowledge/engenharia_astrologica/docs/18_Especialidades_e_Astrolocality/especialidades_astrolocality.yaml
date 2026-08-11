@@ -1,0 +1,61 @@
+status: review
+id: "especialidades_astrolocality"
+nome: "Astrolocalidade: Astrocartografia, Relocação e Espaço Local"
+tipo: "Especialidade"
+subtema: "Relação simbólica entre mapa, lugar e deslocamento"
+tradicoes: ["moderna ocidental", "astrolocalidade"]
+
+escopo:
+  definicao: "Família de técnicas que projeta ou recalcula fatores do mapa em relação à geografia."
+  metodos:
+    astrocartografia: "Projeta no globo os lugares onde um planeta estava angular — ASC, DSC, MC ou IC — no instante do mapa."
+    mapa_relocado: "Mantém o mesmo instante UTC e recalcula casas e ângulos para outro local."
+    espaco_local: "Projeta azimutes planetários sobre o horizonte do local de referência; requer convenções topocêntricas e direção declaradas."
+    paran: "Relaciona estrelas/planetas por simultaneidade de passagem por ângulos; cálculo e uso dependem da escola."
+
+origens_e_divergencias:
+  antecedentes: "A astrologia antiga e medieval relacionou lugares a signos, planetas e mapas mundanos, mas isso não equivale à astrocartografia moderna."
+  moderna: "Jim Lewis sistematizou e difundiu Astro*Carto*Graphy no século XX. Relocação e Espaço Local são técnicas próximas, porém não intercambiáveis."
+  divergencias:
+    - "Autores divergem sobre largura de influência das linhas, prioridade de cruzamentos e uso de parans."
+    - "Mapa relocacional não altera o instante nem as longitudes planetárias geocêntricas; altera a relação com horizonte, meridiano e casas."
+    - "Não há consenso de que morar exatamente sobre uma linha produza evento específico."
+
+calculo_reproduzivel:
+  entradas_obrigatorias:
+    - "data e hora com fonte"
+    - "UTC e fuso IANA histórico"
+    - "latitude/longitude natais e do local estudado"
+    - "zodíaco tropical e modelo geocêntrico/topocêntrico aplicável"
+    - "efeméride/motor e versão"
+    - "sistema de casas no mapa relocacional"
+    - "método de linha, paran ou azimute"
+  regras:
+    - "Não mudar o instante para preservar a hora civil do local relocacionado."
+    - "Registrar tratamento de latitudes extremas e casas indefinidas."
+    - "Distinguir proximidade geográfica de distância angular; o limite deve ser escolha de escola, não constante oculta."
+  regra_de_motor: "Cada resultado deve declarar técnica, linha/ângulo, distância, configuração e mapa-base."
+
+metodo_de_estudo:
+  passos:
+    - "Comparar mapa natal, mapa relocado e linhas relevantes sem fundi-los."
+    - "Ler planeta, ângulo e condição natal antes de atribuir sentido ao lugar."
+    - "Usar biografia, duração e finalidade da permanência como contexto."
+    - "Comparar lugares alternativos e registrar convergências e tensões."
+  linguagem_simbolica: "Linhas podem ser contempladas como caminhos de visibilidade, encontro, enraizamento ou culminação conforme o planeta e o ângulo. A tradição moderna também conserva imagens de viagem, limiar e genius loci."
+  limites:
+    - "Não prometer lugar perfeito, sucesso, cura ou relacionamento."
+    - "Não substituir fatores materiais como segurança, visto, custo, clima, saúde e rede de apoio."
+    - "Não usar mapa de localização como diagnóstico ou ordem de mudança."
+
+referencias:
+  primarias: []
+  secundarias:
+    - "Lewis, Jim. The Psychology of Astro*Carto*Graphy. Penguin/Arkana, 1997."
+    - "Davis, Martin. Astrolocality Astrology. The Wessex Astrologer, 1999."
+    - "Astrodienst. AstroClick Travel e textos introdutórios de Astrocartography; consultar documentação e versão utilizadas."
+  tecnicas: []
+
+relacoes:
+  depende_de: ["astronomia_basica", "sistemas_de_casas", "mapa_natal"]
+  ver_tambem: ["astrocartografia", "mapa_relocado", "espaco_local", "astrologia_mundana"]

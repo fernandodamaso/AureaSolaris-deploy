@@ -1,0 +1,58 @@
+status: review
+id: "astrologia_alquimia"
+nome: "Astrologia e Alquimia"
+tradicoes:
+  - "esoterica ocidental"
+  - "moderna quando explicitada"
+tema: "Correspondências entre fases alquímicas e jornada astrológica."
+
+essencia:
+  - "Nigredo, albedo, citrinitas e rubedo são uma sequência influente, mas não universal, da literatura alquímica europeia."
+  - "As equivalências diretas entre fases e planetas são tabelas simbólicas de autores ou escolas; não constituem cálculo astrológico canônico."
+
+origens_e_divergencias:
+  tradicional: "A alquimia europeia e a filosofia natural usaram correspondências celestes em gêneros e períodos distintos; não há uma tabela histórica única das quatro fases por planeta."
+  moderna: "Jung relê imagens alquímicas como metáforas de individuação; essa leitura não é uma descrição neutra da prática laboratorial pré-moderna."
+  nota: "Overlay simbólico para estudo e narrativa, não técnica de julgamento nem evidência de causalidade. Atribuir cada tabela ao autor que a emprega."
+
+referencias:
+  - autor: "Lawrence M. Principe"
+    obra: "The Secrets of Alchemy"
+    ano: 2013
+    natureza: "secundária historiográfica"
+    localizador: "Capítulos sobre tradições, práticas e linguagem da alquimia europeia"
+  - autor: "C. G. Jung"
+    obra: "Psychology and Alchemy"
+    ano: 1944
+    natureza: "fonte moderna interpretativa"
+    localizador: "Leitura psicológica de imagens alquímicas; não usar como fonte histórica única"
+
+camada_energetica:
+  impressao_mental: "Ver a leitura como processo alquímico, não como foto."
+  permeacao_emocional: "Acolher fases sombrias como necessárias; não pular para 'luz' sem passar por Saturno/Plutão."
+  manifestacao_externa: "Eventos que marcam transformação, morte simbólica, renascimento."
+  como_guiar_o_astral: "Oferecer a alquimia como roteiro: cada trânsito difícil como nigredo necessário."
+
+fases:
+  nigredo:
+    planetas: ["Saturno", "Plutão", "Lua escura"]
+    tema: "Decomposição do ego antigo; depressão, isolamento, crise."
+    leitura: "Não é falha; é o cadinho."
+  albedo:
+    planetas: ["Lua", "Vênus", "Netuno"]
+    tema: "Lavagem, clareza, separação do que é essencial."
+    leitura: "Momento de aprender a receber, não só fazer."
+  citrinitas:
+    planetas: ["Sol", "Júpiter"]
+    tema: "Amadurecimento solar; propósito clareado."
+    leitura: "O sentido reaparece com outra espessura."
+  rubedo:
+    planetas: ["Marte", "Sol"]
+    tema: "Integração e ação; realização visível."
+    leitura: "Colher o que foi transmutado; expressão madura."
+
+ver_mais:
+  - "../10_Esoterismo/Astrologia_e_Cabala_Ocidental.yaml"
+
+## ✏️ Minhas Anotações
+

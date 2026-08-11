@@ -1,0 +1,66 @@
+﻿status: draft
+id: "decanatos_terra"
+nome: "Decanatos do Elemento Terra (Touro, Virgem, Capricórnio)"
+tradicoes:
+  - "convenção por signos da mesma triplicidade"
+  - "camada simbólica moderna atribuída"
+elemento: "Terra"
+tema: "Os 9 decanatos de Terra (3 por signo)"
+
+origens_e_divergencias:
+  sistema_adotado: "Convenção posterior/moderna que percorre Touro, Virgem e Capricórnio dentro do elemento Terra. Não é automaticamente tabela de faces caldaicas."
+  regencias: "Vênus, Mercúrio e Saturno são regentes tradicionais dos signos utilizados pela convenção."
+  faces_caldaicas: "Têm sequência própria e precisam ser consultadas em tabela separada."
+  nota: "A coincidência de alguns planetas entre sistemas não elimina sua diferença de linhagem."
+atlas_simbolico:
+  pessoas_arquetipos: "O terroso, o construtor, o agricultor"
+  lugares_fisicos: "Campos, fazendas, montanhas, jardins"
+  objetos_materia: "Ferramentas, sementes, instrumentos de trabalho"
+  eventos_tipicos: "Colheitas, construções, trabalhos"
+  animais: "Touro, vaca, cavalo de carga"
+  plantas_ervas: "Trigo, videira, oliveira, hera"
+  metais_pedras: "Cobre, bronze, esmeralda, turquesa"
+  cores_sons: "Verde, rosa, marrom; notas Lá e Ré"
+  numeros: "2 (dualidade), 6 (harmonia), 8 (materialidade)"
+  dias_semana: "Sexta-feira (Vênus), sábado (Saturno)"
+  doencas_corpo: "Garganta, pescoço, sistema digestivo"
+  arquetipos_mitologicos: "Deméter/Ceres, Héstia/Vesta, Cronos/Saturno"
+  mitos_historias: "Deméter e a colheita; Héstia e o fogo sagrado"
+  sonhos_simbolos_inconsciente: "Campos, colheitas, construções, trabalhos"
+  expressao_elevada_sombra: "Elevada: trabalho consciente, colheita | Sombra: avareza, teimosia"
+
+camada_energetica:
+  campo_mental: "Terra pura (Touro 0-10°) = sentido cru. Terra matizada (Virgem 10-20°) = sentido com análise. Terra amadurecida (Capricórnio 20-30°) = sentido com estrutura."
+  permeacao_emocional: "Do prazer material à realização duradoura."
+  manifestacao_externa: "Eventos PROVÁVEIS de construção, estabilidade e recursos. Inclinação, não destino."
+  como_guiar_o_astral: "Usar o decanato para entender COMO o nativo materializa (Touro = prazer; Virgem = método; Capricórnio = estrutura)."
+
+decanatos:
+  - "Touro 1 (0-10°): Vênus — Touro puro / o Sentido"
+  - "Touro 2 (10-20°): Mercúrio — Touro matizado por Virgem / o Construtor"
+  - "Touro 3 (20-30°): Saturno — Touro amadurecido por Capricórnio / o Alicerce"
+  - "Virgem 1 (0-10°): Mercúrio — Virgem puro / o Analista"
+  - "Virgem 2 (10-20°): Saturno — Virgem matizado por Capricórnio / o Responsável"
+  - "Virgem 3 (20-30°): Vênus — Virgem amadurecida por Touro / o Cuidador"
+  - "Capricornio 1 (0-10°): Saturno — Capricórnio puro / o Estruturante"
+  - "Capricornio 2 (10-20°): Vênus — Capricórnio matizado por Touro / o Construtor de Valor"
+  - "Capricornio 3 (20-30°): Mercúrio — Capricórnio amadurecido por Virgem / o Planejador"
+
+foco_especial:
+  infantil: "Terra em 1º decanato = criança que aprende pelo tato; 3º decanato = criança que já parece 'sabida'."
+calculo_e_escopo:
+  calculo: "Usar longitude tropical, intervalo de 10° e a convenção por triplicidade declarada."
+  simbolismo: "Trabalho, colheita e materialidade são imagens de estudo atribuídas, não diagnóstico de caráter ou recursos."
+  divergencia: "Não usar a sequência como prova de que faces/decanos egípcios tenham os mesmos regentes."
+referencias:
+  - autor: "Engenharia Astrológica"
+    obra: "Decanatos"
+    natureza: "fonte editorial"
+    localizador: "Distinção de sistemas em 03_Signos/Decanatos.yaml."
+  - autor: "Cláudio Ptolomeu"
+    obra: "Tetrabiblos"
+    natureza: "primária histórica"
+    localizador: "Faces tradicionais como tabela alternativa."
+limite_documental: "Permanece draft até a convenção por triplicidade receber fonte própria verificável."
+
+

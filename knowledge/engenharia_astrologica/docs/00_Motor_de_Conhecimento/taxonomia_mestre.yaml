@@ -1,0 +1,236 @@
+meta_fundacao_pessoal:
+  filtro_interpretativo:
+  - 7 Princípios Herméticos (Kybalion, distinto do Corpus Hermeticum) — filtro filosófico pessoal do caderno
+  - Reencarnação e Evolução do Espírito — o mapa é um plano de estudo da alma
+  - Ocultismo Cristão Ocidental — toda iniciação conduz à Luz
+  separacao_das_4_tradicoes:
+    tradicional:
+      objetivo: Julgamento, destino, eventos
+      foco: Técnica, promessa natal, timing
+      aviso: Não misturar com interpretação evolutiva sem indicar
+    hermetica_magica:
+      objetivo: Correspondências e transformação espiritual
+      foco: Símbolo, analogia, operação mágica
+      aviso: Não é previsão — é trabalho com o princípio
+    psicologica:
+      objetivo: Consciência e integração
+      foco: Arquétipo, inconsciente, padrão
+      aviso: Não é fatalismo — é mapeamento de tendências
+    evolutiva:
+      objetivo: Propósito da alma, karma
+      foco: Nodos, Plutão, jornada da encarnação
+      aviso: Pressupõe reencarnação — filtro pessoal do caderno
+taxonomia_mestre:
+  00_Filosofia:
+  - 7 Princípios Herméticos (Kybalion, em distinção do Corpus Hermeticum)
+  - Reencarnação e Evolução do Espírito
+  - Macrocosmo e microcosmo
+  - Sincronicidade
+  - Destino e livre-arbítrio
+  01_Fundamentos:
+  - História da Astrologia (mesopotâmica a contemporânea)
+  - Filosofia astrológica
+  - Cosmologia astrológica (aristotélico-ptolomaica, esferas)
+  - Elementos (Fogo, Terra, Ar, Água)
+  - Modalidades (Cardinal, Fixo, Mutável)
+  - Polaridades (Masculino, Feminino, Ativo, Receptivo)
+  02_Astronomia:
+  - Esfera celeste, Eclíptica, Zênite, Nadir
+  - Equinócios, Solstícios, Precessão
+  - Movimento retrógrado, Velocidade planetária
+  - Zodíaco Tropical (0° de Áries)
+  03_Signos:
+  - Áries a Peixes (arquétipo, regente, elemento, modalidade)
+  - Decanatos, Termos, Faces, Duades
+  04_Planetas:
+  - Luminares (Sol, Lua)
+  - Pessoais, Sociais, Transpessoais
+  - Outros Corpos (Quíron, Ceres, etc.)
+  - Nodos Lunares (Norte/Sul — eixo cármico) [ver 04_Planetas/Nodos.yaml]
+  - Significados e Naturezas
+  - Planeta Feral / Sem Aspectos
+  - Estrelas Fixas (Sirius, Regulus, Algol, etc.)
+  - Cosmologia Planetária (Ordem caldaica, música das esferas)
+  - Fases planetárias e condições heliacais
+  - Fase Lunar avançada (Balsâmica, Fora de curso, Vocacional)
+  05_Casas:
+  - Sistemas de casas (Placidus, Inteiro, Koch, etc.)
+  - Significado das 12 casas
+  - Classificações (Angulares, Sucedentes, Cadentes)
+  - Ângulos do mapa (Ascendente, MC, Eixos)
+  06_Aspectos:
+  - Ptolomaicos (Conjunção, Oposição, Quadratura, Trígono, Sextil)
+  - Menores (Quincúncio, Semissextil, Quintil, etc.)
+  - Orbes (Aplicativo, Separativo)
+  - Configurações Planetárias (Stellium, Grande Trígono, Grande Cruz, T-Square, Yod,
+    Pipa, Castelo, Locomotiva, Balde, Tigela, Feixe, Gangorra, Splash)
+  - Antiscia e Contra-antiscion (Pontos solsticiais, reflexos)
+  - Midpoints / Pontos Médios (Sol/Lua, eixos)
+  07_Dignidades:
+  - Essenciais (Domicílio, Exaltação, Queda, Exílio)
+  - Acidentais (Angularidade, Velocidade, Orientalidade)
+  - Condições Avançadas (Combustão, Cazimi, Heliacal rising/setting, Aumentando/Diminuindo
+    em luz, Latitude)
+  - Alegria dos Planetas (Planeta na sua alegria por casa)
+  - Relação Planeta-Signo-Casa
+  08_Tecnicas_Tradicionais:
+  - Regente do mapa, Dispositores, Recepção mútua
+  - Almuten, Hyleg, Alcocoden
+  - Sect (mapa diurno/noturno)
+  - Senhor do Tempo
+  - Astrologia Helenística (Dorotheus, Valens, Firmicus)
+  - Partes Arábicas / Lotes (ver 22_Lotes_Profundos para detalhes)
+  - Astrologia Medieval (Almuten figuris, Bonatti, Abu Ma'shar)
+  09_Tecnicas_Modernas:
+  - Astrologia Psicológica e Humanista
+  - Arquétipos, Individuação, Inconsciente
+  10_Esoterismo:
+  - Astrologia Renascentista (Ficino, Agrippa)
+  - Astrologia Kármica/Evolutiva (Nodos, Karma, Alma, Plutão evolutivo)
+  - Astrologia Esotérica e Teosofia (Alice Bailey, Sete Raios)
+  - Astrologia e Alquimia (Nigredo, Albedo, Citrinitas, Rubedo, Opus Magnum)
+  - Astrologia e Cabala Ocidental (Árvore da Vida, Sephiroth)
+  - Magia Astrológica (Eleição, Talismãs, Horas planetárias)
+  - Astrologia Espiritual (Nodos, Casa 12, Transcendência)
+  11_Previsao:
+  - Trânsitos e Progressões
+  - Direções Primárias e Simbólicas
+  - Retornos e Revoluções
+  - Firdárias e Profeções (anuais e mensais)
+  - Ciclos (Saturno-Júpiter, Cronocratores)
+  - Eclipses (Solar, Lunar, Série Saros, como marcadores)
+  12_Relacionamentos:
+  - Sinastria, Composite, Davison
+  - Sobreposição de casas
+  - Midpoints relacionais
+  - Nodos em sinastria
+  - Aspectos kármicos
+  13_Mundana:
+  - Países, Guerras, Clima, Economia
+  - Grandes conjunções, Ingressos Solares
+  14_Horaria:
+  - Pergunta, Significadores, Aplicação/Separação, Julgamento
+  15_Medicina:
+  - Temperamentos, Humores
+  - Iatroastrologia, Melotesia
+  - Signos e órgãos, Planetas e funções vitais
+  - Crises médicas e doenças crônicas
+  16_Ferramentas_e_Bibliografia:
+  - Astrologia Numerológica/Simbólica
+  - Banco de Dados (Efemérides, Swiss Ephemeris, Algoritmos)
+  - Clássicos (Ptolomeu, Valens, Dorotheus, Firmicus, Manilius)
+  - Medievais (Abu Ma'shar, Al-Biruni, Bonatti)
+  - Renascimento (Ficino, Agrippa, Paracelso)
+  - Modernos (Rudhyar, Greene, Arroyo, Hand, Sasportas, J.W. Green, Forrest)
+  17_Metodologia_de_Leitura:
+  - Hierarquia de interpretação e Primazia dos fatores
+  - Estrutura do julgamento astrológico
+  - Significador natural e acidental
+  - Peso dos fatores e síntese interpretativa
+  - Contradições do mapa
+  - Repetição simbólica e Dominantes
+  - Como as 4 tradições se complementam
+  18_Especialidades_e_Astrolocality:
+  - Astrocartografia, Geodética, Linhas planetárias, Relocação
+  - Astrologia Vocacional (MC, Trabalho, Chamado)
+  - Astrologia Infantil (Mapa infantil, Potenciais)
+  19_Tradicoes_Antigas:
+  - Pitagorismo (Harmonia das esferas, Número, Reencarnação)
+  - Platonismo e Neoplatonismo (Alma do mundo, Ascensão)
+  - Tradição Caldaica (Oráculos Caldeus, Jâmblico)
+  - Astrologia Zoroastriana/Persa Ocidental (Magos, Dualidade)
+  - Astrologia Egípcia (Decanos, Hermetismo primordial)
+  - Astrologia Mesopotâmica (Presságios, Babilônia)
+  20_Magia_e_Tradicao_Salomonica:
+  - Clavícula de Salomão, Lemegeton, Ars Goetia
+  - Selos Planetários, Quadrados Mágicos
+  - Anjos e Inteligências Planetárias
+  - Picatrix (Ghâyat al-Hakim)
+  - Maçonaria e Tradição Iniciática
+  21_Lua_Avancada_e_Mansoes:
+  - Lua Pré-Natal (Syzygy, Prenatal Syzygy)
+  - Fases Lunares (completo)
+  - 28 Mansões Lunares Árabes (Manazil al-Qamar)
+  - Magia, Medicina e Agricultura Lunar
+  - Talismãs Lunares por Mansão
+  22_Lotes_Profundos:
+  - Fundamento e Cálculo (Fórmulas diurnas/noturnas)
+  - 12 Lotes principais (Fortuna, Espírito, Eros, Necessidade, Coragem, Vitória, Base,
+    Casamento, Filhos, Pais, Morte)
+  - Ativação dos Lotes por trânsito e profeção
+  A_Atlas_Simbolico:
+    descricao: O coração do caderno — correspondências físicas, psíquicas e espirituais
+    planetas:
+    - pessoas
+    - lugares
+    - objetos
+    - animais
+    - plantas
+    - metais
+    - cores
+    - números
+    - doenças
+    - mitos
+    - sonhos
+    signos:
+    - arquétipo
+    - países
+    - tipos humanos
+    - expressão
+    casas:
+    - tema
+    - lugares
+    - momentos
+    - pessoas
+    aspectos:
+    - expressão simbólica
+    estrelas_fixas:
+    - mito
+    - natureza
+    - expressão
+  B_Linguagem_Astrologica:
+    descricao: O vocabulário — alfabeto antes da gramática
+    conteudo:
+    - planetas como verbos
+    - signos como adjetivos
+    - casas como substantivos
+    - aspectos como conjunções
+  C_Engenharia_da_Interpretacao:
+    descricao: Como combinar os símbolos e resolver o mapa
+    conteudo:
+    - as 4 tradições
+    - hierarquia
+    - síntese
+    - contradições
+  D_Engenharia_da_Previsao:
+    descricao: O desdobramento no tempo
+    conteudo:
+    - trânsitos
+    - progressões
+    - firdárias
+    - eclipses
+    - retornos
+  E_Astrologia_Aplicada:
+    descricao: Ritmo no cotidiano
+    conteudo:
+    - dias e horas planetárias
+    - lua fora de curso
+    - fases lunares
+    - produtividade
+    - finanças
+  F_Curiosidades_e_Etimologias:
+    descricao: Momentos 💎 Ahhhhh... que abrem o símbolo
+    conteudo:
+    - etimologias
+    - histórico
+    - quotes
+    - curiosidades astronômicas
+origens_e_divergencias:
+  tradicional: Conceito/técnica presente na tradição astrológica ocidental.
+  moderna: Possível ressignificação contemporânea.
+  nota: Rotular a escola quando divergir.
+camada_energetica:
+  impressao_mental: Campo conceitual do tema/técnica.
+  permeacao_emocional: Como o tema toca a experiência subjetiva.
+  manifestacao_externa: Como aparece em comportamentos e eventos.
+  como_guiar_o_astral: Como usar este conhecimento na leitura prática.

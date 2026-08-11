@@ -1,0 +1,50 @@
+﻿status: review
+id: "envelope"
+nome: "Envelope / Bundle (Feixe)"
+formato: "Planetas concentrados num arco de ~120° do zodíaco (um 'feixe' junto)"
+
+origens_e_divergencias:
+  tradicional: "Não é configuração ptolomaica. Pertence à tipologia moderna de distribuição planetária associada a Marc Edmund Jones."
+  moderna: "A concentração pode ser descrita como foco de experiência; qualquer leitura de personalidade é interpretativa e não substitui julgamento de fatores individuais."
+  nota: "Não confundir com stellium: feixe mede distribuição global; stellium mede concentração de fatores numa região, signo ou casa."
+atlas_simbolico:
+  pessoas_arquetipos: "O contido, o concentrado, o que envolve"
+  lugares_fisicos: "Cercados, envelopes, envelopes postais, gabinetes"
+  objetos_materia: "Envelopes, cartas, documentos, caixas"
+  eventos_tipicos: "Comunicações concentradas, mensagens fechadas, revelações tardias"
+  animais: "Tartaruga, caracol, caranguejo"
+  plantas_ervas: "Hera, rosmaninho, tomilho"
+  metais_pedras: "Chumbo, ônix, obsidiana"
+  cores_sons: "Marrom, cinza; notas Lá e Sol"
+  numeros: "4 (concentração), 8 (fechamento), 12 (final)"
+  dias_semana: "Sábado (Saturno)"
+  doencas_corpo: "Ossos, pele, sistema esquelético"
+  arquetipos_mitologicos: "Cronos/Saturno, Héstia/Vesta"
+  mitos_historias: "Cronos e o tempo; Héstia e o fogo sagrado"
+  sonhos_simbolos_inconsciente: "Envelopes, cartas, caixas, segredos"
+  expressao_elevada_sombra: "Elevada: concentração produtiva, revelação consciente | Sombra: retenção, segredos opressivos"
+
+camada_energetica:
+  impressao_mental: "A mente foca TUDO num setor — intensidade concentrada, mas visão estreita. O nativo 'vê' pouco além do feixe."
+  permeacao_emocional: "Profundidade numa área, mas ansiedade com o que está 'fora do feixe'."
+  manifestacao_externa: "Eventos PROVÁVEIS giram em torno do setor ocupado. Arquétipos: o Feixe, a Lanterna. Inclinação, não destino."
+  como_guiar_o_astral: "Mostrar o dom da concentração — e incentivar a 'olhar pro lado' de tempos em tempos."
+
+consenso_tradicional: "Não existe consenso tradicional para este padrão. A descrição de foco é interpretação moderna da distribuição."
+arquetipos_simbolicos: ["O Feixe", "A Lanterna", "O Especialista"]
+definicao_tecnica: "Verificar a distância entre o primeiro e o último planeta pelo menor arco; registrar se nodos, ângulos e asteroides foram excluídos."
+referencias:
+  - autor: "Marc Edmund Jones"
+    obra: "The Guide to Horoscope Interpretation"
+    natureza: "primária moderna"
+    localizador: "Tipologias de distribuição planetária; conferir edição e definição adotada."
+  - autor: "Dane Rudhyar"
+    obra: "The Astrology of Personality"
+    natureza: "secundária moderna"
+    localizador: "Leitura de padrões do mapa como gestalt; conferir edição."
+validacao_de_fontes:
+  base: "A ficha atribui o padrão à tipologia moderna, não à doutrina de aspectos de Ptolomeu."
+  limite: "O arco de 120° é convenção de método; não há parâmetro universal para todas as escolas."
+foco_especial:
+  infantil: "Crianca com envelope tende a hiperfocar um interesse; vale ampliar o leque."
+

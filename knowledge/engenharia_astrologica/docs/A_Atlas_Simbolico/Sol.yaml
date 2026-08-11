@@ -1,0 +1,124 @@
+status: review
+id: "sol_atlas"
+nome: "Sol — Atlas Simbólico"
+tradicoes:
+  - "atlas simbolico editorial"
+  - "sintese multiescola"
+tipo: "Atlas Simbólico"
+subtema: "Correspondências do Sol"
+
+origens_e_divergencias:
+  tradicional: "O Sol rege Leão e exalta-se em Áries; significa rei, autoridade, honra, luz, vitalidade, pai em certos contextos e centro de visibilidade. Agrippa registra ouro e repertórios solares."
+  moderna: "Rudhyar e linhas psicológicas enfatizam identidade, vontade e Self; linhas evolutivas podem falar em propósito da alma. Essas leituras ampliam, mas não substituem, o julgamento técnico."
+  nota: "Apolo e Hélio são distintos na religião grega, embora Apolo tenha sido progressivamente solarizado. Pai/mãe solar, missão e Self variam por escola e contexto."
+
+origem_linguistica_mito_glifo:
+  etimologia: "Sol vem do latim sol; Hḗlios é o deus/astro grego e Shamash o solar mesopotâmico ligado à justiça."
+  mito: "Hélio conduz o carro solar; Rá atravessa o ciclo diurno e noturno; Amaterasu recolhe-se à caverna. Comparações mostram motivos solares sem apagar diferenças culturais."
+  glifo: "☉, círculo com ponto central, tornou-se a imagem gráfica do centro luminoso."
+  porque: "Fonte aparente de luz e organizador do dia e das estações, o Sol fundamenta centro, visibilidade, realeza, vida e medida do tempo."
+
+atlas_simbolico:
+  pessoas_arquetipos:
+    - "Líder nato"
+    - "Pai/Mãe (arquétipo parental solar)"
+    - "Autoridade legítima"
+    - "Criança (vitalidade pura)"
+    - "Rei/Rainha"
+    - "Herói solar"
+    - "Criador"
+  lugares_fisicos:
+    - "Trono"
+    - "Áreas abertas e ensolaradas"
+    - "Palácios, prédios governamentais"
+    - "Campos de farol/luz"
+    - "Altos, montanhas (onde o Sol nasce)"
+  objetos_materia:
+    - "Coroa"
+    - "Cetro"
+    - "Ouro puro"
+    - "Joias de brilho central"
+    - "Relógio de sol"
+    - "Espelho dourado"
+  eventos_tipicos:
+    - "Reconhecimento público"
+    - "Promoção"
+    - "Nascimento de filhos"
+    - "Marcos de vida (formatura, casamento, coroação)"
+    - "Crise de identidade"
+    - "Ascensão e queda de poder"
+  animais:
+    - "Leão"
+    - "Falcão"
+    - "Galo"
+    - "Águia"
+    - "Cavalo branco"
+    - "Grifo"
+  plantas_ervas:
+    - "Rosa amarela"
+    - "Girassol"
+    - "Canela"
+    - "Louro (Delfos)"
+    - "Mel (pólen)"
+    - "Camomila romana"
+    - "Heliotrópio (sempre virado para o Sol)"
+  metais_pedras:
+    - "Ouro"
+    - "Topázio imperial"
+    - "Citrino"
+    - "Ámbar"
+    - "Pedra do sol (sunstone)"
+    - "Diamante (brilho central)"
+  cores_sons:
+    cores: ["Ouro", "Amarelo-dourado", "Laranja solar", "Branco-radiante"]
+    sons: ["Trombeta", "Canto coral", "Ressoar de sino solar", "Órgão"]
+  numeros: [1, 6, 10]
+  dias_semana: ["Domingo"]
+  doencas_corpo:
+    doencas: ["Problemas cardíacos", "Pressão alta", "Coluna dorsal", "Olhos"]
+    partes_corpo: ["Coração", "Coluna dorsal", "Olhos", "Sistema circulatório central"]
+  arquetipos_mitologicos:
+    - "Apolo (luz, arte, profecia)"
+    - "Hélio (Sol que gira o céu)"
+    - "Rá (Sol egípcio, criador)"
+    - "Inti (Sol inca)"
+    - "Amaterasu (Sol japonesa, luz que se oculta)"
+    - "Shamash (Sol babilônico, justiça)"
+  mitos_historias:
+    - "Ícaro (orgulho solar — asas de cera derretem)"
+    - "Phaethon (filho do Sol que cai)"
+    - "Apolo e a Pítia (luz que ilumina)"
+    - "Rá e Apófis (batalha diária da luz)"
+    - "Amaterasu na caverna (retirada da luz)"
+    - "Hércules e o Cinturão de Hippolyte (força solar)"
+  sonhos_simbolos_inconsciente:
+    - "Sol radioso = integração do Self"
+    - "Sol eclipsado = crise de identidade"
+    - "Queimar-se no Sol = orgulho inflado"
+  expressao_elevada_sombra: "Elevada: coragem autêntica, liderança inspiradora, generosidade | Sombra: orgulho, arrogância, egocentrismo, 'complexo de deus'"
+
+camada_energetica:
+  impressao_mental: "A mente que BRILHA e ORGANIZA. Vontade central, senso de propósito, 'quem eu sou no fundo'."
+  permeacao_emocional: "Autoestima e vitalidade emocional. Quando saudável: entusiasmo, generosidade. Quando ferido: vaidade, depressão por perda de reconhecimento."
+  manifestacao_externa: "Eventos PROVÁVEIS de reconhecimento, liderança, nascimentos, marcos. Arquétipos: o Rei, o Sol, o Fogo Central. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a encontrar SUA própria luz, não a esperar brilho externo. Sol é o centro — o centro não depende de ninguém."
+
+tarot_relacionado:
+  carta: "O Sol (Arcano Maior XIX)"
+  conexao: "Luz pura, alegria, sucesso, clareza. O Sol no tarot é a expressão máxima da energia solar: sem sombra, sem dúvida."
+
+foco_especial:
+  infantil: "A criança Sol precisa ser vista e valorizada. Precisa de espaço para brilhar, de reconhecimento sincero. Quando não tem: tende a apagar-se ou a exagerar."
+  familiar: "O pai/mãe solar é a autoridade da família. A referência de 'como se lidera'. Conflitos: orgulho familiar, legado."
+  carmico_espiritual: "O Sol no mapa indica onde a alma veio brilhar. Casa/signo do Sol = missão kármica de expressão autêntica. Não é destino — é inclinação para desenvolver."
+
+camada_tecnica_e_limites:
+  regra: "O motor deve calcular longitude solar, casa, dignidade e aspectos. O Sol não recebe rótulos impossíveis à sua definição, como combusto ou feral quando a regra exige ausência de aspectos com outros planetas e o consenso do projeto o exclui."
+  limites: "Coração, pressão e olhos são correspondências históricas, não diagnóstico. Self, missão, tarot e mitos são camadas interpretativas atribuídas."
+referencias:
+  primarias: ["Ptolemeu, Tetrabiblos, I.4 e I.17-19.", "William Lilly, Christian Astrology (1647), pp. 69-71.", "Agrippa, De occulta philosophia, I.23-24 e II.10."]
+  secundarias: ["Dane Rudhyar, The Astrology of Personality (1936), leitura humanista moderna do Sol."]
+anotacoes_pessoais: []
+ver_mais:
+  - "../04_Planetas/Sol.yaml"
+

@@ -1,0 +1,44 @@
+﻿status: draft
+id: "numerologia_horario"
+nome: "Numerologia do Horário de Nascimento"
+tradicoes:
+  - "tradicional"
+  - "aplicada"
+tema: "Reduzir hora/minuto do nascimento à raiz pitagórica (1 a 9)"
+
+essencia:
+  - "Hora e minuto somados e reduzidos (ex.: 14:27 → 1+4+2+7 = 14 → 1+4 = 5)"
+  - "O número final = 'tempero' do nascimento"
+  - "Cruzar com o número do dia/ano para o 'mapa numerológico'"
+
+origens_e_divergencias:
+  tradicional: "Astrologia caldeu/babilônica → helenística (Dorotheus, Masha'allah) — dias/horas planetárias."
+  moderna: "Moderno (numerologia pitagórica aplicada ao horário)."
+  nota: "Revisar ao citar — marca a escola usada."
+atlas_simbolico:
+  pessoas_arquetipos: "O numerólogo, o místico, o que vê padrões no tempo"
+  lugares_fisicos: "Lugares de padrão: templos, bibliotecas"
+  objetos_materia: "Números, símbolos, instrumentos de numerologia"
+  eventos_tipicos: "Eventos de número: ciclos, sincronicidades"
+  animais: "Cobra, fênix"
+  plantas_ervas: "Lótus, papoula"
+  metais_pedras: "Ouro, cristal de rocha"
+  cores_sons: "Dourado, violeta; notas Dó e Lá"
+  numeros: "1-9 (pitagórico), 10, 11, 12, 22"
+  dias_semana: "Todos os dias"
+  doencas_corpo: "Sistema nervoso, cérebro"
+  arquetipos_mitologicos: "Pitágoras, Hermes/Mercúrio"
+  mitos_historias: "Pitágoras e a numerologia; Hermes e a sabedoria"
+  sonhos_simbolos_inconsciente: "Números, padrões, sincronicidades"
+  expressao_elevada_sombra: "Elevada: numerologia viva, padrão consciente | Sombra: superstição, rigidez"
+
+camada_energetica:
+  impressao_mental: "O instante de chegada tem um 'número-guia' que colore a mente do nativo."
+  permeacao_emocional: "O número 1 = liderança; 2 = parceria; 5 = liberdade; etc. (ver arquétipo 1–9)."
+  manifestacao_externa: "Leitura de tendência de vida, não evento. Inclinação, não destino."
+  como_guiar_o_astral: "Complementar ao mapa — mostrar o 'número de chegada' como tom de fundo."
+
+relacao_pitagorica: "Redução 1–9 = base da numerologia pitagórica; cada número tem arquétipo (1 unidade, 2 duplo, 3 expressão, 4 base, 5 mudança, 6 harmonia, 7 mistério, 8 poder, 9 conclusão)."
+foco_especial:
+  carmico: "O número de chegada às vezes 'repete' um tema de vida (oferecer a quem ressoa)."
+

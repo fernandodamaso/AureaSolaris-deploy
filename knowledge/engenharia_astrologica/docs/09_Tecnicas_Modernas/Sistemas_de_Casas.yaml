@@ -1,0 +1,69 @@
+status: complete
+id: "sistemas_de_casas"
+nome: "Sistemas de Casas"
+tradicoes:
+  - "helenística"
+  - "medieval"
+  - "renascentista"
+  - "tradicional"
+  - "moderna ocidental"
+tipo: "arquitetura de domificação (fundamento histórico e técnico; alojamento editorial de legado)"
+classificacao_editorial:
+  nucleo_conceitual: "Casas e domificação"
+  localizacao_atual: "09_Tecnicas_Modernas por legado de organização; não é técnica moderna de origem"
+  regra_de_apresentacao: "Não há sistema universal. Toda leitura deve exibir o sistema e permitir escolha entre variantes suportadas."
+escopo_documental:
+  tecnica_historica:
+    - "whole sign, equal, quadrantais e variantes históricas"
+    - "diferença entre signo-casa e cúspide"
+    - "dependência do problema, da escola e da latitude"
+  calculo_e_regra: "O motor deve permitir escolha explícita de sistema de casas e registrar essa escolha em toda leitura em que ela altere resultado."
+  divergencias_de_escola: "Não existe consenso absoluto único entre whole sign, equal, Placidus, Regiomontanus, Campanus, Alcabitius, Porphyry, Koch etc."
+referencias:
+  - autor: "William Lilly"
+    obra: "Christian Astrology, 1647."
+    natureza: "fonte primária histórica"
+    localizador: "prática horária inglesa com domificação Regiomontanus"
+  - autor: "Chris Brennan"
+    obra: "Hellenistic Astrology: The Study of Fate and Fortune, Amor Fati Publications, 2017."
+    natureza: "secundária histórica"
+    localizador: "Discussão contemporânea sobre whole sign e domificação antiga"
+  - autor: "Swiss Ephemeris"
+    obra: "Swiss Ephemeris Programmer's Documentation."
+    natureza: "referência técnica"
+    localizador: "https://www.astro.com/swisseph/swephprg.htm; cálculo de casas e retornos de erro em latitudes extremas"
+definicao_tecnica: "Sistema de casas é o método pelo qual a esfera local é dividida em doze setores de significado, produzindo diferentes cúspides, extensões de casas e, em alguns casos, lógica de signo-casa."
+familias:
+  whole_sign: "Cada signo inteiro contado a partir do Ascendente torna-se uma casa."
+  equal: "Casas de 30° contadas a partir do grau do Ascendente."
+  quadrantais: "Divisões baseadas em arcos ou quadrantes da esfera local; incluem Placidus, Regiomontanus, Campanus, Koch e outros."
+  porphyry_e_afins: "Divisões baseadas em trissecção de quadrantes ou princípios relacionados."
+notas_editoriais:
+  - "Horária tradicional inglesa costuma usar Regiomontanus."
+  - "Muitos reconstrucionistas helenísticos privilegiam whole sign."
+  - "Astrologia moderna popular frequentemente usa Placidus."
+  - "Alguns sistemas falham ou exigem adaptação em latitudes extremas."
+quadro_operacional_do_corpus:
+  whole_sign:
+    contexto: "reconstruções helenísticas e comparação de signo-casa"
+    limite: "o Ascendente permanece um grau sensível, mas pode não ser a cúspide da primeira casa."
+  equal:
+    contexto: "domificação de 30° a partir do Ascendente"
+    limite: "não é intercambiável com whole sign: o Ascendente é cúspide."
+  placidus:
+    contexto: "uso moderno ocidental frequente"
+    limite: "pode produzir condição de indefinição em latitudes extremas; o motor deve comunicar o erro e oferecer variante, sem fallback silencioso."
+  regiomontanus:
+    contexto: "horária tradicional inglesa, especialmente a linhagem de Lilly"
+    limite: "é uma escolha de escola, não regra obrigatória para todo mapa."
+  campanus_alcabitius_porphyry_koch:
+    contexto: "variantes históricas ou modernas disponíveis para estudo comparado"
+    limite: "devem registrar algoritmo, versão e compatibilidade de latitude."
+nao_confundir_com:
+  - "sistema de casas não é técnica interpretativa por si só"
+  - "mudança de sistema pode alterar regências acidentais, angularidade e julgamentos"
+camada_energetica:
+  impressao_mental: "O sistema de casas define por onde a vida é espacialmente organizada no mapa."
+  permeacao_emocional: "Mudanças de domificação podem alterar a narrativa de foco e experiência."
+  manifestacao_externa: "No motor, a escolha afeta cúspides, posições por casa e várias regras derivadas."
+  como_guiar_o_astral: "Sempre declarar o sistema escolhido e, quando houver divergência forte, permitir comparação consciente."

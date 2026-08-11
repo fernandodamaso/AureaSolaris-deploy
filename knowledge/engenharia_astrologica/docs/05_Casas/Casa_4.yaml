@@ -1,0 +1,66 @@
+status: review
+id: "casa_4"
+tradicoes:
+  - "helenística"
+  - "medieval"
+  - "renascentista"
+  - "moderna (camadas psicológica e sistêmica explicitamente separadas)"
+tipo: "conceito técnico de casa astrológica"
+escopo_documental:
+  tecnica_historica:
+    - "significação tradicional da casa, sua relação com ângulos, casas sucedentes/cadentes e tópicos derivados"
+  camadas_modernas: "Atlas simbólico, Tarot, medicina, arquétipos e leitura sistêmica permanecem separados da regra histórica."
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "primária"
+    localizador: "Livro IV e passagens sobre configuração e significação dos lugares"
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    natureza: "primária"
+    localizador: "Livros II–IV, tópicos das casas e julgamento natal"
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    natureza: "primária"
+    localizador: "Livro I, significações das casas e regras de julgamento"
+validacao_de_fontes:
+  base: "A significa??o hist?rica dos lugares ? sustentada por Ptolomeu, Valens e Lilly, nas refer?ncias estruturadas da ficha."
+  escopo: "Tarot, Atlas simb?lico, medicina, psicologia e leitura sist?mica s?o camadas de estudo rotuladas; n?o substituem a t?cnica hist?rica de casas."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+numero: 4
+nome: "Casa 4 — O Trono / As Raízes"
+tema: "De onde venho e onde descanso"
+
+origens_e_divergencias:
+  tradicional: "Ptolomeu (Tetrabiblos) — significados tradicionais das 12 casas."
+  moderna: "Astrologia psicológica/sistêmica (Liz Greene, escola de relações familiares)."
+  nota: "Revisar ao citar — marca a escola usada."
+atlas_simbolico:
+  pessoas_arquetipos: "O pai, a mãe, o lar, as raízes, o fim"
+  lugares_fisicos: "Lares, terras, campos, subsolo, lugares de origem"
+  objetos_materia: "Chaves, álbuns, baús, fotografias"
+  eventos_tipicos: "Mudanças de lar, finais, mortes, heranças de família"
+  animais: "Caranguejo, lagosta, cão de guarda"
+  plantas_ervas: "Lírio, jasmim, rosa branca, lótus"
+  metais_pedras: "Prata, pérola, madrepérola"
+  cores_sons: "Branco, prata; notas Dó e Lá"
+  numeros: "2 (dualidade lar), 4 (segurança), 6 (família)"
+  dias_semana: "Segunda-feira (Lua)"
+  doencas_corpo: "Estômago, seios, útero, sistema digestivo"
+  arquetipos_mitologicos: "Deméter/Ceres, Héstia/Vesta, Hera/Juno"
+  mitos_historias: "Deméter e Perséfone; Héstia e o fogo sagrado"
+  sonhos_simbolos_inconsciente: "Águas paradas, casas, mãe, memórias"
+  expressao_elevada_sombra: "Elevada: lar como refúgio, raízes fortes | Sombra: apego excessivo, vitimização"
+
+camada_energetica:
+  campo_mental: "Foco no lar, na origem, no que é íntimo. 'Onde é meu chão?'"
+  permeacao_emocional: "Acolhimento, memória, 'o que me sustenta emocionalmente'."
+  manifestacao_externa: "Eventos prováveis ligados a família, casa, fim de ciclo. Arquétipos: o Trono, o Ninho. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a construir ninho SEM repetir padrão."
+
+significados_derivados:
+  dinheiro_parceiro: false
+  fim_da_vida: "Casa 4 = 'fim da vida' em tradição (fim = regresso ao lar)."
+  pais: "Casa 4 = pai/mãe (origem)."
+  propriedades: "Imóveis, terras, 'chão' físico."
+  final_de_ciclo: "Em eleição: Casa 4 = 'fecha o ciclo'."

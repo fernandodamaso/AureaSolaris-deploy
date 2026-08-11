@@ -1,0 +1,130 @@
+id: revolucao_lunar
+nome: Revolução lunar (retorno lunar)
+tipo: tecnica_de_retorno
+tradicoes:
+- moderna ocidental
+- prática contemporânea de cartas de retorno
+- moriniana (apenas quando explicitamente declarada)
+status: review
+definicao: Carta levantada para o instante em que a Lua retorna à longitude eclíptica
+  tropical natal exata. Ocorre aproximadamente a cada 27,3 dias, isto é, por um ciclo
+  sideral lunar; não é a Lua Nova mensal, nem o retorno da fase natal.
+fundamento_de_calculo:
+  retorno: Encontrar o instante em que a longitude geocêntrica tropical da Lua coincide
+    com a longitude lunar natal, usando a mesma convenção de efeméride.
+  periodicidade: A proximidade de 27,3 dias é uma orientação astronômica; o instante
+    deve ser calculado, não estimado por calendário.
+  localidade: Local natal, residência ou local físico no instante são escolhas encontradas
+    na prática moderna; a carta deve registrar qual foi usada.
+  dados_minimos: Longitude lunar natal, instante do retorno, coordenadas, fuso legal,
+    zodíaco, sistema de casas e efeméride.
+formula_reproduzivel:
+  equacao_do_retorno: Resolver λLua(t) − λLua_natal = 0 mod 360° para o primeiro retorno
+    posterior ao anterior, na mesma convenção geocêntrica/tropical e efeméride do
+    natal.
+  busca_numerica: Usar a cadência aproximada de 27,3 dias somente como janela inicial;
+    localizar e refinar o instante até a tolerância declarada. Registrar UTC/TT, ΔT
+    quando aplicável e precisão do motor.
+  carta: Calcular posições no instante global do retorno e levantar casas/ângulos
+    na localidade declarada. Não reutilizar automaticamente as cúspides do retorno
+    solar.
+  vigencia: A convenção direta é retorno lunar a retorno lunar seguinte. A associação
+    com semanas, fases ou lunação exige técnica adicional declarada.
+variantes_e_linhagem:
+  retorno_de_longitude: O núcleo técnico é o retorno à longitude lunar natal; não
+    é retorno de fase Sol–Lua, Lua Nova, Lua Cheia ou ingresso.
+  moriniana: A abordagem de Morin deve ser aplicada somente a partir da regra/edição
+    identificada, sem converter automaticamente toda carta de retorno moderna em método
+    moriniano.
+  localidade: Nascimento, residência e local físico são variantes contemporâneas de
+    levantamento. Registrar uma única escolha por carta e não fundir seus ângulos.
+dados_reproduziveis:
+  obrigatorios:
+  - Longitude e instante lunares natais, zodíaco, geocentria, época, efeméride/motor
+    e versão.
+  - Janela de busca, instante do retorno em UTC/local, tolerância, escala de tempo
+    e ΔT quando aplicável.
+  - Localidade para casas, coordenadas, fuso legal/histórico, sistema de casas e parâmetros
+    de aspecto.
+  saida_minima: Exibir longitude natal e de retorno, diferença residual, instante
+    UTC/local, localidade e vigência adotada.
+procedimento:
+- Calcular o instante exato do retorno lunar, sem confundi-lo com uma Lua Nova, Lua
+  Cheia ou ingresso da Lua em signo natal.
+- 'Declarar a regra de localidade e o intervalo de vigência usado: de retorno a retorno
+  é a convenção mais direta.'
+- Ler os ângulos, a Lua, regentes e configurações da figura segundo uma hierarquia
+  previamente escolhida.
+- Relacionar a carta à profecção/revolução solar vigente se a escola as combinar,
+  preservando o caráter mensal do retorno.
+- 'Registrar alterações de hora natal: a longitude lunar muda rapidamente e pode afetar
+  o retorno calculado.'
+regras_para_motor:
+  saida_minima_obrigatoria:
+  - Longitude lunar natal e de retorno, residual angular, instante UTC/local, localidade,
+    sistema de casas, vigência adotada e fonte de efeméride.
+  - Marcação explícita de se a leitura segue retorno lunar contemporâneo geral ou
+    regra moriniana específica.
+  guardrails:
+  - Não substituir retorno lunar por lunação, Lua Nova, Lua Cheia ou ingresso mensal.
+  - Não mesclar automaticamente local natal, residência e local físico; escolher e
+    registrar uma política por carta.
+  nota_de_escopo:
+    - "A carta mensal não deve ser lida como técnica autônoma absoluta sem relação com o natal e com a técnica anual escolhida."
+relacao_com_morin_e_retorno_solar:
+- Morin tratou revoluções solares e lunares em livro próprio da Astrologia Gallica;
+  as regras morinianas devem ser estudadas em sua fonte, não projetadas em todos os
+  usos modernos de retorno lunar.
+- A revolução lunar compartilha a lógica formal de retorno de longitude com a solar,
+  mas tem escala temporal e problemas interpretativos próprios.
+nao_confundir_com:
+- 'Lunação: relação Sol–Lua atual de conjunção ou oposição.'
+- 'Fase lunar natal: distância angular natal Sol–Lua.'
+- 'Direções terciárias: fórmula de progressão, não retorno de longitude.'
+camada_simbolica:
+  imagem: A Lua retorna ao seu grau natal dentro de um ritmo breve, pondo em relevo
+    a recorrência lunar no calendário pessoal.
+  linguagem: Retorno e revolução são termos da recorrência astronômica; a leitura
+    de qualidades mensais é uma elaboração astrológica posterior.
+divergencias:
+- Não há consenso único sobre local de levantamento, prioridade de casas/ângulos e
+  orbes.
+- A atribuição exclusiva a estados emocionais é uma simplificação moderna; a carta
+  deve ser lida com os significadores e regras que a escola realmente usa.
+referencias:
+- autor: Jean-Baptiste Morin de Villefranche
+  obra: 'Astrologia Gallica, Livro XXIII: Revoluções Solares e Lunares'
+  natureza: fonte histórica para a abordagem moriniana; conferir edição e tradução
+- autor: Astrodienst
+  obra: Lunar Return Chart
+  natureza: definição, cálculo e escolha de localidade na prática contemporânea
+  url: https://www.astro.com/astrowiki/en/Lunar_Return_Chart
+- autor: Jürgen Hoppmann
+  obra: 'Lunar Return Astrology: The Birth of the Moon'
+  editora: ArsAstrologica
+  ano: 2023
+  natureza: obra contemporânea especializada
+- autor: Astrodienst
+  obra: Swiss Ephemeris Programmer's Documentation
+  edicao_ou_traducao: Documentação técnica do motor Swiss Ephemeris
+  localizador: Cálculo de posições e escala de tempo; registrar versão efetivamente
+    utilizada
+  url: https://www.astro.com/swisseph/swephprg.htm
+  natureza: técnica — efeméride e reprodução numérica
+validacao_de_fontes:
+  base: "As refer?ncias estruturadas identificam a linhagem hist?rica, moderna ou astron?mica pertinente a esta t?cnica preditiva."
+  escopo: "Uma implementa??o deve declarar edi??o, algoritmo, efem?ride, escala de tempo e variante de escola; esta exig?ncia ? uma regra de reprodu??o, n?o uma lacuna de fonte."
+  limite: "A ficha permanece em review e n?o converte hip?tese, aproxima??o pedag?gica ou releitura moderna em previs?o determinista."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+notas_de_implementacao:
+- Definir tolerância de busca e política de localidade para o motor do projeto, com
+  caso-teste calculado e versionado.
+origens_e_divergencias:
+  tradicional: Conceito/técnica presente na tradição astrológica ocidental.
+  moderna: Possível ressignificação contemporânea.
+  nota: Rotular a escola quando divergir.
+camada_energetica:
+  impressao_mental: Campo conceitual do tema/técnica.
+  permeacao_emocional: Como o tema toca a experiência subjetiva.
+  manifestacao_externa: Como aparece em comportamentos e eventos.
+  como_guiar_o_astral: Como usar este conhecimento na leitura prática.

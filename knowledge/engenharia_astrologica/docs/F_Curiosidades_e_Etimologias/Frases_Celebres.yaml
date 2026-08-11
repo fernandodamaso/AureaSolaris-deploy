@@ -1,0 +1,69 @@
+﻿status: review
+id: "frases_celebres"
+nome: "Frases Célebres da Astrologia"
+tradicoes:
+  - "historica"
+  - "etimologica"
+  - "editorial"
+tema: "Quotes e pensamentos de autores e tradições astrológicas."
+
+essencia:
+  - "Palavras de peso resumem tradições inteiras."
+  - "Cada quote deve ser contextualizada: autor, tradição, aplicação."
+
+origens_e_divergencias:
+  tradicional: "Vários autores clássicos e modernos."
+  moderna: "Compilação contemporânea."
+  nota: "As entradas precisam distinguir citação literal, tradução e paráfrase. A autoria popular de uma frase não basta para atribuí-la como citação acadêmica."
+
+limites_de_uso:
+  - "Não usar frase sem edição, página/carta ou fonte verificável como citação literal em publicação."
+  - "As fórmulas 'inclina, não determina' e 'macrocosmo/microcosmo' são mantidas como chaves de estudo, mas não devem ser atribuídas automaticamente a um único autor."
+
+camada_energetica:
+  impressao_mental: "A frase que ressoa como espelho do mapa."
+  permeacao_emocional: "Identificação, insight, 'ah!' moment."
+  manifestacao_externa: "Citação em leituras, estudos, mentorias."
+  como_guiar_o_astral: "A quote é convite, não sentença; usar para abrir diálogo."
+
+quotes:
+  - autor: "Alan Leo"
+    frase: "A astrologia não determina; inclina."
+    contexto: "Teosófica/moderna; fundador da astrologia moderna como psicologia."
+    aplicacao: "Usar como filtro filosófico central do projeto."
+    qualificacao: "Paráfrase pedagógica atribuída em circulação contemporânea; confirmar edição antes de tratar como citação literal de Alan Leo."
+  - autor: "Carl Jung"
+    frase: "A astrologia representa a soma de todas as psicologias da antiguidade."
+    contexto: "Psicológica; arquétipos."
+    aplicacao: "Justifica uso de arquétipos em leitura."
+    qualificacao: "Tradução de formulação atribuída à correspondência de Jung; conferir língua, data e edição da carta antes de citação direta."
+  - autor: "Ptolomeu"
+    frase: "Os astros inclinam, não determinam."
+    contexto: "Tradicional; Tetrabiblos."
+    aplicacao: "Fundamento ético da leitura."
+    qualificacao: "Não é formulação literal estabelecida do Tetrabiblos; registrar como paráfrase posterior sobre influência e necessidade."
+  - autor: "Dante"
+    frase: "A astrologia é a ciência dos movimentos celestes e suas influências."
+    contexto: "Medieval; visão integrada de cosmos e humanidade."
+    aplicacao: "Lembrar que mapa = modelo do cosmos em micro."
+    qualificacao: "Resumo editorial, não usar como citação literal sem localizar a passagem em edição de Dante."
+  - autor: "Paracelso"
+    frase: "A macrocosmo e o microcosmo são um."
+    contexto: "Hermética/renascentista."
+    aplicacao: "Justificar correspondências e atlas simbólico."
+    qualificacao: "Formulação hermética recorrente; atribuição literal a Paracelso requer verificação em edição crítica."
+
+referencias:
+  primarias:
+    - "Ptolomeu. Tetrabiblos, livro I, para a distinção antiga entre causas celestes e acontecimentos sublunares."
+    - "Jung, C. G. Letters, vol. 1: 1906–1950. Princeton University Press, 1973; verificar a carta e a tradução usadas."
+  secundarias:
+    - "Holden, James H. A History of Horoscopic Astrology. American Federation of Astrologers, 1996."
+  tecnicas:
+    - "Usar transcrição, edição e página/carta sempre que uma frase for exportada como citação."
+
+ver_mais:
+  - "../F_Curiosidades_e_Etimologias/etimologias.yaml"
+
+## ✏️ Minhas Anotações
+

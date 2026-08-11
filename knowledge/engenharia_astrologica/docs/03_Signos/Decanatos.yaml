@@ -1,0 +1,81 @@
+status: review
+id: decanatos
+nome: Decanatos (Decans)
+tradicoes:
+- decanatos tradicionais
+- releitura moderna quando explicitada
+tema: Subdivisão de 10° de cada signo (0-10, 10-20, 20-30) com regente próprio
+origens_e_divergencias:
+  tradicional: 'Há ao menos duas famílias que não devem ser fundidas: decanos egípcios (associados a estrelas/decanos) e faces caldaicas (regentes pela ordem caldaica). A sequência por triplicidade/signos do mesmo elemento é uma convenção posterior ou moderna, não a única regra tradicional.'
+  moderna: 'Algumas escolas usam sub-regências por triplicidade e podem incluir regentes modernos. Isso é releitura de escola e deve ser identificado como tal.'
+  divergencia: 'Não há uma tabela universal de regentes. A ficha individual precisa informar se aplica faces caldaicas, decanos egípcios, decanos por triplicidade, Tarô ou outra grade.'
+  nota: 'O motor deve guardar método e tabela usados; nunca inferir Plutão, Urano ou Netuno numa tabela tradicional sem escolha explícita da pessoa usuária.'
+essencia:
+- Cada signo tem 3 decanatos de 10°
+- 'Regente tradicional: triplicidade (1º = signo regente, 2º = regente do elemento fixo, 3º = regente do elemento mutável)'
+- Na moderna, cada decanato carrega uma 'cor' do signo
+atlas_simbolico:
+  pessoas_arquetipos: triplicidade de personagens do signo, tr?s rostos de uma mesma natureza, fases sucessivas de express?o
+  lugares_fisicos: faixas do zod?aco, tabelas de decanos, calend?rios simb?licos
+  objetos_materia: decan?rios, t?buas de subdivis?o, listas de faces e regentes
+  eventos_tipicos: mudan?a de tom dentro do mesmo signo, grada??o de for?a, refinamento interpretativo
+  arquetipos_mitologicos: tr?s etapas de uma jornada, tr?s guardi?es de um mesmo territ?rio
+  expressao_elevada_sombra: 'Elevada: nuance, refinamento, leitura graduada | Sombra: fragmenta??o arbitr?ria, excesso de subdivis?o'
+camada_energetica:
+  campo_mental: O decanato é a 'microcor' dentro do signo — dois nativos com Sol em Leão em 2° (decanato de Leão/Caranguejo) operam diferente de quem tem Sol em Leão em 22° (decanato de Leão/Áries).
+  permeacao_emocional: Cada decanato tem um 'clima emocional' mais preciso — o 1º decanato é o signo puro; o 2º, 'matizado'; o 3°, 'amadurecido'.
+  manifestacao_externa: Eventos PROVÁVEIS tendem a concentrar-se no decanato do planeta ativado. Inclinação, não destino.
+  como_guiar_o_astral: Usar o decanato para dar PRECISÃO — é o 'subtom' do signo.
+metodo_de_escolha:
+  faces_caldaicas: 'Usar a sequência caldaica documentada para faces; não substituir regentes tradicionais por planetas transaturninos.'
+  decanos_por_triplicidade: 'Se a escola adotar signos do mesmo elemento, declarar a ordem e os regentes usados; é convenção interpretativa, não consenso helenístico único.'
+  decanos_egipcios: 'Exigem tabela e fonte próprias; não presumir equivalência direta com as faces caldaicas.'
+
+procedimento_de_calculo:
+  - "Usar longitude tropical de 0° a <360° e identificar o signo de 30° correspondente."
+  - "Dentro do signo, dividir a longitude interna em 0°–<10°, 10°–<20° e 20°–<30°; a borda de 10° pertence ao decanato seguinte."
+  - "Selecionar antes do cálculo uma tabela: faces caldaicas, decanos egípcios, convenção por signos da mesma triplicidade ou outra tabela documentada."
+  - "Guardar no resultado o nome da tabela, regente atribuído, zodíaco e versão da fonte; não deduzir uma tabela a partir do símbolo."
+
+tabelas_distintas_exemplos:
+  faces_caldaicas:
+    linhagem: "Faces por ordem caldaica em repertórios tradicionais; conferir tabela/edição escolhida."
+    aries: ["0°–<10° Marte", "10°–<20° Sol", "20°–<30° Vênus"]
+    cancer: ["0°–<10° Vênus", "10°–<20° Mercúrio", "20°–<30° Lua"]
+    escorpiao: ["0°–<10° Marte", "10°–<20° Sol", "20°–<30° Vênus"]
+  signos_da_mesma_triplicidade:
+    linhagem: "Convenção interpretativa posterior/moderna: os três decanatos recebem a cor dos três signos do mesmo elemento; não chamar de faces caldaicas."
+    aries: ["Áries/Marte", "Leão/Sol", "Sagitário/Júpiter"]
+    cancer: ["Câncer/Lua", "Escorpião/Marte (Plutão em releituras modernas)", "Peixes/Júpiter (Netuno em releituras modernas)"]
+    escorpiao: ["Escorpião/Marte (Plutão em releituras modernas)", "Peixes/Júpiter (Netuno em releituras modernas)", "Câncer/Lua"]
+  decanos_egipcios:
+    linhagem: "Família histórica distinta ligada a estrelas/decanos; requer tabela própria, que esta ficha não substitui."
+
+escopo_documental:
+  significado: "Subdivisão zodiacal de 10°; o sentido e o regente dependem da tabela."
+  porque: "As divergências nascem de histórias, finalidades e cosmologias diferentes, não de erro que possa ser apagado numa tabela única."
+  origem: "Decanos egípcios, faces caldaicas e releituras modernas são camadas diferentes."
+  uso: "Aplicar como refinamento depois de signo, planeta, casa e técnica principal, quando a escola o aceitar."
+  camada_simbolica: "Etimologias, mitos, imagens e curiosidades são material de estudo atribuído; não comprovam uma tabela de regência."
+foco_especial:
+  infantil: Criança com planeta em 1º decanato = energia 'crua'; 3º decanato = energia 'madura' (pode explicar por que uma criança de 7 anos já parece ter 'lidado' com um tema).
+  futuro: Ver `08_Qualidades_Fisicas` para a relação decanato-físico.
+nota_expansao: Os 36 decanatos individuais (3 por signo) entram como YAMLs próprios — a criar sob demanda.
+
+referencias:
+  - autor: "Cláudio Ptolomeu"
+    obra: "Tetrabiblos"
+    natureza: "primária histórica"
+    localizador: "Livro I; faces e divisões zodiacais, conferir tradução/edição."
+  - autor: "Firmicus Maternus"
+    obra: "Mathesis"
+    natureza: "primária histórica"
+    localizador: "Divisões zodiacais e decanos; conferir livro/edição."
+  - autor: "Chris Brennan"
+    obra: "Hellenistic Astrology"
+    natureza: "secundária historiográfica/técnica"
+    localizador: "Seções sobre faces, limites e dignidades menores; conferir edição."
+
+validacao_de_fontes:
+  base: "A ficha-base está em review por documentar os sistemas e seus limites. As fichas individuais permanecem draft até que sua tabela e fonte sejam conferidas separadamente."
+  limite: "Não usar a palavra 'tradicional' para uma tabela híbrida de regentes modernos, nem apresentar simbologia de triplicidade como tabela caldaica ou egípcia."

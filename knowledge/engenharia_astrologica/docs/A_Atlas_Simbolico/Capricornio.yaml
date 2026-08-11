@@ -1,0 +1,104 @@
+﻿status: review
+id: "capricornio_atlas"
+nome: "Capricórnio — Atlas Simbólico"
+tradicoes:
+  - "atlas simbolico editorial"
+  - "sintese multiescola"
+tipo: "Atlas Simbólico"
+subtema: "Correspondências de Capricórnio"
+
+origens_e_divergencias:
+  tradicional: "Saturno — terra cardinal, estrutura, tempo, ambição."
+  moderna: "Saturno (mesmo). Sem divergência."
+  nota: "Regência unânime."
+
+atlas_simbolico:
+  pessoas_arquetipos:
+    - "O executivo"
+    - "O construtor"
+    - "O sábio"
+    - "O trabalhador"
+    - "O responsável"
+    - "O patriarca"
+  lugares_fisicos:
+    - "Montanhas"
+    - "Escritórios"
+    - "Fazendas"
+    - "Lugares frios"
+    - "Instituições"
+  objetos_materia:
+    - "Relógios"
+    - "Pedras"
+    - "Tijolos"
+    - "Estruturas"
+    - "Ferro frio"
+  eventos_tipicos:
+    - "Promoções"
+    - "Contratos"
+    - "Concretizações"
+    - "Separações"
+    - "Maturidade"
+  animais:
+    - "Cabra"
+    - "Crocodilo"
+    - "Serpente"
+    - "Corvo"
+    - "Galo"
+  plantas_ervas:
+    - "Hera"
+    - "Samambaia"
+    - "Raízes"
+    - "Cardo"
+    - "Pinheiro"
+  metais_pedras:
+    - "Chumbo"
+    - "Ônix"
+    - "Jade negro"
+    - "Ágata negra"
+    - "Sardônica"
+  cores_sons:
+    cores: ["Preto", "Marrom-escuro", "Azul-petróleo", "Cinza-chumbo"]
+    sons: ["Tambor lento", "Sino fúnebre", "Gongo"]
+  numeros: [3, 8, 15]
+  dias_semana: ["Sábado"]
+  doencas_corpo:
+    doencas: ["Problemas ósseos", "Artrite", "Rigidez"]
+    partes_corpo: ["Ossos", "Joelhos", "Pele seca", "Dentes"]
+  arquetipos_mitologicos:
+    - "Cronos/Saturno"
+    - "Hades"
+    - "Anúbis"
+  mitos_historias:
+    - "Cronos e a Idade do Ouro"
+    - "Hades e Perséfone"
+  expressao_elevada_sombra: "Elevada: estrutura, maturidade, responsabilidade | Sombra: rigidez, depressão, medo, pessimismo"
+
+revisao_editorial:
+  origem_e_linguagem: "Capricórnio vem do latim capricornus, 'cabra com chifres'; a figura híbrida cabra-peixe é imagem antiga transmitida por múltiplas culturas."
+  mito_arquetipo_e_porque: "Subida, pedra, montanha e cabra articulam esforço e altitude; a cauda aquática preserva a imagem de ambivalência, sem converter mito em diagnóstico de personalidade."
+  limite_tecnico: "A regência de Saturno é tradicional; imagens modernas de carreira/controle são camadas interpretativas e exigem casa, aspectos e escola declarada."
+referencias:
+  primarias:
+    - "Ptolomeu. Tetrabiblos, livro I: signos e qualidades, conforme edição declarada."
+  secundarias:
+    - "Houlding, Deborah. The Houses: Temples of the Sky. The Wessex Astrologer, 1996."
+  tecnicas:
+    - "Ver 02_Astronomia/Zodiaco_Tropical.yaml e 04_Planetas/Saturno.yaml."
+camada_energetica:
+  impressao_mental: "A mente que ESTRUTURA e PLANEJA. Tempo, regra, maturidade, 'o que dura'."
+  permeacao_emocional: "Medo e responsabilidade. Quando saudável: serenidade. Quando ferido: depressão."
+  manifestacao_externa: "Eventos PROVÁVEIS de concretização, limitações, contratos. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a CONSTRUIR COM REALISMO. Capricórnio é a prova: o que aguenta o tempo, aguenta tudo."
+
+tarot_relacionado:
+  carta: "O Eremita (IX)"
+  conexao: "O Eremita é Capricórnio: tempo, solitude, sabedoria que vem com idade."
+
+foco_especial:
+  infantil: "A criança Capricórnio é precocemente responsável. Precisa de limites claros, não de abandono."
+  familiar: "O patriarca/matriarca que estrutura. O que ensina a lidar com tempo."
+  carmico_espiritual: "Capricórnio indica a LIÇÃO DE MATURIDADE. Casa Capricórnio = onde a pessoa aprende a crescer pelo esforço."
+
+ver_mais:
+  - "../03_Signos/Capricornio.yaml"
+

@@ -1,0 +1,71 @@
+﻿status: review
+id: "astronomia"
+nome: "Astronomia"
+tradicoes:
+  - "astronomica de apoio"
+  - "editorial"
+tipo: "Fundamentos"
+subtema: "Base física do céu"
+
+origens_e_divergencias:
+  tradicional: "Cosmologias antigas, incluindo a ptolomaica, descrevem o céu a partir do observador terrestre e sustentam vocabulário histórico da astrologia ocidental. Não devem ser confundidas com a astronomia física contemporânea."
+  moderna: "Astronomia fornece observação, coordenadas, tempo, dinâmica orbital e efemérides. Ela é indispensável para cálculo preciso, sem decidir por si o significado atribuído por uma escola astrológica."
+  nota: "Zodíaco tropical é uma divisão sazonal/equinocial da eclíptica em 12 partes de 30°, distinta das constelações e de escolas siderais excluídas deste acervo."
+
+atlas_simbolico:
+  pessoas_arquetipos: "O astrônomo, o observador, o cientista"
+  lugares_fisicos: "Observatórios, planetários, universidades"
+  objetos_materia: "Telescópios, mapas estelares, efemérides"
+  eventos_tipicos: "Observações, descobertas, registros"
+  animais: "Águia (visão), coruja (sabedoria)"
+  plantas_ervas: "Sálvia (memória)"
+  metais_pedras: "Prata (lua), cristal (clareza)"
+  cores_sons:
+    cores: ["Azul-escuro", "prata", "preto"]
+    sons: ["Sino", "vento"]
+  numeros: [360, 12, 7]
+  dias_semana: ["Quarta-feira"]
+  doencas_corpo:
+    doencas: ["Problemas de visão"]
+    partes_corpo: ["Olhos", "cérebro"]
+  arquetipos_mitologicos:
+    - "Hermes (mensageiro)"
+    - "Atena (sabedoria)"
+  mitos_historias: "A observação do céu; a criação da astronomia"
+  expressao_elevada_sombra: "Elevada: observação precisa e distinção de camadas | Sombra: confundir coordenada, cosmologia e interpretação"
+
+camada_energetica:
+  impressao_mental: "Astronomia oferece dados e modelos observacionais; escolas astrológicas atribuem regras e significados a partir desses dados."
+  permeacao_emocional: "A contemplação do céu pode enriquecer o estudo sem dissolver distinções entre história, medida e interpretação."
+  manifestacao_externa: "Aplicação prática: registrar tempo, local, coordenadas, sistema de casas e efeméride para resultados reproduzíveis."
+  como_guiar_o_astral: "Ensinar a conferir o cálculo antes da leitura simbólica e a declarar a convenção astronômica utilizada."
+
+foco_especial:
+  infantil: "Nota pedagógica: observar fases lunares, estações, horizonte e movimento aparente antes de abstrair símbolos."
+  familiar: "Não é significador familiar natal; usar casas/significadores da técnica pertinente."
+  carmico_espiritual: "Camada simbólica de estudo, não consequência calculável de uma posição astronômica."
+
+procedimento_de_calculo:
+  - "Converter data/hora local para UTC usando fuso IANA e registrar localidade/geocoordenadas."
+  - "Calcular posições por efeméride/versionamento declarados e indicar coordenada (longitude eclíptica, declinação etc.)."
+  - "Escolher zodíaco tropical e sistema de casas explicitamente; não fazer fallback silencioso."
+  - "Distinguir signo tropical, constelação observável, latitude/declinação e casas locais."
+
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Almagest"
+    natureza: "primária histórica"
+    localizador: "Cosmologia e geometria astronômica antigas; consultar tradução/edição."
+  - autor: "U.S. Naval Observatory e HM Nautical Almanac Office"
+    obra: "The Astronomical Almanac"
+    natureza: "referência astronômica"
+    localizador: "Tempo, coordenadas e dados astronômicos; consultar edição vigente."
+  - autor: "Swiss Ephemeris"
+    obra: "Programmer's Documentation"
+    natureza: "referência técnica"
+    localizador: "Coordenadas, efemérides e parâmetros de cálculo; registrar versão usada."
+
+validacao_de_fontes:
+  base: "A ficha separa o modelo histórico geocêntrico, a astronomia contemporânea e as regras interpretativas."
+  limite: "O motor deve devolver erro/auditoria, e não interpretação, quando dados temporais, geográficos ou efeméride forem insuficientes."
+

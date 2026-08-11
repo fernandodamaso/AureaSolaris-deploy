@@ -1,0 +1,58 @@
+﻿status: review
+id: "casa_8_atlas"
+nome: "Casa 8 — A Transformação / O Outro Mundo"
+tradicoes:
+  - "atlas simbolico editorial"
+  - "sintese multiescola"
+tipo: "Atlas Simbólico"
+subtema: "Correspondências da Casa 8"
+
+origens_e_divergencias:
+  tradicional: "Ptolomeu (Tetrabiblos) — significados tradicionais das 12 casas."
+  moderna: "Astrologia psicológica/evolutiva — casa 8 como morte e renascimento."
+  nota: "Revisar ao citar — marca a escola usada."
+
+atlas_simbolico:
+  pessoas_arquetipos: "O cirurgião, o detetive, o mago, o renascido, o outro"
+  lugares_fisicos: "Subterrâneos, minas, hospitais psiquiátricos, delegacias"
+  objetos_materia: "Ferramentas cirúrgicas, relíquias, chaves, heranças"
+  eventos_tipicos: "Mortes, renascimentos, crises, transformações, heranças"
+  animais: "Escorpião, águia, lobo negro, cobra, fênix"
+  plantas_ervas: "Erva-moura, raízes profundas, papoula, narciso"
+  metais_pedras: "Obsidiana, granada, rubi, esmeralda escura"
+  cores_sons:
+    cores: ["Preto", "roxo-escuro", "vermelho-sangue", "verde-escuro"]
+    sons: ["Trovão", "tambor profundo", "grito"]
+  numeros: [8]
+  dias_semana: ["Terça-feira"]
+  doencas_corpo:
+    doencas: ["Problemas reprodutivos", "câncer", "infecções profundas"]
+    partes_corpo: ["Órgãos reprodutivos", "intestinos", "sangue"]
+  arquetipos_mitologicos:
+    - "Hades/Plutão"
+    - "Perséfone (renascimento)"
+    - "Hécate"
+  mitos_historias: "Rapto de Perséfone; morte e renascimento de Dioniso"
+  sonhos_simbolos_inconsciente: "Mortes, renascimentos, segredos, poder"
+  expressao_elevada_sombra: "Elevada: transformação, regeneração, poder autêntico | Sombra: manipulação, controle, violência"
+
+revisao_editorial:
+  origem_e_linguagem: "A oitava casa é sucessiva à sétima; recursos de outros, herança, temor e morte aparecem em diferentes linhagens de casas. Transformação é releitura moderna importante, não única definição histórica."
+  mito_arquetipo_e_porque: "Porta, passagem, legado e oculto organizam o mapa simbólico; não justificam inferência fatalista sobre morte, trauma, sexo ou finanças."
+  limite_tecnico: "A analogia com Escorpião/Plutão é moderna. Heranças, perdas e eventos devem ser julgados com técnica, contexto e limites éticos, jamais a partir de um fator isolado."
+referencias:
+  primarias:
+    - "Lilly, William. Christian Astrology. 1647, livro II: significações da oitava casa."
+  secundarias:
+    - "Houlding, Deborah. The Houses: Temples of the Sky. The Wessex Astrologer, 1996."
+  tecnicas:
+    - "Declarar sistema de casas, técnica e pergunta antes de qualquer aplicação preditiva."
+camada_energetica:
+  impressao_mental: "A mente que TRANSFORMA e RENASCE. 'O que morre para eu renascer?'."
+  permeacao_emocional: "Intensidade emocional extrema. Quando saudável: regeneração. Quando ferido: obsessão."
+  manifestacao_externa: "Eventos PROVÁVEIS de crise, morte, renascimento, poder. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a SOLTAR o que já morreu. Casa 8 é a metamorfose, não a destruição."
+
+ver_mais:
+  - "../05_Casas/Casa_8.yaml"
+

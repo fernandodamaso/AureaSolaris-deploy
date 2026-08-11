@@ -1,0 +1,94 @@
+﻿status: review
+id: "tradicoes_interpretacao"
+nome: "Tradições de Interpretação Selecionadas"
+tipo: "Engenharia da Interpretação"
+subtema: "Tradições e escolas"
+
+origens_e_divergencias:
+  tradicional: "Hellenística, medieval, renascentista e horária compartilham alguns instrumentos, mas variam em autores, cosmologia, dignidades e finalidade de julgamento."
+  moderna: "Rudhyar, Greene e outros autores psicológicos usam linguagem de arquétipos, individuação e experiência; não são continuidade direta de um método medieval único."
+  evolutiva: "Linhas evolutivas contemporâneas, como as de Jeffrey Green e Steven Forrest, usam propósito da alma, karma e nodos como hipóteses de escola."
+  sistemica: "Não há escola histórica canônica única chamada astrologia sistêmica. São adaptações contemporâneas relacionais/familiares que devem declarar método, autor e limites; Greene e Sasportas são principalmente referências psicológicas."
+  nota: "Não misturar tradições sem avisar. Declarar o que é cálculo, fonte histórica, interpretação de escola e nota simbólica."
+
+atlas_simbolico:
+  pessoas_arquetipos: "O juiz tradicional, o psicólogo moderno, o sacerdote evolutivo, o terapeuta sistêmico"
+  lugares_fisicos: "Tribunais, consultórios, templos, salas de terapia"
+  objetos_materia: "Livros de lei, cartas astrais, livros de psicologia, diagramas de família"
+  eventos_tipicos: "Julgamentos, terapias, rituais, sínteses"
+  animais: "Águia (tradicional), coruja (psicológica), serpente (evolutiva), teia de aranha (sistêmica)"
+  plantas_ervas: "Carvalho (tradicional), lavanda (psicológica), lótus (evolutiva), hera (sistêmica)"
+  metais_pedras: "Ferro (tradicional), prata (psicológica), ouro (evolutiva), quartzo (sistêmico)"
+  cores_sons:
+    cores: ["Preto (tradicional)", "azul (psicológica)", "dourado (evolutiva)", "verde (sistêmica)"]
+    sons: ["Tambor (tradicional)", "harpa (psicológica)", "órgão (evolutiva)", "vento (sistêmico)"]
+  numeros: [4, 7, 12]
+  dias_semana: ["Quinta-feira"]
+  doencas_corpo:
+    doencas: ["Problemas de visão", "ansiedade", "insônia"]
+    partes_corpo: ["Olhos", "cérebro", "sistema nervoso"]
+  arquetipos_mitologicos:
+    - "Themis (tradicional)"
+    - "Atena (psicológica)"
+    - "Hécate (evolutiva)"
+    - "Deméter (sistêmica)"
+  mitos_historias: "Lentes diferentes para objetos de estudo relacionados; não são caminhos intercambiáveis para uma única verdade técnica."
+  sonhos_simbolos_inconsciente: "Tribunais, consultórios, templos, famílias"
+  expressao_elevada_sombra: "Elevada: integração das 4 tradições | Sombra: mistura sem critério, confusão de linguagens"
+
+camada_energetica:
+  impressao_mental: "Cada tradição é uma LENTE. A mesma foto, filtros diferentes."
+  permeacao_emocional: "A interpretação como serviço, não como julgamento."
+  manifestacao_externa: "Eventos prováveis de síntese, escolha de escola, clareza. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a ESCOLHER SUA LENTE. Não misturar tradições sem avisar."
+
+como_usar: |
+  Quando ler um mapa:
+  1. Escolha UMA tradição principal.
+  2. Use as outras como PONTES, não como base.
+  3. SEMPRE declare a escola usada ao interpretar.
+
+tradicoes:
+  tradicional:
+    objetivo: "Julgamento, destino, eventos"
+    foco: "Técnica, promessa natal, timing"
+    ferramentas: ["Dignidades", "aspectos", "casas", "timing"]
+  hermetico_magica:
+    objetivo: "Correspondências, transformação"
+    foco: "Símbolo, analogia, operação"
+    ferramentas: ["Atlas simbólico", "talismãs", "rituais"]
+  psicologica:
+    objetivo: "Consciência, integração"
+    foco: "Arquétipo, inconsciente, padrão"
+    ferramentas: ["Sonhos", "projeções", "identificação"]
+  evolutiva:
+    objetivo: "Propósito da alma, karma"
+    foco: "Nodos, Plutão, encarnação"
+    ferramentas: ["Nodos", "Lilith", "Quíron", "parte da fortuna"]
+  sistemica_relacional:
+    objetivo: "Observar personagens, vínculos e padrões familiares conforme método contemporâneo declarado"
+    foco: "Relações, sobreposições, significadores familiares e narrativas de sistema"
+    ferramentas: ["Sinastria", "casas derivadas", "mapas relacionais", "genograma quando autorizado"]
+
+referencias:
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    natureza: "primária histórica"
+    localizador: "Métodos helenísticos; conferir edição."
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    natureza: "primária histórica"
+    localizador: "Método tradicional/horário; conferir edição."
+  - autor: "Dane Rudhyar"
+    obra: "The Astrology of Personality"
+    natureza: "primária moderna"
+    localizador: "Formulação humanista/psicológica; conferir edição."
+  - autor: "Jeffrey Wolf Green"
+    obra: "Pluto: The Evolutionary Journey of the Soul"
+    natureza: "primária moderna"
+    localizador: "Formulação evolutiva; conferir edição."
+
+validacao_de_fontes:
+  base: "A ficha preserva escolas não canônicas como material de estudo, mas não inventa genealogia histórica ou consenso."
+  limite: "A camada sistêmica/relacional não deve ser apresentada como técnica tradicional sem método/autoria declarados."
+

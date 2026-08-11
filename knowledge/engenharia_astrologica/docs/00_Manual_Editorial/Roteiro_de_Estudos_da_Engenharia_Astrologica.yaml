@@ -1,0 +1,172 @@
+status: review
+id: roteiro_estudos_engenharia_astrologica
+nome: Roteiro de Estudos da Engenharia Astrológica
+exige_tradicao: false
+justificativa_sem_tradicao: Roteiro pedag?gico e organizacional; n?o ? uma ficha de
+  tradi??o ou de t?cnica astrol?gica.
+tipo: roteiro de ordem e técnicas de estudo
+objetivo: 'Oferecer uma ordem viva para estudar todo o corpus: primeiro a linguagem
+  e o cálculo, depois a interpretação, as tradições, as especialidades e as camadas
+  simbólicas.'
+como_usar:
+  principio: 'Não é uma prova, grade escolar ou sequência rígida. É uma trilha: cada
+    pessoa pode permanecer mais tempo onde houver fascínio, dúvida ou necessidade
+    de aprofundamento.'
+  ritmo: Estudar em blocos curtos e regulares; alternar leitura, observação de cartas,
+    escrita, desenho e consulta de fontes.
+  caderno_vivo: 'Para cada tema, conservar três registros: o que a fonte diz, o que
+    o símbolo evoca e o que ainda precisa ser investigado.'
+tecnicas_de_estudo:
+  leitura_em_espiral:
+    descricao: Passar primeiro pela visão geral; voltar ao mesmo tema depois de aprender
+      signos, planetas, casas, aspectos e técnicas de tempo. O significado amadurece
+      por camadas.
+  estudo_visual:
+    descricao: Desenhar e anotar a esfera celeste, os eixos, a mandala zodiacal, as
+      relações de aspecto, linhas do tempo e árvores de tradição.
+  mapa_de_linguagem:
+    descricao: Guardar etimologias, glifos, mitos, imagens, analogias e o porquê de
+      cada associação. O símbolo deve ser compreendido antes de virar interpretação.
+  comparacao_de_escolas:
+    descricao: Ler lado a lado o que uma fonte helenística, medieval, psicológica,
+      evolutiva, hermética ou sistêmica faz com o mesmo fator.
+  estudo_por_casos:
+    descricao: Observar cartas próprias, históricas, fictícias ou autorizadas; começar
+      sempre pelo cálculo e pela estrutura antes de avançar para significados especiais.
+  retorno_natural:
+    descricao: Retornar periodicamente aos fundamentos e às fichas mais usadas. A
+      revisão acontece por nova leitura, nova imagem, novo caso e novas fontes — sem
+      formato de quiz.
+  bibliografia_anotada:
+    descricao: 'Toda obra, artigo ou aula ganha uma nota breve: autor, escola, período,
+      ideia central, termos novos e conexões com fichas do corpus.'
+ordem_de_estudo:
+- etapa: 1. A obra e seu vocabulário
+  foco: Filosofia do projeto, camadas de conhecimento, história/escopo da astrologia
+    ocidental, bibliografia e protocolo de cálculo.
+  pastas:
+  - 00_Filosofia
+  - 00_Manual_Editorial
+  - 01_Fundamentos
+  - 16_Ferramentas_e_Bibliografia
+  tecnica: Montar seu caderno de fontes, uma linha do tempo e um glossário pessoal
+    de termos.
+- etapa: 2. O céu que sustenta o mapa
+  foco: Esfera celeste, eclíptica, equinócios, zodíaco tropical, coordenadas, tempo
+    e efemérides.
+  pastas:
+  - 02_Astronomia
+  tecnica: Desenhar os eixos e traduzir cada termo astronômico em uma pergunta de
+    cálculo.
+- etapa: 3. O alfabeto simbólico
+  foco: Elementos, modalidades, polaridades, signos, planetas, luminares, Nodos, pontos
+    e asteroides.
+  pastas:
+  - 03_Signos
+  - 04_Planetas
+  - 08_Qualidades_Fisicas
+  - 27_Asteroides_Pontos
+  tecnica: 'Estudar cada símbolo em quatro chaves: origem, imagem, função técnica
+    e divergência de escola.'
+- etapa: 4. A gramática do mapa
+  foco: Casas, ângulos, sistemas de casas, aspectos, orbes, configurações, antíscia
+    e pontos derivados.
+  pastas:
+  - 05_Casas
+  - 06_Aspectos
+  - 23_Tipos_de_Mapa
+  - 24_Graus_Astrologicos
+  tecnica: 'Usar esquemas visuais: planeta como função, signo como qualidade, casa
+    como campo e aspecto como relação.'
+- etapa: 5. Condição e síntese
+  foco: Dignidades, recepção, sect, condições planetárias, planeta feral, regências,
+    disposições e hierarquia de julgamento.
+  pastas:
+  - 07_Dignidades
+  - 08_Tecnicas_Tradicionais
+  - 17_Metodologia_de_Leitura
+  tecnica: Ler uma carta inteira devagar, descrevendo primeiro a condição dos significadores
+    e só depois as narrativas.
+- etapa: 6. Lua, estrelas, lotes e tempo tradicional
+  foco: Fases lunares, sizígia, mansões, estrelas fixas, lotes, horas planetárias
+    e profecções.
+  pastas:
+  - 07_Estrelas_Fixas
+  - 11_Previsao
+  - 21_Lua_Avancada_e_Mansoes
+  - 22_Lotes_Profundos
+  - 25_Mansoes_Lunares
+  - 26_Tempo_Planetario
+  tecnica: Construir tabelas de cálculo e observar como cada técnica muda a pergunta
+    que está sendo feita.
+- etapa: 7. Previsão, horária e eletiva
+  foco: Trânsitos, progressões, direções, retornos, firdária, eclipses, julgamento
+    horário e eleições.
+  pastas:
+  - 11_Previsao
+  - 14_Horaria
+  - 26_Tempo_Planetario
+  tecnica: Estudar uma técnica por vez e registrar suas regras, autores, parâmetros
+    e linguagem própria.
+- etapa: 8. Relações, família e aplicações
+  foco: Sinastria, composto, Davison, casas derivadas, astrologia sistêmica, vocação,
+    localização e medicina histórica.
+  pastas:
+  - 12_Relacionamentos
+  - 13_Mundana
+  - 15_Medicina
+  - 18_Especialidades_e_Astrolocality
+  tecnica: Mapear personagens, papéis e relações por significadores; separar carta
+    natal, carta relacional e contexto histórico.
+- etapa: 9. Escolas modernas e espirituais
+  foco: Psicológica, humanista, cármica/evolutiva, harmônica, oitavas, hermetismo,
+    Cabala, alquimia e tradição salomônica.
+  pastas:
+  - 09_Tecnicas_Modernas
+  - 10_Esoterismo
+  - 20_Magia_e_Tradicao_Salomonica
+  - 28_Mapa_Draconico
+  tecnica: Ler cada escola por seus pressupostos, autores, símbolos e métodos — sem
+    misturar tudo em uma leitura única.
+- etapa: 10. Tradições, história e biblioteca viva
+  foco: Mesopotâmia, Caldeia, Pérsia, Magos, pitagorismo, platonismo, neoplatonismo,
+    renascimento e bibliografia.
+  pastas:
+  - 19_Tradicoes_Antigas
+  - 16_Ferramentas_e_Bibliografia
+  - 00_Motor_de_Conhecimento
+  tecnica: Construir linhas do tempo, árvores de transmissão, glossário etimológico
+    e bibliografia anotada.
+percursos_paralelos:
+  tradicional: Da Etapa 2 à 7, com ênfase em cálculo, casas, dignidades, lotes, profecções,
+    horária e fontes antigas.
+  simbolico_esoterico: Da Etapa 3 à 10, com ênfase em mito, linguagem, cosmologia,
+    hermetismo, alquimia, Cabala e tradições.
+  psicologico_sistemico: Da Etapa 3 à 9, com ênfase em planetas, casas, relações,
+    família, astrologia psicológica, sistêmica e evolutiva.
+  tecnico_computacional: Da Etapa 1 à 7, com ênfase em efemérides, parâmetros de cálculo,
+    técnica e validação do software.
+fonte_pedagogica_de_referencia:
+  instituicao: Faculty of Astrological Studies
+  contribuicao: 'A ordenação da base dialoga com o percurso da Faculty: esfera celeste
+    e zodíaco, planetas, signos, casas, aspectos, interpretação e contexto histórico-filosófico.'
+  uso: Usar artigos e a biblioteca da Faculty como trilha complementar de leitura,
+    sempre citando a peça específica.
+referencias:
+  primarias: []
+  secundarias:
+  - Faculty of Astrological Studies. Foundation Course. https://astrology.org.uk/astrology-learning-options/foundation-course/
+    (acesso em 2026-08-10).
+  - Faculty of Astrological Studies. Studying with the Faculty. https://astrology.org.uk/article-studying-with-the-faculty/
+    (acesso em 2026-08-10).
+  tecnicas: []
+anotacoes_pessoais: []
+origens_e_divergencias:
+  tradicional: Conceito/técnica presente na tradição astrológica ocidental.
+  moderna: Possível ressignificação contemporânea.
+  nota: Rotular a escola quando divergir.
+camada_energetica:
+  impressao_mental: Campo conceitual do tema/técnica.
+  permeacao_emocional: Como o tema toca a experiência subjetiva.
+  manifestacao_externa: Como aparece em comportamentos e eventos.
+  como_guiar_o_astral: Como usar este conhecimento na leitura prática.

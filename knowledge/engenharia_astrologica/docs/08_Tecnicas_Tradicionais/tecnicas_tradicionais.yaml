@@ -1,0 +1,81 @@
+﻿status: review
+id: "tecnicas_tradicionais"
+nome: "Técnicas Tradicionais"
+tradicoes:
+  - "tradicional"
+  - "helenistica"
+  - "medieval"
+tipo: "Técnicas"
+subtema: "Dignidades, orbes, aspectos ptolomaicos"
+
+origens_e_divergencias:
+  tradicional: "A etiqueta 'tradicional' cobre escolas helenísticas, medievais, árabes, renascentistas e horárias que não são idênticas. A ficha serve de mapa de métodos, não de regra única."
+  moderna: "Autores modernos podem reutilizar termos antigos com objetivos psicológicos distintos; essa releitura deve ser declarada em vez de fundida ao método histórico."
+  nota: "Cada técnica deve registrar autor/escola, tabela, coordenada, orbe e finalidade. Não há pacote tradicional universal."
+
+atlas_simbolico:
+  pessoas_arquetipos: "O técnico, o estrategista, o leitor tradicional"
+  lugares_fisicos: "Tribunais, consultórios, salas de leitura"
+  objetos_materia: "Mapas, efemérides, livros de técnica"
+  eventos_tipicos: "Leituras, análises, julgamentos"
+  animais: "Águia (visão), coruja (sabedoria)"
+  plantas_ervas: "Sálvia, hera"
+  metais_pedras: "Prata, diamante, jaspe"
+  cores_sons:
+    cores: ["Azul", "dourado", "preto"]
+    sons: ["Sino", "tambor"]
+  numeros: [1, 3, 7]
+  dias_semana: ["Quinta-feira"]
+  doencas_corpo:
+    doencas: ["Problemas de visão", "ansiedade"]
+    partes_corpo: ["Olhos", "cérebro"]
+  arquetipos_mitologicos:
+    - "Hermes (mensageiro)"
+    - "Atena (estratégia)"
+  mitos_historias: "Hermes e a técnica"
+  expressao_elevada_sombra: "Elevada: técnica a serviço da pessoa | Sombra: técnica como sentença"
+
+camada_energetica:
+  impressao_mental: "As técnicas tradicionais são a GRAMÁTICA da astrologia. Sem gramática, não há linguagem."
+  permeacao_emocional: "Técnica como segurança. Quando saudável: precisão. Quando ferido: rigidez."
+  manifestacao_externa: "Eventos prováveis de análises, leituras. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a USAR A TÉCNICA COMO FERRAMENTA, não como regra."
+
+tecnicas:
+  - nome: "Dignidades"
+    descricao: "Domicílio, exaltação, triplicidade, termos, faces. Queda, exílio, peregrino."
+    como_usar: "Avaliar adequação e capacidade segundo tabela escolhida; dignidade não equivale a bondade, saúde ou facilidade psicológica automática."
+  - nome: "Orbes"
+    descricao: "Margem adotada por uma escola para reconhecer perfeição, aplicação, separação ou influência de aspecto."
+    valores: "Não há uma tabela universal. O motor deve carregar perfis de autor/escola e exibir o valor aplicado por aspecto, planeta/corpo e técnica."
+  - nome: "Aspectos Ptolomaicos"
+    descricao: "Conjunção, sextil, quadratura, trígono, oposição."
+    como_usar: "Distinguir relação por signo, distância por grau, aplicação/separação e condição dos significadores."
+  - nome: "Aplicação e Separação"
+    descricao: "Planeta mais rápido se aproximando (aplicação) ou se afastando (separação)."
+    como_usar: "Usar a velocidade/ordem reais e a regra da técnica; linguagem de chegada/afastamento é uma simplificação interpretativa."
+
+criterio_de_uso:
+  porque: "Técnicas tradicionais são sistemas de julgamento condicionais: a ordem evita que um símbolo isolado substitua a condição real do mapa."
+  procedimento: "Definir pergunta/finalidade, tradição, dados do mapa, sistema de casas, tabelas e perfil de orbes antes de interpretar."
+  divergencia: "Diferenças surgem de época, tradução, tabela de dignidades, regime de seita, finalidade natal/horária/eletiva e política de orbes."
+  curiosidades_e_origens: "Etimologias, mitos e símbolos podem acompanhar a técnica como camada cultural, mas não substituem cálculo ou fonte."
+
+referencias:
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    natureza: "primária histórica"
+    localizador: "Técnicas helenísticas e julgamento; conferir edição."
+  - autor: "Guido Bonatti"
+    obra: "Liber Astronomiae"
+    natureza: "primária histórica"
+    localizador: "Dignidades, aspectos e julgamento medieval; conferir tradução/edição."
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    natureza: "primária histórica"
+    localizador: "Aspectos, orbes e horária; conferir edição."
+
+validacao_de_fontes:
+  base: "A ficha não trata uma tabela de orbes nem uma tradução como universal."
+  limite: "O motor deve bloquear fallback silencioso de orbe, regência, tabela de dignidades ou sistema de casas."
+

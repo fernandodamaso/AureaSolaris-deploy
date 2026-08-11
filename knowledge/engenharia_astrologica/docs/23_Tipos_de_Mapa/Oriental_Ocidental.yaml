@@ -1,0 +1,57 @@
+status: review
+
+id: "oriental_ocidental"
+nome: "Oriental vs Ocidental"
+tradicoes:
+  - "tradicional"
+  - "editorial"
+tema: "De que lado do Sol o planeta está em relação ao Ascendente"
+
+essencia:
+  - "Oriental = planeta à esquerda do Sol (antes do nascimento do dia)"
+  - "Ocidental = planeta à direita do Sol"
+  - "Planeta matutino vs vespertino"
+
+origens_e_divergencias:
+  tradicional: "Oriental/ocidental descreve posição relativa ao Sol e varia conforme a regra (elongação, nascer antes/depois do Sol, fase ou planeta)."
+  moderna: "Analogias psicológicas de iniciativa/receptividade são interpretações posteriores."
+  nota: "Não confundir orientalidade com sect. Declarar planeta, longitude, condição de visibilidade e convenção antes de calcular."
+
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "fonte primária"
+    localizador: "Livro I, fases, visibilidade e condições planetárias"
+  - autor: "Chris Brennan"
+    obra: "Hellenistic Astrology: The Study of Fate and Fortune"
+    ano: 2017
+    natureza: "secundária histórica/técnica"
+    localizador: "Condições planetárias e distinções de sect/fase"
+atlas_simbolico:
+  pessoas_arquetipos: "O oriental, o ocidental, o que olha para o leste, o que olha para o oeste"
+  lugares_fisicos: "Lugares de leste, lugares de oeste, horizontes"
+  objetos_materia: "Bússolas, mapas, instrumentos de orientação"
+  eventos_tipicos: "Nascimentos (leste), mortes (oeste), viagens"
+  animais: "Falcão (leste), lobo (oeste)"
+  plantas_ervas: "Girassol (leste), hera (oeste)"
+  metais_pedras: "Ouro (leste), prata (oeste)"
+  cores_sons: "Dourado (leste), prata (oeste); notas Dó e Lá"
+  numeros: "1 (leste), 2 (oeste), 6 (harmonia)"
+  dias_semana: "Domingo (leste), segunda-feira (oeste)"
+  doencas_corpo: "Olhos (leste), sistema digestivo (oeste)"
+  arquetipos_mitologicos: "Apolo (leste), Hécate (oeste)"
+  mitos_historias: "Apolo e a luz; Hécate e a noite"
+  sonhos_simbolos_inconsciente: "Sol, lua, luz, sombra, horizontes"
+  expressao_elevada_sombra: "Elevada: orientação consciente, equilíbrio leste/oeste | Sombra: desorientação, extremos"
+
+camada_energetica:
+  campo_mental: "Planetas ORIENTAIS tendem a operar de forma mais AUTÔNOMA e direta na mente (a pessoa 'faz acontecer'). OCIDENTAIS operam de forma mais REATIVA (as coisas 'chegam' a ela)."
+  permeacao_emocional: "Oriental = senso de agência; Ocidental = senso de recepção. Isso muda como você orienta a pessoa sobre sua própria iniciativa."
+  manifestacao_externa: "Eventos prováveis favorecem a pessoa (oriental) ou a colocam em situação de acolher (ocidental). Inclinação, não destino."
+  como_guiar: "Oriental: incentive a liderança da própria vida. Ocidental: ajude a pessoa a não se sentir 'vítima do que chega' — ela ainda escolhe a resposta."
+
+regra_tradicional: "Na tradicional, planeta oriental ao regente do mapa = nativo de iniciativa própria; ocidental = dependente de outros."
+foco_especial:
+  infantil: "Crianca oriental precisa de espaco para iniciar; ocidental, de ser convidada ao inves de empurrada."
+  familiar: "A orientacao dos planetas dos pais explica quem 'puxa' e quem 'recebe' no lar."
+

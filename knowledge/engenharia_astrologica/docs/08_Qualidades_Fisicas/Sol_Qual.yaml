@@ -1,0 +1,63 @@
+status: review
+
+id: "sol_qualidades"
+nome: "Sol — Qualidades Físicas"
+cor: "Ouro, amarelo-dourado, laranja"
+metal: "Ouro"
+planta: "Rosa, girassol, canela, louro, mel"
+elemento_fisico: "Fogo (calor, seco)"
+parte_do_corpo: "Coração, dorso, sistema circulatório central"
+qualidade_termica: "Quente e seco"
+chakra_overlay: "Coração (4º) e Coroa (7º) — centro e transcendência"
+
+origens_e_divergencias:
+  tradicional: "Doutrina das Assinaturas (Culpeper/Agrippa): Sol = ouro, girassol, coração, fogo."
+  moderna: "Astrologia psicológica: cor como expressão da identidade."
+  nota: "Chakra overlay = sincretismo Nova Era, não canônico."
+atlas_simbolico:
+  pessoas_arquetipos: "Rei, líder, pai, herói"
+  lugares_fisicos: "Palácios, tronos, lugares de poder"
+  objetos_materia: "Coroas, cetros, jóias, ouro"
+  eventos_tipicos: "Coroações, reconhecimento, sucesso"
+  animais: "Leão, águia, cavalo nobre"
+  plantas_ervas: "Girassol, heliotropo, rosa, laranjeira"
+  metais_pedras: "Ouro, âmbar, topázio, citrino, diamante"
+  cores_sons: "Amarelo-dourado, laranja, roxo; notas Dó e Sol; trombeta, órgão"
+  numeros: "1 (unidade), 10 (completude), 19 (sol tarot)"
+  dias_semana: "Domingo"
+  doencas_corpo: "Coração, coluna dorsal, olhos, pressão arterial"
+  arquetipos_mitologicos: "Apolo, Hélio, Ra"
+  mitos_historias: "Apolo e a Pítia; Ícaro; Faetonte"
+  sonhos_simbolos_inconsciente: "Luz intensa, fogo, coroas, tronos, amanhecer"
+  expressao_elevada_sombra: "Elevada: liderança inspiradora, generosidade | Sombra: arrogância, vaidade"
+
+camada_energetica:
+  impressao_mental: "A cor dourada no mapa = 'centro que brilha'. Pessoa de Sol forte tende a 'iluminar' o ambiente."
+  permeacao_emocional: "Calor, generosidade, orgulho."
+  manifestacao_externa: "Estilo dourado/amarelo; tende a ser 'o centro' nas fotos. Arquétipos: o Rei, o Sol. Inclinação, não destino."
+  como_guiar_o_astral: "Usar a cor como 'amuleto' — dourado fortalece a expressão do Sol."
+
+porque_simbolico: |
+  OURO = metal nobre que NÃO enferruja — exatamente o Sol: identidade que não 'envelhece' no sentido de perder valor.
+  ROSA/GIRASSOL = seguem o Sol (giram para ele). CINNAMON/LOURO = calor solar (especiarias 'quentes').
+  CORAÇÃO = centro do corpo = Sol = centro do mapa.
+
+linha_tradicao: "Doutrina das Assinaturas (Culpeper/Agrippa): Sol = ouro, girassol, coração, fogo."
+chakra_nota: "Overlay sincretico — chakras NÃO são astrológicos. Rotular como tal."
+tradicoes:
+  - "astrologia helenística e medieval"
+  - "correspondências renascentistas"
+  - "astrologia psicológica moderna"
+revisao_editorial:
+  atribuicao: "Ouro e qualidades quente/seca pertencem a tabelas tradicionais; a metáfora do centro e a leitura de identidade pertencem a sínteses modernas."
+  limite: "Coração, dorso e circulação são correspondências histórico-simbólicas; não permitem diagnóstico cardíaco, prognóstico ou prescrição."
+  chakra: "Overlay sincrético contemporâneo, não regra de cálculo astrológico."
+referencias:
+  primarias:
+    - "Ptolomeu. Tetrabiblos, livro I: natureza solar e qualidades planetárias; consultar tradução/edição declarada."
+    - "Agrippa, Heinrich Cornelius. Three Books of Occult Philosophy, livro I: ouro e correspondências solares."
+    - "Culpeper, Nicholas. The English Physitian / Complete Herbal, 1653: regências planetárias das plantas."
+  secundarias:
+    - "Greene, Liz. The Luminaries: The Psychology of the Sun and Moon in the Horoscope. Samuel Weiser, 1992."
+  tecnicas:
+    - "Para o Sol, registrar longitude, declinação, condição por casa e aspectos antes de síntese."

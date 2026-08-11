@@ -1,0 +1,56 @@
+﻿status: draft
+id: "decanato_touro_1"
+nome: "Decanato 1 de Touro (0°–10°) — Touro puro"
+tradicoes:
+  - "convenção por signos da mesma triplicidade"
+  - "camada simbólica moderna atribuída"
+regente: "Vênus (Touro/Vênus na convenção por triplicidade; face caldaica correspondente: Mercúrio)"
+
+origens_e_divergencias:
+  sistema_adotado: "Convenção posterior/moderna por signos da mesma triplicidade: 0°–<10° de Touro recebe a cor de Touro/Vênus."
+  faces_caldaicas: "A face caldaica de 0°–<10° de Touro é Mercúrio; as tabelas divergem."
+  decanos_egipcios: "Sistema histórico distinto; requer tabela própria."
+  nota: "Prazer, corpo e valor são camadas simbólicas atribuídas, não prova de uma regência antiga da faixa."
+
+calculo_e_escopo:
+  intervalo: "Touro tropical 0°–<10°; 10° exatos iniciam o segundo decanato."
+  uso: "Refinamento opcional depois de planeta, signo, casa e técnica principal."
+  camada_simbolica: "Imagens de fruto, tesouro e estabilidade pertencem ao atlas de estudo, não a uma previsão."
+referencias:
+  - autor: "Engenharia Astrológica"
+    obra: "Decanatos"
+    natureza: "fonte editorial"
+    localizador: "Tabela comparativa em 03_Signos/Decanatos.yaml."
+  - autor: "Cláudio Ptolomeu"
+    obra: "Tetrabiblos"
+    natureza: "primária histórica"
+    localizador: "Faces; a faixa caldaica é Mercúrio."
+limite_documental: "Permanece draft: fonte específica para a convenção por triplicidade e seus símbolos ainda precisa ser conferida."
+atlas_simbolico:
+  pessoas_arquetipos: "O Montanha, o que expressa Terra Cardinal"
+  lugares_fisicos: "Lugares de Terra Cardinal"
+  objetos_materia: "Objetos de Terra Cardinal"
+  eventos_tipicos: "Eventos de Terra Cardinal"
+  animais: "Animais de Terra Cardinal"
+  plantas_ervas: "Plantas de Terra Cardinal"
+  metais_pedras: "Metais de Terra Cardinal"
+  cores_sons: "Cores de Terra Cardinal"
+  numeros: "Números de Terra Cardinal"
+  dias_semana: "Dias de Terra Cardinal"
+  doencas_corpo: "Partes do corpo de Terra Cardinal"
+  arquetipos_mitologicos: "Arquétipos de Terra Cardinal"
+  mitos_historias: "Mitologias de Terra Cardinal"
+  sonhos_simbolos_inconsciente: "Símbolos de Terra Cardinal"
+  expressao_elevada_sombra: "Elevada: Terra Cardinal consciente | Sombra: Terra Cardinal descontrolado"
+
+camada_energetica:
+  impressao_mental: "Touro cru — prazer, posse, tato, 'o que é meu'. Mente operando pelo que SENTE no corpo."
+  permeacao_emocional: "Prazer imediato, apego ao conforto."
+  manifestacao_externa: "Eventos PROVÁVEIS de ganho material, prazer sensorial, apego. Arquétipos: o Fruto, o Tesouro. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a 'ter sem ser possuída' — o 1º decanato de Touro pode confundir ter com ser."
+
+porque_simbolico: "Vênus rege Touro = planeta do prazer e da beleza. 0° de Touro cai no 'ponto gama' da Terra (zodíaco = 0° Áries; Touro começa o eixo material). É a primavera em concreto: a natureza desabrocha em FORMA."
+foco_especial:
+  infantil: "Criança com Sol/ASC/Vênus em Touro 1 = criança que expressa afeto pelo dar/receber objetos."
+
+

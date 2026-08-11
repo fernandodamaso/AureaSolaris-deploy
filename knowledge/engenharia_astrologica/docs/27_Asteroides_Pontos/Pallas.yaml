@@ -1,0 +1,120 @@
+﻿status: draft
+id: "pallas"
+nome: "Pallas (Asteroide 2 Pallas)"
+tradicoes:
+  - "moderna ocidental"
+  - "pontos calculados"
+tema: "Estratégia, arte, justiça, sabedoria prática"
+
+essencia:
+  - "Estratégia"
+  - "Arte"
+  - "Justiça"
+  - "Sabedoria prática"
+
+atlas_simbolico:
+  pessoas_arquetipos:
+    - "Estrategista militar"
+    - "Juíza"
+    - "Artista"
+    - "Arquiteta"
+    - "Advogada"
+    - "Guerreira sábia"
+  lugares:
+    - "Tribunal"
+    - "Estúdio de arte"
+    - "Gabinete de estratégia"
+    - "Escritório de advocacia"
+    - "Academia de guerra"
+    - "Biblioteca de estratégia"
+  objetos_materia:
+    - "Escudo com Medusa"
+    - "Lança"
+    - "Pincel"
+    - "Estatueta de deusa"
+    - "Mapa de batalha"
+    - "Balança da justiça"
+  eventos_tipicos:
+    - "Julgamento"
+    - "Criação de obra de arte"
+    - "Vitória por estratégia"
+    - "Defesa de causa"
+    - "Mediação de conflito"
+    - "Invenção"
+  animais:
+    - "Coruja (sabedoria)"
+    - "Serpente (estratégia)"
+    - "Cavalo de guerra"
+    - "Águia (visão ampla)"
+    - "Cão de caça"
+  plantas_ervas:
+    - "Oliveira (sabedoria)"
+    - "Loureiro (vitória)"
+    - "Hortelã"
+    - "Verbasco"
+    - "Manjericão"
+  metais_pedras:
+    - "Bronze"
+    - "Ferro"
+    - "Ágata"
+    - "Lápis-lazúli"
+    - "Turquesa"
+  cores_sons:
+    cores: ["Azul-escuro", "Verde-oliva", "Dourado-velho"]
+    sons: ["Bate-estacas (guerra)", "Pincel na tela", "Martelo do juiz", "Canto de sabedoria"]
+  numeros: [2, 4, 8, 22, 44]
+  dias_semana: ["Quarta-feira (compartilhado com Mercúrio)"]
+  doencas_corpo:
+    doencas: ["Problemas neurológicos", "Enxaqueca"]
+    partes_corpo: ["Cérebro", "Sistema nervoso", "Olhos"]
+  arquetipos_mitologicos:
+    - "Palas Atena (deusa da estratégia e sabedoria)"
+    - "Palas filha de Triton (guerreira sábia)"
+    - "Atena nascida da cabeça de Zeus (sabedoria que surge da mente)"
+  mitos_historias:
+    - "Atena e a Guerra de Troia (estratégia vence força)"
+    - "Atena e Aracne (arte que compete com os deuses)"
+    - "Atena e Odisseu (sabedoria prática)"
+    - "Medusa na égide de Atena (proteção pelo terror)"
+  sonhos_inconsciente:
+    - "Escudo com Medusa = proteção pela sabedoria"
+    - "Balança da justiça = necessidade de equilíbrio"
+    - "Mapa de batalha = planejamento mental"
+    - "Pincel = expressão criativa"
+  expressao_elevada_vs_sombra:
+    elevada: "Estrategista justa, que usa a mente para defender e criar, que une arte e justiça."
+    sombra: "Manipuladora fria, que usa estratégia para dominar, 'justiça' como máscara de vingança."
+
+camada_energetica:
+  impressao_mental: "A mente de 'como eu planejo?'. Estratégia, arte, justiça prática. Quando atrito: frieza, manipulação, 'o fim justifica os meios'."
+  permeacao_emocional: "Clareza e objetividade. Quando bloqueado: confusão, 'não sei o que fazer'. Quando solto: criatividade estratégica."
+  manifestacao_externa: "Eventos prováveis de julgamento, criação artística, vitória por estratégia. Trânsitos marcam decisões importantes."
+  como_guiar_o_astral: "Ajudar a mente a usar a estratégia para o bem comum, não só para ganho pessoal. Pallas pede justiça, não vingança."
+
+representa:
+  pessoas: ["Juiz", "Estrategista", "Artista", "Advogado", "Arquiteta"]
+  eventos: ["Julgamento", "Criação artística", "Vitória por estratégia", "Defesa"]
+  corpo: ["Cérebro", "Sistema nervoso", "Olhos"]
+
+dignidades_essenciais:
+  domicilio: ["Virgem (moderno)"]
+  exaltacao: [""]
+  detrimento: ["Peixes"]
+  queda: [""]
+
+combinacoes_exemplo:
+  casa_6:
+    temas: ["serviço", "saúde", "trabalho"]
+    possiveis_efeitos: ["trabalho como estratégia", "arte como cura", "justiça no trabalho"]
+    reforcado_por: ["mercurio_conjunto", "venus_conjunto"]
+    amenizado_por: ["marte_aflito", "saturno_conjunto"]
+
+origens_e_divergencias:
+  escola_tradicional:
+    autores: []
+    conceito: "Não tradicional — descoberto em 1802."
+  escola_moderna:
+    autores: [Demetra George, Liz Greene]
+    conceito: "Planeta da estratégia, da arte e da justiça prática — a guerreira sábia."
+  por_que_da_divergencia: "Pallas é moderna por definição: entrou no mapa no século XIX como segundo asteroide descoberto."
+

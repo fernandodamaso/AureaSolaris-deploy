@@ -1,0 +1,49 @@
+status: review
+id: libra_qualidades
+nome: Libra — Qualidades Físicas
+cor: Rosa, azul-claro, verde-esmeralda, dourado-suave
+tradicoes: [tradicional, médica histórica, moderna, editorial]
+parte_do_corpo: Rins e região lombar; pele, glúteos e adrenais são extensões variáveis
+elemento_fisico: Ar
+qualidade_termica: Quente e úmida
+origens_e_divergencias:
+  tradicional: "A melothesia associa Libra aos rins e à região lombar; cobre, rosas e verde pertencem a tabelas venusianas."
+  moderna: "Equilíbrio relacional, estética e simetria corporal são releituras modernas de Vênus e da balança."
+  nota: "Rins não provam uma teoria fisiológica de equilíbrio, e sim uma correspondência histórica posteriormente racionalizada."
+atlas_simbolico:
+  pessoas_arquetipos: Juiz, diplomata, artista, parceiro, advogado, mediador, esteta
+  lugares_fisicos: Tribunais, galerias de arte, consultórios, locais de parceria, jardins belos
+  objetos_materia: Balanças, espelhos, jóias, livros de direito, arte, contratos
+  eventos_tipicos: Casamentos, contratos, acordos, julgamentos, festas elegantes, diplomacia
+  animais: Cervo, fênix, cisne, cão de caça, pomba, lebre
+  plantas_ervas: Rosa, violeta, madressilva, orquídea, oliveira, videira
+  metais_pedras: Cobre, ouro rosa, diamante, esmeralda, safira, opala
+  cores_sons: Rosa, verde-claro, azul-claro; notas Lá e Ré; violino, piano, harpa
+  numeros: 6 (harmonia), 7 (justiça), 8 (equilíbrio)
+  dias_semana: Sexta-feira (dia de Vênus)
+  doencas_corpo: "Na medicina astrológica histórica: rins e lombar; pele, adrenais e sistema urinário ampliado variam por autor. Não usar para diagnóstico."
+  arquetipos_mitologicos: Themis (justiça), Hera/Juno, Afrodite/Vênus, Zeus/Júpiter
+  mitos_historias: A balança de Themis; O julgamento de Páris; Afrodite e a maçã de ouro
+  sonhos_simbolos_inconsciente: Balanças, espelhos, festas, casamentos, justiça, arte
+  expressao_elevada_sombra: 'Elevada: justiça equilibrada, arte harmoniosa, parceria verdadeira | Sombra: indecisão crônica, superficialidade, dependência do outro'
+camada_energetica:
+  impressao_mental: A cor rosa/azul no mapa = 'mente que equilibra'.
+  permeacao_emocional: Busca de harmonia, medo do conflito.
+  manifestacao_externa: "Traços suaves ou simétricos e estilo harmonioso são descrições fisionômicas venusianas preservadas como crença, não como consenso."
+  como_guiar_o_astral: "Usar cobre, balança e harmonia para estudar a cadeia venusiana, sem promessa física atribuída à cor."
+porque_simbolico: 'Libra = RINS/REGIÃO LOMBAR — rins ELIMINAM toxinas e MANTÉM o equilíbrio hídrico (a ''balança'' dos fluidos). A região lombar é o ''eixo de equilíbrio'' do corpo.
+
+  ROSA = cor da HARMONIA (mistura de vermelho e branco = paixão + pureza). AZUL-CLARO = cor do CÉU (equilíbrio).
+
+  '
+leitura_corporal: {regra: "Libra corresponde aos rins e à lombar na melothesia.", uso: "Estudo histórico/simbólico; não diagnóstico."}
+aparencia_nas_tradicoes:
+  descricao: "Textos descrevem tipo libriano/venusiano com proporções equilibradas, feições agradáveis, simetria e cuidado estético."
+  porque: "A imagem deriva de Vênus, do ar cardinal e da balança como emblema de proporção."
+  variantes: "Alguns autores julgam Vênus e o Ascendente; manuais modernos transferem o tipo ao Sol em Libra."
+  limite: "Registrar como doutrina de beleza/proporção de certas escolas, não padrão universal ou juízo de valor sobre corpos."
+referencias:
+  - {autor: "Claudius Ptolemy", obra: "Tetrabiblos", natureza: "primária histórica", localizador: "Livro I; Vênus, Libra e membros do corpo."}
+  - {autor: "William Lilly", obra: "Christian Astrology", natureza: "primária histórica", localizador: "Descrições fisionômicas de Vênus e signos."}
+  - {autor: "Heinrich Cornelius Agrippa", obra: "De occulta philosophia", natureza: "primária histórica", localizador: "Livro I; cobre, cores e correspondências venusianas."}
+validacao_de_fontes: {base: "Rins/lombar e cobre são correspondências históricas; simetria estética é doutrina fisionômica variável.", limite: "Não usar para diagnóstico ou hierarquia estética."}

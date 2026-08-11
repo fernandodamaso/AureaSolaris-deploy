@@ -1,0 +1,62 @@
+status: review
+
+id: "plutao_qualidades"
+nome: "Plutão — Qualidades Físicas"
+cor: "Preto-profundo, vermelho-sangue, roxo-intenso, cinza-fumaça"
+metal: "Plutônio (teórico), ferro (transformado)"
+planta: "Hortelã-pimenta, absinto, cogumelo, hera, raiz que 'cresce no escuro'"
+elemento_fisico: "Água fixa (frio, seco na superfície, úmido no fundo)"
+parte_do_corpo: "Órgãos sexuais, sistema excretor, bexiga, intestinos (profundos)"
+qualidade_termica: "Frio e seco (profundo)"
+chakra_overlay: "Raiz (1º) e Sacro (2º) — sobrevivência e transformação"
+
+origens_e_divergencias:
+  tradicional: "Doutrina das Assinaturas moderna: Plutão = cogumelo, hortelã-pimenta, abismo."
+  moderna: "Astrologia psicológica (Liz Greene) — corpo como linguagem simbólica."
+  nota: "Chakra overlay = sincretismo Nova Era, não canônico."
+atlas_simbolico:
+  pessoas_arquetipos: "Mago, xamã, cirurgião, detetive, estrategista"
+  lugares_fisicos: "Lugares profundos, subterrâneos, penínsulas, fontes termais"
+  objetos_materia: "Faca de cirurgia, espada, veneno, elixir, ouro"
+  eventos_tipicos: "Morte/renascimento, heranças, cirurgias, investigações"
+  animais: "Escorpião, serpente, lobo, abutre, phoenix, crocodilo"
+  plantas_ervas: "Papoula, cannabis, açafrão, ruibarbo, mandrágora, heléboro"
+  metais_pedras: "Ferro, plutônio; obsidiana, granada, topázio escuro, rubi"
+  cores_sons: "Vermelho-escuro, preto, marrom; notas Dó e Sol; tambor, órgão"
+  numeros: "4 (morte), 8 (transformação), 13 (morte tarot)"
+  dias_semana: "Terça-feira (tradicional Marte, moderno Plutão)"
+  doencas_corpo: "Órgãos sexuais, bexiga, intestino grosso, próstata, nariz, sangue"
+  arquetipos_mitologicos: "Hades, Plutão, Perséfone, Hécate"
+  mitos_historias: "Rapto de Perséfone; Esculápio e a ressurreição"
+  sonhos_simbolos_inconsciente: "Águas profundas, escorpiões, morte, renascimento, tesouros ocultos"
+  expressao_elevada_sombra: "Elevada: regeneração profunda, cura pelo confronto | Sombra: vingança, manipulação"
+
+camada_energetica:
+  impressao_mental: "Plutão é ABISMO e RENASCIMENTO — a mente 'desce ao fundo' para renascer."
+  permeacao_emocional: "Intensidade, magnetismo, medo da morte/transformação."
+  manifestacao_externa: "Estilo preto/vermelho/roxo; tende a ter 'olhos de Plutão' (intensidade). Arquétipos: o Fênix, o Xamã. Inclinação, não destino."
+  como_guiar_o_astral: "Plutão pede ENTREGA — a pessoa precisa 'morrer para renascer', não controlar a transformação."
+
+porque_simbolico: |
+  PLUTÔNIO = elemento RADIOATIVO, que TRANSFORMA matéria (radiação altera DNA). Plutão = transformação da alma.
+  PRETO = cor do 'fundo' (abismo, útero, terra escura). VERMELHO-SANGUE = cor da vida que brota da dor.
+  ORGÃOS SEXUAIS = 'porta da vida e da morte' (nascimento/morte através do sexo = Plutão).
+
+linha_tradicao: "Doutrina das Assinaturas moderna: Plutão = cogumelo, hortelã-pimenta, abismo."
+chakra_nota: "Overlay sincretico."
+tradicoes:
+  - "astrologia moderna de planetas exteriores"
+  - "astrologia psicológica"
+  - "correspondências simbólicas editoriais"
+revisao_editorial:
+  atribuicao: "Plutão foi descoberto em 1930 e não integra o septenário antigo. Cogumelo, abismo, raízes e plutônio são correspondências modernas/editoriais, não doutrina clássica."
+  limite: "Órgãos sexuais, excreção, trauma, sangue e 'morte/renascimento' são imagens simbólicas modernas; não permitem inferir doença, violência, abuso ou destino."
+  chakra: "Overlay sincrético contemporâneo, não regra de cálculo astrológico."
+referencias:
+  primarias:
+    - "Tombaugh, Clyde W. Registros de descoberta de Plutão, 1930; consultar arquivo/edição histórica declarada."
+  secundarias:
+    - "Greene, Liz. The Astrology of Fate. Samuel Weiser, 1984."
+    - "Sasportas, Howard. The Gods of Change: Pain, Crisis and the Transits of Uranus, Neptune and Pluto. Arkana, 1989."
+  tecnicas:
+    - "Declarar se o motor trata Plutão como planeta/planeta-anão para a interface; a longitude vem de efeméride."

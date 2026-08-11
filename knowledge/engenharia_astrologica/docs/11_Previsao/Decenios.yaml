@@ -1,0 +1,70 @@
+id: decenios
+nome: Decênios (decennials / dekaeterides)
+tipo: tecnica_de_senhores_do_tempo
+tradicoes:
+- helenística
+status: review
+definicao: Sistema helenístico de senhores do tempo, associado sobretudo a Vettius
+  Valens e Heféstio de Tebas, que organiza períodos planetários maiores e subperíodos.
+  A contagem parte da luz sectária e segue uma sequência zodiacal/planetária definida
+  pelo texto adotado; não é simplesmente uma lista fixa dos planetas pela ordem caldaica.
+estrutura_basica:
+  periodo_maior: Em uma reconstrução comum, cada regente recebe 129 meses, isto é,
+    dez anos e nove meses em calendário de 360 dias.
+  ponto_de_partida: A sequência se inicia a partir da luz da seita — Sol em natividade
+    diurna, Lua em noturna — conforme a regra/texto empregado.
+  ordem: Os regentes são encontrados na ordem zodiacal a partir do ponto de partida,
+    com detalhes que exigem leitura da fonte.
+  subperiodos: Subdivisões planetárias acompanham os períodos maiores; sua regra deve
+    ser mantida junto da tabela usada.
+procedimento_de_calculo:
+- Determinar a seita e identificar a luz sectária com regra explícita.
+- Localizar sua posição zodiacal e ordenar os planetas tradicionais segundo o procedimento
+  da edição escolhida.
+- Construir períodos maiores e subperíodos com a convenção de meses/anos declarada.
+- 'Avaliar o regente pelo mapa natal: condição, casas, regências, aspectos, seita
+  e relação com o significador do tema.'
+- Usar uma segunda técnica de período como contexto, sem misturar decênios e firdária.
+nao_confundir_com:
+- 'Decanatos: subdivisões de 10° do zodíaco, não períodos de 10 anos e nove meses.'
+- 'Firdária: sistema persa-árabe com tabelas diurnas/noturnas próprias.'
+- 'Profecções: ciclo anual de 12 signos a partir do Ascendente.'
+camada_simbolica:
+  imagem: A luz da seita acende a sequência inicial; os planetas assumem administrações
+    longas em ordem zodiacal.
+  linguistica: Dekaeteris/dekaeterides remete a períodos de dez anos; a designação
+    moderna 'decennials' conserva a ideia de década, embora a duração técnica possa
+    incluir meses adicionais.
+divergencias_e_limites:
+- Edições e softwares podem divergir em calendário, data de início e regra de subperíodos;
+  o resultado sem esses parâmetros não é reproduzível.
+- A apresentação moderna de períodos iguais de 129 meses é uma reconstrução de trabalho
+  que deve ser cotejada com Valens e Heféstio.
+- A técnica usa os sete planetas tradicionais; acréscimos de planetas exteriores são
+  extensões modernas, não transmissão helenística.
+referencias:
+- autor: Vettius Valens
+  obra: The Anthology, Livro IV
+  tradutor: Mark Riley
+  natureza: fonte helenística principal; conferir numeração e passagem na edição adotada
+- autor: Hephaistio of Thebes
+  obra: Apotelesmatics
+  natureza: fonte tardo-antiga correlata; selecionar tradução acadêmica
+- autor: Kepler College
+  obra: Hellenistic Timing Techniques
+  natureza: programa que enumera decênios entre as técnicas de timing
+  url: https://www.keplercollege.org/certificates/hellenistic-timing-techniques/
+validacao_de_fontes:
+  base: "As refer?ncias estruturadas identificam a linhagem hist?rica, moderna ou astron?mica pertinente a esta t?cnica preditiva."
+  escopo: "Uma implementa??o deve declarar edi??o, algoritmo, efem?ride, escala de tempo e variante de escola; esta exig?ncia ? uma regra de reprodu??o, n?o uma lacuna de fonte."
+  limite: "A ficha permanece em review e n?o converte hip?tese, aproxima??o pedag?gica ou releitura moderna em previs?o determinista."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+origens_e_divergencias:
+  tradicional: Conceito/técnica presente na tradição astrológica ocidental.
+  moderna: Possível ressignificação contemporânea.
+  nota: Rotular a escola quando divergir.
+camada_energetica:
+  impressao_mental: Campo conceitual do tema/técnica.
+  permeacao_emocional: Como o tema toca a experiência subjetiva.
+  manifestacao_externa: Como aparece em comportamentos e eventos.
+  como_guiar_o_astral: Como usar este conhecimento na leitura prática.

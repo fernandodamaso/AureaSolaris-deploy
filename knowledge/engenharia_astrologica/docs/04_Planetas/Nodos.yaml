@@ -1,0 +1,148 @@
+status: review
+id: "nodos"
+tradicoes:
+  - "helenística"
+  - "medieval"
+  - "renascentista"
+  - "moderna"
+  - "cármica/evolutiva (linhagem moderna explicitamente separada)"
+escopo_documental:
+  tecnica_historica:
+    - "eixo nodal, eclipses, interseções orbitais e usos tradicionais"
+  camadas_modernas: "A leitura cármica/evolutiva do eixo é uma camada moderna e não substitui o uso tradicional em eclipses e timing."
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "primária"
+    localizador: "Livro II, eclipses e nós/interseções celestes; conferir edição"
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    natureza: "primária"
+    localizador: "Passagens sobre eclipses e pontos nodais; conferir edição"
+  - autor: "Steven Forrest"
+    obra: "The Inner Sky"
+    natureza: "secundária/moderna"
+    localizador: "Capítulos sobre nodos e leitura evolutiva; conferir edição"
+validacao_de_fontes:
+  base: "As refer?ncias estruturadas sustentam a camada hist?rica ou moderna explicitamente declarada para este corpo."
+  escopo: "Mitologia, psicologia, evolu??o, medicina, sist?mica e Atlas permanecem camadas de estudo rotuladas, sem substituir dado astron?mico ou regra de escola."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+nome: "Nodos Lunares (Norte e Sul)"
+tipo: "Eixos / Pontos (não corpos físicos)"
+tradicao_primaria: ["evolutiva", "tradicional"]
+
+essencia:
+  - "Destino vs. Herança"
+  - "Direção de crescimento (Norte)"
+  - "Padrão de conforto (Sul)"
+  - "Eixo da encarnação"
+
+atlas_simbolico:
+  pessoas_arquetipos:
+    - "Viajante do tempo"
+    - "Professor do destino"
+    - "Guia de almas"
+    - "Pessoa em transição"
+    - "Gênio incompreendido (Sul)"
+    - "Aluno corajoso (Norte)"
+  lugares:
+    - "Encruzilhada"
+    - "Fronteira entre mundos"
+    - "Templo de iniciação"
+    - "Aeroporto (partida/chegada)"
+    - "Casa de conhecidos (Sul = lar familiar)"
+  objetos_materia:
+    - "Mapa do tesouro"
+    - "Bússola"
+    - "Passaporte"
+    - "Carta antiga"
+    - "Chave que não abre nada"
+    - "Livro de vidas passadas"
+  eventos_tipicos:
+    - "Encontro de destino"
+    - "Mudança de país"
+    - "Iniciação espiritual"
+    - "Repetição de padrão"
+    - "Crise de meia-idade"
+    - "Retorno à terra natal"
+  animais:
+    - "Dragão (eixo do dragão)"
+    - "Tartaruga (longevidade)"
+    - "Borboleta (metamorfose)"
+    - "Pássaro migratório"
+    - "Cão de duas cabeças (Norte/Sul)"
+  plantas_ervas:
+    - "Samambaia (se reproduz por esporos = passado/futuro)"
+    - "Raiz de mandrágora"
+    - "Rosa de Jericó (ressurreição)"
+    - "Lótus (nascimento espiritual)"
+  metais_pedras:
+    - "Ferro"
+    - "Aço"
+    - "Obsidiana"
+    - "Turmalina preta"
+    - "Pedra de lua (memória)"
+  cores_sons:
+    cores: ["Violeta", "Azul-meia-noite", "Prata", "Preto"]
+    sons: ["Apito de trem", "Vento na fronteira", "Canto de baleia", "Tic-tac de relógio"]
+  numeros: [12, 18, 24, 36, 180, 360]
+  dias_semana: ["Nenhum (ponto matemático)"]
+  doencas_corpo:
+    doencas: ["Problemas de equilíbrio", "Doenças neurodegenerativas"]
+    partes_corpo: ["Cérebro", "Equilíbrio vestibular"]
+  arquetipos_mitologicos:
+    - "Cabeça e Cauda do Dragão"
+    - "Anúbis (guia das almas)"
+    - "Hermes psicopompo"
+    - "Kali (destruição e renovação)"
+  mitos_historias:
+    - "Dragão devorando o sol (eclipse = Nodo)"
+    - "Anúbis guiando Osíris (passagem entre mundos)"
+    - "Mito da encruzilhada (escolha de caminho)"
+    - "Percurso de Heracles (trabalhos = jornada nodal)"
+  sonhos_inconsciente:
+    - "Mapa antigo = padrão cármico"
+    - "Perder o passaporte = medo de não crescer"
+    - "Voltar para casa antiga = repetição do Sul"
+    - "Estrada que se bifurca = encruzilhada nodal"
+    - "Trem que parte = chamado do Norte"
+  expressao_elevada_vs_sombra:
+    elevada: "Viajante consciente, que honra o passado e abraça o futuro, guia de almas."
+    sombra: "Vitimista do destino, que culpa 'vidas passadas' por tudo, repetidor compulsivo."
+
+camada_energetica:
+  impressao_mental: |
+    O Nodo Norte é a direção que a mente ainda não sabe trilhar — puxa para o novo, o desconfortável que faz crescer.
+    O Nodo Sul é o pensamento automático, a rota conhecida e confortável (mas estagnada).
+  permeacao_emocional: |
+    Norte traz inquietação de quem aprende; Sul traz alívio de quem repete.
+    O mapa tende a prender a pessoa no Sul por conforto — o trabalho é ir para o Norte.
+  manifestacao_externa: |
+    Eventos prováveis de 'encontros de destino' e repetições de padrão. Trânsitos sobre os Nodos tendem a abrir a direção de vida.
+  como_guiar_o_astral: |
+    Ajudar a mente a reconhecer o padrão do Sul (o que já domina) e dar o primeiro passo incômodo para o Norte (o que veio aprender).
+    Não é 'destino garantido' — é inclinação de jornada.
+
+nodo_norte:
+  significado: "O que a alma veio DESENVOLVER nesta vida. Direção de crescimento, propósito em movimento."
+  leitura: "Puxa para o novo. Desconfortável no início, natural com o tempo."
+  casas_signos_exemplo: "Ler por signo (qualidade a desenvolver) e casa (área da vida)."
+
+nodo_sul:
+  significado: "O que a alma já DOMINA de vidas passadas. Conforto, talento, mas risco de estagnação."
+  leitura: "Puxa para o repetido. Fácil, mas prende. É a 'zona de conforto cármica'."
+  casas_signos_exemplo: "Ler por signo (domínio trazido) e casa (área onde se repete)."
+
+foco_especial:
+  infantil: "Na criança, o Nodo Norte é o desafio de desenvolvimento; o Sul é o talento já presente. Ajuda pais a entenderem 'onde a criança precisa crescer'."
+  familiar: "Nodos dos familiares em sinastria mostram onde há complementaridade ou repetição de padrão geracional."
+  carmico: "Eixo central da leitura evolutiva/cármica — oferecer a quem ressoa (separar do técnico, Regra 4)."
+
+origens_e_divergencias:
+  escola_tradicional:
+    autores: [Ptolomeu, Valens]
+    conceito: "Cabeça e Cauda do Dragão — pontos de eclipse, usados para timing e eventos."
+  escola_evolutiva:
+    autores: [J.W. Green, Forrest, Rudhyar]
+    conceito: "Eixo de encarnacao: Norte = direcao da alma, Sul = heranca de vidas passadas."
+  por_que_da_divergencia: "A tradicional via os Nodos como marcadores de eclipse/timing; a evolutiva os psicologizou como eixo de jornada da alma."

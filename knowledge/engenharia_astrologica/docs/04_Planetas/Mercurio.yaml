@@ -1,0 +1,161 @@
+status: review
+id: "mercurio"
+tradicoes:
+  - "helenística"
+  - "medieval"
+  - "renascentista"
+  - "moderna (camada psicológica explicitamente separada)"
+escopo_documental:
+  tecnica_historica:
+    - "natureza, significações, regência, dignidades, sect e condições planetárias conforme a linhagem selecionada"
+  camadas_modernas: "Psicologia, evolução, sistêmica, mitologia e correspondências contemporâneas permanecem identificadas como camadas próprias."
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "primária"
+    localizador: "Livros I–II, natureza, significações e condições dos planetas"
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    natureza: "primária"
+    localizador: "Livros I–II, significadores e julgamento natal"
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    natureza: "primária"
+    localizador: "Livro I, significações, dignidades e condições planetárias"
+validacao_de_fontes:
+  base: "As refer?ncias estruturadas sustentam a camada hist?rica ou moderna explicitamente declarada para este corpo."
+  escopo: "Mitologia, psicologia, evolu??o, medicina, sist?mica e Atlas permanecem camadas de estudo rotuladas, sem substituir dado astron?mico ou regra de escola."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+nome: "Mercúrio"
+tipo: "Planeta"
+tradicao_primaria: ["tradicional", "psicológica"]
+
+essencia:
+  - "Comunicação"
+  - "Pensamento"
+  - "Movimento"
+  - "Mediação"
+
+atlas_simbolico:
+  pessoas_arquetipos:
+    - "Mensageiro"
+    - "Escritor"
+    - "Comerciante"
+    - "Criança (curiosidade)"
+    - "Estudante"
+    - "Tradutor"
+    - "Burro de carga (modo sombra)"
+  lugares:
+    - "Mercados, feiras"
+    - "Escolas, bibliotecas"
+    - "Estradas, cruzamentos"
+    - "Escritórios"
+    - "Telefone, internet"
+    - "Aeroportos, estações"
+  objetos_materia:
+    - "Caderno, diário"
+    - "Caneta, pena"
+    - "Lápis, giz"
+    - "Mapa"
+    - "Cálculo, ábaco"
+    - "Sapatos (movimento)"
+    - "Carta, envelope"
+  eventos_tipicos:
+    - "Assinatura de contrato"
+    - "Estudo, prova"
+    - "Viagem curta"
+    - "Mudança de ideia"
+    - "Roubo de objetos pequenos"
+    - "Encontro com irmão/vizinho"
+    - "Notícia, recado"
+  animais:
+    - "Galo (anuncia o dia)"
+    - "Macaco"
+    - "Borboleta (ligeireza)"
+    - "Lebre"
+    - "Cão (mensageiro fiel)"
+    - "Golfinho (comunicação subaquática)"
+  plantas_ervas:
+    - "Hortelã"
+    - "Louro"
+    - "Verbasco"
+    - "Aspargo"
+    - "Sálvia"
+    - "Linho"
+  metais_pedras:
+    - "Mercúrio (quicksilver)"
+    - "Ágata"
+    - "Opalina"
+    - "Topázio"
+    - "Pedra-ímã (atrito=gera movimento)"
+  cores_sons:
+    cores: ["Amarelo", "Laranja-claro", "Verde-limão", "Azul-claro"]
+    sons: ["Campainha", "Apito", "Chave virando", "Teclado digitando", "Voz rápida"]
+  numeros: [3, 5, 8, 14]
+  dias_semana: ["Quarta-feira"]
+  doencas_corpo:
+    doencas: ["Problemas neurológicos", "Asma", "Insônia", " Nervosismo"]
+    partes_corpo: ["Pulmões", "Braços", "Mãos", "Sistema nervoso", "Intestino delgado"]
+  arquetipos_mitologicos:
+    - "Hermes/Mercúrio (mensageiro dos deuses)"
+    - "Anubis (guia das almas, comunicação entre mundos)"
+    - "Thoth (deus egípcio da escrita e sabedoria)"
+    - "Sarasvati (conhecimento, palavra)"
+  mitos_historias:
+    - "Hermes inventa a lira (arte da comunicação)"
+    - "Hermes guia as almas ao Hades (funeral como última mensagem)"
+    - "Mercúrio e Apolo (troca do caduceu = troca de saberes)"
+    - "Mito de Babel (comunicação que se fragmenta)"
+  sonhos_inconsciente:
+    - "Mensageiro com asas = comunicação urgente do inconsciente"
+    - "Perder a voz = medo de não ser ouvido"
+    - "Escrever à mão = necessidade de organizar pensamentos"
+    - "Perder sapatos = perda de mobilidade mental"
+    - "Mapa em branco = falta de direcionamento"
+  expressao_elevada_vs_sombra:
+    elevada: "Comunicador claro, curador pela palavra, mediador, que traduz o complexo em simples."
+    sombra: "Mentiroso, manipulador da palavra, tagarela vazio, ansiedade mental, ladrão de pequenos objetos."
+
+camada_energetica:
+  impressao_mental: "A mente de 'como chega até mim?'. Velocidade, curiosidade, diálogo interno. Quando atrito: ansiedade, fofoca, mente acelerada sem direção."
+  permeacao_emocional: "Leva a emoção por meio da linguagem. Quando bloqueado: comunicação muda, 'engolir sapos'. Quando solto: humor leve, troca."
+  manifestacao_externa: "Eventos prováveis de encontro com irmãos, viagens curtas, notícias, estudos. Trânsitos aceleram ou bloqueiam comunicação."
+  como_guiar_o_astral: "Ajudar a mente a escolher a palavra certa: Mercúrio pede clareza, não apenas velocidade. O que é dito molda o que será sentido."
+
+representa:
+  pessoas: ["Mensageiro", "Escritor", "Comerciante", "Criança (curiosidade)", "Irmão", "Vizinho"]
+  eventos: ["Assinatura", "Estudo", "Viagem curta", "Notícia", "Encontro"]
+  corpo: ["Pulmões", "Braços", "Mãos", "Sistema nervoso"]
+
+dignidades_essenciais:
+  domicilio: ["Gêmeos", "Virgem"]
+  exaltacao: ["Virgem"]
+  detrimento: ["Sagitário", "Peixes"]
+  queda: ["Peixes"]
+
+astronomia_e_regras_de_julgamento:
+  astronomia_observacional:
+    - "Planeta rápido e sempre relativamente próximo do Sol; alterna aparições matutinas e vespertinas."
+    - "Retrogradações, estações, combustão e máxima elongação alteram fortemente sua observação e seu julgamento tradicional."
+  criterios_tradicionais:
+    - "Mercúrio é altamente condicional: natureza funcional e efeitos dependem da própria condição e das associações com benéficos, maléficos e luminares."
+    - "Orientalidade/ocidentalidade, velocidade e estado solar devem ser declarados antes de sínteses interpretativas."
+  notas_de_motor:
+    - "Auditar elongação solar, velocidade, direção de movimento e estado oriental/ocidental antes de classificar a condição de Mercúrio."
+    - "Não tratar Mercúrio como intrinsecamente benéfico ou maléfico sem contexto técnico."
+
+combinacoes_exemplo:
+  casa_3:
+    temas: ["comunicação", "irmãos", "viagens curtas", "estudo"]
+    possiveis_efeitos: ["mente ágil", "fala fácil", "curiosidade insaciável"]
+    reforcado_por: ["venus_conjunto", "jupiter_dignificado"]
+    amenizado_por: ["saturno_conjunto", "marte_aflito"]
+
+origens_e_divergencias:
+  escola_tradicional:
+    autores: [Ptolomeu, Bonatti]
+    conceito: "Planeta da linguagem, mediação, comércio, cálculo, escrita e razão discursiva, cuja qualidade prática depende muito de condição e companhia."
+  escola_moderna:
+    autores: [Liz Greene, Jung]
+    conceito: "Função psicológica do pensamento: como a mente organiza, comunica e conecta ideias."
+  por_que_da_divergencia: "Tradicional vê Mercúrio como 'função prática da mente'; moderna vê como 'função simbólica da comunicação interna'."

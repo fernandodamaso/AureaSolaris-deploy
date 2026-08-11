@@ -1,0 +1,146 @@
+status: review
+id: "quiron"
+tradicoes:
+  - "moderna"
+  - "psicológica"
+  - "mitológica"
+escopo_documental:
+  tecnica_historica:
+    - "história da descoberta de Quíron e sua incorporação à astrologia moderna"
+  camadas_modernas: "A figura do curador ferido é uma leitura mitológica/psicológica moderna, não uma dignidade tradicional."
+referencias:
+  - autor: "Melanie Reinhart"
+    obra: "Chiron and the Healing Journey"
+    natureza: "secundária/moderna"
+    localizador: "Obra de referência da linhagem de Quíron; conferir edição"
+  - autor: "Liz Greene"
+    obra: "Astrology: A Cosmic Science"
+    natureza: "secundária/moderna"
+    localizador: "Contexto psicológico moderno; conferir edição"
+validacao_de_fontes:
+  base: "As refer?ncias estruturadas sustentam a camada hist?rica ou moderna explicitamente declarada para este corpo."
+  escopo: "Mitologia, psicologia, evolu??o, medicina, sist?mica e Atlas permanecem camadas de estudo rotuladas, sem substituir dado astron?mico ou regra de escola."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+nome: "Quíron"
+tipo: "Asteroide/Centauro"
+tradicao_primaria: ["moderna", "psicológica", "evolutiva"]
+
+essencia:
+  - "Cura"
+  - "Ferida sagrada"
+  - "Professor ferido"
+  - "Integração"
+
+atlas_simbolico:
+  pessoas_arquetipos:
+    - "Curandeiro ferido"
+    - "Mentor"
+    - "Sábio marginal"
+    - "Médico sem diploma"
+    - "Profeta rejeitado"
+    - "Gênio incompreendido"
+  lugares:
+    - "Clínica alternativa"
+    - "Floresta (remédio natural)"
+    - "Fronteira"
+    - "Montanha de cura"
+    - "Hospital público"
+    - "Mosteiro"
+  objetos_materia:
+    - "Bordão de peregrino"
+    - "Flecha (que não mata)"
+    - "Ervas medicinais"
+    - "Bandagem"
+    - "Cálice de cura"
+    - "Livro de sabedoria popular"
+    - "Lira (Quíron tocava música para curar)"
+  eventos_tipicos:
+    - "Ferida que vira dom"
+    - "Doença crônica"
+    - "Cura repentina"
+    - "Encontro com mentor inesperado"
+    - "Rejeição por ser diferente"
+    - "Perda de filho"
+    - "Iniciação por sofrimento"
+  animais:
+    - "Cavalo (centauro)"
+    - "Cobra (renascimento)"
+    - "Cão de cura (cão lupa)"
+    - "Falcão (visão panorâmica)"
+    - "Tartaruga (longevidade)"
+    - "Lebre (velocidade de cura)"
+  plantas_ervas:
+    - "Hortelã-pimenta"
+    - "Sálvia"
+    - "Valeriana"
+    - "Arnica"
+    - "Camomila"
+    - "Ginseng"
+    - "Erva de São João"
+  metais_pedras:
+    - "Prata"
+    - "Cobre"
+    - "Ágata"
+    - "Pedra da lua"
+    - "Turquesa"
+    - "Obsidiana (ferida que reflete)"
+  cores_sons:
+    cores: ["Verde-esmeralda", "Violeta", "Prata", "Marrom-terra"]
+    sons: ["Flauta de Pã", "Canto de cura", "Suspiro de alívio", "Tambor xamânico"]
+  numeros: [6, 10, 13, 22, 30]
+  dias_semana: ["Quarta-feira (compartilhado com Mercúrio)"]
+  doencas_corpo:
+    doencas: ["Doenças crônicas", "Feridas que não cicatrizam", "Dores articulares"]
+    partes_corpo: ["Quadril", "Pernas", "Coluna vertebral", "Sistema imunológico"]
+  arquetipos_mitologicos:
+    - "Quíron (centauro curador)"
+    - "Asclépio (deus da medicina)"
+    - "Prometeu sofrendo"
+    - "Mestre Hálito da Vida"
+  mitos_historias:
+    - "Quíron ferido por Héracles (ferida que não cicatriza)"
+    - "Quíron trocando sua imortalidade por Prometeu"
+    - "Asclépio ressuscitando mortos (poder de cura)"
+    - "Mito do Ferreiro que se queima (ferida profissional)"
+  sonhos_inconsciente:
+    - "Centauro = integração do animal humano"
+    - "Ferida que sangra mas não dói = ferida sagrada"
+    - "Cura milagrosa = Quíron positivo"
+    - "Não conseguir caminhar = Quíron bloqueado na perna/quadril"
+    - "Flecha que erra o alvo = trauma de infância"
+  expressao_elevada_vs_sombra:
+    elevada: "Curador compassivo, que usa a própria ferida para ensinar, que entrega o que recebeu."
+    sombra: "Vitimista, maratonista de terapia, que 'cura' para não confrontar a própria dor, abuso do papel de salvador."
+
+camada_energetica:
+  impressao_mental: "A mente de 'como eu ajudo sem repetir?'. Ferida que virou recurso. Quando atrito: compulsão por curar, vitimização, 'ninguém me entende'."
+  permeacao_emocional: "Empatia profunda, mas com limites. Quando bloqueado: autoflagelação emocional. Quando solto: compaixão madura."
+  manifestacao_externa: "Eventos prováveis de cura, trauma, encontro com mentor ou ferido. Trânsitos marcam crises de saúde ou chamado de cura."
+  como_guiar_o_astral: "Ajudar a mente a ver que a ferida não é destino: Quíron pede que a dor se torne recurso, não identidade."
+
+representa:
+  pessoas: ["Curandeiro", "Mentor", "Médico", "Terapeuta", "Ferido que ensina"]
+  eventos: ["Ferida que vira dom", "Cura", "Trauma", "Encontro com mentor"]
+  corpo: ["Quadril", "Pernas", "Coluna vertebral"]
+
+dignidades_essenciais:
+  domicilio: ["Sagitário (moderno)"]
+  exaltacao: ["Virgem"]
+  detrimento: ["Gêmeos"]
+  queda: [""]
+
+combinacoes_exemplo:
+  casa_6:
+    temas: ["saúde", "serviço", "rotina"]
+    possiveis_efeitos: ["cura pelo trabalho", "doença crônica", "serviço como medicina"]
+    reforcado_por: ["sol_conjunto", "jupiter_conjunto"]
+    amenizado_por: ["saturno_conjunto", "marte_aflito"]
+
+origens_e_divergencias:
+  escola_tradicional:
+    autores: []
+    conceito: "Não tradicional — descoberto em 1977."
+  escola_moderna:
+    autores: [Liz Greene, Melanie Reinhart]
+    conceito: "O curador ferido: a ferida que não cicatriza é também o dom de cura."
+  por_que_da_divergencia: "Quíron é moderno por definição: entrou no mapa em 1977, junto com a popularização da psicologia transpessoal."

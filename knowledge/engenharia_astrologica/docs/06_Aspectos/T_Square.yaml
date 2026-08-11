@@ -1,0 +1,53 @@
+﻿status: review
+id: "t_square"
+nome: "Quadratura T (T-Square)"
+formato: "Dois planetas em oposição + um terceiro em quadratura com AMBOS (forma de 'T'; o 4º vértice fica livre)"
+
+origens_e_divergencias:
+  tradicional: "Oposição e quadratura são aspectos tradicionais; T-Square é o nome moderno para sua combinação em três fatores."
+  moderna: "A noção de planeta ápice, ponto vazio ou via de integração pertence a escolas modernas e deve aparecer como interpretação atribuída."
+  nota: "Não é uma Grande Cruz incompleta em sentido técnico: é uma configuração própria de uma oposição e duas quadraturas."
+escopo_documental:
+  significado: "Duas pontas em oposição e um ápice em quadratura com ambas."
+  porque: "A figura reúne polaridade e duas relações de quadratura; modernas escolas leem o ápice como ponto de concentração do circuito."
+  origem: "Aspectos componentes antigos; nomenclatura e unidade configuracional modernas."
+  uso: "Calcular oposição e duas quadraturas separadamente, registrando orbes, aplicação/separação e condições dos três fatores."
+  divergencia: "Há desacordo sobre o peso do ápice, do ponto vazio e sobre o orbe aceitável da figura."
+referencias:
+  - autor: "Cláudio Ptolomeu"
+    obra: "Tetrabiblos"
+    natureza: "primária histórica"
+    localizador: "Livro I; quadratura e oposição, conferir edição."
+  - autor: "Dane Rudhyar"
+    obra: "The Astrology of Personality"
+    natureza: "secundária moderna"
+    localizador: "Leitura moderna de padrões de aspectos; conferir edição."
+validacao_de_fontes:
+  base: "A ficha separa cálculo da configuração e linguagens modernas de tensão/integração."
+  limite: "Não usar ponto vazio ou ápice como fórmula automática de solução ou previsão."
+atlas_simbolico:
+  pessoas_arquetipos: "O tensionado, o guerreiro, o construtor sob pressão"
+  lugares_fisicos: "Campos de batalha, construções, locais de desafio"
+  objetos_materia: "Espadas, ferramentas de tensão, estruturas"
+  eventos_tipicos: "Guerras, crises, desafios supremos, construções sob pressão"
+  animais: "Leão, touro, escorpião"
+  plantas_ervas: "Alecrim, urtiga, plantas espinhosas"
+  metais_pedras: "Ferro, aço, granada, jaspe"
+  cores_sons: "Vermelho, preto; notas Si e Dó"
+  numeros: "4 (tensão), 7 (crise), 9 (superação)"
+  dias_semana: "Terça-feira (Marte), sábado (Saturno)"
+  doencas_corpo: "Coração, sistema circulatório, ossos"
+  arquetipos_mitologicos: "Hércules, Teseu, Perseu"
+  mitos_historias: "Os 12 trabalhos; Teseu e o Minotauro"
+  sonhos_simbolos_inconsciente: "Guerras, tensões, construções"
+  expressao_elevada_sombra: "Elevada: tensão como alavanca | Sombra: conflito destrutivo, frustração"
+
+camada_energetica:
+  impressao_mental: "Tensão de dois polos (oposição) que se concentra num terceiro (quadratura) — e o vértice LIVRE é a 'saída'. A mente é puxada pro conflito, mas tem onde descarregar."
+  permeacao_emocional: "Inquietação motriz; a tensão pede ação no eixo livre."
+  manifestacao_externa: "Eventos PROVÁVEIS de crise que se resolve pelo vértice livre. Arquétipos: o T, a Alavanca. Inclinação, não destino."
+  como_guiar_o_astral: "Mostrar que o vértice livre é a DIREÇÃO — assumir aquele eixo transforma a tensão em motor."
+
+consenso_tradicional: "A 'Grande Cruz sem uma perna'; a tensão mais comum e mais acionável."
+arquetipos_simbolicos: ["O T", "A Alavanca", "O Conflito com saída"]
+

@@ -1,0 +1,114 @@
+status: review
+id: "julgamento"
+tradicoes:
+  - "helenística"
+  - "medieval"
+  - "renascentista"
+  - "moriniana"
+  - "moderna (camadas psicológica e sistêmica separadas)"
+tipo: "metodologia de julgamento"
+escopo_documental:
+  tecnica_historica:
+    - "hierarquia de fatores, significadores, dignidades, aspectos, recepções, testemunhos e síntese"
+  regra_do_projeto: "Confirmar por múltiplos testemunhos é uma regra editorial do projeto, não um consenso universal de toda escola."
+  camada_simbolica: "Linguagem energética, psicológica, sistêmica e cármica permanece identificada como camada própria."
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "primária"
+    localizador: "Livros I–III, princípios de julgamento e prognóstico"
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    natureza: "primária"
+    localizador: "Livros I–II, exemplos de julgamento natal"
+  - autor: "Jean-Baptiste Morin de Villefranche"
+    obra: "Astrologia Gallica"
+    natureza: "primária"
+    localizador: "Livros XVII–XXVI; conferir edição"
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    natureza: "primária"
+    localizador: "Livro I, regras de julgamento"
+nome: "Julgamento"
+tema: "Arte de juntar técnicas para formar conclusão coerente — o coração da leitura."
+
+essencia:
+  - "Julgamento = síntese, não soma."
+  - "Regra editorial do projeto: procurar confirmação por múltiplos testemunhos; isso não é uma lei universal de todas as escolas."
+  - "Separar técnica (todos podem ouvir) de camada energética (ressonância)."
+
+matriz_minima_por_linhagem:
+  ptolomeu:
+    enfase: "qualidade dos fatores, lugares, fases e prognóstico por raciocínio geral"
+    nota: "não equivale ao vocabulário horário posterior de Lilly"
+  valens:
+    enfase: "testemunhos múltiplos, exemplos, lotes, cronocratores e condicionamento natal"
+    nota: "a síntese aparece muito por acumulação de casos e critérios"
+  lilly:
+    enfase: "regras operacionais, dignidades, recepções, aplicação/separação e julgamento explícito"
+    nota: "serve como referência inglesa do século XVII, não como resumo de toda tradição"
+  morin:
+    enfase: "determinações natais, seleção rigorosa de significadores e ativação temporal"
+    nota: "não autoriza chamar toda técnica combinada de moriniana"
+
+protocolo_minimo_de_julgamento:
+  passos:
+    - "Definir a pergunta, o assunto ou o recorte antes de selecionar fatores."
+    - "Fixar a escola, a técnica e a hierarquia de critérios."
+    - "Separar significador, condição, testemunhos convergentes e timing."
+    - "Distinguir fato calculável, regra histórica, regra editorial do projeto e nota simbólica."
+  guardrails:
+    - "Não transformar confirmação por múltiplos testemunhos em lei histórica universal sem autoria."
+    - "Não concluir por uma única palavra-chave quando a escola exigir síntese."
+
+origens_e_divergencias:
+  tradicional: "Morin de Villefranche enfatizava julgamento cuidadoso."
+  moderna: "Coaching simplifica; risco de afirmação sem base técnica."
+  nota: "Julgamento é responsabilidade; não é adivinhação."
+
+atlas_simbolico:
+  pessoas_arquetipos: "Juiz, sábio, conselheiro, mediador"
+  lugares_fisicos: "Tribunais, bibliotecas, consultórios, templos"
+  objetos_materia: "Balança, espada, livro, caderno de leitura"
+  eventos_tipicos: "Decisões, sentenças, acordos, clareiras"
+  animais: "Coruja, águia, lobo (juiz da floresta)"
+  plantas_ervas: "Hera (sabedoria), oliveira (paz)"
+  metais_pedras: "Ouro (justiça), lápis-lazúli (verdade)"
+  cores_sons:
+    cores: ["Azul", "dourado", "branco", "preto"]
+    sons: ["Silêncio", "gavel", "voz calma"]
+  numeros: [2, 7, 9]
+  dias_semana: ["Quinta-feira (Júpiter)", "Sábado (Saturno)"]
+  doencas_corpo:
+    doencas: ["Ansiedade", "dor de cabeça"]
+    partes_corpo: ["Cabeça", "coração"]
+  arquetipos_mitologicos: ["Themis", "Mitra", "São Miguel"]
+  mitos_historias: "Themis com a balança; julgamento como equilíbrio, não como punição"
+  sonhos_simbolos_inconsciente: "Balanças, tribunais, sentenças, clareza"
+  expressao_elevada_sombra: "Elevada: justiça compassiva, verdade com misericórdia | Sombra: crueldade, rigidez, condenação"
+
+camada_energetica:
+  campo_mental: "Pensamento que sintetiza sem simplificar."
+  permeacao_emocional: "Serenidade diante da complexidade; evitar julgamento precipitado."
+  manifestacao_externa: "Leituras coerentes, conclusões fundamentadas, conselhos úteis."
+  como_guiar_o_astral: "Ensinar o consulente a VER A TECNICA primeiro; a camada energética é convite, não imposição."
+
+tecnicas:
+  pilares:
+    - "Técnica: planetas, aspectos, casas confirmados."
+    - "Tradição: marcação da escola usada."
+    - "Tempo: 2+ técnicas de timing convergem."
+    - "Ressonância: camada energética faz sentido para o consulente."
+  erro_comum:
+    - "Afirmar sem confirmação."
+    - "Misturar escolas sem rotular."
+    - "Usar timing único como data exata."
+  cuidado:
+    - "Julgamento é PARA o consulente, não SOBRE ele."
+    - "Técnica serve; empatia guia."
+
+ver_mais:
+  - "../17_Metodologia_de_Leitura/metodologia_leitura.yaml"
+  - "../C_Engenharia_da_Interpretacao/hierarquia_interpretacao.yaml"
+
+## ✏️ Minhas Anotações

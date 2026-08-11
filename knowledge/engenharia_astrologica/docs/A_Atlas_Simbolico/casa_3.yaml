@@ -1,0 +1,57 @@
+﻿status: review
+id: "casa_3_atlas"
+nome: "Casa 3 — O Mensageiro / A Comunicação"
+tradicoes:
+  - "atlas simbolico editorial"
+  - "sintese multiescola"
+tipo: "Atlas Simbólico"
+subtema: "Correspondências da Casa 3"
+
+origens_e_divergencias:
+  tradicional: "Ptolomeu (Tetrabiblos) — significados tradicionais das 12 casas."
+  moderna: "Astrologia psicológica/sistêmica — casas como áreas de desenvolvimento."
+  nota: "Revisar ao citar — marca a escola usada."
+
+atlas_simbolico:
+  pessoas_arquetipos: "O irmão, o vizinho, o estudante, o mensageiro"
+  lugares_fisicos: "Estradas curtas, escolas, mercados, vizinhança"
+  objetos_materia: "Livros, canetas, telefones, veículos curtos"
+  eventos_tipicos: "Viagens curtas, estudos, encontros com irmãos"
+  animais: "Lebre, cão de caça, pássaro mensageiro"
+  plantas_ervas: "Hera, verbena, sálvia, menta"
+  metais_pedras: "Mercúrio, Ágata, Topázio"
+  cores_sons:
+    cores: ["Amarelo", "Laranja claro"]
+    sons: ["Voz", "vento", "silvo"]
+  numeros: [3]
+  dias_semana: ["Quarta-feira"]
+  doencas_corpo:
+    doencas: ["Problemas respiratórios", "ansiedade", "problemas nervosos"]
+    partes_corpo: ["Pulmões", "braços", "mãos", "sistema nervoso"]
+  arquetipos_mitologicos:
+    - "Hermes"
+    - "Apolo (palavra)"
+  mitos_historias: "Hermes e a lira"
+  sonhos_simbolos_inconsciente: "Mensagens, cartas, palavras"
+  expressao_elevada_sombra: "Elevada: comunicação clara, aprendizado | Sombra: tagarelice, superficialidade"
+
+revisao_editorial:
+  origem_e_linguagem: "A terceira casa é cadente do Ascendente; caminhos próximos, irmãos, mensagens e ambiente imediato são significações transmitidas por linhagens de casas."
+  mito_arquetipo_e_porque: "Mensageiro, ponte e vizinhança explicam o porquê simbólico; não descrevem automaticamente capacidade intelectual ou vínculo familiar."
+  limite_tecnico: "A analogia com Gêmeos/Mercúrio é moderna. Cálculo de casa, regente, aspectos e pergunta devem preceder a síntese."
+referencias:
+  primarias:
+    - "Lilly, William. Christian Astrology. 1647, livro II: significações da terceira casa."
+  secundarias:
+    - "Houlding, Deborah. The Houses: Temples of the Sky. The Wessex Astrologer, 1996."
+  tecnicas:
+    - "Declarar sistema de casas e distinguir carta natal, horária e relacional."
+camada_energetica:
+  impressao_mental: "Como eu aprendo e comunico. 'O que eu digo?'"
+  permeacao_emocional: "Curiosidade, diálogo, 'o que eu escuto'."
+  manifestacao_externa: "Eventos prováveis de aprendizado, viagens curtas. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a FALAR COM VERDADE. Casa 3 é a palavra, não o ruído."
+
+ver_mais:
+  - "../05_Casas/Casa_3.yaml"
+

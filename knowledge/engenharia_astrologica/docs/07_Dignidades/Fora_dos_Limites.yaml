@@ -1,0 +1,51 @@
+id: fora_dos_limites
+nome: Fora dos limites (out of bounds)
+tipo: condicao_por_declinacao
+tradicoes:
+- moderna ocidental
+status: review
+definicao: Um corpo está fora dos limites quando sua declinação ultrapassa, em valor
+  absoluto, a máxima declinação solar da época — aproximadamente a obliquidade da
+  eclíptica. É condição de um corpo individual; não é paralelo, contraparalelo, latitude
+  eclíptica ou dignidade essencial.
+calculo:
+  limite_solar: Usar a obliquidade/declinação solar máxima da época, não um número
+    eterno.
+  regra: Se |declinação do corpo| > limite solar, o corpo está fora dos limites.
+  exemplo: Com limite aproximado de 23°26', Lua +25°00' está fora dos limites; Sol
+    não pode estar nessa condição.
+  dados: Declinação, época, efeméride e referência geocêntrica/topocêntrica declaradas.
+relacao_com_paralelos:
+- Paralelo compara dois corpos; fora dos limites compara um corpo ao alcance solar.
+- 'Um planeta pode estar fora dos limites e também paralelo/contraparalelo a outro:
+  cálculos independentes.'
+- A Lua ultrapassa os limites solares com mais frequência que muitos planetas, por
+  sua geometria orbital.
+usos_modernos:
+- Algumas escolas leem a condição como expressão fora do ritmo solar habitual, exceção
+  ou transgressão de limites.
+- Os significados variam por autor e não equivalem a caráter, diagnóstico ou acontecimento
+  inevitável.
+- Ler junto de signo, casa, regente, aspectos e ciclo do corpo.
+referencias:
+- autor: NASA
+  obra: Reference Systems
+  natureza: declinação e relação entre equador celeste e eclíptica
+  url: https://science.nasa.gov/learn/basics-of-space-flight/chapter2-2/
+- autor: Swiss Ephemeris
+  obra: Programmer's Documentation
+  natureza: dados de declinação e efeméride
+  url: https://www.astro.com/swisseph/swephprg.htm
+validacao_de_fontes:
+  base: "As refer?ncias estruturadas sustentam a terminologia de dignidade, debilidade, recep??o e condi??o dentro das linhagens declaradas."
+  escopo: "Diferen?as entre autores permanecem vis?veis e n?o devem ser convertidas em regra ?nica do motor sem sele??o expl?cita de escola."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+origens_e_divergencias:
+  tradicional: Conceito/técnica presente na tradição astrológica ocidental.
+  moderna: Possível ressignificação contemporânea.
+  nota: Rotular a escola quando divergir.
+camada_energetica:
+  impressao_mental: Campo conceitual do tema/técnica.
+  permeacao_emocional: Como o tema toca a experiência subjetiva.
+  manifestacao_externa: Como aparece em comportamentos e eventos.
+  como_guiar_o_astral: Como usar este conhecimento na leitura prática.

@@ -1,0 +1,46 @@
+﻿status: draft
+id: "castor_atlas"
+nome: "Castor — Atlas Simbólico"
+tradicoes:
+  - "atlas simbolico editorial"
+  - "sintese multiescola"
+tipo: "Atlas Simbólico"
+subtema: "Correspondências de Castor"
+
+origens_e_divergencias:
+  tradicional: "Ptolomeu — Castor = gêmeo imortal; viagens, comércio, eloquência, morte súbita."
+  moderna: "Astrologia moderna mantém; acrescenta comunicação, irmãos, viagens curtas."
+  nota: "Castor e Pollux são gêmeos mitológicos; Castor é mortal, Pollux imortal."
+
+atlas_simbolico:
+  pessoas_arquetipos: "Gêmeo, comerciante, mensageiro, irmão, viajante"
+  lugares_fisicos: "Estradas, mercados, portos, cidades, lugares de passagem"
+  objetos_materia: "Mapa, mochila, moeda, carta, bilhete"
+  eventos_tipicos: "Viagens curtas, encontros com irmãos/amigos, negócios, mensagens"
+  animais: "Cavalo, pombo, golfinho, cachorro"
+  plantas_ervas: "Hera, oliveira, madressilva, trigo"
+  metais_pedras: "Prata, cristal transparente, água marinha"
+  cores_sons:
+    cores: ["Azul-celeste", "prata", "verde claro"]
+    sons: ["Apito", "canto suave", "vento entre árvores"]
+  numeros: [2, 6, 13]
+  dias_semana: ["Quarta-feira (Mercúrio)", "Sexta-feira (Vênus)"]
+  doencas_corpo:
+    doencas: ["Problemas respiratórios leves", "dor nas pernas"]
+    partes_corpo: ["Pulmões", "braços", "pernas"]
+  arquetipos_mitologicos: ["Castor e Pólux", "Hermes mensageiro", "Apolo guia"]
+  mitos_historias: "Os Dioscuros; um mortal, um imortal; união céu/Terra na fraternidade"
+  sonhos_simbolos_inconsciente: "Gêmeos, cavalos brancos, caminhos, bilhetes inesperados"
+  expressao_elevada_sombra: "Elevada: irmandade verdadeira, viagem com sentido, eloquência justa | Sombra: deslealdade, negócios escusos, dispersão"
+
+camada_energetica:
+  impressao_mental: "Mentalidade comunicativa e curiosa; necessidade de conexão por troca."
+  permeacao_emocional: "Leveza, sociabilidade. Quando sombra: superficialidade, desconfiança entre irmãos/amigos."
+  manifestacao_externa: "Eventos PROVÁVEIS de viagem curta, encontro com irmão/amigo, mensagem inesperada."
+  como_guiar_o_astral: "Ajudar a valorizar vínculos reais; Castor ensina que diálogo é ponte, não barreira."
+
+ver_mais:
+  - "../07_Estrelas_Fixas/README.yaml"
+
+## ✏️ Minhas Anotações
+

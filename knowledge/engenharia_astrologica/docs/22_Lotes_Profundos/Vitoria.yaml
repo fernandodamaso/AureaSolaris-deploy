@@ -1,0 +1,56 @@
+status: review
+id: "lote_vitoria"
+nome: "Parte da Vitória"
+tradicoes:
+  - "helenistica"
+  - "arabe-medieval"
+formula_diurna: "Asc + Júpiter − Espírito"
+formula_noturna: "Asc + Espírito − Júpiter"
+tema: "Sucesso, reconhecimento, triunfo"
+
+sentido_do_calculo: |
+  Júpiter (expansão) menos Espírito (direção) = onde a expansão se alinha com o propósito.
+  O ponto do TRIUNFO: onde a pessoa 'vence' quando segue sua direção.
+
+origens_e_divergencias:
+  tradicional: "Vitória é um lote planetário de Paulus, associado a Júpiter e calculado a partir de Espírito com reversão por sect."
+  moderna: "Sucesso psicológico ou reconhecimento são extensões interpretativas e não resultado garantido."
+  nota: "Avaliar regente, lugar e contexto; não prometer vitória, prestígio ou resultado material."
+
+referencias:
+  - autor: "Paulus Alexandrinus"
+    obra: "Introductory Matters"
+    edicao_ou_traducao: "Dorian Gieseler Greenbaum, tradução inglesa"
+    natureza: "fonte primária helenística"
+    localizador: "Capítulo 23, lote de Vitória"
+  - autor: "Dorian Gieseler Greenbaum"
+    obra: "Late Classical Astrology: Paulus Alexandrinus and Olympiodorus"
+    ano: 2001
+    natureza: "secundária filológica"
+    localizador: "Fórmulas e transmissão dos lotes planetários"
+atlas_simbolico:
+  pessoas_arquetipos: "O vitorioso, o campeão, o que ganha"
+  lugares_fisicos: "Arenas, estádios, palácios, lugares de triunfo"
+  objetos_materia: "Coroas, troféus, cetros, insígnias"
+  eventos_tipicos: "Vitórias, triunfos, promoções, reconhecimento"
+  animais: "Leão, águia, cavalo nobre"
+  plantas_ervas: "Girassol, carvalho, olmo"
+  metais_pedras: "Ouro, âmbar, rubi, diamante"
+  cores_sons: "Amarelo-dourado, laranja; notas Dó e Sol"
+  numeros: "1 (liderança), 9 (completude), 10 (autoridade)"
+  dias_semana: "Domingo (Sol), quinta-feira (Júpiter)"
+  doencas_corpo: "Coração, sistema nervoso central, olhos"
+  arquetipos_mitologicos: "Zeus/Júpiter, Apolo, Atena"
+  mitos_historias: "Zeus e a vitória; Apolo e a glória"
+  sonhos_simbolos_inconsciente: "Coroas, troféus, vitórias, triunfos"
+  expressao_elevada_sombra: "Elevada: vitória justa, triunfo generoso | Sombra: arrogância, vaidade, dominação"
+
+camada_energetica:
+  impressao_mental: "Onde a mente busca ser bem-sucedida e reconhecida."
+  permeacao_emocional: "Esperança de 'dar certo' e o risco de inflação se desmedida."
+  manifestacao_externa: "Eventos prováveis de reconhecimento e expansão. Arquétipos: a Coroa, a Laurel. Inclinação, não destino."
+  como_guiar_o_astral: "Orientar a pessoa a buscar vitória com mérito, não só sorte."
+
+como_usar: "Ler como 'ponto de sucesso'. Aliar a Júpiter bem dignificado = vitórias naturais; a maléfico = vitória por esforço."
+regente: "Regente do signo onde cai; lido por casa e aspectos."
+

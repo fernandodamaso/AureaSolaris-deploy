@@ -1,0 +1,72 @@
+﻿status: review
+id: "fundamentos"
+nome: "Fundamentos"
+tradicoes:
+  - "editorial"
+  - "multiescola"
+tipo: "Fundamentos"
+subtema: "Base conceitual da Engenharia Astrológica"
+
+origens_e_divergencias:
+  tradicional: "Fundamentos ocidentais incluem esfera local, zodíaco, planetas, casas, aspectos, seita e dignidades, mas sua definição e prioridade variam entre helenismo, medievo, Renascimento e horária."
+  moderna: "Escolas psicológicas, humanistas e evolutivas acrescentam linguagens de arquétipo, desenvolvimento e propósito; elas precisam permanecer atribuídas."
+  nota: "A seção organiza pré-requisitos de estudo. Não unifica sistemas contraditórios nem exclui notas históricas, etimológicas, míticas e simbólicas quando estiverem identificadas."
+
+atlas_simbolico:
+  pessoas_arquetipos: "O estudante, o iniciante, o buscador de base"
+  lugares_fisicos: "Escolas, bibliotecas, salas de aula"
+  objetos_materia: "Livros, cadernos, mapas, lápis"
+  eventos_tipicos: "Estudos, aprendizados, descobertas"
+  animais: "Coruja (sabedoria), formiga (organização)"
+  plantas_ervas: "Sálvia (memória), hera (permanência)"
+  metais_pedras: "Prata (lua), cristal de rocha (clareza)"
+  cores_sons:
+    cores: ["Azul-claro", "prata", "verde-oliva"]
+    sons: ["Dó", "lá", "vento"]
+  numeros: [1, 3, 6]
+  dias_semana: ["Quarta-feira"]
+  doencas_corpo:
+    doencas: ["Problemas nervosos", "olhos"]
+    partes_corpo: ["Olhos", "cérebro"]
+  arquetipos_mitologicos:
+    - "Hermes (comunicação)"
+    - "Atena (sabedoria)"
+  mitos_historias: "Hermes e a escrita; Atena e a organização"
+  expressao_elevada_sombra: "Elevada: estrutura viva que serve | Sombra: rigidez, burocracia"
+
+camada_energetica:
+  impressao_mental: "Os fundamentos são a BASE. Sem base, a casa desaba."
+  permeacao_emocional: "Aprendizado como segurança. Quando saudável: curiosidade. Quando ferido: medo de errar."
+  manifestacao_externa: "Eventos prováveis de estudos, aprendizados. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a APRENDER SEM MEDO. Fundamentos não são regras — são ferramentas."
+
+foco_especial:
+  infantil: "Nota pedagógica: o estudo inicial deve alternar observação do céu, vocabulário, cálculo simples e leitura de fontes."
+  familiar: "Não é significador familiar natal. Relações familiares exigem casas e significadores da técnica escolhida."
+  carmico_espiritual: "Nota de estudo: fundamentos são pré-requisitos; não existe uma 'Casa Fundamentos' canônica no mapa natal."
+
+estrutura_de_estudo:
+  significado: "Aprender a distinguir coordenada astronômica, regra de escola, interpretação e símbolo."
+  porque: "A ordem evita que uma associação memorável substitua cálculo, fonte ou contexto."
+  origem: "O vocabulário de base vem de camadas históricas diferentes; a ficha encaminha cada uma à sua tradição."
+  uso: "Antes de aplicar técnica, confirmar dados, zodíaco, casas, pontos, orbes e fontes."
+  divergencia: "Divergências devem ser registradas como opções de método, nunca escondidas sob termos genéricos."
+
+referencias:
+  - autor: "Cláudio Ptolomeu"
+    obra: "Tetrabiblos"
+    natureza: "primária histórica"
+    localizador: "Estrutura básica de astrologia ocidental antiga; conferir edição."
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    natureza: "primária histórica"
+    localizador: "Técnicas helenísticas e exemplos; conferir edição."
+  - autor: "Dane Rudhyar"
+    obra: "The Astrology of Personality"
+    natureza: "primária moderna"
+    localizador: "Reformulação humanista do estudo do mapa; conferir edição."
+
+validacao_de_fontes:
+  base: "A ficha é mapa pedagógico, não fonte única para cada técnica."
+  limite: "O motor deve encaminhar a ficha específica antes de calcular ou interpretar fundamento controverso."
+

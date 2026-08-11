@@ -1,0 +1,90 @@
+status: review
+id: "eclipses"
+tradicoes:
+  - "helenística"
+  - "árabe/medieval"
+  - "mundana"
+  - "moderna (camada interpretativa separada)"
+tipo: "técnica de eclipses e ciclos"
+escopo_documental:
+  tecnica_historica:
+    - "sizígia, visibilidade, lugar do eclipse, duração, série e aplicação mundana/natal segundo a fonte"
+  fato_astronomico: "Saros é periodicidade astronômica; não implica repetição automática de significado interpretativo."
+  camada_moderna: "A leitura como gatilho psicológico ou evento pessoal permanece nota moderna atribuída."
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "primária"
+    localizador: "Livro II, capítulos sobre eclipses e prognóstico universal"
+  - autor: "Abu Ma'shar"
+    obra: "On the Great Conjunctions"
+    natureza: "primária/secundária histórica"
+    localizador: "Tratamento de eclipses e conjunções; conferir edição/tradução"
+  - autor: "NASA Eclipse Web Site"
+    obra: "Saros and Eclipse Periodicity"
+    natureza: "astronômica"
+    localizador: "Tabelas e explicação do ciclo Saros"
+validacao_de_fontes:
+  base: "As refer?ncias estruturadas identificam a linhagem hist?rica, moderna ou astron?mica pertinente a esta t?cnica preditiva."
+  escopo: "Uma implementa??o deve declarar edi??o, algoritmo, efem?ride, escala de tempo e variante de escola; esta exig?ncia ? uma regra de reprodu??o, n?o uma lacuna de fonte."
+  limite: "A ficha permanece em review e n?o converte hip?tese, aproxima??o pedag?gica ou releitura moderna em previs?o determinista."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+nome: "Eclipses"
+tema: "Eclipses solar e lunar como gatilhos previsíveis — ativam pontos sensíveis do mapa."
+
+essencia:
+  - "Eclipse solar: Lua nova com nodos — novo ciclo, evento visível, início de processo."
+  - "Eclipse lunar: Lua cheia com nodos — fechamento, emoção intensa, resposta a processo antigo."
+  - "Ativam por conjunção/oposição exata a planetas/ângulos do mapa natal ou por trânsito."
+  - "Saros: periodicidade astronômica de aproximadamente 18 anos; a repetição geométrica não prova, por si só, repetição de tema interpretativo."
+
+origens_e_divergencias:
+  tradicional: "Ptolomeu e tradição árabe usam eclipses como previsão coletiva e pessoal."
+  moderna: "Interpretação moderna: gatilho emocional/evento; validar por aspectos no mapa."
+  nota: "Eclipse por si não é sentença; é ALERTA de ponto sensível. Validar com trânsitos/progressões."
+
+atlas_simbolico:
+  pessoas_arquetipos: "A testemunha, o evento surpresa, o fechamento de ciclo"
+  lugares_fisicos: "Observatórios, templos, lugares de mito"
+  objetos_materia: "Luneta, vidro fumê, registros antigos, disco solar"
+  eventos_tipicos: "Eclipses, mudanças súbitas, revelações, fechamentos"
+  animais: "Coruja, cachorro (late para eclipse), gato, morcego"
+  plantas_ervas: "Arruda, salsa, alecrim — proteção"
+  metais_pedras: "Prata (Lua), ouro (Sol), obsidiana"
+  cores_sons:
+    cores: ["Preto", "prata", "dourado", "vermelho-sangue"]
+    sons: ["Silêncio", "vento", "canto sagrado"]
+  numeros: [18, 19, 0]
+  dias_semana: ["Segunda-feira (Lua)", "Domingo (Sol)"]
+  doencas_corpo:
+    doencas: ["Olhos", "coração", "sistema nervoso"]
+    partes_corpo: ["Olhos", "coração", "cabeça"]
+  arquetipos_mitologicos: ["Amaterasu (retirada da luz)", "Rá e Apófis", "Lua e Endimion"]
+  mitos_historias: "Amaterasu na caverna; luz que retorna; eclipse como renascimento cíclico"
+  sonhos_simbolos_inconsciente: "Sombra que encobre, luz que retorna, olhos"
+  expressao_elevada_sombra: "Elevada: revelação, renascimento, ajuste de rumo | Sombra: trauma súbito, negação, catástrofe"
+
+camada_energetica:
+  campo_mental: "Evento luz/sombra que expõe o que estava oculto."
+  permeacao_emocional: "Choque, assombro, clareza súbita, medo do escuro."
+  manifestacao_externa: "Eventos PROVÁVEIS de virada, doença/recuperação, fim de ciclo."
+  como_guiar_o_astral: "Mostrar eclipse como aviso: se o ponto ativado for X, o cuidado é Y."
+
+tecnicas:
+  eclipse_solar:
+    significado: "Início de novo ciclo por conjunção com nodos."
+    leitura: "Ver signo/casa e aspectos no mapa; trânsito ativa ponto."
+    saros: "Ciclo de 18 anos; repetição de tema por família Saros."
+  eclipse_lunar:
+    significado: "Fechamento por oposição com nodos."
+    leitura: "Ver Lua natal/Progressada; emoção coletiva e pessoal."
+  ativacao_mapa:
+    regra: "Conjunção/oposição exata a planeta/ângulo = gatilho provável."
+    cuidado: "Orbe apertado; não extrapolar sem confirmação."
+
+ver_mais:
+  - "../11_Previsao/Lunacoes.yaml"
+  - "../11_Previsao/ciclos_saturno_jupiter.yaml"
+  - "../D_Engenharia_da_Previsao/ciclos_saturno_jupiter.yaml"
+
+## ✏️ Minhas Anotações

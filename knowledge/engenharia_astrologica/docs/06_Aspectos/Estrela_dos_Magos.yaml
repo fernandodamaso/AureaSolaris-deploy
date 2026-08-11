@@ -1,0 +1,56 @@
+﻿status: draft
+id: "estrela_dos_magos"
+nome: "Estrela dos Magos (Grande Trígono com dois sextis)"
+formato: "Rótulo editorial sem geometria histórica padronizada neste acervo. Antes de calcular, a ficha precisa de fonte que defina corpos, aspectos e figura de forma reproduzível."
+
+origens_e_divergencias:
+  tradicional: "Não há base verificada para atribuir este rótulo a Ptolomeu, à astrologia caldaica, aos Magos persas ou a uma técnica hermética canônica."
+  moderna: "Pode circular como nome contemporâneo de figura visual, mas a fonte, a geometria e o uso ainda não foram confirmados nesta base."
+  nota: "O termo Magos deve ser preservado como curiosidade histórica somente após distinguir o contexto persa/zoroastriano real de apropriações esotéricas posteriores."
+escopo_documental:
+  significado: "Termo em apuração; não é regra de cálculo disponível."
+  porque: "Uma figura só pode ser usada tecnicamente se houver definição geométrica e linhagem documentadas."
+  origem: "Origem do rótulo não verificada; não alegar antiguidade ou autoridade sacerdotal."
+  uso: "Não implementar no motor nem oferecer interpretação enquanto não houver fonte e parâmetros."
+  divergencia: "A ausência de padronização impede comparar interpretações entre escolas."
+limite_documental: "Permanece draft por falta de fonte específica que padronize nome, geometria e linhagem. A ficha preserva a curiosidade sem convertê-la em conhecimento canônico."
+atlas_simbolico:
+  pessoas_arquetipos: "O mago, o sábio, o que vê a estrela"
+  lugares_fisicos: "Templos, desertos, locais de revelação"
+  objetos_materia: "Estrelas, mapas celestes, instrumentos de visão"
+  eventos_tipicos: "Revelações, missões, encontros de destino"
+  animais: "Camelo, águia, fênix"
+  plantas_ervas: "Mirra, sálvia, ouro"
+  metais_pedras: "Ouro, lápis-lazúli, safira"
+  cores_sons: "Azul-royal, roxo; notas Lá e Dó"
+  numeros: "3 (trindade), 6 (harmonia), 9 (completude)"
+  dias_semana: "Quinta-feira (Júpiter), domingo (Sol)"
+  doencas_corpo: "Sistema nervoso central, olhos"
+  arquetipos_mitologicos: "Os Magos, Apolo, Atena"
+  mitos_historias: "Os Reis Magos; A estrela de Belém"
+  sonhos_simbolos_inconsciente: "Estrelas, mapas, revelações, missões"
+  expressao_elevada_sombra: "Elevada: missão cumprida, visão clara | Sombra: fanatismo, crença cega"
+
+camada_energetica:
+  impressao_mental: "O fluxo do Grande Trígono GANHA PONTES de oportunidade (os sextis). A mente tem dom E portas para usá-lo."
+  permeacao_emocional: "Facilidade que se conecta a outros recursos — quase 'mágica' de sincronia."
+  manifestacao_externa: "Eventos PROVÁVEIS de realização 'que parecem sortudas'. Arquétipos: a Casa dos Magos, a Pirâmide. Inclinação, não destino."
+  como_guiar_o_astral: "Incentivar a USAR os sextis — o dom do trígono se realiza quando a pessoa se dispõe nas pontes."
+
+consenso_tradicional: "Não há consenso tradicional nem fonte verificada que autorize classificá-la como configuração especialmente favorecida."
+arquetipos_simbolicos: ["A Casa dos Magos", "A Pirâmide", "O Dom que se realiza"]
+
+referencias:
+  - autor: "Heródoto"
+    obra: "Histórias"
+    natureza: "primária histórica"
+    localizador: "Livro I; referência histórica aos Magos persas, sem relação com esta figura de aspectos."
+  - autor: "Mary Boyce"
+    obra: "A History of Zoroastrianism"
+    natureza: "secundária historiográfica"
+    localizador: "Contexto histórico-religioso dos Magos; não é fonte para geometria astrológica."
+
+validacao_de_fontes:
+  base: "As fontes documentam o termo histórico Magos, não uma configuração astrológica chamada Estrela dos Magos."
+  limite: "A ficha continua draft e não deve alimentar cálculo, ranking de poder ou previsão até que nome, geometria e linhagem sejam verificáveis."
+

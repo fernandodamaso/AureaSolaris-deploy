@@ -1,0 +1,47 @@
+﻿status: draft
+id: "casa_9_atlas"
+nome: "Casa 9 — O Horizonte / A Fé"
+tradicoes:
+  - "atlas simbolico editorial"
+  - "sintese multiescola"
+tipo: "Atlas Simbólico"
+subtema: "Correspondências da Casa 9"
+
+origens_e_divergencias:
+  tradicional: "Ptolomeu (Tetrabiblos) — significados tradicionais das 12 casas."
+  moderna: "Astrologia psicológica/evolutiva — casa 9 como fé e filosofia."
+  nota: "Revisar ao citar — marca a escola usada."
+
+atlas_simbolico:
+  pessoas_arquetipos: "O filósofo, o professor, o sacerdote, o estrangeiro, o viajante"
+  lugares_fisicos: "Templos, universidades, montanhas sagradas, fronteiras"
+  objetos_materia: "Livros sagrados, mapas, flechas, cetro"
+  eventos_tipicos: "Viagens longas, formatura, casamento, publicações"
+  animais: "Cavalo, centauro, cão de caça, águia, cervo"
+  plantas_ervas: "Carvalho, nogueira, sálvia, rosmaninho"
+  metais_pedras: "Estanho, lápis-lazúli, topázio, turquesa, safira"
+  cores_sons:
+    cores: ["Azul-royal", "roxo", "dourado", "verde-escuro"]
+    sons: ["Órgão", "tambor distante", "canto gregoriano"]
+  numeros: [9]
+  dias_semana: ["Quinta-feira"]
+  doencas_corpo:
+    doencas: ["Problemas hepáticos", "problemas de quadril", "excesso"]
+    partes_corpo: ["Fígado", "quadril", "coxas", "sangue"]
+  arquetipos_mitologicos:
+    - "Quiron (centauro sábio)"
+    - "Jasão (viajante)"
+    - "Hércules (busca)"
+  mitos_historias: "Jasão e os Argonautas; Hércules e os trabalhos; a busca do Graal"
+  sonhos_simbolos_inconsciente: "Horizontes, montanhas, jornadas sagradas"
+  expressao_elevada_sombra: "Elevada: filosofia, fé, generosidade | Sombra: fanatismo, dogmatismo, exagero"
+
+camada_energetica:
+  impressao_mental: "A mente que busca a verdade. Filosofia, fé, expansão, 'qual é o sentido?'."
+  permeacao_emocional: "Esperança e otimismo. Quando saudável: generosidade. Quando ferido: fanatismo."
+  manifestacao_externa: "Eventos prováveis de viagens, estudos, publicações. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a encontrar sua verdade sem impô-la. Casa 9 é a fé, não o dogma."
+
+ver_mais:
+  - "../05_Casas/Casa_9.yaml"
+

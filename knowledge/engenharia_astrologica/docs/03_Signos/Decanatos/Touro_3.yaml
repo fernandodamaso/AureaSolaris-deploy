@@ -1,0 +1,56 @@
+﻿status: draft
+id: "decanato_touro_3"
+nome: "Decanato 3 de Touro (20°–30°) — Touro amadurecido por Capricórnio"
+tradicoes:
+  - "convenção por signos da mesma triplicidade"
+  - "camada simbólica moderna atribuída"
+regente: "Saturno (Capricórnio/Saturno na convenção por triplicidade; também Saturno na face caldaica correspondente)"
+
+origens_e_divergencias:
+  sistema_adotado: "Convenção posterior/moderna por signos da mesma triplicidade: 20°–<30° de Touro recebe a cor de Capricórnio/Saturno."
+  faces_caldaicas: "A face caldaica de 20°–<30° de Touro também é Saturno, por sequência caldaica distinta."
+  decanos_egipcios: "Sistema histórico distinto; não inferir equivalência sem tabela própria."
+  nota: "A coincidência de Saturno não torna as duas linhagens idênticas."
+
+calculo_e_escopo:
+  intervalo: "Touro tropical 20°–<30°; 30° exatos são 0° de Gêmeos."
+  uso: "Refinamento opcional; não inferir patrimônio, rigidez ou maturidade objetiva pelo intervalo isolado."
+  camada_simbolica: "Alicerce e montanha são imagens de estudo atribuídas."
+referencias:
+  - autor: "Engenharia Astrológica"
+    obra: "Decanatos"
+    natureza: "fonte editorial"
+    localizador: "Tabela comparativa em 03_Signos/Decanatos.yaml."
+  - autor: "Cláudio Ptolomeu"
+    obra: "Tetrabiblos"
+    natureza: "primária histórica"
+    localizador: "Faces; a faixa caldaica é Saturno."
+limite_documental: "Permanece draft: a convenção por triplicidade e suas associações ainda necessitam fonte específica."
+atlas_simbolico:
+  pessoas_arquetipos: "O Adubo, o que expressa Terra Mutável"
+  lugares_fisicos: "Lugares de Terra Mutável"
+  objetos_materia: "Objetos de Terra Mutável"
+  eventos_tipicos: "Eventos de Terra Mutável"
+  animais: "Animais de Terra Mutável"
+  plantas_ervas: "Plantas de Terra Mutável"
+  metais_pedras: "Metais de Terra Mutável"
+  cores_sons: "Cores de Terra Mutável"
+  numeros: "Números de Terra Mutável"
+  dias_semana: "Dias de Terra Mutável"
+  doencas_corpo: "Partes do corpo de Terra Mutável"
+  arquetipos_mitologicos: "Arquétipos de Terra Mutável"
+  mitos_historias: "Mitologias de Terra Mutável"
+  sonhos_simbolos_inconsciente: "Símbolos de Terra Mutável"
+  expressao_elevada_sombra: "Elevada: Terra Mutável consciente | Sombra: Terra Mutável descontrolado"
+
+camada_energetica:
+  impressao_mental: "Touro + estrutura — a mente agora PERSISTE. O prazer vira investimento de longo prazo."
+  permeacao_emocional: "Apego duradouro, lealdade construída, mas rigidez se bloqueado."
+  manifestacao_externa: "Eventos PROVÁVEIS de construção lenta e sólida, herança, patrimônio. Arquétipos: o Alicerce, a Montanha. Inclinação, não destino."
+  como_guiar_o_astral: "Mostrar que o 3º decanato de Touro é dom de 'construir para durar' — evitar a rigidez."
+
+porque_simbolico: "Capricórnio matiza Touro com Terra cardinal: o PRAZER ganha TEMPO. Saturno = estrutura e paciência — daí o 'investidor de longo prazo'."
+foco_especial:
+  carmico: "Decanato 3 de Touro pode carregar temas de 'herança pesada' ou 'pactos de família' com bens."
+
+

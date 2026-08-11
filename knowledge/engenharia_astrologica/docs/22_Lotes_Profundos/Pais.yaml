@@ -1,0 +1,47 @@
+﻿status: draft
+id: "lote_pais"
+nome: "Parte dos Pais"
+tradicoes:
+  - "helenistica"
+  - "arabe-medieval"
+formula_diurna: "Asc + Sol − Saturno"
+formula_noturna: "Asc + Saturno − Sol"
+tema: "Figura parental, autoridade de origem"
+
+sentido_do_calculo: |
+  Sol (identidade/pai interno) menos Saturno (limite/autoridade) = onde a figura de pai se 'fixa' no mapa.
+  O ponto da AUTORIDADE DE ORIGEM: como a pessoa internaliza o pai/mãe.
+
+origens_e_divergencias:
+  tradicional: "Helenística (Ptolomeu, Vettius Valens) — lotes como pontos matemáticos."
+  moderna: "Evolutiva/moderna (Steven Forrest, Jeffrey Green) — lotes como 'pontos sensíveis da jornada'."
+  nota: "Revisar ao citar — marca a escola usada."
+atlas_simbolico:
+  pessoas_arquetipos: "O pai, a mãe, os progenitores"
+  lugares_fisicos: "Lares, terras, campos, lugares de origem"
+  objetos_materia: "Chaves, álbuns, baús, fotografias"
+  eventos_tipicos: "Nascimentos, mortes, heranças, raízes"
+  animais: "Cão de guarda, caranguejo, cavalo de carga"
+  plantas_ervas: "Lírio, jasmim, rosa branca, lótus"
+  metais_pedras: "Prata, pérola, madrepérola"
+  cores_sons: "Branco, prata; notas Dó e Lá"
+  numeros: "2 (dualidade), 4 (segurança), 6 (família)"
+  dias_semana: "Segunda-feira (Lua), sábado (Saturno)"
+  doencas_corpo: "Estômago, seios, útero, sistema digestivo"
+  arquetipos_mitologicos: "Deméter/Ceres, Héstia/Vesta, Hera/Juno"
+  mitos_historias: "Deméter e Perséfone; Héstia e o fogo sagrado"
+  sonhos_simbolos_inconsciente: "Águas paradas, casas, mãe, memórias"
+  expressao_elevada_sombra: "Elevada: lar como refúgio, raízes fortes | Sombra: apego excessivo, vitimização"
+
+camada_energetica:
+  impressao_mental: "Onde a mente 'coloca' a figura de pai/mãe interna."
+  permeacao_emocional: "Vínculo com a autoridade de origem — apoio ou ferida."
+  manifestacao_externa: "Eventos prováveis ligados a pais/autoridade. Arquétipos: o Trono, a Vara. Inclinação, não destino."
+  como_guiar_o_astral: "Ler com Casa 4, Casa 10, Sol e Saturno — a Parte mostra o ponto sensível do parental."
+
+como_usar: "Ler para mapear a 'pegada' da figura parental no mapa do filho. Na astrologia infantil, essencial para entender a internalização do pai/mãe."
+foco_especial:
+  familiar: "Central na astrologia familiar — indica a 'pegada' da figura parental no mapa do filho."
+  infantil: "No mapa da criança, mostra como ela internaliza o pai/mãe."
+regente: "Regente do signo onde cai; lido por casa e aspectos."
+

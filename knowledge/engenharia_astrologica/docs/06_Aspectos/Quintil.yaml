@@ -1,0 +1,58 @@
+﻿status: review
+id: "quintil"
+nome: "Quintil"
+angulo: "72°"
+natureza: "criatividade (talento inventivo)"
+
+origens_e_divergencias:
+  tradicional: "O quintil não integra os cinco aspectos maiores de Ptolomeu. Ganha relevo na ampliação harmônica de aspectos associada a Kepler e em escolas modernas posteriores."
+  moderna: "Criatividade, habilidade ou invenção são leituras frequentes, mas pertencem a linhagens modernas de harmônicos e não constituem consenso histórico."
+  nota: "O quintil é 72° (1/5 do círculo); biquintil é 144°. Não confundir a divisão geométrica com a casa 5 ou com uma garantia de talento."
+escopo_documental:
+  significado: "Aspecto harmônico por longitude de 72° (quinta parte do círculo)."
+  porque: "O número cinco e a série harmônica servem de matriz para leituras de forma, composição e criação em certas escolas."
+  origem: "Pós-ptolomaico; desenvolvido em debates renascentistas/modernos sobre aspectos harmônicos."
+  uso: "Avaliar somente com orbe e método de harmônicos explícitos; começar pelos planetas e suas condições."
+  divergencia: "Algumas escolas dão grande peso ao quintil; outras o omitem inteiramente."
+referencias:
+  - autor: "Johannes Kepler"
+    obra: "Harmonices Mundi"
+    natureza: "primária histórica"
+    localizador: "Discussão de proporções e aspectos harmônicos; conferir edição/tradução."
+  - autor: "John Addey"
+    obra: "Harmonics in Astrology"
+    natureza: "secundária moderna"
+    localizador: "Método harmônico contemporâneo; conferir edição."
+validacao_de_fontes:
+  base: "A ficha distingue o aspecto geométrico de sua leitura moderna de criatividade."
+  limite: "Não usar quintil isolado para declarar genialidade, vocação ou evento inevitável."
+atlas_simbolico:
+  pessoas_arquetipos: "O criador, o artista, o inventor"
+  lugares_fisicos: "Estúdios, laboratórios, templos de arte"
+  objetos_materia: "Ferramentas de criação, instrumentos, obras de arte"
+  eventos_tipicos: "Criações artísticas, invenções, talentos"
+  animais: "Fênix, cisne, pavão"
+  plantas_ervas: "Girassol, heliotropo, rosa"
+  metais_pedras: "Ouro, âmbar, citrino, topázio"
+  cores_sons: "Amarelo-dourado, laranja; notas Dó e Sol"
+  numeros: "5 (criatividade), 7 (gênio), 9 (talentos)"
+  dias_semana: "Domingo (Sol), quarta-feira (Mercúrio)"
+  doencas_corpo: "Coração, sistema circulatório, coluna dorsal"
+  arquetipos_mitologicos: "Apolo, Atena, Dioniso"
+  mitos_historias: "Apolo e a música; Dioniso e o teatro"
+  sonhos_simbolos_inconsciente: "Arte, música, invenções, talentos"
+  expressao_elevada_sombra: "Elevada: talento único, criatividade fluida | Sombra: gênio incompreendido, egocentrismo artístico"
+
+camada_energetica:
+  impressao_mental: "Dois princípios se tocam por uma Via criativa — a mente acha soluções 'fora da caixa'."
+  permeacao_emocional: "Inspiração que alegra, mas que pode ser instável se não for materializada."
+  manifestacao_externa: "Eventos PROVÁVEIS de criação, insight, invenção. Arquétipos: a Faísca, o Artista. Inclinação, não destino."
+  como_guiar_o_astral: "Incentivar a materializar a inspiração — o quintil dá a ideia, falta o fazer."
+
+consenso_tradicional: "Aspecto de talento criativo (especialmente em 5ª casa)."
+arquetipos_simbolicos: ["A Faísca", "O Artista"]
+
+aplicativo_separativo: "Aplicativa: a inspiração CHEGA. Separativa: a faísca se dissipa se não for usada."
+
+exemplo_pratico: "Vênus quintil Urano: atração por o que é original/incomum — a pessoa se apaixona por ideias e pessoas 'diferentes'. Leitura: 'sua criatividade amorosa é invenção; materialize as ideias'."
+

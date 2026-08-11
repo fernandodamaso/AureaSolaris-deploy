@@ -1,0 +1,104 @@
+﻿status: review
+id: "cancer_atlas"
+nome: "Câncer — Atlas Simbólico"
+tradicoes:
+  - "atlas simbolico editorial"
+  - "sintese multiescola"
+tipo: "Atlas Simbólico"
+subtema: "Correspondências de Câncer"
+
+origens_e_divergencias:
+  tradicional: "Lua — água, nutrição, lar, memória, emoção."
+  moderna: "Lua (mesmo). Sem divergência."
+  nota: "Regência unânime."
+
+atlas_simbolico:
+  pessoas_arquetipos:
+    - "A mãe"
+    - "A nutridora"
+    - "O sensitivo"
+    - "O protetor"
+    - "O memorialista"
+    - "O viajante emocional"
+  lugares_fisicos:
+    - "Lagos"
+    - "Lares"
+    - "Tumbas"
+    - "Cidades com canais"
+    - "Jardins noturnos"
+  objetos_materia:
+    - "Espelhos"
+    - "Pratos de prata"
+    - "Leite"
+    - "Água"
+    - "Pedra da lua"
+  eventos_tipicos:
+    - "Nascimentos"
+    - "Mudanças de lar"
+    - "Viagens noturnas"
+    - "Sonhos proféticos"
+    - "Gestação"
+  animais:
+    - "Caranguejo"
+    - "Lebre"
+    - "Cisne noturno"
+    - "Gato"
+    - "Lobo uivante"
+  plantas_ervas:
+    - "Lírio"
+    - "Jasmim noturno"
+    - "Alface"
+    - "Couve"
+    - "Melissa"
+  metais_pedras:
+    - "Prata"
+    - "Pedra da lua"
+    - "Pérola"
+    - "Madrepérola"
+  cores_sons:
+    cores: ["Prata", "Branco luar", "Azul-prateado", "Cinza-perola"]
+    sons: ["Flauta", "Canto noturno", "Murmúrio d'água"]
+  numeros: [2, 4, 7, 9]
+  dias_semana: ["Segunda-feira"]
+  doencas_corpo:
+    doencas: ["Problemas digestivos", "Ansiedade", "Insônia", "Problemas ginecológicos"]
+    partes_corpo: ["Estômago", "Útero", "Seios", "Sistema digestivo"]
+  arquetipos_mitologicos:
+    - "Artemis/Diana"
+    - "Hécate"
+    - "Selene"
+  mitos_historias:
+    - "Artemis e Actaeon"
+    - "Hécate nas encruzilhadas"
+    - "Isis reconstituindo Osíris"
+  expressao_elevada_sombra: "Elevada: nutrição, empatia, intuição | Sombra: manipulação emocional, dependência, apego"
+
+revisao_editorial:
+  origem_e_linguagem: "Câncer deriva do latim cancer, 'caranguejo'; o signo tropical e a constelação homônima não são a mesma coisa."
+  mito_arquetipo_e_porque: "Caranguejo, casco, água e imagens de cuidado são chaves simbólicas; mitos gregos e leituras psicológicas devem ser mantidos como camadas atribuídas, não como fato universal."
+  limite_tecnico: "Regência lunar tradicional não autoriza dedução corporal, familiar ou emocional sem julgamento do mapa inteiro."
+referencias:
+  primarias:
+    - "Ptolomeu. Tetrabiblos, livro I: signos e qualidades, conforme edição declarada."
+  secundarias:
+    - "Rudhyar, Dane. The Astrological Signs: The Pulse of Life. Harper & Row, 1971."
+  tecnicas:
+    - "Ver 02_Astronomia/Zodiaco_Tropical.yaml e 04_Planetas/Lua.yaml."
+camada_energetica:
+  impressao_mental: "A mente que SENTE e PROTEGE. Memória, imagem interna, 'como eu me sinto sendo eu'."
+  permeacao_emocional: "Corpo emocional inteiro — nutrição ou fome emocional."
+  manifestacao_externa: "Eventos PROVÁVEIS de mudanças de estado emocional, lares, mães, mulheres. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a diferenciar 'sentir' de 'ser'. Câncer precisa de casa (segurança), não de prisão."
+
+tarot_relacionado:
+  carta: "A Lua (XVIII)"
+  conexao: "Câncer é regido pela Lua: mistério, intuição, o que está oculto, o inconsciente."
+
+foco_especial:
+  infantil: "A criança Câncer precisa de rotina, acolhimento, colo. Mudanças bruscas a desestruturam."
+  familiar: "A mãe/mulher da família. A que cuida, nutre, lembra."
+  carmico_espiritual: "Câncer indica a LIÇÃO DE NUTRIÇÃO. Casa Câncer = onde a pessoa aprende a cuidar e ser cuidada."
+
+ver_mais:
+  - "../03_Signos/Cancer.yaml"
+

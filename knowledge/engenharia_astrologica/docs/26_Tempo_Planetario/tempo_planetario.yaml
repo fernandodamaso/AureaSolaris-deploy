@@ -1,0 +1,73 @@
+status: review
+id: "tempo_planetario"
+nome: "Tempo Planetário"
+tradicoes:
+  - "tradicional"
+  - "aplicada"
+tipo: "Aprofundamento"
+subtema: "Dias, horas, numerologia do horário"
+
+origens_e_divergencias:
+  tradicional: "Tempo planetário reúne técnicas distintas — dias, horas, cronocratores e eleições — que não devem ser calculadas como uma regra única."
+  moderna: "Planejamento cotidiano é uso contemporâneo e precisa declarar qual técnica foi aplicada."
+  nota: "Este é índice de estudo: cada saída deve informar técnica, parâmetros, escola e fonte."
+
+referencias:
+  - autor: "Heinrich Cornelius Agrippa"
+    obra: "Three Books of Occult Philosophy"
+    natureza: "fonte renascentista"
+    localizador: "Dias e horas planetárias; consultar edição"
+  - autor: "Vettius Valens"
+    obra: "The Anthology"
+    natureza: "fonte primária helenística"
+    localizador: "Cronocratores e tempo astrológico; conferir edição"
+
+atlas_simbolico:
+  pessoas_arquetipos: "O estrategista, o planejador, o ritualista"
+  lugares_fisicos: "Relógios, calendários, templos"
+  objetos_materia: "Relógios solares, ampulhetas, mapas"
+  eventos_tipicos: "Planejamento, timing, decisões"
+  animais: "Gato, águia, lobo, leão, pomba, lebre, caranguejo"
+  plantas_ervas: "Hera, carvalho, alecrim, girassol, rosa, verbena, lírio"
+  metais_pedras: "Chumbo, estanho, ferro, ouro, cobre, mercúrio, prata"
+  cores_sons:
+    cores: ["Preto", "azul-royal", "vermelho", "dourado", "verde", "amarelo", "prata"]
+    sons: ["Gongo", "órgão", "tambor", "trombeta", "harpa", "silvo", "flauta"]
+  numeros: [7]
+  dias_semana: ["Sábado", "Quinta-feira", "Terça-feira", "Domingo", "Sexta-feira", "Quarta-feira", "Segunda-feira"]
+  doencas_corpo:
+    doencas: ["Problemas relacionados a cada planeta"]
+    partes_corpo: ["Cada planeta rege partes do corpo (ver atlas do planeta)"]
+  arquetipos_mitologicos:
+    - "Cronos (Saturno)"
+    - "Zeus (Jupiter)"
+    - "Ares (Marte)"
+    - "Apolo (Sol)"
+    - "Afrodite (Vênus)"
+    - "Hermes (Mercúrio)"
+    - "Artemis (Lua)"
+  mitos_historias: "Cada dia tem seu planeta regente"
+  expressao_elevada_sombra: "Elevada: timing consciente | Sombra: obsessão por timing"
+
+camada_energetica:
+  impressao_mental: "Cada dia/hora tem uma qualidade planetária. 'Hoje é dia de Marte: ação'. 'Esta hora é de Vênus: harmonia'."
+  permeacao_emocional: "Ritmo emocional seguindo os ciclos planetários."
+  manifestacao_externa: "Eventos prováveis de timing, planejamento, ritmo. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a SINCRONIZAR COM O RITMO CÓSMICO. Dia planetário é sugestão, não regra."
+
+como_usar: |
+  Dias planetários:
+  - Sábado = Saturno (estrutura, limites)
+  - Quinta-feira = Júpiter (expansão, fé)
+  - Terça-feira = Marte (ação, coragem)
+  - Domingo = Sol (vontade, identidade)
+  - Sexta-feira = Vênus (amor, beleza)
+  - Quarta-feira = Mercúrio (comunicação, aprendizado)
+  - Segunda-feira = Lua (nutrição, emoção)
+
+  Horas planetárias:
+  - Seguem ordem inversa dos dias
+  - 1ª hora = planeta do dia
+  - 2ª hora = próximo planeta
+  - ...até completar 7, depois repetir ordem inversa para 24
+

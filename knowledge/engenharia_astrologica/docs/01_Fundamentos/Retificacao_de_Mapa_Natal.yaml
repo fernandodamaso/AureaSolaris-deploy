@@ -1,0 +1,64 @@
+status: review
+id: "retificacao_natal"
+nome: "Retificação de Mapa Natal"
+tipo: "técnica de dados e timing"
+tradicao_primaria: ["tradicional", "moderna"]
+
+escopo:
+  definicao_operacional: "Processo de formular e testar hipóteses sobre uma hora natal incerta a partir de documentação disponível, intervalos de incerteza e técnicas declaradas."
+  inclui:
+    - "Pesquisa de registros e classificação da qualidade dos dados antes de qualquer ajuste."
+    - "Comparação documentada de hipóteses com eventos datados e técnicas consistentes."
+  nao_inclui:
+    - "Inventar uma hora exata quando não há evidência suficiente."
+    - "Tratar a saída de uma técnica como confirmação independente de si mesma."
+  exclusoes_do_projeto: []
+
+fundamento:
+  descricao: "Hora natal incerta afeta principalmente ângulos, casas e técnicas de tempo. Retificação é uma hipótese de trabalho, não recuperação de certeza documental; por isso o intervalo, as evidências e os resultados concorrentes precisam ser preservados."
+  contexto_historico: "Existem métodos tradicionais e modernos de retificação. Eles não convergem necessariamente e devem ser apresentados como métodos atribuídos, com avaliação explícita de incerteza."
+
+procedimento:
+  pre_requisitos:
+    - "Documentos de nascimento, relatos e suas fontes separados por qualidade."
+    - "Faixa inicial de hora local, local de nascimento, regra histórica de fuso e horário de verão."
+    - "Cronologia de eventos datados, sem induzir lembranças para ajustar a carta."
+  passos:
+    - "Priorizar documento original e registrar margem de incerteza."
+    - "Gerar cartas candidatas dentro do intervalo, sem ocultar as alternativas."
+    - "Aplicar um conjunto fixo de técnicas a todos os candidatos e registrar acertos, falhas e ambiguidade."
+    - "Exigir convergência entre múltiplos eventos e técnicas antes de estreitar o intervalo."
+    - "Publicar resultado como faixa e nível de confiança, não como hora provada quando a evidência não a sustenta."
+  parametros_de_calculo:
+    - "fonte e precisão da hora"
+    - "intervalo de incerteza"
+    - "fuso/horário de verão históricos"
+    - "técnicas testadas"
+    - "eventos datados e fonte"
+
+uso_interpretativo:
+  pergunta_que_ajuda_a_responder:
+    - "Quais configurações de ângulo e casa permanecem plausíveis diante de dados natais incompletos?"
+  como_ponderar: "Enquanto houver incerteza relevante, priorizar posições menos sensíveis ao horário e apresentar leituras de casa/ângulo como condicionais."
+  limites:
+    - "Não usar retificação para confirmar narrativa preferida, diagnóstico, alegação traumática ou decisão de alto impacto."
+    - "Não apagar a hora documental original nem a margem de incerteza."
+
+divergencias_de_tradicao:
+  consenso: "A qualidade dos dados deve preceder a interpretação de ângulos, casas e timing."
+  divergencias:
+    - "Métodos tradicionais e modernos usam critérios distintos e podem produzir horas diferentes."
+  decisao_editorial: "O resultado será sempre uma hipótese auditável, com versão de cálculo, técnicas, eventos e grau de confiança."
+
+referencias:
+  primarias: []
+  secundarias:
+    - "Vetter, Richard. Astrological Chart Rectification. Astrodienst. https://www.astro.com/astrology/in_rectification_e.htm (acesso em 2026-08-10)."
+    - "Lois Rodden. Astro-Databank: princípios de classificação de dados natais. Consultar documentação e versão utilizada."
+  tecnicas: []
+
+relacoes:
+  depende_de: ["protocolo_calculo_reproduzivel", "equinocios_solsticios_precessao"]
+  ver_tambem: ["lua_prenatal_syzygy", "direcoes_primarias", "progressoes", "arcos_solares"]
+
+anotacoes_pessoais: []

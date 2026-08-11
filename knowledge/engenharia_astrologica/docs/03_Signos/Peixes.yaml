@@ -1,0 +1,87 @@
+status: review
+id: "peixes"
+nome: "Peixes"
+tradicoes:
+  - "helenística"
+  - "medieval"
+  - "renascentista"
+  - "moderna (somente camadas explicitamente modernas)"
+escopo_documental:
+  tecnica_historica:
+    - "elemento, modalidade, regência, dignidade e estrutura zodiacal"
+    - "divergências modernas de regência ou leitura entram como nota explícita, sem substituir silenciosamente a camada histórica"
+  camadas_modernas: "Atlas simbólico, Tarot, correspondências médicas e releituras contemporâneas permanecem separados da regra histórica e devem ser apresentados como camada interpretativa rotulada."
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "primária"
+    localizador: "Livro I, capítulos sobre signos, qualidades e regências"
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    natureza: "primária"
+    localizador: "Livros I–II, passagens sobre signos e regentes"
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    natureza: "primária"
+    localizador: "Livro I, descrição dos signos e significadores"
+validacao_de_fontes:
+  base: "A regra zodiacal hist?rica ? sustentada por Ptolomeu, Valens e Lilly, nas refer?ncias estruturadas da ficha."
+  escopo: "Tarot, Atlas simb?lico, mitologia, correspond?ncias m?dicas e psicologia s?o camadas de estudo rotuladas; n?o s?o consenso nem substituem a regra hist?rica."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+elemento: "Água"
+modalidade: "Mutável"
+regente: "Júpiter (moderno: Netuno)"
+
+origens_e_divergencias:
+  tradicional: "Júpiter (expansão, fé, compaixão, espiritualidade)."
+  moderna: "Netuno (dissolução, unidade, imaginação, transcendência)."
+  divergencia: "Tradicional vê Peixes como Júpiter (expansão da fé); moderna troca para Netuno (dissolução das fronteiras). Ambas coexistem — registrar ao citar."
+  nota: "Divergência importante: Júpiter = 'crer e expandir'; Netuno = 'dissolver e unir'. A leitura muda o tom."
+
+essencia:
+  - "Unidade"
+  - "Compaixão"
+  - "Dissolução"
+
+simbologia_elemento:
+  elemento: "Água"
+  modalidade: "Mutável"
+  simbolo: "Névoa / Orvalho / Mar que se dissolve"
+  analogia: "Água Mutável — como a névoa que dissolve tudo na água."
+  porque: "Água Mutável é a água em DISSOLUÇÃO: confusão, compaixão, transcendência. Peixes é o décimo segundo signo, onde a energia se dissolve no todo. A névoa representa o limite entre água e ar — não é mais água sólida, já se prepara para evaporar."
+atlas_simbolico:
+  pessoas_arquetipos: "Místico, poeta, artista, sonhador, curador, místico, vítima/salvador"
+  lugares_fisicos: "Mares, oceanos, ilhas, conventos, hospitais, locais de retiro, sonhos"
+  objetos_materia: "Velas, incenso, instrumentos musicais, poções, quadros, sonhos"
+  eventos_tipicos: "Mistérios, iniciações, mortes simbólicas, cura, arte, compaixão"
+  animais: "Peixe, golfinho, baleia, cavalo-marinho, cisne, cão de água"
+  plantas_ervas: "Lótus, papoula, adormeceira, jasmim, violeta, menta"
+  metais_pedras: "Estanho, marfim, ametista, água-marinha, opala, pérola"
+  cores_sons: "Azul-mar, verde-água, roxo; notas Lá e Dó; piano, órgão, sino"
+  numeros: "3 (misticismo), 6 (serviço compassivo), 9 (transcendência)"
+  dias_semana: "Quinta-feira (Júpiter tradicional), segunda-feira (Lua/Netuno moderno)"
+  doencas_corpo: "Pés, sistema linfático, vícios, imunidade, glândulas, doenças psicossomáticas"
+  arquetipos_mitologicos: "Poseidon/Netuno, Dioniso, Hécate, Anfitrite, Jesus Cristo"
+  mitos_historias: "Dioniso e a sua dupla natureza; Jesus andando sobre as águas; O dilúvio"
+  sonhos_simbolos_inconsciente: "Águas profundas, névoa, peixes, ilhas, barcos, música"
+  expressao_elevada_sombra: "Elevada: compaixão universal, arte transcendente, serviço espiritual | Sombra: escape da realidade, vícios, vitimização, confusão"
+
+tarot:
+  carta: "O Louco"
+  explicacao: "Carta 0 — início, entrega, confiança, travessia. Peixes é o Louco porque ambos representam a água que se dissolve no ar: o salto sem rede, a fé que não precisa de prova, o último signo que já é o primeiro."
+
+camada_energetica:
+  impressao_mental: "A mente que dissolve fronteiras. Fé, imaginação, confusão. Quando atrito: ilusão, vítima, fuga."
+  permeacao_emocional: "Sentimento oceânico, sem bordas. Compaixão profunda e também indefinição."
+  manifestacao_externa: "Eventos prováveis de inspiração, espiritualidade, mas também de névoa e confusão. Trânsitos dissolvem o rígido."
+  como_guiar_o_astral: "Ajudar a pessoa a discernir inspiração de fuga. Peixes guia bem quando ancora o sonho no real."
+
+decanatos:
+  - "0-10: Peixes (Júpiter) — fusão e intuição"
+  - "10-20: Câncer (Lua) — acolhimento e raiz"
+  - "20-30: Escorpião (Marte) — profundidade e transformação"
+
+foco_especial:
+  infantil: "A criança Peixes é sonhadora e muito sensível ao invisível. Precisa de ancoragem no real e de proteção emocional."
+  familiar: "O membro que traz sensibilidade e sacrifício silencioso para o lar. Emocionalmente fusionado com a família."
+

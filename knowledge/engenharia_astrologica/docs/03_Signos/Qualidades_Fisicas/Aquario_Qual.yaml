@@ -1,0 +1,62 @@
+status: review
+id: aquario_qualidades
+nome: Aquário — Qualidades Físicas
+tradicoes: [tradicional, moderna, médica histórica, editorial]
+cor: Azul e tons escuros (Saturno, tradição); azul-elétrico e violeta (Urano, associação moderna)
+parte_do_corpo: Panturrilhas e tornozelos; circulação e sistema nervoso são extensões modernas, não regências anatômicas consensuais
+elemento_fisico: Ar
+qualidade_termica: Quente e úmida na classificação elementar aristotélica; algumas tabelas tardias descrevem o signo de modo diverso
+origens_e_divergencias:
+  tradicional: "A melothesia zodiacal associa Aquário às pernas abaixo dos joelhos e aos tornozelos. A regência é de Saturno; por isso, cores e matérias saturninas pertencem à camada tradicional."
+  moderna: "Urano, eletricidade, azul-elétrico, sistema nervoso e redes são associações modernas posteriores à descoberta do planeta; não devem ser retroprojetadas sobre autores antigos."
+  nota: "As correspondências corporais são linguagem astrológica histórica e simbólica, não descrição de aparência, diagnóstico ou causalidade médica."
+atlas_simbolico:
+  pessoas_arquetipos: Inventor, revolucionário, cientista, humanitário, guru, amigo
+  lugares_fisicos: Laboratórios, universidades, aeroportos, redes, espaços coletivos, cidades
+  objetos_materia: Máquinas, circuitos, livros científicos, redes, aviões, inventos
+  eventos_tipicos: Revoluções, invenções, reuniões de grupo, mudanças sociais, inovações
+  animais: Águia, falcão, peixe voador, golfinho, cão pastor, aranha
+  plantas_ervas: Olivas, oliveira, samambaia, urtiga, menta, zimbro
+  metais_pedras: Uranium, alumínio, turquesa, lápis-lazúli, água-marinha
+  cores_sons: Azul-elétrico, violeta, prata; notas Mi e Lá; sintetizador, violino
+  numeros: 4 (estrutura inovadora), 7 (mental superior), 11 (gênio coletivo)
+  dias_semana: Sábado (dia de Saturno tradicional), domingo (moderno/Urano)
+  doencas_corpo: "Na medicina astrológica histórica: tornozelos e panturrilhas; circulação periférica e sistema nervoso pertencem sobretudo a ampliações modernas. Não usar para diagnóstico."
+  arquetipos_mitologicos: Prometeu, Zeus/Júpiter (raio), Hécate, Atena
+  mitos_historias: Prometeu roubando o fogo; Pandora e a caixa; Atena nascendo da cabeça de Zeus
+  sonhos_simbolos_inconsciente: Máquinas, aviões, redes, coletivos, céu estrelado, relâmpagos
+  expressao_elevada_sombra: 'Elevada: inovação a serviço do coletivo, amizade universal, mente avançada | Sombra: rebeldia sem causa, frieza emocional, extremismo'
+camada_energetica:
+  impressao_mental: A cor azul-elétrico no mapa = 'mente em rede'.
+  permeacao_emocional: Necessidade de pertencer à tribo, originalidade, 'não sou igual'.
+  manifestacao_externa: "O Inovador é um arquétipo moderno possível. Cor, estilo e aparência não podem ser inferidos de um signo isolado."
+  como_guiar_o_astral: "Usar o contraste Saturno–Urano para estudar continuidade e inovação, sempre nomeando a escola."
+porque_simbolico: 'Aquário = PANTURRILHAS/TORNOZELOS — são a ''rede de sustentação móvel'' (Urano = rede em movimento). O sistema nervoso autônomo = ''rede elétrica autônoma''.
+
+  AZUL-ELÉTRICO = cor da ELETRICIDADE (Urano = raio). NEON = cor do ''futuro''.
+
+  '
+leitura_corporal:
+  regra: "A melothesia descreve uma correspondência do signo com uma região corporal; não afirma que pessoas com Sol, Ascendente ou outro fator em Aquário tenham determinada aparência ou doença."
+  uso: "Somente como camada histórica/simbólica e, em astrologia médica histórica, dentro do mapa inteiro e de seu contexto."
+aparencia_nas_tradicoes:
+  descricao: "Textos e manuais modernos associam Aquário a olhar alerta, expressão incomum, corpo alongado ou estilo excêntrico/elétrico."
+  porque: "A imagem nasce da combinação do ar fixo com Saturno e, modernamente, Urano, eletricidade e ruptura de convenções."
+  variantes: "Autores tradicionais priorizam Saturno e temperamento; autores modernos enfatizam Urano e originalidade. Ascendente, regente e aspectos costumam receber mais peso que o Sol."
+  limite: "Registrar como crença morfológica de escolas astrológicas, não como regra universal nem identificação automática."
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "primária histórica"
+    localizador: "Livro I; qualidades dos signos e sequência anatômica zodiacal."
+  - autor: "Nicholas Culpeper"
+    obra: "Astrological Judgement of Diseases from the Decumbiture of the Sick"
+    natureza: "primária histórica"
+    localizador: "Correspondências médico-astrológicas; consultar edição utilizada."
+  - autor: "Reinhold Ebertin"
+    obra: "The Combination of Stellar Influences"
+    natureza: "secundária moderna"
+    localizador: "Associações modernas de Urano; não confundir com a regência tradicional."
+validacao_de_fontes:
+  base: "A região anatômica é tradicional; eletricidade e sistema nervoso são camadas uranianas modernas."
+  limite: "Não há base para fenotipagem, diagnóstico ou prescrição a partir do signo isolado."

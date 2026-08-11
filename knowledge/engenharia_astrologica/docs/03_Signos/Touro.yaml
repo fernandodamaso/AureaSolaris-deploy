@@ -1,0 +1,86 @@
+status: review
+id: "touro"
+nome: "Touro"
+tradicoes:
+  - "helenística"
+  - "medieval"
+  - "renascentista"
+  - "moderna (somente camadas explicitamente modernas)"
+escopo_documental:
+  tecnica_historica:
+    - "elemento, modalidade, regência, dignidade e estrutura zodiacal"
+    - "divergências modernas de regência ou leitura entram como nota explícita, sem substituir silenciosamente a camada histórica"
+  camadas_modernas: "Atlas simbólico, Tarot, correspondências médicas e releituras contemporâneas permanecem separados da regra histórica e devem ser apresentados como camada interpretativa rotulada."
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "primária"
+    localizador: "Livro I, capítulos sobre signos, qualidades e regências"
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    natureza: "primária"
+    localizador: "Livros I–II, passagens sobre signos e regentes"
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    natureza: "primária"
+    localizador: "Livro I, descrição dos signos e significadores"
+validacao_de_fontes:
+  base: "A regra zodiacal hist?rica ? sustentada por Ptolomeu, Valens e Lilly, nas refer?ncias estruturadas da ficha."
+  escopo: "Tarot, Atlas simb?lico, mitologia, correspond?ncias m?dicas e psicologia s?o camadas de estudo rotuladas; n?o s?o consenso nem substituem a regra hist?rica."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+elemento: "Terra"
+modalidade: "Fixo"
+regente: "Vênus"
+
+origens_e_divergencias:
+  tradicional: "Vênus (prazer, posse, beleza)."
+  moderna: "Vênus (mesmo). Sem divergência significativa."
+  nota: "Regência unânime."
+
+essencia:
+  - "Estabilidade"
+  - "Posse"
+  - "Sentido"
+
+simbologia_elemento:
+  elemento: "Terra"
+  modalidade: "Fixo"
+  simbolo: "Rocha / Solo fértil compactado"
+  analogia: "Terra Fixa — como uma montanha ou rocha sólida."
+  porque: "Terra Fixa é o ESTÁGIO final da matéria: consolidada, permanente, produtiva. Touro é o segundo signo, onde a energia se materializa em forma duradoura. A rocha representa segurança, posse e beleza que perdura."
+atlas_simbolico:
+  pessoas_arquetipos: "Camponês, agricultor, banqueiro, artesão, músico, pessoa de posses"
+  lugares_fisicos: "Campos, fazendas, jardins, montanhas, bosques, locais de abundância"
+  objetos_materia: "Moedas, jóias, instrumentos musicais, ferramentas de trabalho, vinho, pão"
+  eventos_tipicos: "Colheitas, casamentos, aquisições de bens, construções, festas da terra"
+  animais: "Touro, vaca, cavalo de carga, boi, toupeira, cisne"
+  plantas_ervas: "Videira, trigo, rosa, lírio, oliveira, hera, rosmaninho"
+  metais_pedras: "Cobre, bronze, esmeralda, jaspe verde, turquesa, topázio"
+  cores_sons: "Verde, rosa, marrom; notas Lá e Ré; flauta, violão, trompa"
+  numeros: "2 (dualidade material), 6 (harmonia terrena), 8 (materialidade)"
+  dias_semana: "Sexta-feira (dia de Vênus)"
+  doencas_corpo: "Garganta, pescoço, tireoide, rigidez cervical, excesso de peso, vícios"
+  arquetipos_mitologicos: "Zeus em forma de touro (rapto de Europa), Dioniso/Baco, Deméter/Ceres, Hestia/Vesta"
+  mitos_historias: "Touro de Creta; Os trabalhos de Hércules (captura do touro); Dioniso e a videira"
+  sonhos_simbolos_inconsciente: "Touros, campos verdes, comida, tesouros, musicais, jardins"
+  expressao_elevada_sombra: "Elevada: estabilidade confiável, gosto refinado, persistência construtiva | Sombra: possessividade, avareza, teimosia cega, apego material"
+
+tarot:
+  carta: "O Papa / O Hierofante"
+  explicacao: "Carta 5 — tradição, valores, prazer material estável. Touro é o Papa porque ambos representam o que é consagrado pela repetição: o templo, o altar, o vinho, o prazer ritualizado."
+
+camada_energetica:
+  impressao_mental: "A mente que fixa e valoriza. 'Isso é meu e fica'. Busca segurança tangível. Quando atrito: apego, teimosia, medo de falta."
+  permeacao_emocional: "Afeto pacífico e corporificado. Gosta de conforto e prazer estável; desequilibrado vira possessividade."
+  manifestacao_externa: "Eventos prováveis de aquisição, estabilidade, questões de corpo e recursos. Trânsitos tendem a trazer ou testar a segurança."
+  como_guiar_o_astral: "Ajudar a pessoa a soltar o que virou grudo. Touro floresce quando confia no fluxo, não quando agarra."
+
+decanatos:
+  - "0-10: Touro (Vênus) — prazer e posse"
+  - "10-20: Virgem (Mercúrio) — organização prática"
+  - "20-30: Capricórnio (Saturno) — estrutura e resistência"
+
+foco_especial:
+  infantil: "A criança Touro precisa de rotina e toque. Se sente segura pelo corpo e pelo que é previsível."
+  familiar: "O membro que dá base material ao lar. Resistência familiar, mas dificuldade em mudar hábitos."
+

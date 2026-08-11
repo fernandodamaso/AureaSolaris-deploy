@@ -1,0 +1,57 @@
+status: review
+id: "cosmologia_tradicional"
+nome: "Cosmologia Tradicional e Teoria das Esferas"
+tipo: "fundamento histórico"
+tradicao_primaria: ["helenística", "medieval", "renascentista"]
+
+escopo:
+  definicao_operacional: "Descrição histórica de modelos cosmológicos usados para organizar o céu na astrologia antiga, medieval e renascentista."
+  inclui:
+    - "Terra como centro observacional do esquema geocêntrico."
+    - "Esferas celestes, ordem planetária e relação entre cosmologia, astronomia antiga e linguagem astrológica."
+  nao_inclui:
+    - "Apresentar o modelo das esferas como descrição física atual do universo."
+    - "Usar cosmologia histórica para dispensar parâmetros astronômicos modernos no cálculo."
+  exclusoes_do_projeto: []
+
+fundamento:
+  descricao: "Modelos de esferas e de movimentos celestes estruturaram a linguagem técnica de muitas fontes tradicionais. Eles explicam a arquitetura histórica de termos como esfera, ascensão, aspecto, ordem planetária e mundo sublunar."
+  contexto_historico: "Há variações entre cosmologias aristotélicas, ptolomaicas, medievais e renascentistas. A ficha não presume que uma formulação represente todas as épocas."
+
+procedimento:
+  pre_requisitos:
+    - "Informar qual autor, período ou modelo está sendo apresentado."
+  passos:
+    - "Usar o modelo histórico para contextualizar vocabulário e técnica."
+    - "Separar a reconstrução histórica do cálculo contemporâneo por efemérides."
+  parametros_de_calculo: []
+
+uso_interpretativo:
+  pergunta_que_ajuda_a_responder:
+    - "Que visão de ordem celeste sustenta uma técnica ou metáfora tradicional?"
+  como_ponderar: "A cosmologia esclarece o vocabulário e a coerência interna de uma escola; ela não é, por si, uma regra interpretativa isolada."
+  limites:
+    - "Não converter modelos cosmológicos antigos em alegações científicas atuais."
+    - "Não confundir ordem caldaica, esferas e oitavas planetárias modernas."
+
+divergencias_de_tradicao:
+  consenso: "Fontes tradicionais recorrem a modelos geocêntricos e a ordens celestes para organizar relações astrológicas."
+  divergencias:
+    - "A formulação física, teológica e metafísica das esferas varia entre autores e períodos."
+    - "Uso moderno pode preservar a geometria observacional sem adotar a física antiga."
+  decisao_editorial: "O corpus tratará cosmologia tradicional como história das ideias e indicará sempre o modelo e a fonte."
+
+referencias:
+  primarias:
+    - "Aristóteles. Sobre o Céu. Traduções críticas variam; citar edição utilizada em fichas derivadas."
+    - "Ptolemaeus. Almagesto. Tradução de G. J. Toomer. Princeton University Press, 1998."
+    - "Ptolemaeus. Tetrabiblos. Tradução de F. E. Robbins. Loeb Classical Library, 1940."
+  secundarias:
+    - "Lindberg, David C. The Beginnings of Western Science. University of Chicago Press, 2007."
+  tecnicas: []
+
+relacoes:
+  depende_de: ["historia_escopo_astrologia_ocidental", "esfera_celeste_coordenadas"]
+  ver_tambem: ["ordem_caldaica", "thema_mundi", "pitagorismo", "platonismo_neoplatonismo"]
+
+anotacoes_pessoais: []

@@ -1,0 +1,101 @@
+status: review
+id: simbolo_lilith
+nome: Símbolo de Lilith — ⚸ (Lua Negra / Meu Apogeu)
+planeta: Lilith
+significado_visual: '⚸ = CRESCENTE LUA (inconsciente, feminino) + CRUZ INVERTIDA (rejeição, inversão, sombra).
+
+  O crescente representa a Lua = o feminino rejeitado.
+
+  A cruz invertida = o que foi invertido, negado, colocado de cabeça para baixo.
+
+  Junção = Lilith = o feminino que foi rejeitado e se tornou sombra/autonomia radical.
+
+  '
+origem: Glifo moderno, usado em astrologia feminista e psicológica (século XX).
+atlas_simbolico:
+  pessoas_arquetipos:
+  - A livre
+  - A rejeitada
+  - A selvagem
+  - A sexualidade não domesticada
+  lugares_fisicos:
+  - Lugares de transgressão
+  - Lugares de poder feminino não domesticado
+  objetos_materia:
+  - Faca (corte)
+  - Espelho (reflexo)
+  - Corrente (prisão)
+  eventos_tipicos:
+  - Crises de autonomia
+  - Crises de sexualidade
+  - Rejeição, abandono
+  - Encontros com a sombra
+  animais:
+  - Coruja noturna
+  - Gato preto
+  - Cobra
+  - Lobo
+  plantas_ervas:
+  - Erva-moura
+  - Papoula
+  - Narciso
+  - Hortelã-pimenta
+  metais_pedras:
+  - Obsidiana
+  - Ônix negro
+  - Ágata negra
+  - Rubi
+  cores_sons:
+    cores:
+    - Preto
+    - roxo-escuro
+    - vermelho-sangue
+    sons:
+    - Grito
+    - trovão
+    - tambor profundo
+  numeros:
+  - 8
+  - 13
+  dias_semana:
+  - Sábado
+  doencas_corpo:
+    doencas:
+    - Problemas reprodutivos
+    - crises nervosas
+    partes_corpo:
+    - Órgãos reprodutivos
+    - sistema nervoso
+  arquetipos_mitologicos:
+  - Lilith (Eva rejeitada)
+  - Hécate (lua negra)
+  - Perséfone (rejeição e renascimento)
+  mitos_historias:
+  - Lilith rejeitada por Adão
+  - Lilith como demônio da noite
+  - Hécate nas encruzilhadas
+  expressao_elevada_sombra: 'Elevada: autonomia autêntica, sexualidade livre | Sombra: rejeição, manipulação, sombra'
+origens_e_divergencias:
+  tradicional: Símbolo padrão da astrologia ocidental.
+  moderna: Mantido o símbolo tradicional; algumas variantes modernas existem.
+  nota: Símbolo é convenção visual, não técnica.
+tradicoes:
+  - "notação moderna da Lua Negra"
+  - "escolas modernas e psicológicas"
+  - "estudo mítico-literário de Lilith"
+revisao_editorial:
+  origem_do_glifo: "⚸ é usado em software e tabelas modernas para Black Moon Lilith; não é glifo herdado do repertório planetário clássico. A leitura de crescente e cruz invertida é simbólica/editorial, não origem documental consensual do desenho."
+  curiosidade: "'Lilith' pode designar conceitos distintos — figura mítica/literária, apogeu lunar médio ou oscilante, asteroide e pontos hipotéticos — que não devem ser confundidos."
+  convencao_nao_tecnica: "O sinal só identifica a definição escolhida. O motor deve declarar qual Lilith calcula e não inferir 'sombra' ou autonomia a partir do glifo."
+referencias:
+  primarias:
+    - "Isaías 34:14 e tradições textuais posteriores sobre lilith; consultar tradução e contexto histórico declarados."
+  secundarias:
+    - "George, Demetra. Mysteries of the Dark Moon: The Healing Power of the Dark Goddess. HarperOne, 1992."
+  tecnicas:
+    - "Unicode Consortium. The Unicode Standard, bloco Miscellaneous Symbols: U+26B8 BLACK MOON LILITH."
+camada_energetica:
+  impressao_mental: Símbolo gráfico do planeta/corpo celeste.
+  permeacao_emocional: Reconhecimento visual do arquétipo.
+  manifestacao_externa: Uso em mapas, fichas e leitura visual.
+  como_guiar_o_astral: Fixar o símbolo como atalho visual do planeta.

@@ -1,0 +1,107 @@
+﻿status: review
+id: "sagitario_atlas"
+nome: "Sagitário — Atlas Simbólico"
+tradicoes:
+  - "atlas simbolico editorial"
+  - "sintese multiescola"
+tipo: "Atlas Simbólico"
+subtema: "Correspondências de Sagitário"
+
+origens_e_divergencias:
+  tradicional: "Júpiter — fogo mutável, expansão, filosofia, viagens."
+  moderna: "Júpiter (mesmo). Sem divergência."
+  nota: "Regência unânime."
+
+atlas_simbolico:
+  pessoas_arquetipos:
+    - "O filósofo"
+    - "O viajante"
+    - "O professor"
+    - "O buscador de verdade"
+    - "O estrangeiro"
+    - "O livre"
+  lugares_fisicos:
+    - "Estradas"
+    - "Fronteiras"
+    - "Universidades"
+    - "Templos"
+    - "Montanhas sagradas"
+    - "Países estrangeiros"
+  objetos_materia:
+    - "Livros sagrados"
+    - "Mapas"
+    - "Flechas"
+    - "Cetro"
+    - "Relógio de sol"
+  eventos_tipicos:
+    - "Viagens longas"
+    - "Formatura"
+    - "Casamento"
+    - "Publicações"
+    - "Imigrações"
+  animais:
+    - "Cavalo"
+    - "Centauro"
+    - "Cão de caça"
+    - "Águia"
+    - "Cervo"
+    - "Galo"
+  plantas_ervas:
+    - "Carvalho"
+    - "Nogueira"
+    - "Sálvia"
+    - "Rosmaninho"
+    - "Hera"
+  metais_pedras:
+    - "Estanho"
+    - "Lápis-lazúli"
+    - "Topázio"
+    - "Turquesa"
+    - "Safira"
+  cores_sons:
+    cores: ["Azul-royal", "Roxo", "Dourado", "Verde-escuro"]
+    sons: ["Órgão", "Tambor distante", "Canto gregoriano"]
+  numeros: [3, 9, 12]
+  dias_semana: ["Quinta-feira"]
+  doencas_corpo:
+    doencas: ["Problemas hepáticos", "Problemas de quadril", "Excesso"]
+    partes_corpo: ["Fígado", "Quadril", "Coxas", "Sangue"]
+  arquetipos_mitologicos:
+    - "Quiron (centauro sábio)"
+    - "Jasão (viajante)"
+    - "Hércules (busca)"
+  mitos_historias:
+    - "Jasão e os Argonautas"
+    - "Hércules e os trabalhos"
+    - "A busca do Graal"
+  expressao_elevada_sombra: "Elevada: filosofia, liberdade, generosidade, verdade | Sombra: fanatismo, exagero, dogmatismo, fuga"
+
+revisao_editorial:
+  origem_e_linguagem: "Sagitário vem do latim sagittarius, 'arqueiro'. O centauro-arqueiro é figura zodiacal; signo tropical e constelação não são o mesmo objeto astronômico."
+  mito_arquetipo_e_porque: "Arco, direção, viagem e busca de horizonte são imagens simbólicas; Quíron e outros centauros pertencem a mitos específicos e não esgotam a leitura do signo."
+  limite_tecnico: "Júpiter é regente tradicional; viagem, ensino, fé ou filosofia só podem ser interpretados com casas, aspectos, condição e pergunta contextualizados."
+referencias:
+  primarias:
+    - "Ptolomeu. Tetrabiblos, livro I: signos e qualidades, conforme edição declarada."
+  secundarias:
+    - "Rudhyar, Dane. The Astrological Signs: The Pulse of Life. Harper & Row, 1971."
+  tecnicas:
+    - "Ver 02_Astronomia/Zodiaco_Tropical.yaml e 04_Planetas/Jupiter.yaml."
+camada_energetica:
+  impressao_mental: "A mente que BUSCA A VERDADE. Filosofia, fé, expansão, 'qual é o sentido?'."
+  permeacao_emocional: "Esperança e otimismo. Quando saudável: generosidade. Quando ferido: fanatismo, exagero."
+  manifestacao_externa: "Eventos PROVÁVEIS de viagens, estudos, publicações. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a ENCONTRAR SUA VERDADE sem impô-la. Sagitário é a bússola, não o mapa."
+
+tarot_relacionado:
+  carta: "A Roda da Fortuna (X)"
+  conexao: "Júpiter é a Roda: expansão, sorte, ciclos, a grande jornada."
+
+foco_especial:
+  infantil: "A criança Sagitário adora histórias, viagens, aprender. Precisa de fé, otimismo, horizontes amplos."
+  familiar: "O professor/avô da família. O que expande horizontes."
+  carmico_espiritual: "Sagitário indica a LIÇÃO DE FÉ. Casa Sagitário = onde a pessoa cresce e expande."
+
+ver_mais:
+  - "../03_Signos/Sagitario.yaml"
+

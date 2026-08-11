@@ -1,0 +1,46 @@
+﻿status: draft
+id: "antares_atlas"
+nome: "Antares — Atlas Simbólico"
+tradicoes:
+  - "atlas simbolico editorial"
+  - "sintese multiescola"
+tipo: "Atlas Simbólico"
+subtema: "Correspondências de Antares"
+
+origens_e_divergencias:
+  tradicional: "Ptolomeu — Antares = coração do Escorpião; opositor de Marte/Regulus; intensidade, risco."
+  moderna: "Astrologia moderna mantém; acrescenta obsessão, sexo, poder."
+  nota: "Estrela considerada perigosa por excesso; interpretar com cautela."
+
+atlas_simbolico:
+  pessoas_arquetipos: "Místico intenso, estrategista, cirurgião, investigador"
+  lugares_fisicos: "Locais subterrâneos, hospitais, laboratórios, templos secretos"
+  objetos_materia: "Faca cirúrgica, livro proibido, fogo púrpura, chave"
+  eventos_tipicos: "Crise de poder, morte simbólica, transformação radical, obsessão"
+  animais: "Escorpião, aranha, serpente, águia real"
+  plantas_ervas: "Ervas espinhosas, venenos medicinais, mirra, cânfora"
+  metais_pedras: "Ferro, granada, rubi, obsidiana"
+  cores_sons:
+    cores: ["Vermelho-escuro", "preto", "roxo"]
+    sons: ["Tambor grave", "sussurro", "voz profunda"]
+  numeros: [8, 13, 23]
+  dias_semana: ["Terça-feira (Marte)", "Sábado (Saturno)"]
+  doencas_corpo:
+    doencas: ["Febres altas", "infecções", "crises"]
+    partes_corpo: ["Órgãos sexuais", "coração", "intestinos"]
+  arquetipos_mitologicos: ["Escorpião de Orion", "Hércules matando o touro de Creta", "Sete contra Tebas"]
+  mitos_historias: "Orion vs Escorpião; luta eterna entre luz e sombra; transformação como prova"
+  sonhos_simbolos_inconsciente: "Escorpiões, fogo púrpura, cortes, abismos, mortes simbólicas"
+  expressao_elevada_sombra: "Elevada: cirurgião da alma, estratégia justa, transmutação | Sombra: obsessão, vingança, manipulação"
+
+camada_energetica:
+  impressao_mental: "Mentalidade de investigação radical; tendência a ver o que está oculto."
+  permeacao_emocional: "Intensidade emocional extrema; medo de traição/controle."
+  manifestacao_externa: "Eventos PROVÁVEIS de crise, morte simbólica, encontro com o proibido."
+  como_guiar_o_astral: "Mostrar que intensidade pode ser curadora, não só destrutiva; usar para transformação, não fixação."
+
+ver_mais:
+  - "../07_Estrelas_Fixas/Antares.yaml"
+
+## ✏️ Minhas Anotações
+

@@ -1,0 +1,67 @@
+status: review
+id: "casa_11"
+tradicoes:
+  - "helenística"
+  - "medieval"
+  - "renascentista"
+  - "moderna (camadas psicológica e sistêmica explicitamente separadas)"
+tipo: "conceito técnico de casa astrológica"
+escopo_documental:
+  tecnica_historica:
+    - "significação tradicional da casa, sua relação com ângulos, casas sucedentes/cadentes e tópicos derivados"
+  camadas_modernas: "Atlas simbólico, Tarot, medicina, arquétipos e leitura sistêmica permanecem separados da regra histórica."
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "primária"
+    localizador: "Livro IV e passagens sobre configuração e significação dos lugares"
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    natureza: "primária"
+    localizador: "Livros II–IV, tópicos das casas e julgamento natal"
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    natureza: "primária"
+    localizador: "Livro I, significações das casas e regras de julgamento"
+validacao_de_fontes:
+  base: "A significa??o hist?rica dos lugares ? sustentada por Ptolomeu, Valens e Lilly, nas refer?ncias estruturadas da ficha."
+  escopo: "Tarot, Atlas simb?lico, medicina, psicologia e leitura sist?mica s?o camadas de estudo rotuladas; n?o substituem a t?cnica hist?rica de casas."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+numero: 11
+nome: "Casa 11 — A Comunidade / O Futuro"
+tema: "Com quem sonho e a quem pertenço"
+
+origens_e_divergencias:
+  tradicional: "Ptolomeu (Tetrabiblos) — significados tradicionais das 12 casas."
+  moderna: "Astrologia psicológica/sistêmica (Liz Greene, escola de relações familiares)."
+  nota: "Revisar ao citar — marca a escola usada."
+atlas_simbolico:
+  pessoas_arquetipos: "O amigo, o grupo, o reformador, o humanitário"
+  lugares_fisicos: "Clubes, grupos, redes, espaços coletivos"
+  objetos_materia: "Bandeiras, distintivos, redes, livros de utopia"
+  eventos_tipicos: "Reuniões de grupo, reformas, inovações, amizades"
+  animais: "Águia, falcão, cão pastor, golfinho"
+  plantas_ervas: "Olivas, samambaia, zimbro"
+  metais_pedras: "Alumínio, lápis-lazúli, água-marinha"
+  cores_sons: "Azul-elétrico, prata; notas Mi e Lá"
+  numeros: "4 (estrutura coletiva), 7 (mental superior), 11 (gênio)"
+  dias_semana: "Sábado (Saturno/Urano)"
+  doencas_corpo: "Tornozelos, circulação, sistema nervoso"
+  arquetipos_mitologicos: "Prometeu, Atena, Zeus/Júpiter (raio)"
+  mitos_historias: "Prometeu e o fogo; Pandora; Atena nascida de Zeus"
+  sonhos_simbolos_inconsciente: "Máquinas, redes, coletivos, céu estrelado"
+  expressao_elevada_sombra: "Elevada: amizade universal, inovação coletiva | Sombra: rebeldia sem causa, frieza"
+
+camada_energetica:
+  campo_mental: "Foco em grupos, amizades, causas e o futuro desejado."
+  permeacao_emocional: "Pertencimento, 'quem é minha tribo', 'o futuro que sonhamos'."
+  manifestacao_externa: "Eventos prováveis de grupo, amizade, causa. Arquétipos: a Tribo, o Futuro. Inclinação, não destino."
+  como_guiar_o_astral: "Casa 11 pede PERTENCIMENTO — a pessoa 'quer sonhar junto'."
+
+significados_derivados:
+  dinheiro_parceiro: false
+  amigos: "Casa 11 = amigos de verdade, 'tribo escolhida'."
+  grupos: "Clubes, associações, 'grupos que eu pertenço'."
+  causas: "Causas sociais, 'o futuro que quero construir'."
+  filhos_adotivos: "Casa 11 = filhos adotivos/espirituais (diferente de Casa 5 que é biológico)."
+  projetos_futuros: "Sonhos de futuro, 'o que quero ver acontecer'."

@@ -1,0 +1,60 @@
+status: review
+id: "astrologia_harmonica"
+nome: "Astrologia Harmônica e Mapas Harmônicos"
+tipo: "técnica moderna"
+tradicao_primaria: ["moderna", "harmônica"]
+
+escopo:
+  definicao_operacional: "Método moderno que transforma longitudes de uma carta por um número harmônico para tornar visíveis famílias de divisões do círculo e suas configurações."
+  inclui:
+    - "Mapas harmônicos calculados pela multiplicação das longitudes por um inteiro e redução a 0°–360°."
+    - "Leitura de relações vinculadas ao número harmônico escolhido, com método declarado."
+  nao_inclui:
+    - "A Escola Uraniana/Hamburgo, cosmobiologia, planetas hipotéticos ou dial de 90°."
+    - "A suposição de que qualquer harmônico isolado tem significado universal."
+  exclusoes_do_projeto: ["Astrologia Uraniana/Hamburgo e cosmobiologia."]
+
+fundamento:
+  descricao: "Em um harmônico n, cada longitude é multiplicada por n e reduzida ao círculo. Relações angulares que pertencem à família de n tornam-se mais próximas de conjunções ou oposições na carta harmônica, facilitando a inspeção geométrica."
+  contexto_historico: "A formulação de mapas harmônicos é uma especialidade moderna. Ela não deve ser confundida com a ordem caldaica, música das esferas histórica ou 'oitavas' planetárias."
+
+procedimento:
+  pre_requisitos:
+    - "Carta natal ou evento calculado com parâmetros reproduzíveis."
+    - "Número harmônico e finalidade da análise declarados."
+  passos:
+    - "Converter cada longitude natal para o intervalo 0°–360°."
+    - "Multiplicar cada longitude pelo número harmônico escolhido e reduzir módulo 360°."
+    - "Observar agrupamentos e relações resultantes, retornando sempre à carta radical para interpretação."
+    - "Registrar número harmônico, orbes e critério de leitura."
+  parametros_de_calculo:
+    - "número harmônico inteiro"
+    - "longitudes tropicais de origem"
+    - "orbes"
+    - "corpos e pontos incluídos"
+
+uso_interpretativo:
+  pergunta_que_ajuda_a_responder:
+    - "Que família de relações geométricas merece inspeção adicional na carta radical?"
+  como_ponderar: "Usar o harmônico para investigação de padrões; confirmar a relevância em posições, casas, aspectos e contexto da carta original."
+  limites:
+    - "Não usar um mapa harmônico como substituto da carta radical."
+    - "Não atribuir um significado fixo a cada número sem citar a escola/autoria."
+
+divergencias_de_tradicao:
+  consenso: "O procedimento matemático de transformação é claro; os significados interpretativos dos harmônicos variam."
+  divergencias:
+    - "Autores diferem na seleção de harmônicos, orbes e sentido simbólico de cada número."
+  decisao_editorial: "As futuras fichas de harmônicos devem separar fórmula, autor e hipótese interpretativa; o núcleo do projeto não adota a Escola de Hamburgo."
+
+referencias:
+  primarias: []
+  secundarias:
+    - "Addey, John. Harmonics in Astrology. Fowler, 1976."
+  tecnicas: []
+
+relacoes:
+  depende_de: ["zodiaco_tropical", "protocolo_calculo_reproduzivel", "aspectos"]
+  ver_tambem: ["aspectos_menores", "configuracoes_planetarias", "teoria_oitavas_planetarias"]
+
+anotacoes_pessoais: []

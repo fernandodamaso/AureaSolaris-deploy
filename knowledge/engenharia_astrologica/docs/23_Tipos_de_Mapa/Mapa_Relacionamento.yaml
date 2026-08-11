@@ -1,0 +1,76 @@
+status: review
+
+id: "mapa_relacionamento"
+nome: "Mapa de Relacionamento (Visão de Navegação)"
+tradicoes:
+  - "editorial"
+  - "moderna ocidental"
+tipo: "nó de navegação"
+escopo_documental:
+  tecnica_historica:
+    - "organiza as três famílias principais de leitura relacional: sinastria, composite e Davison"
+  regra_do_projeto: "Esta ficha não substitui as fichas técnicas; ela apenas orienta a escolha do método."
+  camada_simbolica: "Qualquer leitura psicológica, sistêmica ou cármica depende da técnica já escolhida."
+referencias:
+  - autor: "Ronald C. Davison"
+    obra: "Synastry: Understanding Human Relations Through Astrology"
+    natureza: "moderna de referência"
+    localizador: "comparação de métodos relacionais; conferir edição"
+  - autor: "John Townley"
+    obra: "Composite Charts: The Astrology of Relationships"
+    natureza: "moderna"
+    localizador: "uso do composite como método distinto"
+validacao_de_fontes:
+  base: "As refer?ncias estruturadas delimitam c?lculo, uso e genealogia dos tipos de mapa tratados nesta ficha."
+  escopo: "A taxonomia separa qualidades, derivados, relacionais e especialidades; ela n?o funde composite, Davison e compara??o entre mapas."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+tema: "Como escolher corretamente entre sinastria, composite e Davison."
+
+essencia:
+  - "Sinastria = comparação entre dois mapas"
+  - "Composite = carta por midpoint planetário"
+  - "Davison = carta por midpoint real de tempo e lugar"
+
+origens_e_divergencias:
+  tradicional: "A comparação de mapas tem antecedentes mais antigos, mas a tríade sinastria/composite/Davison é organização moderna."
+  moderna: "A astrologia relacional moderna separa comparação, carta composta e carta relacional real."
+  nota: "Não fundir os três métodos numa única leitura indiferenciada."
+atlas_simbolico:
+  pessoas_arquetipos: "O parceiro, o amante, o aliado"
+  lugares_fisicos: "Tribunais, templos, locais de parceria"
+  objetos_materia: "Alianças, contratos, espelhos"
+  eventos_tipicos: "Casamentos, contratos, parcerias"
+  animais: "Cervo, cisne, pomba"
+  plantas_ervas: "Rosa, violeta, madressilva"
+  metais_pedras: "Cobre, ouro rosa, diamante, esmeralda"
+  cores_sons: "Rosa, verde-claro; notas Lá e Ré"
+  numeros: "6 (harmonia), 7 (justiça), 8 (equilíbrio)"
+  dias_semana: "Sexta-feira (Vênus)"
+  doencas_corpo: "Rins, pele, adrenais"
+  arquetipos_mitologicos: "Hera/Juno, Afrodite/Vênus, Themis"
+  mitos_historias: "O julgamento de Páris; Afrodite e a união"
+  sonhos_simbolos_inconsciente: "Espelhos, festas, casamentos, justiça"
+  expressao_elevada_sombra: "Elevada: parceria equilibrada | Sombra: dependência, superficialidade"
+
+camada_energetica:
+  campo_mental: "A junção de dois campos mentais. Onde se atraem (Vênus/Júpiter) e onde se atritam (Saturno/Marte/Netuno)."
+  permeacao_emocional: "O que um ativa no outro emocionalmente. Netuno=fusão/ilusão; Saturno=compromisso/limit."
+  manifestacao_externa: "Eventos prováveis do relacionamento seguem os aspectos cruzados. Inclinação, não destino."
+  como_guiar: "Mostrar onde a dupla 'pega' e onde 'esbarra' — e que consciência escolhe o tom. Não rotular como 'alma gêmea' ou 'incompatível'."
+
+foco_especial:
+  infantil: "Sinastria pais-filho mostra onde a criança se apoia e onde se desafia. Ferramenta central da astrologia infantil."
+  familiar: "Eixo central das relações familiares no seu projeto — ler pais x filhos, irmãos, avós."
+  carmico: "Nodos em sinastria indicam laços de jornada (oferecer a quem ressoa)."
+
+como_usar: |
+  1. Se a pergunta é "como nossos mapas interagem?", começar por sinastria.
+  2. Se a pergunta é "qual é a entidade simbólica da relação?", usar composite.
+  3. Se a pergunta é "como esta relação se configura como carta própria no tempo e espaço?", usar Davison.
+  4. Só depois acrescentar sobreposição de casas, nodos, midpoints ou camadas cármicas/sistêmicas.
+
+relacoes:
+  ver_tambem:
+    - "../12_Relacionamentos/sinastria.yaml"
+    - "../12_Relacionamentos/composite_davison.yaml"
+    - "../12_Relacionamentos/Davison.yaml"

@@ -1,0 +1,58 @@
+status: review
+id: "horas_planetarias"
+nome: "Horas Planetárias"
+tradicoes:
+  - "tradicional"
+  - "aplicada"
+tema: "As 24h do dia divididas em ciclos de 7 regentes (a hora do nascimento tem um planeta)"
+
+essencia:
+  - "Ordem: Lua, Mercúrio, Vênus, Sol, Marte, Júpiter, Saturno (e recomeça)"
+  - "O dia começa no nascer do Sol; a 1ª hora pertence ao planeta do dia"
+  - "Planeta da hora do nascimento = 'regente do horário' (eletiva tradicional)"
+
+origens_e_divergencias:
+  tradicional: "As horas planetárias seguem a ordem caldaica; a prática aparece em recepções helenísticas, medievais e renascentistas com convenções de cálculo."
+  moderna: "Numerologia aplicada ao horário é camada contemporânea distinta e não regra do cálculo tradicional."
+  nota: "Dividir luz diurna e noite em doze horas temporais cada; a duração depende de nascer/pôr do Sol, data e local."
+
+referencias:
+  - autor: "Heinrich Cornelius Agrippa"
+    obra: "Three Books of Occult Philosophy"
+    natureza: "fonte renascentista"
+    localizador: "Livro II, dias e horas planetárias; consultar edição"
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    ano: 1647
+    natureza: "fonte primária renascentista"
+    localizador: "Tabelas e convenções de tempo; conferir edição"
+
+regras_de_calculo:
+  entrada: "Data, coordenadas, fuso, nascer e pôr do Sol pela convenção astronômica declarada."
+  procedimento: "Primeira hora diurna recebe o regente do dia; repetir Saturno–Júpiter–Marte–Sol–Vênus–Mercúrio–Lua em horas diurnas e noturnas."
+  escolha: "Exibir tanto a hora temporal quanto a hora civil; não as confundir."
+atlas_simbolico:
+  pessoas_arquetipos: "O que segue o ritmo horário, o disciplinado"
+  lugares_fisicos: "Lugares de tempo: relógios, templos, locais de oração"
+  objetos_materia: "Relógios, ampulhetas, instrumentos de tempo"
+  eventos_tipicos: "Eventos de hora: orações, trabalhos, ritmos"
+  animais: "Animais de tempo: coruja (hora noturna), etc."
+  plantas_ervas: "Plantas de hora: lavanda (hora de Mercúrio), etc."
+  metais_pedras: "Metais de hora: mercúrio (hora de Mercúrio), etc."
+  cores_sons: "Cores de hora: amarelo (Mercúrio), etc."
+  numeros: "12 (horas), 24 (dia completo)"
+  dias_semana: "Todos os dias"
+  doencas_corpo: "Sistema nervoso, coração, sistema digestivo"
+  arquetipos_mitologicos: "Helios, Selene, Ares, etc."
+  mitos_historias: "Mitologias das horas planetárias"
+  sonhos_simbolos_inconsciente: "Tempo, horas, relógios, ampulhetas"
+  expressao_elevada_sombra: "Elevada: tempo consciente, ritmo sagrado | Sombra: rigidez, obsessão"
+
+camada_energetica:
+  impressao_mental: "O tempo vira uma roda de regentes — cada hora tem 'dono'. A mente do nascimento é batizada pelo planeta da hora."
+  permeacao_emocional: "Sutil: o tom da hora influencia o humor de quem nasce nela."
+  manifestacao_externa: "Na eleição, ações feitas na 'hora certa' do planeta são favorecidas. Inclinação, não destino."
+  como_guiar_o_astral: "Ferramenta de eleição, não de destino — usar para 'quando' fazer, não 'se' vai acontecer."
+
+origens: "Astrologia helenística / horária (Dorotheus, Masha'allah), Chaves de Salomão"
+

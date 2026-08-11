@@ -1,0 +1,166 @@
+status: review
+id: "venus"
+tradicoes:
+  - "helenística"
+  - "medieval"
+  - "renascentista"
+  - "moderna (camada psicológica explicitamente separada)"
+escopo_documental:
+  tecnica_historica:
+    - "natureza, significações, regência, dignidades, sect e condições planetárias conforme a linhagem selecionada"
+  camadas_modernas: "Psicologia, evolução, sistêmica, mitologia e correspondências contemporâneas permanecem identificadas como camadas próprias."
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "primária"
+    localizador: "Livros I–II, natureza, significações e condições dos planetas"
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    natureza: "primária"
+    localizador: "Livros I–II, significadores e julgamento natal"
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    natureza: "primária"
+    localizador: "Livro I, significações, dignidades e condições planetárias"
+validacao_de_fontes:
+  base: "As refer?ncias estruturadas sustentam a camada hist?rica ou moderna explicitamente declarada para este corpo."
+  escopo: "Mitologia, psicologia, evolu??o, medicina, sist?mica e Atlas permanecem camadas de estudo rotuladas, sem substituir dado astron?mico ou regra de escola."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+nome: "Vênus"
+tipo: "Planeta"
+tradicao_primaria: ["tradicional", "psicológica", "evolutiva"]
+
+essencia:
+  - "Amor"
+  - "Beleza"
+  - "Harmonia"
+  - "Valor"
+
+atlas_simbolico:
+  pessoas_arquetipos:
+    - "Amante"
+    - "Artista"
+    - "Diplomata"
+    - "Jovem mulher (beleza)"
+    - "Música, cantor"
+    - "Decorador, estilista"
+  lugares:
+    - "Jardins, parques"
+    - "Teatro, cinema"
+    - "Galeria de arte"
+    - "Banco (valor)"
+    - "Praia, ilha"
+    - "Quarto de vestir"
+  objetos_materia:
+    - "Jóias (ouro e prata)"
+    - "Perfume"
+    - "Rosa, flor"
+    - "Espelho de maquiagem"
+    - "Pintura, tela"
+    - "Moeda de cobre"
+    - "Violão, instrumento de cordas"
+  eventos_tipicos:
+    - "Casamento"
+    - "Encontro amoroso"
+    - "Compra de joias/arte"
+    - "Festas, celebrações"
+    - "Ganho de dinheiro"
+    - "Crise de valores"
+    - "Separação amorosa"
+  animais:
+    - "Cervo"
+    - "Coelho"
+    - "Pomba"
+    - "Cisne"
+    - "Abelha (mel = doçura)"
+    - "Gato siamês (elegância)"
+  plantas_ervas:
+    - "Rosa"
+    - "Jasmim"
+    - "Violeta"
+    - "Macieira (flor)"
+    - "Aveia"
+    - "Camomila"
+    - "Morango"
+  metais_pedras:
+    - "Cobre"
+    - "Bronze"
+    - "Esmeralda"
+    - "Jade"
+    - "Pérola"
+    - "Quartzo rosa"
+    - "Turquesa"
+  cores_sons:
+    cores: ["Verde-esmeralda", "Rosa", "Azul-claro", "Dourado-suave"]
+    sons: ["Violino", "Harpa", "Canto de pássaro", "Riso", "Música suave"]
+  numeros: [2, 6, 7, 15]
+  dias_semana: ["Sexta-feira"]
+  doencas_corpo:
+    doencas: ["Problemas renais", "Doenças venéreas", "Distúrbios hormonais"]
+    partes_corpo: ["Rins", "Lombar", "Órgãos genitais (femininos)", "Garganta"]
+  arquetipos_mitologicos:
+    - "Afrodite/Vênus (amor, beleza)"
+    - "Anfitrite (mar amoroso)"
+    - "Kuan Yin (compaixão)"
+    - "Freyja (amor e guerra nórdica)"
+  mitos_historias:
+    - "Afrodite e Eros (nascimento do amor)"
+    - "Paris e o pomo da discórdia (beleza que causa guerra)"
+    - "Pigmalião e Galatéia (arte que ganha vida)"
+    - "Anfitrite e Poseidon (mar que acolhe)"
+  sonhos_inconsciente:
+    - "Rosa vermelha = paixão ativa"
+    - "Rosa branca = pureza do afeto"
+    - "Perder jóias = medo de perder valor próprio"
+    - "Banho de perfumes = desejo de sedução"
+    - "Crise de beleza = crise de identidade"
+  expressao_elevada_vs_sombra:
+    elevada: "Amor incondicional, artista que eleva, diplomata que une, que vê beleza em tudo."
+    sombra: "Obsessão por aparência, sedução vazia, dependência do outro para sentir valor, frieza emocional."
+
+camada_energetica:
+  impressao_mental: "A mente de 'o que me atrai?'. Gosto, preferência, harmonia. Quando atrito: obsessão por beleza, indecisão amorosa, cálculo frio do que 'vale a pena'."
+  permeacao_emocional: "Doçura e prazer. Quando bloqueado: frieza, crítica estética, 'não mereço'. Quando solto: generosidade, entrega."
+  manifestacao_externa: "Eventos prováveis de encontros, arte, dinheiro, casamento. Trânsitos tendem a trazer encontros ou crises de valor."
+  como_guiar_o_astral: "Ajudar a mente a reconhecer o que valoriza de verdade — não o que é socialmente esperado. Vênus pede autenticidade no desejo, não só na aparência."
+
+representa:
+  pessoas: ["Amante", "Artista", "Jovem mulher", "Diplomata"]
+  eventos: ["Casamento", "Encontro", "Compra de arte/joias", "Celebração"]
+  corpo: ["Rins", "Lombar", "Órgãos genitais femininos"]
+
+dignidades_essenciais:
+  domicilio: ["Touro", "Libra"]
+  exaltacao: ["Peixes"]
+  detrimento: ["Escorpião", "Áries"]
+  queda: ["Virgem"]
+
+astronomia_e_regras_de_julgamento:
+  astronomia_observacional:
+    - "Planeta visível em forte brilho, porém sempre relativamente próximo do Sol; alterna estrela matutina e vespertina."
+    - "Retrogradação, estações, combustão e elongação máxima são condições observáveis relevantes para seu estado."
+  criterios_tradicionais:
+    - "Vênus é benéfica por natureza, mas sua eficácia depende de dignidade, casa, aspecto, sect e estado solar."
+    - "Mudanças entre aparição matutina/vespertina podem ser usadas por escolas específicas; não universalizar sem fonte."
+  notas_de_motor:
+    - "Auditar elongação, direção, combustão/cazimi e estado oriental/ocidental antes de fixar leitura automática."
+    - "Separar amor/afeição tradicionais, acordos, prazeres e valor material das ressignificações psicológicas ou cármicas."
+
+combinacoes_exemplo:
+  casa_7:
+    temas: ["casamento", "parceria", "beleza compartilhada"]
+    possiveis_efeitos: ["atração forte", "gosto estético refinado", "necessidade de harmonia no relacionamento"]
+    reforcado_por: ["jupiter_dignificado", "lua_conjunto"]
+    amenizado_por: ["saturno_conjunto", "marte_aflito"]
+
+origens_e_divergencias:
+  escola_tradicional:
+    autores: [Ptolomeu, Bonatti]
+    conceito: "O pequeno benéfico, significador de amor, concórdia, prazeres, artes, acordos e bens agradáveis."
+  escola_moderna:
+    autores: [Liz Greene, Jung]
+    conceito: "Função do sentimento: como valoramos, amamos e criamos harmonia."
+  escola_evolutiva:
+    autores: [Green, Forrest]
+    conceito: "O que a alma veio aprender sobre amar e ser amado, através de repetições de padrão."
+  por_que_da_divergencia: "Tradicional vê Vênus como benéfico material/emocional; moderna acrescenta a função psicológica de 'valorar'."

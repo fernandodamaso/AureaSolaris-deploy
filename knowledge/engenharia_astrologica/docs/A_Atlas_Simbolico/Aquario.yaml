@@ -1,0 +1,104 @@
+﻿status: review
+id: "aquario_atlas"
+nome: "Aquário — Atlas Simbólico"
+tradicoes:
+  - "atlas simbolico editorial"
+  - "sintese multiescola"
+tipo: "Atlas Simbólico"
+subtema: "Correspondências de Aquário"
+
+origens_e_divergencias:
+  tradicional: "Saturno (antiga) / Urano (moderna) — ar fixo, revolução, humanitarismo."
+  moderna: "Urano (mesmo). Sem divergência significativa."
+  nota: "Saturno como regência tradicional antiga, Urano na moderna."
+
+atlas_simbolico:
+  pessoas_arquetipos:
+    - "O inovador"
+    - "O reformador"
+    - "O humanitário"
+    - "O rebelde"
+    - "O gênio coletivo"
+    - "O futurista"
+  lugares_fisicos:
+    - "Laboratórios"
+    - "Fábricas"
+    - "Aeroportos"
+    - "Redes elétricas"
+    - "Torres de transmissão"
+    - "Comunidades"
+  objetos_materia:
+    - "Aparelhos eléctricos"
+    - "Computadores"
+    - "Raios"
+    - "Lâmpadas"
+    - "Radares"
+  eventos_tipicos:
+    - "Revoluções"
+    - "Invenções"
+    - "Quebras súbitas"
+    - "Mudanças coletivas"
+    - "Surtos geniais"
+  animais:
+    - "Águia"
+    - "Morcego"
+    - "Aranha"
+    - "Abelha"
+    - "Cão de raiva"
+  plantas_ervas:
+    - "Aloé"
+    - "Erva de São João"
+    - "Orquídea rara"
+    - "Trevo de quatro folhas"
+  metais_pedras:
+    - "Urânio"
+    - "Zircônio"
+    - "Ametista"
+    - "Fluorita"
+    - "Topázio-azul"
+  cores_sons:
+    cores: ["Azul-elétrico", "Violeta", "Prata-luz", "Rosa-neon"]
+    sons: ["Zumbido eléctrico", "Vento forte", "Bip"]
+  numeros: [4, 7, 11]
+  dias_semana: ["Sábado"]
+  doencas_corpo:
+    doencas: ["Problemas nervosos", "Choques eléctricos", "Insônia"]
+    partes_corpo: ["Sistema nervoso autônomo", "Cérebro", "Panturrilhas"]
+  arquetipos_mitologicos:
+    - "Prometeu"
+    - "Urano (céu primordial)"
+    - "Atlas"
+  mitos_historias:
+    - "Prometeu roubando o fogo"
+    - "Atlas carregando o céu"
+  expressao_elevada_sombra: "Elevada: inovação, liberdade, generosidade | Sombra: rebeldia sem causa, fanatismo por mudança"
+
+revisao_editorial:
+  origem_e_linguagem: "Aquário vem do latim aquarius, 'portador de água'. O signo tropical não é a constelação e o jarro é imagem iconográfica, não descrição de um objeto técnico."
+  mito_arquetipo_e_porque: "Água derramada, renovação e coletividade sustentam leituras simbólicas; Ganimedes e outras narrativas exigem atribuição cultural específica."
+  limite_tecnico: "Saturno é regente tradicional; Urano é regente moderno. O motor deve oferecer variante de escola, não ocultar a divergência."
+referencias:
+  primarias:
+    - "Ptolomeu. Tetrabiblos, livro I: signos e qualidades, conforme edição declarada."
+  secundarias:
+    - "Rudhyar, Dane. The Astrological Signs: The Pulse of Life. Harper & Row, 1971."
+  tecnicas:
+    - "Ver 04_Planetas/Saturno.yaml, 04_Planetas/Urano.yaml e as regras de regência selecionáveis."
+camada_energetica:
+  impressao_mental: "A mente que INOVA e LIBERTA. Insights súbitos, rupturas de padrão."
+  permeacao_emocional: "Liberdade interior. Quando saudável: originalidade. Quando ferido: solidão por ser diferente."
+  manifestacao_externa: "Eventos PROVÁVEIS de rupturas, inovações, encontros súbitos. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a CANALIZAR a electricidade. Aquário sem filtro causa curto-circuito."
+
+tarot_relacionado:
+  carta: "O Louco (0)"
+  conexao: "O Louco é Aquário: passo no vazio, ruptura, confiança no desconhecido."
+
+foco_especial:
+  infantil: "A criança Aquário é o gênio incompreendido. Precisa de liberdade, estímulo intelectual."
+  familiar: "O membro 'estranho' da família. O que traz inovação."
+  carmico_espiritual: "Aquário indica a LIÇÃO DE LIBERDADE. Casa Aquário = onde a pessoa deve inovar e libertar."
+
+ver_mais:
+  - "../03_Signos/Aquario.yaml"
+

@@ -1,0 +1,46 @@
+﻿status: draft
+id: "pollux_atlas"
+nome: "Pollux — Atlas Simbólico"
+tradicoes:
+  - "atlas simbolico editorial"
+  - "sintese multiescola"
+tipo: "Atlas Simbólico"
+subtema: "Correspondências de Pollux"
+
+origens_e_divergencias:
+  tradicional: "Ptolomeu — Pollux = gêmeo imortal; coragem, proteção, fama, luta honrosa."
+  moderna: "Astrologia moderna mantém; acrescenta liderança, defesa do grupo."
+  nota: "Pollux é o gêmeo imortal; mais ativo e combativo que Castor."
+
+atlas_simbolico:
+  pessoas_arquetipos: "Guerreiro nobre, protetor, líder de grupo, irmão"
+  lugares_fisicos: "Campos de batalha, ginásios, estádios, comunidades"
+  objetos_materia: "Espada, escudo, capacete, medalha, estandarte"
+  eventos_tipicos: "Batalhas honrosas, defesa de grupo, fama conquistada, competição"
+  animais: "Cavalo de guerra, leão, touro, falcão"
+  plantas_ervas: "Carvalho, cardo, café, pimenta"
+  metais_pedras: "Ferro, rubi, granada, diamante"
+  cores_sons:
+    cores: ["Vermelho-fogo", "dourado", "preto"]
+    sons: ["Trombeta", "tambor de guerra", "grito de batalha"]
+  numeros: [2, 8, 18]
+  dias_semana: ["Terça-feira (Marte)", "Domingo (Sol)"]
+  doencas_corpo:
+    doencas: ["Ferimentos", "febres", "dor de cabeça intensa"]
+    partes_corpo: ["Cabeça", "olhos", "braços"]
+  arquetipos_mitologicos: ["Pólux", "Hércules", "Aquiles", "São Jorge"]
+  mitos_historias: "Pollux dividindo a imortalidade com Castor; sacrifício pelo irmão; defesa honrosa"
+  sonhos_simbolos_inconsciente: "Espadas, cavalos brancos, bandeiras, lutas justas"
+  expressao_elevada_sombra: "Elevada: coragem leal, defesa do grupo, honra em combate | Sombra: violência excessiva, orgulho de força, combate desnecessário"
+
+camada_energetica:
+  impressao_mental: "Mentalidade de defesa e honra; acredita que lutar pelo grupo é sagrado."
+  permeacao_emocional: "Força emocional intensa; medo de covardia, traição."
+  manifestacao_externa: "Eventos PROVÁVEIS de competição honrosa, defesa, reconhecimento por coragem."
+  como_guiar_o_astral: "Ajudar a escolher lutas; nem toda batalha vale a pena; coragem sem sabedoria = imprudência."
+
+ver_mais:
+  - "../07_Estrelas_Fixas/README.yaml"
+
+## ✏️ Minhas Anotações
+

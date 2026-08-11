@@ -1,0 +1,83 @@
+﻿status: review
+id: "metodologia_leitura"
+nome: "Metodologia de Leitura"
+tradicoes:
+  - "editorial"
+  - "multiescola"
+tipo: "Engenharia da Interpretação"
+subtema: "Como ler um mapa passo a passo"
+
+origens_e_divergencias:
+  tradicional: "Lilly, Bonatti e Morin organizam julgamento segundo finalidade e significadores; não oferecem uma sequência idêntica a uma leitura psicológica natal moderna."
+  moderna: "Rudhyar, Greene e linhas evolutivas podem enfatizar Sol, Lua, Ascendente, padrões e desenvolvimento; esse enquadramento deve ser nomeado."
+  nota: "A metodologia é uma trilha de síntese para estudo. Antes de usar, selecionar tradição, tipo de mapa e parâmetros de cálculo."
+
+atlas_simbolico:
+  pessoas_arquetipos: "O leitor, o conselheiro, o estrategista"
+  lugares_fisicos: "Consultórios, salas de leitura"
+  objetos_materia: "Mapas, cartas, computadores"
+  eventos_tipicos: "Leituras, consultas, análises"
+  animais: "Águia (visão ampla), coruja (sabedoria)"
+  plantas_ervas: "Sálvia, hera"
+  metais_pedras: "Prata, cristal, diamante"
+  cores_sons:
+    cores: ["Azul", "dourado", "prata"]
+    sons: ["Sino", "harpa", "vento"]
+  numeros: [1, 3, 7]
+  dias_semana: ["Quarta-feira"]
+  doencas_corpo:
+    doencas: ["Problemas de visão", "ansiedade"]
+    partes_corpo: ["Olhos", "cérebro"]
+  arquetipos_mitologicos:
+    - "Hermes (mensageiro)"
+    - "Atena (estratégia)"
+  mitos_historias: "Hermes e a leitura do futuro"
+  expressao_elevada_sombra: "Elevada: leitura consciente | Sombra: dogmatismo, sentença"
+
+camada_energetica:
+  impressao_mental: "Ler um mapa é MONTAR UMA HISTÓRIA. Não é listar significados — é argumentar."
+  permeacao_emocional: "Leitura como serviço, não como julgamento. Quando saudável: clareza. Quando ferido: sentença."
+  manifestacao_externa: "Eventos prováveis de leituras, decisões. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a ENTENDER A ORDEM. Não misturar tradições sem avisar."
+
+passos_leitura:
+  - passo: "1. Declare a pergunta, o tipo de mapa e a tradição"
+    detalhe: "Natal, horária, eletiva, previsional ou relacional exigem significadores e prioridades diferentes."
+  - passo: "2. Audite os dados e as escolhas de cálculo"
+    detalhe: "Confirmar hora/local/UTC, zodíaco, casas, corpos, efeméride, orbes e tabela de regras."
+  - passo: "3. Estabeleça a estrutura primária exigida pela técnica"
+    detalhe: "Na natal, pode incluir Ascendente/regente, luminares, seita e ângulos; em outras técnicas, os significadores próprios."
+  - passo: "4. Julgue condição dos significadores"
+    detalhe: "Dignidade, casa, angularidade, movimento/fase, seita, recepção e relações relevantes, segundo a escola."
+  - passo: "5. Leia aspectos e configurações em contexto"
+    detalhe: "Calcular aspectos, aplicação/separação e orbes; uma figura visual não substitui seus componentes."
+  - passo: "6. Procure repetição, confirmação e contradição"
+    detalhe: "Dê mais peso a fatores repetidos por métodos compatíveis e descreva divergências em vez de apagá-las."
+  - passo: "7. Acrescente camadas de escola explicitamente"
+    detalhe: "Sol–Lua–Ascendente psicológicos, nodos evolutivos, simbolismo hermético e leitura sistêmica entram com autoria e limites declarados."
+  - passo: "8. Sintetize e documente"
+    detalhe: "Separar cálculo, fonte, inferência e nota simbólica; registrar incerteza e evitar sentença."
+
+como_usar: |
+  Não há proibição universal de iniciar por aspectos: a ordem depende da técnica.
+  Nunca misture tradições sem avisar.
+  Sempre informar os parâmetros e oferecer interpretação atribuída, não sentença.
+
+referencias:
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    natureza: "primária histórica"
+    localizador: "Escolha de significadores e ordem de julgamento; conferir edição."
+  - autor: "Guido Bonatti"
+    obra: "Liber Astronomiae"
+    natureza: "primária histórica"
+    localizador: "Método de julgamento e condições; conferir tradução/edição."
+  - autor: "Dane Rudhyar"
+    obra: "The Astrology of Personality"
+    natureza: "primária moderna"
+    localizador: "Estrutura de leitura humanista; conferir edição."
+
+validacao_de_fontes:
+  base: "A ficha distingue metodologia editorial, julgamento tradicional e sequência psicológica moderna."
+  limite: "O motor não deve pular auditoria de dados nem aplicar uma ordem natal a horária, eletiva ou previsão sem escolha explícita."
+

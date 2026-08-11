@@ -1,0 +1,61 @@
+status: review
+id: "aspectos_karmicos"
+nome: "Aspectos Cármicos em Relações"
+tipo: "Relacionamentos"
+subtema: "Leituras cármicas/evolutivas de contatos entre mapas"
+tradicoes:
+  - "cármica moderna"
+  - "evolutiva"
+  - "relacional"
+
+escopo:
+  definicao: "Categoria interpretativa moderna que atribui sentido de continuidade, aprendizado ou repetição a determinados contatos de sinastria. Não é uma classe geométrica distinta de aspecto."
+  inclui: ["contatos com nodos lunares", "Saturno", "Plutão", "Quíron quando adotado", "eixos e regentes segundo a escola"]
+  nao_inclui: ["prova de vidas passadas", "contrato de alma verificável", "sentença de permanência ou obrigação"]
+
+origens_e_divergencias:
+  historico: "A astrologia antiga e medieval estudou nodos, Saturno e vínculos entre significadores, mas a expressão psicológica 'aspecto cármico' e seu repertório atual pertencem sobretudo a correntes ocidentais modernas."
+  escola_carmica: "Pode ler repetições, débitos e tarefas simbólicas; autores diferem sobre quais corpos e aspectos contam."
+  escola_evolutiva: "Frequentemente dá centralidade a Plutão, nodos e seus regentes, porém o método depende do autor."
+  relacional: "Pode usar esses contatos como linguagem para padrões observáveis da relação, sem assumir uma metafísica específica."
+  decisao_editorial: "Conservar a hipótese espiritual como nota de escola; nunca apresentá-la como fato histórico, causal ou calculável."
+
+metodo:
+  pre_requisitos:
+    - "Dois mapas natais calculados com dados e configurações documentados."
+    - "Política explícita de aspectos, orbes, nodos verdadeiro/médio e pontos opcionais."
+    - "Escola cármica/evolutiva identificada antes da interpretação."
+  passos:
+    - "Calcular a sinastria normalmente; não criar um aspecto especial chamado cármico."
+    - "Isolar os contatos que a escola escolhida considera relevantes."
+    - "Interpretar planeta, ponto, aspecto, casa e regência antes de acrescentar a camada cármica."
+    - "Procurar repetição temática no conjunto; um contato isolado não sustenta conclusão totalizante."
+    - "Distinguir observação relacional, inferência simbólica e crença metafísica no texto final."
+  regra_de_motor: "O motor calcula os mesmos aspectos da sinastria e apenas anexa a etiqueta de escola se a regra editorial correspondente estiver ativa."
+
+uso_interpretativo:
+  nodo_sul: "Algumas escolas o associam a familiaridade e padrões repetidos; isso não prova vínculo anterior."
+  nodo_norte: "Pode simbolizar direção de desenvolvimento; não autoriza dizer que uma pessoa é a missão da outra."
+  saturno: "Pode enfatizar duração, limite, responsabilidade, medo ou compromisso, conforme o aspecto e o conjunto."
+  plutao: "Na leitura moderna pode marcar intensidade, poder e transformação; evitar linguagem inevitabilista."
+  quiron: "É opcional e moderno; pode organizar temas de vulnerabilidade e cuidado, sem diagnosticar trauma."
+  limites:
+    - "Não recomendar manter relação abusiva por suposto karma."
+    - "Não atribuir culpa, dívida espiritual, doença ou trauma sem base na experiência declarada."
+    - "Registrar quando a pessoa não adota premissas reencarnacionistas."
+
+camada_simbolica:
+  nota: "Imagens de nó, fio, ciclo, dívida e passagem pertencem ao vocabulário simbólico moderno; são recursos contemplativos, não correspondências universais."
+  imagens: ["nó", "ponte", "espiral", "encruzilhada"]
+
+referencias:
+  primarias: []
+  secundarias:
+    - "Greene, Liz. Relating: An Astrological Guide to Living with Others on a Small Planet. Samuel Weiser, 1977."
+    - "Forrest, Steven; Forrest, Jodie. Skymates: Love, Sex and Evolutionary Astrology. Seven Paws Press, edição consultada."
+    - "Green, Jeffrey Wolf. Pluto: The Evolutionary Journey of the Soul, vol. 1. Llewellyn, edição consultada."
+  tecnicas: []
+
+relacoes:
+  depende_de: ["sinastria", "aspectos", "nodos_lunares"]
+  ver_tambem: ["astrologia_carmica", "astrologia_evolutiva", "quiron", "plutao", "saturno"]

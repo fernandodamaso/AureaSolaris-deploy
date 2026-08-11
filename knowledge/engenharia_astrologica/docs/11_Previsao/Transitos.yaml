@@ -1,0 +1,94 @@
+id: transitos
+nome: 'Trânsitos: método de cálculo e julgamento'
+tipo: tecnica_de_movimento_atual
+tradicoes:
+- tradicional ocidental
+- moderna ocidental
+status: review
+definicao: Trânsito é a relação, numa data e hora, entre a posição atual de um corpo
+  celeste e fatores de uma carta de referência. É uma família de observação geométrica,
+  não uma lista de palavras-chave. A leitura muda conforme se trate de natividade,
+  carta de retorno, mapa mundano, horária ou eletiva.
+dados_e_calculo:
+  carta_de_referencia: Definir se o trânsito é lido sobre mapa natal, retorno, evento,
+    mundano ou eleição; não alternar o mapa sem registrar.
+  fatores: Selecionar antes os planetas, ângulos, lotes, estrelas ou cúspides admitidos
+    pela escola.
+  aspecto: Calcular longitude, aspecto por grau e orbe com critérios declarados; signo
+    inteiro e aspecto por grau podem ter funções distintas em tradições diferentes.
+  movimento: Anotar aplicação/separação, estações, retrogradação e repetições do contato.
+  data: Usar UTC, local/fuso, efeméride, zodíaco e convenção de casas do protocolo
+    reprodutível.
+procedimento:
+- Começar pelos significadores natais e pelo assunto, antes de procurar contatos transitórios.
+- Calcular contatos exatos e janela de orbe com data/hora, distinguindo passagem direta,
+  retrógrada e direta posterior.
+- Avaliar o trânsito segundo natureza/condição do fator em movimento e do fator natal,
+  casas, regências e recepção quando a escola usar esses critérios.
+- Relacionar a janela ao senhor do tempo ou retorno vigente, se houver um método complementar
+  escolhido.
+- Separar fato astronômico (posição e aspecto), regra de escola e interpretação simbólica
+  no registro.
+regras_para_motor:
+  saida_minima_obrigatoria:
+  - Mapa de referência declarado, fator em trânsito, fator radical, aspecto, orbe,
+    aplicação/separação, direção do movimento e carimbo temporal.
+  - Quando houver retrogradação, listar cada passagem distinta e não só a data central
+    mais próxima.
+  guardrails:
+  - Não gerar interpretação sem informar a escola ou o protocolo de julgamento adotado.
+  - Exigir hora natal confiável para ângulos e lotes sensíveis ao minuto.
+  - Não confundir aspecto por grau com relação por signo inteiro quando a técnica mantiver
+    ambos separados.
+camadas_de_escala:
+  rapidos: 'Lua, Sol, Mercúrio, Vênus e Marte: ritmos mais breves; o valor interpretativo
+    depende do mapa e do método.'
+  lentos_tradicionais: 'Júpiter e Saturno: ciclos mais longos e retornos próprios.'
+  modernos: Urano, Netuno e Plutão podem ser usados em escolas modernas; seu emprego
+    não deve ser retroprojetado nos métodos tradicionais.
+  angulos_e_lotes: Contatos com ângulos e lotes requerem hora natal e fórmula de lote
+    confiáveis.
+nao_confundir_com:
+- 'Retorno planetário: caso particular de trânsito em que o próprio corpo retorna
+  à longitude natal.'
+- 'Progressão ou direção: mapa simbólico/direcional obtido por fórmula, não posição
+  atual do planeta.'
+- 'Carta de lunação ou eclipse: figura coletiva/cíclica específica, que pode ser comparada
+  a trânsitos sem ser sinônimo deles.'
+divergencias_e_limites:
+- Orbes, aspectos admitidos, peso de planetas lentos e uso de casas variam muito entre
+  escolas.
+- O fato de ocorrer três passagens por retrogradação é uma propriedade de certos ciclos,
+  não uma regra de interpretação em três atos.
+- Trânsito isolado não elimina a necessidade de julgamento natal e de uma escala temporal
+  clara.
+referencias:
+- autor: William Lilly
+  obra: Christian Astrology
+  ano: 1647
+  natureza: vocabulário tradicional de aplicação, separação e condição; não manual
+    único de trânsito moderno
+- autor: Faculty of Astrological Studies
+  obra: Foundation Course
+  natureza: referência pedagógica contemporânea de fundamentos e técnicas
+  url: https://astrology.org.uk/astrology-learning-options/foundation-course/
+- autor: Swiss Ephemeris
+  obra: Programmer's Documentation
+  natureza: referência técnica para efemérides e cálculo reproduzível
+  url: https://www.astro.com/swisseph/swephprg.htm
+validacao_de_fontes:
+  base: "As refer?ncias estruturadas identificam a linhagem hist?rica, moderna ou astron?mica pertinente a esta t?cnica preditiva."
+  escopo: "Uma implementa??o deve declarar edi??o, algoritmo, efem?ride, escala de tempo e variante de escola; esta exig?ncia ? uma regra de reprodu??o, n?o uma lacuna de fonte."
+  limite: "A ficha permanece em review e n?o converte hip?tese, aproxima??o pedag?gica ou releitura moderna em previs?o determinista."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+notas_de_implementacao:
+  - "A tabela de orbes e a prioridade de fatores por escola pertencem à configuração normativa do motor, não a esta ficha geral."
+origens_e_divergencias:
+  tradicional: Conceito/técnica presente na tradição astrológica ocidental.
+  moderna: Possível ressignificação contemporânea.
+  nota: Rotular a escola quando divergir.
+camada_energetica:
+  impressao_mental: Campo conceitual do tema/técnica.
+  permeacao_emocional: Como o tema toca a experiência subjetiva.
+  manifestacao_externa: Como aparece em comportamentos e eventos.
+  como_guiar_o_astral: Como usar este conhecimento na leitura prática.

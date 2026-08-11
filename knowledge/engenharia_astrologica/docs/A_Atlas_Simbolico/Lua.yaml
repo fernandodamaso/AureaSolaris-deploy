@@ -1,0 +1,123 @@
+status: review
+id: "lua_atlas"
+nome: "Lua — Atlas Simbólico"
+tradicoes:
+  - "atlas simbolico editorial"
+  - "sintese multiescola"
+tipo: "Atlas Simbólico"
+subtema: "Correspondências da Lua"
+
+origens_e_divergencias:
+  tradicional: "A Lua rege Câncer e exalta-se em Touro; significa corpo, mãe, povo, geração, viagens, umidade e mudança. Fase, aplicação, velocidade, secto, dignidade e regente modificam o juízo. Agrippa registra prata e repertórios lunares."
+  moderna: "Linhas psicológicas a leem como hábitos, memória afetiva e segurança. A associação direta à anima junguiana é aproximação moderna, não consenso."
+  nota: "Selene, Ártemis/Diana, Hécate e Ísis vêm de contextos distintos: as aproximações enriquecem o atlas, mas não são identidades históricas."
+
+origem_linguistica_mito_glifo:
+  etimologia: "Lua vem do latim luna; Selḗnē nomeia em grego a deusa e o astro."
+  mito: "Selene percorre a noite e ama Endimião; Ártemis adquire associações lunares, enquanto Hécate articula limiar e encruzilhada."
+  glifo: "☽ representa diretamente o crescente visível."
+  porque: "Fases, luz refletida e movimento rápido explicam receptividade, ciclo, hábito, memória e mutabilidade."
+
+atlas_simbolico:
+  pessoas_arquetipos:
+    - "A mãe"
+    - "A nutridora"
+    - "A sensitiva"
+    - "A protetora"
+    - "A memória viva"
+    - "O viajante noturno"
+    - "A psique emocional"
+  lugares_fisicos:
+    - "Lagos, rios, oceanos"
+    - "Casas, lares, cozinhas"
+    - "Tumbas, lugares subterrâneos"
+    - "Cidades com canais"
+    - "Jardins noturnos"
+    - "Ilhas"
+  objetos_materia:
+    - "Espelhos (reflexo)"
+    - "Pratos de prata"
+    - "Joias de lua"
+    - "Leite, água, prata"
+    - "Pedra da lua"
+    - "Cápsulas, cápsulas de memória"
+  eventos_tipicos:
+    - "Nascimentos"
+    - "Mudanças de lar"
+    - "Viagens noturnas"
+    - "Sonhos proféticos"
+    - "Luto, perda"
+    - "Gestação"
+  animais:
+    - "Gato"
+    - "Coruja"
+    - "Caranguejo"
+    - "Lebre"
+    - "Cisne noturno"
+    - "Lobo uivante"
+    - "Sapo"
+  plantas_ervas:
+    - "Lírio"
+    - "Jasmim noturno"
+    - "Alface"
+    - "Couve"
+    - "Papoula"
+    - "Arroz"
+    - "Melissa (erva-cidreira)"
+  metais_pedras:
+    - "Prata"
+    - "Pedra da lua"
+    - "Pérola"
+    - "Cristal de quartzo branco"
+    - "Madrepérola"
+  cores_sons:
+    cores: ["Prata", "Branco luar", "Azul-prateado", "Cinza-perola"]
+    sons: ["Flauta", "Canto noturno", "Ressoar de sino lunar", "Murmúrio d'água"]
+  numeros: [2, 4, 7, 9]
+  dias_semana: ["Segunda-feira"]
+  doencas_corpo:
+    doencas: ["Problemas digestivos", "Ansiedade", "Insônia", "Problemas ginecológicos"]
+    partes_corpo: ["Estômago", "Útero", "Seios", "Sistema digestivo", "Olhos"]
+  arquetipos_mitologicos:
+    - "Artemis/Diana (caçadora, lua)"
+    - "Hécate (lua negra, encruzilhadas)"
+    - "Selene (lua que percorre a noite)"
+    - "Isis (lua egípcia, mãe universal)"
+    - "Tânato (morte, lua negra)"
+  mitos_historias:
+    - "Artemis e Actaeon (lua que protege a pureza)"
+    - "Hécate nas encruzilhadas"
+    - "Isis reconstituindo Osíris"
+    - "Lua e Endimion (amor noturno)"
+  sonhos_simbolos_inconsciente:
+    - "Lua cheia = plenitude emocional"
+    - "Lua nova = recomeço interior"
+    - "Lua sangrenta = crise emocional"
+    - "Cair da lua = perda de referência emocional"
+  expressao_elevada_sombra: "Elevada: nutrição, empatia, intuição, proteção | Sombra: manipulação emocional, dependência, humor volátil, apego"
+
+camada_energetica:
+  impressao_mental: "A mente que SENTE primeiro. Memória, imagem interna, 'como eu me sinto sendo eu'. Reage antes de pensar."
+  permeacao_emocional: "O corpo emocional inteiro — nutrição ou fome emocional. A Lua é a fome, a saciedade, o colo."
+  manifestacao_externa: "Eventos PROVÁVEIS de mudanças de estado emocional, lares, mães, mulheres, público feminino, viagens. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a diferenciar 'sentir' de 'ser'. Lua precisa de casa (segurança), não de prisão."
+
+tarot_relacionado:
+  carta: "A Sacerdotisa (Arcano Maior II)"
+  conexao: "A Sacerdotisa é a Lua personificada: mistério, intuição, o que está oculto, o inconsciente."
+
+foco_especial:
+  infantil: "A criança Lua precisa de rotina, acolhimento, colo. Mudanças bruscas a desestruturam. Alimentos e cheiros são âncoras."
+  familiar: "A mãe/mulher da família é a Lua. Representa a nutrição, a memória, a que cuida. Conflitos: apego, controle emocional."
+  carmico_espiritual: "Lua indica onde a alma precisa de SEGURANÇA. Casa Lua = onde a pessoa se sente em casa. Missão: nutrir o mundo como foi nutrida (ou não foi)."
+
+camada_tecnica_e_limites:
+  regra: "Calcular fase, aplicação/separação, velocidade, dignidade, casa, secto, regente e aspectos antes de rotular a Lua."
+  limites: "Correspondências corporais são históricas, não diagnóstico. Sonhos, tarot e crenças cármicas são camadas atribuídas, não resultados necessários."
+referencias:
+  primarias: ["Ptolemeu, Tetrabiblos, I.4 e I.17-19.", "William Lilly, Christian Astrology (1647), pp. 81-83.", "Agrippa, De occulta philosophia, I.23-24 e II.10."]
+  secundarias: ["Demetra George, Ancient Astrology in Theory and Practice, vol. I (2019), capítulos planetários."]
+anotacoes_pessoais: []
+ver_mais:
+  - "../04_Planetas/Lua.yaml"
+

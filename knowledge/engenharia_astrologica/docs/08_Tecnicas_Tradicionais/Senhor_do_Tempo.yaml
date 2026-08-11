@@ -1,0 +1,60 @@
+﻿status: review
+id: "senhor_do_tempo"
+nome: "Senhor do Tempo"
+tradicoes:
+  - "tradicional"
+  - "helenistica"
+  - "medieval"
+tema: "Planeta que governa o período cronológico predominante numa leitura de timing."
+
+essencia:
+  - "O Senhor do Tempo rege a qualidade do tempo/ciclo em análise."
+  - "Usado em direções primárias, profecções/firdarias, timing por período."
+
+origens_e_divergencias:
+  tradicional: "'Senhor do tempo' é nome funcional, não algoritmo único. Pode designar o regente anual de profecções, um senhor de firdaria, distribuidor por termos, cronocrator ou outro regente de período conforme a técnica."
+  moderna: "Linhas tradicionais contemporâneas reapresentam essas técnicas; leituras psicológicas de fase devem ser identificadas como camada moderna."
+  nota: "Nunca calcular ou exibir um único Senhor do Tempo sem indicar técnica, data inicial, regime diurno/noturno, tabela e convenção de casas."
+
+camada_energetica:
+  impressao_mental: "Perceber qual energia governa a fase atual."
+  permeacao_emocional: "Sentir-se alinhado ou desalinhado com o tempo vigente."
+  manifestacao_externa: "A técnica pode organizar temas de período em seu próprio sistema; não torna eventos específicos inevitáveis."
+  como_guiar_o_astral: "Apresentar técnica e indicadores ativados, distinguindo cálculo de interpretação e evitando prescrição fatalista."
+
+uso_pratico:
+  eleicao: "Eleição possui regras próprias (incluindo senhor da hora, regente do Ascendente e significadores); não confundir essas funções com cronocrator natal."
+  diagnostico: "Não é ferramenta diagnóstica médica nem marcador de infortúnio; avaliar a condição do regente dentro da técnica escolhida."
+  timing: "Em profecções, firdarias, distribuições/direções e outras técnicas, o governante do período é definido pelo método específico."
+
+procedimento:
+  - "Selecionar uma técnica de tempo e registrar seus parâmetros antes de nomear o regente."
+  - "Calcular início e fim do período, carta de referência e tabela aplicável."
+  - "Julgar o regente por condição natal e por técnicas complementares somente se a escola permitir essa combinação."
+  - "Exibir incerteza e divergências quando técnicas diferentes apontarem regentes distintos."
+
+referencias:
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    natureza: "primária histórica"
+    localizador: "Cronocratores, profecções e períodos; conferir livro/edição."
+  - autor: "Abū Maʿshar"
+    obra: "The Abbreviation of the Introduction to Astrology"
+    natureza: "primária histórica"
+    localizador: "Técnicas de períodos e juízo temporal; conferir tradução/edição."
+  - autor: "Robert Hand"
+    obra: "On the Heavenly Spheres"
+    natureza: "secundária técnica"
+    localizador: "Apresentação de profecções e técnicas tradicionais de tempo; conferir edição."
+
+validacao_de_fontes:
+  base: "A ficha trata Senhor do Tempo como rótulo dependente de técnica, não como planeta universal do ano."
+  limite: "O motor não deve usar o termo para recomendar ação, diagnosticar saúde ou predizer evento sem técnica explícita."
+
+ver_mais:
+  - "../11_Previsao/Direcoes_Primarias.yaml"
+  - "../11_Previsao/Firdaria.yaml"
+  - "../11_Previsao/ciclos_saturno_jupiter.yaml"
+
+## ✏️ Minhas Anotações
+

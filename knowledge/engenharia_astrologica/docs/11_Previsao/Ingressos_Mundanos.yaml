@@ -1,0 +1,73 @@
+id: ingressos_mundanos
+nome: Ingressos sazonais e julgamento mundano
+tipo: tecnica_mundana_de_tempo
+tradicoes:
+- helenística e ptolomaica
+- medieval e renascentista
+- mundana contemporânea
+status: review
+definicao: Ingresso é a entrada do Sol em um signo ou de outro fator num novo signo.
+  No julgamento mundano tradicional, têm especial relevo as quatro entradas solares
+  nos signos cardinais, ligadas a equinócios e solstícios. Uma carta de ingresso é
+  uma técnica coletiva/sazonal, não um mapa natal anual simplificado.
+fundamento_astronomico:
+  cardinais_tropicais: 0° de Áries, Câncer, Libra e Capricórnio correspondem aos equinócios
+    e solstícios no zodíaco tropical.
+  instante: Calcular a hora exata em que a longitude tropical aparente do Sol alcança
+    0° do signo, usando efeméride e escala de tempo declaradas.
+  localidade: Planetas têm a mesma longitude no instante global; ângulos e casas dependem
+    do local/território da carta mundana.
+  escala: A carta pode ser estudada para localidade, nação, região ou tema coletivo
+    somente se sua jurisdição for definida.
+procedimento_tradicional:
+- Definir território, período e tradição de casas/regências antes de levantar a carta.
+- Calcular o ingresso solar e, se a escola o requer, a sizígia precedente, eclipses,
+  grandes conjunções e cartas de lunação.
+- Examinar ângulos, regente do Ascendente, luminares, casas temáticas e planetas relevantes
+  segundo o autor.
+- 'Distinguir carta de ingresso anual de ingressos intermediários: escolas divergem
+  sobre quando cada carta governa e como se subordinam.'
+- Registrar visibilidade e território para fenômenos complementares, em vez de tratar
+  uma carta global como se suas casas fossem universais.
+nao_confundir_com:
+- Ingresso de planeta pessoal em signo natal, que é trânsito individual.
+- Revolução solar, que retorna à longitude natal do Sol de uma pessoa.
+- Mapa de equinócio/solstício astronômico sem método mundano declarado.
+camada_simbolica:
+  imagem: Os quatro portais sazonais organizam o ano tropical; a carta do céu no limiar
+    estrutura, para as escolas mundanas, a leitura de uma estação.
+  linguistica: Ingresso vem de ingressus, entrada; aqui descreve um fato de longitude
+    antes de qualquer juízo de acontecimento.
+divergencias_e_limites:
+- Ptolomeu e autores medievais não aplicam os mesmos procedimentos, casas, territórios
+  ou hierarquia de cartas.
+- O uso contemporâneo de ingresso para uma pessoa é uma adaptação que não deve apagar
+  a escala mundana original.
+- A técnica requer fontes históricas e exemplos por autor; não existe uma lista única
+  de significados de ingresso.
+referencias:
+- autor: Ptolemaeus
+  obra: Tetrabiblos, Livro II, capítulos 10–13
+  natureza: fonte clássica para pontos sazonais e sizígias precedentes
+  url: https://penelope.uchicago.edu/Thayer/E/Roman/Texts/Ptolemy/Tetrabiblos/2C*.html
+- autor: Masha'allah
+  obra: On Solar Revolutions and Ingresses
+  natureza: fonte medieval correlata; confirmar edição/tradução
+- autor: Benjamin N. Dykes
+  obra: 'Astrology of the World II: Revolutions & History'
+  natureza: traduções e contexto de ingressos/conjunções medievais
+  url: https://bendykes.com/product/astrology-of-the-world-ii-revolutions-history/
+validacao_de_fontes:
+  base: "As refer?ncias estruturadas identificam a linhagem hist?rica, moderna ou astron?mica pertinente a esta t?cnica preditiva."
+  escopo: "Uma implementa??o deve declarar edi??o, algoritmo, efem?ride, escala de tempo e variante de escola; esta exig?ncia ? uma regra de reprodu??o, n?o uma lacuna de fonte."
+  limite: "A ficha permanece em review e n?o converte hip?tese, aproxima??o pedag?gica ou releitura moderna em previs?o determinista."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+origens_e_divergencias:
+  tradicional: Conceito/técnica presente na tradição astrológica ocidental.
+  moderna: Possível ressignificação contemporânea.
+  nota: Rotular a escola quando divergir.
+camada_energetica:
+  impressao_mental: Campo conceitual do tema/técnica.
+  permeacao_emocional: Como o tema toca a experiência subjetiva.
+  manifestacao_externa: Como aparece em comportamentos e eventos.
+  como_guiar_o_astral: Como usar este conhecimento na leitura prática.

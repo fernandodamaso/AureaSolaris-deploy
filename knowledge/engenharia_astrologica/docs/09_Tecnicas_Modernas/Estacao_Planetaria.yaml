@@ -1,0 +1,50 @@
+status: complete
+id: "estacao_planetaria"
+nome: "Estação Planetária"
+tradicoes:
+  - "helenística"
+  - "medieval"
+  - "tradicional"
+  - "moderna ocidental"
+tipo: "condição de movimento aparente (fundamento tradicional; alojamento editorial de legado)"
+classificacao_editorial:
+  nucleo_conceitual: "Astronomia aplicada e condição planetária acidental"
+  localizacao_atual: "09_Tecnicas_Modernas por legado de organização; não é técnica moderna de origem"
+  regra_de_apresentacao: "Distinguir o evento matemático de velocidade nula da janela operacional de interpretação."
+escopo_documental:
+  tecnica_historica:
+    - "ponto de virada entre movimento direto e retrógrado"
+    - "condição de quase imobilidade aparente"
+    - "relação com força acidental e timing"
+  calculo_e_regra: "O motor deve identificar estação a partir da mudança de sinal da velocidade longitudinal aparente e registrar a janela técnica adotada."
+  divergencias_de_escola: "Algumas escolas tratam a estação como intensificação; outras como impedimento, lentidão ou virada crítica conforme o planeta e o contexto."
+referencias:
+  - autor: "William Lilly"
+    obra: "Christian Astrology, 1647, Livro I (condições de movimento dos planetas)."
+    natureza: "fonte primária histórica"
+    localizador: "Livro I, estado direto, retrógrado e estacionário"
+  - autor: "Swiss Ephemeris"
+    obra: "Swiss Ephemeris Programmer's Documentation."
+    natureza: "referência técnica"
+    localizador: "https://www.astro.com/swisseph/swephprg.htm; cálculo de longitude e velocidade aparente"
+definicao_tecnica: "Estação planetária é o momento ou faixa em que a velocidade aparente do planeta se aproxima de zero antes da mudança de direção direta para retrógrada ou retrógrada para direta."
+tipos:
+  estacionario_retrogrado: "Planeta prestes a iniciar retrogradação."
+  estacionario_direto: "Planeta prestes a retomar movimento direto."
+politica_de_calculo_do_corpus:
+  evento_exato: "O instante de estação é determinado pela mudança de sinal da velocidade longitudinal geocêntrica eclíptica, refinada numericamente pelo motor."
+  janela_operacional: "Não há limiar histórico universal em graus/dia. O corpus trata como 'estacionário' o evento exato e, para exibição de janela, exige parâmetro explícito por planeta, técnica e efeméride."
+  divergencia: "Intensificação, impedimento ou virada são julgamentos de escola; não decorrem automaticamente do número."
+uso_interpretativo:
+  regra_geral: "A estação aumenta a relevância técnica do planeta em muitos sistemas, mas não de maneira uniforme: pode indicar pausa, inflexão, insistência ou intensificação."
+  previsao: "É especialmente importante em trânsitos e cronologias."
+camada_moderna:
+  nota: "Autores modernos frequentemente associam estação a revisão, decisão, suspensão ou condensação do tema planetário."
+nao_confundir_com:
+  - "retrogradação inteira"
+  - "lentidão moderada sem mudança próxima de direção"
+camada_energetica:
+  impressao_mental: "O planeta parece parar, concentrando atenção no ponto da virada."
+  permeacao_emocional: "Pode ser vivido como suspensão, insistência ou momento de inflexão."
+  manifestacao_externa: "Em previsão, marca fases de reversão, demora ou reforço de temas."
+  como_guiar_o_astral: "Registrar sempre se a estação é para retrogradação ou para retomada do direto."

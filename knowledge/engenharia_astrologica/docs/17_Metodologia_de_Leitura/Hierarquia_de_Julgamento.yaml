@@ -1,0 +1,66 @@
+status: review
+id: "hierarquia_de_julgamento"
+nome: "Hierarquia de Julgamento Astrológico"
+tipo: "metodologia de interpretação"
+tradicao_primaria: ["tradicional", "psicológica", "editorial"]
+
+escopo:
+  definicao_operacional: "Procedimento de síntese que ordena fatores antes de interpretar. Ele evita que palavras-chave isoladas, um único aspecto ou uma técnica secundária recebam mais peso que a estrutura da pergunta e da carta."
+  inclui:
+    - "Definição de pergunta, tipo de carta e técnica."
+    - "Verificação de dados, significadores, condição, relações, repetição e síntese."
+    - "Separação explícita entre leitura tradicional, psicológica, evolutiva, hermética e sistêmica."
+  nao_inclui:
+    - "Uma fórmula universal de pesos válida para todas as escolas."
+    - "A conversão automática de correspondência simbólica em diagnóstico clínico moderno ou certeza factual sem tradição, técnica e fonte declaradas."
+  exclusoes_do_projeto: []
+
+fundamento:
+  descricao: "Julgamento é síntese situada: o peso de um fator depende do tipo de questão, da técnica, do significador e de sua condição. Repetição simbólica fortalece uma hipótese; contradições pedem análise, não descarte silencioso."
+  contexto_historico: "Fontes tradicionais oferecem regras de significação e condição; escolas modernas reordenam a leitura em torno de subjetividade, desenvolvimento ou contexto. O método editorial preserva essa diferença."
+
+procedimento:
+  pre_requisitos:
+    - "Dados de cálculo reproduzíveis."
+    - "Pergunta, tipo de carta e tradição de leitura declarados."
+  passos:
+    - "Confirmar dados, zodíaco, casas, orbes e limites de precisão."
+    - "Definir a técnica e seus significadores centrais."
+    - "Avaliar sect, dignidade, condição acidental, regência e disposição dos significadores."
+    - "Avaliar aspectos, aplicações/separações, casas, ângulos, configurações e repetições."
+    - "Distinguir fatores estruturais de indicadores auxiliares, como pontos, estrelas, graus ou asteroides."
+    - "Formular uma síntese condicional, apresentar divergências e declarar incertezas."
+  parametros_de_calculo:
+    - "tipo de carta e técnica"
+    - "significadores selecionados"
+    - "tabela de dignidades"
+    - "casas, orbes e sistema zodiacal"
+
+uso_interpretativo:
+  pergunta_que_ajuda_a_responder:
+    - "Quais fatores são realmente relevantes para esta pergunta e como eles se qualificam mutuamente?"
+  como_ponderar: "Começar pela estrutura e pelos significadores. Configurações, asteroides e correspondências simbólicas podem enriquecer, mas não devem contradizer ou substituir a base sem justificativa."
+  limites:
+    - "Não prometer certeza onde dados ou técnicas divergem."
+    - "Não mesclar quatro tradições em uma única conclusão sem nomear a mudança de lente."
+    - "Quando uma tradição histórica formular juízo médico, prognóstico ou prescrição própria, registrar isso como camada documental atribuída, não como consenso universal do corpus."
+
+divergencias_de_tradicao:
+  consenso: "Uma leitura responsável requer contexto, seleção de significadores e síntese de fatores."
+  divergencias:
+    - "Tradições diferem na prioridade dada a casas, regências, aspecto por signo, psicologia, nodos ou planetas exteriores."
+  decisao_editorial: "O corpus explicará a hierarquia adotada por cada técnica e registrará fatores contrários, em vez de ocultá-los."
+
+referencias:
+  primarias:
+    - "Ptolemaeus. Tetrabiblos. Tradução de F. E. Robbins. Loeb Classical Library, 1940."
+    - "Bonatti, Guido. Book of Astronomy. Tradução de Benjamin Dykes. Cazimi Press, 2007."
+  secundarias:
+    - "Houlding, Deborah. The Houses: Temples of the Sky. Ascella Publications, 2006."
+  tecnicas: []
+
+relacoes:
+  depende_de: ["protocolo_calculo_reproduzivel", "dignidades_essenciais_acidentais", "significadores"]
+  ver_tambem: ["metodologia_de_leitura", "repeticao_simbolica", "dominantes", "contradicoes_do_mapa"]
+
+anotacoes_pessoais: []

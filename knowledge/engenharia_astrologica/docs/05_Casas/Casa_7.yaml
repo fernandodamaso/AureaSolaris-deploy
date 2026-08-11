@@ -1,0 +1,66 @@
+status: review
+id: "casa_7"
+tradicoes:
+  - "helenística"
+  - "medieval"
+  - "renascentista"
+  - "moderna (camadas psicológica e sistêmica explicitamente separadas)"
+tipo: "conceito técnico de casa astrológica"
+escopo_documental:
+  tecnica_historica:
+    - "significação tradicional da casa, sua relação com ângulos, casas sucedentes/cadentes e tópicos derivados"
+  camadas_modernas: "Atlas simbólico, Tarot, medicina, arquétipos e leitura sistêmica permanecem separados da regra histórica."
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "primária"
+    localizador: "Livro IV e passagens sobre configuração e significação dos lugares"
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    natureza: "primária"
+    localizador: "Livros II–IV, tópicos das casas e julgamento natal"
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    natureza: "primária"
+    localizador: "Livro I, significações das casas e regras de julgamento"
+validacao_de_fontes:
+  base: "A significa??o hist?rica dos lugares ? sustentada por Ptolomeu, Valens e Lilly, nas refer?ncias estruturadas da ficha."
+  escopo: "Tarot, Atlas simb?lico, medicina, psicologia e leitura sist?mica s?o camadas de estudo rotuladas; n?o substituem a t?cnica hist?rica de casas."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+numero: 7
+nome: "Casa 7 — O Outro / A Aliança"
+tema: "Com quem me uno e me oponho"
+
+origens_e_divergencias:
+  tradicional: "Ptolomeu (Tetrabiblos) — significados tradicionais das 12 casas."
+  moderna: "Astrologia psicológica/sistêmica (Liz Greene, escola de relações familiares)."
+  nota: "Revisar ao citar — marca a escola usada."
+atlas_simbolico:
+  pessoas_arquetipos: "O parceiro, o cônjuge, o adversário, o aliado"
+  lugares_fisicos: "Tribunais, consultórios, locais de parceria, frente de casas"
+  objetos_materia: "Contratos, alianças, anéis, espelhos"
+  eventos_tipicos: "Casamentos, contratos, parcerias, julgamentos"
+  animais: "Cervo, cisne, pomba"
+  plantas_ervas: "Rosa, violeta, madressilva"
+  metais_pedras: "Cobre, ouro rosa, diamante, esmeralda"
+  cores_sons: "Rosa, verde-claro; notas Lá e Ré"
+  numeros: "6 (harmonia), 7 (justiça), 8 (equilíbrio)"
+  dias_semana: "Sexta-feira (Vênus)"
+  doencas_corpo: "Rins, pele, adrenais"
+  arquetipos_mitologicos: "Themis, Hera/Juno, Afrodite/Vênus"
+  mitos_historias: "O julgamento de Páris; Afrodite e a união"
+  sonhos_simbolos_inconsciente: "Espelhos, festas, casamentos, justiça"
+  expressao_elevada_sombra: "Elevada: parceria equilibrada, justiça | Sombra: dependência, superficialidade"
+
+camada_energetica:
+  campo_mental: "Foco no 'outro significativo'. O que busco fora de mim para completar."
+  permeacao_emocional: "Desejo de união, medo de perder a si no outro."
+  manifestacao_externa: "Eventos prováveis de parceria, casamento, divórcio. Arquétipos: o Espelho, a Aliança. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a unir SEM anular-se."
+
+significados_derivados:
+  dinheiro_parceiro: false
+  casamento: "Casa 7 = parceria formal (casamento, união estável)."
+  parceiros_publicos: "Clientes, sócios, 'o outro no mundo' (diferente de Casa 1 que é EU)."
+  divórcio: "Casa 7 em tensão = crise de parceria, divórcio, separação."
+  inimigos_abertos: "Casa 7 = 'inimigo declarado' (oposição aberta, não sombra como Casa 12)."

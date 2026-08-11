@@ -1,0 +1,45 @@
+﻿status: draft
+id: "esoterismo"
+nome: "Esoterismo"
+tradicoes:
+  - "esoterica ocidental"
+  - "moderna quando explicitada"
+tipo: "Especial"
+subtema: "Ocultismo, magia, tradições esotéricas"
+
+origens_e_divergencias:
+  tradicional: "Hermetismo, alquimia, cabala, magia cerimonial."
+  moderna: "Jung, psicologia arquetípica, esoterismo contemporâneo."
+  nota: "Conteúdo sensível — usar como referência simbólica, não como manual."
+
+atlas_simbolico:
+  pessoas_arquetipos: "O ocultista, o alquimista, o buscador do oculto"
+  lugares_fisicos: "Templos, laboratórios alquímicos, bibliotecas ocultas"
+  objetos_materia: "Talismãs, pentáculos, livros ocultos"
+  eventos_tipicos: "Rituais, invocações, transformações"
+  animais: "Dragão, serpente, águia, lobo"
+  plantas_ervas: "Ervas de poder, ervas de proteção"
+  metais_pedras: "Ouro, prata, obsidiana, diamante"
+  cores_sons:
+    cores: ["Preto", "dourado", "roxo", "branco"]
+    sons: ["Canto gregoriano", "tambor", "sino"]
+  numeros: [1, 3, 4, 7, 12]
+  dias_semana: ["Domingo", "Quinta-feira", "Sábado"]
+  doencas_corpo:
+    doencas: ["Problemas nervosos", "exaustão"]
+    partes_corpo: ["Sistema nervoso", "coração"]
+  arquetipos_mitologicos:
+    - "Hermes Trismegisto"
+    - "Salomão"
+    - "Anjo"
+  mitos_historias: "Hermes e a magia; Salomão e os selos"
+  expressao_elevada_sombra: "Elevada: transformação consciente | Sombra: manipulação, abuso de poder"
+
+camada_energetica:
+  impressao_mental: "O esoterismo é a CAMADA OCULTA da astrologia. Não é 'mágica' — é simbologia profunda."
+  permeacao_emocional: "Poder como responsabilidade. Quando saudável: serviço. Quando ferido: manipulação."
+  manifestacao_externa: "Eventos prováveis de transformação, proteção, invocação. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a USAR O ESOTERISMO COM ÉTICA. Ocultismo não é controle — é cooperação com o invisível."
+
+aviso_etica: "NÃO é manual de prática. É referência simbólica para o estudante de astrologia."
+

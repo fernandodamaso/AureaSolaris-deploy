@@ -1,0 +1,63 @@
+status: review
+
+id: "lua_qualidades"
+nome: "Lua — Qualidades Físicas"
+cor: "Prata, branco-perolado, azul-pálido, cinza-prateado"
+metal: "Prata"
+planta: "Jasmim, lírio, camomila, salgueiro, melancia"
+elemento_fisico: "Água (frio, úmido)"
+parte_do_corpo: "Estômago, mamas, útero, sistema digestivo superior, líquidos corporais"
+qualidade_termica: "Fria e úmida"
+chakra_overlay: "Sacro (2º) e Terceira Visão (6º) — sentir e imaginar"
+
+origens_e_divergencias:
+  tradicional: "Doutrina das Assinaturas: Lua = prata, salgueiro, jasmim, líquidos."
+  moderna: "Astrologia psicológica: prata como 'reflexo' da identidade."
+  nota: "Chakra overlay = sincretismo Nova Era, não canônico."
+atlas_simbolico:
+  pessoas_arquetipos: "Mãe, mulher, cuidador, família"
+  lugares_fisicos: "Lares, rios, lagos, praias, cavernas"
+  objetos_materia: "Panelas, fotografias, álbuns, baús, conchas"
+  eventos_tipicos: "Casamentos, nascimentos, mudanças de lar, reuniões"
+  animais: "Caranguejo, lagosta, cisne, golfinho, cão de água"
+  plantas_ervas: "Lírio, jasmim, rosa branca, melão, pepino, lótus"
+  metais_pedras: "Prata, pérola, pedra da lua, cristal, madrepérola"
+  cores_sons: "Branco, prata, azul-claro; notas Dó e Lá; harpa, sino d'água"
+  numeros: "2 (dualidade), 4 (lar), 6 (nutrição)"
+  dias_semana: "Segunda-feira"
+  doencas_corpo: "Estômago, seios, útero, sistema digestivo, fluídos"
+  arquetipos_mitologicos: "Selene, Artemis, Hécate"
+  mitos_historias: "Artemis e a caçada; Hécate e os cruzamentos"
+  sonhos_simbolos_inconsciente: "Água parada, casas, mãe, bebês, prata, lua cheia"
+  expressao_elevada_sombra: "Elevada: cuidado compassivo, memória afetiva | Sombra: apego excessivo, dependência"
+
+camada_energetica:
+  impressao_mental: "A cor prata no mapa = 'reflexo'. Pessoa de Lua forte tende a 'refletir' o ambiente antes de agir."
+  permeacao_emocional: "Sensibilidade, intuição, 'maré interna'."
+  manifestacao_externa: "Estilo prata/branco/azul-pálido; tende a ter 'cara de lua' (olhos arredondados). Arquétipos: a Mãe, o Espelho. Inclinação, não destino."
+  como_guiar_o_astral: "Usar prata/branco como 'escudo suave' — protege sem blindagem dura."
+
+porque_simbolico: |
+  PRATA = metal reflexivo (reflete a luz, não emite). A Lua REFLETE a luz do Sol.
+  SALGUEIRO cresce na água, é flexível (Lua = adaptação). CAMOMILA = calmante, 'embala' como a Lua embala a maré.
+  ESTÔMAGO = primeiro órgão que 'recebe' (assim como a Lua recebe a luz do Sol).
+
+linha_tradicao: "Doutrina das Assinaturas: Lua = prata, salgueiro, jasmim, líquidos."
+chakra_nota: "Overlay sincretico."
+tradicoes:
+  - "astrologia helenística e medieval"
+  - "correspondências renascentistas"
+  - "astrologia psicológica moderna"
+revisao_editorial:
+  atribuicao: "Prata e qualidades fria/úmida pertencem a tabelas tradicionais; a imagem da prata como reflexo é interpretação simbólica moderna."
+  limite: "Líquidos, estômago, mamas e útero são correspondências histórico-simbólicas; não permitem dedução clínica ou reprodutiva sobre uma pessoa."
+  chakra: "Overlay sincrético contemporâneo, não regra de cálculo astrológico."
+referencias:
+  primarias:
+    - "Ptolomeu. Tetrabiblos, livro I: natureza lunar e qualidades planetárias; consultar tradução/edição declarada."
+    - "Agrippa, Heinrich Cornelius. Three Books of Occult Philosophy, livro I: prata e correspondências lunares."
+    - "Culpeper, Nicholas. The English Physitian / Complete Herbal, 1653: regências planetárias das plantas."
+  secundarias:
+    - "Greene, Liz. The Luminaries: The Psychology of the Sun and Moon in the Horoscope. Samuel Weiser, 1992."
+  tecnicas:
+    - "Para fase, velocidade e condição da Lua, usar efeméride e parâmetros documentados."

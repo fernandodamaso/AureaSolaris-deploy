@@ -1,0 +1,90 @@
+id: pontos_calculados
+nome: 'Pontos calculados: taxonomia, cálculo e escopo'
+tipo: fundamento_de_pontos_derivados
+tradicoes:
+- helenística e medieval para lotes
+- moderna ocidental para ângulos derivados e pontos orbitais
+status: review
+definicao: Pontos calculados são posições derivadas de uma geometria celeste, fórmula
+  entre fatores ou parâmetro orbital. Não são corpos materiais. Vertex, Lilith, Lotes
+  e pontos médios exigem documentação diferente, embora todos apareçam como graus
+  no mapa.
+familias:
+  angulos_e_geometria_local:
+    exemplos:
+    - Ascendente/Descendente
+    - Meio do Céu/Fundo do Céu
+    - Vertex/Antivertex
+    - East Point/Ascendente Equatorial
+    - Co-Ascendente/Ascendente Polar
+    dados_criticos: Hora, latitude, longitude, tempo sideral, obliquidade e algoritmo
+      de casas/ângulos.
+  orbitais:
+    exemplos:
+    - Nodo Norte/Sul
+    - apogeu lunar médio
+    - apogeu osculante (Lilith)
+    - perigeu/Priapo
+    dados_criticos: Efeméride, modelo médio/verdadeiro/osculante e convenção geocêntrica/topocêntrica.
+  formulaicos:
+    exemplos:
+    - Lote da Fortuna
+    - Lote do Espírito
+    - partes árabes
+    - pontos médios
+    dados_criticos: Fórmula, ordem dos termos, seita, zodíaco e regra de conversão
+      circular.
+  simetricos:
+    exemplos:
+    - antíscia
+    - contra-antíscia
+    - pontos solsticiais
+    dados_criticos: Regra de espelhamento em relação ao eixo Câncer–Capricórnio.
+procedimento_geral:
+- Identificar a família do ponto e a variante exata antes de interpretar.
+- Registrar fórmula/algoritmo, software, efeméride, hora, local e convenções relevantes.
+- Verificar com segundo programa quando o ponto depender de cálculo complexo.
+- Declarar orbe e técnica de uso; os orbes planetários não se transferem automaticamente.
+- Separar resultado de cálculo, regra de tradição e leitura simbólica no registro.
+nao_confundir_com:
+- Um ponto matemático não recebe dignidade essencial por si; seu regente e suas relações
+  podem ser avaliados apenas dentro da técnica.
+- Lilith/Lua Negra, asteroide 1181 Lilith e uma Dark Moon hipotética são entidades
+  distintas.
+- Vertex/Antivertex não são Descendente/Ascendente; East Point não é o Ascendente
+  local.
+- Pontos médios tradicionais/modernos não implicam adotar a escola Uraniana/Hamburgo,
+  excluída do projeto.
+ligacoes_internas:
+- vertex
+- antivertex
+- east_point
+- coascendente_ascendente_polar
+- lilith
+- priapo
+- nodos
+- lote_fortuna
+- lote_espirito
+- antiscia_contraantiscia
+- pontos_medios
+referencias:
+- autor: Swiss Ephemeris
+  obra: General Documentation
+  natureza: cálculo de Vertex, Equatorial Ascendant, nodos e apogeus lunares
+  url: https://www.astro.com/swisseph/swisseph.htm
+- autor: Vettius Valens
+  obra: The Anthology
+  natureza: fonte helenística para lotes e técnicas de tempo
+validacao_de_fontes:
+  base: "As refer?ncias estruturadas distinguem defini??o geom?trica, c?lculo reprodut?vel e uso interpretativo moderno."
+  escopo: "Pontos calculados e seus orbes dependem de conven??o declarada; interpreta??es modernas s?o notas de estudo, n?o consenso universal."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+origens_e_divergencias:
+  tradicional: Conceito/técnica presente na tradição astrológica ocidental.
+  moderna: Possível ressignificação contemporânea.
+  nota: Rotular a escola quando divergir.
+camada_energetica:
+  impressao_mental: Campo conceitual do tema/técnica.
+  permeacao_emocional: Como o tema toca a experiência subjetiva.
+  manifestacao_externa: Como aparece em comportamentos e eventos.
+  como_guiar_o_astral: Como usar este conhecimento na leitura prática.

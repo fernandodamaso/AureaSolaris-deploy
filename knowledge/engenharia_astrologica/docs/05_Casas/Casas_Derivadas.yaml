@@ -1,0 +1,53 @@
+status: review
+id: casas_derivadas
+nome: Casas Derivadas
+tradicoes:
+- tradicional
+- relacional quando explicitado
+tema: 'Sistema de casas derivadas: Casa X do mapa A = Casa 4 do mapa B (sinastria profunda)'
+essencia:
+- Casa 1 do nativo = Eu
+- Casa 1 do parceiro (Casa 7 do nativo) = O Outro como EU
+- Casa 4 do parceiro (Casa 10 do nativo) = O Outro como MUNDO/TRABALHO
+- Casa 10 do parceiro (Casa 4 do nativo) = O Outro como RAÍZES
+- Casa 7 do parceiro (Casa 1 do nativo) = O Outro como PARCEIRO DELE
+- Casa 5 do filho (Casa 11 do nativo, invertido) = O filho como AMIGO/ESPÍRITO
+- Casa 4 do filho (Casa 10 do nativo, invertido) = O filho como MUNDO/PROJETO
+origens_e_divergencias:
+  tradicional: "A técnica de casas derivadas (turned houses) é claramente desenvolvida na astrologia medieval e moderna tradicional. Não atribuir sua formulação corrente diretamente a Ptolomeu sem fonte específica."
+  moderna: "Sinastria, psicologia e leituras sistêmicas podem aplicar a contagem a vínculos familiares; essas extensões não substituem o julgamento tradicional do mapa individual."
+  nota: "Declarar sempre a casa de referência. Em sinastria, não confundir casa derivada dentro de um mapa com sobreposição de casas entre dois mapas."
+atlas_simbolico:
+  pessoas_arquetipos: parentes, c?njuges, filhos, s?cios e suas posi??es relativas no sistema da carta
+  lugares_fisicos: ?rvores familiares, mapas relacionais, tabelas de refer?ncia cruzada
+  objetos_materia: espelhos, diagramas, genealogias, esquemas de casas sobre casas
+  eventos_tipicos: leitura de v?nculos, invers?o de perspectiva, tradu??o do ponto de vista do outro
+  arquetipos_mitologicos: a casa refletida, a rela??o como espelho estrutural
+  expressao_elevada_sombra: 'Elevada: empatia estrutural, vis?o relacional precisa | Sombra: confus?o de referenciais, sobreleitura especulativa'
+camada_energetica:
+  campo_mental: As casas derivadas mostram COMO o OUTRO VÊ O MUNDO — a perspectiva invertida.
+  permeacao_emocional: 'Empatia estrutural: ''como o outro sente o que eu sinto''.'
+  manifestacao_externa: Eventos PROVÁVEIS na dinâmica de casais/família quando as casas derivadas se ativam. Inclinação, não destino.
+  como_guiar_o_astral: Usar em sinastria e leitura familiar — a casa derivada revela o 'lado de dentro' do outro.
+foco_especial:
+  familiar: Casa derivada é ESSENCIAL em astrologia familiar e de casal — mostra o 'mapa invertido' do sistema.
+  infantil: Ler a Casa 4 do filho = Casa 10 do pai/mãe (invertido) = o filho vê o pai como 'autoridade do mundo'.
+como_usar: 'Regra geral: para achar a casa X a partir de uma casa-base B, conte B como 1; resultado = B + X - 1, reduzido ao ciclo de 12. Exemplo: a 4ª a partir da 7ª é a 10ª. A fórmula só vale dentro do mesmo mapa e da referência declarada.'
+
+referencias:
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    natureza: "primária histórica"
+    localizador: "Livro II; julgamento de casas derivadas/turned houses, conferir edição."
+  - autor: "Guido Bonatti"
+    obra: "Liber Astronomiae"
+    natureza: "primária histórica"
+    localizador: "Passagens sobre significadores e casas relativas; conferir tradução/edição."
+  - autor: "John Frawley"
+    obra: "The Horary Textbook"
+    natureza: "secundária técnica"
+    localizador: "Capítulos sobre casas derivadas; uso contemporâneo da técnica tradicional."
+
+validacao_de_fontes:
+  base: "A ficha descreve uma operação de contagem relativa, não um sistema exclusivo de sinastria."
+  limite: "Atribuições familiares específicas exigem julgamento dos significadores, da pergunta/técnica e do contexto; não automatizar equivalências psicológicas."

@@ -1,0 +1,46 @@
+﻿status: draft
+id: "vega_atlas"
+nome: "Vega — Atlas Simbólico"
+tradicoes:
+  - "atlas simbolico editorial"
+  - "sintese multiescola"
+tipo: "Atlas Simbólico"
+subtema: "Correspondências de Vega"
+
+origens_e_divergencias:
+  tradicional: "Ptolomeu — Vega = estrela da Lira; música, poesia, harmonia, viagem rápida."
+  moderna: "Astrologia moderna mantém; acrescenta arte, vocação criativa."
+  nota: "Classificada como estrela de natureza Saturno/Vênus por tradição."
+
+atlas_simbolico:
+  pessoas_arquetipos: "Músico, poeta, artista, viajante rápido, mensageiro"
+  lugares_fisicos: "Teatros, bibliotecas, salas de concerto, cidades culturais"
+  objetos_materia: "Lira, livro de poemas, partitura, bilhete de viagem, carta"
+  eventos_tipicos: "Apresentações artísticas, viagens curtas, reconhecimento por talento"
+  animais: "Falcão, andorinha, cavalo rápido, gato"
+  plantas_ervas: "Hera, jasmim, rosa, lavanda"
+  metais_pedras: "Prata, safira azul, turmalina azul, cristal transparente"
+  cores_sons:
+    cores: ["Azul-celeste", "prata", "branco-azulado"]
+    sons: ["Harpa", "canto", "sino", "flauta"]
+  numeros: [3, 7, 12]
+  dias_semana: ["Quarta-feira (Mercúrio)", "Sexta-feira (Vênus)"]
+  doencas_corpo:
+    doencas: ["Dor de garganta", "problemas respiratórios leves"]
+    partes_corpo: ["Garganta", "ouvidos", "sistema respiratório"]
+  arquetipos_mitologicos: ["Orfeu", "Apolo (música)", "Hermes (mensageiro)", "Anfitrite"]
+  mitos_historias: "Orfeu encantando a natureza; lira divina; harmonia das esferas"
+  sonhos_simbolos_inconsciente: "Música celestial, vozes harmoniosas, viagens curtas, cartas"
+  expressao_elevada_sombra: "Elevada: arte que une, beleza que cura, comunicação inspirada | Sombra: dispersão artística, fuga pela arte, idealização vazia"
+
+camada_energetica:
+  impressao_mental: "Mentalidade criativa e comunicativa; busca de harmonia como expressão."
+  permeacao_emocional: "Sensibilidade artística, saudade do belo. Quando sombra: dispersão, fuga por fantasia."
+  manifestacao_externa: "Eventos PROVÁVEIS de inspiração artística, encontro com mentor criativo, viagem curta."
+  como_guiar_o_astral: "Mostrar que talento pede disciplina; Vega inspira, mas Saturno estrutura."
+
+ver_mais:
+  - "../07_Estrelas_Fixas/README.yaml"
+
+## ✏️ Minhas Anotações
+

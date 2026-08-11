@@ -1,0 +1,90 @@
+status: review
+id: "lunacoes"
+tradicoes:
+  - "helenística"
+  - "medieval"
+  - "agrícola/popular"
+  - "moderna"
+tipo: "ciclo lunar e técnica auxiliar de tempo"
+escopo_documental:
+  tecnica_historica:
+    - "sizígia, fases, lunação precedente e usos eletivos, agrícolas, mundanos ou mágicos conforme a fonte"
+  camada_moderna: "A leitura psicológica de Lua Nova/Cheia e intenção emocional é moderna e deve ser apresentada como nota."
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "primária"
+    localizador: "Livro II, fases, sizígias e prognóstico"
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    natureza: "primária"
+    localizador: "Passagens sobre Lua, fases e cronologia; conferir edição"
+  - autor: "Dane Rudhyar"
+    obra: "The Lunation Cycle"
+    natureza: "secundária/moderna"
+    localizador: "Ciclo de lunação e interpretação moderna; conferir edição"
+validacao_de_fontes:
+  base: "As refer?ncias estruturadas identificam a linhagem hist?rica, moderna ou astron?mica pertinente a esta t?cnica preditiva."
+  escopo: "Uma implementa??o deve declarar edi??o, algoritmo, efem?ride, escala de tempo e variante de escola; esta exig?ncia ? uma regra de reprodu??o, n?o uma lacuna de fonte."
+  limite: "A ficha permanece em review e n?o converte hip?tese, aproxima??o pedag?gica ou releitura moderna em previs?o determinista."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+nome: "Lunações"
+tema: "Ciclos de Lua Nova e Lua Cheia como marcos de tempo e emoção."
+
+essencia:
+  - "Lua Nova: início de ciclo, intenção, novo ciclo."
+  - "Lua Cheia: clímax, emoção, iluminação."
+  - "Quarto Crescente/Quarto Minguante: ajuste, avaliação."
+  - "Usar lunação para timing de projetos e emoções."
+  - "Lunação por signo = sabor emocional do ciclo."
+
+origens_e_divergencias:
+  tradicional: "Tradição popular e agrícola; menos canônica em textos técnicos."
+  moderna: "Amplamente usada em astrologia contemporânea, coaching e psicologia."
+  nota: "Usar como estrutura auxiliar, não como método principal."
+
+atlas_simbolico:
+  pessoas_arquetipos: "Mulher cíclica, curadora, guardiã do tempo"
+  lugares_fisicos: "Mar, rios, templos lunares, jardins noturnos"
+  objetos_materia: "Cálice, espelho de prata, véu, candle"
+  eventos_tipicos: "Mudanças de humor, inícios, culminações, purificações"
+  animais: "Coruja, gato, cisne, peixe"
+  plantas_ervas: "Jasmim, camomila, salgueiro, prímula"
+  metais_pedras: "Prata, pérola, água marinha, lápis-lazúli"
+  cores_sons:
+    cores: ["Prata", "branco", "azul-lua", "verde-água"]
+    sons: ["Canto suave", "água", "vento noturno"]
+  numeros: [1, 2, 7, 14]
+  dias_semana: ["Segunda-feira (Lua)"]
+  doencas_corpo:
+    doencas: ["Histeria", "emoção reprimida", "insônia"]
+    partes_corpo: ["Estômago", "seios", "sistema digestivo"]
+  arquetipos_mitologicos: ["Artemis/Diana", "Hécate", "Lua como mãe"]
+  mitos_historias: "Artemis caçadora noturna; Hécate nos cruzamentos; Lua como regulador dos tempos"
+  sonhos_simbolos_inconsciente: "Faces da Lua, marés, partos, mudanças de humor"
+  expressao_elevada_sombra: "Elevada: ritmo saudável, intuição, cuidado | Sombra: instabilidade, dependência emocional"
+
+camada_energetica:
+  campo_mental: "Ciclo mental visível nas fases da Lua."
+  permeacao_emocional: "Marés emocionais; Lua Nova = introspecção, Lua Cheia = clareza emocional."
+  manifestacao_externa: "Eventos PROVÁVEIS alinhados ao ciclo: contratos na Lua Nova, culminações na Lua Cheia."
+  como_guiar_o_astral: "Ajudar a pessoa a RESSOAR com o ciclo; usar Lua Nova para semear, Lua Cheia para colher."
+
+tecnicas:
+  lua_nova:
+    tema: "Intenção, semeadura, invisível."
+    uso: "Planejamento, contratos, inícios simbólicos."
+    cuidado: "Evitar decisões irreversíveis na fase escura."
+  lua_cheia:
+    tema: "Clímax, emoção, iluminação."
+    uso: "Celebrar, fechar, ver onde a semeadura chegou."
+    cuidado: "Emoção alta; evitar conflitos desnecessários."
+  quartos:
+    crescente: "Ajuste de rota; 'como está indo?'"
+    minguante: "Limpidez, perdão, desapego"
+
+ver_mais:
+  - "../11_Previsao/Lunacoes.yaml"
+  - "../11_Previsao/ciclos_saturno_jupiter.yaml"
+
+## ✏️ Minhas Anotações

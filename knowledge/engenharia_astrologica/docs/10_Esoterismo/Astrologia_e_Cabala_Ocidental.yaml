@@ -1,0 +1,52 @@
+status: review
+id: "astrologia_cabala_ocidental"
+nome: "Astrologia e Cabala Ocidental"
+tradicoes:
+  - "esoterica ocidental"
+  - "moderna quando explicitada"
+tema: "Correspondências entre astrologia, Árvore da Vida e Sephiroth."
+
+essencia:
+  - "A Árvore da Vida possui dez sefirot e, em diagramas posteriores, vinte e duas trilhas; ela não é um esquema de doze casas."
+  - "Correspondências entre planetas, signos, letras e sefirot variam entre cabala judaica, cabala cristã renascentista e Qabalah hermética moderna."
+  - "Astrologia como linguagem simbólica da criação."
+
+origens_e_divergencias:
+  tradicional: "Agrippa e correntes cristãs/herméticas renascentistas participam de uma história de recepção distinta da cabala judaica."
+  moderna: "A Qabalah hermética do século XIX e leituras junguianas usam correspondências próprias, que devem ser identificadas como tais."
+  nota: "Manter como overlay rotulado; não converter equivalências de uma escola em regra universal, nem misturar com julgamento tradicional sem atribuição."
+
+referencias:
+  - autor: "Heinrich Cornelius Agrippa"
+    obra: "Three Books of Occult Philosophy"
+    natureza: "fonte primária renascentista"
+    localizador: "Livro II, correspondências e imagens; consultar edição/tradução escolhida"
+  - autor: "Moshe Idel"
+    obra: "Kabbalah: New Perspectives"
+    ano: 1988
+    natureza: "secundária historiográfica"
+    localizador: "Distinções históricas entre tradições cabalísticas"
+
+camada_energetica:
+  impressao_mental: "Sentir o mapa como árvore; cada planeta como caminho."
+  permeacao_emocional: "Busca de sentido espiritual através dos símbolos."
+  manifestacao_externa: "Estudo de cabala aplicado ao mapa; práticas de meditação simbólica."
+  como_guiar_o_astral: "Usar como mapa de crescimento, não como classificação definitiva."
+
+correspondencias:
+  kether: "Zodíaco como todo; começo criador."
+  chokmah: "Urano/Marte; força criadora masculina."
+  binah: "Saturno; estrutura, limite."
+  chesed: "Júpiter; expansão, misericórdia."
+  geburah: "Marte; força, justiça."
+  tiphereth: "Sol; centro, beleza, equilíbrio."
+  netzach: "Vênus; vitória, emoção."
+  hod: "Mercúrio; intelecto, comunicação."
+  yesod: "Lua; armazém, sonhos."
+  malkuth: "Terra/Casa 4; materialização."
+
+ver_mais:
+  - "../10_Esoterismo/astrologia_alquimia.yaml"
+
+## ✏️ Minhas Anotações
+

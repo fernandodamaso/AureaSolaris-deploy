@@ -1,0 +1,49 @@
+status: review
+id: peixes_qualidades
+nome: Peixes — Qualidades Físicas
+tradicoes: [tradicional, médica histórica, moderna, editorial]
+cor: Azul, verde-água e tons marítimos (Júpiter/água); violeta e néon translúcido são associações netunianas modernas
+parte_do_corpo: Pés; sistema linfático, glândulas e sensibilidade a substâncias são extensões modernas, não melothesia consensual
+elemento_fisico: Água
+qualidade_termica: Fria e úmida
+origens_e_divergencias:
+  tradicional: "A sequência anatômica encerra o zodíaco nos pés; Júpiter é o regente tradicional e sustenta estanho, quinta-feira e certas cores."
+  moderna: "Netuno, oceano, dissolução, vícios, fármacos, sistema linfático e violeta são camadas modernas. Elas não devem ser atribuídas à tradição antiga."
+  nota: "Distinguir Júpiter tradicional de Netuno moderno e não naturalizar estigma de vício, doença ou vitimização."
+atlas_simbolico:
+  pessoas_arquetipos: Místico, poeta, artista, sonhador, curador, místico, vítima/salvador
+  lugares_fisicos: Mares, oceanos, ilhas, conventos, hospitais, locais de retiro, sonhos
+  objetos_materia: Velas, incenso, instrumentos musicais, poções, quadros, sonhos
+  eventos_tipicos: Mistérios, iniciações, mortes simbólicas, cura, arte, compaixão
+  animais: Peixe, golfinho, baleia, cavalo-marinho, cisne, cão de água
+  plantas_ervas: Lótus, papoula, adormeceira, jasmim, violeta, menta
+  metais_pedras: Estanho, marfim, ametista, água-marinha, opala, pérola
+  cores_sons: Azul-mar, verde-água, roxo; notas Lá e Dó; piano, órgão, sino
+  numeros: 3 (misticismo), 6 (serviço compassivo), 9 (transcendência)
+  dias_semana: Quinta-feira (Júpiter tradicional), segunda-feira (Lua/Netuno moderno)
+  doencas_corpo: "Na medicina astrológica histórica: pés. Linfa, imunidade, glândulas, sensibilidade química e vícios são ampliações modernas. Não usar para diagnóstico ou estigma."
+  arquetipos_mitologicos: Poseidon/Netuno, Dioniso, Hécate, Anfitrite, Jesus Cristo
+  mitos_historias: Dioniso e a sua dupla natureza; Jesus andando sobre as águas; O dilúvio
+  sonhos_simbolos_inconsciente: Águas profundas, névoa, peixes, ilhas, barcos, música
+  expressao_elevada_sombra: 'Elevada: compaixão universal, arte transcendente, serviço espiritual | Sombra: escape da realidade, vícios, vitimização, confusão'
+camada_energetica:
+  impressao_mental: A cor azul-marinho/violeta no mapa = 'mente que dissolve'.
+  permeacao_emocional: Compaixão universal, confusão de limites, 'tudo é um'.
+  manifestacao_externa: "Olhos úmidos ou sonhadores, formas suaves e estilo fluido são descrições modernas do tipo pisciano/netuniano, preservadas como crença."
+  como_guiar_o_astral: "Comparar o Peixes jupiteriano tradicional ao Peixes netuniano moderno; cor e ritual não recebem promessa causal."
+porque_simbolico: 'Peixes = PÉS — são a parte do corpo que ''anda sobre as águas'' (Netuno = dissolução, o invisível). Os pés ''fundam'' o corpo no chão — mas Peixes ''funda'' no invisível.
+
+  AZUL-MARINHO = cor do OCEANO PROFUNDO (Netuno = oceano). VIOLETA = cor do ''entre-dois'' (mistura de azul e vermelho = mar + vida).
+
+  '
+leitura_corporal: {regra: "Peixes corresponde aos pés na melothesia.", uso: "Camada histórica/simbólica; não diagnóstico ou inferência de uso de substâncias."}
+aparencia_nas_tradicoes:
+  descricao: "Manuais descrevem o tipo pisciano como olhos grandes, úmidos ou distantes, contornos suaves, movimento fluido e aparência mutável."
+  porque: "A imagem combina água mutável, os dois peixes e, modernamente, Netuno, névoa e dissolução de limites."
+  variantes: "O tipo jupiteriano tradicional não é idêntico ao netuniano moderno; Ascendente, Júpiter/Netuno e planetas angulares recebem pesos diferentes."
+  limite: "Preservar como crença fisionômica; não associar aparência a vício, fragilidade, doença mental ou espiritualidade obrigatória."
+referencias:
+  - {autor: "Claudius Ptolemy", obra: "Tetrabiblos", natureza: "primária histórica", localizador: "Livro I; Peixes, Júpiter e membros do corpo."}
+  - {autor: "William Lilly", obra: "Christian Astrology", natureza: "primária histórica", localizador: "Descrições de Júpiter e Peixes; consultar significadores completos."}
+  - {autor: "Liz Greene", obra: "The Astrological Neptune and the Quest for Redemption", natureza: "secundária moderna", localizador: "Simbolismo psicológico moderno de Netuno; não é fonte da melothesia antiga."}
+validacao_de_fontes: {base: "Pés e Júpiter são tradicionais; linfa, química e dissolução são ampliações netunianas modernas.", limite: "Não usar como fenótipo obrigatório, diagnóstico ou estigma."}

@@ -1,0 +1,58 @@
+status: review
+
+id: "sect_diurno_noturno"
+nome: "Sect — Diurno e Noturno"
+tradicoes:
+  - "tradicional"
+  - "helenistica"
+tema: "De onde vem a luz do mapa"
+
+essencia:
+  - "Dia vs Noite"
+  - "Sol acima/abaixo do horizonte"
+  - "Benéfico por Sect"
+
+origens_e_divergencias:
+  tradicional: "Sect é uma doutrina helenística de carta diurna/noturna, retomada por autores medievais; deve ser lida com regência, hemisfério, condição e escola declarados."
+  moderna: "Analogias psicológicas de exterioridade/interioridade podem ser estudadas como leitura posterior, não como definição técnica de sect."
+  nota: "Não usar sect para tipificar personalidade ou orientar família sem separar inferência moderna da regra histórica."
+
+referencias:
+  - autor: "Vettius Valens"
+    obra: "The Anthology"
+    edicao_ou_traducao: "Mark Riley, tradução inglesa"
+    natureza: "fonte primária helenística"
+    localizador: "Passagens sobre seita, luminárias e condição planetária"
+  - autor: "Chris Brennan"
+    obra: "Hellenistic Astrology: The Study of Fate and Fortune"
+    ano: 2017
+    natureza: "secundária histórica/técnica"
+    localizador: "Capítulos sobre sect e condições planetárias"
+atlas_simbolico:
+  pessoas_arquetipos: "O diurno, o noturno, o que brilha, o que se esconde"
+  lugares_fisicos: "Lugares de luz, lugares de sombra, templos"
+  objetos_materia: "Relógios de sol, lâmpadas, instrumentos de tempo"
+  eventos_tipicos: "Inícios, finais, revelações, ocultamentos"
+  animais: "Leão (diurno), coruja (noturno)"
+  plantas_ervas: "Girassol (diurno), lótus (noturno)"
+  metais_pedras: "Ouro (diurno), prata (noturno)"
+  cores_sons: "Dourado (diurno), prata (noturno); notas Dó e Lá"
+  numeros: "1 (diurno), 2 (noturno), 6 (harmonia)"
+  dias_semana: "Domingo (diurno), segunda-feira (noturno)"
+  doencas_corpo: "Olhos (diurno), sistema nervoso (noturno)"
+  arquetipos_mitologicos: "Apolo (diurno), Hécate (noturna)"
+  mitos_historias: "Apolo e a luz; Hécate e a noite"
+  sonhos_simbolos_inconsciente: "Sol, lua, luz, sombra"
+  expressao_elevada_sombra: "Elevada: luz consciente, sombra integrada | Sombra: rejeição da sombra, negação da luz"
+
+camada_energetica:
+  campo_mental: "Mapa diurno: mente voltada à ação externa, expressão, propósito visível. Noturno: mente voltada ao interior, emoção, intuicao."
+  permeacao_emocional: "Diurno tende a processar pelo fazer; noturno pelo sentir. Isso muda COMO você orienta."
+  manifestacao_externa: "A 'luz' do mapa (seta de onde vem o recurso) muda. Eventos prováveis favorecem o lado do Sect."
+  como_guiar: "Diurno: oriente pela ação e propósito. Noturno: oriente pelo acolhimento e intuição. Não force o oposto."
+
+regra_tradicional: "Sol, Júpiter e Saturno pertencem à seita diurna; Lua, Vênus e Marte, à noturna. Saturno é a maleficência mais moderada em carta diurna e Marte em carta noturna; Mercúrio requer uma regra explícita de fase/posição em relação ao Sol. Isso não é uma licença para chamar o planeta automaticamente benéfico ou maléfico."
+foco_especial:
+  infantil: "Crianca diurna pede estímulo e faça; noturna pede acolhimento e ambiente calmo."
+  familiar: "O Sect de cada membro explica por que uns 'falam' e outros 'sentem' no lar."
+

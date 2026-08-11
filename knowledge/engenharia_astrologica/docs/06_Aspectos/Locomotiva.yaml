@@ -1,0 +1,48 @@
+﻿status: review
+id: "locomotiva"
+nome: "Locomotiva"
+formato: "Planetas distribuídos ao longo de aproximadamente 240°, deixando cerca de 120° vazios; a leitura moderna destaca o planeta-guia na borda do arco conforme o sentido adotado."
+
+origens_e_divergencias:
+  tradicional: "Não é configuração ptolomaica. É padrão de distribuição da tipologia moderna de Marc Edmund Jones."
+  moderna: "O chamado planeta-guia pode orientar uma leitura de direção ou iniciativa, mas não é automaticamente dominante nem deve ser confundido com planeta solitário."
+  nota: "A determinação do planeta-guia depende da convenção de movimento usada pela escola; o motor deve exibi-la."
+atlas_simbolico:
+  pessoas_arquetipos: "O líder, o pioneiro, o que abre caminho"
+  lugares_fisicos: "Trilhas, estradas, campos de batalha, montanhas"
+  objetos_materia: "Trens, ferramentas de progresso, mapas"
+  eventos_tipicos: "Conquistas, aberturas, pioneirismo, avanços"
+  animais: "Leão, touro, cavalo de guerra"
+  plantas_ervas: "Alecrim, urtiga, hera"
+  metais_pedras: "Ferro, aço, rubi, jaspe"
+  cores_sons: "Vermelho, laranja; notas Si e Dó"
+  numeros: "1 (início), 3 (progresso), 9 (conquista)"
+  dias_semana: "Domingo (Sol), terça-feira (Marte)"
+  doencas_corpo: "Cabeça, sistema nervoso, coluna"
+  arquetipos_mitologicos: "Hércules, Teseu, Apolo"
+  mitos_historias: "Hércules e os trabalhos; Teseu e o Minotauro"
+  sonhos_simbolos_inconsciente: "Trens, estradas, pioneirismo, conquistas"
+  expressao_elevada_sombra: "Elevada: liderança pioneira, abertura de caminho | Sombra: arrogância, centralização excessiva"
+
+camada_energetica:
+  impressao_mental: "Toda a energia empurra a partir do planeta solitário (o cabochete) — ele 'puxa o trem'. A mente opera em torno desse ponto livre."
+  permeacao_emocional: "O cabochete carrega a tensão de 'iniciar'; o resto segue."
+  manifestacao_externa: "Eventos PROVÁVEIS giram em torno do tema do cabochete. Arquétipos: a Locomotiva, o Cabochete. Inclinação, não destino."
+  como_guiar_o_astral: "Mostrar que o planeta solitário é o 'ponto de partida' da pessoa — trabalhá-lo é trabajar o mapa."
+
+consenso_tradicional: "Não existe consenso tradicional para este padrão. No método de Jones, o planeta na borda que lidera a sequência pode ser uma chave de abordagem, sem substituir os demais critérios de força."
+arquetipos_simbolicos: ["A Locomotiva", "O Cabochete", "O Motor"]
+definicao_tecnica: "Confirmar arco ocupado e arco vazio, sem aplicar a regra de Balde/Bucket. Registrar quais corpos entram no padrão e como se escolhe a borda-guia."
+referencias:
+  - autor: "Marc Edmund Jones"
+    obra: "The Guide to Horoscope Interpretation"
+    natureza: "primária moderna"
+    localizador: "Locomotive e demais distribuições planetárias; conferir edição."
+  - autor: "Dane Rudhyar"
+    obra: "The Astrology of Personality"
+    natureza: "secundária moderna"
+    localizador: "Leitura moderna da forma global do mapa; conferir edição."
+validacao_de_fontes:
+  base: "A ficha corrige a noção de planeta isolado: Locomotiva é definida pelo arco vazio, não por um punho em oposição."
+  limite: "A palavra 'cabochete' é metáfora editorial; não é parâmetro de cálculo."
+

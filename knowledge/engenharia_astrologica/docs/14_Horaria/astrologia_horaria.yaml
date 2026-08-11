@@ -1,0 +1,63 @@
+status: review
+id: "astrologia_horaria"
+nome: "Astrologia Horária"
+tradicoes:
+  - "horaria tradicional"
+  - "medieval"
+tipo: "Aprofundamento"
+subtema: "Mapa da pergunta no tempo"
+
+origens_e_divergencias:
+  tradicional: "A horária de pergunta é especialmente documentada nas transmissões árabe-medievais e renascentistas; não deve ser reduzida a uma fórmula helenística única."
+  moderna: "Linhas contemporâneas divergem sobre radicalidade, casas, recepção, orbes e permissibilidade da pergunta."
+  nota: "A carta precisa registrar instante, local, sistema de casas, pergunta e escola. Significadores e condição vêm antes de qualquer resposta resumida."
+
+referencias:
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    ano: 1647
+    natureza: "fonte primária renascentista"
+    localizador: "Livro II, julgamento de questões horárias"
+  - autor: "Guido Bonatti"
+    obra: "Book of Astronomy"
+    edicao_ou_traducao: "Benjamin Dykes, Cazimi Press, 2007"
+    natureza: "fonte medieval traduzida"
+    localizador: "Tratados sobre julgamento e questões"
+
+atlas_simbolico:
+  pessoas_arquetipos: "O consulente, o juiz, o mensageiro"
+  lugares_fisicos: "Locais de consulta, tribunais"
+  objetos_materia: "Mapas horários, perguntas, respostas"
+  eventos_tipicos: "Consultas, respostas, decisões"
+  animais: "Águia (visão), coruja (sabedoria)"
+  plantas_ervas: "Sálvia, hera"
+  metais_pedras: "Prata, cristal, diamante"
+  cores_sons:
+    cores: ["Azul", "dourado", "prata"]
+    sons: ["Sino", "harpa"]
+  numeros: [1, 3, 7]
+  dias_semana: ["Quarta-feira"]
+  doencas_corpo:
+    doencas: ["Problemas de visão", "ansiedade"]
+    partes_corpo: ["Olhos", "cérebro"]
+  arquetipos_mitologicos:
+    - "Hermes (mensageiro)"
+    - "Atena (estratégia)"
+  mitos_historias: "Hermes e a resposta"
+  expressao_elevada_sombra: "Elevada: resposta clara | Sombra: resposta ambígua"
+
+camada_energetica:
+  impressao_mental: "A horária é o 'mapa da pergunta no tempo'. 'O que eu pergunto agora?'."
+  permeacao_emocional: "Ansiedade e espera por resposta. Quando saudável: clareza. Quando ferido: dúvida."
+  manifestacao_externa: "Eventos prováveis de respostas, decisões. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a FAZER PERGUNTAS CLARAS. Horária não adivinha — responde o que é perguntado."
+
+como_usar: |
+  1. A pergunta deve ser CLARA e ESPECÍFICA.
+  2. Calcule o mapa do MOMENTO da pergunta.
+  3. Identifique os significadores (planetas que representam a pergunta).
+  4. Leia os aspectos entre significadores.
+  5. SEMPRE como tendência, não como sentença.
+
+  Regra: se não sabe ler a resposta, não responda.
+

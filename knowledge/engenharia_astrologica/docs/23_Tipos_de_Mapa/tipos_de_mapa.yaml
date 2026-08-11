@@ -1,0 +1,70 @@
+status: review
+id: "tipos_de_mapa"
+nome: "Tipos de Mapa"
+tradicoes:
+  - "editorial"
+  - "multiescola"
+tipo: "taxonomia de leitura"
+escopo_documental:
+  tecnica_historica:
+    - "separação entre carta natal, qualidades do mapa, mapas derivados, mapas relacionais e técnicas especializadas"
+  regra_do_projeto: "A taxonomia não deve misturar técnica, tipo de carta e camada interpretativa como se fossem a mesma coisa."
+  camada_simbolica: "As camadas energéticas do projeto não anulam a diferença entre método de cálculo e método de interpretação."
+referencias:
+  - autor: "Manual editorial do corpus"
+    obra: "Plano de completude e taxonomia mestre"
+    natureza: "editorial"
+    localizador: "seções de tipos de mapa, previsão e relacionamentos"
+validacao_de_fontes:
+  base: "As refer?ncias estruturadas delimitam c?lculo, uso e genealogia dos tipos de mapa tratados nesta ficha."
+  escopo: "A taxonomia separa qualidades, derivados, relacionais e especialidades; ela n?o funde composite, Davison e compara??o entre mapas."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+subtema: "Mapas especializados"
+
+origens_e_divergencias:
+  tradicional: "Horária, mundana, médica — mapas especializados."
+  moderna: "Sinastria, composite, Davison, astrocartografia, dracônico e outras derivações modernas."
+  nota: "Cada tipo de mapa tem cálculo, pergunta e limites próprios."
+
+atlas_simbolico:
+  pessoas_arquetipos: "O especialista, o estrategista, o leitor"
+  lugares_fisicos: "Observatórios, consultórios, salas de leitura"
+  objetos_materia: "Mapas, cartas, computadores"
+  eventos_tipicos: "Leituras, consultas, análises"
+  animais: "Águia (visão ampla), coruja (sabedoria)"
+  plantas_ervas: "Sálvia, hera"
+  metais_pedras: "Prata, cristal, diamante"
+  cores_sons:
+    cores: ["Azul", "dourado", "prata"]
+    sons: ["Sino", "harpa", "vento"]
+  numeros: [1, 3, 7]
+  dias_semana: ["Quinta-feira"]
+  doencas_corpo:
+    doencas: ["Problemas de visão", "ansiedade"]
+    partes_corpo: ["Olhos", "cérebro"]
+  arquetipos_mitologicos:
+    - "Hermes (mensageiro)"
+    - "Atena (estratégia)"
+  mitos_historias: "Hermes e a leitura do futuro"
+  expressao_elevada_sombra: "Elevada: especialização consciente | Sombra: fragmentação, perda do mapa natal"
+
+camada_energetica:
+  impressao_mental: "Cada mapa é uma LENTE DIFERENTE sobre a mesma vida."
+  permeacao_emocional: "Especialização como profundidade. Quando saudável: visão clara. Quando ferido: perda de contexto."
+  manifestacao_externa: "Eventos prováveis de leituras, análises, especializações. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a NÃO PERDER O MAPA NATAL. Especialização é ferramenta, não identidade."
+
+como_usar: |
+  Tipos de mapa:
+  1. Natal — a base de tudo
+  2. Qualidades do mapa natal — sect, orientalidade, dominância, padrões
+  3. Sinastria — comparação entre duas vidas
+  4. Composite — carta composta do vínculo
+  5. Davison — carta relacional por midpoint real
+  6. Horária — pergunta específica no tempo
+  7. Mundana — eventos coletivos
+  8. Médica — saúde e corpo
+  9. Eletiva — timing de início
+  10. Astrocartografia — mapa geográfico
+
+  Regra: o Natal é SEMPRE a base. Os outros são LENTES.

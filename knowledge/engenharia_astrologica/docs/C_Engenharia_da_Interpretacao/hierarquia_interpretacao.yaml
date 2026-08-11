@@ -1,0 +1,72 @@
+﻿status: review
+id: "hierarquia_interpretacao"
+nome: "Hierarquia de Interpretação"
+tradicoes:
+  - "editorial"
+  - "multiescola"
+tipo: "Engenharia da Interpretação"
+subtema: "Primazia dos fatores"
+
+origens_e_divergencias:
+  tradicional: "Lilly, Bonatti, Valens e Morin oferecem métodos de julgamento com prioridades próprias; não existe uma ordem única em que Sol, Lua e Ascendente sempre ocupem as mesmas posições."
+  moderna: "Linhas psicológicas podem iniciar pelas funções Sol–Lua–Ascendente, mas isso é uma pedagogia moderna, não a hierarquia universal da astrologia tradicional."
+  nota: "Hierarquia é um protocolo de leitura escolhido por finalidade e escola. O sistema deve mostrar a ordem aplicada e os fatores que a modificaram."
+
+atlas_simbolico:
+  pessoas_arquetipos: "O juiz, o advogado, o conselheiro, o estrategista"
+  lugares_fisicos: "Tribunais, bibliotecas, escritórios"
+  objetos_materia: "Livros de lei, balanças, argumentos escritos"
+  eventos_tipicos: "Julgamentos, sínteses, argumentações, decisões"
+  animais: "Águia, lobo, coruja"
+  plantas_ervas: "Sálvia, hera, carvalho"
+  metais_pedras: "Prata, diamante, jaspe"
+  cores_sons:
+    cores: ["Azul", "dourado", "preto"]
+    sons: ["Gongo", "tambor", "silêncio"]
+  numeros: [1, 3, 7]
+  dias_semana: ["Quinta-feira"]
+  doencas_corpo:
+    doencas: ["Problemas de visão", "ansiedade", "insônia"]
+    partes_corpo: ["Olhos", "cérebro", "sistema nervoso"]
+  arquetipos_mitologicos:
+    - "Themis (justiça)"
+    - "Athena (estratégia)"
+    - "Hermes (mediação)"
+  mitos_historias: "Themis e as Moiras; Atena e a guerra justa"
+  sonhos_simbolos_inconsciente: "Tribunais, argumentos, decisões"
+  expressao_elevada_sombra: "Elevada: justiça, síntese, sabedoria | Sombra: parcialidade, dogmatismo"
+
+camada_energetica:
+  impressao_mental: "Como PENSAR o mapa. Primeiro: Sol (essência), depois Lua (contexto emocional), depois Ascendente (expressão)."
+  permeacao_emocional: "Interpretação como julgamento justo — não como sentença."
+  manifestacao_externa: "Eventos prováveis de decisões, sínteses, conclusões. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a ENTENDER A ORDEM. Não misturar tradições sem avisar."
+
+como_usar: |
+  Procedimento editorial, não ordem universal:
+  1. Declare finalidade (natal, horária, eletiva, previsional, relacional) e tradição.
+  2. Verifique dados, zodíaco, sistema de casas, seita, tabelas e pontos incluídos.
+  3. Identifique significadores primários exigidos pela técnica (por exemplo, Ascendente/regente, luminar da seita, casa/pergunta).
+  4. Julgue condição essencial e acidental, angularidade, fase/movimento e relações relevantes.
+  5. Procure repetição e contradição antes de recorrer a fatores secundários ou simbólicos.
+  6. Só então acrescente a camada psicológica, kármica, hermética ou sistêmica explicitamente rotulada.
+  7. Sintetize com evidências, limites e divergências; não reduza o mapa a uma lista de palavras-chave.
+
+referencias:
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    natureza: "primária histórica"
+    localizador: "Princípios de significadores e julgamento; conferir edição."
+  - autor: "Guido Bonatti"
+    obra: "Liber Astronomiae"
+    natureza: "primária histórica"
+    localizador: "Ordem de julgamento e condições; conferir tradução/edição."
+  - autor: "Jean-Baptiste Morin"
+    obra: "Astrologia Gallica"
+    natureza: "primária histórica"
+    localizador: "Regras de julgamento natal; conferir edição/tradução."
+
+validacao_de_fontes:
+  base: "A ficha trata prioridade como método dependente de técnica, não como dogma de Sol–Lua–Ascendente."
+  limite: "O motor não deve ocultar a tradição ou apresentar síntese multiescola como consenso."
+

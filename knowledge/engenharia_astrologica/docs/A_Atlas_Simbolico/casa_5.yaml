@@ -1,0 +1,58 @@
+﻿status: review
+id: "casa_5_atlas"
+nome: "Casa 5 — O Trono / A Criação"
+tradicoes:
+  - "atlas simbolico editorial"
+  - "sintese multiescola"
+tipo: "Atlas Simbólico"
+subtema: "Correspondências da Casa 5"
+
+origens_e_divergencias:
+  tradicional: "Ptolomeu (Tetrabiblos) — significados tradicionais das 12 casas."
+  moderna: "Astrologia psicológica — casas como áreas de desenvolvimento."
+  nota: "Revisar ao citar — marca a escola usada."
+
+atlas_simbolico:
+  pessoas_arquetipos: "O criador, o amante, o filho, o artista, o jogador"
+  lugares_fisicos: "Teatros, salas de jogo, jardins de infância, parques"
+  objetos_materia: "Obras de arte, brinquedos, joias, bilhetes de sorte"
+  eventos_tipicos: "Nascimentos, gestações, criação artística, jogos, romance"
+  animais: "Leão, criança, gato, golfinho, pavão"
+  plantas_ervas: "Girassol, rosa, lótus, cravo"
+  metais_pedras: "Ouro, rubi, citrino, diamante"
+  cores_sons:
+    cores: ["Ouro", "laranja", "amarelo-dourado"]
+    sons: ["Música", "canto coral", "aplausos"]
+  numeros: [5]
+  dias_semana: ["Domingo", "Sexta-feira"]
+  doencas_corpo:
+    doencas: ["Problemas cardíacos", "excesso"]
+    partes_corpo: ["Coração", "coluna dorsal", "costas"]
+  arquetipos_mitologicos:
+    - "Dioniso (celebração)"
+    - "Afrodite (amor)"
+    - "Hércules (jovem herói)"
+  mitos_historias: "Dioniso e as bacantes; Afrodite e Eros"
+  sonhos_simbolos_inconsciente: "Crianças, jogos, paixões, arte"
+  expressao_elevada_sombra: "Elevada: criação autêntica, amor generoso, alegria | Sombra: vaidade, jogo compulsivo, criatividade egoísta"
+
+revisao_editorial:
+  origem_e_linguagem: "A quinta casa é sucessiva e reúne, em tradições de casas, filhos, prazer, criação, jogos e emissões; 'trono' e criação são imagens pedagógicas."
+  mito_arquetipo_e_porque: "Palco, obra, fertilidade e brincadeira formam o porquê simbólico, sem transformar desejo de filhos ou talento em destino obrigatório."
+  limite_tecnico: "A analogia com Leão/Sol é moderna. Filhos, gestação e projetos requerem método, contexto e nunca diagnóstico/prognóstico determinista."
+referencias:
+  primarias:
+    - "Lilly, William. Christian Astrology. 1647, livro II: significações da quinta casa."
+  secundarias:
+    - "Houlding, Deborah. The Houses: Temples of the Sky. The Wessex Astrologer, 1996."
+  tecnicas:
+    - "Distinguir técnica natal, horária e eletiva antes de aplicar as significações."
+camada_energetica:
+  impressao_mental: "A mente que CRIA e AMA. Prazer, expressão, 'o que eu faço por amor?'."
+  permeacao_emocional: "Alegria e paixão. Quando saudável: criatividade. Quando ferido: drama, ego inflado."
+  manifestacao_externa: "Eventos PROVÁVEIS de criação, nascimentos, romance, jogos. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a CRIAR SEM MEDO. Casa 5 é a vida que se expressa, não o espetáculo."
+
+ver_mais:
+  - "../05_Casas/Casa_5.yaml"
+

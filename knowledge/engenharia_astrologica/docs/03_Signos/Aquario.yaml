@@ -1,0 +1,87 @@
+status: review
+id: "aquario"
+nome: "Aquário"
+tradicoes:
+  - "helenística"
+  - "medieval"
+  - "renascentista"
+  - "moderna (somente camadas explicitamente modernas)"
+escopo_documental:
+  tecnica_historica:
+    - "elemento, modalidade, regência, dignidade e estrutura zodiacal"
+    - "divergências modernas de regência ou leitura entram como nota explícita, sem substituir silenciosamente a camada histórica"
+  camadas_modernas: "Atlas simbólico, Tarot, correspondências médicas e releituras contemporâneas permanecem separados da regra histórica e devem ser apresentados como camada interpretativa rotulada."
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "primária"
+    localizador: "Livro I, capítulos sobre signos, qualidades e regências"
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    natureza: "primária"
+    localizador: "Livros I–II, passagens sobre signos e regentes"
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    natureza: "primária"
+    localizador: "Livro I, descrição dos signos e significadores"
+validacao_de_fontes:
+  base: "A regra zodiacal hist?rica ? sustentada por Ptolomeu, Valens e Lilly, nas refer?ncias estruturadas da ficha."
+  escopo: "Tarot, Atlas simb?lico, mitologia, correspond?ncias m?dicas e psicologia s?o camadas de estudo rotuladas; n?o s?o consenso nem substituem a regra hist?rica."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+elemento: "Ar"
+modalidade: "Fixo"
+regente: "Saturno (moderno: Urano)"
+
+origens_e_divergencias:
+  tradicional: "Saturno (estrutura, limite, massa, povo)."
+  moderna: "Urano (inovação, ruptura, originalidade, tecnologia)."
+  divergencia: "Tradicional vê Aquário como Saturno frio/seco (a 'massa', o povo, a estrutura coletiva). Moderna troca para Urano (o 'raio', a inovação, o choque). Ambas coexistem — registrar ao citar."
+  nota: "Divergência importante: Saturno = estrutura/rígido; Urano = choque/liberdade. A leitura muda o tom."
+
+essencia:
+  - "Originalidade"
+  - "Coletivo"
+  - "Futuro"
+
+simbologia_elemento:
+  elemento: "Ar"
+  modalidade: "Fixo"
+  simbolo: "Céu noturno / Atmosfera parada"
+  analogia: "Ar Fixo — como o céu noturno cheio de estrelas fixas."
+  porque: "Ar Fixo é o ar CONSOLIDADO: ideias fixas, grupo, futuro. Aquário é o décimo primeiro signo, onde a energia se organiza em causas. O céu noturno representa o ar que não se move, mas contém todas as estrelas (ideias) fixas."
+atlas_simbolico:
+  pessoas_arquetipos: "Inventor, revolucionário, cientista, humanitário, guru, amigo"
+  lugares_fisicos: "Laboratórios, universidades, aeroportos, redes, espaços coletivos, cidades"
+  objetos_materia: "Máquinas, circuitos, livros científicos, redes, aviões, inventos"
+  eventos_tipicos: "Revoluções, invenções, reuniões de grupo, mudanças sociais, inovações"
+  animais: "Águia, falcão, peixe voador, golfinho, cão pastor, aranha"
+  plantas_ervas: "Olivas, oliveira, samambaia, urtiga, menta, zimbro"
+  metais_pedras: "Uranium, alumínio, turquesa, lápis-lazúli, água-marinha"
+  cores_sons: "Azul-elétrico, violeta, prata; notas Mi e Lá; sintetizador, violino"
+  numeros: "4 (estrutura inovadora), 7 (mental superior), 11 (gênio coletivo)"
+  dias_semana: "Sábado (dia de Saturno tradicional), domingo (moderno/Urano)"
+  doencas_corpo: "Tornozelos, sistema circulatório, sistema nervoso, varizes, alergias"
+  arquetipos_mitologicos: "Prometeu, Zeus/Júpiter (raio), Hécate, Atena"
+  mitos_historias: "Prometeu roubando o fogo; Pandora e a caixa; Atena nascendo da cabeça de Zeus"
+  sonhos_simbolos_inconsciente: "Máquinas, aviões, redes, coletivos, céu estrelado, relâmpagos"
+  expressao_elevada_sombra: "Elevada: inovação a serviço do coletivo, amizade universal, mente avançada | Sombra: rebeldia sem causa, frieza emocional, extremismo"
+
+tarot:
+  carta: "A Estrela"
+  explicacao: "Carta 17 — esperança, futuro, inovação, renovação. Aquário é a Estrela porque ambos representam o fogo que queima sem consumir: a água que regenera, o futuro que brilha no escuro. A Estrela é a única carta que olha para cima enquanto derrama água."
+
+camada_energetica:
+  impressao_mental: "A mente que rompe e redeia. 'Por que assim e não diferente?'. Invenção e causa. Quando atrito: rebeldia à toa, frieza, excentricidade defensiva."
+  permeacao_emocional: "Sentimento mediado pelo grupo e pela ideia. Ama a humanidade, às vezes à custa do próximo."
+  manifestacao_externa: "Eventos prováveis de mudanças súbitas, redes, causas, tecnologia. Trânsitos mexem no coletivo e no inesperado."
+  como_guiar_o_astral: "Ajudar a pessoa a viver a mudança sem perder o vínculo. Aquário guia bem quando inclui, não quando isola."
+
+decanatos:
+  - "0-10: Aquário (Saturno) — originalidade e rede"
+  - "10-20: Gêmeos (Mercúrio) — comunicação e agilidade"
+  - "20-30: Libra (Vênus) — relação e equilíbrio"
+
+foco_especial:
+  infantil: "A criança Aquário é a 'diferente' que pensa fora da caixa. Precisa de liberdade para ser ela mesma."
+  familiar: "O membro que questiona tradições familiares. Inova o lar, mas pode parecer distante."
+

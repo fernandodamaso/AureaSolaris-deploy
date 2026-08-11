@@ -1,0 +1,81 @@
+status: review
+id: "iatroastrologia_melotesia"
+nome: "Iatroastrologia e Melotesia"
+tradicoes:
+  - "medica historica ocidental"
+  - "moderna simbolica"
+tipo: "Astrologia Médica"
+subtema: "Correspondências médicas avançadas"
+
+origens_e_divergencias:
+  tradicional: "Hipócrates, Paulus Alexandrinus — iatroastrologia como 'medicina astrológica'."
+  moderna: "Overlay moderno — corpo como linguagem simbólica."
+  nota: "No estudo, manter a linguagem médica histórica com atribuição precisa; em aplicação contemporânea, distinguir documento, símbolo e conduta clínica."
+
+referencias:
+  - autor: "Manilius"
+    obra: "Astronomica"
+    natureza: "fonte primária greco-romana"
+    localizador: "Livro II, correspondências zodiacais do corpo"
+  - autor: "Paulus Alexandrinus"
+    obra: "Introductory Matters"
+    edicao_ou_traducao: "Dorian Gieseler Greenbaum, tradução inglesa"
+    natureza: "fonte primária tardia"
+    localizador: "Passagens de melotesia; conferir edição"
+  - autor: "Nicholas Culpeper"
+    obra: "Semeiotica Uranica"
+    ano: 1651
+    natureza: "fonte histórica de astrologia médica"
+    localizador: "Documento de período; não equivale a evidência médica contemporânea"
+
+limites_de_uso: ["Melotesia descreve um vocabulário histórico-simbólico, não uma relação clínica causal.", "Não usar para diagnóstico, prognóstico, prescrição ou substituição de cuidado profissional."]
+
+atlas_simbolico:
+  pessoas_arquetipos: "O médico, o curador, o herbalista"
+  lugares_fisicos: "Hospitais, clínicas, herbários"
+  objetos_materia: "Instrumentos médicos, livros de medicina"
+  eventos_tipicos: "Diagnósticos, curas, crises"
+  animais: "Coruja, serpente (cura)"
+  plantas_ervas: "Ervas medicinais, sálvia, camomila"
+  metais_pedras: "Prata, cristal, jaspe"
+  cores_sons:
+    cores: ["Prata", "azul-claro", "verde-oliva"]
+    sons: ["Dó", "lá"]
+  numeros: [3, 6, 9]
+  dias_semana: ["Quarta-feira"]
+  doencas_corpo:
+    doencas: ["Problemas de equilíbrio"]
+    partes_corpo: ["Todo o corpo"]
+  arquetipos_mitologicos:
+    - "Asclépio (medicina)"
+    - "Hipócrates (ética médica)"
+  mitos_historias: "Asclépio e a serpente da cura"
+  expressao_elevada_sombra: "Elevada: cura consciente | Sombra: diagnóstico como sentença"
+
+camada_energetica:
+  impressao_mental: "Iatroastrologia = 'astrologia aplicada à medicina'. Cada planeta/signo/casa rege partes do corpo."
+  permeacao_emocional: "Doença como linguagem simbólica. Quando saudável: alerta. Quando ferido: sentença."
+  manifestacao_externa: "Eventos prováveis de crises de saúde, curas. Inclinação, não destino."
+  como_guiar_o_astral: "Ler primeiro a camada histórica e sua técnica. Se houver releitura simbólica ou psicológica, declará-la como camada posterior."
+
+melotesia:
+  definicao: "Sistema de atribuição de planetas a partes do corpo, baseado em signos e casas."
+  como_usar: |
+    Mapa corporal tradicional:
+    - Cabeça: Áries, Casa 1
+    - Pescoço: Touro, Casa 2
+    - Braços: Gêmeos, Casa 3
+    - Estômago: Câncer, Casa 4
+    - Coração: Leão, Casa 5
+    - Intestinos: Virgem, Casa 6
+    - Rins: Libra, Casa 7
+    - Órgãos reprodutivos: Escorpião, Casa 8
+    - Quadril: Sagitário, Casa 9
+    - Joelhos: Capricórnio, Casa 10
+    - Panturrilhas: Aquário, Casa 11
+    - Pés: Peixes, Casa 12
+
+    Regra: planeta em signo/casa = ponto de atenção simbólica.
+
+aviso_etica: "Camada ética separada: preservar o ensino histórico no corpus e distinguir isso de orientação clínica contemporânea."
+

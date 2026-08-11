@@ -1,0 +1,46 @@
+﻿status: draft
+id: "fomalhaut_atlas"
+nome: "Fomalhaut — Atlas Simbólico"
+tradicoes:
+  - "atlas simbolico editorial"
+  - "sintese multiescola"
+tipo: "Atlas Simbólico"
+subtema: "Correspondências de Fomalhaut"
+
+origens_e_divergencias:
+  tradicional: "Ptolomeu, Al-Battani — Fomalhaut = Peixe Austral; iluminação espiritual, sabedoria oculta."
+  moderna: "Astrologia moderna mantém; acrescenta misticismo, ocultismo, cura por água."
+  nota: "Classificada como estrela de natureza Vênus/Mercúrio por tradição."
+
+atlas_simbolico:
+  pessoas_arquetipos: "Místico, curador espiritual, visionário, pessoa oculta"
+  lugares_fisicos: "Lagos, fontes, templos secretos, bibliotecas esotéricas"
+  objetos_materia: "Cálice, livro de sabedoria, espelho de água, cetro"
+  eventos_tipicos: "Iniciação espiritual, cura emocional, revelação, visão"
+  animais: "Peixe, cisne, golfinho, baleia"
+  plantas_ervas: "Lótus, salgueiro, mirra, camomila"
+  metais_pedras: "Prata, água marinha, lápis-lazúli, opala"
+  cores_sons:
+    cores: ["Azul-aqua", "prata", "verde-água"]
+    sons: ["Canto de baleia", "água corrente", "cantos suaves"]
+  numeros: [6, 11, 22]
+  dias_semana: ["Sexta-feira (Vênus)", "Quarta-feira (Mercúrio)"]
+  doencas_corpo:
+    doencas: ["Problemas circulatórios", "emoção reprimida"]
+    partes_corpo: ["Sangue", "rins", "pés"]
+  arquetipos_mitologicos: ["Poseidon/Netuno", "Anfitrite", "Proteu", "Jesus como pescador de homens"]
+  mitos_historias: "Fomalhaut como guardião do sul; visão espiritual que não se impõe, se convida"
+  sonhos_simbolos_inconsciente: "Águas profundas, peixes brilhantes, visões suaves, conhecimento oculto"
+  expressao_elevada_sombra: "Elevada: cura espiritual, visão compassiva, sabedoria oculta | Sombra: ocultismo vazio, fuga para misticismo, ilusão espiritual"
+
+camada_energetica:
+  impressao_mental: "Mentalidade mística mas prática; espiritualidade como água, não como dogma."
+  permeacao_emocional: "Profundidade emocional, sensibilidade. Quando sombra: evasão mística, negação do real."
+  manifestacao_externa: "Eventos PROVÁVEIS de insight espiritual, cura emocional, contato com guia oculto."
+  como_guiar_o_astral: "Ajudar a pessoa a ver espiritualidade como prática, não como fantasia; espiritualidade sem ação = evasão."
+
+ver_mais:
+  - "../07_Estrelas_Fixas/README.yaml"
+
+## ✏️ Minhas Anotações
+

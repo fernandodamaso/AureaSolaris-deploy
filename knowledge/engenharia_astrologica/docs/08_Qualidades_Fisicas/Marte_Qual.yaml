@@ -1,0 +1,63 @@
+status: review
+
+id: "marte_qualidades"
+nome: "Marte — Qualidades Físicas"
+cor: "Vermelho, ferrugem, laranja-fogo"
+metal: "Ferro"
+planta:: "Espinho, absinto, pimenta, gengibre, nabo, mostarda"
+elemento_fisico: "Fogo (quente, seco)"
+parte_do_corpo: "Cabeça, músculos, glândulas suprarrenais, sistema imunológico, sangue"
+qualidade_termica: "Quente e seca"
+chakra_overlay: "Plexo Solar (3º) — ação e coragem"
+
+origens_e_divergencias:
+  tradicional: "Doutrina das Assinaturas (Culpeper/Agrippa)."
+  moderna: "Astrologia psicológica (Liz Greene) — corpo como linguagem simbólica."
+  nota: "Chakra overlay = sincretismo Nova Era, não canônico."
+atlas_simbolico:
+  pessoas_arquetipos: "Guerreiro, atleta, soldado, competidor"
+  lugares_fisicos: "Campos de batalha, arenas, lugares altos"
+  objetos_materia: "Espadas, machados, capacetes, fogo, aço"
+  eventos_tipicos: "Guerras, nascimentos, competições, inaugurações"
+  animais: "Carneiro, touro, cavalo de guerra, lobo, leão"
+  plantas_ervas: "Alecrim, pimenta, urtiga, plantas espinhosas, hera"
+  metais_pedras: "Ferro, aço, rubi, jaspe, diamante, granada"
+  cores_sons: "Vermelho, laranja, dourado; notas Si e Dó; percussão"
+  numeros: "1 (início), 7 (guerra), 11 (duplo fogo)"
+  dias_semana: "Terça-feira"
+  doencas_corpo: "Cabeça, olhos, febres, inflamações, cortes, queimaduras"
+  arquetipos_mitologicos: "Ares, Marte, Hércules"
+  mitos_historias: "Ares na Guerra de Troia; Hércules e os trabalhos"
+  sonhos_simbolos_inconsciente: "Fogo, espadas, guerra, corridas, nascimentos"
+  expressao_elevada_sombra: "Elevada: coragem autêntica, ação justa | Sombra: agressividade, impulsividade"
+
+camada_energetica:
+  impressao_mental: "Marte é AÇÃO e FRONTEIRA — a mente 'avança' ou 'defende'."
+  permeacao_emocional: "Raiva, coragem, impulso."
+  manifestacao_externa: "Estilo vermelho/preto; tende a ser atlético ou ter 'cara de luta'. Arquétipos: o Guerreiro. Inclinação, não destino."
+  como_guiar_o_astral: "Marte pede CANAL — a pessoa precisa de esporte/arte/luta, senão a raiva 'encarna'."
+
+porque_simbolico: |
+  FERRO = metal da GUERRA (espadas, armaduras). Vermelho = cor do SANGUE e do FOGO.
+  ESPINHO = planta que DEFENDE (como Marte defende). GENGIBRE/PIMENTA = picam como golpe.
+  CABEÇA = parte do corpo de Áries (o signo de Marte) — 'cabeça de Áries' = avançar primeiro.
+
+linha_tradicao: "Doutrina das Assinaturas: Marte = ferro, espinho, absinto, vermelho."
+chakra_nota: "Overlay sincretico."
+tradicoes:
+  - "astrologia helenística e medieval"
+  - "correspondências renascentistas"
+  - "astrologia psicológica moderna"
+revisao_editorial:
+  atribuicao: "Ferro e qualidades quente/seca pertencem a tabelas tradicionais; a relação da cabeça com Áries pertence ao zodíaco anatômico histórico."
+  limite: "Sangue, músculos, cabeça e inflamação são correspondências histórico-simbólicas; não constituem diagnóstico, risco médico ou prescrição."
+  chakra: "Overlay sincrético contemporâneo, não regra de cálculo astrológico."
+referencias:
+  primarias:
+    - "Ptolomeu. Tetrabiblos, livro I: natureza marcial e qualidades planetárias; consultar tradução/edição declarada."
+    - "Agrippa, Heinrich Cornelius. Three Books of Occult Philosophy, livro I: ferro e correspondências de Marte."
+    - "Culpeper, Nicholas. The English Physitian / Complete Herbal, 1653: regências planetárias das plantas."
+  secundarias:
+    - "Greene, Liz. Mars: The Astrology of the Planet of War. Samuel Weiser, 1996."
+  tecnicas:
+    - "Avaliar Marte com condição, aspectos, casas e escola de leitura declarada."

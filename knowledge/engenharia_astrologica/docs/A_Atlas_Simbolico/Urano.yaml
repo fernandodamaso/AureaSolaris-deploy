@@ -1,0 +1,107 @@
+status: review
+id: "urano_atlas"
+nome: "Urano — Atlas Simbólico"
+tradicoes:
+  - "atlas simbolico editorial"
+  - "sintese multiescola"
+tipo: "Atlas Simbólico"
+subtema: "Correspondências de Urano"
+
+origens_e_divergencias:
+  tradicional: "Urano foi reconhecido como planeta por William Herschel em 1781 e não integra os sete planetas da astrologia antiga. Aquário permanece domicílio de Saturno no esquema tradicional."
+  moderna: "Autores modernos ligam Urano a Aquário, ruptura, invenção, reforma, eletricidade, independência e eventos súbitos; escolas divergem sobre regência, co-regência e peso interpretativo."
+  nota: "Não há dia semanal tradicional próprio: sábado pertence a Saturno. Urânio, eletricidade, computadores, plantas, pedras e anatomia são correspondências modernas, não consenso."
+
+origem_linguistica_mito_glifo:
+  etimologia: "O planeta recebeu o nome latinizado Uranus, do grego Ouranos, o Céu primordial."
+  mito: "Ouranos é castrado por Cronos — não castra a si mesmo. Prometeu é uma analogia moderna de rebelião e fogo técnico, não identidade com Ouranos."
+  glifo: "⛢ é um glifo astrológico moderno; ♅, com H em homenagem a Herschel, também é usado. A coexistência deve ser preservada."
+  porque: "A própria descoberta ampliou a fronteira conhecida do sistema solar; o período revolucionário e posteriores associações à eletricidade sustentaram ruptura e inovação."
+
+atlas_simbolico:
+  pessoas_arquetipos:
+    - "O inventor"
+    - "O gênio"
+    - "O rebelde"
+    - "O reformador"
+    - "O futurista"
+    - "O libertador"
+  lugares_fisicos:
+    - "Laboratórios"
+    - "Fábricas"
+    - "Aeroportos"
+    - "Observatórios"
+    - "Redes elétricas"
+    - "Torres de transmissão"
+  objetos_materia:
+    - "Aparelhos eléctricos"
+    - "Computadores"
+    - "Raios"
+    - "Lâmpadas"
+    - "Fios"
+    - "Radares"
+  eventos_tipicos:
+    - "Invenções"
+    - "Revoluções"
+    - "Quebras súbitas"
+    - "Surtos geniais"
+    - "Mudanças inesperadas"
+  animais:
+    - "Águia"
+    - "Cobra eléctrica"
+    - "Aranha (teia = rede)"
+    - "Morcego"
+    - "Abelha"
+  plantas_ervas:
+    - "Aloé"
+    - "Erva de São João"
+    - "Orquídea rara"
+    - "Trevo de quatro folhas"
+  metais_pedras:
+    - "Urânio"
+    - "Zircônio"
+    - "Ametista"
+    - "Fluorita"
+    - "Topázio-azul"
+  cores_sons:
+    cores: ["Azul-eléctrico", "Violeta", "Prata-luz", "Rosa-neon"]
+    sons: ["Zumbido eléctrico", "Vento forte", "Bip", "Ressonância"]
+  numeros: [4, 7, 11]
+  dias_semana: ["Sábado (Urano tradicionalmente associado a Saturno)"]
+  doencas_corpo:
+    doencas: ["Problemas nervosos", "Choques eléctricos", "Insônia"]
+    partes_corpo: ["Sistema nervoso autônomo", "Cérebro eléctrico", "Olhos", "Panturrilhas"]
+  arquetipos_mitologicos:
+    - "Urano/Caelus (céu primordial)"
+    - "Prometeu (roubo do fogo = conhecimento proibido)"
+    - "Pallas Atena (sabedoria súbita)"
+  mitos_historias:
+    - "Prometeu roubando o fogo dos deuses"
+    - "Urano castrando-se (inovação radical)"
+  expressao_elevada_sombra: "Elevada: inovação, liberdade, génio | Sombra: rebeldia sem causa, caos, fanatismo por mudança"
+
+camada_energetica:
+  impressao_mental: "A mente que INOVA e LIBERTA. Insights súbitos, rupturas de padrão, electricidade mental."
+  permeacao_emocional: "Liberdade interior. Quando saudável: originalidade. Quando ferido: rebeldia, solidão por ser 'diferente'."
+  manifestacao_externa: "Eventos PROVÁVEIS de rupturas, inovações, encontros súbitos. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a CANALIZAR a electricidade. Urano sem filtro causa curto-circuito."
+
+tarot_relacionado:
+  carta: "O Louco (Arcano Maior 0)"
+  conexao: "O Louco é Urano: passo no vazio, ruptura, confiança no desconhecido, gênio que não vê limites."
+
+foco_especial:
+  infantil: "A criança Urano é o gênio incompreendido. Precisa de liberdade, estímulo intelectual, espaço para ser diferente."
+  familiar: "O membro 'estranho' da família. O que traz inovação ou desestrutura."
+  carmico_espiritual: "Urano indica a LIÇÃO DE LIBERDADE. Casa Urano = onde a pessoa deve inovar e libertar."
+
+camada_tecnica_e_limites:
+  regra: "O motor só deve usar Urano quando habilitado e registrar se Aquário segue Saturno tradicional, Urano moderno ou co-regência; nenhuma variante pode ser silenciosa."
+  limites: "Sistema nervoso, insônia e choques são correspondências modernas, não diagnóstico. Tarot, oitavas, pedras e leituras cármicas exigem atribuição."
+referencias:
+  primarias: ["William Herschel, 'Account of a Comet', Philosophical Transactions of the Royal Society 71 (1781); fonte da descoberta, antes do reconhecimento orbital como planeta."]
+  secundarias: ["James Holden, A History of Horoscopic Astrology (1996), contexto dos planetas modernos.", "Dane Rudhyar, The Astrology of Personality (1936), recepção humanista de Urano."]
+anotacoes_pessoais: []
+ver_mais:
+  - "../04_Planetas/Urano.yaml"
+

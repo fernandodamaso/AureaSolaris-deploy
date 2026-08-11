@@ -1,0 +1,56 @@
+status: review
+id: "lote_coragem"
+nome: "Parte da Coragem"
+tradicoes:
+  - "helenistica"
+  - "arabe-medieval"
+formula_diurna: "Asc + Marte − Fortuna"
+formula_noturna: "Asc + Fortuna − Marte"
+tema: "Ousadia, ação, enfrentamento"
+
+sentido_do_calculo: |
+  Marte é a AÇÃO/impulso; Fortuna é o que nutre.
+  A fórmula mede onde a ação se apoia no que nutre (ou where age à custa do que nutre). É o ponto do ENFRENTAMENTO.
+
+origens_e_divergencias:
+  tradicional: "Coragem é um dos lotes planetários de Paulus, associado a Marte; a fórmula usa Fortuna e Marte com reversão por sect."
+  moderna: "Leituras de bravura, trauma ou autoafirmação são extensões modernas e não substituem a técnica."
+  nota: "Registrar fórmula, sect, fonte e regente. Não tratar o lote como prova de conduta ou destino."
+
+referencias:
+  - autor: "Paulus Alexandrinus"
+    obra: "Introductory Matters"
+    edicao_ou_traducao: "Dorian Gieseler Greenbaum, tradução inglesa"
+    natureza: "fonte primária helenística"
+    localizador: "Capítulo 23, lotes planetários atribuídos ao Panaretos"
+  - autor: "Dorian Gieseler Greenbaum"
+    obra: "Late Classical Astrology: Paulus Alexandrinus and Olympiodorus"
+    ano: 2001
+    natureza: "secundária filológica"
+    localizador: "Fórmulas e transmissão dos lotes planetários"
+atlas_simbolico:
+  pessoas_arquetipos: "O corajoso, o guerreiro, o que enfrenta"
+  lugares_fisicos: "Campos de batalha, arenas, lugares de desafio"
+  objetos_materia: "Espadas, escudos, ferramentas de coragem"
+  eventos_tipicos: "Desafios, guerras, conquistas, enfrentamentos"
+  animais: "Leão, touro, lobo"
+  plantas_ervas: "Alecrim, urtiga, plantas espinhosas"
+  metais_pedras: "Ferro, aço, rubi, jaspe"
+  cores_sons: "Vermelho, laranja; notas Si e Dó"
+  numeros: "1 (início), 4 (tensão), 7 (crise)"
+  dias_semana: "Terça-feira (Marte), domingo (Sol)"
+  doencas_corpo: "Coração, sistema circulatório, ossos"
+  arquetipos_mitologicos: "Ares/Marte, Hércules, Teseu"
+  mitos_historias: "Hércules e os trabalhos; Teseu e o Minotauro"
+  sonhos_simbolos_inconsciente: "Guerras, desafios, conquistas"
+  expressao_elevada_sombra: "Elevada: coragem autêntica, enfrentamento consciente | Sombra: imprudência, violência, egoísmo"
+
+camada_energetica:
+  impressao_mental: "De onde a mente tira impulso de enfrentar."
+  permeacao_emocional: "Coragem como energia de 'vou' — ou bravata defensiva se desequilibrada."
+  manifestacao_externa: "Eventos prováveis de iniciativa ousada. Arquétipos: o Escudo, a Espada. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a usar a Coragem sem confundir com imprudência."
+
+como_usar: "Ler onde a pessoa 'se arma'. Trânsito aqui = janela de audácia (ou de atrito se maléfico)."
+regente: "Regente do signo onde cai; lido por casa e aspectos."
+

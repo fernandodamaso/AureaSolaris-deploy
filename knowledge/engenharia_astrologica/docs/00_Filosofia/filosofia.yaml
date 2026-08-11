@@ -1,0 +1,77 @@
+﻿status: review
+id: "filosofia"
+nome: "Filosofia"
+tradicoes:
+  - "editorial"
+  - "multiescola"
+tipo: "Filosofia"
+subtema: "Camada energética, propósito, regras"
+
+origens_e_divergencias:
+  tradicional: "A base acolhe escolas ocidentais selecionadas como objetos históricos de estudo, cada qual com vocabulário, cosmologia e regras próprios. Não apresenta uma tradição como se falasse por todas as demais."
+  moderna: "Engenharia Astrológica é uma arquitetura editorial e de estudo, não uma escola histórica nem uma técnica de interpretação concorrente."
+  nota: "Esta ficha define a política do projeto: separar fonte, cálculo, inferência, opinião e nota simbólica; preservar divergências sem fabricar consenso."
+
+atlas_simbolico:
+  pessoas_arquetipos: "O estudante, o buscador, o iniciante"
+  lugares_fisicos: "Cadernos, bibliotecas, salas de estudo"
+  objetos_materia: "Cadernos, lápis, livros"
+  eventos_tipicos: "Descobertas, estudos, insights"
+  animais: "Coruja (sabedoria), formiga (organização)"
+  plantas_ervas: "Sálvia (memória), hera (permanência)"
+  metais_pedras: "Prata, cristal de rocha"
+  cores_sons:
+    cores: ["Azul-claro", "prata"]
+    sons: ["Dó", "lá"]
+  numeros: [1, 3, 6]
+  dias_semana: ["Quarta-feira"]
+  doencas_corpo:
+    doencas: ["Problemas nervosos", "olhos"]
+    partes_corpo: ["Olhos", "cérebro"]
+  arquetipos_mitologicos:
+    - "Hermes (comunicação)"
+    - "Atena (sabedoria)"
+  mitos_historias: "Hermes e a escrita"
+  expressao_elevada_sombra: "Elevada: estrutura viva que serve | Sombra: rigidez, burocracia"
+
+camada_energetica:
+  impressao_mental: "A FILOSOFIA É A BASE. Técnica sem filosofia é ferramenta cega. Filosofia sem técnica é devaneio."
+  permeacao_emocional: "Propósito como combustível. Quando saudável: direção clara. Quando ferido: confusão."
+  manifestacao_externa: "Eventos prováveis de estudos, descobertas, insights. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a ENTENDER O PORQUÊ. Filosofia não é abstrata — é a lente que muda tudo."
+
+pilares:
+  - "Design de caderno físico — papel, linhas, abas, fontes handwriting"
+  - "Banco de dados estruturado — YAMLs com id, nome, status, camada_energetica, origens_e_divergencias"
+  - "Alimentação bidirecional — banco → caderno → banco"
+  - "Astrologia inclina, não determina — ALERTA, não destino"
+
+regras:
+  - "NUNCA destruir o caderno (regra do_not_delete)"
+  - "Toda entrada no banco deve ter id, nome, status"
+  - "O caderno é o MEIO de aprendizado, não o FIM"
+  - "Design é essencial — sem design, não é caderno"
+
+aviso_etica: "Este é um caderno de estudos pessoal. Não substitui consulta profissional. Use como ferramenta de aprendizado e referência."
+
+criterio_de_leitura:
+  significado: "A ficha deve dizer o que o termo significa dentro da tradição declarada."
+  porque: "Quando houver explicação cosmológica, histórica ou técnica, ela deve ser atribuída à fonte/escola, não naturalizada."
+  origem: "Etimologia, mito, glifo, curiosidade e linhagem pertencem à camada de estudo e devem ser distinguidos de regra de cálculo."
+  uso: "Uma técnica só entra no motor com parâmetros, limites e tradição de uso declarados."
+  divergencia: "Quando autores ou escolas divergem, a causa (época, cosmologia, sistema de casas, tabela, orbe ou finalidade) deve ser descrita e oferecida como escolha consciente quando houver cálculo."
+
+referencias:
+  - autor: "Aurea Solaris"
+    obra: "AGENTS.md e Constituição do projeto"
+    natureza: "fonte editorial primária"
+    localizador: "Propósito, limites, duas bases de dados e regras de precisão/documentação."
+  - autor: "Engenharia Astrológica"
+    obra: "Protocolo de Fechamento de Fontes"
+    natureza: "fonte editorial primária"
+    localizador: "docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md"
+
+validacao_de_fontes:
+  base: "Por ser carta editorial, esta ficha referencia as normas que ela governa, e não atribui o método do projeto a uma linhagem histórica."
+  limite: "Não usar esta ficha como citação de uma regra astrológica histórica; consultar a ficha e fonte específicas da técnica."
+

@@ -1,0 +1,49 @@
+status: review
+id: sagitario_qualidades
+nome: Sagitário — Qualidades Físicas
+cor: Roxo, azul-royal, índigo, dourado
+tradicoes: [tradicional, médica histórica, moderna, editorial]
+parte_do_corpo: Quadris e coxas; fígado pertence sobretudo à cadeia geral de Júpiter
+elemento_fisico: Fogo
+qualidade_termica: Quente e seca pelo elemento fogo; Júpiter é tradicionalmente quente e úmido, distinção que explica tabelas divergentes
+origens_e_divergencias:
+  tradicional: "A melothesia associa Sagitário aos quadris e coxas. Fígado, estanho, quinta-feira e expansão derivam de Júpiter, regente do signo."
+  moderna: "Busca de sentido, viagem e expansão psicológica reelaboram a cadeia jupiteriana."
+  nota: "Separar o fogo quente/seco do signo da natureza quente/úmida de Júpiter; a combinação não autoriza diagnóstico nem fenótipo obrigatório."
+atlas_simbolico:
+  pessoas_arquetipos: Filósofo, viajante, professor, aventureiro, cavaleiro, missionário
+  lugares_fisicos: Montanhas, estradas, universidades, templos, países distantes, fronteiras
+  objetos_materia: Livros de filosofia, mapas, flechas, selas, malas de viagem, títulos
+  eventos_tipicos: Viagens longas, formaturas, publicações, aventuras, descobertas
+  animais: Cavalo, centauro, águia, cão de caça, camelo, falcão
+  plantas_ervas: Nogueira, oliveira, cedro, sálvia, mirra, açafrão
+  metais_pedras: Estanho, turquesa, topázio azul, safira, lápis-lazúli
+  cores_sons: Azul-royal, roxo, índigo; notas Dó e Lá; trombeta, címbalo
+  numeros: 3 (trindade filosófica), 7 (espiritualidade), 9 (completude)
+  dias_semana: Quinta-feira (dia de Júpiter)
+  doencas_corpo: "Na medicina astrológica histórica: quadris e coxas por melothesia; fígado e excessos por Júpiter. Sistema nervoso e inflamação crônica não são consenso. Não usar para diagnóstico."
+  arquetipos_mitologicos: Zeus/Júpiter, Héracles/Hércules, Quirón, Atena
+  mitos_historias: Os Argonautas; Quirón e a educação de Hércules; A busca do Cálice Sagrado
+  sonhos_simbolos_inconsciente: Montanhas, viagens, livros, setas, festas, templos
+  expressao_elevada_sombra: 'Elevada: sabedoria generosa, viagem como busca, fé que liberta | Sombra: fanatismo, exagero, arrogância filosófica, superficialidade'
+camada_energetica:
+  impressao_mental: A cor roxa/azul no mapa = 'mente que expande'.
+  permeacao_emocional: Esperança, fé, 'quero mais' — risco de exagero.
+  manifestacao_externa: "Porte expansivo, pernas fortes, expressão aberta e olhar distante são descrições do tipo sagitariano/jupiteriano, preservadas como crença fisionômica."
+  como_guiar_o_astral: "Usar quadris, cavalo, estanho e horizonte para compreender a cadeia jupiteriana, sem atribuir efeito terapêutico às cores."
+porque_simbolico: 'Sagitário = QUADRIS/COXAS — são os ''músculos da expansão'' (avançar, galopar, saltar). O fígado = ''amplificador do corpo'' (Júpiter = expansão).
+
+  ROXO = cor da REALEZA e da EXPANSÃO (Júpiter = rei dos deuses). AZUL-ROYAL = cor do ''céu vasto''.
+
+  '
+leitura_corporal: {regra: "Sagitário corresponde a quadris e coxas na melothesia; fígado é correspondência de Júpiter.", uso: "Estudo histórico/simbólico condicionado pelo mapa inteiro."}
+aparencia_nas_tradicoes:
+  descricao: "Autores descrevem o tipo sagitariano/jupiteriano como alto ou expansivo, de coxas fortes, gesto amplo, face aberta e olhar voltado ao longe."
+  porque: "A imagem reúne fogo mutável, o centauro em movimento e Júpiter como princípio de ampliação."
+  variantes: "O tipo de Júpiter dominante pode diferir do Ascendente em Sagitário; alguns manuais modernos simplificam para o signo solar."
+  limite: "Registrar como doutrina fisionômica variável, não prova de signo, saúde hepática ou caráter."
+referencias:
+  - {autor: "Claudius Ptolemy", obra: "Tetrabiblos", natureza: "primária histórica", localizador: "Livro I; Júpiter, Sagitário, qualidades e membros do corpo."}
+  - {autor: "William Lilly", obra: "Christian Astrology", natureza: "primária histórica", localizador: "Descrições fisionômicas de Júpiter e dos signos."}
+  - {autor: "Heinrich Cornelius Agrippa", obra: "De occulta philosophia", natureza: "primária histórica", localizador: "Livro I; estanho, cores e correspondências de Júpiter."}
+validacao_de_fontes: {base: "A ficha distingue melothesia, elemento fogo e natureza planetária de Júpiter.", limite: "Não usar como diagnóstico ou fenotipagem automática."}

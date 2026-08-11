@@ -1,0 +1,57 @@
+﻿status: review
+id: "casa_2_atlas"
+nome: "Casa 2 — O Tesouro / Os Recursos"
+tradicoes:
+  - "atlas simbolico editorial"
+  - "sintese multiescola"
+tipo: "Atlas Simbólico"
+subtema: "Correspondências da Casa 2"
+
+origens_e_divergencias:
+  tradicional: "Ptolomeu (Tetrabiblos) — significados tradicionais das 12 casas."
+  moderna: "Astrologia psicológica/sistêmica — casas como áreas de desenvolvimento."
+  nota: "Revisar ao citar — marca a escola usada."
+
+atlas_simbolico:
+  pessoas_arquetipos: "O possuidor, o valor, a autoestima material"
+  lugares_fisicos: "Tesouros, cofres, campos, bancos"
+  objetos_materia: "Moedas, joias, documentos de valor"
+  eventos_tipicos: "Ganhos, perdas, autoestima, valor próprio"
+  animais: "Boi, touro, cavalo de carga"
+  plantas_ervas: "Videira, trigo, oliveira, hera"
+  metais_pedras: "Cobre, bronze, esmeralda, turquesa"
+  cores_sons:
+    cores: ["Verde", "Rosa"]
+    sons: ["Lá", "Ré"]
+  numeros: [2]
+  dias_semana: ["Domingo"]
+  doencas_corpo:
+    doencas: ["Problemas de garganta", "problemas de pescoço", "obesidade"]
+    partes_corpo: ["Garganta", "pescoço", "tireoide", "região lombar"]
+  arquetipos_mitologicos:
+    - "Pluto (riqueza oculta)"
+    - "Hermes (comércio)"
+  mitos_historias: "Midas e o toque de ouro"
+  sonhos_simbolos_inconsciente: "Tesouros, ouro, posses"
+  expressao_elevada_sombra: "Elevada: generosidade, valor autêntico | Sombra: ganância, possessividade, valor frágil"
+
+revisao_editorial:
+  origem_e_linguagem: "A segunda casa é sucessiva ao Ascendente; tesouro e recursos são imagens pedagógicas para posses, sustento e valores em tradições de casas."
+  mito_arquetipo_e_porque: "Guardar, nutrir e medir valor oferecem uma linguagem simbólica para a casa; não reduzem riqueza a destino astral."
+  limite_tecnico: "A casa deve ser calculada no sistema escolhido. A analogia com Touro é moderna e não substitui regente, planetas e condição da casa."
+referencias:
+  primarias:
+    - "Lilly, William. Christian Astrology. 1647, livro II: significações da segunda casa."
+  secundarias:
+    - "Houlding, Deborah. The Houses: Temples of the Sky. The Wessex Astrologer, 1996."
+  tecnicas:
+    - "Usar sistema de casas e dados de nascimento documentados; não prometer ou negar recursos por um fator isolado."
+camada_energetica:
+  impressao_mental: "Como eu me valorizo e possuo. 'O que é meu?'"
+  permeacao_emocional: "Valorização, 'o que eu mereço'."
+  manifestacao_externa: "Eventos prováveis de ganhos, perdas, valorização. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a VALORIZAR-SE SEM APEGAR. Casa 2 é o valor, não a conta bancária."
+
+ver_mais:
+  - "../05_Casas/Casa_2.yaml"
+

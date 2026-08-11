@@ -1,0 +1,66 @@
+status: review
+id: "casa_3"
+tradicoes:
+  - "helenística"
+  - "medieval"
+  - "renascentista"
+  - "moderna (camadas psicológica e sistêmica explicitamente separadas)"
+tipo: "conceito técnico de casa astrológica"
+escopo_documental:
+  tecnica_historica:
+    - "significação tradicional da casa, sua relação com ângulos, casas sucedentes/cadentes e tópicos derivados"
+  camadas_modernas: "Atlas simbólico, Tarot, medicina, arquétipos e leitura sistêmica permanecem separados da regra histórica."
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "primária"
+    localizador: "Livro IV e passagens sobre configuração e significação dos lugares"
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    natureza: "primária"
+    localizador: "Livros II–IV, tópicos das casas e julgamento natal"
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    natureza: "primária"
+    localizador: "Livro I, significações das casas e regras de julgamento"
+validacao_de_fontes:
+  base: "A significa??o hist?rica dos lugares ? sustentada por Ptolomeu, Valens e Lilly, nas refer?ncias estruturadas da ficha."
+  escopo: "Tarot, Atlas simb?lico, medicina, psicologia e leitura sist?mica s?o camadas de estudo rotuladas; n?o substituem a t?cnica hist?rica de casas."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+numero: 3
+nome: "Casa 3 — Os Pares / A Comunicação"
+tema: "Como me relaciono com o próximo e o imediato"
+
+origens_e_divergencias:
+  tradicional: "Ptolomeu (Tetrabiblos) — significados tradicionais das 12 casas."
+  moderna: "Astrologia psicológica/sistêmica (Liz Greene, escola de relações familiares)."
+  nota: "Revisar ao citar — marca a escola usada."
+atlas_simbolico:
+  pessoas_arquetipos: "O mensageiro, o irmão, o estudante, o escritor"
+  lugares_fisicos: "Escolas, mercados, ruas, estações, bibliotecas"
+  objetos_materia: "Livros, cartas, telefones, bilhetes"
+  eventos_tipicos: "Visitas, aulas, negociações, notícias, viagens curtas"
+  animais: "Macaco, raposa, borboleta"
+  plantas_ervas: "Lavanda, menta, verbena"
+  metais_pedras: "Mercúrio, ágata, citrino"
+  cores_sons: "Amarelo, cinza; notas Mi e Lá"
+  numeros: "3 (comunicação), 5 (sentidos)"
+  dias_semana: "Quarta-feira (Mercúrio)"
+  doencas_corpo: "Pulmões, braços, mãos, sistema nervoso periférico"
+  arquetipos_mitologicos: "Hermes/Mercúrio, Castor e Pólux"
+  mitos_historias: "Hermes mensageiro; Os gêmeos Castor e Pólux"
+  sonhos_simbolos_inconsciente: "Cartas, bilhetes, estradas, crianças"
+  expressao_elevada_sombra: "Elevada: comunicação clara, aprendizado | Sombra: fofoca, superficialidade"
+
+camada_energetica:
+  campo_mental: "Mente ágil, curiosa, voltada ao troca-troca direto."
+  permeacao_emocional: "Curiosidade, 'quero saber', medo de 'ficar de fora'."
+  manifestacao_externa: "Eventos prováveis de comunicação, viagens curtas, irmãos. Arquétipos: o Mensageiro, o Irmão. Inclinação, não destino."
+  como_guiar_o_astral: "Casa 3 pede TROCA — a pessoa precisa falar, escrever, circular."
+
+significados_derivados:
+  dinheiro_parceiro: false
+  irmaos: "Casa 3 = irmãos, primos, 'família imediata' (não pais — isso é Casa 4)."
+  vizinhos: "Vizinhos, ambiente próximo, 'quem mora ao lado'."
+  viagens_curtas: "Viagens de até 1 dia (passeio, ida à cidade vizinha)."
+  ensino_fundamental: "Escola primária, 'primeiro aprendizado'."

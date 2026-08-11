@@ -1,0 +1,49 @@
+﻿status: draft
+id: "mapa_draconico"
+nome: "Mapa Dracônico"
+tradicoes:
+  - "moderna ocidental"
+  - "karmica"
+tipo: "Aprofundamento"
+subtema: "Eixo do dragão, leitura cármica"
+
+origens_e_divergencias:
+  tradicional: "Hellenística — eixo nodoso como 'cabeça e cauda do dragão'."
+  moderna: "Evolutiva/cármica — eixo nodoso como 'missão da alma'."
+  nota: "Revisar ao citar — marca a escola usada."
+
+atlas_simbolico:
+  pessoas_arquetipos: "O dragão, o navegador, o buscador do caminho"
+  lugares_fisicos: "Eclusas, caminhos, rotas, mapas"
+  objetos_materia: "Bússolas, mapas, eixos, chaves"
+  eventos_tipicos: "Encontros com missão, mudanças de direção, sincronicidades"
+  animais: "Dragão, serpente, águia, baleia"
+  plantas_ervas: "Hera, hera, raízes profundas"
+  metais_pedras: "Ouro, cristal, obsidiana"
+  cores_sons:
+    cores: ["Verde-escuro", "roxo", "dourado", "prata"]
+    sons: ["Gongo", "vento", "serpente"]
+  numeros: [12]
+  dias_semana: ["Quinta-feira"]
+  doencas_corpo:
+    doencas: ["Problemas de coluna", "equilíbrio"]
+    partes_corpo: ["Coluna dorsal", "equilíbrio"]
+  arquetipos_mitologicos:
+    - "Dragão"
+    - "Jörmungandr (serpente do mundo)"
+    - "Quimera"
+  mitos_historias: "O dragão que guarda o tesouro; Jason e o Velocino de Ouro"
+  expressao_elevada_sombra: "Elevada: missão cumprida | Sombra: desvio, medo do caminho"
+
+camada_energetica:
+  impressao_mental: "O eixo nodoso é o CAMINHO DA ALMA. Nodo Norte = missão; Nodo Sul = passado."
+  permeacao_emocional: "Busca de sentido. Quando saudável: direção clara. Quando ferido: desvio, repetição de padrões."
+  manifestacao_externa: "Eventos prováveis de encontros com missão, mudanças de direção. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a SEGUIR O NODO NORTE SEM NEGAR O SUL. O passado é base, não destino."
+
+como_usar: |
+  1. Identifique Nodo Norte (missão) e Nodo Sul (passado).
+  2. Leia por signo (QUALIDADE) e por casa (ONDE).
+  3. Regente do Nodo Norte = COMO se acessa a missão.
+  4. Planetas aspectando o eixo = FACILITADORES ou OBSTÁCULOS.
+

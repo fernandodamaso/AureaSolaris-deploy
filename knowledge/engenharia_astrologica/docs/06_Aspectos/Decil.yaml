@@ -1,0 +1,58 @@
+﻿status: review
+id: "decil"
+nome: "Semiquintil / Decil"
+angulo: "36° (1/10 do zodíaco)"
+natureza: "intervenção sutil (sincronia)"
+
+origens_e_divergencias:
+  tradicional: "O decil não pertence aos cinco aspectos maiores de Ptolomeu. É uma divisão harmônica posterior, usada em algumas linhas modernas e de harmônicos."
+  moderna: "A associação com refinamento, ligação sutil ou criatividade é interpretação de escola; não há consenso universal de significado."
+  nota: "Não confundir decil (36°) com quintil (72°). O primeiro é a décima parte do círculo e pode ser lido como subdivisão da família do quinto apenas quando a escola escolhida o prevê."
+escopo_documental:
+  significado: "Aspecto menor por longitude de 36° (1/10 do círculo)."
+  porque: "A leitura decorre de uma escolha de harmônicos, não de afinidade tradicional de signos."
+  origem: "Pós-ptolomaico; a nomenclatura reflete a divisão decimal do círculo."
+  uso: "Só destacar quando o perfil de aspectos menores estiver ativo e o orbe declarado for satisfeito."
+  divergencia: "Escolhas de harmônicos e orbes variam; muitas escolas tradicionais simplesmente não o usam."
+referencias:
+  - autor: "Johannes Kepler"
+    obra: "Harmonices Mundi"
+    natureza: "primária histórica"
+    localizador: "Contexto da extensão harmônica de aspectos; conferir edição/tradução."
+  - autor: "John Addey"
+    obra: "Harmonics in Astrology"
+    natureza: "secundária moderna"
+    localizador: "Uso de harmônicos; conferir edição e método."
+validacao_de_fontes:
+  base: "A ficha registra o decil como aspecto harmônico posterior, não como aspecto ptolomaico."
+  limite: "O motor não deve aplicar orbe fixo nem atribuir destino, sincronia objetiva ou causalidade a este aspecto."
+atlas_simbolico:
+  pessoas_arquetipos: "O sincronizado, o iluminado, o escolhido"
+  lugares_fisicos: "Montanhas, templos, locais de destino"
+  objetos_materia: "Oráculos, relíquias, objetos sagrados"
+  eventos_tipicos: "Sincronicidades, intervenções divinas, encontros de destino"
+  animais: "Águia, falcão, fênix"
+  plantas_ervas: "Sálvia, mirra, açafrão"
+  metais_pedras: "Ouro, lápis-lazúli, safira"
+  cores_sons: "Azul-royal, roxo; notas Lá e Dó"
+  numeros: "10 (completude), 7 (espiritualidade), 3 (trindade)"
+  dias_semana: "Quinta-feira (Júpiter), domingo (Sol)"
+  doencas_corpo: "Sistema nervoso central, cérebro, olhos"
+  arquetipos_mitologicos: "Apolo (oráculo), Zeus/Júpiter, Atena"
+  mitos_historias: "O oráculo de Delfos; Zeus e a justiça"
+  sonhos_simbolos_inconsciente: "Oráculos, luzes, sincronicidades, montanhas"
+  expressao_elevada_sombra: "Elevada: sincronicidade consciente, destino cumprido | Sombra: crença cega em destino, fanatismo"
+
+camada_energetica:
+  impressao_mental: "Toque muito sutil entre princípios — quase imperceptível, mas presente como 'coincidência significativa'."
+  permeacao_emocional: "Sensação de 'foi planejado' ou de sincronia discreta."
+  manifestacao_externa: "Eventos PROVÁVEIS de sincronia, 'acaso que não é acaso'. Arquétipos: a Sincronia, a Mão que orienta. Inclinação, não destino."
+  como_guiar_o_astral: "Sinalizar que há uma ordem maior agindo — convidar a pessoa a notar os 'sinais' sem superstição."
+
+consenso_tradicional: "Alguns autores (ex.: T. Johndro, escola deAspectos menores) associam o decil à SINCRONIA ou INTERVENÇÃO DIVINA — o 'toque do invisível'."
+arquetipos_simbolicos: ["A Sincronia", "A Mão que orienta", "O Acaso significativo"]
+
+aplicativo_separativo: "Aplicativa: a sincronia SE MANIFESTA (o 'signo' chega). Separativa: a sincronia se dissipa na rotina."
+
+exemplo_pratico: "Sol decil Netuno: momentos de 'tudo faz sentido' de forma sutil — a pessoa tem lampejos de unidade. Leitura: 'quando sentir essa coerência repentina, anote; é sua bússola discreta'."
+

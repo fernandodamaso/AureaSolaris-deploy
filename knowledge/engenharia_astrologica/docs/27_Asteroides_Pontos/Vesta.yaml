@@ -1,0 +1,124 @@
+﻿status: draft
+id: "vesta"
+nome: "Vesta (Asteroide 4 Vesta)"
+tradicoes:
+  - "moderna ocidental"
+  - "pontos calculados"
+tema: "Missão, devoção, pureza, fogo interno"
+
+essencia:
+  - "Devoção"
+  - "Pureza"
+  - "Missão"
+  - "Fogo sagrado"
+
+atlas_simbolico:
+  pessoas_arquetipos:
+    - "Freira/monge"
+    - "Vigilante"
+    - "Sacerdotisa"
+    - "Curador por dedicação"
+    - "Anacoreta"
+    - "Guardião do fogo"
+  lugares:
+    - "Templo"
+    - "Mosteiro"
+    - "Lareira"
+    - "Fornalha"
+    - "Altar"
+    - "Biblioteca monástica"
+  objetos_materia:
+    - "Vela acesa"
+    - "Lareira"
+    - "Vestimenta branca"
+    - "Cálice"
+    - "Incenso"
+    - "Livro de horas"
+    - "Cajado de peregrino"
+  eventos_tipicos:
+    - "Iniciação"
+    - "Voto de castidade"
+    - "Retiro espiritual"
+    - "Dedicação total a causa"
+    - "Crise de fé"
+    - "Abuso de poder religioso (sombra)"
+  animais:
+    - "Cervo branco"
+    - "Fênix"
+    - "Abelha (colmeia)"
+    - "Cão de guarda"
+    - "Gralha"
+    - "Serpente branca"
+  plantas_ervas:
+    - "Lótus branco"
+    - "Lavanda"
+    - "Mirra"
+    - "Aloé"
+    - "Ramo de oliveira"
+    - "Rosa branca"
+  metais_pedras:
+    - "Prata"
+    - "Ouro branco"
+    - "Cristal branco"
+    - "Pérola"
+    - "Diamante branco"
+    - "Turquesa branca"
+  cores_sons:
+    cores: ["Branco", "Azul-branco", "Vermelho-fogo"]
+    sons: ["Canto gregoriano", "Crepitar de fogo", "Sino de templo", "Suspiro de devoção"]
+  numeros: [4, 9, 10, 20, 40]
+  dias_semana: ["Quarta-feira (compartilhado com Mercúrio)"]
+  doencas_corpo:
+    doencas: ["Exaustão por dedicação excessiva", "Problemas de coluna por postura de oração"]
+    partes_corpo: ["Coluna vertebral", "Pele", "Sistema nervoso central"]
+  arquetipos_mitologicos:
+    - "Vesta/Hestia (deusa do fogo sagrado)"
+    - "Vestal (sacerdotisa que guarda o fogo)"
+    - "Artemis virgem (dedicação total à missão)"
+  mitos_historias:
+    - "Vesta mantendo o fogo sagrado (devoção contínua)"
+    - "Vestais que quebram o voto (castigo: enterradas vivas)"
+    - "Hestia renunciando ao trono (missão acima de poder)"
+    - "Mito da chama eterna"
+  sonhos_inconsciente:
+    - "Fogo que não apaga = missão que não morre"
+    - "Templo vazio = falta de devoção"
+    - "Vela apagada = crise de fé"
+    - "Vestal = anacoreta moderna"
+  expressao_elevada_vs_sombra:
+    elevada: "Guardião da tradição, devoto compassivo, que serve sem precisar de reconhecimento."
+    sombra: "Fanático religioso, medo da sexualidade, 'santo' que condena, obsessão por pureza."
+
+camada_energetica:
+  impressao_mental: "A mente de 'o que eu sirvo?'. Devoção, missão, pureza. Quando atrito: fanatismo, medo da sexualidade, 'sou puro por rejeitar o corpo'."
+  permeacao_emocional: "Fogo interno constante. Quando bloqueado: frieza, solidão, 'ninguém entende minha missão'. Quando solto: dedicação que ilumina."
+  manifestacao_externa: "Eventos prováveis de iniciação, retiro, dedicação total. Trânsitos marcam chamado de missão ou crise de fé."
+  como_guiar_o_astral: "Ajudar a mente a honrar o fogo interno sem se isolar: Vesta pede devoção, não fanatismo; serviço, não autoflagelação."
+
+representa:
+  pessoas: ["Sacerdote", "Freira", "Guardião", "Curador devoto"]
+  eventos: ["Iniciação", "Retiro", "Voto", "Dedicação"]
+  corpo: ["Coluna vertebral", "Pele", "Sistema nervoso central"]
+
+dignidades_essenciais:
+  domicilio: ["Virgem (moderno)"]
+  exaltacao: [""]
+  detrimento: ["Peixes"]
+  queda: [""]
+
+combinacoes_exemplo:
+  casa_6:
+    temas: ["serviço", "rotina", "saúde"]
+    possiveis_efeitos: ["dedicação ao trabalho", "exaustão por servir", "missão como profissão"]
+    reforcado_por: ["sol_conjunto", "mercurio_conjunto"]
+    amenizado_por: ["saturno_conjunto", "marte_aflito"]
+
+origens_e_divergencias:
+  escola_tradicional:
+    autores: []
+    conceito: "Não tradicional — descoberto em 1807."
+  escola_moderna:
+    autores: [Demetra George, Liz Greene]
+    conceito: "Planeta da devoção, da missão, do fogo sagrado e da pureza interior."
+  por_que_da_divergencia: "Vesta é moderna por definição: entrou no mapa como primeiro asteroide descoberto."
+

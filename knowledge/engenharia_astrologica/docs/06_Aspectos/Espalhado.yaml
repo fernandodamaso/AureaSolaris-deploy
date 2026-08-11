@@ -1,0 +1,50 @@
+﻿status: review
+id: "espalhado"
+nome: "Espalhado / Splash"
+formato: "Planetas distribuídos em quase todos os signos, sem concentração"
+
+origens_e_divergencias:
+  tradicional: "Não é configuração ptolomaica. Integra as tipologias modernas de distribuição planetária de Marc Edmund Jones."
+  moderna: "A linguagem de variedade, difusão ou múltiplos interesses é leitura moderna do padrão, não julgamento obrigatório."
+  nota: "O padrão não prescinde de aspectos, casas, dignidades ou angularidade; apenas descreve uma disposição global."
+atlas_simbolico:
+  pessoas_arquetipos: "O disperso, o multifacetado, o generalista"
+  lugares_fisicos: "Mercados, estações, lugares de movimento"
+  objetos_materia: "Mapas, instrumentos diversos, ferramentas múltiplas"
+  eventos_tipicos: "Dispersão, multiplicidade, atividades paralelas"
+  animais: "Borboleta, macaco, esquilo"
+  plantas_ervas: "Lavanda, menta, verbena"
+  metais_pedras: "Mercúrio, cristal de rocha"
+  cores_sons: "Amarelo, verde-claro; notas Mi e Lá"
+  numeros: "3 (multiplicidade), 5 (oportunidade), 8 (fluxo)"
+  dias_semana: "Quarta-feira (Mercúrio)"
+  doencas_corpo: "Sistema nervoso, pulmões, braços"
+  arquetipos_mitologicos: "Hermes/Mercúrio, Atena"
+  mitos_historias: "Hermes e a multiplicidade; Atena e a estratégia"
+  sonhos_simbolos_inconsciente: "Mapas, dispersão, multiplicidade"
+  expressao_elevada_sombra: "Elevada: versatilidade consciente, generalismo útil | Sombra: dispersão paralisante, superficialidade"
+
+camada_energetica:
+  impressao_mental: "A mente 'pula' de área em área — interesses amplos, mas difícil de aprofundar."
+  permeacao_emocional: "Versatilidade emocional, mas risco de dispersão e falta de foco."
+  manifestacao_externa: "Eventos PROVÁVEIS variados e espalhados. Arquétipos: o Leque, a Chuva. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a escolher UM foco por vez — o espalhado precisa de direção consciente."
+
+consenso_tradicional: "Não existe consenso tradicional para este padrão. Versatilidade e dispersão são hipóteses interpretativas modernas."
+arquetipos_simbolicos: ["O Leque", "A Chuva", "O Polivalente"]
+definicao_tecnica: "Declarar os corpos considerados e o critério de dispersão. Não inferir Splash somente porque há planetas em muitos signos se houver uma concentração dominante por hemisfério, quadrante ou arco."
+referencias:
+  - autor: "Marc Edmund Jones"
+    obra: "The Guide to Horoscope Interpretation"
+    natureza: "primária moderna"
+    localizador: "Tipologias de distribuição planetária; conferir edição."
+  - autor: "Dane Rudhyar"
+    obra: "The Astrology of Personality"
+    natureza: "secundária moderna"
+    localizador: "Padrões de distribuição e leitura de conjunto; conferir edição."
+validacao_de_fontes:
+  base: "O termo Splash é preservado como curiosidade terminológica da tipologia moderna."
+  limite: "Não o usar como diagnóstico de dispersão psíquica nem como predição de eventos."
+foco_especial:
+  infantil: "Crianca espalhada precisa de rotina que favoreca aprofundar, senao 'sabe um pouco de tudo'."
+
