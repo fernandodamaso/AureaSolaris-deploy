@@ -95,7 +95,6 @@ const result = await safeInvoke<string>('openrouter_chat', {
 | `list_archived_chats` | Listar conversas arquivadas |
 | `load_archived_chat` | Carregar conversa arquivada |
 | `get_total_tokens` | Obter total de tokens usados |
-| `get_todoist_tasks` | Buscar tarefas do Todoist |
 | `send_telegram_message` | Enviar msg pelo Telegram |
 | `save_board` | Salvar mesa de criacao |
 | `load_board` | Carregar mesa de criacao |
@@ -180,7 +179,7 @@ O `AgendaContext` (em `src/context/`) gerencia estado global relacionado a:
 | Historico de chat | `%APPDATA%/aurea-solaris/memory/` |
 | Perfis de usuario | `localStorage` |
 | Dados de agenda | `localStorage` |
-| Tarefas Todoist | API Todoist (remoto) |
+| Tarefas locais | localStorage / adaptador opcional |
 | Mesa de Criacao | `%APPDATA%/aurea-solaris/memory/board.json` |
 | Uso de tokens | `%APPDATA%/aurea-solaris/memory/usage.json` |
 

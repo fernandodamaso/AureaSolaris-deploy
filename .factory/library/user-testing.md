@@ -44,7 +44,6 @@ Superficie de teste e estrategia de validacao.
 |---------|-----------|---------|
 | OpenRouter | API Key obrigatória | Agentes de IA cloud |
 | Ollama | Local (opcional) | Agentes de IA local (privacidade) |
-| Todoist | Token (opcional) | Sincronização de tarefas |
 | Telegram | Token (opcional) | Notificacoes |
 
 ---
@@ -117,7 +116,7 @@ python astro_engine.py '{"year": 2024, "month": 1, "day": 1}'
 - [ ] Carregar estado (load_board)
 
 ### Integracoes
-- [ ] Busca de tarefas Todoist
+- [ ] Sincronização de tarefas locais
 - [ ] Envio de mensagem Telegram
 - [ ] Sincronização de dados
 

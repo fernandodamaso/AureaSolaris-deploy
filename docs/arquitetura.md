@@ -14,7 +14,7 @@ Aurea Solaris é um app desktop construído com **Tauri 2** (Rust backend + Reac
 │  • Design system: gold/navy, Montserrat/Inter    │
 ├─────────────────────────────────────────────────┤
 │  Backend Rust (Tauri 2 — lib.rs)                 │
-│  • 21+ comandos IPC: Diário, Todoist, Calendário│
+│  • 21+ comandos IPC: Diário, Calendário, Astrologia │
 │  • Sidecar管理: inicia Python via HTTP           │
 │  • AppState: reqwest client compartilhado        │
 │  • Tray Icon: minimiza para bandeja              │
@@ -44,7 +44,7 @@ User clica no app
     → Tauri IPC → lib.rs processa
       → Se astrologia: HTTP POST localhost:9876/natal
       → Se diário: lê/escreve vault Obsidian
-      → Se Todoist/Calendar: HTTP API externa
+      → Se Calendar externo: HTTP API externa
     → Resultado volta ao frontend
   → React atualiza estado
 ```
@@ -75,8 +75,8 @@ User clica no app
 
 ### Integrações (4+ comandos)
 - `run_astro_engine` — chama sidecar Python
-- `get_todoist_tasks`, `create_todoist_task`, `toggle_todoist_task`, `postpone_todoist_task`
 - `add_google_event`, `delete_google_event`, `list_google_calendar_events`
+- `get_google_events` — alias para listagem de eventos
 
 ### Sistema (3 comandos)
 - `get_sys_info`, `get_key`, `save_app_setting`
@@ -101,7 +101,7 @@ Refatorado em 2026-06-11. Características:
 | AstrologiaPage | AstrologiaBoard.tsx | Mapa natal + mandala SVG |
 | DiarioView | DiarioView.tsx | Diário com sidebar + editor |
 | MesaCriacao | MesaCriacao.tsx | Board tipo Miro (post-its, texto, imagens) |
-| AgendaView | agenda/AgendaView.tsx | Calendário + tarefas Todoist |
+| AgendaView | agenda/AgendaView.tsx | Calendário + tarefas locais |
 | SaudeView | SaudeView.tsx | Saúde e vitalidade |
 | FinancasView | FinancasView.tsx | Gestão financeira |
 | HermesChat | HermesChat.tsx | Chat flutuante com Hermes |

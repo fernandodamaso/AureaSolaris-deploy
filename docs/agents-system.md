@@ -18,7 +18,7 @@ Aurea Solaris uses **Hermes** as its sole AI assistant, accessible through the *
 |------|-----------------|
 | **Astrology** | Interprets natal charts, analyzes transits, explains planetary hours, teaches techniques |
 | **Diary** | Helps write entries, reflects on themes, connects to astrological context |
-| **Productivity** | Manages Todoist tasks, schedules events, organizes priorities |
+| **Productivity** | Manages local tasks, schedules events, organizes priorities |
 | **Calendar** | Reviews Google Calendar events, suggests optimal timing based on transits |
 | **Obsidian** | Reads/writes to Obsidian vault for second-brain organization |
 | **Learning** | Teaches astrology concepts, chart reading, house systems, aspect patterns |

@@ -27,7 +27,7 @@
 ### Integrations
 | Task | File | Docs |
 |------|------|------|
-| Calendar sync | `src/services/composio.ts` | [google-calendar.md](google-calendar.md) |
+| Calendar local-first | `src/context/AgendaContext.tsx` | [google-calendar.md](google-calendar.md) |
 || Google Drive | Integrations settings | [google-drive-integration.md](google-drive-integration.md) |
 
 ### Configuration

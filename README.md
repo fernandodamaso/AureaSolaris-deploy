@@ -29,7 +29,7 @@ O Aurea Solaris foi construído com tecnologias modernas e robustas:
 | **TypeScript 5.8** | JavaScript tipado para código mais seguro e manutenível |
 | **Vite 7** | Ferramenta de build rápida e moderna |
 | **Tailwind CSS v4** | Framework CSS para estilização ágil (via `@tailwindcss/vite`) |
-| **Python 3** | Motor de cálculos astrológicos precisos (biblioteca Kerykeion) |
+| **Python 3** | Motor de cálculos astrológicos (Swiss Ephemeris + Kerykeion fallback) |
 
 ---
 
@@ -159,17 +159,14 @@ O projeto utiliza variáveis de ambiente para configurações sensíveis. Elas d
 
 | Variável | Descrição | Obrigatório |
 |----------|-----------|-------------|
-| `OPENROUTER_API_KEY` | Chave de API para serviços de IA em nuvem | Para agentes IA online |
-| `TODOIST_TOKEN` | Token de acesso ao Todoist | Para integração com tarefas |
-| `TELEGRAM_TOKEN` | Token do bot do Telegram | Para notificações |
-| `TELEGRAM_CHAT_ID` | ID do chat para mensagens | Para notificações |
-| `EMAIL_SENDER` | Email remetente | Para funcionalidades de email |
-| `EMAIL_PASSWORD` | Senha de app do email | Para funcionalidades de email |
-| `GOOGLE_CLIENT_ID` | Client ID OAuth2 do Google | Para Google Calendar/Drive |
+| `AUREA_DATA_DIR` | Pasta de dados privados do usuário | Sim |
+| `AUREA_SIDECAR_TOKEN` | Token de acesso local ao sidecar | Sim |
+| `AUREA_SESSION_SECRET` | Segredo para cookies de sessão | Sim |
+| `OPENAI_API_KEY` | Chave de API OpenAI-compatible (somente se escolhida) | Opcional |
+| `OPENAI_BASE_URL` | URL base do provedor OpenAI-compatible | Opcional |
+| `OPENAI_MODEL` | Modelo do provedor OpenAI-compatible | Opcional |
 
-**Nota de Personalização**: Embora você possa usar o `.env` para valores globais, o Aurea Solaris agora permite configurações individuais por perfil para integrações, sem mexer em arquivos de sistema.
-
-**Nota**: O Ollama local funciona automaticamente em `http://localhost:11434` se estiver instalado.
+Integrações externas (Google, Todoist, Telegram, etc.) estão fora do escopo atual; quando forem adicionadas, serão adapters opcionais com consentimento explícito.
 
 ---
 
@@ -182,13 +179,13 @@ AureaSolaris/
 │   ├── context/            # Estado global (AgendaContext, DiarioContext, GlobalContext)
 │   ├── hooks/              # Lógica especializada
 │   ├── types/              # Definições TypeScript
-│   ├── services/           # APIs externas (Composio)
-│   └── utils/              # Utilitários (tauri.ts, logger.ts, mockData.ts)
+│   ├── services/           # APIs locais do Hermes e engenharia
+│   └── utils/              # Utilitários (tauri.ts, logger.ts, astro-calc.ts)
 ├── src-tauri/              # Backend Rust (Tauri IPC)
 │   └── src/lib.rs          # Comandos Tauri (IPC API)
 ├── docs/                   # Documentação (inclui superpowers/specs/)
 
-├── astro_engine.py         # Motor de astrologia (Python/Kerykeion)
+├── astro_engine.py         # Motor de astrologia (Python/Swiss Ephemeris + Kerykeion)
 ├── ephe/                 # Efemérides NASA
 └── .env                  # Configurações
 ```

@@ -20,7 +20,6 @@ As seguintes variaveis sao usadas pelo projeto (definidas em `.env` e `.env.loca
 ### APIs de Integracao
 | Variavel | Descricao | Onde Usado |
 |----------|-----------|------------|
-| `TODOIST_TOKEN` | Token de acesso a API do Todoist | `src-tauri/src/lib.rs` - comando `get_todoist_tasks` |
 | `TELEGRAM_TOKEN` | Token do bot do Telegram | `src-tauri/src/lib.rs` - comando `send_telegram_message` |
 | `TELEGRAM_CHAT_ID` | ID do chat do Telegram para envio de mensagens | `src-tauri/src/lib.rs` - comando `send_telegram_message` |
 

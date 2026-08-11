@@ -19,7 +19,7 @@ C:\AureaSolaris\
 │   │   ├── common/
 │   │   │   └── UIComponents.tsx    ← NavItem, botões reutilizáveis
 │   │   ├── agenda/
-│   │   │   └── AgendaView.tsx      ← Calendário + tarefas Todoist
+│   │   │   └── AgendaView.tsx      ← Calendário + tarefas locais
 │   │   ├── diario/
 │   │   │   ├── DiarioSidebar.tsx   ← Pastas + lista de notas
 │   │   │   ├── DiarioEditor.tsx    ← Editor de texto com auto-save
