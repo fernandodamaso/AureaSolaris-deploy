@@ -1,0 +1,12 @@
+# Runtime isolado do motor astrológico. O instalador o empacota; Python do usuário não é requisito.
+fastapi==0.115.12
+uvicorn[standard]==0.34.2
+pydantic==2.11.3
+argon2-cffi==23.1.0
+pypdf==5.4.0
+httpx==0.28.1
+pyswisseph==2.10.3.2
+kerykeion==5.8.1
+pyinstaller==6.13.0
+backports.tarfile==1.2.0
+tzdata==2025.2
