@@ -104,9 +104,9 @@ Não pular C1: sem resultados de referência com configuração conhecida, não 
 
 O objetivo “tão bom quanto Astro.com, Astro-Seek e Solar Fire” só pode ser concluído quando todas as fixtures obrigatórias estiverem aprovadas/rastreáveis, as tolerâncias C2–C5 passarem, houver execução limpa por release, o Windows contiver efemérides compatíveis, a UI distinguir cálculo certificado de auditável e um relatório de diferenças revisado acompanhar a versão.
 
-## Handoff para outra IA
+## Procedimento para outra IA
 
-1. Leia `AGENTS.md`, `docs/CONSTITUICAO.md`, este documento e `docs/PROJECT_HANDOFF.md`.
+1. Leia `AGENTS.md`, `docs/CONSTITUICAO.md`, `docs/AI_WORKING_GUIDE.md` e este documento.
 2. Não altere tolerância, fixture aprovada ou versão do motor sem relatório.
 3. Não faça scraping de referências nem use sessão/credenciais da pessoa; use resultados fornecidos, exportações autorizadas ou coleta manual documentada.
 4. Rode `python tests/engine_reference/run_reference_checks.py` e os testes existentes antes de tocar no motor.

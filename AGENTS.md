@@ -2,6 +2,8 @@
 
 Este arquivo orienta pessoas, IDEs e agentes de IA. Leia-o antes de alterar código, dados, documentação ou configuração. Em caso de conflito, prevalecem segurança e privacidade; depois [`docs/CONSTITUICAO.md`](docs/CONSTITUICAO.md); depois este arquivo. Planos antigos e telas existentes não definem o produto.
 
+Para a rota operacional compacta de agentes, leia [`docs/AI_WORKING_GUIDE.md`](docs/AI_WORKING_GUIDE.md) depois deste arquivo e consulte apenas o domínio necessário.
+
 ## Propósito e fronteiras
 
 O **Aurea Solaris** é um aplicativo desktop local-first para estudo astrológico, organização pessoal e reflexão. O produto central é um **Caderno Vivo**: quadro visual espacial e caderno de notas são duas visões dos mesmos dados, não módulos duplicados.

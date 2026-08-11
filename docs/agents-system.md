@@ -1,4 +1,6 @@
-# AI Assistant System — Hermes
+# AI Assistant System — Historical Hermes Migration Note
+
+> Historical reference only. The current single-assistant rules are in [`AGENTS.md`](../AGENTS.md), [`docs/CONSTITUICAO.md`](CONSTITUICAO.md), and [`AI_WORKING_GUIDE.md`](AI_WORKING_GUIDE.md). Do not use the retired persona list below as current product scope.
 
 > **Single assistant architecture.** All previous multi-agent personas (Dr. Strange, Alfred, Uncle Duck, Rafiki, Stark) have been removed. Hermes handles everything.
 

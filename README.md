@@ -1,304 +1,56 @@
 # Aurea Solaris
 
-> Referência obrigatória de produto e dados: [Constituição do Aurea Solaris](docs/CONSTITUICAO.md).
+Aurea Solaris is a local-first Windows desktop application for astrological study, personal organization, and reflection. It is maintained through AI agents, so the repository's documentation is optimized for machine task routing and safe, small changes.
 
-## 🌟 O que é o Aurea Solaris?
+## Start here as an AI agent
 
-O **Aurea Solaris** é um aplicativo de desktop que combina **astrologia**, **gestão pessoal** e **inteligência artificial** em uma única ferramenta. Ele foi pensado para ajudá-lo a organizar sua vida cotidiana enquanto considera influências astrológicas, oferecendo uma experiência única e personalizada.
+Read in this order:
 
-Imagine ter um assistente virtual que não apenas ajuda com tarefas e finanças, mas também entende o momento astrológico do seu dia e oferece orientações de acordo com as estrelas. É isso que o Aurea Solaris faz — conectando tecnologia moderna com sabedoria ancestral.
+1. [`AGENTS.md`](AGENTS.md) — mandatory rules, privacy boundaries, product map, and commands.
+2. [`docs/CONSTITUICAO.md`](docs/CONSTITUICAO.md) — normative product and data decisions.
+3. [`docs/AI_WORKING_GUIDE.md`](docs/AI_WORKING_GUIDE.md) — compact task routing and validation loop.
+4. [`docs/index.md`](docs/index.md) — domain references.
 
-### 🎯 Para que serve?
+Do not read the entire `docs/` tree by default. Use the domain document relevant to the task; treat `docs/archive/` as historical context.
 
-- **Organização pessoal**: Agenda inteligente que adapta suas tarefas conforme as horas planetárias
-- **Astrologia prática**: Mapas natais, trânsitos e cálculos astrológicos em tempo real
-- **Saúde e bem-estar**: Acompanhamento de hábitos saudáveis e vitalidade
-- **Banco de ideias**: Um canvas infinito para conectar conceitos e criar projetos
-- **Diário inteligente**: Registro diário com insights baseados no seu mapa astral
+## Product boundaries
 
----
+- The Caderno Vivo board and journal are two views of the same data.
+- Editorial astrology knowledge and private person-owned data are separate databases.
+- Hermes is the single assistant. Suggestions and memory are always reviewable and reversible.
+- Astrological calculations preserve UTC, IANA timezone, location, configuration, engine/ephemeris version, and input hash.
+- Financial features and Gmail are outside the current scope.
 
-## 🛠️ Tecnologias Utilizadas
+## Code map
 
-O Aurea Solaris foi construído com tecnologias modernas e robustas:
+| Area | Entry points |
+|---|---|
+| React interface | `src/App.tsx`, `src/components/`, `src/context/` |
+| Caderno Vivo/journal | `src/components/MesaCriacao.tsx`, `src/components/DiarioView.tsx` |
+| Astrology engine/API | `astro_engine.py`, `main_api.py` |
+| Tauri/native desktop | `src-tauri/src/lib.rs`, `src-tauri/tauri.conf.json` |
+| Data migrations | `src-tauri/migrations/knowledge/`, `src-tauri/migrations/private/` |
+| Editorial corpus | `knowledge/engenharia_astrologica/` |
 
-| Tecnologia | Função |
-|------------|--------|
-| **Tauri 2.0 (Rust)** | Framework para aplicações desktop nativas, rápido e leve |
-| **React 19.1** | Biblioteca para interfaces interativas e responsivas |
-| **TypeScript 5.8** | JavaScript tipado para código mais seguro e manutenível |
-| **Vite 7** | Ferramenta de build rápida e moderna |
-| **Tailwind CSS v4** | Framework CSS para estilização ágil (via `@tailwindcss/vite`) |
-| **Python 3** | Motor de cálculos astrológicos (Swiss Ephemeris + Kerykeion fallback) |
+## Development commands
 
----
+Run from the repository root:
 
-## 📋 Pré-requisitos
-
-Antes de começar, certifique-se de ter os seguintes programas instalados:
-
-### Programas Necessários
-
-| Programa | Versão Mínima | Como Instalar |
-|----------|---------------|---------------|
-| **Node.js** | 18+ | [nodejs.org](https://nodejs.org) |
-| **Rust** | Qualquer versão estável | [rustup.rs](https://rustup.rs) |
-| **Python** | 3.10+ | [python.org](https://python.org) |
-| **Tauri CLI** | v2 | `cargo install tauri-cli` |
-
-### Dependências Python
-
-O motor de astrologia utiliza a biblioteca **Kerykeion**:
-
-```bash
-pip install kerykeion
-```
-
----
-
-## 🚀 Como Rodar o Projeto
-
-### ⚡ TESTE RÁPIDO (Para você!)
-
-**Clique duas vezes neste arquivo na sua Área de Trabalho:**
-
-```
-📁 AureaSolaris-Dev.bat
-```
-
-Isso vai:
-1. ✅ Verificar dependências
-2. ✅ Iniciar o servidor Vite
-3. ✅ Abrir automaticamente `http://localhost:1420/` no navegador
-
----
-
-### Opção 2: Dentro do Projeto
-
-Execute `start-dev.bat` na pasta do projeto:
-
-```batch
-start-dev.bat
-```
-
-### Opção 3: Via Terminal
-
-```bash
-npm start
-```
-
-O servidor estará em `http://localhost:1420/`
-
----
-
-### Comandos Disponíveis
-
-| Comando | Descrição | Uso |
-|---------|-----------|-----|
-| `📁 AureaSolaris-Dev.bat` | **ONE-CLICK** - Inicia + abre navegador | **USE ESTE!** |
-| `npm start` | Inicia servidor Vite | Terminal |
-| `npm run dev` | Vite com hot reload | Desenvolvimento |
-| `npm run build` | Verifica TypeScript + build | Pre-deploy |
-| `npm run tauri dev` | App desktop completa | Com Tauri |
-| `npm run lint` | Verifica código | Pre-commit |
-| `npm test` | Executa testes | Verificação |
-
----
-
-### 🔧 Se der Problema
-
-**Porta já em uso?**
-```bash
-npx kill-port 1420
-npm start
-```
-
-**Erro de TypeScript?**
-```bash
+```powershell
 npm run build
+npm run test
+cargo check --manifest-path .\src-tauri\Cargo.toml
+npm run tauri -- dev
 ```
 
----
+The Python sidecar uses the isolated `.aurea-build-venv`; do not depend on a globally installed Python for release work.
 
-## 🏗️ Arquitetura do Projeto
+## Windows release
 
-O Aurea Solaris possui uma arquitetura em **3 camadas** que trabalham em harmonia:
+`build.bat` rebuilds the PyInstaller sidecar, copies it into `src-tauri/binaries/`, and creates the NSIS installer. The current release evidence, artifact hashes, technical checks, and remaining manual acceptance are recorded in [`docs/RELEASE_VALIDATION_2026-08-10.md`](docs/RELEASE_VALIDATION_2026-08-10.md).
 
-```
-┌─────────────────────────────────────────────────┐
-│              CAMADA 1: FRONTEND                  │
-│         React + TypeScript + Tailwind            │
-│    (Interface visual e interação do usuário)     │
-└─────────────────┬───────────────────────────────┘
-                  │ Comunicação IPC
-┌─────────────────▼───────────────────────────────┐
-│              CAMADA 2: NATIVA                    │
-│            Tauri (Rust)                          │
-│    (Sistema de arquivos, APIs, persistência)     │
-└─────────────────┬───────────────────────────────┘
-                  │ Subprocesso Python
-┌─────────────────▼───────────────────────────────┐
-│              CAMADA 3: MOTOR                     │
-│              Python                              │
-│   (Cálculos astrológicos com Kerykeion)          │
-└─────────────────────────────────────────────────┘
-```
+Current state: release `0.1.1` has a passing technical build and sidecar smoke test; native Windows installer acceptance and repository push/merge remain pending.
 
-### Como as Camadas se Comunicam
+## Change discipline
 
-1. **Frontend → Backend**: A interface React envia comandos via `invoke()` para o Rust
-2. **Backend Rust**: Gerencia arquivos, chama APIs externas, executa subprocessos
-3. **Rust → Python**: Chama o `astro_engine.py` para cálculos astrológicos complexos
-4. **Python → Rust → Frontend**: Resultados são retornados pela cadeia para exibição
-
----
-
-## 🔐 Variáveis de Ambiente
-
-O projeto utiliza variáveis de ambiente para configurações sensíveis. Elas devem ser definidas nos arquivos `.env` ou `.env.local`:
-
-| Variável | Descrição | Obrigatório |
-|----------|-----------|-------------|
-| `AUREA_DATA_DIR` | Pasta de dados privados do usuário | Sim |
-| `AUREA_SIDECAR_TOKEN` | Token de acesso local ao sidecar | Sim |
-| `AUREA_SESSION_SECRET` | Segredo para cookies de sessão | Sim |
-| `OPENAI_API_KEY` | Chave de API OpenAI-compatible (somente se escolhida) | Opcional |
-| `OPENAI_BASE_URL` | URL base do provedor OpenAI-compatible | Opcional |
-| `OPENAI_MODEL` | Modelo do provedor OpenAI-compatible | Opcional |
-
-Integrações externas (Google, Todoist, Telegram, etc.) estão fora do escopo atual; quando forem adicionadas, serão adapters opcionais com consentimento explícito.
-
----
-
-## 📁 Estrutura de Pastas
-
-```
-AureaSolaris/
-├── src/                    # Frontend React
-│   ├── components/         # Componentes e Views (inclui diario/ com subcomponentes)
-│   ├── context/            # Estado global (AgendaContext, DiarioContext, GlobalContext)
-│   ├── hooks/              # Lógica especializada
-│   ├── types/              # Definições TypeScript
-│   ├── services/           # APIs locais do Hermes e engenharia
-│   └── utils/              # Utilitários (tauri.ts, logger.ts, astro-calc.ts)
-├── src-tauri/              # Backend Rust (Tauri IPC)
-│   └── src/lib.rs          # Comandos Tauri (IPC API)
-├── docs/                   # Documentação (inclui superpowers/specs/)
-
-├── astro_engine.py         # Motor de astrologia (Python/Swiss Ephemeris + Kerykeion)
-├── ephe/                 # Efemérides NASA
-└── .env                  # Configurações
-```
-
-Para uma explicação detalhada de cada pasta e arquivo, consulte o guia completo: [docs/estrutura-do-projeto.md](docs/estrutura-do-projeto.md)
-
----
-
-## Cálculos Astrológicos
-
-O Aurea Solaris utiliza o motor `kerykeion` (Python) para cálculos astrológicos de alta precisão:
-
-- **Efemérides:** Swiss Ephemeris (de421.bsp)
-- **Sistema de casas:** Configurável (Regiomontanus, Placidus, Koch, etc.)
-- **Corpos:** 10 planetas + Chiron + North Node + Lilith + Part of Fortune + Vertex
-- **Aspectos:** Todos os aspectos maiores e menores com orbs configuráveis
-- **Horas planetárias:** Baseadas na ordem caldéia
-- **Fase lunar:** Cálculo real via ephemeris
-
-Para validar a precisão, o mapa natal de referência está em `natal_charts/viviane.json`.
-
----
-
-## 🤖 Agentes de Inteligência Artificial
-
-O diferencial do Aurea Solaris é sua equipe de 5 agentes de IA, cada um com personalidade e função específica:
-
-### 🧙‍♂️ Hermes — O Tutor Pessoal
-
-- **Atua**: Globalmente, como visão geral do sistema e guia de estudo
-- **Personalidade**: Sábio, direto e empático, conecta padrões entre astrologia e ações do dia
-- **Função**: Oferece perspectivas macro, ligando horas celestes às suas atividades, além de organização, saúde e estudo
-
----
-
-## 📱 Views Modulares
-
-A interface é dividida em módulos especializados que você pode acessar conforme sua necessidade:
-
-1. **Mesa de Criação** — Canvas infinito para conectar ideias e projetos
-2. **Astrologia** — Mapas natais, trânsitos e horas planetárias
-3. **Saúde & Vitalidade** — Controle de bem-estar e hábitos
-4. **Agenda Preditiva** — Cronograma inteligente baseado nas estrelas
-
-6. **Diário (Memórias)** — Registro diário com insights
-
----
-
-## 📚 Documentação
-
-### Navigation Hub
-- **[docs/index.md](docs/index.md)** — All documentation organized by domain (English)
-
-### Quick Reference
-- **[docs/quick-reference.md](docs/quick-reference.md)** — Fast lookup for common tasks
-
-### Domain Documentation (English)
-- [Agents System](docs/agents-system.md) — Personas, configuration, models
-- [Tauri IPC API](docs/tauri-ipc-api.md) — All backend commands
-- [Astrology Engine](docs/astrology-engine.md) — Python calculations
-- [Google Calendar](docs/google-calendar.md) — Calendar integration
-- [Data Persistence](docs/data-persistence.md) — Storage mechanisms
-- [Setup Guide](docs/setup-guide.md) — Installation instructions
-
-### Portuguese Documentation
-- [Estrutura do Projeto](docs/estrutura-do-projeto.md) — Guia completo de pastas e arquivos
-
-### Legacy (Preserved)
-- [Arquitetura Técnica](docs/arquitetura.md) — ⚠️ Original (see domain docs above)
-
----
-
-## 🔒 Segurança
-
-- Nunca compartilhe seus arquivos `.env` ou `.env.local`
-- As chaves de API são armazenadas localmente e nunca enviadas ao repositório
-- A pasta `.factory/` contém configurações do sistema de agentes e deve ser mantida
-
----
-
-## 💡 Para Agentes de IA
-
-Se você é um agente de IA trabalhando neste projeto, siga estas dicas:
-
-### Navegação Rápida
-
-- **Precisa modificar um componente UI?** → `src/components/` + leia `docs/estrutura-do-projeto.md`
-- **Precisa alterar uma API Tauri?** → `src-tauri/src/lib.rs` + leia `docs/arquitetura.md`
-- **Precisa modificar cálculos astrológicos?** → `astro_engine.py`
-- **Precisa ajustar configurações?** → Arquivos na raiz (`package.json`, `vite.config.ts`)
-- **Precisa entender os agentes?** → `AGENTS.md` + `docs/arquitetura.md`
-
-### Regras Importantes
-
-1. **Linguagem acessível**: Explique conceitos técnicos de forma simples para o usuário
-2. **Documentação首先**: Toda mudança no código DEVE atualizar a documentação correspondente
-3. **Português**: Mantenha toda documentação em Português
-
-### Arquivos de Referência
-
-- `AGENTS.md` — Diretrizes principais do projeto
-- `docs/arquitetura.md` — Arquitetura técnica detalhada
-- `docs/estrutura-do-projeto.md` — Mapeamento de pastas e responsabilidades
-- `.factory/library/` — Conhecimento acumulado do projeto
-
----
-
-## 📄 Licença
-
-Este é um projeto pessoal. Todos os direitos reservados.
-
----
-
-<p align="center">
-  <em>Aurea Solaris — Onde a tecnologia encontra as estrelas ✨</em>
-</p>
+Inspect Git status first. Preserve unrelated changes. Use `rg` for discovery and `apply_patch` for edits. Never commit secrets, mix private/editorial data, invent sources or calculations, or use destructive Git commands. Every change should report affected files, data/privacy risk, validation, and real pending work.

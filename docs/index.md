@@ -1,67 +1,34 @@
-# Aurea Solaris Documentation
+# Aurea Solaris — AI Documentation Index
 
-> **Navigation hub** — all project docs organized by domain.
-> **Rule:** Each domain has ONE source of truth.
+Use this as a routing map, not as a reading list. The canonical agent path is:
 
-## Quick Access
+1. [`AGENTS.md`](../AGENTS.md) — mandatory rules.
+2. [`CONSTITUICAO.md`](CONSTITUICAO.md) — normative product/data decisions.
+3. [`AI_WORKING_GUIDE.md`](AI_WORKING_GUIDE.md) — compact task map and validation loop.
+4. The relevant domain reference below.
 
-| I need to... | Go to... |
-|--------------|----------|
-| Understand the architecture | [arquitetura.md](arquitetura.md) |
-| Find where to edit code | [quick-reference.md](quick-reference.md) |
-| Add/modify Tauri command | [tauri-ipc-api.md](tauri-ipc-api.md) |
-| Change astrology calculations | [astrology-engine.md](astrology-engine.md) |
-| Understand the canonical astrology knowledge contract | [astrology-knowledge-contract.md](astrology-knowledge-contract.md) |
-| Open the Biblioteca Visual installation notes | [BIBLIOTECA_VISUAL.md](BIBLIOTECA_VISUAL.md) |
-| Sync/import the Engenharia Astrológica corpus safely | [data/ENGENHARIA_SYNC_PLAYBOOK.md](data/ENGENHARIA_SYNC_PLAYBOOK.md) |
-| Certify the astrology engine | [ENGINE_CERTIFICATION_PLAN.md](ENGINE_CERTIFICATION_PLAN.md) |
-| Resume the project safely | [PROJECT_HANDOFF.md](PROJECT_HANDOFF.md) |
-| Integrate with Google Calendar | [google-calendar.md](google-calendar.md) |
-| Understand data storage | [data-persistence.md](data-persistence.md) |
-| See folder structure | [estrutura-do-projeto.md](estrutura-do-projeto.md) |
-| Know the AI assistant (Hermes) | [../AGENTS.md](../AGENTS.md) |
+## Domain references
 
-## By Domain
+| Domain | Source of truth |
+|---|---|
+| Architecture/native app | [`arquitetura.md`](arquitetura.md), [`tauri-ipc-api.md`](tauri-ipc-api.md) |
+| React/UI/accessibility | [`estrutura-do-projeto.md`](estrutura-do-projeto.md), [`components.md`](components.md), [`accessibility.md`](accessibility.md), [`design-system.md`](design-system.md) |
+| Astrology engine | [`astrology-engine.md`](astrology-engine.md), [`ENGINE_CERTIFICATION_PLAN.md`](ENGINE_CERTIFICATION_PLAN.md), [`astrology-knowledge-contract.md`](astrology-knowledge-contract.md) |
+| Editorial corpus/library | [`BIBLIOTECA_VISUAL.md`](BIBLIOTECA_VISUAL.md), [`data/ENGENHARIA_SYNC_PLAYBOOK.md`](data/ENGENHARIA_SYNC_PLAYBOOK.md) |
+| Private data/storage | [`data-persistence.md`](data-persistence.md), [`data/DOMINIOS_DE_DADOS.md`](data/DOMINIOS_DE_DADOS.md) |
+| Hermes | [`HERMES_MIND_ARCHITECTURE.md`](HERMES_MIND_ARCHITECTURE.md), [`HERMES_MIND_API.md`](HERMES_MIND_API.md) |
+| Integrations | [`google-calendar-integration.md`](google-calendar-integration.md), [`google-drive-integration.md`](google-drive-integration.md) |
+| Setup/commands | [`setup-guide.md`](setup-guide.md), [`AI_WORKING_GUIDE.md`](AI_WORKING_GUIDE.md) |
+| Release evidence | [`RELEASE_VALIDATION_2026-08-10.md`](RELEASE_VALIDATION_2026-08-10.md) |
 
-### Architecture & System
+## Current project state
 
-- [arquitetura.md](arquitetura.md) — Architecture, layers, commands
-- [tauri-ipc-api.md](tauri-ipc-api.md) — All Tauri commands and types
-- [data-persistence.md](data-persistence.md) — Storage mechanisms
+- Release `0.1.1` technical build and generated-sidecar smoke: documented as passed in the release record.
+- Native Windows installer acceptance: pending human verification.
+- Branch push/merge: not performed.
 
-### Astrology Engine
+## What is not canonical
 
-- [astrology-engine.md](astrology-engine.md) — Python calculations, Swiss Ephemeris
-- [astrology-rules.md](astrology-rules.md) — Astrological rules and techniques
-- [astrology-knowledge-contract.md](astrology-knowledge-contract.md) — Normative contract linking Engenharia Astrológica to the engine
-- [BIBLIOTECA_VISUAL.md](BIBLIOTECA_VISUAL.md) — Current in-app library mode, bundled snapshot, and consultation rules
-- [data/ENGENHARIA_SYNC_PLAYBOOK.md](data/ENGENHARIA_SYNC_PLAYBOOK.md) — Operational sync/import playbook with manifests, snapshots, and anti-drift rules
-- [ASTROLOGY_LESSONS_LEARNED.md](ASTROLOGY_LESSONS_LEARNED.md) — Lessons from engine development
-
-### Frontend
-
-- [components.md](components.md) — Reusable components
-- [design-system.md](design-system.md) — Design tokens and visual guide
-- [accessibility.md](accessibility.md) — Accessibility patterns
-- [estrutura-do-projeto.md](estrutura-do-projeto.md) — Folder structure (PT-BR)
-
-### Integrations
-
-- [google-calendar.md](google-calendar.md) — Calendar via Composio
-- [google-calendar-integration.md](google-calendar-integration.md) — Integration details
-
-### AI Assistant
-
-- [../AGENTS.md](../AGENTS.md) — Hermes: the single AI assistant
-
-### Project Management
-
-- [ROADMAP.md](ROADMAP.md) — canonical implementation order
-- [PROJECT_HANDOFF.md](PROJECT_HANDOFF.md) — current state and next action
-- [MVP_Alfa_Checklist.md](MVP_Alfa_Checklist.md) — MVP progress checklist
-- [PLANO_SIMPLIFICACAO.md](PLANO_SIMPLIFICACAO.md) — Simplification plan (June 2026)
-
-### Historical (Preserved)
-
-- [agents-system.md](agents-system.md) — Old 5-agent system (deprecated)
-- [AGENTS.md](../AGENTS.md) — Rewritten: now describes Hermes
+- `docs/archive/` contains historical plans, specifications, and reviews.
+- `docs/agents-system.md` describes the retired multi-agent architecture; current Hermes rules are in `AGENTS.md` and the Hermes domain documents.
+- Old implementation plans do not override the Constitution or current code.
