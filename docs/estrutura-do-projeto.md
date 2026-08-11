@@ -6,7 +6,8 @@
 C:\AureaSolaris\
 ├── 📄 main_api.py              ← Sidecar FastAPI (porta 9876)
 ├── 📄 requirements-api.txt     ← Dependências Python
-├── 📄 start_aurea.bat          ← Script de inicialização
+├── 📄 launch_chrome.bat        ← Inicialização principal no Chrome
+├── 📄 launch_aurea.bat         ← Alias compatível do launcher Chrome
 ├── 📄 astro_engine.py          ← Motor astrológico (Swiss Ephemeris)
 ├── 📄 package.json             ← Node.js deps (React, Vite, Tauri)
 │

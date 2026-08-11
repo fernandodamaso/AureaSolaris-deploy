@@ -2,6 +2,28 @@
 
 Aurea Solaris is a local-first application for astrological study, personal organization, and reflection. Its current primary experience is a local web app opened in Chrome by a one-click Windows launcher. Tauri remains available as a deferred native compatibility path. It is maintained through AI agents, so the repository's documentation is optimized for machine task routing and safe, small changes.
 
+## Start Aurea in Chrome
+
+On Windows, double-click [`launch_chrome.bat`](launch_chrome.bat). It starts
+the local FastAPI runtime, serves the compiled frontend from `dist/`, and opens
+Chrome. Vite is not used during normal startup. If the compiled frontend is
+missing in a source checkout, the launcher builds it once; after that, Node.js
+is not needed to open the app.
+
+For first-time setup, create the isolated Python environment and install the
+frontend/runtime dependencies:
+
+```powershell
+python -m venv .aurea-build-venv
+.\.aurea-build-venv\Scripts\python.exe -m pip install -r requirements-api.txt
+npm install
+```
+
+The default local address is `http://127.0.0.1:9876`. If that port is already
+occupied, the launcher selects another loopback port and the compiled frontend
+follows the service's local origin. [`launch_aurea.bat`](launch_aurea.bat) is a
+compatibility alias for the same Chrome launcher.
+
 ## Start here as an AI agent
 
 Read in this order:
@@ -50,7 +72,10 @@ The Python sidecar uses the isolated `.aurea-build-venv`; do not depend on a glo
 
 `build.bat` rebuilds the PyInstaller sidecar, copies it into `src-tauri/binaries/`, and creates the NSIS installer. The current release evidence, artifact hashes, technical checks, and remaining manual acceptance are recorded in [`docs/RELEASE_VALIDATION_2026-08-10.md`](docs/RELEASE_VALIDATION_2026-08-10.md).
 
-Current state: release `0.1.1` has a passing technical build and sidecar smoke test; Chrome-first launcher/runtime work is now the active focus. Native Windows installer work is paused.
+Current state: the Chrome-first launcher/runtime is implemented and has
+automated bridge coverage; manual acceptance of login, navigation, persistence,
+Hermes, and shutdown on Windows remains. Native Windows installer work is
+paused.
 
 ## Change discipline
 

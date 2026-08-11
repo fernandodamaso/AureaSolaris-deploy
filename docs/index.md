@@ -25,7 +25,7 @@ Use this as a routing map, not as a reading list. The canonical agent path is:
 ## Current project state
 
 - Release `0.1.1` technical build and generated-sidecar smoke: documented as passed in the release record.
-- Chrome-first launcher/runtime: active implementation focus.
+- Chrome-first launcher/runtime: implemented; manual Windows acceptance remains.
 - Native Windows installer acceptance: paused while the Chrome-first path is implemented.
 - Branch push/merge: not performed.
 
