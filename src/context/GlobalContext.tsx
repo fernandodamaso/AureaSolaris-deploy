@@ -1,6 +1,6 @@
 import { createContext, useContext, ReactNode, useMemo } from 'react';
 import { useAstrologyData } from '../hooks/useAstrologyData';
-import { useAgendaContext, AureaProfile, AureaTask, AureaEvent, AureaDocument } from './AgendaContext';
+import { useAgendaContext, AureaProfile, AureaTask, AureaEvent, AureaDocument, AstroMapSubject } from './AgendaContext';
 
 interface AstroState {
   liveData: any;
@@ -15,7 +15,9 @@ interface GlobalContextType {
   astro: AstroState;
   agenda: {
     profiles: AureaProfile[];
+    mapSubjects: AstroMapSubject[];
     activeProfile: AureaProfile | null;
+    activeSubjectId: string;
     tasks: AureaTask[];
     events: AureaEvent[];
     metrics: { done: number; pending: number; notDone: number };
@@ -99,7 +101,9 @@ Estabilidade: Alta | Agentes: Sintonizados | Conectividade: OK
       astro: { liveData, transits, loading, error, planetaryHour: pPager, dayRegent: dRegent },
       agenda: {
         profiles: agenda.profiles,
+        mapSubjects: agenda.mapSubjects ?? [],
         activeProfile,
+        activeSubjectId: agenda.activeSubjectId,
         tasks: agenda.tasks,
         events: agenda.events,
         metrics: agenda.getMetrics(),

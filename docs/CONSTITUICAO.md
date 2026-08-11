@@ -35,7 +35,13 @@ Cada conta também possui uma biblioteca pessoal: livros, PDFs, artigos, links e
 
 ## Escala de produto
 
-Hoje, a experiência primária do Aurea é uma aplicação web local aberta no Chrome por um atalho de clique único no Windows, projetada primeiro para a tela de um notebook como o Galaxy Book 4 Ultra. A interface deve permanecer responsiva e preparada para tablet/mobile no futuro. O Tauri continua como caminho nativo compatível e poderá voltar ao foco depois, mas não deve bloquear o navegador local. Cada conta possui dados, preferências, integrações, consentimentos e memória Hermes isolados.
+Hoje, a experiência primária do Aurea é uma aplicação web local aberta no Chrome por um atalho de clique único no Windows, projetada primeiro para a tela de um notebook como o Galaxy Book 4 Ultra. A interface deve permanecer responsiva e preparada para tablet/mobile no futuro. O Tauri e instaladores estão fora do foco atual. A experiência canônica é a aplicação web local aberta em `127.0.0.1` no Chrome, via servidor local do projeto. Código, docs e agentes devem assumir essa realidade como padrão. Cada conta possui dados, preferências, integrações, consentimentos e memória Hermes isolados.
+
+## IA e provedores
+
+Hermes usa desde o início um provedor escolhido pela pessoa: **ChatGPT / OpenAI** ou **Hermes Gateway**. Ollama e qualquer IA local não são requisito, nem são sondados automaticamente. A conversa escolhe um único provedor; se ele falhar, Hermes informa a falha em vez de encaminhar conteúdo silenciosamente a outro serviço.
+
+Antes de enviar uma conversa, a interface mostra o provedor e pede consentimento explícito para aquela conversa. Senhas, tokens e memória integral não entram no prompt; o contexto enviado continua sujeito aos limites de privacidade e proveniência desta Constituição.
 
 ## Privacidade e acesso
 

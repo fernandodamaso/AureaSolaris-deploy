@@ -197,6 +197,12 @@ body {
   width: 100%;
 }
 
+.mandala-header {
+  display: grid;
+  grid-template-columns: minmax(13rem, 1fr) auto;
+  align-items: center;
+}
+
 .mandala-action {
   min-height: 42px;
   display: inline-flex;
@@ -265,8 +271,13 @@ body {
   box-shadow: var(--aurea-shadow);
 }
 
-@media (min-width: 900px) {
+@media (min-width: 1180px) {
   .mandala-actionbar { width: auto; }
+}
+
+@media (max-width: 1179px) {
+  .mandala-header { grid-template-columns: 1fr; }
+  .mandala-actionbar { justify-content: flex-start; }
 }
 
 @media (max-width: 640px) {
@@ -276,7 +287,7 @@ body {
 }
 
 .hermes-panel {
-  width: min(520px, calc(100vw - 24px));
+  width: min(420px, calc(100vw - 24px));
   max-height: calc(100dvh - 48px);
   border: 1px solid rgba(169,109,45,.40);
   box-shadow: 0 28px 80px rgba(14,26,37,.33);
@@ -313,7 +324,7 @@ body {
 
 .hermes-panel .assistant-bubble {
   background: rgba(255,255,255,0.12);
-  color: #0f172a;
+  color: #f8fafc;
   border: 1px solid rgba(255,255,255,0.16);
 }
 
@@ -334,11 +345,33 @@ body {
 /* The tutor is a utility, not a permanent overlay on the work surface. Keep
    a real reading gutter whenever it is open so the mandala/card never sits
    underneath the conversation. */
-@media (min-width: 768px) {
-  .layout-grid:has(.hermes-panel) .main-area { margin-right: 436px; }
+@media (min-width: 960px) {
+  .layout-grid:has(.hermes-panel) .main-area { margin-right: 444px; }
 }
 
-@media (max-width: 767px) {
+/* Em notebooks médios o menu vira trilho enquanto o tutor está aberto. Assim
+   a área de estudo e o Hermes convivem sem um cobrir o outro. */
+@media (min-width: 960px) and (max-width: 1279px) {
+  .layout-grid:has(.hermes-panel) {
+    grid-template-columns: 80px minmax(0, 1fr) !important;
+  }
+  .layout-grid:has(.hermes-panel) > aside:first-of-type > div:first-child {
+    justify-content: center;
+    padding-inline: 8px;
+  }
+  .layout-grid:has(.hermes-panel) > aside:first-of-type h1,
+  .layout-grid:has(.hermes-panel) > aside:first-of-type nav button span:last-child,
+  .layout-grid:has(.hermes-panel) > aside:first-of-type > div:last-child button > div:last-child {
+    display: none;
+  }
+  .layout-grid:has(.hermes-panel) > aside:first-of-type nav button,
+  .layout-grid:has(.hermes-panel) > aside:first-of-type > div:last-child button {
+    justify-content: center;
+    padding-inline: 8px;
+  }
+}
+
+@media (max-width: 959px) {
   .layout-grid:has(.hermes-panel) .main-area { margin-bottom: 0; }
   .hermes-panel { max-width: calc(100vw - 24px); }
 }
