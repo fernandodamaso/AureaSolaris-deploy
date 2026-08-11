@@ -109,12 +109,3 @@ POST /transit    → Trânsitos atuais
   "asc": {"sign": "Leo", "degree": 8.7}
 }
 ```
-
-## Fallback TypeScript (astro-calc.ts)
-
-Quando o sidecar não está disponível, o frontend tem cálculos básicos em TypeScript. Esses são menos precisos mas funcionam como demonstração:
-
-- Posições aproximadas dos planetas
-- Casas por Placidus simplificado
-- Aspectos com orbs fixas
-- Para uso profissional, sempre usar o sidecar Python
