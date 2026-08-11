@@ -1,10 +1,12 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { useAstroData } from '../hooks/useAstroData';
 import { MandalaChart } from './MandalaChart';
-import { RefreshCw, Compass, User, Users, Plus, Edit3, MessageSquare, FileText } from 'lucide-react';
+import { RefreshCw, User, Users, Plus, Edit3, MessageSquare, FileText } from 'lucide-react';
 import { useAgendaContext } from '../context/AgendaContext';
 import { BirthForm } from './common/BirthForm';
 import { CalculationEvidence } from './common/CalculationEvidence';
+import { readCertifiedCalculation } from '../utils/certifiedCalculation';
+import { NatalReportCard } from './NatalReportCard';
 
 type BirthInput = { year: number; month: number; day: number; hour: number; lat: number; lon: number; timezone: string };
 
@@ -25,24 +27,31 @@ function readBirthInput(profile: any): BirthInput | null {
 }
 
 export const MandalaPage = () => {
-  const { profiles, activeProfileId, addConnection, updateProfile } = useAgendaContext();
-  const [selectedTarget, setSelectedTarget] = useState<'current' | string>('me');
+  const { profiles, mapSubjects, activeProfileId, activeSubjectId, setActiveSubjectId, addConnection, updateProfile } = useAgendaContext();
+  const selectedTarget = activeSubjectId;
   const [showForm, setShowForm] = useState(false);
   const [editingConnectionId, setEditingConnectionId] = useState<string | null>(null);
   const showDetails = true;
-  
+
   // O mapa é a visão principal. O Caderno abre apenas por uma ação explícita.
-  
+
   const containerRef = useRef<HTMLDivElement>(null);
   const [containerWidth, setContainerWidth] = useState(800);
-  
-  const activeProfile = useMemo(() => 
+
+  const activeProfile = useMemo(() =>
     profiles.find(p => p.id === activeProfileId) || profiles[0]
   , [profiles, activeProfileId]);
 
+  useEffect(() => {
+    const mapsForOwner = mapSubjects?.filter((subject) => subject.ownerProfileId === activeProfileId) || [];
+    if (mapsForOwner.length && !mapsForOwner.some((subject) => subject.id === selectedTarget)) {
+      setActiveSubjectId(mapsForOwner[0].id);
+    }
+  }, [activeProfileId, mapSubjects, selectedTarget, setActiveSubjectId]);
+
   const handleSaveConnection = (data: any) => {
     if (editingConnectionId) {
-      const updatedConnections = (activeProfile.connections || []).map((c: any) => 
+      const updatedConnections = (activeProfile.connections || []).map((c: any) =>
         c.id === editingConnectionId ? { ...c, ...data, birthData: data } : c
       );
       updateProfile(activeProfile.id, { connections: updatedConnections });
@@ -72,13 +81,9 @@ export const MandalaPage = () => {
   }, [containerWidth]);
 
   const birthData = useMemo<BirthInput | null>(() => {
-    if (selectedTarget === 'current') return null;
-    if (selectedTarget === 'me') {
-       return readBirthInput(activeProfile);
-     }
-    const conn = activeProfile.connections?.find((c: any) => c.id === selectedTarget);
-    return readBirthInput(conn);
-  }, [selectedTarget, activeProfile]);
+    const subject = mapSubjects?.find(map => map.id === selectedTarget);
+    return readBirthInput(subject?.source || null);
+  }, [selectedTarget, activeProfile, mapSubjects]);
 
   const calculationEnabled = Boolean(birthData);
   const { data, loading, error, recalculate } = useAstroData(birthData, calculationEnabled);
@@ -93,17 +98,21 @@ export const MandalaPage = () => {
       retrograde?: boolean;
       isAngle?: boolean;
       stationary?: boolean;
+      speed?: number;
+      house?: number;
     }> = [];
 
     // Traditional planets + Chiron
     Object.entries(data.planets).forEach(([name, info]: [string, any]) => {
       allPoints.push({
         name,
-        degree: info.degree || 0,
+        degree: info.degree,
         sign: info.sign || '',
-        retrograde: info.retrograde || false,
+        retrograde: info.retrograde === true,
         isAngle: ['ASC', 'MC'].includes(name),
-        stationary: info.stationary || false,
+        stationary: info.stationary === true,
+        speed: typeof info.speed === 'number' ? info.speed : undefined,
+        house: typeof info.house === 'number' ? info.house : undefined,
       });
     });
 
@@ -112,9 +121,12 @@ export const MandalaPage = () => {
       Object.entries(data.secondary).forEach(([name, info]: [string, any]) => {
         allPoints.push({
           name,
-          degree: info.degree || 0,
+          degree: info.degree,
           sign: info.sign || '',
-          retrograde: false,
+          retrograde: info.retrograde === true,
+          stationary: info.stationary === true,
+          speed: typeof info.speed === 'number' ? info.speed : undefined,
+          house: typeof info.house === 'number' ? info.house : undefined,
         });
       });
     }
@@ -154,15 +166,12 @@ export const MandalaPage = () => {
     return data?.aspects || [];
   }, [data]);
 
-  const allTargets = [
-    { id: 'current', name: 'Céu Sagrado (Agora)', icon: <Compass size={14}/> },
-    { id: 'me', name: `Meu Mapa Natal`, icon: <User size={14}/> },
-    ...(activeProfile.connections || []).map((c: any) => ({
-      id: c.id, 
-      name: `Natal: ${c.name}`, 
-      icon: <Users size={14}/> 
-    }))
-  ];
+  const sharedMapTargets = mapSubjects?.filter((map) => map.ownerProfileId === activeProfile?.id) || [];
+  const allTargets = sharedMapTargets.map((map) => ({
+    id: map.id,
+    name: map.kind === 'profile' ? map.name : `Natal: ${map.name}`,
+    icon: map.kind === 'profile' ? <User size={14} /> : <Users size={14} />,
+  }));
 
   const activeTargetLabel = allTargets.find(t => t.id === selectedTarget)?.name || 'Mapa selecionado';
 
@@ -179,7 +188,7 @@ export const MandalaPage = () => {
     const auditReceipt = data?.meta?.receipt;
     const receipt = data?.meta
       ? `Cálculo astronômico recebido\n• UTC: ${auditReceipt?.resolved_time?.utc || data.meta.timestamp || 'não informado'}\n• Fuso IANA: ${auditReceipt?.resolved_time?.iana_timezone || 'não informado'}\n• Local: ${data.meta.location?.lat ?? '—'}, ${data.meta.location?.lon ?? '—'}\n• Motor: ${auditReceipt?.engine?.name || 'não informado'} ${auditReceipt?.engine?.version || ''}\n• Hash da entrada: ${auditReceipt?.input_hash || 'não informado'}`
-      : 'Cálculo astronômico: indisponível — não registrar interpretação como fato.';
+      : 'Cálculo astronômico indisponível — não registrar interpretação como fato.';
     window.dispatchEvent(new CustomEvent('open-caderno-vivo', {
       detail: {
         type: 'create-study',
@@ -192,38 +201,38 @@ export const MandalaPage = () => {
   return (
     <div className="flex h-full min-w-0 overflow-hidden w-full">
       <div ref={containerRef} className="flex flex-1 min-w-0 flex-col h-full items-center justify-start gap-6 p-4 md:p-8 overflow-y-auto no-scrollbar transition-all duration-500">
-        <div className="w-full flex flex-wrap items-center justify-between gap-4 background: rgba(11,23,34,0.55) backdrop-blur-md p-5 rounded-[2rem] border border-color: rgba(217,166,83,0.18) shadow-sm transition-all">
+        <div className="aurea-page-header w-full flex flex-wrap items-center justify-between gap-5 p-5 rounded-2xl shadow-sm transition-all">
         <div className="flex items-center gap-4">
-          <div className="p-3 background: var(--aurea-surface-light) rounded-2xl border border-color: rgba(217,166,83,0.18) color: var(--aurea-gold)">
-            {selectedTarget === 'current' ? <Compass size={24} /> : <User size={24} />}
+          <div className="p-3 bg-[var(--aurea-surface-warm)] rounded-2xl border border-color: rgba(217,166,83,0.18) text-[var(--aurea-gold)]">
+            {allTargets.find((target) => target.id === selectedTarget)?.icon || <User size={24} />}
           </div>
           <div>
-            <h1 className="text-[12px] font-black uppercase tracking-[0.3em] color: var(--aurea-text) leading-tight">Mandala Astrológica</h1>
-            <p className="text-[9px] font-bold color: var(--aurea-gold) uppercase tracking-widest mt-1">
+            <h1 className="text-sm font-black uppercase tracking-[0.22em] text-[var(--aurea-text)] leading-tight">Mandala Astrológica</h1>
+            <p className="text-[11px] font-bold text-[var(--aurea-gold-deep)] uppercase tracking-widest mt-1">
               {allTargets.find(t => t.id === selectedTarget)?.name}
             </p>
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center justify-center gap-2 shrink-0" aria-label="Ações do mapa">
+        <div className="mandala-actionbar" aria-label="Ações do mapa">
           <button
             onClick={() => {
               setEditingConnectionId(null);
               setShowForm(true);
             }}
-            className="flex items-center gap-2 rounded-xl border border-color: rgba(217,166,83,0.18) background: var(--aurea-surface-light) px-3 py-2.5 color: var(--aurea-gold) shadow-sm transition-all hover:-translate-y-px hover:bg-gold/5 hover:shadow focus-visible:outline-none focus-visible:ring-2 focus-visible: ring-color: var(--aurea-gold) focus-visible:ring-offset-2 shrink-0"
+            className="mandala-action aurea-button-primary"
             title="Adicionar Novo Mapa"
           >
             <Plus size={16} />
-            <span className="text-[10px] font-black uppercase tracking-widest">Mapa</span>
+            <span>Adicionar mapa</span>
           </button>
 
-          <label className="flex flex-col gap-0.5 rounded-xl border border-color: rgba(38,54,66,0.6) background: var(--aurea-surface) px-3 py-1.5 shadow-sm transition-colors focus-within:border-gold/40 focus-within:ring-2 focus-within:ring-[#c5a059]/20 shrink-0">
-            <span className="text-[8px] font-black uppercase tracking-[0.14em] color: var(--aurea-text-muted)">Mapa em foco</span>
-            <select 
+          <label className="mandala-map-select">
+            <span>Mapa em foco</span>
+            <select
               value={selectedTarget}
-              onChange={(e) => setSelectedTarget(e.target.value)}
-              className="bg-transparent text-[10px] font-black uppercase tracking-widest text-gray-700 outline-none"
+              onChange={(e) => setActiveSubjectId(e.target.value)}
+              className="w-full"
               aria-label="Mapa em foco"
             >
               {allTargets.map(t => (
@@ -232,13 +241,14 @@ export const MandalaPage = () => {
             </select>
           </label>
 
-          {selectedTarget !== 'current' && selectedTarget !== 'me' && (
+          {selectedTarget && selectedTarget !== activeProfile?.id && (
             <button
               onClick={() => {
                 setEditingConnectionId(selectedTarget);
                 setShowForm(true);
               }}
-              className="flex items-center rounded-xl border border-color: rgba(38,54,66,0.6) background: var(--aurea-surface) p-2.5 color: var(--aurea-text-muted) shadow-sm transition-all hover:-translate-y-px hover:border-color: rgba(217,166,83,0.3) hover:color: var(--aurea-gold) hover:shadow focus-visible:outline-none focus-visible:ring-2 focus-visible: ring-color: var(--aurea-gold) focus-visible:ring-offset-2 shrink-0"
+              className="mandala-action"
+              aria-label="Editar dados do mapa"
               title="Editar Dados do Mapa"
             >
               <Edit3 size={16} />
@@ -247,31 +257,31 @@ export const MandalaPage = () => {
 
           <button
             onClick={openCadernoForCurrentMap}
-            className="flex items-center gap-2 rounded-xl border border-color: rgba(38,54,66,0.6) background: var(--aurea-surface) px-3 py-2.5 color: var(--aurea-text-muted) shadow-sm transition-all hover:-translate-y-px hover:border-color: rgba(217,166,83,0.3) hover:text-gold hover:shadow focus-visible:outline-none focus-visible:ring-2 focus-visible: ring-color: var(--aurea-gold) focus-visible:ring-offset-2 shrink-0"
+            className="mandala-action"
             title="Criar estudo no Caderno Vivo a partir deste mapa"
           >
             <FileText size={16} />
-            <span className="text-[10px] font-black uppercase tracking-widest">Estudar no Caderno</span>
+            <span>Estudar no Caderno</span>
           </button>
 
           <button
             onClick={openHermesForCurrentMap}
-            className="flex items-center gap-2 rounded-xl border border-color: rgba(38,54,66,0.6) background: var(--aurea-surface) px-3 py-2.5 color: var(--aurea-text-muted) shadow-sm transition-all hover:-translate-y-px hover:border-color: rgba(217,166,83,0.3) hover:text-gold hover:shadow focus-visible:outline-none focus-visible:ring-2 focus-visible: ring-color: var(--aurea-gold) focus-visible:ring-offset-2 shrink-0"
+            className="mandala-action"
             title="Abrir Hermes com este mapa em foco"
           >
             <MessageSquare size={16} />
-            <span className="text-[10px] font-black uppercase tracking-widest">Tutor IA</span>
+            <span>Tutor IA</span>
           </button>
 
           <button
             onClick={recalculate}
             disabled={loading || !birthData}
             aria-label={loading ? 'Calculando mapa' : birthData ? 'Atualizar cálculo do mapa' : 'Complete os dados de nascimento para calcular'}
-            className="flex items-center gap-2 rounded-xl border border-color: rgba(38,54,66,0.6) background: var(--aurea-surface) px-3 py-2.5 color: var(--aurea-text-muted) shadow-sm transition-all hover:-translate-y-px hover:border-color: rgba(217,166,83,0.3) hover:color: var(--aurea-gold) hover:shadow focus-visible:outline-none focus-visible:ring-2 focus-visible: ring-color: var(--aurea-gold) focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none shrink-0"
+            className="mandala-action"
             title={birthData ? 'Atualizar cálculo' : 'Data, hora, coordenadas e fuso são obrigatórios'}
           >
             <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
-            <span className="text-[10px] font-black uppercase tracking-widest">{loading ? 'Calculando' : 'Atualizar'}</span>
+            <span>{loading ? 'Calculando' : 'Atualizar cálculo'}</span>
           </button>
         </div>
       </div>
@@ -282,9 +292,9 @@ export const MandalaPage = () => {
 
       {error && (
         <div className="text-[11px] text-red-500 bg-red-50 border border-red-100 rounded-xl px-6 py-4 font-medium max-w-md text-center animate-in shake duration-500">
-          ⚠️ {error}
+           ⚠️ {error}
           <br />
-           <span className="text-[10px] text-red-400">Confira o serviço local e os dados declarados no recibo.</span>
+            <span className="text-[10px] text-red-400">Confira o serviço local e os dados declarados no recibo.</span>
         </div>
       )}
 
@@ -297,38 +307,46 @@ export const MandalaPage = () => {
       {loading && !data && (
         <div className="h-[580px] flex flex-col items-center justify-center gap-4">
           <div className="w-12 h-12 border-4 border-color: rgba(217,166,83,0.18) border-t-gold rounded-full animate-spin" />
-          <div className="text-[10px] color: var(--aurea-text-muted) font-bold uppercase tracking-[0.2em] animate-pulse">
+          <div className="text-[10px] text-[#596a76] font-bold uppercase tracking-[0.2em] animate-pulse">
             Sintonizando Esferas Celestes...
           </div>
         </div>
       )}
 
        {chartPlanets.length > 0 && birthData ? (
-        <div className="w-full max-w-[580px] animate-in zoom-in-95 duration-700 background: rgba(11,23,34,0.55) backdrop-blur-sm rounded-[2rem] border border-color: rgba(217,166,83,0.18) p-2 sm:p-5 shadow-lg relative transition-all">
+        <div className="mandala-chart-shell animate-in zoom-in-95 duration-700 sm:p-5 relative transition-all">
           <MandalaChart
             size={chartSize}
             planets={chartPlanets}
             houses={chartHouses}
             aspects={chartAspects}
             showPanel={showDetails}
+            calculationCertified={Boolean(readCertifiedCalculation(data, 'natal'))}
           />
         </div>
       ) : !loading && !error ? (
-        <div className="text-[11px] color: var(--aurea-text-muted) font-medium">
+        <div className="text-[11px] text-[#596a76] font-medium">
            Nenhum dado astrológico disponível para este mapa.
         </div>
       ) : null}
 
+      {data && !loading && (
+        <NatalReportCard
+          data={data}
+          loading={loading}
+        />
+      )}
+
       {showForm && (
         <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/40 backdrop-blur-md p-4 animate-in fade-in zoom-in-95">
-           <BirthForm 
+           <BirthForm
              title={editingConnectionId ? "Editar Mapa" : "Adicionar Mapa"}
              initialData={editingConnectionId ? activeProfile.connections?.find((c: any) => c.id === editingConnectionId)?.birthData : undefined}
-             onSave={handleSaveConnection} 
+             onSave={handleSaveConnection}
              onClose={() => {
                setShowForm(false);
                setEditingConnectionId(null);
-             }} 
+             }}
            />
         </div>
       )}

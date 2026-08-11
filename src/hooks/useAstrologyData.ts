@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { safeInvoke } from '../utils/tauri';
 import { getAspectOrbs, AspectOrb } from '../utils/astro-settings';
 import { astroLogger } from '../utils/logger';
+import { readCertifiedCalculation } from '../utils/certifiedCalculation';
 
 const SIGN_MAP: Record<string, string> = {
   Ari: 'Áries', Tau: 'Touro', Gem: 'Gêmeos', Can: 'Câncer',
@@ -141,6 +142,9 @@ export const useAstrologyData = (natalData?: NatalPositions) => {
 
       const parsed = JSON.parse(response);
       if (parsed?.error || !parsed?.planets) throw new Error(parsed?.error || 'Resposta do motor incompleta.');
+      if (!readCertifiedCalculation(parsed, 'transit')) {
+        throw new Error('O motor respondeu sem recibo auditável. Nenhum trânsito será exibido.');
+      }
 
       const normalized = normalizeAstroData(parsed);
       if (!normalized) throw new Error('A resposta do motor não pôde ser normalizada.');

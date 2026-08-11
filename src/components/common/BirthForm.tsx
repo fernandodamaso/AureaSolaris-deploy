@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Clock, MapPin, Calendar, Save, UserPlus, X, Navigation } from 'lucide-react';
+import { Clock, MapPin, Calendar, Save, UserPlus, X } from 'lucide-react';
 
 interface BirthFormProps {
   onSave: (data: {
@@ -24,6 +24,19 @@ interface BirthFormProps {
   title?: string;
 }
 
+const BRAZILIAN_CITIES = [
+  { name: 'Belo Horizonte, MG', lat: -19.9167, lon: -43.9345, timezone: 'America/Sao_Paulo' },
+  { name: 'Brasília, DF', lat: -15.7975, lon: -47.8919, timezone: 'America/Sao_Paulo' },
+  { name: 'Curitiba, PR', lat: -25.4284, lon: -49.2733, timezone: 'America/Sao_Paulo' },
+  { name: 'Fortaleza, CE', lat: -3.7172, lon: -38.5433, timezone: 'America/Fortaleza' },
+  { name: 'Manaus, AM', lat: -3.1190, lon: -60.0217, timezone: 'America/Manaus' },
+  { name: 'Porto Alegre, RS', lat: -30.0346, lon: -51.2177, timezone: 'America/Sao_Paulo' },
+  { name: 'Recife, PE', lat: -8.0476, lon: -34.8770, timezone: 'America/Recife' },
+  { name: 'Rio de Janeiro, RJ', lat: -22.9068, lon: -43.1729, timezone: 'America/Sao_Paulo' },
+  { name: 'Salvador, BA', lat: -12.9714, lon: -38.5124, timezone: 'America/Bahia' },
+  { name: 'São Paulo, SP', lat: -23.5505, lon: -46.6333, timezone: 'America/Sao_Paulo' },
+];
+
 const formatDateForDisplay = (value?: string) => {
   if (!value) return '';
   const isoMatch = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
@@ -34,15 +47,19 @@ const parseDateForStorage = (value: string) => {
   const match = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(value.trim());
   if (!match) return null;
 
-  const [, day, month, year] = match;
-  const parsed = new Date(Number(year), Number(month) - 1, Number(day));
+  const [, dayText, monthText, yearText] = match;
+  const day = Number(dayText);
+  const month = Number(monthText);
+  const year = Number(yearText);
+  const parsed = new Date(Date.UTC(year, month - 1, day));
   if (
-    parsed.getFullYear() !== Number(year) ||
-    parsed.getMonth() !== Number(month) - 1 ||
-    parsed.getDate() !== Number(day)
-  ) return null;
+    parsed.getUTCFullYear() !== year ||
+    parsed.getUTCMonth() !== month - 1 ||
+    parsed.getUTCDate() !== day
+  )
+    return null;
 
-  return `${year}-${month}-${day}`;
+  return `${yearText}-${monthText}-${dayText}`;
 };
 
 const isCoordinate = (value: string, minimum: number, maximum: number) => {
@@ -156,33 +173,28 @@ export const BirthForm = ({ onSave, onClose, initialData, title }: BirthFormProp
             <label htmlFor="birth-location" className="text-[10px] font-black uppercase text-gray-400 pl-4 tracking-widest">Cidade ou local</label>
             <div className="relative">
               <MapPin className="absolute left-5 top-1/2 -translate-y-1/2 text-gold/40 pointer-events-none" size={18} />
-              <input id="birth-location" required className={`${inputClass} pl-12`} placeholder="Ex.: São Paulo, SP, Brasil" value={location} onChange={event => { setLocation(event.target.value); setFormError(''); }} />
-            </div>
-          </div>
-
-          <div className="rounded-2xl border border-amber-200 bg-amber-50/70 p-4 space-y-3">
-            <p className="text-[10px] font-black uppercase tracking-widest text-amber-800">Coordenadas para cálculo auditável</p>
-            <p className="text-[11px] leading-relaxed text-amber-900">Latitude e longitude são obrigatórias. O Aurea não preenche ou presume este dado.</p>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-1">
-                <label htmlFor="birth-lat" className="text-[9px] font-black uppercase text-amber-700 tracking-wider">Latitude</label>
-                <div className="relative">
-                  <Navigation className="absolute left-3 top-1/2 -translate-y-1/2 text-amber-600/60" size={15} />
-                  <input id="birth-lat" type="text" inputMode="decimal" required placeholder="Ex.: -23,5505" className="w-full rounded-xl border border-amber-200 bg-white py-3 pl-9 pr-3 text-sm font-bold text-gray-800 focus:border-gold focus:ring-2 focus:ring-gold/15 outline-none" value={lat} onChange={event => { setLat(event.target.value); setFormError(''); }} />
-                </div>
-              </div>
-              <div className="space-y-1">
-                <label htmlFor="birth-lng" className="text-[9px] font-black uppercase text-amber-700 tracking-wider">Longitude</label>
-                <div className="relative">
-                  <Navigation className="absolute left-3 top-1/2 -translate-y-1/2 rotate-90 text-amber-600/60" size={15} />
-                  <input id="birth-lng" type="text" inputMode="decimal" required placeholder="Ex.: -46,6333" className="w-full rounded-xl border border-amber-200 bg-white py-3 pl-9 pr-3 text-sm font-bold text-gray-800 focus:border-gold focus:ring-2 focus:ring-gold/15 outline-none" value={lng} onChange={event => { setLng(event.target.value); setFormError(''); }} />
-                </div>
-              </div>
-            </div>
-            <div className="space-y-1">
-              <label htmlFor="birth-timezone" className="text-[9px] font-black uppercase text-amber-700 tracking-wider">Fuso IANA</label>
-              <input id="birth-timezone" type="text" required placeholder="Ex.: America/Sao_Paulo" className="w-full rounded-xl border border-amber-200 bg-white px-3 py-3 text-sm font-bold text-gray-800 focus:border-gold focus:ring-2 focus:ring-gold/15 outline-none" value={timezone} onChange={event => { setTimezone(event.target.value); setFormError(''); }} />
-              <p className="text-[10px] text-amber-800">Não inferimos o fuso pelas coordenadas.</p>
+              <select
+                id="birth-location"
+                required
+                className={`${inputClass} pl-12 cursor-pointer`}
+                value={location}
+                onChange={event => {
+                  const selected = event.target.value;
+                  setLocation(selected);
+                  setFormError('');
+                  const city = BRAZILIAN_CITIES.find(c => c.name === selected);
+                  if (city) {
+                    setLat(String(city.lat));
+                    setLng(String(city.lon));
+                    setTimezone(city.timezone);
+                  }
+                }}
+              >
+                <option value="">Selecione a cidade...</option>
+                {BRAZILIAN_CITIES.map(city => (
+                  <option key={city.name} value={city.name}>{city.name}</option>
+                ))}
+              </select>
             </div>
           </div>
 
