@@ -21,6 +21,8 @@ if os.path.isdir('ephe'):
 elif os.path.isdir(ephe_path):
     ephe_datas = [(ephe_path, 'ephe')]
 
+frontend_datas = [('dist', 'dist')] if os.path.isdir('dist') else []
+
 a = Analysis(
     ['main_api.py'],
     pathex=[],
@@ -28,13 +30,14 @@ a = Analysis(
     datas=[
         ('astro_engine.py', '.'),        # Engine original (importado como módulo)
         ('local_storage.py', '.'),
+        ('browser_workspace.py', '.'),
         ('src-tauri/migrations/private/*.sql', 'migrations/private'),
         ('src-tauri/migrations/knowledge/*.sql', 'migrations/knowledge'),
         # Snapshot editorial canônico para a primeira instalação local de
         # knowledge.sqlite; o importador preserva hash e proveniência.
         ('knowledge/engenharia_astrologica/knowledge/build/editorial_current.sqlite',
          'knowledge/engenharia_astrologica/knowledge/build'),
-    ] + ephe_datas + backports_datas,
+    ] + ephe_datas + frontend_datas + backports_datas,
     hiddenimports=[
         'astro_engine',
         'local_storage',

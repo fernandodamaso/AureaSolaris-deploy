@@ -6,7 +6,7 @@ Para a rota operacional compacta de agentes, leia [`docs/AI_WORKING_GUIDE.md`](d
 
 ## Propósito e fronteiras
 
-O **Aurea Solaris** é um aplicativo desktop local-first para estudo astrológico, organização pessoal e reflexão. O produto central é um **Caderno Vivo**: quadro visual espacial e caderno de notas são duas visões dos mesmos dados, não módulos duplicados.
+O **Aurea Solaris** é um aplicativo local-first para estudo astrológico, organização pessoal e reflexão. A experiência primária em pausa de desenvolvimento é uma aplicação web local aberta no Chrome por um atalho executável; o Tauri permanece como caminho nativo compatível, não como foco atual. O produto central é um **Caderno Vivo**: quadro visual espacial e caderno de notas são duas visões dos mesmos dados, não módulos duplicados.
 
 A **Enciclopédia Visual** incorpora o acervo da Engenharia Astrológica como referência interna. Ela preserva fontes, escolas, divergências e versões; não simplifica apagando tradições. Finanças está fora do escopo atual.
 
@@ -14,7 +14,7 @@ O corpus não neutraliza crenças, correspondências ou interpretações para fa
 
 **Axioma editorial:** rigor significa atribuição e contexto, não higienização.
 
-O primeiro alvo é Windows desktop, confortável para notebook. A arquitetura deve ser responsiva e compatível com futura adaptação a tablet/mobile, sem sacrificar o desktop.
+O primeiro alvo operacional agora é Chrome no Windows, confortável para notebook, iniciado por um atalho de clique único em `127.0.0.1`. A arquitetura deve preservar o modo local-first e continuar compatível com Tauri para uma etapa futura, sem bloquear a experiência no navegador.
 
 ## Duas bases de dados, dois limites
 

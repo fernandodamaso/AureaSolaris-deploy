@@ -5,6 +5,7 @@ import {
   Key, Palette, Camera
 } from 'lucide-react';
 import { safeInvoke } from '../utils/tauri';
+import { LOCAL_API_URL } from '../utils/api';
 import { readCertifiedCalculation } from '../utils/certifiedCalculation';
 
 interface ProfileEditorProps {
@@ -82,7 +83,7 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEdi
 
         // Try direct HTTP to sidecar first (works in both Tauri and browser dev mode)
         try {
-          const res = await fetch('http://127.0.0.1:9876/natal', {
+          const res = await fetch(`${LOCAL_API_URL}/natal`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload),

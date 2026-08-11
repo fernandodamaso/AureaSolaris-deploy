@@ -1,31 +1,37 @@
 # Data Persistence
 
-> How and where data is stored in Aurea Solaris.
-> **Ownership:** This is the ONLY source for persistence details.
+The Chrome runtime keeps the editorial database and each person's private data
+separate. The browser session is held in memory and is not written to
+`localStorage`.
 
-## Storage Matrix
+## Storage matrix
 
-| Data Type | Location | Mechanism |
-|-----------|----------|-----------|
-| UI Preferences | `localStorage` | React State + useEffect |
-| Profiles & Agenda | `localStorage` | AgendaContext |
-| Health & Habits | `localStorage` | SaudeContext |
-# Removido do escopo atual
-| Chat History | `memory/{agent}.json` | Tauri FS API (`save_history`) |
-| Assets (Images) | `assets/` | Tauri FS API (`save_asset`) |
-| Board State | `memory/board.json` | Tauri FS API (`save_board/load_board`) |
-| Astrology Cache | `astro_data.json` | Python Script |
-| Google Drive Tokens | `google_tokens.json` | Tauri FS API (app data dir) |
-| AI Token Usage | `memory/usage.json` | Tauri FS API (`log_usage`) |
+| Data type | Current Chrome storage | Ownership |
+|---|---|---|
+| Account credentials and Hermes records | Local SQLite under the configured Aurea data directory | `owner_id` in the private database |
+| Caderno Vivo boards | Local JSON under the owner's private workspace | Authenticated browser owner |
+| Diary folders and entries | Local JSON under the owner's private workspace | Authenticated browser owner |
+| Health document previews | Local JSON under the owner's private workspace | Authenticated browser owner and selected map |
+| Profile, agenda and UI preferences | Browser `localStorage` | App-local UI state; never used as password storage |
+| Editorial knowledge | Local SQLite imported from the canonical editorial snapshot | Shared impersonal corpus; never mixed with private records |
 
-## Memory Directory
+The browser adapter authenticates with the local FastAPI runtime on every
+application opening. It keeps only a short-lived in-memory session token while
+the tab is open. Closing the session invalidates that token.
 
-`src-tauri/memory/` contains:
-- Chat histories per agent
-- Board state
-- Usage statistics
+## Backups and migration
 
-## Related Documentation
+Private SQLite backups are created only by an explicit backup action and carry
+an integrity check and SHA-256 receipt. Schema migrations preserve the original
+database through a verified pre-migration backup. Editorial imports preserve
+source hashes and publication metadata.
 
-- [tauri-ipc-api.md](tauri-ipc-api.md) — FS commands (save_history, save_asset, etc.)
-- [estrutura-do-projeto.md](estrutura-do-projeto.md) (PT) — Folder structure details
+One pre-release private bootstrap checksum is recognized as a read-only
+compatibility marker so an existing database can open after the migration file
+was committed. The data and recorded historical checksum are not rewritten;
+any other checksum mismatch still blocks startup.
+
+## Important boundary
+
+The old `src-tauri/memory/` files and the Tauri filesystem commands remain for
+native compatibility. They are not the source of truth for the Chrome path.

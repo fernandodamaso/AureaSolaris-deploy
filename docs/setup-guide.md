@@ -1,80 +1,85 @@
 # Setup Guide
 
-> How to install and run Aurea Solaris.
-> **Ownership:** This is the ONLY source for setup instructions.
+Primary runtime: a local web app opened in Chrome. Tauri is optional compatibility tooling while the Chrome path is the active focus.
 
-## Prerequisites
+## Requirements
 
-| Program | Version | Install |
-|---------|---------|---------|
-| Node.js | 18+ | [nodejs.org](https://nodejs.org) |
-| Rust | Stable | [rustup.rs](https://rustup.rs) |
-| Python | 3.10+ | [python.org](https://python.org) |
-| Tauri CLI | v2 | `cargo install tauri-cli` |
+- Windows
+- Google Chrome
+- Python 3.10+
+- Repository Python environment `.aurea-build-venv` with `requirements-api.txt` installed
+- Node.js 18+ and npm only for the one-time frontend build in a source checkout
 
-### Python Dependencies
+Rust and the Tauri CLI are required only for native compatibility work, not for the primary browser runtime.
 
-```bash
-pip install kerykeion
+## First setup
+
+From the repository root:
+
+```powershell
+python -m venv .aurea-build-venv
+.\.aurea-build-venv\Scripts\python.exe -m pip install -r requirements-api.txt
+npm install
 ```
 
-## Quick Start
+## Start the local Chrome app
 
-### Option 1: One-Click (Recommended)
+Double-click [`launch_chrome.bat`](../launch_chrome.bat), or run it from a terminal:
 
-Double-click `AureaSolaris-Dev.bat` on Desktop.
-
-### Option 2: From Project Folder
-
-```batch
-start-dev.bat
+```powershell
+.\launch_chrome.bat
 ```
 
-### Option 3: Terminal
+The launcher starts:
 
-```bash
-npm start
-```
+- FastAPI local runtime: `http://127.0.0.1:9876`
+- the already-built frontend from `dist/`
+- Chrome at the local interface URL
 
-Server runs at `http://localhost:1420/`
+The API serves the frontend and the local API from the same loopback origin. Vite is not started by the launcher. No hosted URL or external data transfer is required for the local runtime.
 
-## Available Commands
+On the first run from a source checkout, if `dist/index.html` is missing, the launcher performs `npm run build` once. After that, Node.js is not needed to open the application.
 
-| Command | Description |
-|---------|-------------|
-| `npm start` | Start Vite dev server |
-| `npm run dev` | Vite with hot reload |
-| `npm run build` | TypeScript check + build |
-| `npm run tauri dev` | Full desktop app with Tauri |
-| `npm run lint` | Code linting |
-| `npm test` | Run tests (Vitest) |
+## Development commands
+
+| Command | Purpose |
+|---|---|
+| `npm start` | Start the browser UI in development mode only |
+| `npm run build` | TypeScript check and production frontend build |
+| `npm run test` | Run Vitest tests |
+| `python main_api.py` | Start the local API directly |
+| `npm run tauri -- dev` | Optional native compatibility path |
+| `build.bat` | Build the Windows release artifacts; currently paused while Chrome is primary |
+
+## Acceptance note
+
+The browser adapter and release-style launcher are implemented. Final product
+acceptance still requires a person to exercise login, private storage, Caderno
+Vivo, journal, Hermes, persistence after restart, and shutdown on the target
+Windows machine.
 
 ## Troubleshooting
 
 ### Port in use
 
-```bash
-npx kill-port 1420
-npm start
+The release-style launcher uses only `127.0.0.1:9876`. Check and stop only the process owning that port, then run the launcher again. Do not terminate unrelated Python or Node processes.
+
+### API does not start
+
+```powershell
+& .\.aurea-build-venv\Scripts\python.exe -m pip install -r requirements-api.txt
+& .\.aurea-build-venv\Scripts\python.exe main_api.py
 ```
 
-### TypeScript errors
+### TypeScript or UI build errors
 
-```bash
+```powershell
 npm run build
 ```
 
-## Environment Variables
+## Related documentation
 
-| Variable | Required For |
-|----------|--------------|
-| `OPENROUTER_API_KEY` | Cloud AI agents |
-| `TELEGRAM_TOKEN` | Telegram notifications |
-| `VITE_COMPOSIO_API_KEY` | Google Calendar |
-
-**Note:** Ollama local works automatically at `http://localhost:11434` if installed.
-
-## Related Documentation
-
-- [quick-reference.md](quick-reference.md) — Fast task lookup
-- [estrutura-do-projeto.md](estrutura-do-projeto.md) (PT) — Folder structure
+- [`AGENTS.md`](../AGENTS.md) — mandatory agent rules
+- [`AI_WORKING_GUIDE.md`](AI_WORKING_GUIDE.md) — compact task routing
+- [`arquitetura.md`](arquitetura.md) — system layers
+- [`RELEASE_VALIDATION_2026-08-10.md`](RELEASE_VALIDATION_2026-08-10.md) — historical Windows release evidence

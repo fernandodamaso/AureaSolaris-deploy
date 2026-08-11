@@ -12,6 +12,13 @@ if not exist ".aurea-build-venv\Scripts\python.exe" (
 )
 
 echo [1/2] Gerando o motor astrologico isolado...
+npm.cmd run build
+if errorlevel 1 (
+    echo ERRO: falha ao gerar a interface web compilada.
+    popd
+    exit /b 1
+)
+
 ".aurea-build-venv\Scripts\python.exe" -m PyInstaller --clean --noconfirm build_sidecar.spec
 if errorlevel 1 (
     echo ERRO: falha ao gerar o motor astrologico.

@@ -14,16 +14,19 @@ import io
 import json
 import math
 import secrets
+from pathlib import Path
 from datetime import datetime, timezone
 from contextlib import asynccontextmanager
-from typing import Optional, List
+from typing import Any, Dict, Optional, List
 from urllib.parse import urlparse
+from threading import RLock
 
 import httpx
 import uvicorn
-from fastapi import Depends, FastAPI, Header, HTTPException, Query
+from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 # ─── UTF-8 on Windows ───
@@ -47,16 +50,46 @@ from local_storage import (
     StorageValidationError,
     get_storage,
 )
+from browser_workspace import (
+    create_diary_entry,
+    create_diary_folder,
+    delete_board,
+    delete_diary_entry,
+    delete_diary_folder,
+    get_diary_entry,
+    list_boards,
+    list_diary_entries,
+    list_diary_folders,
+    load_board,
+    load_health_memory,
+    save_board,
+    save_health_memory,
+    update_diary_entry,
+)
 
 # ─── Porta ───
 API_PORT = int(os.environ.get("ASTRO_API_PORT", 9876))
 API_HOST = "127.0.0.1"
 SIDECAR_TOKEN_ENV = "AUREA_SIDECAR_TOKEN"
+SIDECAR_TOKEN: Optional[str] = os.environ.get(SIDECAR_TOKEN_ENV)
+_BROWSER_SESSIONS: Dict[str, str] = {}
+_BROWSER_SESSIONS_LOCK = RLock()
+
+
+def _sidecar_token() -> str:
+    """Resolve the local shell token lazily so tests and spawned shells can configure it."""
+    global SIDECAR_TOKEN
+    configured = os.environ.get(SIDECAR_TOKEN_ENV)
+    if configured:
+        SIDECAR_TOKEN = configured
+    if not SIDECAR_TOKEN:
+        SIDECAR_TOKEN = secrets.token_urlsafe(32)
+    return SIDECAR_TOKEN
 
 
 def require_sidecar_token(x_aurea_sidecar_token: Optional[str] = Header(default=None)) -> None:
     """Gate private storage routes with the token shared by the desktop shell."""
-    expected = os.environ.get(SIDECAR_TOKEN_ENV)
+    expected = _sidecar_token()
     if not expected or not x_aurea_sidecar_token or not secrets.compare_digest(x_aurea_sidecar_token, expected):
         raise HTTPException(status_code=401, detail="Token do sidecar ausente ou inválido.")
 
@@ -90,6 +123,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:1420",
+        "http://127.0.0.1:1420",
         "tauri://localhost",
         "tauri://localhost:1420",
         "http://tauri.localhost",
@@ -129,6 +163,13 @@ class ChatRequest(BaseModel):
         default=False,
         description="Consentimento explícito desta conversa para enviar o conteúdo a um provedor externo.",
     )
+
+
+class BrowserCommandRequest(BaseModel):
+    """Small browser-to-sidecar bridge for operations formerly exposed by Tauri IPC."""
+
+    command: str = Field(min_length=1, max_length=120)
+    args: Dict[str, Any] = Field(default_factory=dict)
 
 
 class HermesThreadOpenRequest(BaseModel):
@@ -434,6 +475,197 @@ async def health():
     }
 
 
+def _browser_session_owner(token: Optional[str]) -> str:
+    if not token:
+        raise HTTPException(status_code=401, detail="Sessão local do navegador ausente.")
+    with _BROWSER_SESSIONS_LOCK:
+        owner_id = _BROWSER_SESSIONS.get(token)
+    if not owner_id:
+        raise HTTPException(status_code=401, detail="Sessão local do navegador inválida ou expirada.")
+    return owner_id
+
+
+def _browser_issue_session(owner_id: str) -> str:
+    token = secrets.token_urlsafe(32)
+    with _BROWSER_SESSIONS_LOCK:
+        _BROWSER_SESSIONS[token] = owner_id
+    return token
+
+
+def _browser_payload(args: Dict[str, Any]) -> dict:
+    raw_payload = args.get("payload")
+    if not raw_payload:
+        return {}
+    if isinstance(raw_payload, dict):
+        return raw_payload
+    if not isinstance(raw_payload, str):
+        raise HTTPException(status_code=422, detail="Payload local inválido.")
+    try:
+        payload = json.loads(raw_payload)
+    except json.JSONDecodeError as error:
+        raise HTTPException(status_code=422, detail="Payload local não é JSON válido.") from error
+    if not isinstance(payload, dict):
+        raise HTTPException(status_code=422, detail="Payload local deve ser um objeto JSON.")
+    return payload
+
+
+@app.post("/browser/command")
+async def browser_command(
+    req: BrowserCommandRequest,
+    x_aurea_browser_session: Optional[str] = Header(default=None),
+):
+    """Bridge the browser UI to a small, authenticated subset of desktop commands."""
+    args = req.args
+
+    if req.command == "private_account_register":
+        account_id = str(args.get("ownerId") or "")
+        result = get_storage().create_private_account(
+            account_id=account_id,
+            display_name=str(args.get("displayName") or ""),
+            login_name=str(args.get("loginName") or ""),
+            password=str(args.get("password") or ""),
+        )
+        owner_id = str(result["account_id"])
+        return {"result": owner_id, "browser_session_token": _browser_issue_session(owner_id)}
+
+    if req.command == "private_session_open":
+        result = get_storage().authenticate_private_account(
+            login_name=str(args.get("loginName") or ""),
+            password=str(args.get("password") or ""),
+        )
+        owner_id = str(result["account_id"])
+        requested_owner = str(args.get("ownerId") or "")
+        if requested_owner and requested_owner != owner_id:
+            raise HTTPException(status_code=403, detail="A conta local não corresponde ao perfil solicitado.")
+        return {"result": owner_id, "browser_session_token": _browser_issue_session(owner_id)}
+
+    if req.command == "private_session_close":
+        if x_aurea_browser_session:
+            with _BROWSER_SESSIONS_LOCK:
+                _BROWSER_SESSIONS.pop(x_aurea_browser_session, None)
+        return {"result": True}
+
+    if req.command == "remembered_owner_clear":
+        return {"result": True}
+
+    if req.command in {"run_astro_engine", "get_transit_positions"}:
+        payload = _browser_payload(args)
+        is_transit = req.command == "get_transit_positions" or bool(payload.get("transit"))
+        if is_transit:
+            result = calculate_transit_positions(
+                year=payload.get("year"),
+                month=payload.get("month"),
+                day=payload.get("day"),
+                hour=payload.get("hour"),
+                lat=payload.get("lat"),
+                lon=payload.get("lon"),
+                include_asteroids=bool(payload.get("include_asteroids", False)),
+                timezone_name=payload.get("timezone"),
+                utc_offset_minutes=payload.get("utc_offset_minutes"),
+            )
+        else:
+            result = calculate_astrology(
+                year=payload.get("year"),
+                month=payload.get("month"),
+                day=payload.get("day"),
+                hour=payload.get("hour"),
+                lat=payload.get("lat"),
+                lon=payload.get("lon"),
+                house_system=payload.get("house_system", "Regiomontanus"),
+                timezone_name=payload.get("timezone"),
+                utc_offset_minutes=payload.get("utc_offset_minutes"),
+            )
+        return {"result": json.dumps(result, ensure_ascii=False)}
+
+    owner_id = _browser_session_owner(x_aurea_browser_session)
+    try:
+        if req.command == "save_board":
+            return {"result": save_board(
+                owner_id,
+                str(args.get("boardId") or args.get("board_id") or ""),
+                str(args.get("name") or "Caderno"),
+                args.get("nodes", []),
+                args.get("edges", []),
+            )}
+        if req.command == "load_board":
+            return {"result": load_board(owner_id, str(args.get("boardId") or args.get("board_id") or ""))}
+        if req.command == "list_boards":
+            return {"result": list_boards(owner_id)}
+        if req.command == "delete_board":
+            return {"result": delete_board(owner_id, str(args.get("boardId") or args.get("board_id") or ""))}
+        if req.command == "load_health_memory":
+            return {"result": load_health_memory(owner_id, str(args.get("profileId") or args.get("profile_id") or ""))}
+        if req.command == "save_health_memory":
+            return {"result": save_health_memory(
+                owner_id,
+                str(args.get("profileId") or args.get("profile_id") or ""),
+                args.get("memory", []),
+            )}
+        if req.command == "diary_list_folders":
+            return {"result": list_diary_folders(owner_id)}
+        if req.command == "diary_create_folder":
+            return {"result": create_diary_folder(owner_id, str(args.get("name") or "Nova pasta"), str(args.get("icon") or "📁"))}
+        if req.command == "diary_delete_folder":
+            return {"result": delete_diary_folder(owner_id, str(args.get("id") or ""))}
+        if req.command == "diary_list_entries":
+            folder_id = args.get("folder_id") or args.get("folderId")
+            return {"result": list_diary_entries(owner_id, str(folder_id) if folder_id else None)}
+        if req.command == "diary_get_entry":
+            return {"result": get_diary_entry(owner_id, str(args.get("id") or ""))}
+        if req.command == "diary_create_entry":
+            return {"result": create_diary_entry(
+                owner_id,
+                str(args.get("title") or "Nova Nota"),
+                str(args.get("folder_id") or args.get("folderId") or "general"),
+                str(args.get("status") or "idea"),
+            )}
+        if req.command == "diary_update_entry":
+            changes = {
+                key: args[key]
+                for key in ("title", "content", "folder_id", "folderId", "status")
+                if key in args
+            }
+            if "folderId" in changes:
+                changes["folder_id"] = changes.pop("folderId")
+            return {"result": update_diary_entry(owner_id, str(args.get("id") or ""), changes)}
+        if req.command == "diary_delete_entry":
+            return {"result": delete_diary_entry(owner_id, str(args.get("id") or ""))}
+    except LookupError as error:
+        raise HTTPException(status_code=404, detail=str(error)) from error
+    except ValueError as error:
+        raise HTTPException(status_code=422, detail=str(error)) from error
+    except (OSError, RuntimeError) as error:
+        raise HTTPException(status_code=503, detail=str(error)) from error
+
+    if req.command == "private_sidecar_request":
+        method = str(args.get("method") or "GET").upper()
+        path = str(args.get("path") or "")
+        if method not in {"GET", "POST"} or not (path.startswith("/hermes/") or path.startswith("/storage/")):
+            raise HTTPException(status_code=403, detail="Rota privada não permitida no navegador.")
+        query = args.get("query") or {}
+        body = args.get("body") or {}
+        supplied_owner = body.get("owner_id") or query.get("owner_id")
+        if supplied_owner and str(supplied_owner) != owner_id:
+            raise HTTPException(status_code=403, detail="A operação privada pertence a outro proprietário.")
+        async with httpx.AsyncClient(base_url=f"http://{API_HOST}:{API_PORT}") as client:
+            response = await client.request(
+                method,
+                path,
+                params=query,
+                json=body if method == "POST" else None,
+                headers={"X-Aurea-Sidecar-Token": _sidecar_token()},
+            )
+        try:
+            response_payload = response.json()
+        except ValueError:
+            response_payload = {"error": response.text}
+        if not response.is_success:
+            raise HTTPException(status_code=response.status_code, detail=response_payload)
+        return {"result": response_payload}
+
+    raise HTTPException(status_code=404, detail=f"Comando de navegador não implementado: {req.command}")
+
+
 @app.get("/storage/diagnostic")
 async def storage_diagnostic(_: None = Depends(require_sidecar_token)):
     """Expõe somente integridade e versões; nunca conteúdo privado."""
@@ -657,6 +889,53 @@ async def transit(req: TransitRequest):
             status_code=500,
             detail={"error": str(e), "traceback": traceback.format_exc()}
         )
+
+
+@app.post("/extract_pdf")
+async def extract_pdf(
+    request: Request,
+    x_aurea_browser_session: Optional[str] = Header(default=None),
+    x_aurea_sidecar_token: Optional[str] = Header(default=None),
+):
+    """Extract text only after an explicit local upload/selection action.
+
+    Chrome sends the selected PDF bytes with the browser session header. The
+    native compatibility path may send a JSON body containing a selected local
+    path and the sidecar token. No file is stored by this endpoint.
+    """
+    content_type = (request.headers.get("content-type") or "").split(";", 1)[0].lower()
+    if content_type == "application/json":
+        payload = await request.json()
+        file_path = payload.get("file_path") if isinstance(payload, dict) else None
+        if not isinstance(file_path, str) or not file_path.strip():
+            raise HTTPException(status_code=422, detail="Caminho do PDF ausente.")
+        path = Path(file_path).expanduser().resolve()
+        if path.suffix.lower() != ".pdf" or not path.is_file():
+            raise HTTPException(status_code=422, detail="O arquivo selecionado não é um PDF válido.")
+        try:
+            content = path.read_bytes()
+        except OSError as error:
+            raise HTTPException(status_code=422, detail="Não foi possível ler o PDF selecionado.") from error
+        filename = path.name
+    else:
+        if not x_aurea_browser_session:
+            raise HTTPException(status_code=401, detail="Sessão local do navegador ausente.")
+        if not _browser_session_owner(x_aurea_browser_session):
+            raise HTTPException(status_code=401, detail="Sessão local do navegador inválida.")
+        content = await request.body()
+        filename = request.headers.get("x-aurea-filename") or "Documento.pdf"
+
+    if len(content) > 20 * 1024 * 1024:
+        raise HTTPException(status_code=413, detail="O PDF excede o limite local de 20 MB.")
+    if not content.startswith(b"%PDF"):
+        raise HTTPException(status_code=422, detail="O arquivo selecionado não parece ser um PDF.")
+    try:
+        from pypdf import PdfReader
+        reader = PdfReader(io.BytesIO(content))
+        text = "\n".join(page.extract_text() or "" for page in reader.pages)
+    except Exception as error:
+        raise HTTPException(status_code=422, detail="Não foi possível extrair texto deste PDF.") from error
+    return {"filename": filename, "text": text[:10000], "pages": len(reader.pages)}
 
 
 @app.get("/config")
@@ -919,6 +1198,14 @@ async def chat_stream(req: ChatRequest):
         yield "data: [DONE]\n\n"
 
     return StreamingResponse(generate(), media_type="text/event-stream")
+
+
+# The Chrome-first launcher uses the production frontend from the same
+# loopback origin. Keeping this mount after all API routes prevents the SPA
+# fallback from shadowing /health, /openapi.json, and the local API contract.
+_FRONTEND_DIST = Path(__file__).resolve().parent / "dist"
+if _FRONTEND_DIST.is_dir() and (_FRONTEND_DIST / "index.html").is_file():
+    app.mount("/", StaticFiles(directory=_FRONTEND_DIST, html=True), name="frontend")
 
 
 if __name__ == "__main__":

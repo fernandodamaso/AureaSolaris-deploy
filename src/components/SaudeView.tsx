@@ -1,10 +1,11 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Activity, FileText, Loader2, Moon, UploadCloud } from 'lucide-react';
-import { invoke } from '@tauri-apps/api/core';
+import { getBrowserSessionHeaders, isTauriRuntime, safeInvoke } from '../utils/tauri';
 import { useAstroData } from '../hooks/useAstroData';
 import { useAgendaContext } from '../context/AgendaContext';
 import { readConfirmedBirthInput } from '../utils/confirmedBirthInput';
 import { readCertifiedCalculation } from '../utils/certifiedCalculation';
+import { LOCAL_API_URL } from '../utils/api';
 
 type HealthRecord = {
   id: string;
@@ -24,6 +25,7 @@ export const SaudeView = () => {
   const [healthHistory, setHealthHistory] = useState<HealthRecord[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const availableMaps = useMemo(() => {
     const subjects = mapSubjects?.filter((map) => map.ownerProfileId === activeProfileId) || [];
@@ -48,7 +50,7 @@ export const SaudeView = () => {
     }
 
     let active = true;
-    invoke<HealthRecord[]>('load_health_memory', { profileId: focusedSubjectId })
+    safeInvoke<HealthRecord[]>('load_health_memory', { profileId: focusedSubjectId })
       .then((records) => {
         if (active) setHealthHistory(Array.isArray(records) ? records : []);
       })
@@ -58,9 +60,57 @@ export const SaudeView = () => {
     return () => { active = false; };
   }, [focusedSubjectId]);
 
+  const saveExtractedRecord = async (fileName: string, text: string) => {
+    const record: HealthRecord = {
+      id: crypto.randomUUID(),
+      date: new Date().toISOString(),
+      fileName,
+      // Guardamos apenas uma prévia para identificar o documento. A leitura
+      // clínica não é produzida pelo Aurea sem revisão humana e consentimento.
+      rawText: text.slice(0, 500),
+    };
+    const updated = [record, ...healthHistory];
+    const saved = await safeInvoke('save_health_memory', { profileId: focusedSubjectId, memory: updated });
+    if (saved === null) throw new Error('Não foi possível salvar o histórico privado no serviço local.');
+    setHealthHistory(updated);
+    setNotice('Documento registrado no histórico privado deste mapa.');
+  };
+
+  const uploadBrowserPdf = async (file: File) => {
+    setIsUploading(true);
+    try {
+      const extraction = await fetch(`${LOCAL_API_URL}/extract_pdf`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': file.type || 'application/pdf',
+          'X-Aurea-Filename': file.name,
+          ...getBrowserSessionHeaders(),
+        },
+        body: file,
+      });
+      const extracted = await extraction.json().catch(() => ({})) as { text?: string; detail?: string };
+      if (!extraction.ok) throw new Error(extracted.detail || 'Não foi possível ler este PDF no serviço local.');
+      await saveExtractedRecord(file.name, typeof extracted.text === 'string' ? extracted.text : '');
+    } catch (uploadError) {
+      setNotice(uploadError instanceof Error ? uploadError.message : 'Não foi possível registrar o documento.');
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleBrowserFile = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = '';
+    if (file) void uploadBrowserPdf(file);
+  };
+
   const handleUploadExam = async () => {
     if (!focusedSubjectId) return;
     setNotice(null);
+    if (!isTauriRuntime()) {
+      fileInputRef.current?.click();
+      return;
+    }
     try {
       const { open } = await import('@tauri-apps/plugin-dialog');
       const selected = await open({
@@ -70,25 +120,14 @@ export const SaudeView = () => {
       if (!selected || Array.isArray(selected)) return;
 
       setIsUploading(true);
-      const extraction = await fetch('http://127.0.0.1:9876/extract_pdf', {
+      const extraction = await fetch(`${LOCAL_API_URL}/extract_pdf`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ file_path: selected }),
       });
       if (!extraction.ok) throw new Error('Não foi possível ler este PDF no serviço local.');
       const extracted = await extraction.json() as { text?: string };
-      const record: HealthRecord = {
-        id: crypto.randomUUID(),
-        date: new Date().toISOString(),
-        fileName: selected.split(/[\\/]/).pop() || 'Documento.pdf',
-        // Guardamos apenas uma prévia para identificar o documento. A leitura
-        // clínica não é produzida pelo Aurea sem revisão humana e consentimento.
-        rawText: typeof extracted.text === 'string' ? extracted.text.slice(0, 500) : undefined,
-      };
-      const updated = [record, ...healthHistory];
-      await invoke('save_health_memory', { profileId: focusedSubjectId, memory: updated });
-      setHealthHistory(updated);
-      setNotice('Documento registrado no histórico privado deste mapa.');
+      await saveExtractedRecord(selected.split(/[\\/]/).pop() || 'Documento.pdf', extracted.text || '');
     } catch (uploadError) {
       setNotice(uploadError instanceof Error ? uploadError.message : 'Não foi possível registrar o documento.');
     } finally {
@@ -177,6 +216,13 @@ export const SaudeView = () => {
               {isUploading ? <Loader2 size={15} className="animate-spin" /> : <UploadCloud size={15} />}
               {isUploading ? 'Lendo…' : 'Registrar PDF'}
             </button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="application/pdf,.pdf"
+              className="hidden"
+              onChange={handleBrowserFile}
+            />
           </div>
           <div className="mt-4 space-y-3">
             {healthHistory.length === 0 ? (

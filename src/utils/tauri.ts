@@ -1,28 +1,51 @@
 import { invoke } from '@tauri-apps/api/core';
 
 // Check if running in Tauri or browser
-const isTauri = () => {
+export const isTauriRuntime = () => {
   // @ts-expect-error - Tauri internal API not typed
   return !!(window.__TAURI_INTERNALS__);
 };
 
 import { ipcLogger } from './logger';
+import { LOCAL_API_URL } from './api';
+
+let browserSessionToken: string | null = null;
+
+export function getBrowserSessionHeaders(): Record<string, string> {
+  return browserSessionToken
+    ? { 'X-Aurea-Browser-Session': browserSessionToken }
+    : {};
+}
 
 export async function safeInvoke<T>(cmd: string, args?: any): Promise<T | null> {
   const stopTimer = ipcLogger.startTimer();
   try {
     let result: T;
-    if (isTauri()) {
+    if (isTauriRuntime()) {
       result = await invoke<T>(cmd, args);
       ipcLogger.metricIPC(cmd, stopTimer(), true);
       return result;
     } else {
-      // Browser dev mode: no Tauri bridge available.
-      // Return null so callers fall back to real local computation
-      // (e.g. calculateFallback in useAstrologyData.ts) instead of stale mock data.
-      console.warn(`[Aurea] Command '${cmd}' not available outside Tauri — returning null to trigger real fallback.`);
-      ipcLogger.metricIPC(cmd, stopTimer(), false);
-      return null;
+      const response = await fetch(`${LOCAL_API_URL}/browser/command`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(browserSessionToken ? { 'X-Aurea-Browser-Session': browserSessionToken } : {}),
+        },
+        body: JSON.stringify({ command: cmd, args: args || {} }),
+      });
+      const payload = await response.json().catch(() => null) as {
+        result?: T;
+        browser_session_token?: string;
+        detail?: unknown;
+      } | null;
+      if (!response.ok) {
+        throw new Error(typeof payload?.detail === 'string' ? payload.detail : `Browser command failed: ${response.status}`);
+      }
+      if (payload?.browser_session_token) browserSessionToken = payload.browser_session_token;
+      if (cmd === 'private_session_close') browserSessionToken = null;
+      ipcLogger.metricIPC(cmd, stopTimer(), true);
+      return payload?.result ?? null;
     }
   } catch (err: any) {
     ipcLogger.metricIPC(cmd, stopTimer(), false);
