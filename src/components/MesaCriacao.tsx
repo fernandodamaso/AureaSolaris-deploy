@@ -23,7 +23,6 @@ export type CadernoIntent =
 type MesaCriacaoProps = {
   intent?: CadernoIntent | null;
   onIntentHandled?: () => void;
-  ownerId?: string | null;
 };
 
 type HistoryAction = {
@@ -38,6 +37,7 @@ const STICKY_COLORS = ['#FFFDE7', '#E3F2FD', '#F3E5F5', '#E8F5E9', '#FCE4EC', '#
 const MAX_HISTORY = 50;
 const GRID_SIZE = 20;
 const LS_ACTIVE = 'aurea_active_board';
+const activeBoardKey = () => `${LS_ACTIVE}:${localStorage.getItem('aurea_active_id') || 'anonymous'}`;
 
 const snap = (v: number) => Math.round(v / GRID_SIZE) * GRID_SIZE;
 const uid = () => `board_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
@@ -78,7 +78,7 @@ export const MesaCriacao = ({ intent = null, onIntentHandled }: MesaCriacaoProps
         nodes: data?.nodes || [],
         edges: data?.edges || []
       };
-      localStorage.setItem(LS_ACTIVE, board.id);
+      localStorage.setItem(activeBoardKey(), board.id);
       setRequestedStudyNodeId(studyNodeId);
       setActiveBoard(board);
     } catch (error) {
@@ -113,7 +113,7 @@ export const MesaCriacao = ({ intent = null, onIntentHandled }: MesaCriacaoProps
   // Restore last active board from Tauri
   useEffect(() => {
     if (!shouldRestoreLastBoard.current) return;
-    const lastId = localStorage.getItem(LS_ACTIVE);
+    const lastId = localStorage.getItem(activeBoardKey());
     if (lastId) {
       safeInvoke('load_board', { boardId: lastId }).then((data: any) => {
         if (data && data.nodes) {
@@ -123,13 +123,13 @@ export const MesaCriacao = ({ intent = null, onIntentHandled }: MesaCriacaoProps
              if (meta) {
                setActiveBoard({ id: lastId, name: meta.name, updatedAt: meta.updated_at, nodes: data.nodes, edges: data.edges });
              } else {
-               localStorage.removeItem(LS_ACTIVE);
+               localStorage.removeItem(activeBoardKey());
              }
           });
         } else {
-          localStorage.removeItem(LS_ACTIVE);
+          localStorage.removeItem(activeBoardKey());
         }
-      }).catch(() => localStorage.removeItem(LS_ACTIVE));
+      }).catch(() => localStorage.removeItem(activeBoardKey()));
     }
   }, []);
 
@@ -164,7 +164,7 @@ export const MesaCriacao = ({ intent = null, onIntentHandled }: MesaCriacaoProps
     });
     setRequestedStudyNodeId(null);
     setActiveBoard(null);
-    localStorage.removeItem(LS_ACTIVE);
+    localStorage.removeItem(activeBoardKey());
   };
 
   if (activeBoard) {
@@ -231,29 +231,28 @@ const BoardManager = ({ onOpen, intentError }: { onOpen: (meta: any) => void; in
   };
 
   return (
-    <div className="absolute inset-0 overflow-y-auto" style={{ background: '#F8F8F7', fontFamily: 'Inter, system-ui, sans-serif' }}>
-      <div className="max-w-5xl mx-auto px-8 py-12">
+    <div className="absolute inset-0 overflow-y-auto" style={{ background: 'var(--aurea-bg)', fontFamily: 'var(--font-body)' }}>
+      <div className="max-w-5xl mx-auto px-5 py-8 sm:px-8 sm:py-12">
         {/* Header */}
-        <div className="flex items-end justify-between mb-10">
+        <div className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <div className="flex items-center gap-2 mb-1">
               <LayoutGrid size={18} style={{ color: 'var(--color-gold)' }} />
               <span className="text-xs font-bold uppercase tracking-[0.2em]" style={{ color: 'var(--color-gold)' }}>Caderno Vivo</span>
             </div>
-            <h1 className="text-2xl font-bold color: var(--aurea-text)">Seus cadernos</h1>
+            <h1 className="aurea-page-title text-2xl">Seus cadernos</h1>
             <p className="text-sm color: var(--aurea-text-muted) mt-1">Cada caderno é um espaço vivo de estudo e criação</p>
           </div>
           <button
             onClick={() => setCreating(true)}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90 active:scale-95"
-            style={{ background: '#1A1A1A' }}
+            className="aurea-button-primary flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all hover:opacity-90 active:scale-95"
           >
             <Plus size={16} /> Novo caderno
           </button>
         </div>
 
         {intentError && (
-          <div role="alert" className="mb-6 flex items-start gap-3 rounded-2xl border border-color: rgba(239,68,68,0.3) background: rgba(239,68,68,0.08) p-4 text-sm color: #EF4444">
+          <div role="alert" className="mb-6 flex items-start gap-3 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-800">
             <AlertCircle size={18} className="mt-0.5 shrink-0" aria-hidden="true" />
             <p>{intentError}</p>
           </div>
@@ -261,19 +260,18 @@ const BoardManager = ({ onOpen, intentError }: { onOpen: (meta: any) => void; in
 
         {/* Create modal inline */}
         {creating && (
-          <div className="mb-6 p-5 rounded-2xl border-2 border-dashed background: var(--aurea-surface)" style={{ borderColor: '#E0E0E0' }}>
+          <div className="mb-6 p-5 rounded-2xl border-2 border-dashed" style={{ borderColor: 'var(--aurea-line)', background: 'var(--aurea-surface)' }}>
             <p className="text-xs font-semibold color: var(--aurea-text-muted) mb-3 uppercase tracking-wider">Nome do novo caderno</p>
-            <div className="flex gap-3">
+            <div className="flex flex-col gap-3 sm:flex-row">
               <input
                 ref={inputRef}
                 value={newName}
                 onChange={e => setNewName(e.target.value)}
                 onKeyDown={e => { if (e.key === 'Enter') create(); if (e.key === 'Escape') setCreating(false); }}
                 placeholder="Ex: Estudo de Mercúrio, Planejamento semanal..."
-                className="flex-1 px-4 py-2.5 rounded-xl border text-sm outline-none focus:border-gray-400 transition-all"
-                style={{ borderColor: '#E0E0E0' }}
+            className="flex-1 px-4 py-2.5 text-sm outline-none transition-all"
               />
-              <button onClick={create} className="px-5 py-2.5 rounded-xl text-sm font-semibold text-white" style={{ background: '#1A1A1A' }}>Criar</button>
+              <button onClick={create} className="aurea-button-primary px-5 py-2.5 rounded-xl text-sm font-semibold">Criar</button>
               <button onClick={() => { setCreating(false); setNewName(''); }} className="px-4 py-2.5 rounded-xl text-sm color: var(--aurea-text-muted) hover:color: var(--aurea-text) transition-all">Cancelar</button>
             </div>
           </div>
@@ -287,25 +285,25 @@ const BoardManager = ({ onOpen, intentError }: { onOpen: (meta: any) => void; in
             </div>
             <p className="text-sm font-semibold color: var(--aurea-text-muted)">Nenhum caderno ainda</p>
             <p className="text-xs text-gray-300 mt-1 mb-6">Crie seu primeiro espaço de estudo e criação</p>
-            <button onClick={() => setCreating(true)} className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white" style={{ background: '#1A1A1A' }}>
+            <button onClick={() => setCreating(true)} className="aurea-button-primary flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold">
               <Plus size={15} /> Criar primeiro caderno
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {boards.map(board => (
               <div
                 key={board.id}
                 role="button"
                 tabIndex={0}
                 aria-label={`Abrir caderno ${board.name}`}
-                className="group relative background: var(--aurea-surface) rounded-2xl overflow-hidden cursor-pointer transition-all hover:box-shadow: 0 10px 30px rgba(0,0,0,0.4) hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2"
-                style={{ border: '1px solid #EBEBEB', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}
+                className="group relative rounded-2xl overflow-hidden cursor-pointer transition-all hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2"
+                style={{ background: 'var(--aurea-surface)', border: '1px solid var(--aurea-line)', boxShadow: '0 8px 24px rgba(24,42,58,0.07)' }}
                 onClick={() => onOpen(board)}
                 onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); onOpen(board); } }}
               >
                 {/* Preview area */}
-                <div className="h-36 relative overflow-hidden" style={{ background: '#F8F8F7' }}>
+                <div className="h-36 relative overflow-hidden" style={{ background: 'var(--aurea-surface-warm)' }}>
                   {/* Mini node previews */}
                   <div className="absolute inset-3 overflow-hidden">
                     {(board.nodes || []).slice(0, 6).map((node: any, i: number) => (
@@ -344,7 +342,7 @@ const BoardManager = ({ onOpen, intentError }: { onOpen: (meta: any) => void; in
                 </div>
                 {/* Info */}
                 <div className="px-4 py-3">
-                  <p className="text-sm font-semibold text-gray-800 truncate">{board.name}</p>
+                  <p className="text-sm font-semibold text-[var(--aurea-text)] truncate">{board.name}</p>
                   <div className="flex items-center gap-1 mt-1">
                     <Clock size={10} style={{ color: '#BDBDBD' }} />
                     <span className="text-xs color: var(--aurea-text-muted)">{fmt(board.updated_at || board.updatedAt)}</span>
@@ -359,7 +357,7 @@ const BoardManager = ({ onOpen, intentError }: { onOpen: (meta: any) => void; in
       {/* Confirm delete dialog */}
       {confirmDelete && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm" onClick={() => setConfirmDelete(null)}>
-           <div role="dialog" aria-modal="true" aria-labelledby="delete-caderno-title" className="background: var(--aurea-surface) rounded-2xl p-6 w-80 shadow-2xl" onClick={e => e.stopPropagation()}>
+           <div role="dialog" aria-modal="true" aria-labelledby="delete-caderno-title" className="aurea-modal rounded-2xl p-6 w-80 shadow-2xl" onClick={e => e.stopPropagation()}>
              <h3 id="delete-caderno-title" className="text-sm font-bold color: var(--aurea-text) mb-2">Apagar caderno?</h3>
             <p className="text-xs color: var(--aurea-text-muted) mb-5">Esta ação não pode ser desfeita. Todos os cards serão removidos.</p>
             <div className="flex justify-end gap-2">

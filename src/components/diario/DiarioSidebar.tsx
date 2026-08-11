@@ -81,13 +81,17 @@ export const DiarioSidebar: React.FC = () => {
 
         <div className="space-y-0.5">
           {folders.map(folder => (
-            <button
+            <div
               key={folder.id}
-              onClick={() => selectFolder(folder.id)}
-              className="w-full flex items-center gap-2 px-2 py-1.5 text-xs rounded-lg transition-all text-left group"
+              className="group relative"
+            >
+              <button
+                type="button"
+                onClick={() => selectFolder(folder.id)}
+                className="w-full flex items-center gap-2 px-2 py-1.5 text-xs rounded-lg transition-all text-left"
               style={{
-                color: selectedFolderId === folder.id ? '#111' : '#666',
-                backgroundColor: selectedFolderId === folder.id ? 'rgba(0,0,0,0.04)' : 'transparent',
+                color: selectedFolderId === folder.id ? 'var(--aurea-text)' : 'var(--aurea-text-muted)',
+                backgroundColor: selectedFolderId === folder.id ? 'var(--aurea-gold-soft)' : 'transparent',
                 fontWeight: selectedFolderId === folder.id ? 600 : 500,
               }}
             >
@@ -97,22 +101,25 @@ export const DiarioSidebar: React.FC = () => {
                 <Folder size={14} className="text-gray-400" />
               )}
               <span className="flex-1 truncate">{folder.name}</span>
+              </button>
               {folder.id !== 'general' && (
                 <button
+                  type="button"
                   onClick={e => {
                     e.stopPropagation();
                     if (window.confirm(`Apagar pasta "${folder.name}"?`)) {
                       deleteFolder(folder.id);
                     }
                   }}
-                  className="opacity-0 group-hover:opacity-100 p-1 rounded-md hover:bg-white transition-all"
-                  style={{ color: '#A0A0A0' }}
+                  aria-label={`Excluir pasta ${folder.name}`}
+                  className="absolute right-1 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 p-1 rounded-md hover:bg-white transition-all"
+                  style={{ color: 'var(--aurea-text-subtle)' }}
                   title="Excluir pasta"
                 >
                   <Trash2 size={11} className="hover:text-red-500" />
                 </button>
               )}
-            </button>
+            </div>
           ))}
 
           {isAddingFolder && (
@@ -166,13 +173,17 @@ export const DiarioSidebar: React.FC = () => {
         ) : (
           <div className="space-y-1">
             {filteredEntries.map(entry => (
-              <button
+              <div
                 key={entry.id}
-                onClick={() => selectEntry(entry.id)}
-                className="w-full text-left p-2.5 rounded-lg transition-all group"
+                className="group relative"
+              >
+                <button
+                  type="button"
+                  onClick={() => selectEntry(entry.id)}
+                  className="w-full text-left p-2.5 rounded-lg transition-all"
                 style={{
-                  backgroundColor: activeEntryId === entry.id ? '#FFFFFF' : 'transparent',
-                  border: activeEntryId === entry.id ? '1px solid #EBEBEB' : '1px solid transparent',
+                  backgroundColor: activeEntryId === entry.id ? 'var(--aurea-surface)' : 'transparent',
+                  border: activeEntryId === entry.id ? '1px solid var(--aurea-line)' : '1px solid transparent',
                   boxShadow: activeEntryId === entry.id ? '0 1px 3px rgba(0,0,0,0.02)' : 'none',
                 }}
               >
@@ -195,19 +206,22 @@ export const DiarioSidebar: React.FC = () => {
                       </p>
                     </div>
                   </div>
-                  {activeEntryId !== entry.id && (
+                </div>
+                </button>
+                {activeEntryId !== entry.id && (
                     <button
+                      type="button"
                       onClick={e => {
                         e.stopPropagation();
                         if (window.confirm('Excluir esta nota?')) deleteEntry(entry.id);
                       }}
-                      className="opacity-0 group-hover:opacity-100 p-1 text-gray-300 hover:text-red-500 transition-opacity ml-1"
+                      aria-label={`Excluir nota ${entry.title || 'sem título'}`}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 p-1 text-gray-400 hover:text-red-600 transition-opacity"
                     >
                       <Trash2 size={11} />
                     </button>
-                  )}
-                </div>
-              </button>
+                )}
+              </div>
             ))}
           </div>
         )}

@@ -93,35 +93,30 @@ export const AssetPicker = ({ onClose, onImport }: AssetPickerProps) => {
           setItems(mapped);
 
         } else if (activeTab === 'calendar') {
-          // 3. List Google Calendar events
-          const res = await safeInvoke<string>('get_google_events');
-          if (res) {
-            const list = JSON.parse(res);
-            const mapped: AssetItem[] = list.map((e: any) => ({
-              id: e.id || `cal-${Date.now()}-${Math.random()}`,
-              type: 'calendar',
-              title: e.title || 'Compromisso',
-              preview: e.start ? new Date(e.start).toLocaleString('pt-BR') : 'Sem data',
-              data: e
-            }));
-            setItems(mapped);
-          }
+          // 3. List browser-local agenda events. External calendar sync is not enabled.
+          const eventsRaw = localStorage.getItem('aurea_events');
+          const events = eventsRaw ? JSON.parse(eventsRaw) : [];
+          const mapped: AssetItem[] = (Array.isArray(events) ? events : []).map((event: any) => ({
+            id: event.id || `cal-${Date.now()}-${Math.random()}`,
+            type: 'calendar',
+            title: event.title || 'Compromisso',
+            preview: event.start ? new Date(event.start).toLocaleString('pt-BR') : 'Sem data',
+            data: event,
+          }));
+          setItems(mapped);
 
         } else if (activeTab === 'tasks') {
-          // 4. List Todoist tasks
-          const res = await safeInvoke<string>('get_todoist_tasks', {});
-          if (res) {
-            const list = JSON.parse(res);
-            const mapped: AssetItem[] = list.map((t: any) => ({
-              id: t.id || `task-${Date.now()}`,
-              type: 'task',
-              title: t.content || 'Tarefa sem título',
-              preview: t.is_completed || t.completed ? '✓ Concluída' : '⏳ Pendente',
-              data: t
-            }));
-            setItems(mapped);
-          }
-
+          // 4. List local tasks
+          const tasksRaw = localStorage.getItem('aurea_tasks');
+          const tasks = tasksRaw ? JSON.parse(tasksRaw) : [];
+          const mapped: AssetItem[] = (Array.isArray(tasks) ? tasks : []).map((t: any) => ({
+            id: t.id || `task-${Date.now()}`,
+            type: 'task',
+            title: t.content || 'Tarefa sem título',
+            preview: t.is_completed || t.completed ? '✓ Concluída' : '⏳ Pendente',
+            data: t
+          }));
+          setItems(mapped);
         } else if (activeTab === 'lessons') {
           // 5. List Hermetic lessons
           const lessonsRaw = localStorage.getItem('aurea_Hermes_lessons');

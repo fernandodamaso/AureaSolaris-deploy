@@ -22,6 +22,25 @@ interface DiarioContextType {
 const DiarioContext = createContext<DiarioContextType | undefined>(undefined);
 const DEFAULT_FOLDER = 'general';
 
+const normalizeEntry = (raw: any): DiaryEntry => ({
+  id: raw.id,
+  title: raw.title || 'Nota sem título',
+  content: raw.content || '',
+  folderId: raw.folderId ?? raw.folder_id ?? DEFAULT_FOLDER,
+  createdAt: raw.createdAt ?? raw.created_at ?? new Date().toISOString(),
+  updatedAt: raw.updatedAt ?? raw.updated_at ?? raw.createdAt ?? raw.created_at ?? new Date().toISOString(),
+  wordCount: raw.wordCount ?? raw.word_count ?? 0,
+  status: raw.status || 'idea',
+});
+
+const normalizeFolder = (raw: any): DiaryFolder => ({
+  id: raw.id,
+  name: raw.name,
+  icon: raw.icon || '📁',
+  order: raw.order ?? 0,
+  createdAt: raw.createdAt ?? raw.created_at ?? new Date().toISOString(),
+});
+
 export const DiarioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [folders, setFolders] = useState<DiaryFolder[]>([]);
   const [entries, setEntries] = useState<DiaryEntry[]>([]);
@@ -36,9 +55,9 @@ export const DiarioProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       setIsLoading(true);
       try {
         const folderList = await safeInvoke<DiaryFolder[]>('diary_list_folders');
-        if (folderList) setFolders(folderList);
+        if (folderList) setFolders(folderList.map(normalizeFolder));
         const entryList = await safeInvoke<DiaryEntry[]>('diary_list_entries', { folder_id: DEFAULT_FOLDER });
-        if (entryList) setEntries(entryList);
+        if (entryList) setEntries(entryList.map(normalizeEntry));
       } finally {
         setIsLoading(false);
       }
@@ -50,13 +69,13 @@ export const DiarioProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setActiveEntryId(null);
     setActiveEntry(null);
     const entryList = await safeInvoke<DiaryEntry[]>('diary_list_entries', { folder_id: id });
-    if (entryList) setEntries(entryList);
+    if (entryList) setEntries(entryList.map(normalizeEntry));
   }, []);
 
   const selectEntry = useCallback(async (id: string) => {
     setActiveEntryId(id);
     const entry = await safeInvoke<DiaryEntry>('diary_get_entry', { id });
-    if (entry) setActiveEntry(entry);
+    if (entry) setActiveEntry(normalizeEntry(entry));
   }, []);
 
   const createEntry = useCallback(async () => {
@@ -65,9 +84,10 @@ export const DiarioProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       folder_id: selectedFolderId,
     });
     if (entry) {
-      setEntries(prev => [entry, ...prev]);
+      const normalized = normalizeEntry(entry);
+      setEntries(prev => [normalized, ...prev]);
       setActiveEntryId(entry.id);
-      setActiveEntry(entry);
+      setActiveEntry(normalized);
     }
   }, [selectedFolderId]);
 
@@ -77,8 +97,9 @@ export const DiarioProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     if (changes.content !== undefined) payload.content = changes.content;
     const updated = await safeInvoke<DiaryEntry>('diary_update_entry', payload);
     if (updated) {
-      setActiveEntry(updated);
-      setEntries(prev => prev.map(e => (e.id === id ? updated : e)));
+      const normalized = normalizeEntry(updated);
+      setActiveEntry(normalized);
+      setEntries(prev => prev.map(e => (e.id === id ? normalized : e)));
       return true;
     }
     return false;
@@ -104,7 +125,7 @@ export const DiarioProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   const createFolder = useCallback(async (name: string) => {
     const folder = await safeInvoke<DiaryFolder>('diary_create_folder', { name, icon: '📁' });
-    if (folder) setFolders(prev => [...prev, folder]);
+    if (folder) setFolders(prev => [...prev, normalizeFolder(folder)]);
   }, []);
 
   const deleteFolder = useCallback(async (id: string) => {
@@ -113,7 +134,7 @@ export const DiarioProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     if (selectedFolderId === id) {
       setSelectedFolderId(DEFAULT_FOLDER);
       const entryList = await safeInvoke<DiaryEntry[]>('diary_list_entries', { folder_id: DEFAULT_FOLDER });
-      if (entryList) setEntries(entryList);
+      if (entryList) setEntries(entryList.map(normalizeEntry));
     }
   }, [selectedFolderId]);
 
