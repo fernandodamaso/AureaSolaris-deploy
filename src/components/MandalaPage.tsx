@@ -29,7 +29,7 @@ export const MandalaPage = () => {
   const [selectedTarget, setSelectedTarget] = useState<'current' | string>('me');
   const [showForm, setShowForm] = useState(false);
   const [editingConnectionId, setEditingConnectionId] = useState<string | null>(null);
-  const [showDetails, setShowDetails] = useState(true);
+  const showDetails = true;
   
   // O mapa é a visão principal. O Caderno abre apenas por uma ação explícita.
   
@@ -92,6 +92,7 @@ export const MandalaPage = () => {
       sign: string;
       retrograde?: boolean;
       isAngle?: boolean;
+      stationary?: boolean;
     }> = [];
 
     // Traditional planets + Chiron
@@ -102,7 +103,6 @@ export const MandalaPage = () => {
         sign: info.sign || '',
         retrograde: info.retrograde || false,
         isAngle: ['ASC', 'MC'].includes(name),
-        speed: info.speed ?? 0,
         stationary: info.stationary || false,
       });
     });
@@ -192,14 +192,14 @@ export const MandalaPage = () => {
   return (
     <div className="flex h-full min-w-0 overflow-hidden w-full">
       <div ref={containerRef} className="flex flex-1 min-w-0 flex-col h-full items-center justify-start gap-6 p-4 md:p-8 overflow-y-auto no-scrollbar transition-all duration-500">
-        <div className="w-full flex flex-wrap items-center justify-between gap-4 bg-white/40 backdrop-blur-md p-5 rounded-[2rem] border border-gold/10 shadow-sm transition-all">
+        <div className="w-full flex flex-wrap items-center justify-between gap-4 background: rgba(11,23,34,0.55) backdrop-blur-md p-5 rounded-[2rem] border border-color: rgba(217,166,83,0.18) shadow-sm transition-all">
         <div className="flex items-center gap-4">
-          <div className="p-3 bg-[#FCF9F1] rounded-2xl border border-gold/10 text-[#c5a059]">
+          <div className="p-3 background: var(--aurea-surface-light) rounded-2xl border border-color: rgba(217,166,83,0.18) color: var(--aurea-gold)">
             {selectedTarget === 'current' ? <Compass size={24} /> : <User size={24} />}
           </div>
           <div>
-            <h1 className="text-[12px] font-black uppercase tracking-[0.3em] text-gray-800 leading-tight">Mandala Astrológica</h1>
-            <p className="text-[9px] font-bold text-[#c5a059] uppercase tracking-widest mt-1">
+            <h1 className="text-[12px] font-black uppercase tracking-[0.3em] color: var(--aurea-text) leading-tight">Mandala Astrológica</h1>
+            <p className="text-[9px] font-bold color: var(--aurea-gold) uppercase tracking-widest mt-1">
               {allTargets.find(t => t.id === selectedTarget)?.name}
             </p>
           </div>
@@ -211,15 +211,15 @@ export const MandalaPage = () => {
               setEditingConnectionId(null);
               setShowForm(true);
             }}
-            className="flex items-center gap-2 rounded-xl border border-gold/10 bg-[#FCF9F1] px-3 py-2.5 text-[#c5a059] shadow-sm transition-all hover:-translate-y-px hover:bg-gold/5 hover:shadow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c5a059] focus-visible:ring-offset-2 shrink-0"
+            className="flex items-center gap-2 rounded-xl border border-color: rgba(217,166,83,0.18) background: var(--aurea-surface-light) px-3 py-2.5 color: var(--aurea-gold) shadow-sm transition-all hover:-translate-y-px hover:bg-gold/5 hover:shadow focus-visible:outline-none focus-visible:ring-2 focus-visible: ring-color: var(--aurea-gold) focus-visible:ring-offset-2 shrink-0"
             title="Adicionar Novo Mapa"
           >
             <Plus size={16} />
             <span className="text-[10px] font-black uppercase tracking-widest">Mapa</span>
           </button>
 
-          <label className="flex flex-col gap-0.5 rounded-xl border border-gray-100 bg-white px-3 py-1.5 shadow-sm transition-colors focus-within:border-gold/40 focus-within:ring-2 focus-within:ring-[#c5a059]/20 shrink-0">
-            <span className="text-[8px] font-black uppercase tracking-[0.14em] text-gray-400">Mapa em foco</span>
+          <label className="flex flex-col gap-0.5 rounded-xl border border-color: rgba(38,54,66,0.6) background: var(--aurea-surface) px-3 py-1.5 shadow-sm transition-colors focus-within:border-gold/40 focus-within:ring-2 focus-within:ring-[#c5a059]/20 shrink-0">
+            <span className="text-[8px] font-black uppercase tracking-[0.14em] color: var(--aurea-text-muted)">Mapa em foco</span>
             <select 
               value={selectedTarget}
               onChange={(e) => setSelectedTarget(e.target.value)}
@@ -238,7 +238,7 @@ export const MandalaPage = () => {
                 setEditingConnectionId(selectedTarget);
                 setShowForm(true);
               }}
-              className="flex items-center rounded-xl border border-gray-100 bg-white p-2.5 text-gray-500 shadow-sm transition-all hover:-translate-y-px hover:border-gold/20 hover:text-[#c5a059] hover:shadow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c5a059] focus-visible:ring-offset-2 shrink-0"
+              className="flex items-center rounded-xl border border-color: rgba(38,54,66,0.6) background: var(--aurea-surface) p-2.5 color: var(--aurea-text-muted) shadow-sm transition-all hover:-translate-y-px hover:border-color: rgba(217,166,83,0.3) hover:color: var(--aurea-gold) hover:shadow focus-visible:outline-none focus-visible:ring-2 focus-visible: ring-color: var(--aurea-gold) focus-visible:ring-offset-2 shrink-0"
               title="Editar Dados do Mapa"
             >
               <Edit3 size={16} />
@@ -247,7 +247,7 @@ export const MandalaPage = () => {
 
           <button
             onClick={openCadernoForCurrentMap}
-            className="flex items-center gap-2 rounded-xl border border-gray-100 bg-white px-3 py-2.5 text-gray-500 shadow-sm transition-all hover:-translate-y-px hover:border-gold/20 hover:text-gold hover:shadow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c5a059] focus-visible:ring-offset-2 shrink-0"
+            className="flex items-center gap-2 rounded-xl border border-color: rgba(38,54,66,0.6) background: var(--aurea-surface) px-3 py-2.5 color: var(--aurea-text-muted) shadow-sm transition-all hover:-translate-y-px hover:border-color: rgba(217,166,83,0.3) hover:text-gold hover:shadow focus-visible:outline-none focus-visible:ring-2 focus-visible: ring-color: var(--aurea-gold) focus-visible:ring-offset-2 shrink-0"
             title="Criar estudo no Caderno Vivo a partir deste mapa"
           >
             <FileText size={16} />
@@ -256,7 +256,7 @@ export const MandalaPage = () => {
 
           <button
             onClick={openHermesForCurrentMap}
-            className="flex items-center gap-2 rounded-xl border border-gray-100 bg-white px-3 py-2.5 text-gray-500 shadow-sm transition-all hover:-translate-y-px hover:border-gold/20 hover:text-gold hover:shadow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c5a059] focus-visible:ring-offset-2 shrink-0"
+            className="flex items-center gap-2 rounded-xl border border-color: rgba(38,54,66,0.6) background: var(--aurea-surface) px-3 py-2.5 color: var(--aurea-text-muted) shadow-sm transition-all hover:-translate-y-px hover:border-color: rgba(217,166,83,0.3) hover:text-gold hover:shadow focus-visible:outline-none focus-visible:ring-2 focus-visible: ring-color: var(--aurea-gold) focus-visible:ring-offset-2 shrink-0"
             title="Abrir Hermes com este mapa em foco"
           >
             <MessageSquare size={16} />
@@ -267,7 +267,7 @@ export const MandalaPage = () => {
             onClick={recalculate}
             disabled={loading || !birthData}
             aria-label={loading ? 'Calculando mapa' : birthData ? 'Atualizar cálculo do mapa' : 'Complete os dados de nascimento para calcular'}
-            className="flex items-center gap-2 rounded-xl border border-gray-100 bg-white px-3 py-2.5 text-gray-500 shadow-sm transition-all hover:-translate-y-px hover:border-gold/20 hover:text-[#c5a059] hover:shadow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c5a059] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none shrink-0"
+            className="flex items-center gap-2 rounded-xl border border-color: rgba(38,54,66,0.6) background: var(--aurea-surface) px-3 py-2.5 color: var(--aurea-text-muted) shadow-sm transition-all hover:-translate-y-px hover:border-color: rgba(217,166,83,0.3) hover:color: var(--aurea-gold) hover:shadow focus-visible:outline-none focus-visible:ring-2 focus-visible: ring-color: var(--aurea-gold) focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none shrink-0"
             title={birthData ? 'Atualizar cálculo' : 'Data, hora, coordenadas e fuso são obrigatórios'}
           >
             <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
@@ -296,15 +296,15 @@ export const MandalaPage = () => {
 
       {loading && !data && (
         <div className="h-[580px] flex flex-col items-center justify-center gap-4">
-          <div className="w-12 h-12 border-4 border-gold/10 border-t-gold rounded-full animate-spin" />
-          <div className="text-[10px] text-gray-400 font-bold uppercase tracking-[0.2em] animate-pulse">
+          <div className="w-12 h-12 border-4 border-color: rgba(217,166,83,0.18) border-t-gold rounded-full animate-spin" />
+          <div className="text-[10px] color: var(--aurea-text-muted) font-bold uppercase tracking-[0.2em] animate-pulse">
             Sintonizando Esferas Celestes...
           </div>
         </div>
       )}
 
        {chartPlanets.length > 0 && birthData ? (
-        <div className="w-full max-w-[580px] animate-in zoom-in-95 duration-700 bg-white/40 backdrop-blur-sm rounded-[2rem] border border-gold/10 p-2 sm:p-5 shadow-lg relative transition-all">
+        <div className="w-full max-w-[580px] animate-in zoom-in-95 duration-700 background: rgba(11,23,34,0.55) backdrop-blur-sm rounded-[2rem] border border-color: rgba(217,166,83,0.18) p-2 sm:p-5 shadow-lg relative transition-all">
           <MandalaChart
             size={chartSize}
             planets={chartPlanets}
@@ -312,17 +312,9 @@ export const MandalaPage = () => {
             aspects={chartAspects}
             showPanel={showDetails}
           />
-          <button
-            type="button"
-            onClick={() => setShowDetails(value => !value)}
-            className="mx-auto mt-4 flex rounded-xl border border-gold/20 bg-white px-4 py-2 text-[10px] font-black uppercase tracking-widest text-gray-600 transition hover:border-gold/50 hover:text-[#c5a059]"
-            aria-expanded={showDetails}
-          >
-            {showDetails ? 'Ocultar dados técnicos' : 'Ver dados técnicos do mapa'}
-          </button>
         </div>
       ) : !loading && !error ? (
-        <div className="text-[11px] text-gray-400 font-medium">
+        <div className="text-[11px] color: var(--aurea-text-muted) font-medium">
            Nenhum dado astrológico disponível para este mapa.
         </div>
       ) : null}

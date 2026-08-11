@@ -71,10 +71,10 @@ export const AgendaView = () => {
       {/* 1. HEADER COM PERFIL */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-[11px] font-black uppercase tracking-[0.3em] text-gray-800">
+          <h2 className="text-[11px] font-black uppercase tracking-[0.3em] color: var(--aurea-text)">
             Agenda {masterProfile ? `- ${masterProfile.name}` : ''}
           </h2>
-          <p className="text-[10px] text-gold/60 font-bold mt-1">
+          <p className="text-[10px] color: var(--aurea-gold) font-bold mt-1">
             {tasks.filter(t => t.completed || t.is_completed).length} tarefas concluídas · {tasks.filter(t => !t.completed && !t.is_completed).length} pendentes
           </p>
         </div>
@@ -85,8 +85,8 @@ export const AgendaView = () => {
               onClick={() => setActiveProfileId(p.id)}
               className={`px-3 py-1 rounded-md text-[10px] font-black uppercase tracking-widest transition-all ${
                 activeProfileId === p.id 
-                  ? 'bg-[#333333] text-white' 
-                  : 'text-gray-400 hover:text-gold'
+                  ? 'background: var(--aurea-bg-deep); color: var(--aurea-text)' 
+                  : 'color: var(--aurea-text-muted) hover:text-[var(--aurea-gold)]'
               }`}
             >
               {p.name}
@@ -96,16 +96,16 @@ export const AgendaView = () => {
       </div>
 
       {/* 2. CALENDAR SEMANAL */}
-      <div className="bg-white rounded-2xl border border-gold/10 p-6 shadow-sm">
+      <div className="background: var(--aurea-surface) rounded-2xl border border-color: rgba(217,166,83,0.2) p-6 shadow-sm">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-400">
+          <h3 className="text-[10px] font-black uppercase tracking-[0.3em] color: var(--aurea-text-muted)">
             {selectedDay.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })}
           </h3>
           <div className="flex gap-1.5">
-            <button type="button" aria-label="Semana anterior" onClick={prevWeek} className="p-2 hover:bg-white focus-visible:outline-2 focus-visible:outline-gold rounded-lg text-gold border border-gold/5 transition-all shadow-sm">
+            <button type="button" aria-label="Semana anterior" onClick={prevWeek} className="p-2 hover:background: var(--aurea-surface) focus-visible:outline-2 focus-visible:outline-gold rounded-lg text-gold border border-color: rgba(217,166,83,0.15) transition-all shadow-sm">
               <ChevronLeft size={16}/>
             </button>
-            <button type="button" aria-label="Próxima semana" onClick={nextWeek} className="p-2 hover:bg-white focus-visible:outline-2 focus-visible:outline-gold rounded-lg text-gold border border-gold/5 transition-all shadow-sm">
+            <button type="button" aria-label="Próxima semana" onClick={nextWeek} className="p-2 hover:background: var(--aurea-surface) focus-visible:outline-2 focus-visible:outline-gold rounded-lg text-gold border border-color: rgba(217,166,83,0.15) transition-all shadow-sm">
               <ChevronRight size={16}/>
             </button>
           </div>
@@ -126,12 +126,12 @@ export const AgendaView = () => {
                 aria-label={`Selecionar ${d.toLocaleDateString('pt-BR')}`}
                 className={`relative flex flex-col items-center p-3 rounded-xl transition-all border focus-visible:outline-2 focus-visible:outline-gold ${
                   isSelected 
-                    ? 'bg-[#333333] text-white border-[#333333] shadow-lg scale-[1.02]' 
-                    : 'bg-white text-gray-800 border-gray-100 hover:border-gold/20'
+                    ? 'background: var(--aurea-bg-deep); color: var(--aurea-text) border-color: var(--aurea-bg-deep) shadow-lg scale-[1.02]' 
+                    : 'background: var(--aurea-surface) color: var(--aurea-text) border-color: rgba(38,54,66,0.6) hover:border-color: rgba(217,166,83,0.3)'
                 }`}
               >
                 <span className={`text-[10px] font-black uppercase mb-1 tracking-widest ${
-                  isSelected ? 'text-gold' : 'text-gray-400'
+                  isSelected ? 'text-gold' : 'color: var(--aurea-text-muted)'
                 }`}>
                   {d.toLocaleDateString('pt-BR', { weekday: 'short' })}
                 </span>
@@ -159,32 +159,32 @@ export const AgendaView = () => {
             {events
               .filter(e => new Date(e.start).toDateString() === selectedDay.toDateString())
               .map(e => (
-                <div key={e.id} className="p-4 border rounded-xl flex justify-between items-center group transition-all hover:bg-[#FCF9F1]/60 shadow-xs bg-[#FCF9F1]/40 border-gold/5">
+                <div key={e.id} className="p-4 border rounded-xl flex justify-between items-center group transition-all hover:background: rgba(11,23,34,0.6) shadow-xs background: rgba(11,23,34,0.55) border-color: rgba(217,166,83,0.15)">
                   <div className="flex gap-4 items-center">
-                    <div className="p-2 rounded-lg shadow-xs border bg-white text-gold border-gold/5">
+                    <div className="p-2 rounded-lg shadow-xs border background: var(--aurea-surface) text-gold border-color: rgba(217,166,83,0.15)">
                       <Clock size={12}/>
                     </div>
                     <div>
-                      <p className="text-[12px] font-black text-gray-800 tracking-tight">{e.title}</p>
-                      <p className="text-[10px] text-gold/60 font-bold">
+                      <p className="text-[12px] font-black color: var(--aurea-text) tracking-tight">{e.title}</p>
+                      <p className="text-[10px] color: var(--aurea-gold) font-bold">
                         {new Date(e.start).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
                       </p>
                     </div>
                   </div>
-                  <button type="button" aria-label={`Excluir compromisso ${e.title}`} onClick={() => void deleteEvent(e.id)} className="p-2 text-gray-300 hover:text-red-500 focus-visible:text-red-500 focus-visible:outline-2 focus-visible:outline-red-400 transition-all">
+                  <button type="button" aria-label={`Excluir compromisso ${e.title}`} onClick={() => void deleteEvent(e.id)} className="p-2 color: var(--aurea-text-muted) hover:text-red-500 focus-visible:text-red-500 focus-visible:outline-2 focus-visible:outline-red-400 transition-all">
                     <Trash2 size={14} />
                   </button>
                 </div>
               ))
             }
             {events.filter(e => new Date(e.start).toDateString() === selectedDay.toDateString()).length === 0 && (
-              <p className="text-[10px] text-gray-300 font-bold uppercase tracking-[0.3em] text-center py-8">
+              <p className="text-[10px] color: var(--aurea-text-muted) font-bold uppercase tracking-[0.3em] text-center py-8">
                 Nenhum compromisso
               </p>
             )}
             <button 
               onClick={() => { setModalText(''); setEventTime(''); setEventAction({ status: 'idle' }); setShowEventModal(true); }}
-              className="w-full p-3 border border-dashed border-gold/20 rounded-xl text-[10px] font-black uppercase tracking-widest text-gold/40 hover:text-gold hover:border-gold/40 focus-visible:outline-2 focus-visible:outline-gold transition-all"
+              className="w-full p-3 border border-dashed border-color: rgba(217,166,83,0.3) rounded-xl text-[10px] font-black uppercase tracking-widest text-gold/40 hover:text-[var(--aurea-gold)] hover:border-color: rgba(217,166,83,0.45) focus-visible:outline-2 focus-visible:outline-gold transition-all"
             >
               + Novo Compromisso
             </button>
@@ -201,29 +201,29 @@ export const AgendaView = () => {
                   aria-label={`${(task.completed || task.is_completed) ? 'Reabrir' : 'Concluir'} tarefa ${task.content}`}
                   aria-pressed={Boolean(task.completed || task.is_completed)}
                   onClick={() => void toggleTask(task.id, !(task.completed || task.is_completed))}
-                  className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-colors shrink-0 focus-visible:outline-2 focus-visible:outline-gold ${(task.completed || task.is_completed) ? 'bg-gold border-gold text-white' : 'border-gray-200 text-transparent group-hover:border-gold/50'}`}
+                  className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-colors shrink-0 focus-visible:outline-2 focus-visible:outline-gold ${(task.completed || task.is_completed) ? 'bg-gold border-gold text-white' : 'border-gray-200 text-transparent group-hover:border-color: rgba(217,166,83,0.15)0'}`}
                 >
                   ✓
                 </button>
-                <span className={`flex-1 text-[13px] font-medium ${(task.completed || task.is_completed) ? 'line-through text-gray-400' : 'text-[#333333]'}`}>
+                <span className={`flex-1 text-[13px] font-medium ${(task.completed || task.is_completed) ? 'line-through color: var(--aurea-text-muted)' : 'color: var(--aurea-text)'}`}>
                   {task.content}
                 </span>
                 <button 
                   onClick={() => deleteTask(task.id)}
-                  className="opacity-0 group-hover:opacity-100 text-gray-300 hover:text-red-400 transition-all"
+                  className="opacity-0 group-hover:opacity-100 color: var(--aurea-text-muted) hover:text-red-400 transition-all"
                 >
                   <Trash2 size={12}/>
                 </button>
               </div>
             ))}
             {tasks.length === 0 && (
-              <p className="text-[10px] text-gray-300 font-bold uppercase tracking-[0.3em] text-center py-8">
+              <p className="text-[10px] color: var(--aurea-text-muted) font-bold uppercase tracking-[0.3em] text-center py-8">
                 Nenhuma tarefa
               </p>
             )}
             <button 
               onClick={() => { setModalText(''); setTaskAction({ status: 'idle' }); setShowTaskModal(true); }}
-              className="w-full p-3 border border-dashed border-gold/20 rounded-xl text-[10px] font-black uppercase tracking-widest text-gold/40 hover:text-gold hover:border-gold/40 focus-visible:outline-2 focus-visible:outline-gold transition-all"
+              className="w-full p-3 border border-dashed border-color: rgba(217,166,83,0.3) rounded-xl text-[10px] font-black uppercase tracking-widest text-gold/40 hover:text-[var(--aurea-gold)] hover:border-color: rgba(217,166,83,0.45) focus-visible:outline-2 focus-visible:outline-gold transition-all"
             >
               + Nova Tarefa
             </button>
@@ -234,12 +234,12 @@ export const AgendaView = () => {
       {/* MODAL: NOVO COMPROMISSO */}
       {showEventModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => setShowEventModal(false)}>
-          <div className="bg-white rounded-2xl p-6 w-96 shadow-2xl" onClick={e => e.stopPropagation()}>
-            <h3 className="text-[11px] font-black uppercase tracking-[0.3em] text-gray-800 mb-4">Novo Compromisso</h3>
-            <label htmlFor="agenda-event-title" className="text-[10px] font-bold text-gray-500">Título</label>
+          <div className="background: var(--aurea-surface) rounded-2xl p-6 w-96 shadow-2xl" onClick={e => e.stopPropagation()}>
+            <h3 className="text-[11px] font-black uppercase tracking-[0.3em] color: var(--aurea-text) mb-4">Novo Compromisso</h3>
+            <label htmlFor="agenda-event-title" className="text-[10px] font-bold color: var(--aurea-text-muted)">Título</label>
             <input
               id="agenda-event-title"
-              className="w-full p-3 border border-gold/20 rounded-xl text-[12px] font-bold outline-none focus:border-gold transition-all"
+              className="w-full p-3 border border-color: rgba(217,166,83,0.3) rounded-xl text-[12px] font-bold outline-none focus:border-gold transition-all"
               placeholder="Ex: Reunião com cliente"
               value={modalText}
               disabled={eventAction.status === 'loading' || eventAction.status === 'success'}
@@ -248,11 +248,11 @@ export const AgendaView = () => {
               onKeyDown={e => e.key === 'Enter' && handleAddEvent()}
               autoFocus
             />
-            <label htmlFor="agenda-event-time" className="mt-3 block text-[10px] font-bold text-gray-500">Horário local</label>
+            <label htmlFor="agenda-event-time" className="mt-3 block text-[10px] font-bold color: var(--aurea-text-muted)">Horário local</label>
             <input
               id="agenda-event-time"
               type="time"
-              className="w-full p-3 border border-gold/20 rounded-xl text-[12px] font-bold outline-none focus:border-gold transition-all"
+              className="w-full p-3 border border-color: rgba(217,166,83,0.3) rounded-xl text-[12px] font-bold outline-none focus:border-gold transition-all"
               value={eventTime}
               disabled={eventAction.status === 'loading' || eventAction.status === 'success'}
               onChange={event => { setEventTime(event.target.value); setEventAction({ status: 'idle' }); }}
@@ -262,14 +262,14 @@ export const AgendaView = () => {
               <button 
                 onClick={() => setShowEventModal(false)}
                 disabled={eventAction.status === 'loading'}
-                className="flex-1 py-3 text-gray-400 font-black uppercase text-[10px] tracking-[0.3em] hover:text-gray-600 transition-all"
+                className="flex-1 py-3 color: var(--aurea-text-muted) font-black uppercase text-[10px] tracking-[0.3em] hover:text-gray-600 transition-all"
               >
                 Cancelar
               </button>
               <button 
                 onClick={eventAction.status === 'success' ? () => setShowEventModal(false) : handleAddEvent}
                 disabled={eventAction.status === 'loading'}
-                className="flex-1 py-3 bg-[#333333] text-white rounded-xl font-black uppercase text-[10px] tracking-[0.3em] hover:bg-gold transition-all shadow-lg"
+                className="flex-1 py-3 background: var(--aurea-bg-deep); color: var(--aurea-text) rounded-xl font-black uppercase text-[10px] tracking-[0.3em] hover:bg-gold transition-all shadow-lg"
               >
                 {eventAction.status === 'loading' ? 'Salvando…' : eventAction.status === 'success' ? 'Concluído' : 'Confirmar'}
               </button>
@@ -281,12 +281,12 @@ export const AgendaView = () => {
       {/* MODAL: NOVA TAREFA */}
       {showTaskModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => setShowTaskModal(false)}>
-          <div className="bg-white rounded-2xl p-6 w-96 shadow-2xl" onClick={e => e.stopPropagation()}>
-            <h3 className="text-[11px] font-black uppercase tracking-[0.3em] text-gray-800 mb-4">Nova Tarefa</h3>
-            <label htmlFor="agenda-task-title" className="text-[10px] font-bold text-gray-500">Tarefa</label>
+          <div className="background: var(--aurea-surface) rounded-2xl p-6 w-96 shadow-2xl" onClick={e => e.stopPropagation()}>
+            <h3 className="text-[11px] font-black uppercase tracking-[0.3em] color: var(--aurea-text) mb-4">Nova Tarefa</h3>
+            <label htmlFor="agenda-task-title" className="text-[10px] font-bold color: var(--aurea-text-muted)">Tarefa</label>
             <input
               id="agenda-task-title"
-              className="w-full p-3 border border-gold/20 rounded-xl text-[12px] font-bold outline-none focus:border-gold transition-all"
+              className="w-full p-3 border border-color: rgba(217,166,83,0.3) rounded-xl text-[12px] font-bold outline-none focus:border-gold transition-all"
               placeholder="Ex: Estudar mapas astrais"
               value={modalText}
               disabled={taskAction.status === 'loading' || taskAction.status === 'success'}
@@ -300,14 +300,14 @@ export const AgendaView = () => {
               <button 
                 onClick={() => setShowTaskModal(false)}
                 disabled={taskAction.status === 'loading'}
-                className="flex-1 py-3 text-gray-400 font-black uppercase text-[10px] tracking-[0.3em] hover:text-gray-600 transition-all"
+                className="flex-1 py-3 color: var(--aurea-text-muted) font-black uppercase text-[10px] tracking-[0.3em] hover:text-gray-600 transition-all"
               >
                 Cancelar
               </button>
               <button 
                 onClick={taskAction.status === 'success' ? () => setShowTaskModal(false) : handleAddTask}
                 disabled={taskAction.status === 'loading'}
-                className="flex-1 py-3 bg-[#333333] text-white rounded-xl font-black uppercase text-[10px] tracking-[0.3em] hover:bg-gold transition-all shadow-lg"
+                className="flex-1 py-3 background: var(--aurea-bg-deep); color: var(--aurea-text) rounded-xl font-black uppercase text-[10px] tracking-[0.3em] hover:bg-gold transition-all shadow-lg"
               >
                 {taskAction.status === 'loading' ? 'Salvando…' : taskAction.status === 'success' ? 'Concluído' : 'Confirmar'}
               </button>
