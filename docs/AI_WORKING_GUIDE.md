@@ -8,7 +8,6 @@ This is the compact operational context for AI agents. Do not read every documen
 2. `docs/CONSTITUICAO.md` — normative decisions about privacy, data, editorial rigor, and Hermes.
 3. This guide — task routing, validation, and release state.
 4. Only the domain document required by the task.
-5. `docs/archive/` only when historical context is explicitly needed.
 
 If sources conflict, use: safety/privacy → Constitution → `AGENTS.md` → this guide → domain reference.
 
@@ -54,5 +53,5 @@ Release `0.1.1` has a successful technical build and source-generated sidecar sm
 - Keep this guide short and operational.
 - Keep product/data rules in `AGENTS.md` and `docs/CONSTITUICAO.md`; do not duplicate them here.
 - Keep detailed domain facts in one domain document and link to it.
-- Treat `docs/archive/` and historical incident/design files as reference, not current instructions.
+- Keep completed plans and abandoned implementation notes out of the current documentation tree; Git history preserves them when needed.
 - Do not create a handoff document with a second project status; update this guide or the release validation record instead.

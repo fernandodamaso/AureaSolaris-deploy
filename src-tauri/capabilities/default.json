@@ -9,14 +9,6 @@
     "core:default",
     "opener:default",
     "fs:default",
-    {
-      "identifier": "fs:allow-read-dir",
-      "allow": [{ "path": "C:\\AureaSolaris\\Laboratorio_Stark\\**" }]
-    },
-    {
-      "identifier": "fs:allow-read-file",
-      "allow": [{ "path": "C:\\AureaSolaris\\Laboratorio_Stark\\**" }]
-    },
     "dialog:default"
   ]
 }

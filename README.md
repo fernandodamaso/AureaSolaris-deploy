@@ -33,7 +33,7 @@ Read in this order:
 3. [`docs/AI_WORKING_GUIDE.md`](docs/AI_WORKING_GUIDE.md) — compact task routing and validation loop.
 4. [`docs/index.md`](docs/index.md) — domain references.
 
-Do not read the entire `docs/` tree by default. Use the domain document relevant to the task; treat `docs/archive/` as historical context.
+Do not read the entire `docs/` tree by default. Use only the current domain document relevant to the task.
 
 ## Product boundaries
 

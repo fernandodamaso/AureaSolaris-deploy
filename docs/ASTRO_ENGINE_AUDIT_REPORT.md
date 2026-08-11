@@ -607,9 +607,9 @@ def _background_transit_updater():
 
 **Atualmente:** Kerykeion é usado como fallback apenas para Chiron quando SWE falha.
 
-**Problema:** Kerykeion internamente usa uma efeméride própria que pode divergir  
-do Swiss Ephemeris. O documento `ASTROLOGY_LESSONS_LEARNED.md` documenta que  
-Kerykeion estava **~9° fora** para a posição de Chiron de Viviane.
+**Problema:** Kerykeion internamente usa uma efeméride própria que pode divergir
+do Swiss Ephemeris. Diferenças entre motores devem ser registradas em fixtures
+anônimas e nos relatórios de certificação, sem dados pessoais no repositório.
 
 **Recomendação:** 
 - **Kerykeion NUNCA deveria ser usado para cálculos quando SWE está disponível**
