@@ -81,3 +81,17 @@ Gerada em 11/08/2026 para corrigir o sidecar que encerrava antes de abrir a API 
 - TypeScript, 45 testes de interface, 11 testes Python e build Tauri: aprovados;
 - smoke do sidecar empacotado: saúde local, 12 casas e recibo natal aprovados em porta isolada;
 - pendência de aceite: abrir a janela nativa desta versão e verificar Mandala + Hermes com os dados confirmados da pessoa.
+
+## Revalidação do sidecar commitado — 11/08/2026
+
+O executável commitado em `src-tauri/binaries/astro-engine-x86_64-pc-windows-msvc.exe` foi executado em porta e diretório de dados temporários isolados.
+
+- SHA-256 conferido: `EF698F141E1A6CB5BEB3F3B5593175EC1ACED65EA39189969B34573E4D755DA5`;
+- health: `ok`, motor `swisseph`, porta isolada `19876`;
+- fixture natal: `2000-01-01 12:00`, `America/Sao_Paulo`, offset explícito `-120`, São Paulo, sistema `Regiomontanus`;
+- resultado: 13 corpos, 12 casas e 9 aspectos;
+- recibo: `calculation-receipt.v1`, tipo `natal`, UTC `2000-01-01T14:00:00Z`;
+- hash da entrada desta requisição: `81853654a5e859fb80bab8408ff79f226caedb35423839771892d4fdf9981e2e`;
+- motor declarado no recibo: `aurea-solaris-astro-engine 2026.08.audit-1`.
+
+A verificação foi concluída com sucesso contra o binário commitado. O hash `6d4a...` registrado na evidência histórica corresponde a uma requisição anterior com parâmetros diferentes (Placidus e offset omitido), portanto não é o hash da requisição acima.
