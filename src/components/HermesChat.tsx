@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, Sparkles, X } from 'lucide-react';
 import { useGlobalContext } from '../context/GlobalContext';
-import { parseConfirmedBirthDate, readCertifiedCalculation } from '../utils/certifiedCalculation';
+import { readCertifiedCalculation } from '../utils/certifiedCalculation';
 import {
   appendHermesMessage,
   getHermesThreadContext,
@@ -22,50 +22,6 @@ function storedMessageToChat(message: HermesStoredMessage): ChatMessage | null {
   return null;
 }
 
-function reduceToSingle(n: number): number {
-  while (n > 9 && n !== 11 && n !== 22 && n !== 33) {
-    n = Math.floor(n / 10) + (n % 10);
-  }
-  return n;
-}
-
-function numerologyMeaning(n: number): string {
-  const meanings: Record<number, string> = {
-    1: 'Início, liderança, independência, vontade',
-    2: 'Cooperação, diplomacia, dualidade, paciência',
-    3: 'Criação, expressão, comunicação, alegria',
-    4: 'Estabilidade, estrutura, trabalho, fundação',
-    5: 'Mudança, liberdade, aventura, transformação',
-    6: 'Harmonia, responsabilidade, amor, família',
-    7: 'Espiritualidade, introspecção, saber, mistério',
-    8: 'Poder material, abundância, realização, karma',
-    9: 'Completação, sabedoria, humanitarismo, ciclos',
-    11: 'Iluminação, intuição elevada, visão espiritual',
-    22: 'Mestre construtor, grandes realizações, servicio',
-    33: 'Mestre professor, compaixão universal, cura'
-  };
-  return meanings[n] || '';
-}
-
-function numerologyCycle(n: number): string {
-  const cycles: Record<number, string> = {
-    1: 'Ano de novos começos e plantio de sementes',
-    2: 'Ano de cooperação e construção de parcerias',
-    3: 'Ano de expressão criativa e comunicação',
-    4: 'Ano de trabalho duro e fundação',
-    5: 'Ano de mudanças e transformações',
-    6: 'Ano de responsabilidades familiares e amor',
-    7: 'Ano de introspecção e espiritualidade',
-    8: 'Ano de abundância e realização material',
-    9: 'Ano de conclusão e desapego'
-  };
-  return cycles[n] || '';
-}
-
-/**
- * Monta o system prompt completo do Hermes com TODOS os dados do sistema.
- * Inclui: perfil, mapa natal, trânsitos, tarefas, finanças, saúde, contexto temporal.
- */
 function formatCalculatedPositions(positions: Record<string, unknown>): string {
   return Object.entries(positions)
     .map(([name, value]) => {
@@ -82,210 +38,94 @@ function formatCalculatedPositions(positions: Record<string, unknown>): string {
     .join(' | ');
 }
 
-export function buildSystemPrompt(ctx: ReturnType<typeof useGlobalContext>): string {
-  const { astro, agenda, system } = ctx;
-  const profile = agenda.activeProfile;
-
-  // ── Dados de nascimento ──
-  const birthSection = profile
-    ? `--- NASCIMENTO ---
-Nome: ${profile.name}
-Data: ${profile.birthDate || 'Não informado'}
-Hora: ${profile.birthTime || 'Não informado'}
-Cidade: ${profile.birthCity || 'Não informado'}
-${profile.context ? `Contexto pessoal: ${profile.context}` : ''}
-${profile.dialogStyle ? `Estilo de diálogo preferido: ${profile.dialogStyle}` : ''}`
-    : '--- NASCIMENTO --- Nenhum perfil configurado. Peça ao usuário seus dados de nascimento.';
-
-  // ── Mapa natal (posições planetárias raw) ──
-  const certifiedNatal = readCertifiedCalculation(
-    (profile as (typeof profile & { certifiedNatalCalculation?: unknown }) | null)?.certifiedNatalCalculation,
-    'natal',
+function resolveActiveSubject(ctx: ReturnType<typeof useGlobalContext>) {
+  const owner = ctx.agenda.activeProfile;
+  const subject = ctx.agenda.mapSubjects?.find(candidate =>
+    candidate.ownerProfileId === owner?.id && candidate.id === ctx.agenda.activeSubjectId
   );
-  const natalRaw = certifiedNatal?.planets;
-  let natalSection = '--- MAPA NATAL --- Dados não calculados ainda.';
-  if (natalRaw && typeof natalRaw === 'object') {
-    const entries = Object.entries(natalRaw)
-      .filter(([k]) => !['ASC', 'MC', 'DSC', 'IC'].includes(k) || true)
-      .map(([k, v]) => {
-        if (typeof v === 'number') {
-          const signs = ['Áries', 'Touro', 'Gêmeos', 'Câncer', 'Leão', 'Virgem',
-            'Libra', 'Escorpião', 'Sagitário', 'Capricórnio', 'Aquário', 'Peixes'];
-          const idx = Math.floor(((v % 360) + 360) % 360 / 30);
-          const deg = ((v % 30) + 30) % 30;
-          return `${k}: ${deg.toFixed(1)}° ${signs[idx] || '?'}`;
-        }
-        if (typeof v === 'object' && v !== null) {
-          const obj = v as any;
-          const pos = obj.pos_in_sign ?? obj.longitude;
-          const sign = typeof obj.sign === 'string' ? obj.sign : null;
-          const house = obj.house ? ` (casa ${obj.house})` : '';
-          const retro = obj.retrograde ? ' ℞' : '';
-          return Number.isFinite(pos) && sign ? `${k}: ${pos.toFixed(1)}° ${sign}${house}${retro}` : null;
-        }
-        return `${k}: ${v}`;
-      });
-    natalSection = `--- MAPA NATAL ---
-${entries.join('\n')}`;
-  }
+  return {
+    owner,
+    subject,
+    source: subject?.source ?? owner,
+    name: subject?.name ?? owner?.name ?? 'Mapa não selecionado',
+  };
+}
 
-  // ── Trânsitos atuais ──
-  const certifiedNatalSection = certifiedNatal
-    ? `--- MAPA NATAL (VALOR CALCULADO) ---
+export function buildSystemPrompt(ctx: ReturnType<typeof useGlobalContext>): string {
+  const { astro, system } = ctx;
+  const { owner, subject, source, name } = resolveActiveSubject(ctx);
+  const birthSource = source?.birthData ?? source?.natal ?? source ?? {};
+  const birthDate = source?.birthDate ?? birthSource?.birthDate ?? birthSource?.date;
+  const birthTime = source?.birthTime ?? birthSource?.birthTime ?? birthSource?.time;
+  const birthPlace = source?.birthCity ?? birthSource?.birthCity ?? birthSource?.location;
+  const birthTimezone = source?.birthTimezone ?? birthSource?.birthTimezone ?? birthSource?.timezone;
+
+  const certifiedNatal = readCertifiedCalculation(source?.certifiedNatalCalculation, 'natal');
+  const certifiedTransit = readCertifiedCalculation(astro.liveData, 'transit');
+
+  const natalSection = certifiedNatal
+    ? `MAPA NATAL — VALORES CALCULADOS
 Recibo: ${certifiedNatal.meta.receipt.input_hash}
 UTC: ${certifiedNatal.meta.receipt.resolved_time.utc}
 Fuso IANA: ${certifiedNatal.meta.receipt.resolved_time.iana_timezone}
 Motor: ${certifiedNatal.meta.receipt.engine.name} ${certifiedNatal.meta.receipt.engine.version}
-Posições: ${formatCalculatedPositions(certifiedNatal.planets) || 'Indisponíveis: recibo sem posições legíveis.'}`
-    : '--- MAPA NATAL --- Indisponível: nenhum cálculo natal certificado com recibo auditável foi recebido.';
-  natalSection = certifiedNatalSection;
+Posições: ${formatCalculatedPositions(certifiedNatal.planets) || 'O recibo não trouxe posições legíveis.'}`
+    : 'MAPA NATAL — indisponível: este sujeito não possui cálculo certificado no contexto recebido.';
 
-  const transitSection = certifiedNatal
-    ? '--- TRÂNSITOS PESSOAIS --- Indisponíveis: a conexão entre o mapa natal certificado e o cálculo de trânsitos ainda não foi recebida.'
-    : '--- TRÂNSITOS PESSOAIS --- Indisponíveis sem um mapa natal certificado com recibo auditável.';
-
-  // ── Céu agora ──
-  const certifiedTransit = readCertifiedCalculation(astro.liveData, 'transit');
-  const certifiedTransitPositions = certifiedTransit ? formatCalculatedPositions(certifiedTransit.planets) : '';
-  const certifiedAspects = certifiedTransit && Array.isArray((certifiedTransit as any).aspects)
-    ? (certifiedTransit as any).aspects.slice(0, 8).map((aspect: any) =>
-        `${aspect.p1} ${aspect.symbol || aspect.aspect} ${aspect.p2} (orb ${Number.isFinite(aspect.orb) ? aspect.orb.toFixed(1) : '?'}°)`,
-      )
-    : [];
-  const certifiedRetrogrades = certifiedTransit
-    ? Object.entries(certifiedTransit.planets)
-        .filter(([name, position]) => !['ASC', 'MC', 'DSC', 'IC'].includes(name) && Boolean((position as any)?.retrograde))
-        .map(([name]) => name)
-    : [];
-  const certifiedSkySection = certifiedTransit
-    ? `--- CÉU AGORA (VALOR CALCULADO) ---
+  const skySection = certifiedTransit
+    ? `CÉU ATUAL — VALORES CALCULADOS
 Recibo: ${certifiedTransit.meta.receipt.input_hash}
 UTC: ${certifiedTransit.meta.receipt.resolved_time.utc}
 Fuso IANA: ${certifiedTransit.meta.receipt.resolved_time.iana_timezone}
 Motor: ${certifiedTransit.meta.receipt.engine.name} ${certifiedTransit.meta.receipt.engine.version}
-Posições atuais: ${certifiedTransitPositions || 'Indisponíveis: recibo sem posições legíveis.'}
-Aspectos ativos: ${certifiedAspects.length ? certifiedAspects.join(' | ') : 'Não recebidos neste cálculo.'}
-Retrogradações: ${certifiedRetrogrades.length ? certifiedRetrogrades.join(', ') : 'Nenhuma recebida.'}`
-    : '--- CÉU AGORA --- Indisponível: nenhum cálculo de trânsito certificado com recibo auditável foi recebido.';
+Posições: ${formatCalculatedPositions(certifiedTransit.planets) || 'O recibo não trouxe posições legíveis.'}`
+    : 'CÉU ATUAL — indisponível: nenhum cálculo certificado foi recebido.';
 
-  const skySection = certifiedSkySection;
+  return `HERMES — tutor de estudo do Aurea Solaris
 
-  // ── Tarefas ──
-  const pendingTasks = agenda.tasks.filter((t: any) => !t.completed && !t.is_completed);
-  const completedTasks = agenda.tasks.filter((t: any) => t.completed || t.is_completed);
-  const taskSection = `--- TAREFAS ---
-Pendentes: ${pendingTasks.length}
-Completas: ${completedTasks.length}
-Progresso: ${agenda.metrics.done}%
-Top 5 pendentes:
-${pendingTasks.slice(0, 5).map((t: any) => `- ${t.content}`).join('\n') || 'Nenhuma tarefa pendente'}`;
+ESCOPO DA CONVERSA
+Titular autenticado: ${owner?.name ?? 'indisponível'}
+Mapa em foco: ${name}
+Tipo de mapa: ${subject?.kind === 'connection' ? 'conexão autorizada' : subject?.kind === 'profile' ? 'mapa do titular' : 'não identificado'}
+Nascimento informado: ${birthDate ?? 'data indisponível'} · ${birthTime ?? 'hora indisponível'} · ${birthPlace ?? 'local indisponível'} · ${birthTimezone ?? 'fuso indisponível'}
 
-  // ── Finanças removido do escopo atual ──
-
-  // ── Numerologia ──
-  const numerologySection = (() => {
-    const today = new Date();
-    const dayNum = today.getDate();
-    const monthNum = today.getMonth() + 1;
-    const yearNum = today.getFullYear();
-    const dailyVibration = reduceToSingle(dayNum + monthNum + yearNum);
-
-    const confirmedBirthDate = parseConfirmedBirthDate(profile?.birthDate);
-    if (confirmedBirthDate) {
-        const { day: bDay, month: bMonth, year: bYear } = confirmedBirthDate;
-        const lifePath = reduceToSingle(bDay + bMonth + bYear);
-        const personalYear = reduceToSingle(bDay + bMonth + yearNum);
-        const personalMonth = reduceToSingle(personalYear + monthNum);
-        const personalDay = reduceToSingle(personalMonth + dayNum);
-        return `--- NUMEROLOGIA ---
-Caminho de Vida: ${lifePath} (${numerologyMeaning(lifePath)})
-Ano Pessoal: ${personalYear} (${numerologyCycle(personalYear)})
-Mês Pessoal: ${personalMonth}
-Dia Pessoal: ${personalDay}
-Vibração do Dia (Universal): ${dailyVibration} (${numerologyMeaning(dailyVibration)})`;
-    }
-    return `--- NUMEROLOGIA ---
-Vibração do Dia (Universal): ${dailyVibration} (${numerologyMeaning(dailyVibration)})`;
-  })();
-
-  // ── Monta tudo ──
-  return `═══════════════════════════════════════════════════
-HERMES — Assistente Hermético do Aurea Solaris
-═══════════════════════════════════════════════════
-
-AXIOMA FUNDAMENTAL: "Tudo é vibração. Tudo é mente."
-
-Você é Hermes, o guia hermético ${profile?.name ? `da pessoa ${profile.name}` : 'da pessoa usuária'} dentro do Aurea Solaris.
-Seu conhecimento é fundamentado no Hermetismo antigo, no V.O.H
-(Vontade Oculta de Hermes de José Laercio do Egito), nos 7
-Princípios do Kybalion, na Astrologia e na Numerologia.
-
-OS 7 PRINCÍPIOS HERMÉTICOS — use-os SEMPRE:
-1. MENTALISMO — "O Universo é Mental." Toda situação começa na mente.
-2. CORRESPONDÊNCIA — "Como em cima, embaixo." O mapa natal reflete o microcosmo.
-3. VIBRAÇÃO — "Tudo vibra." Cada planeta, signo e número tem frequência.
-4. POLARIDADE — "Tudo é duplo." Forças opostas coexistem e se equilibram.
-5. RITMO — "Tudo flui." Ciclos planetários, lunares e numerológicos.
-6. CAUSALIDADE — "Toda causa tem efeito." Conectar consequências às origens.
-7. GÊNERO — "Tudo é masculino e feminino." Sol (Yang) e Lua (Yin) em ação.
-
-SEUS PAPEIS:
-🧭 Guia Hermético — Interpreta mapa natal, trânsitos e horas planetárias pelo lente dos 7 Princípios. Nunca só "planeta em signo" — sempre o SIGNIFICADO VIBRATÓRIO por trás.
-📿 Numerólogo — Calcula e interpreta vibrações numéricas. Conecta o Caminho de Vida, Ano Pessoal e vibração do dia às questões do usuário.
-📋 Secretário — Gerencia tarefas, agenda e calendário, mas sempre sugerindo QUAL hora planetária é melhor para cada tipo de ação.
-📓 Companheiro de Diário — Ajuda a escrever, refletir e conectar temas diários ao mapa astral e à vibração vigente.
-
-REGRAS DE INTERPRETAÇÃO HERMÉTICA:
-- SEMPRE comece pela vibração (planeta + signo + casa + trânsito)
-- Conecte com o princípio hermético relevante (Mentalismo, Correspondência, etc.)
-- Use a numerologia para datar e qualificar a energia do momento
-- Nunca invente posições planetárias — use APENAS os dados fornecidos
-- Seja direto e técnico nos dados, mas elevado no significado
-- Máximo 3-4 parágrafos por resposta
-- Responda SEMPRE em português
-- Privacidade: esta conversa usa somente o serviço local. Um provedor externo só pode receber dados após autorização explícita da pessoa para aquela conversa.
-- "Conhece-te a ti mesmo" é o norte — sempre guie ao autoconhecimento
-
-CONTRATO DE PROVENIÊNCIA:
-- Diferencie explicitamente valor calculado, regra interpretativa, fonte, inferência e anotação pessoal quando forem relevantes à pergunta.
-- Um valor calculado deve repetir apenas os dados recebidos do motor; não complete lacunas.
-- Regra interpretativa só existe quando a escola/tradição estiver declarada. Se não estiver, diga que a regra não foi selecionada.
-- Nunca invente uma fonte. Se nenhuma fonte editorial foi recuperada, escreva “Fonte: não selecionada”.
-- Toda leitura sua deve usar o rótulo “Inferência de Hermes” e ser apresentada como hipótese de estudo, nunca como fato.
-- Anotações pessoais só podem ser citadas quando vierem do contexto fornecido pela pessoa.
-
-${birthSection}
+CONTRATO DE VERDADE
+- Responda em português, com clareza e sem inventar dados, fontes, escolas ou cálculos.
+- Separe explicitamente: Valor calculado; Regra interpretativa; Fonte; Inferência de Hermes; Anotação pessoal.
+- Um valor calculado só pode repetir o que veio de um recibo auditável.
+- Uma regra interpretativa só pode ser aplicada quando a escola/tradição e a fonte tiverem sido recuperadas.
+- Se não houver fonte editorial no contexto, escreva “Fonte: não selecionada” e não improvise uma interpretação.
+- Toda hipótese sua deve ser rotulada “Inferência de Hermes” e apresentada como possibilidade de estudo.
+- Não crie memória, tarefa, evento ou registro. Apenas proponha uma ação revisável quando a pessoa pedir.
+- Não use tarefas, dados de saúde, numerologia, horas planetárias ou anotações que não estejam neste contexto.
+- Mantenha a resposta concisa e adequada à pergunta.
 
 ${natalSection}
 
-${numerologySection}
-
 ${skySection}
 
-${transitSection}
-
-${taskSection}
-
---- SISTEMA ---
-Philosophia: Hermetismo + Astrologia + Numerologia
-Fundação: V.O.H, Kybalion, Ordem Hermética
-Status: ${system.status}
-Conectividade: OK`;
+TRÂNSITOS PESSOAIS — indisponíveis até existir vínculo auditável entre o mapa natal em foco e o céu calculado.
+BASE EDITORIAL — nenhuma fonte foi recuperada para esta conversa.
+ESTADO LOCAL — ${system.status}.`;
 }
 
 function summarizeSystemPrompt(full: string): string {
-  if (!full) return '';
-  // If already short, return as-is
-  if (full.length <= 1200) return full;
-  // Prefer cutting at a nearby newline for readability
-  const snippet = full.slice(0, 1200);
-  const lastNewline = snippet.lastIndexOf('\n');
-  const cut = lastNewline > 200 ? snippet.slice(0, lastNewline) : snippet;
-  return cut + '\n\n[...resumo do contexto. Ative "Ver contexto" para o prompt completo]';
+  // O prompt já é um resumo estruturado. Cortá-lo removeria justamente o
+  // contrato de proveniência e poderia autorizar respostas sem lastro.
+  return full;
 }
 
 export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {
   const ctx = useGlobalContext();
+  const activeOwner = ctx.agenda.activeProfile;
+  const activeSubject = ctx.agenda.mapSubjects?.find(subject =>
+    subject.ownerProfileId === activeOwner?.id && subject.id === ctx.agenda.activeSubjectId
+  );
+  const activeSubjectName = activeSubject?.name ?? activeOwner?.name ?? 'Mapa não selecionado';
+  const activeSubjectSource = activeSubject?.source ?? activeOwner;
+  const activeTopicKey = activeOwner && activeSubject
+    ? `hermes:owner:${activeOwner.id}:subject:${activeSubject.id}`
+    : null;
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -297,6 +137,8 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
   const [systemPromptSummary, setSystemPromptSummary] = useState<string | null>(null);
   const [lastLatencyMs, setLastLatencyMs] = useState<number | null>(null);
   const [streamingEnabled, setStreamingEnabled] = useState<boolean>(true);
+  const [provider, setProvider] = useState<'openai' | 'hermes_gateway'>('openai');
+  const [externalConsent, setExternalConsent] = useState(false);
   const assistantIndexRef = useRef<number | null>(null);
   const [useFullPrompt, setUseFullPrompt] = useState<boolean>(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -323,7 +165,7 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
     if (!isOpen) return;
 
     let cancelled = false;
-    const profile = ctx.agenda.activeProfile;
+    const profile = activeOwner;
     setThreadId(null);
     setInitialized(false);
 
@@ -334,8 +176,8 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
       };
     }
 
-    const topicKey = `hermes:profile:${profile.id}:geral`;
-    const title = `Hermes - ${profile.name}`;
+    const topicKey = activeTopicKey ?? `hermes:owner:${profile.id}:subject:${profile.id}`;
+    const title = `Hermes — ${activeSubjectName}`;
 
     const openPersistentThread = async () => {
       setMemoryStatus('Abrindo memoria local...');
@@ -360,9 +202,7 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
           ? `Memoria local ativa: ${restoredMessages.length} mensagens recuperadas.`
           : 'Memoria local ativa: novo fio de estudo.',
       );
-      if (restoredMessages.length) {
-        setMessages(restoredMessages);
-      }
+      setMessages(restoredMessages);
       // build and cache the system prompt once after restoring context
       try {
         const prompt = buildSystemPrompt(ctx);
@@ -391,35 +231,34 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
     };
   }, [
     isOpen,
-    ctx.agenda.activeProfile?.id,
-    ctx.agenda.activeProfile?.name,
+    activeOwner?.id,
+    activeSubject?.id,
+    activeSubjectName,
   ]);
 
   // Mensagem de boas-vindas com contexto
   useEffect(() => {
     if (!initialized && isOpen) {
-      const profile = ctx.agenda.activeProfile;
+      const profile = activeOwner;
       const hasCertifiedNatal = Boolean(readCertifiedCalculation(
-        (profile as (typeof profile & { certifiedNatalCalculation?: unknown }) | null)?.certifiedNatalCalculation,
+        activeSubjectSource?.certifiedNatalCalculation,
         'natal',
       ));
       const hasCertifiedTransit = Boolean(readCertifiedCalculation(ctx.astro.liveData, 'transit'));
-      const planetaryHour = ctx.astro.planetaryHour?.name || 'cálculo indisponível';
 
       const welcome = profile
-        ? `Olá, ${profile.name}! 🌙\n\n` +
+        ? `Olá! O estudo em foco é **${activeSubjectName}**.\n\n` +
           `📊 **Mapa natal:** ${hasCertifiedNatal ? 'cálculo certificado com recibo disponível.' : 'indisponível até receber um cálculo certificado com recibo.'}\n` +
           `🔭 **Céu atual:** ${hasCertifiedTransit ? 'cálculo certificado com recibo disponível.' : 'indisponível até o motor fornecer recibo auditável.'}\n` +
-          `🕐 **Hora planetária (regra temporal):** ${ctx.astro.planetaryHour.icon} ${planetaryHour}\n` +
           `✨ **Trânsitos pessoais:** indisponíveis até a conexão entre cálculos certificados estar disponível.\n` +
-          `📋 **Tarefas pendentes:** ${ctx.agenda.tasks.filter((t: any) => !t.completed && !t.is_completed).length}\n\n` +
-          `Posso abrir uma investigação no Caderno Vivo, explicar um cálculo recebido ou organizar suas tarefas. Sempre vou separar cálculo, fonte, regra e inferência.`
+          `📚 **Fonte editorial:** ainda não selecionada para esta conversa.\n\n` +
+          `Posso explicar um cálculo recebido ou ajudar a estruturar uma investigação. Sempre vou separar cálculo, fonte, regra e inferência.`
         : 'Olá! Eu sou o Hermes. Antes de interpretar um mapa, configure data, hora, local, coordenadas e fuso de nascimento. 🌙';
 
       setMessages([{ role: 'assistant', content: welcome }]);
       setInitialized(true);
     }
-  }, [isOpen, initialized, ctx]);
+  }, [isOpen, initialized, ctx.astro.liveData, activeOwner, activeSubjectName, activeSubjectSource]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -438,7 +277,7 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
 
     // Monta o contexto local necessário. O backend recusa qualquer provedor
     // externo até existir consentimento explícito para a conversa.
-    const ownerId = ctx.agenda.activeProfile?.id;
+    const ownerId = activeOwner?.id;
     const currentThreadId = threadId;
 
     try {
@@ -505,7 +344,9 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
             },
             (err) => {
               reject(err);
-            }
+            },
+            externalConsent,
+            provider,
           );
         });
       } else {
@@ -514,6 +355,8 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
           contextMessages,
           undefined,
           promptToUse,
+          externalConsent,
+          provider,
         );
         const latency = Date.now() - t0;
         setLastLatencyMs(latency);
@@ -568,7 +411,7 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
         content: message.content,
         memoryType: 'study_note',
         evidenceNote: `Memória proposta a partir da conversa Hermes no tópico ${currentThreadId}.`,
-        topicKey: `hermes:profile:${ownerId}:geral`,
+        topicKey: activeTopicKey ?? `hermes:owner:${ownerId}:subject:${ownerId}`,
         sourceThreadId: currentThreadId,
         confidence: 'inferred',
       });
@@ -583,13 +426,13 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
 
   const certifiedTransit = readCertifiedCalculation(ctx.astro.liveData, 'transit');
   const certifiedNatal = readCertifiedCalculation(
-    (ctx.agenda.activeProfile as (typeof ctx.agenda.activeProfile & { certifiedNatalCalculation?: unknown }) | null)?.certifiedNatalCalculation,
+    activeSubjectSource?.certifiedNatalCalculation,
     'natal',
   );
   const calculationReady = Boolean(certifiedTransit);
 
   return (
-    <div className="hermes-panel fixed inset-x-3 bottom-3 z-50 flex h-[min(620px,calc(100dvh-24px))] flex-col overflow-hidden rounded-2xl aurea-modal animate-in slide-in-from-bottom-10 fade-in sm:inset-x-auto sm:bottom-6 sm:right-6">
+    <aside className="hermes-panel fixed inset-x-3 bottom-3 z-50 flex h-[min(620px,calc(100dvh-24px))] flex-col overflow-hidden rounded-2xl aurea-modal animate-in slide-in-from-bottom-10 fade-in sm:inset-x-auto sm:bottom-6 sm:right-6" aria-label={`Hermes — estudo de ${activeSubjectName}`}>
       {/* Header */}
       <div className="aurea-shell-dark px-4 py-3 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-2">
@@ -599,7 +442,7 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
           <div>
             <p className="text-[11px] font-bold text-white uppercase tracking-wider">Hermes</p>
             <p className="text-[8px] text-[var(--aurea-gold)]/70 uppercase tracking-widest">
-              {ctx.agenda.activeProfile ? `${ctx.agenda.activeProfile.name} · ${ctx.astro.planetaryHour?.icon || '🌙'} ${ctx.astro.planetaryHour?.name || ''}` : 'Assistente Pessoal'}
+              {activeOwner ? `Mapa em foco · ${activeSubjectName}` : 'Assistente de estudo'}
             </p>
           </div>
         </div>
@@ -633,15 +476,11 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
 
       {/* Context bar — mostra dados resumidos */}
       <div className="aurea-shell-dark px-3 py-2 border-t border-white/10 flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] text-[var(--aurea-text-on-dark)] shrink-0">
-        <span>Regra temporal: {ctx.astro.planetaryHour?.name || 'indisponível'}</span>
-        <span>|</span>
         <span>Céu: {certifiedTransit ? 'certificado' : 'indisponível'}</span>
         <span>|</span>
         <span>Mapa natal: {certifiedNatal ? 'certificado' : 'indisponível'}</span>
         <span>|</span>
         <span>Trânsitos pessoais: conexão pendente</span>
-        <span>|</span>
-        <span>📋 {ctx.agenda.tasks.filter((t: any) => !t.completed && !t.is_completed).length} pendentes</span>
         <span>|</span>
         {lastLatencyMs !== null && (
           <span title={`Última resposta em ${Math.round(lastLatencyMs)} ms`} className="font-mono">Última resposta: {(lastLatencyMs / 1000).toFixed(2)}s</span>
@@ -688,7 +527,7 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
                     onClick={() => void proposeHermesMemoryFromMessage(m)}
                     className="rounded-full border border-[var(--aurea-gold)] bg-[var(--aurea-gold)/10] px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--aurea-gold)] transition hover:bg-[var(--aurea-gold)/20]"
                   >
-                    Salvar como memória
+                    Propor memória
                   </button>
                 </div>
               )}
@@ -710,6 +549,28 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
 
       {/* Input */}
       <div className="p-3 border-t border-[var(--aurea-line)] bg-[var(--aurea-surface)] shrink-0">
+        <div className="mb-2 flex flex-wrap items-center gap-x-3 gap-y-2 text-[10px] text-[var(--aurea-text-muted)]">
+          <label className="flex items-center gap-1.5">
+            <span className="font-bold uppercase tracking-wide">Provedor</span>
+            <select
+              value={provider}
+              onChange={event => setProvider(event.target.value as 'openai' | 'hermes_gateway')}
+              className="rounded border border-[var(--aurea-line)] bg-[var(--aurea-surface)] px-2 py-1 text-[10px] font-semibold text-[var(--aurea-text)]"
+              aria-label="Provedor do Hermes"
+            >
+              <option value="openai">ChatGPT / OpenAI</option>
+              <option value="hermes_gateway">Hermes Gateway</option>
+            </select>
+          </label>
+          <label className="flex items-center gap-1.5">
+            <input
+              type="checkbox"
+              checked={externalConsent}
+              onChange={event => setExternalConsent(event.target.checked)}
+            />
+            <span>Permito enviar esta conversa ao provedor selecionado</span>
+          </label>
+        </div>
         <div className="flex gap-2">
           <input
             className="aurea-input flex-1 rounded-xl px-3 py-2 text-[13px] outline-none transition-colors focus-visible:ring-2 focus-visible:ring-[var(--aurea-gold)]"
@@ -717,11 +578,11 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
             aria-label="Pergunte ao Hermes"
             value={input}
             onChange={e => setInput(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && !e.shiftKey && sendMessage()}
+            onKeyDown={e => e.key === 'Enter' && !e.shiftKey && externalConsent && sendMessage()}
           />
           <button
             onClick={() => sendMessage()}
-            disabled={loading || !input.trim()}
+            disabled={loading || !input.trim() || !externalConsent}
             className="aurea-button-primary flex h-[42px] w-[42px] items-center justify-center rounded-xl transition-all hover:bg-[var(--aurea-gold)] hover:text-[var(--aurea-navy)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--aurea-gold)] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-30"
             aria-label="Enviar mensagem ao Hermes"
             title="Enviar"
@@ -730,6 +591,6 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
           </button>
         </div>
       </div>
-    </div>
+    </aside>
   );
 };

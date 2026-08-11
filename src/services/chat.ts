@@ -16,6 +16,8 @@ export interface ChatMessage {
 export interface ChatRequest {
   messages: ChatMessage[];
   context?: string;
+  provider?: 'openai' | 'hermes_gateway';
+  allowExternal?: boolean;
 }
 
 export interface ChatResponse {
@@ -105,7 +107,8 @@ export async function sendChatMessage(
   messages: ChatMessage[],
   context?: string,
   systemPromptOverride?: string,
-  allowExternal: boolean = false
+  allowExternal: boolean = false,
+  provider?: 'openai' | 'hermes_gateway',
 ): Promise<string> {
   const res = await fetch(`${SIDECAR_URL}/chat`, {
     method: 'POST',
@@ -115,6 +118,7 @@ export async function sendChatMessage(
       context,
       system_prompt_override: systemPromptOverride,
       allow_external: allowExternal,
+      provider,
     }),
   });
 
@@ -309,13 +313,15 @@ export async function sendChatMessageStream(
   context: string | undefined,
   onChunk: (text: string) => void,
   onComplete: () => void,
-  onError: (err: Error) => void
+  onError: (err: Error) => void,
+  allowExternal: boolean = false,
+  provider?: 'openai' | 'hermes_gateway',
 ): Promise<void> {
   try {
     const res = await fetch(`${SIDECAR_URL}/chat/stream`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages, context }),
+      body: JSON.stringify({ messages, context, allow_external: allowExternal, provider }),
     });
 
     if (!res.ok) {

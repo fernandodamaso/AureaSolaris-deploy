@@ -11,6 +11,12 @@ describe('safeInvoke (browser mode — no Tauri bridge)', () => {
     // Ensure we're not in Tauri mode
     // @ts-expect-error - clearing Tauri internals
     delete window.__TAURI_INTERNALS__;
+    // The browser bridge is an HTTP boundary. Keep this unit test independent
+    // from a locally running Aurea server and assert its null-result contract.
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ result: null }),
+    }));
   });
 
   it('returns null for run_astro_engine to trigger real JS fallback', async () => {

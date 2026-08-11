@@ -17,8 +17,7 @@ import secrets
 from pathlib import Path
 from datetime import datetime, timezone
 from contextlib import asynccontextmanager
-from typing import Any, Dict, Optional, List
-from urllib.parse import urlparse
+from typing import Any, Dict, Optional, List, Literal
 from threading import RLock
 
 import httpx
@@ -163,6 +162,10 @@ class ChatRequest(BaseModel):
         default=False,
         description="Consentimento explícito desta conversa para enviar o conteúdo a um provedor externo.",
     )
+    provider: Optional[Literal["openai", "hermes_gateway"]] = Field(
+        default=None,
+        description="Provedor escolhido para esta conversa. Se ausente, usa HERMES_PROVIDER.",
+    )
 
 
 class BrowserCommandRequest(BaseModel):
@@ -245,14 +248,14 @@ class PdfExtractRequest(BaseModel):
 
 
 # ─── Chat provider config ───
-# Ordem desejada: local primeiro.
-# 1) Ollama local (provider padrão)
-# 2) Providers externos apenas se explicitamente habilitados
+# Hermes usa um provedor escolhido explicitamente. Ollama não participa do
+# caminho normal: ele permanece somente como código legado opcional, sem probe.
 HERMES_GATEWAY_URL = os.environ.get(
     "HERMES_GATEWAY_URL",
     "http://localhost:20128/v1/chat/completions",
 )
 HERMES_MODEL = os.environ.get("HERMES_MODEL", "hermes-combo")
+HERMES_PROVIDER = os.environ.get("HERMES_PROVIDER", "openai").strip().lower()
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 OPENAI_CHAT_MODEL = os.environ.get("OPENAI_CHAT_MODEL", "gpt-4o-mini")
 OPENAI_CHAT_URL = os.environ.get(
@@ -339,11 +342,50 @@ async def _openai_chat(session: httpx.AsyncClient, messages: list[dict]) -> dict
     data = resp.json()
     choices = data.get("choices", [])
     if choices and choices[0].get("message", {}).get("content"):
-        return {"reply": choices[0]["message"]["content"]}
+        return {"reply": choices[0]["message"]["content"], "provider": "openai"}
     raise HTTPException(
         status_code=502,
         detail={"error": "OpenAI retornou resposta inválida."},
     )
+
+
+async def _hermes_gateway_chat(session: httpx.AsyncClient, messages: list[dict]) -> dict:
+    """Call the selected Hermes Gateway without probing unrelated local models."""
+    response = await session.post(
+        HERMES_GATEWAY_URL,
+        json={"model": HERMES_MODEL, "messages": messages, "stream": False},
+        headers={"Content-Type": "application/json"},
+        timeout=60.0,
+    )
+    response.raise_for_status()
+    content = response.json().get("choices", [{}])[0].get("message", {}).get("content")
+    if not content:
+        raise HTTPException(status_code=502, detail={"error": "Hermes Gateway retornou resposta inválida."})
+    return {"reply": content, "provider": "hermes_gateway"}
+
+
+def _requested_chat_provider(req: ChatRequest) -> Literal["openai", "hermes_gateway"]:
+    provider = req.provider or HERMES_PROVIDER
+    if provider not in {"openai", "hermes_gateway"}:
+        raise HTTPException(
+            status_code=503,
+            detail={"error": "Provedor Hermes não configurado.", "next_action": "Configure HERMES_PROVIDER como openai ou hermes_gateway."},
+        )
+    return provider
+
+
+async def _chat_with_selected_provider(
+    req: ChatRequest, session: httpx.AsyncClient, messages: list[dict]
+) -> dict:
+    if not req.allow_external:
+        raise HTTPException(
+            status_code=403,
+            detail={"error": "Confirme o envio desta conversa ao provedor Hermes escolhido antes de continuar."},
+        )
+    provider = _requested_chat_provider(req)
+    if provider == "openai":
+        return await _openai_chat(session, messages)
+    return await _hermes_gateway_chat(session, messages)
 
 
 async def _gemini_chat(session: httpx.AsyncClient, messages: list[dict], system_content: str) -> dict:
@@ -1049,7 +1091,7 @@ async def governance_preflight(calc_kind: str):
 
 @app.post("/chat")
 async def chat(req: ChatRequest):
-    """Chat Hermes local-first; saída externa requer consentimento por conversa."""
+    """Chat Hermes pelo provedor escolhido, sem sondar Ollama ou fazer fallback silencioso."""
     system_content = req.system_prompt_override if req.system_prompt_override else SYSTEM_PROMPT
     if req.context:
         system_content += f"\n\n--- CONTEXTO ATUAL ---\n{req.context}\n--- FIM DO CONTEXTO ---"
@@ -1058,73 +1100,13 @@ async def chat(req: ChatRequest):
     for msg in req.messages:
         messages.append({"role": msg.role, "content": msg.content})
 
-    local_failures: list[str] = []
     async with httpx.AsyncClient(timeout=120.0) as session:
-        if await _ollama_available(session):
-            models = await _ollama_list_models(session)
-            if models:
-                model = OLLAMA_MODEL if OLLAMA_MODEL in models else models[0]
-                try:
-                    return await _ollama_chat(session, messages, model)
-                except Exception:
-                    local_failures.append("Ollama local não respondeu corretamente")
-            else:
-                local_failures.append("Ollama local não possui modelo instalado")
-        else:
-            local_failures.append("Ollama local não está em execução")
-
-        gateway_host = urlparse(HERMES_GATEWAY_URL).hostname
-        if gateway_host in {"localhost", "127.0.0.1", "::1"}:
-            try:
-                response = await session.post(
-                    HERMES_GATEWAY_URL,
-                    json={"model": HERMES_MODEL, "messages": messages, "stream": False},
-                    headers={"Content-Type": "application/json"},
-                    timeout=15.0,
-                )
-                response.raise_for_status()
-                content = response.json().get("choices", [{}])[0].get("message", {}).get("content")
-                if content:
-                    return {"reply": content}
-                local_failures.append("gateway local retornou resposta vazia")
-            except Exception:
-                local_failures.append("gateway local Hermes não está em execução")
-
-        if not req.allow_external:
-            raise HTTPException(
-                status_code=503,
-                detail={
-                    "error": "Hermes local indisponível. Nenhum conteúdo foi enviado para a internet.",
-                    "local_status": local_failures,
-                    "next_action": "Inicie um provedor local ou autorize explicitamente um provedor externo nesta conversa.",
-                },
-            )
-        if LOCAL_ONLY or not EXTERNAL_PROVIDERS_ENABLED:
-            raise HTTPException(
-                status_code=503,
-                detail={
-                    "error": "Provedores externos estão desativados pela configuração de privacidade do Aurea.",
-                    "local_status": local_failures,
-                },
-            )
-
-        for provider in (_openai_chat, _gemini_chat, _openrouter_chat):
-            try:
-                if provider is _gemini_chat:
-                    return await provider(session, messages, system_content)
-                return await provider(session, messages)
-            except Exception:
-                continue
-
-    raise HTTPException(
-        status_code=503,
-        detail={"error": "Nenhum provedor Hermes configurado respondeu após consentimento explícito."},
-    )
+        return await _chat_with_selected_provider(req, session, messages)
 
 
 @app.post("/chat/stream")
 async def chat_stream(req: ChatRequest):
-    """Chat com Hermes via streaming SSE. Prioridade: Ollama local."""
+    """SSE compatível com provedores externos, sem depender de Ollama."""
     system_content = req.system_prompt_override if req.system_prompt_override else SYSTEM_PROMPT
     if req.context:
         system_content += f"\n\n--- CONTEXTO ATUAL ---\n{req.context}\n--- FIM DO CONTEXTO ---"
@@ -1135,66 +1117,14 @@ async def chat_stream(req: ChatRequest):
 
     async def generate():
         async with httpx.AsyncClient(timeout=120.0) as session:
-            if await _ollama_available(session):
-                available_models = await _ollama_list_models(session)
-                if not available_models:
-                    yield f"data: {json.dumps({'error': 'Ollama sem modelos disponíveis.'})}\n\n"
-                    yield "data: [DONE]\n\n"
-                    return
-
-                primary_model = OLLAMA_MODEL if OLLAMA_MODEL in available_models else available_models[0]
-                fallback_model = OLLAMA_FALLBACK_MODEL if OLLAMA_FALLBACK_MODEL in available_models else None
-
-                for model in [primary_model, fallback_model]:
-                    if not model:
-                        continue
-                    try:
-                        payload = {
-                            "model": model,
-                            "messages": messages,
-                            "stream": True,
-                            "options": {"num_ctx": 8192},
-                        }
-                        async with session.stream(
-                            "POST",
-                            f"{OLLAMA_URL}/api/chat",
-                            json=payload,
-                            timeout=120.0,
-                        ) as resp:
-                            resp.raise_for_status()
-                            async for line in resp.aiter_lines():
-                                if line.startswith("data: "):
-                                    data_str = line[6:].strip()
-                                    if data_str == "[DONE]":
-                                        yield "data: [DONE]\n\n"
-                                        return
-                                    try:
-                                        chunk = json.loads(data_str)
-                                        delta = chunk.get("message", {}).get("content", "")
-                                        if delta:
-                                            yield f"data: {json.dumps({'content': delta})}\n\n"
-                                    except json.JSONDecodeError:
-                                        continue
-                        yield "data: [DONE]\n\n"
-                        return
-                    except Exception as e:
-                        print(f"[AureaSolaris] Stream Ollama falhou ({model}): {e}", flush=True)
-
-                yield f"data: {json.dumps({'error': 'Ollama falhou para todos os modelos tentados.'})}\n\n"
-                yield "data: [DONE]\n\n"
-                return
-
-            if LOCAL_ONLY:
-                yield f"data: {json.dumps({'error': 'Nenhum modelo de IA local está disponível.'})}\n\n"
-                yield "data: [DONE]\n\n"
-                return
-
-            if not EXTERNAL_PROVIDERS_ENABLED:
-                yield f"data: {json.dumps({'error': 'Provedores externos desabilitados.'})}\n\n"
-                yield "data: [DONE]\n\n"
-                return
-
-        yield f"data: {json.dumps({'error': 'Streaming indisponível para provedores externos no momento.'})}\n\n"
+            try:
+                response = await _chat_with_selected_provider(req, session, messages)
+                yield f"data: {json.dumps({'content': response['reply'], 'provider': response['provider']})}\n\n"
+            except HTTPException as error:
+                detail = error.detail if isinstance(error.detail, str) else error.detail.get("error", "Provedor Hermes indisponível.")
+                yield f"data: {json.dumps({'error': detail})}\n\n"
+            except Exception:
+                yield f"data: {json.dumps({'error': 'Não foi possível contatar o provedor Hermes escolhido.'})}\n\n"
         yield "data: [DONE]\n\n"
 
     return StreamingResponse(generate(), media_type="text/event-stream")

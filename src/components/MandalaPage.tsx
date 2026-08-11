@@ -6,7 +6,6 @@ import { useAgendaContext } from '../context/AgendaContext';
 import { BirthForm } from './common/BirthForm';
 import { CalculationEvidence } from './common/CalculationEvidence';
 import { readCertifiedCalculation } from '../utils/certifiedCalculation';
-import { NatalReportCard } from './NatalReportCard';
 
 type BirthInput = { year: number; month: number; day: number; hour: number; lat: number; lon: number; timezone: string };
 
@@ -31,7 +30,9 @@ export const MandalaPage = () => {
   const selectedTarget = activeSubjectId;
   const [showForm, setShowForm] = useState(false);
   const [editingConnectionId, setEditingConnectionId] = useState<string | null>(null);
-  const showDetails = true;
+  // A visão principal mostra somente a mandala calculada. Tabelas derivadas e
+  // regras interpretativas pertencem ao estudo com fonte, não ao canvas.
+  const showDetails = false;
 
   // O mapa é a visão principal. O Caderno abre apenas por uma ação explícita.
 
@@ -75,15 +76,18 @@ export const MandalaPage = () => {
   }, []);
 
   const chartSize = useMemo(() => {
-    // Mantém margem para o painel sem cortar os rótulos externos da mandala.
-    const idealSize = Math.floor(containerWidth * 0.92);
-    return Math.min(Math.max(idealSize, 280), 500);
+    // A mandala nunca deve ser maior que a área realmente disponível. O limite
+    // inferior menor evita cortar rótulos quando o tutor está aberto.
+    const availableSize = Math.floor(containerWidth - 32);
+    return Math.max(240, Math.min(availableSize, 620));
   }, [containerWidth]);
 
   const birthData = useMemo<BirthInput | null>(() => {
-    const subject = mapSubjects?.find(map => map.id === selectedTarget);
+    const subject = mapSubjects?.find(map =>
+      map.ownerProfileId === activeProfileId && map.id === selectedTarget
+    );
     return readBirthInput(subject?.source || null);
-  }, [selectedTarget, activeProfile, mapSubjects]);
+  }, [selectedTarget, activeProfileId, mapSubjects]);
 
   const calculationEnabled = Boolean(birthData);
   const { data, loading, error, recalculate } = useAstroData(birthData, calculationEnabled);
@@ -177,11 +181,6 @@ export const MandalaPage = () => {
 
   const openHermesForCurrentMap = () => {
     window.dispatchEvent(new Event('open-hermes-chat'));
-    window.dispatchEvent(new CustomEvent('send-hermes-msg', {
-      detail: {
-        prompt: `Quero estudar ${activeTargetLabel}. Separe com clareza: valores calculados, regra interpretativa, fonte disponível e sua inferência.`,
-      },
-    }));
   };
 
   const openCadernoForCurrentMap = () => {
@@ -201,9 +200,9 @@ export const MandalaPage = () => {
   return (
     <div className="flex h-full min-w-0 overflow-hidden w-full">
       <div ref={containerRef} className="flex flex-1 min-w-0 flex-col h-full items-center justify-start gap-6 p-4 md:p-8 overflow-y-auto no-scrollbar transition-all duration-500">
-        <div className="aurea-page-header w-full flex flex-wrap items-center justify-between gap-5 p-5 rounded-2xl shadow-sm transition-all">
+        <div className="aurea-page-header mandala-header w-full gap-5 p-5 rounded-2xl shadow-sm transition-all">
         <div className="flex items-center gap-4">
-          <div className="p-3 bg-[var(--aurea-surface-warm)] rounded-2xl border border-color: rgba(217,166,83,0.18) text-[var(--aurea-gold)]">
+          <div className="p-3 bg-[var(--aurea-surface-warm)] rounded-2xl border border-[rgba(217,166,83,0.18)] text-[var(--aurea-gold)]">
             {allTargets.find((target) => target.id === selectedTarget)?.icon || <User size={24} />}
           </div>
           <div>
@@ -306,7 +305,7 @@ export const MandalaPage = () => {
 
       {loading && !data && (
         <div className="h-[580px] flex flex-col items-center justify-center gap-4">
-          <div className="w-12 h-12 border-4 border-color: rgba(217,166,83,0.18) border-t-gold rounded-full animate-spin" />
+           <div className="w-12 h-12 border-4 border-[rgba(217,166,83,0.18)] border-t-gold rounded-full animate-spin" />
           <div className="text-[10px] text-[#596a76] font-bold uppercase tracking-[0.2em] animate-pulse">
             Sintonizando Esferas Celestes...
           </div>
@@ -329,13 +328,6 @@ export const MandalaPage = () => {
            Nenhum dado astrológico disponível para este mapa.
         </div>
       ) : null}
-
-      {data && !loading && (
-        <NatalReportCard
-          data={data}
-          loading={loading}
-        />
-      )}
 
       {showForm && (
         <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/40 backdrop-blur-md p-4 animate-in fade-in zoom-in-95">
