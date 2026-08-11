@@ -363,16 +363,16 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
   const calculationReady = Boolean(certifiedTransit);
 
   return (
-    <div className="fixed inset-x-3 bottom-3 z-50 flex h-[min(560px,calc(100dvh-24px))] flex-col overflow-hidden rounded-2xl border border-gold/20 bg-white shadow-2xl animate-in slide-in-from-bottom-10 fade-in sm:inset-x-auto sm:bottom-6 sm:right-6 sm:h-[560px] sm:w-[400px]">
+    <div className="fixed inset-x-3 bottom-3 z-50 flex h-[min(560px,calc(100dvh-24px))] flex-col overflow-hidden rounded-2xl border border-color: rgba(217,166,83,0.3) background: var(--aurea-surface) shadow-2xl animate-in slide-in-from-bottom-10 fade-in sm:inset-x-auto sm:bottom-6 sm:right-6 sm:h-[560px] sm:w-[400px]">
       {/* Header */}
-      <div className="px-4 py-3 bg-[#171c31] flex items-center justify-between shrink-0">
+      <div className="px-4 py-3 background: var(--aurea-bg-deep) flex items-center justify-between shrink-0">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-full bg-gold/20 flex items-center justify-center">
-            <Sparkles size={16} className="text-gold" />
+            <Sparkles size={16} className="color: var(--aurea-gold)" />
           </div>
           <div>
             <p className="text-[11px] font-bold text-white uppercase tracking-wider">Hermes</p>
-            <p className="text-[8px] text-gold/70 uppercase tracking-widest">
+            <p className="text-[8px] color: var(--aurea-gold)/70 uppercase tracking-widest">
               {ctx.agenda.activeProfile ? `${ctx.agenda.activeProfile.name} · ${ctx.astro.planetaryHour?.icon || '🌙'} ${ctx.astro.planetaryHour?.name || ''}` : 'Assistente Pessoal'}
             </p>
           </div>
@@ -380,7 +380,7 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
         <div className="flex items-center gap-2">
           <button
             onClick={onClose}
-            className="rounded p-1 text-white/50 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+            className="rounded p-1 text-white/50 transition-colors hover:background: var(--aurea-surface)/10 hover: color: var(--aurea-text) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
             aria-label="Fechar Hermes"
             title="Fechar Hermes"
           >
@@ -390,7 +390,7 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
       </div>
 
       {/* Context bar — mostra dados resumidos */}
-      <div className="px-3 py-1.5 bg-[#171c31]/90 border-t border-gold/10 flex items-center gap-3 text-[8px] text-white/40 shrink-0">
+      <div className="px-3 py-1.5 background: var(--aurea-bg-deep)/90 border-t border-color: rgba(217,166,83,0.18) flex items-center gap-3 text-[8px] color: rgba(241,233,220,0.55) shrink-0">
         <span>Regra temporal: {ctx.astro.planetaryHour?.name || 'indisponível'}</span>
         <span>|</span>
         <span>Céu: {certifiedTransit ? 'certificado' : 'indisponível'}</span>
@@ -402,11 +402,11 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
         <span>📋 {ctx.agenda.tasks.filter((t: any) => !t.completed && !t.is_completed).length} pendentes</span>
       </div>
 
-      <div className="border-b border-gray-100 bg-white px-3 py-2">
+      <div className="border-b border-gray-100 background: var(--aurea-surface) px-3 py-2">
         <button
           type="button"
           onClick={() => setShowProvenance(value => !value)}
-          className="text-[9px] font-bold uppercase tracking-wide text-gray-500 transition hover:text-[#c5a059]"
+          className="text-[9px] font-bold uppercase tracking-wide color: var(--aurea-text-muted) transition hover:text-[#c5a059]"
           aria-expanded={showProvenance}
         >
           {showProvenance ? 'Ocultar contexto e proveniência' : 'Ver contexto e proveniência'}
@@ -423,13 +423,13 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-50">
+      <div className="flex-1 overflow-y-auto p-4 space-y-3 background: rgba(3,10,17,0.4)">
         {messages.map((m, i) => (
           <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
             <div className={`max-w-[85%] px-3 py-2 rounded-xl text-[11px] leading-relaxed whitespace-pre-line ${
               m.role === 'user'
-                ? 'bg-[#171c31] text-white rounded-br-sm'
-                : 'bg-white text-gray-700 border border-gray-100 shadow-sm rounded-bl-sm'
+                ? 'background: var(--aurea-bg-deep) text-white rounded-br-sm'
+                : 'background: var(--aurea-surface) text-gray-700 border border-gray-100 shadow-sm rounded-bl-sm'
             }`}>
               {m.content}
             </div>
@@ -437,7 +437,7 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
         ))}
         {loading && (
           <div className="flex justify-start">
-            <div className="bg-white border border-gray-100 shadow-sm px-3 py-2 rounded-xl rounded-bl-sm">
+            <div className="background: var(--aurea-surface) border border-gray-100 shadow-sm px-3 py-2 rounded-xl rounded-bl-sm">
               <div className="flex gap-1">
                 <span className="w-1.5 h-1.5 bg-gold rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
                 <span className="w-1.5 h-1.5 bg-gold rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
@@ -450,10 +450,10 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
       </div>
 
       {/* Input */}
-      <div className="p-3 border-t border-gray-100 bg-white shrink-0">
+      <div className="p-3 border-t border-gray-100 background: var(--aurea-surface) shrink-0">
         <div className="flex gap-2">
           <input
-            className="flex-1 bg-gray-50 rounded-xl px-3 py-2 text-[11px] outline-none border border-gray-200 focus:border-gold/40 transition-colors focus-visible:ring-2 focus-visible:ring-[#c5a059]"
+            className="flex-1 background: rgba(3,10,17,0.4) rounded-xl px-3 py-2 text-[11px] outline-none border border-color: rgba(38,54,66,0.7) focus: border-color: rgba(217,166,83,0.45) transition-colors focus-visible:ring-2 focus-visible: ring-color: var(--aurea-gold)"
             placeholder="Pergunte ao Hermes..."
             value={input}
             onChange={e => setInput(e.target.value)}
@@ -462,7 +462,7 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
           <button
             onClick={() => sendMessage()}
             disabled={loading || !input.trim()}
-            className="w-8 h-8 rounded-xl bg-[#171c31] text-gold flex items-center justify-center transition-all hover:bg-gold hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c5a059] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-30"
+            className="w-8 h-8 rounded-xl background: var(--aurea-bg-deep) color: var(--aurea-gold) flex items-center justify-center transition-all hover: background: var(--aurea-gold) hover: color: var(--aurea-text) focus-visible:outline-none focus-visible:ring-2 focus-visible: ring-color: var(--aurea-gold) focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-30"
             aria-label="Enviar mensagem ao Hermes"
             title="Enviar"
           >
