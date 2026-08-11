@@ -1,4 +1,3 @@
 @echo off
-cd /d "c:\AureaSolaris"
-npm run tauri dev
+call "%~dp0run_tauri.bat"
 pause

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Edit3, Star, Activity, Calendar, User, PanelLeftOpen, PanelLeftClose, MessageCircle } from 'lucide-react';
+import { Edit3, Star, Activity, Calendar, User, PanelLeftOpen, PanelLeftClose, MessageCircle, FileText } from 'lucide-react';
 import "./styles.css";
 
 // Contexts
@@ -18,7 +18,6 @@ import { LoginView } from './components/LoginView';
 import { DiarioView } from './components/DiarioView';
 import { ProfileEditor } from './components/ProfileEditor';
 import { HermesChat } from './components/HermesChat';
-import { BrandView } from './components/BrandView';
 import { safeInvoke } from './utils/tauri';
 
 // --- ESTILOS GLOBAIS ---
@@ -27,8 +26,8 @@ const globalStyles = `
   .font-sans { font-family: var(--font-body); }
   .font-display { font-family: var(--font-display); }
 
-  .layout-grid { display: grid; height: 100vh; width: 100vw; overflow: hidden; background: var(--aurea-bg-deep); gap: 16px; padding: 16px; transition: grid-template-columns 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-  .main-area { border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; background: var(--aurea-surface); position: relative; }
+  .layout-grid { display: grid; height: 100vh; width: 100vw; overflow: hidden; background: var(--aurea-navy); gap: 16px; padding: 16px; transition: grid-template-columns 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+  .main-area { border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; background-color: var(--aurea-bg); background-image: radial-gradient(circle at 92% 88%, transparent 0 96px, rgba(217,166,83,.10) 97px 98px, transparent 99px 145px, rgba(217,166,83,.06) 146px 147px, transparent 148px), radial-gradient(circle at 92% 88%, rgba(217,166,83,.10) 0 2px, transparent 3px); position: relative; }
 
   .text-gold { color: var(--aurea-gold); }
   .bg-gold { background-color: var(--aurea-gold); }
@@ -85,6 +84,14 @@ export default function App() {
   const masterProfile = agenda.activeProfile;
 
   const isMesa = currentPage === 'mesa-criacao';
+  const pageTitles: Record<string, string> = {
+    astrologia: 'Astrologia',
+    saude: 'Saúde & Vitalidade',
+    agenda: 'Agenda Preditiva',
+    memorias: 'Memórias',
+    diario: 'Histórico & Notas',
+    'mesa-criacao': 'Caderno Vivo',
+  };
 
   const openCaderno = (intent: CadernoIntent) => {
     setCadernoIntent(intent);
@@ -94,28 +101,9 @@ export default function App() {
   useEffect(() => {
     let active = true;
     const restoreRememberedAccess = async () => {
-      const rememberedOwner = await safeInvoke<string | null>('remembered_owner_get');
-      if (!active || !rememberedOwner) {
-        if (active) setIsRestoringAccess(false);
-        return;
-      }
-
-      const profile = agenda.profiles.find(candidate => candidate.id === rememberedOwner);
-      if (!profile) {
-        await safeInvoke('remembered_owner_clear');
-        if (active) setIsRestoringAccess(false);
-        return;
-      }
-
-      const openedOwner = await safeInvoke<string>('private_session_open', { ownerId: rememberedOwner });
-      if (!active) return;
-      if (openedOwner === rememberedOwner) {
-        agenda.setActiveProfileId(rememberedOwner);
-        localStorage.setItem('aurea_active_id', rememberedOwner);
-        setIsAuthenticated(true);
-      } else {
-        await safeInvoke('remembered_owner_clear');
-      }
+      // A remembered owner is not an authenticated session. Password verification
+      // happens in the private sidecar on every app launch.
+      await safeInvoke('remembered_owner_clear');
       if (active) setIsRestoringAccess(false);
     };
     void restoreRememberedAccess();
@@ -156,9 +144,8 @@ export default function App() {
       case 'astrologia': return <AstrologiaPage onOpenCaderno={openCaderno} />;
       case 'saude': return <SaudeView />;
       case 'agenda': return <AgendaView />;
-      case 'brand': return <BrandView />;
       
-      case 'mesa-criacao': return <MesaCriacao ownerId={masterProfile?.id} intent={cadernoIntent} onIntentHandled={() => setCadernoIntent(null)} />;
+      case 'mesa-criacao': return <MesaCriacao intent={cadernoIntent} onIntentHandled={() => setCadernoIntent(null)} />;
       case 'memorias': return <MemoriasView />;
       
       case 'diario': return (
@@ -185,19 +172,19 @@ export default function App() {
             setIsAuthenticated(true);
             return { ok: true, notice: 'Modo navegador: acesso local liberado sem sessão privada.' };
           }
-          const result = await agenda.authenticateProfile(id, password);
-          if (!result.ok) return result;
-          const openedOwner = await safeInvoke<string>('private_session_open', { ownerId: id });
+          const profile = agenda.profiles.find(candidate => candidate.id === id);
+          if (!profile) return { ok: false, error: 'Perfil não encontrado.' };
+          const openedOwner = await safeInvoke<string>('private_session_open', {
+            ownerId: id,
+            loginName: profile.name,
+            password,
+          });
           if (openedOwner !== id) return { ok: false, error: 'Não foi possível abrir sua sessão privada neste computador.' };
           agenda.setActiveProfileId(id);
           localStorage.setItem('aurea_active_id', id);
           let notice: string | undefined;
-          if (rememberAccess) {
-            const remembered = await safeInvoke('remembered_owner_set', { ownerId: id });
-            if (remembered === null) notice = 'O acesso foi aberto, mas não pode ser mantido neste Windows.';
-          } else {
-            await safeInvoke('remembered_owner_clear');
-          }
+          await safeInvoke('remembered_owner_clear');
+          if (rememberAccess) notice = 'Por segurança, será necessário confirmar a senha ao reabrir o aplicativo.';
           setIsAuthenticated(true);
           return { ok: true, notice };
         }}
@@ -207,14 +194,18 @@ export default function App() {
             return { ok: true, notice: 'Modo navegador: acesso local liberado sem sessão privada.' };
           }
           try {
-            const profile = await agenda.addProfile(name, password);
-            const openedOwner = await safeInvoke<string>('private_session_open', { ownerId: profile.id });
-            if (openedOwner !== profile.id) return { ok: false, error: 'Seu perfil foi criado, mas a sessão privada não pode ser aberta. Tente entrar novamente.' };
+            const accountId = crypto.randomUUID();
+            const openedOwner = await safeInvoke<string>('private_account_register', {
+              ownerId: accountId,
+              displayName: name,
+              loginName: name,
+              password,
+            });
+            if (openedOwner !== accountId) return { ok: false, error: 'Não foi possível criar o perfil privado neste computador.' };
+            await agenda.addProfile(name, password, accountId);
             let notice: string | undefined;
-            if (rememberAccess) {
-              const remembered = await safeInvoke('remembered_owner_set', { ownerId: profile.id });
-              if (remembered === null) notice = 'Perfil criado, mas o acesso não pode ser mantido neste Windows.';
-            }
+            await safeInvoke('remembered_owner_clear');
+            if (rememberAccess) notice = 'Por segurança, será necessário confirmar a senha ao reabrir o aplicativo.';
             setIsAuthenticated(true);
             return { ok: true, notice };
           } catch (error) {
@@ -231,7 +222,7 @@ export default function App() {
       <style>{globalStyles}</style>
       
       {/* SIDEBAR */}
-      <aside className="bg-white rounded-[1.5rem] border border-(--color-gold)/20 shadow-xl shrink-0 z-30 flex flex-col relative overflow-hidden transition-all duration-300 cosmic-border">
+      <aside className="rounded-[1.5rem] border border-white/10 shadow-xl shrink-0 z-30 flex flex-col relative overflow-hidden transition-all duration-300 cosmic-border" style={{ background: 'var(--aurea-navy)', color: 'var(--aurea-text-on-dark)' }}>
         <div className="flex items-center gap-4 p-8 pb-4 shrink-0">
           <button type="button" aria-label={isSidebarCollapsed ? 'Expandir menu lateral' : 'Recolher menu lateral'} aria-expanded={!isSidebarCollapsed} className="p-1 hover:rotate-12 focus-visible:outline-2 focus-visible:outline-gold rounded transition-all shrink-0" onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}>
             {isSidebarCollapsed ? <PanelLeftOpen size={24} className="text-gold"/> : <PanelLeftClose size={24} className="text-gold"/>}
@@ -248,19 +239,19 @@ export default function App() {
         </div>
         
         <nav className="flex-1 space-y-1.5 px-4 overflow-y-auto no-scrollbar pb-6 pt-4">
-          <NavItem icon={<Star size={18} />} label="Bíblia Visual" active={currentPage === 'brand'} onClick={() => setCurrentPage('brand')} collapsed={isSidebarCollapsed} />
           <NavItem icon={<Edit3 size={18} />} label="Caderno Vivo" active={currentPage === 'mesa-criacao'} onClick={() => { setCadernoIntent(null); setCurrentPage('mesa-criacao'); }} collapsed={isSidebarCollapsed} />
           <NavItem icon={<Star size={18} />} label="Astrologia" active={currentPage === 'astrologia'} onClick={() => setCurrentPage('astrologia')} collapsed={isSidebarCollapsed} />
           <NavItem icon={<Activity size={18} />} label="Saúde & Vitalidade" active={currentPage === 'saude'} onClick={() => setCurrentPage('saude')} collapsed={isSidebarCollapsed} />
           <NavItem icon={<Calendar size={18} />} label="Agenda Preditiva" active={currentPage === 'agenda'} onClick={() => setCurrentPage('agenda')} collapsed={isSidebarCollapsed} />
+          <NavItem icon={<FileText size={18} />} label="Memórias" active={currentPage === 'memorias'} onClick={() => setCurrentPage('memorias')} collapsed={isSidebarCollapsed} />
 
           <NavItem icon={<Edit3 size={18} />} label="Histórico & Notas" active={currentPage === 'diario'} onClick={() => setCurrentPage('diario')} collapsed={isSidebarCollapsed} />
         </nav>
 
-        <div className="p-4 pt-2 border-t border-gray-100 shrink-0">
-          <button onClick={() => setIsProfileOpen(true)} className="w-full flex items-center gap-4 p-4 rounded-2xl bg-mystic-bg hover:bg-white border border-transparent transition-all group shadow-sm">
-            <div className="w-10 h-10 rounded-full border-2 border-white shadow-md bg-white text-[var(--color-gold)] flex items-center justify-center shrink-0"><User size={16} /></div>
-            {!isSidebarCollapsed && <div className="text-left overflow-hidden"><p className="text-[12px] font-bold uppercase truncate text-gray-800 leading-none">{masterProfile?.name || 'Perfil indisponível'}</p></div>}
+        <div className="p-4 pt-2 border-t border-white/10 shrink-0">
+          <button onClick={() => setIsProfileOpen(true)} className="w-full flex items-center gap-4 p-4 rounded-2xl border border-white/10 transition-all group shadow-sm" style={{ background: 'rgba(255,255,255,0.06)' }}>
+            <div className="w-10 h-10 rounded-full border-2 shadow-md flex items-center justify-center shrink-0" style={{ borderColor: 'var(--aurea-gold)', background: 'var(--aurea-navy-2)', color: 'var(--aurea-gold-light)' }}><User size={16} /></div>
+            {!isSidebarCollapsed && <div className="text-left overflow-hidden"><p className="text-[12px] font-bold uppercase truncate text-[var(--aurea-text-on-dark)] leading-none">{masterProfile?.name || 'Perfil indisponível'}</p></div>}
           </button>
         </div>
       </aside>
@@ -268,12 +259,12 @@ export default function App() {
       {/* CONTEÚDO PRINCIPAL */}
       <main className="main-area cosmic-border">
         {!isMesa && currentPage !== 'astrologia' && (
-          <header className="px-6 py-3 flex justify-between items-center glass-panel shrink-0 border-b border-gold/10 z-20">
-            <h2 className="text-sm font-black tracking-[0.25em] uppercase text-gray-800 truncate mr-3">{currentPage.replace('-', ' ')}</h2>
+          <header className="aurea-page-header px-6 py-3 flex justify-between items-center glass-panel shrink-0 z-20">
+            <h2 className="aurea-page-title text-sm uppercase truncate mr-3">{pageTitles[currentPage] || currentPage.replace('-', ' ')}</h2>
             <PlanetaryInfo />
           </header>
         )}
-        <div className={`flex-1 relative overflow-hidden ${isMesa ? '' : currentPage === 'astrologia' ? 'flex flex-col px-6 pt-6' : currentPage === 'brand' ? '' : 'px-6 pt-8 overflow-y-auto no-scrollbar pb-32'}`}>
+        <div className={`flex-1 relative overflow-hidden ${isMesa ? '' : currentPage === 'astrologia' ? 'flex flex-col px-6 pt-6' : 'px-6 pt-8 overflow-y-auto no-scrollbar pb-32'}`}>
           {currentPage === 'astrologia' ? (
             <div className="flex-1 h-full flex flex-col overflow-hidden">
               {renderPage()}

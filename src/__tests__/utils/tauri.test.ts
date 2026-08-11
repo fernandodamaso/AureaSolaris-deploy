@@ -19,7 +19,7 @@ describe('safeInvoke (browser mode — no Tauri bridge)', () => {
   });
 
   it('returns null for any command outside Tauri (callers handle real fallback)', async () => {
-    const result = await safeInvoke('get_todoist_tasks', {});
+    const result = await safeInvoke('nonexistent_tauri_command', {});
     expect(result).toBeNull();
   });
 

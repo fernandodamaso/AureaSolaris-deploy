@@ -1,212 +1,85 @@
 use serde::{Deserialize, Serialize};
-use tauri::{Emitter, Manager};
+use tauri::{Manager, State};
 use std::fs;
 use std::path::{Path, PathBuf};
-use chrono::{Datelike, Timelike};
+use std::sync::{Arc, Mutex, OnceLock};
+use std::process::Child;
+#[cfg(target_os = "windows")]
+use std::os::windows::process::CommandExt;
 
-#[derive(Serialize, Deserialize, Clone)]
-struct OpenRouterMessage {
-    role: String,
-    content: String,
+// ─── Sidecar / Astro API ───
+const ASTRO_API_URL: &str = "http://127.0.0.1:9876";
+static ACTIVE_OWNER: OnceLock<Mutex<Option<String>>> = OnceLock::new();
+
+// ─── AppState: Shared state loaded ONCE at startup ───
+
+struct AppState {
+    http_client: reqwest::Client,
 }
 
-#[derive(Serialize)]
-struct OpenRouterRequest {
-    model: String,
-    messages: Vec<OpenRouterMessage>,
+// ─── SidecarState: Gerencia o processo Python FastAPI sidecar ───
+
+struct SidecarState {
+    child: Mutex<Option<Child>>,
+    token: String,
 }
 
-#[derive(Deserialize)]
-struct OpenRouterResponse {
-    choices: Vec<OpenRouterChoice>,
-    usage: Option<OpenRouterUsage>,
-}
-
-#[derive(Serialize, Deserialize, Clone)]
-struct OpenRouterUsage {
-    prompt_tokens: u32,
-    completion_tokens: u32,
-    total_tokens: u32,
-}
-
-#[derive(Deserialize)]
-struct OpenRouterChoice {
-    message: OpenRouterChoiceMessage,
-}
-
-#[derive(Deserialize)]
-struct OpenRouterChoiceMessage {
-    content: String,
-}
-
-
-
-#[derive(Serialize)]
-struct OllamaRequest {
-    model: String,
-    messages: Vec<OpenRouterMessage>,
-    stream: bool,
-}
-
-#[derive(Deserialize)]
-struct OllamaResponse {
-    message: OpenRouterChoiceMessage,
-}
-
-#[tauri::command]
-async fn ollama_chat(messages: Vec<OpenRouterMessage>) -> Result<String, String> {
-    println!("Stark: Tentando conectar ao Ollama local (localhost:11434)...");
-    
-    let client = reqwest::Client::builder()
-        .timeout(std::time::Duration::from_secs(60))
-        .build()
-        .map_err(|e| format!("Falha ao criar cliente HTTP para Ollama: {}", e))?;
-
-    let req_body = OllamaRequest {
-        model: "llama3.2".to_string(), 
-        messages,
-        stream: false,
-    };
-
-    let res = client.post("http://localhost:11434/api/chat")
-        .json(&req_body)
-        .send()
-        .await
-        .map_err(|e| format!("Erro de rede ao conectar ao Ollama (Certifique-se que está rodando): {}", e))?;
-
-    if !res.status().is_success() {
-        let err_text = res.text().await.unwrap_or_default();
-        return Err(format!("Erro no Ollama: {}", err_text));
-    }
-
-    let json_res: OllamaResponse = res.json().await.map_err(|e| format!("Erro ao decodificar JSON do Ollama: {}", e))?;
-    
-    let content = json_res.message.content;
-    println!("Stark: Resposta Ollama recebida ({} chars)", content.len());
-    Ok(content)
-}
-
-#[tauri::command]
-async fn ollama_chat_stream(window: tauri::Window, messages: Vec<OpenRouterMessage>) -> Result<String, String> {
-    let client = reqwest::Client::builder()
-        .timeout(std::time::Duration::from_secs(120))
-        .build()
-        .map_err(|e| format!("Falha ao criar cliente: {}", e))?;
-
-    let req_body = serde_json::json!({
-        "model": "llama3.2",
-        "messages": messages,
-        "stream": true
-    });
-
-    let res = client.post("http://localhost:11434/api/chat")
-        .json(&req_body)
-        .send()
-        .await
-        .map_err(|e| format!("Erro de rede Ollama: {}", e))?;
-
-    if !res.status().is_success() {
-        let err = res.text().await.unwrap_or_default();
-        return Err(format!("Erro Ollama: {}", err));
-    }
-
-    let mut full_content = String::new();
-    let mut stream = res.bytes_stream();
-
-    use futures_util::StreamExt;
-    while let Some(chunk) = stream.next().await {
-        let chunk = chunk.map_err(|e: reqwest::Error| format!("Erro no stream: {}", e))?;
-        let text = String::from_utf8_lossy(&chunk);
-
-        for line in text.lines() {
-            if line.trim().is_empty() { continue; }
-            if let Ok(json) = serde_json::from_str::<serde_json::Value>(line) {
-                if let Some(content) = json["message"]["content"].as_str() {
-                    full_content.push_str(content);
-                    let _ = window.emit("chat-stream-chunk", serde_json::json!({
-                        "content": content,
-                        "done": false
-                    }));
-                }
-                if json["done"].as_bool() == Some(true) {
-                    let _ = window.emit("chat-stream-chunk", serde_json::json!({
-                        "content": "",
-                        "done": true
-                    }));
-                }
-            }
+impl SidecarState {
+    fn new() -> Self {
+        Self {
+            child: Mutex::new(None),
+            token: uuid::Uuid::new_v4().to_string(),
         }
     }
 
-    Ok(full_content)
-}
+    fn start(&self, api_path: &Path, data_dir: &Path) -> Result<(), String> {
+        let mut guard = self.child.lock().map_err(|e| e.to_string())?;
+        if guard.is_some() {
+            return Ok(()); // já rodando
+        }
 
-#[tauri::command]
-async fn openrouter_chat_stream(window: tauri::Window, model: String, messages: Vec<OpenRouterMessage>) -> Result<String, String> {
-    dotenvy::from_filename(".env").ok();
-    let api_key = std::env::var("OPENROUTER_API_KEY")
-        .map_err(|_| "OPENROUTER_API_KEY não encontrada".to_string())?;
+        let mut command = std::process::Command::new(api_path);
+        command
+            .current_dir(api_path.parent().unwrap_or(Path::new(".")))
+            .env("ASTRO_API_PORT", "9876")
+            .env("AUREA_DATA_DIR", data_dir)
+            .env("AUREA_SIDECAR_TOKEN", &self.token);
 
-    let client = reqwest::Client::builder()
-        .timeout(std::time::Duration::from_secs(60))
-        .build()
-        .map_err(|e| format!("Falha ao criar cliente: {}", e))?;
+        // O motor é interno ao Aurea. No Windows, não exibir um terminal auxiliar.
+        #[cfg(target_os = "windows")]
+        command.creation_flags(0x08000000);
 
-    let req_body = serde_json::json!({
-        "model": model,
-        "messages": messages,
-        "stream": true
-    });
+        let child = command.spawn()
+            .map_err(|e| format!("Falha ao iniciar sidecar: {}", e))?;
 
-    let res = client.post("https://openrouter.ai/api/v1/chat/completions")
-        .bearer_auth(api_key)
-        .header("HTTP-Referer", "https://github.com/aurea-solaris")
-        .header("X-Title", "Aurea Solaris")
-        .json(&req_body)
-        .send()
-        .await
-        .map_err(|e| format!("Erro de rede OpenRouter: {}", e))?;
-
-    if !res.status().is_success() {
-        let err = res.text().await.unwrap_or_default();
-        return Err(format!("Erro OpenRouter: {}", err));
+        *guard = Some(child);
+        println!(
+            "[AureaSolaris] Sidecar Python iniciado (PID esperado na porta 9876)"
+        );
+        Ok(())
     }
 
-    let mut full_content = String::new();
-    let mut stream = res.bytes_stream();
-
-    use futures_util::StreamExt;
-    while let Some(chunk) = stream.next().await {
-        let chunk = chunk.map_err(|e: reqwest::Error| format!("Erro no stream: {}", e))?;
-        let text = String::from_utf8_lossy(&chunk);
-
-        for line in text.lines() {
-            let line = line.trim();
-            if !line.starts_with("data: ") { continue; }
-            let data = &line[6..];
-            if data == "[DONE]" {
-                let _ = window.emit("chat-stream-chunk", serde_json::json!({
-                    "content": "", "done": true
-                }));
-                continue;
+    fn stop(&self) {
+        if let Ok(mut guard) = self.child.lock() {
+            if let Some(ref mut child) = *guard {
+                let _ = child.kill();
+                println!("[AureaSolaris] Sidecar Python encerrado.");
             }
-            if let Ok(json) = serde_json::from_str::<serde_json::Value>(data) {
-                if let Some(content) = json["choices"][0]["delta"]["content"].as_str() {
-                    full_content.push_str(content);
-                    let _ = window.emit("chat-stream-chunk", serde_json::json!({
-                        "content": content, "done": false
-                    }));
-                }
-            }
+            *guard = None;
         }
     }
-
-    Ok(full_content)
 }
 
-// Helpers for paths
-fn get_mem_path(app: &tauri::AppHandle, filename: &str) -> Result<PathBuf, String> {
-    let mut path = app.path().app_data_dir().map_err(|e| e.to_string())?;
+// ─── Chat / LLM Commands ───
+
+// ─── Helpers: paths e logs ───
+
+fn get_mem_path(
+    app: &tauri::AppHandle,
+    filename: &str,
+) -> Result<PathBuf, String> {
+    let mut path =
+        app.path().app_data_dir().map_err(|e| e.to_string())?;
     path.push("memory");
     if !path.exists() {
         fs::create_dir_all(&path).map_err(|e| e.to_string())?;
@@ -215,426 +88,556 @@ fn get_mem_path(app: &tauri::AppHandle, filename: &str) -> Result<PathBuf, Strin
     Ok(path)
 }
 
-fn get_assets_path(app: &tauri::AppHandle, filename: &str) -> Result<PathBuf, String> {
-    let mut path = app.path().app_data_dir().map_err(|e| e.to_string())?;
-    path.push("assets");
-    if !path.exists() {
-        fs::create_dir_all(&path).map_err(|e| e.to_string())?;
-    }
-    path.push(filename);
-    Ok(path)
-}
-
-
-
-#[tauri::command]
-async fn openrouter_chat(app: tauri::AppHandle, model: String, messages: Vec<OpenRouterMessage>) -> Result<String, String> {
-    dotenvy::from_filename(".env").ok();
-
-    let api_key = std::env::var("OPENROUTER_API_KEY")
-        .map_err(|_| "OPENROUTER_API_KEY não encontrada no .env".to_string())?;
-    
-    println!("Stark: Chamando OpenRouter com modelo: {}", model);
-
-    let client = reqwest::Client::builder()
-        .timeout(std::time::Duration::from_secs(30))
-        .build()
-        .map_err(|e| format!("Falha ao criar cliente HTTP: {}", e))?;
-
-    let req_body = OpenRouterRequest {
-        model,
-        messages,
-    };
-
-    let res = client.post("https://openrouter.ai/api/v1/chat/completions")
-        .bearer_auth(api_key)
-        .header("HTTP-Referer", "https://github.com/aurea-solaris")
-        .header("X-Title", "Aurea Solaris")
-        .json(&req_body)
-        .send()
-        .await
-        .map_err(|e| format!("Erro de rede ao conectar à OpenRouter: {}", e))?;
-
-    let status = res.status();
-    let body_text = res.text().await.map_err(|e| format!("Falha ao ler corpo da resposta: {}", e))?;
-
-    if !status.is_success() {
-        return Err(format!("Erro na API OpenRouter ({}): {}", status, body_text));
-    }
-
-    let json_res: OpenRouterResponse = serde_json::from_str(&body_text).map_err(|e| {
-        format!("Erro ao decodificar JSON da OpenRouter: {} | Resposta: {}", e, body_text)
-    })?;
-    
-    // Log tokens if available (This is mock-ish but stores in a real file)
-    if let Some(usage) = &json_res.usage {
-        let _ = log_usage(&app, usage.total_tokens);
-    }
-
-    if let Some(choice) = json_res.choices.first() {
-        let content = choice.message.content.clone();
-        println!("Stark: Resposta OpenRouter recebida ({} chars)", content.len());
-        Ok(content)
+fn validate_private_id(value: &str, label: &str) -> Result<(), String> {
+    let valid = !value.is_empty()
+        && value.chars().count() <= 128
+        && !value.contains("..")
+        && !value.starts_with('.')
+        && value
+            .chars()
+            .all(|character| character.is_alphanumeric() || matches!(character, '-' | '_' | '.'));
+    if valid {
+        Ok(())
     } else {
-        println!("Stark: ERRO - OpenRouter retornou resposta vazia");
-        Err("A API retornou uma resposta vazia (sem choices)".to_string())
+        Err(format!("{} inválido.", label))
     }
 }
 
-fn log_usage(app: &tauri::AppHandle, tokens: u32) -> Result<(), String> {
-    let path = get_mem_path(app, "usage.json")?;
-    let mut usage_data: serde_json::Value = if path.exists() {
-        let content = fs::read_to_string(&path).map_err(|e| e.to_string())?;
-        serde_json::from_str(&content).unwrap_or(serde_json::json!({}))
-    } else {
-        serde_json::json!({})
-    };
-
-    let total = usage_data["total_tokens"].as_u64().unwrap_or(0) + tokens as u64;
-    usage_data["total_tokens"] = serde_json::Value::from(total);
-    
-    fs::write(path, serde_json::to_string(&usage_data).unwrap()).map_err(|e| e.to_string())?;
-    Ok(())
+fn current_owner() -> Result<String, String> {
+    ACTIVE_OWNER
+        .get_or_init(|| Mutex::new(None))
+        .lock()
+        .map_err(|_| "A sessão privada está indisponível.".to_string())?
+        .clone()
+        .ok_or_else(|| "Nenhum proprietário autenticado nesta sessão.".to_string())
 }
 
-fn chat_filename(agent: &str, chat_id: &Option<String>) -> String {
-    match chat_id {
-        Some(id) if !id.is_empty() => format!("{}_{}.json", agent, id),
-        _ => format!("{}.json", agent),
+async fn sidecar_private_request(
+    state: &AppState,
+    sidecar: &SidecarState,
+    method: reqwest::Method,
+    path: &str,
+    query: Option<serde_json::Value>,
+    body: Option<serde_json::Value>,
+) -> Result<serde_json::Value, String> {
+    let owner_id = current_owner()?;
+    let permitted = path == "/storage/diagnostic"
+        || path == "/storage/backup/private"
+        || path == "/hermes/threads/open"
+        || path == "/hermes/memories/propose"
+        || path == "/hermes/memories"
+        || (path.starts_with("/hermes/threads/")
+            && (path.ends_with("/context") || path.ends_with("/messages")))
+        || (path.starts_with("/hermes/memories/") && path.ends_with("/review"));
+    if !permitted || path.contains('?') || path.contains('#') || path.contains("..") {
+        return Err("Rota privada do sidecar não permitida.".to_string());
     }
-}
 
-#[tauri::command]
-fn save_history(app: tauri::AppHandle, agent: String, history: Vec<OpenRouterMessage>, chat_id: Option<String>) -> Result<(), String> {
-    let filename = chat_filename(&agent, &chat_id);
-    let path = get_mem_path(&app, &filename)?;
-    let json = serde_json::to_string_pretty(&history).map_err(|e| e.to_string())?;
-    fs::write(path, json).map_err(|e| e.to_string())?;
-    Ok(())
-}
-
-#[tauri::command]
-fn load_history(app: tauri::AppHandle, agent: String, chat_id: Option<String>) -> Result<Vec<OpenRouterMessage>, String> {
-    let filename = chat_filename(&agent, &chat_id);
-    let path = get_mem_path(&app, &filename)?;
-    if !path.exists() {
-        return Ok(vec![]);
-    }
-    let json = fs::read_to_string(path).map_err(|e| e.to_string())?;
-    let history: Vec<OpenRouterMessage> = serde_json::from_str(&json).map_err(|e| e.to_string())?;
-    Ok(history)
-}
-
-#[tauri::command]
-fn list_chat_sessions(app: tauri::AppHandle, agent: String) -> Result<Vec<serde_json::Value>, String> {
-    let mem_dir = app.path().app_data_dir().map_err(|e| e.to_string())?.join("memory");
-    if !mem_dir.exists() {
-        return Ok(vec![]);
-    }
-    let prefix = format!("{}_", agent);
-    let mut sessions = vec![];
-    for entry in fs::read_dir(&mem_dir).map_err(|e| e.to_string())? {
-        let entry = entry.map_err(|e| e.to_string())?;
-        let name = entry.file_name().to_string_lossy().to_string();
-        if name.starts_with(&prefix) && name.ends_with(".json") {
-            let metadata = entry.metadata().map_err(|e| e.to_string())?;
-            let created = metadata.created().unwrap_or(std::time::SystemTime::now());
-            let date = chrono::DateTime::<chrono::Local>::from(created).format("%d/%m %H:%M").to_string();
-            // Extract chat_id from filename: "{agent}_{chatId}.json"
-            let chat_id = name
-                .strip_prefix(&prefix)
-                .and_then(|s| s.strip_suffix(".json"))
-                .unwrap_or("legacy")
-                .to_string();
-            // Count messages
-            let content = fs::read_to_string(entry.path()).unwrap_or_default();
-            let msg_count: usize = serde_json::from_str::<Vec<serde_json::Value>>(&content)
-                .map(|v| v.len())
-                .unwrap_or(0);
-            let first_msg: String = serde_json::from_str::<Vec<serde_json::Value>>(&content)
-                .ok()
-                .and_then(|v| v.first().and_then(|m| m.get("content")).and_then(|c| c.as_str()).map(|s| {
-                    if s.len() > 50 { format!("{}...", &s[..50]) } else { s.to_string()
-                    }
-                }))
-                .unwrap_or_else(|| "Chat vazio".to_string());
-            sessions.push(serde_json::json!({
-                "chatId": chat_id,
-                "agent": agent,
-                "date": date,
-                "messageCount": msg_count,
-                "preview": first_msg
-            }));
+    let mut query_pairs = Vec::new();
+    if let Some(serde_json::Value::Object(values)) = query {
+        for (key, value) in values {
+            if key == "owner_id" && value.as_str() != Some(owner_id.as_str()) {
+                return Err("A sessão não pode acessar dados de outro proprietário.".to_string());
+            }
+            if let Some(text) = value.as_str() {
+                query_pairs.push((key, text.to_string()));
+            } else if value.is_number() || value.is_boolean() {
+                query_pairs.push((key, value.to_string()));
+            } else {
+                return Err("Parâmetro privado inválido.".to_string());
+            }
         }
     }
-    sessions.sort_by(|a, b| b["date"].as_str().unwrap_or("").cmp(a["date"].as_str().unwrap_or("")));
-    Ok(sessions)
+    if path.starts_with("/hermes/") && !query_pairs.iter().any(|(key, _)| key == "owner_id") {
+        query_pairs.push(("owner_id".to_string(), owner_id.clone()));
+    }
+
+    let mut payload = body.unwrap_or(serde_json::Value::Null);
+    if let serde_json::Value::Object(values) = &mut payload {
+        if let Some(requested_owner) = values.get("owner_id").and_then(|value| value.as_str()) {
+            if requested_owner != owner_id {
+                return Err("A sessão não pode alterar dados de outro proprietário.".to_string());
+            }
+        }
+        if path.starts_with("/hermes/") {
+            values.insert("owner_id".to_string(), serde_json::Value::String(owner_id));
+        }
+    }
+
+    let mut request = state
+        .http_client
+        .request(method, format!("{}{}", ASTRO_API_URL, path))
+        .header("X-Aurea-Sidecar-Token", &sidecar.token)
+        .query(&query_pairs);
+    if !payload.is_null() {
+        request = request.json(&payload);
+    }
+    let response = request.send().await.map_err(|error| format!("Falha ao acessar o armazenamento privado: {}", error))?;
+    let status = response.status();
+    let response_body: serde_json::Value = response.json().await.map_err(|error| format!("Resposta privada inválida: {}", error))?;
+    if !status.is_success() {
+        let detail = response_body.get("detail").and_then(|value| value.get("error").or(Some(value))).and_then(|value| value.as_str()).unwrap_or("A operação privada falhou.");
+        return Err(detail.to_string());
+    }
+    Ok(response_body)
 }
 
-#[tauri::command]
-fn delete_chat_session(app: tauri::AppHandle, agent: String, chat_id: String) -> Result<(), String> {
-    let filename = chat_filename(&agent, &Some(chat_id));
-    let path = get_mem_path(&app, &filename)?;
-    if path.exists() {
-        fs::remove_file(path).map_err(|e| e.to_string())?;
+fn owner_mem_path(
+    app: &tauri::AppHandle,
+    owner_id: &str,
+    relative_path: &str,
+) -> Result<PathBuf, String> {
+    validate_private_id(owner_id, "owner_id")?;
+    get_mem_path(app, &format!("owners/{}/{}", owner_id, relative_path))
+}
+
+fn owner_diary_vault(owner_id: &str) -> Result<PathBuf, String> {
+    validate_private_id(owner_id, "owner_id")?;
+    let home = dirs_next::home_dir().ok_or("Não foi possível encontrar o diretório do usuário.")?;
+    Ok(home
+        .join("Documents")
+        .join("AureaSolarisDiary-private")
+        .join(owner_id))
+}
+
+fn copy_dir_without_overwrite(source: &Path, destination: &Path) -> Result<usize, String> {
+    if !source.exists() {
+        return Ok(0);
     }
+    fs::create_dir_all(destination).map_err(|error| error.to_string())?;
+    let mut copied = 0;
+    for entry in fs::read_dir(source).map_err(|error| error.to_string())? {
+        let entry = entry.map_err(|error| error.to_string())?;
+        let source_path = entry.path();
+        let destination_path = destination.join(entry.file_name());
+        if entry.file_type().map_err(|error| error.to_string())?.is_dir() {
+            copied += copy_dir_without_overwrite(&source_path, &destination_path)?;
+        } else if !destination_path.exists() {
+            fs::copy(&source_path, &destination_path).map_err(|error| error.to_string())?;
+            copied += 1;
+        }
+    }
+    Ok(copied)
+}
+
+fn migrate_legacy_private_data(app: &tauri::AppHandle, owner_id: &str) -> Result<(), String> {
+    validate_private_id(owner_id, "owner_id")?;
+    let ledger_path = get_mem_path(app, "migrations/legacy-personal-v1.json")?;
+    if let Some(parent) = ledger_path.parent() {
+        fs::create_dir_all(parent).map_err(|error| error.to_string())?;
+    }
+
+    let claimed_owner = if ledger_path.exists() {
+        let raw = fs::read_to_string(&ledger_path).map_err(|error| error.to_string())?;
+        serde_json::from_str::<serde_json::Value>(&raw)
+            .ok()
+            .and_then(|value| value.get("owner_id").and_then(|owner| owner.as_str()).map(str::to_owned))
+    } else {
+        None
+    };
+    if claimed_owner.as_deref().is_some_and(|claimed| claimed != owner_id) {
+        return Ok(());
+    }
+
+    let legacy_boards = get_mem_path(app, "boards")?;
+    let legacy_diary = get_mem_path(app, "diary")?;
+    let owner_boards = owner_mem_path(app, owner_id, "boards")?;
+    let owner_diary = owner_mem_path(app, owner_id, "diary")?;
+    fs::create_dir_all(&owner_boards).map_err(|error| error.to_string())?;
+    fs::create_dir_all(&owner_diary).map_err(|error| error.to_string())?;
+
+    let has_legacy = legacy_boards.exists() || legacy_diary.exists();
+    if !has_legacy && claimed_owner.is_none() {
+        return Ok(());
+    }
+
+    let board_files = copy_dir_without_overwrite(&legacy_boards, &owner_boards)?;
+    let diary_files = copy_dir_without_overwrite(&legacy_diary, &owner_diary)?;
+
+    let legacy_vault = dirs_next::home_dir()
+        .map(|home| home.join("Documents").join("AureaSolarisDiary"));
+    let vault_files = if let Some(source) = legacy_vault {
+        copy_dir_without_overwrite(&source, &owner_diary_vault(owner_id)?)?
+    } else {
+        0
+    };
+
+    let ledger = serde_json::json!({
+        "version": 1,
+        "owner_id": owner_id,
+        "completed": true,
+        "copied": {
+            "boards": board_files,
+            "diary": diary_files,
+            "markdown": vault_files
+        },
+        "completed_at": chrono::Utc::now().to_rfc3339()
+    });
+    fs::write(
+        ledger_path,
+        serde_json::to_string_pretty(&ledger).map_err(|error| error.to_string())?,
+    )
+    .map_err(|error| error.to_string())?;
     Ok(())
 }
 
 #[tauri::command]
-async fn get_todoist_tasks() -> Result<String, String> {
-    dotenvy::from_filename(".env").ok();
-    dotenvy::from_filename(".env.local").ok();
-    let token = std::env::var("TODOIST_TOKEN")
-        .map_err(|_| "Opa! TODOIST_TOKEN não encontrada no .env".to_string())?;
-
-    println!("Stark: Sincronizando tarefas do Todoist...");
-    let client = reqwest::Client::builder()
-        .timeout(std::time::Duration::from_secs(10))
-        .build()
-        .map_err(|e| format!("Falha ao criar cliente HTTP: {}", e))?;
-
-    let res = client.get("https://api.todoist.com/rest/v2/tasks")
-        .bearer_auth(token)
+async fn private_session_open(
+    app: tauri::AppHandle,
+    state: State<'_, AppState>,
+    sidecar: State<'_, Arc<SidecarState>>,
+    owner_id: String,
+    login_name: String,
+    password: String,
+) -> Result<String, String> {
+    validate_private_id(&owner_id, "owner_id")?;
+    let response = state.http_client
+        .post(format!("{}/hermes/auth/login", ASTRO_API_URL))
+        .header("X-Aurea-Sidecar-Token", &sidecar.token)
+        .json(&serde_json::json!({ "login_name": login_name, "password": password }))
         .send()
         .await
-        .map_err(|e| format!("Erro de conexão com o Todoist: {}", e))?;
-
-    if !res.status().is_success() {
-        let status = res.status();
-        let err_body = res.text().await.unwrap_or_default();
-        return Err(format!("Erro na API do Todoist ({}): {}", status, err_body));
+        .map_err(|error| format!("Não foi possível autenticar o perfil local: {}", error))?;
+    let status = response.status();
+    let account: serde_json::Value = response.json().await.map_err(|error| error.to_string())?;
+    if !status.is_success() || account.get("account_id").and_then(|value| value.as_str()) != Some(owner_id.as_str()) {
+        return Err("Credenciais locais inválidas.".to_string());
     }
-
-    let text = res.text().await.map_err(|e| format!("Falha ao ler resposta do Todoist: {}", e))?;
-    println!("Stark: {} tarefas recebidas.", text.chars().filter(|&c| c == '{').count());
-    Ok(text)
+    migrate_legacy_private_data(&app, &owner_id)?;
+    let mut active = ACTIVE_OWNER
+        .get_or_init(|| Mutex::new(None))
+        .lock()
+        .map_err(|_| "Não foi possível iniciar a sessão privada.".to_string())?;
+    *active = Some(owner_id.clone());
+    Ok(owner_id)
 }
 
 #[tauri::command]
-async fn add_todoist_task(content: String) -> Result<String, String> {
-    dotenvy::from_filename(".env").ok();
-    dotenvy::from_filename(".env.local").ok();
-    let token = std::env::var("TODOIST_TOKEN")
-        .map_err(|_| "TODOIST_TOKEN não encontrada no .env".to_string())?;
-
-    println!("Stark: Criando tarefa no Todoist: '{}'", content);
-    let client = reqwest::Client::builder()
-        .timeout(std::time::Duration::from_secs(10))
-        .build()
-        .map_err(|e| format!("Falha ao criar cliente HTTP: {}", e))?;
-
-    let res = client.post("https://api.todoist.com/rest/v2/tasks")
-        .bearer_auth(token)
-        .json(&serde_json::json!({ "content": content }))
-        .send()
-        .await
-        .map_err(|e| format!("Erro ao criar tarefa no Todoist: {}", e))?;
-
-    if !res.status().is_success() {
-        let status = res.status();
-        let err_body = res.text().await.unwrap_or_default();
-        return Err(format!("Erro ao criar tarefa ({}): {}", status, err_body));
-    }
-
-    let text = res.text().await.map_err(|e| e.to_string())?;
-    println!("Stark: Tarefa criada com sucesso.");
-    Ok(text)
-}
-
-#[tauri::command]
-async fn delete_todoist_task(id: String) -> Result<(), String> {
-    dotenvy::from_filename(".env").ok();
-    dotenvy::from_filename(".env.local").ok();
-    let token = std::env::var("TODOIST_TOKEN")
-        .map_err(|_| "TODOIST_TOKEN não encontrada no .env".to_string())?;
-
-    println!("Stark: Deletando tarefa Todoist id={}", id);
-    let client = reqwest::Client::builder()
-        .timeout(std::time::Duration::from_secs(10))
-        .build()
-        .map_err(|e| format!("Falha ao criar cliente HTTP: {}", e))?;
-
-    let res = client.delete(format!("https://api.todoist.com/rest/v2/tasks/{}", id))
-        .bearer_auth(token)
-        .send()
-        .await
-        .map_err(|e| format!("Erro ao deletar tarefa: {}", e))?;
-
-    if !res.status().is_success() {
-        let status = res.status();
-        let err_body = res.text().await.unwrap_or_default();
-        return Err(format!("Erro ao deletar tarefa ({}): {}", status, err_body));
-    }
-
-    println!("Stark: Tarefa {} deletada.", id);
-    Ok(())
-}
-
-#[tauri::command]
-async fn toggle_todoist_task(id: String, completed: bool) -> Result<String, String> {
-    dotenvy::from_filename(".env").ok();
-    dotenvy::from_filename(".env.local").ok();
-    let token = std::env::var("TODOIST_TOKEN")
-        .map_err(|_| "TODOIST_TOKEN não encontrada no .env".to_string())?;
-
-    // Todoist REST v2: "close" = concluir, "reopen" = reabrir
-    let action = if completed { "close" } else { "reopen" };
-    println!("Stark: {} tarefa Todoist id={}", action, id);
-
-    let client = reqwest::Client::builder()
-        .timeout(std::time::Duration::from_secs(10))
-        .build()
-        .map_err(|e| format!("Falha ao criar cliente HTTP: {}", e))?;
-
-    let url = format!("https://api.todoist.com/rest/v2/tasks/{}/{}", id, action);
-    let res = client.post(&url)
-        .bearer_auth(token)
-        .send()
-        .await
-        .map_err(|e| format!("Erro ao {} tarefa: {}", action, e))?;
-
-    if !res.status().is_success() {
-        let status = res.status();
-        let err_body = res.text().await.unwrap_or_default();
-        return Err(format!("Erro ao {} tarefa ({}): {}", action, status, err_body));
-    }
-
-    println!("Stark: Tarefa {} {}.", id, action);
-    Ok(format!("Tarefa {} com sucesso.", if completed { "concluída" } else { "reaberta" }))
-}
-
-#[tauri::command]
-async fn postpone_todoist_task(id: String) -> Result<String, String> {
-    dotenvy::from_filename(".env").ok();
-    dotenvy::from_filename(".env.local").ok();
-    let token = std::env::var("TODOIST_TOKEN")
-        .map_err(|_| "TODOIST_TOKEN não encontrada no .env".to_string())?;
-
-    println!("Stark: Adiando tarefa Todoist id={} para amanhã", id);
-
-    // Calcula amanhã no formato YYYY-MM-DD
-    let tomorrow = chrono::Local::now().checked_add_signed(chrono::Duration::days(1))
-        .unwrap_or(chrono::Local::now())
-        .format("%Y-%m-%d").to_string();
-
-    let client = reqwest::Client::builder()
-        .timeout(std::time::Duration::from_secs(10))
-        .build()
-        .map_err(|e| format!("Falha ao criar cliente HTTP: {}", e))?;
-
-    let res = client.post(format!("https://api.todoist.com/rest/v2/tasks/{}", id))
-        .bearer_auth(token)
-        .json(&serde_json::json!({ "due_date": tomorrow }))
-        .send()
-        .await
-        .map_err(|e| format!("Erro ao adiar tarefa: {}", e))?;
-
-    if !res.status().is_success() {
-        let status = res.status();
-        let err_body = res.text().await.unwrap_or_default();
-        return Err(format!("Erro ao adiar tarefa ({}): {}", status, err_body));
-    }
-
-    println!("Stark: Tarefa {} adiada para {}.", id, tomorrow);
-    Ok(format!("Tarefa adiada para {}.", tomorrow))
-}
-
-/// Google Calendar — requer configuração OAuth2.
-/// Por ora retorna informação clara ao usuário sobre o que é necessário.
-#[tauri::command]
-async fn add_google_event(title: String, start: String) -> Result<String, String> {
-    println!("Stark: add_google_event chamado — title='{}', start='{}'", title, start);
-    // TODO (Etapa 3 do MVP): Implementar OAuth2 do Google e criar evento real via:
-    // POST https://www.googleapis.com/calendar/v3/calendars/primary/events
-    // Por enquanto, retorna stub informativo ao frontend.
-    Ok(format!(
-        "{{\"status\": \"stub\", \"message\": \"Google Calendar requer configuração OAuth2. Evento '{}' em '{}' foi registrado localmente.\"}}",
-        title, start
-    ))
-}
-
-#[tauri::command]
-async fn delete_google_event(id: String) -> Result<String, String> {
-    println!("Stark: delete_google_event chamado — id='{}'", id);
-    // TODO (Etapa 3 do MVP): Implementar OAuth2 e DELETE real.
-    Ok(format!(
-        "{{\"status\": \"stub\", \"message\": \"Google Calendar requer configuração OAuth2. Evento '{}' marcado para remoção localmente.\"}}",
-        id
-    ))
-}
-
-#[tauri::command]
-async fn get_google_events() -> Result<String, String> {
-    println!("Stark: Simulando busca de eventos do Google Calendar...");
-    // Mock de eventos para MVP
-    let events = serde_json::json!([
-        { "id": "g1", "title": "Sessão UDV", "start": "2026-03-24T20:00:00Z", "type": "spiritual" },
-        { "id": "g2", "title": "Almoço em Família", "start": "2026-03-24T12:00:00Z", "type": "social" },
-        { "id": "g3", "title": "Redação Mensal", "start": "2026-03-26T15:00:00Z", "type": "work" }
-    ]);
-    Ok(events.to_string())
-}
-
-#[tauri::command]
-async fn send_telegram_message(message: String) -> Result<String, String> {
-    dotenvy::from_filename(".env").ok();
-    let token = std::env::var("TELEGRAM_TOKEN").map_err(|_| "TELEGRAM_TOKEN não encontrada no .env".to_string())?;
-    let chat_id = std::env::var("TELEGRAM_CHAT_ID").map_err(|_| "TELEGRAM_CHAT_ID não encontrada no .env".to_string())?;
-    
-    println!("Stark: Enviando mensagem Telegram para chat_id: {}", chat_id);
-
-    let client = reqwest::Client::new();
-    let url = format!("https://api.telegram.org/bot{}/sendMessage", token);
-    let res = client.post(url)
+async fn private_account_register(
+    app: tauri::AppHandle,
+    state: State<'_, AppState>,
+    sidecar: State<'_, Arc<SidecarState>>,
+    owner_id: String,
+    display_name: String,
+    login_name: String,
+    password: String,
+) -> Result<String, String> {
+    validate_private_id(&owner_id, "owner_id")?;
+    let response = state.http_client
+        .post(format!("{}/hermes/auth/register", ASTRO_API_URL))
+        .header("X-Aurea-Sidecar-Token", &sidecar.token)
         .json(&serde_json::json!({
-            "chat_id": chat_id,
-            "text": message
+            "account_id": owner_id,
+            "display_name": display_name,
+            "login_name": login_name,
+            "password": password,
         }))
         .send()
         .await
-        .map_err(|e| e.to_string())?;
-
-    let text = res.text().await.map_err(|e| e.to_string())?;
-    Ok(text)
+        .map_err(|error| format!("Não foi possível criar o perfil local: {}", error))?;
+    let status = response.status();
+    let account: serde_json::Value = response.json().await.map_err(|error| error.to_string())?;
+    if !status.is_success() || account.get("account_id").and_then(|value| value.as_str()) != Some(owner_id.as_str()) {
+        return Err("Não foi possível criar o perfil local.".to_string());
+    }
+    migrate_legacy_private_data(&app, &owner_id)?;
+    let mut active = ACTIVE_OWNER
+        .get_or_init(|| Mutex::new(None))
+        .lock()
+        .map_err(|_| "Não foi possível iniciar a sessão privada.".to_string())?;
+    *active = Some(owner_id.clone());
+    Ok(owner_id)
 }
 
 #[tauri::command]
-fn save_board(app: tauri::AppHandle, nodes: serde_json::Value, edges: serde_json::Value) -> Result<(), String> {
-    let path = get_mem_path(&app, "board.json")?;
-    let data = serde_json::json!({
-        "nodes": nodes,
-        "edges": edges
-    });
-    let json = serde_json::to_string_pretty(&data).map_err(|e| e.to_string())?;
-    fs::write(path, json).map_err(|e| e.to_string())?;
+async fn private_sidecar_request(
+    state: State<'_, AppState>,
+    sidecar: State<'_, Arc<SidecarState>>,
+    method: String,
+    path: String,
+    query: Option<serde_json::Value>,
+    body: Option<serde_json::Value>,
+) -> Result<serde_json::Value, String> {
+    let method = method.parse::<reqwest::Method>().map_err(|_| "Método HTTP privado inválido.".to_string())?;
+    sidecar_private_request(&state, sidecar.inner().as_ref(), method, &path, query, body).await
+}
+
+#[tauri::command]
+fn private_session_close() -> Result<(), String> {
+    let mut active = ACTIVE_OWNER
+        .get_or_init(|| Mutex::new(None))
+        .lock()
+        .map_err(|_| "Não foi possível encerrar a sessão privada.".to_string())?;
+    *active = None;
     Ok(())
 }
 
+#[cfg(target_os = "windows")]
+fn protect_for_windows_user(data: &[u8]) -> Result<Vec<u8>, String> {
+    use windows::core::PCWSTR;
+    use windows::Win32::Foundation::{LocalFree, HLOCAL};
+    use windows::Win32::Security::Cryptography::{
+        CryptProtectData, CRYPT_INTEGER_BLOB, CRYPTPROTECT_UI_FORBIDDEN,
+    };
+
+    let input = CRYPT_INTEGER_BLOB {
+        cbData: data.len() as u32,
+        pbData: data.as_ptr() as *mut u8,
+    };
+    let mut output = CRYPT_INTEGER_BLOB::default();
+    unsafe {
+        CryptProtectData(
+            &input,
+            PCWSTR::null(),
+            None,
+            None,
+            None,
+            CRYPTPROTECT_UI_FORBIDDEN,
+            &mut output,
+        )
+        .map_err(|error| format!("Falha ao proteger a sessão no Windows: {}", error))?;
+        let protected = std::slice::from_raw_parts(output.pbData, output.cbData as usize).to_vec();
+        let _ = LocalFree(Some(HLOCAL(output.pbData as *mut std::ffi::c_void)));
+        Ok(protected)
+    }
+}
+
+#[cfg(target_os = "windows")]
+fn unprotect_for_windows_user(data: &[u8]) -> Result<Vec<u8>, String> {
+    use windows::Win32::Foundation::{LocalFree, HLOCAL};
+    use windows::Win32::Security::Cryptography::{
+        CryptUnprotectData, CRYPT_INTEGER_BLOB, CRYPTPROTECT_UI_FORBIDDEN,
+    };
+
+    let input = CRYPT_INTEGER_BLOB {
+        cbData: data.len() as u32,
+        pbData: data.as_ptr() as *mut u8,
+    };
+    let mut output = CRYPT_INTEGER_BLOB::default();
+    unsafe {
+        CryptUnprotectData(
+            &input,
+            None,
+            None,
+            None,
+            None,
+            CRYPTPROTECT_UI_FORBIDDEN,
+            &mut output,
+        )
+        .map_err(|error| format!("Falha ao recuperar a sessão protegida: {}", error))?;
+        let plain = std::slice::from_raw_parts(output.pbData, output.cbData as usize).to_vec();
+        let _ = LocalFree(Some(HLOCAL(output.pbData as *mut std::ffi::c_void)));
+        Ok(plain)
+    }
+}
+
+fn remembered_owner_path(app: &tauri::AppHandle) -> Result<PathBuf, String> {
+    get_mem_path(app, "auth/remembered_owner.dpapi")
+}
+
 #[tauri::command]
-fn load_board(app: tauri::AppHandle) -> Result<serde_json::Value, String> {
-    let path = get_mem_path(&app, "board.json")?;
+fn remembered_owner_set(app: tauri::AppHandle, owner_id: String) -> Result<bool, String> {
+    validate_private_id(&owner_id, "owner_id")?;
+    if current_owner()? != owner_id {
+        return Err("A sessão autenticada não corresponde ao proprietário solicitado.".to_string());
+    }
+    #[cfg(target_os = "windows")]
+    {
+        let protected = protect_for_windows_user(owner_id.as_bytes())?;
+        let path = remembered_owner_path(&app)?;
+        if let Some(parent) = path.parent() {
+            fs::create_dir_all(parent).map_err(|error| error.to_string())?;
+        }
+        fs::write(path, protected).map_err(|error| error.to_string())?;
+        Ok(true)
+    }
+    #[cfg(not(target_os = "windows"))]
+    {
+        let _ = app;
+        Err("Memorizar acesso está disponível apenas no aplicativo Windows.".to_string())
+    }
+}
+
+#[tauri::command]
+fn remembered_owner_get(app: tauri::AppHandle) -> Result<Option<String>, String> {
+    let path = remembered_owner_path(&app)?;
     if !path.exists() {
-        return Ok(serde_json::json!({"nodes": [], "edges": []}));
+        return Ok(None);
+    }
+    #[cfg(target_os = "windows")]
+    {
+        let protected = fs::read(path).map_err(|error| error.to_string())?;
+        let owner_id = String::from_utf8(unprotect_for_windows_user(&protected)?)
+            .map_err(|_| "A sessão protegida contém dados inválidos.".to_string())?;
+        validate_private_id(&owner_id, "owner_id")?;
+        Ok(Some(owner_id))
+    }
+    #[cfg(not(target_os = "windows"))]
+    {
+        Ok(None)
+    }
+}
+
+#[tauri::command]
+fn remembered_owner_clear(app: tauri::AppHandle) -> Result<bool, String> {
+    let path = remembered_owner_path(&app)?;
+    if path.exists() {
+        fs::remove_file(path).map_err(|error| error.to_string())?;
+    }
+    Ok(true)
+}
+
+#[tauri::command]
+fn save_board(
+    app: tauri::AppHandle,
+    board_id: String,
+    name: String,
+    nodes: serde_json::Value,
+    edges: serde_json::Value,
+) -> Result<u64, String> {
+    let owner_id = current_owner()?;
+    validate_private_id(&board_id, "board_id")?;
+    // Save board data to boards/{board_id}.json
+    let board_path = owner_mem_path(&app, &owner_id, &format!("boards/{}.json", board_id))?;
+    if let Some(parent) = board_path.parent() {
+        fs::create_dir_all(parent).map_err(|e| e.to_string())?;
+    }
+    let timestamp = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap_or_default()
+        .as_millis() as u64;
+    let data = serde_json::json!({
+        "nodes": nodes,
+        "edges": edges,
+        "name": name,
+        "owner_id": owner_id,
+        "updated_at": timestamp
+    });
+    let json = serde_json::to_string_pretty(&data).map_err(|e| e.to_string())?;
+    fs::write(&board_path, json).map_err(|e| e.to_string())?;
+
+    // Upsert entry in boards_index.json
+    let index_path = owner_mem_path(&app, &owner_id, "boards/boards_index.json")?;
+    if let Some(parent) = index_path.parent() {
+        fs::create_dir_all(parent).map_err(|e| e.to_string())?;
+    }
+    let mut entries: Vec<serde_json::Value> = if index_path.exists() {
+        let raw = fs::read_to_string(&index_path).map_err(|e| e.to_string())?;
+        serde_json::from_str(&raw).unwrap_or_default()
+    } else {
+        Vec::new()
+    };
+    // Remove existing entry for this board_id, then push updated one
+    entries.retain(|e| e.get("id").and_then(|v| v.as_str()) != Some(&board_id));
+    entries.push(serde_json::json!({
+        "id": board_id,
+        "name": name,
+        "owner_id": owner_id,
+        "updated_at": timestamp
+    }));
+    let index_json = serde_json::to_string_pretty(&entries).map_err(|e| e.to_string())?;
+    fs::write(&index_path, index_json).map_err(|e| e.to_string())?;
+
+    Ok(timestamp)
+}
+
+#[tauri::command]
+fn load_board(app: tauri::AppHandle, board_id: String) -> Result<serde_json::Value, String> {
+    let owner_id = current_owner()?;
+    validate_private_id(&board_id, "board_id")?;
+    let path = owner_mem_path(&app, &owner_id, &format!("boards/{}.json", board_id))?;
+    if !path.exists() {
+        return Ok(serde_json::json!({
+            "nodes": [],
+            "edges": []
+        }));
     }
     let json = fs::read_to_string(path).map_err(|e| e.to_string())?;
-    let data = serde_json::from_str(&json).map_err(|e| e.to_string())?;
+    let mut data: serde_json::Value = serde_json::from_str(&json).map_err(|e| e.to_string())?;
+    data["owner_id"] = serde_json::Value::String(owner_id);
     Ok(data)
 }
 
 #[tauri::command]
-fn save_asset(app: tauri::AppHandle, source_path: String, filename: String) -> Result<String, String> {
-    let target_path = get_assets_path(&app, &filename)?;
-    fs::copy(&source_path, &target_path).map_err(|e| e.to_string())?;
-    Ok(target_path.to_string_lossy().to_string())
+fn list_boards(app: tauri::AppHandle) -> Result<serde_json::Value, String> {
+    let owner_id = current_owner()?;
+    let index_path = owner_mem_path(&app, &owner_id, "boards/boards_index.json")?;
+    if !index_path.exists() {
+        return Ok(serde_json::json!([]));
+    }
+    let raw = fs::read_to_string(&index_path).map_err(|e| e.to_string())?;
+    let mut entries: serde_json::Value = serde_json::from_str(&raw).map_err(|e| e.to_string())?;
+    if let Some(items) = entries.as_array_mut() {
+        for item in items {
+            item["owner_id"] = serde_json::Value::String(owner_id.clone());
+        }
+    }
+    Ok(entries)
 }
 
 #[tauri::command]
+fn delete_board(app: tauri::AppHandle, board_id: String) -> Result<(), String> {
+    let owner_id = current_owner()?;
+    validate_private_id(&board_id, "board_id")?;
+    // Remove the board file
+    let board_path = owner_mem_path(&app, &owner_id, &format!("boards/{}.json", board_id))?;
+    if board_path.exists() {
+        fs::remove_file(&board_path).map_err(|e| e.to_string())?;
+    }
+
+    // Remove from boards_index.json
+    let index_path = owner_mem_path(&app, &owner_id, "boards/boards_index.json")?;
+    if index_path.exists() {
+        let raw = fs::read_to_string(&index_path).map_err(|e| e.to_string())?;
+        let mut entries: Vec<serde_json::Value> =
+            serde_json::from_str(&raw).unwrap_or_default();
+        entries.retain(|e| e.get("id").and_then(|v| v.as_str()) != Some(&board_id));
+        let index_json = serde_json::to_string_pretty(&entries).map_err(|e| e.to_string())?;
+        fs::write(&index_path, index_json).map_err(|e| e.to_string())?;
+    }
+
+    Ok(())
+}
+
+// ─── MEDICAL MEMORY (HEALTH) ───
+#[tauri::command]
+fn load_health_memory(app: tauri::AppHandle, profile_id: String) -> Result<serde_json::Value, String> {
+    let owner_id = current_owner()?;
+    validate_private_id(&profile_id, "profile_id")?;
+    let path = owner_mem_path(&app, &owner_id, &format!("health/{}_memory.json", profile_id))?;
+    if !path.exists() {
+        return Ok(serde_json::json!([]));
+    }
+    let json = fs::read_to_string(path).map_err(|e| e.to_string())?;
+    let data = serde_json::from_str(&json).unwrap_or_else(|_| serde_json::json!([]));
+    Ok(data)
+}
+
+#[tauri::command]
+fn save_health_memory(app: tauri::AppHandle, profile_id: String, memory: serde_json::Value) -> Result<(), String> {
+    let owner_id = current_owner()?;
+    validate_private_id(&profile_id, "profile_id")?;
+    let path = owner_mem_path(&app, &owner_id, &format!("health/{}_memory.json", profile_id))?;
+    if let Some(parent) = path.parent() {
+        fs::create_dir_all(parent).map_err(|e| e.to_string())?;
+    }
+    let json = serde_json::to_string_pretty(&memory).map_err(|e| e.to_string())?;
+    fs::write(path, json).map_err(|e| e.to_string())?;
+    Ok(())
+}
+
+
+#[tauri::command]
 fn get_sys_info() -> Result<serde_json::Value, String> {
-    let load = sys_info::loadavg().map(|l| l.one).unwrap_or(0.0);
-    let mem = sys_info::mem_info().map(|m| (m.total - m.free) as f64 / 1024.0 / 1024.0).unwrap_or(0.0);
-    let disk = sys_info::disk_info().map(|d| d.free as f64 / 1024.0 / 1024.0).unwrap_or(0.0);
-    
+    let load =
+        sys_info::loadavg().map(|l| l.one).unwrap_or(0.0);
+    let mem = sys_info::mem_info()
+        .map(|m| (m.total - m.free) as f64 / 1024.0 / 1024.0)
+        .unwrap_or(0.0);
+    let disk = sys_info::disk_info()
+        .map(|d| d.free as f64 / 1024.0 / 1024.0)
+        .unwrap_or(0.0);
+
     Ok(serde_json::json!({
         "cpu_load": format!("{:.1}%", load * 10.0),
         "ram_usage": format!("{:.1} GB", mem),
@@ -643,110 +646,256 @@ fn get_sys_info() -> Result<serde_json::Value, String> {
 }
 
 #[tauri::command]
-fn list_archived_chats(app: tauri::AppHandle, agent: String) -> Result<Vec<serde_json::Value>, String> {
-    let mut path = app.path().app_data_dir().map_err(|e| e.to_string())?;
-    path.push("memory");
-    path.push("archives");
-    if !path.exists() {
-        return Ok(vec![]);
+async fn run_astro_engine(
+    state: State<'_, AppState>,
+    payload: Option<String>,
+) -> Result<String, String> {
+    // 1. Health check rápido
+    check_sidecar_health(&state.http_client).await?;
+
+    // 2. Parse do payload (aceita JSON ou None)
+    let body: serde_json::Value = match payload {
+        Some(ref p) => serde_json::from_str(p)
+            .map_err(|e| format!("JSON inválido no payload: {}", e))?,
+        None => serde_json::json!({}),
+    };
+
+    // 3. Detectar se é natal ou transit pelo campo 'transit'
+    let is_transit = body
+        .get("transit")
+        .and_then(|v| v.as_bool())
+        .unwrap_or(false);
+
+    let url = if is_transit {
+        format!("{}/transit", ASTRO_API_URL)
+    } else {
+        format!("{}/natal", ASTRO_API_URL)
+    };
+
+    // 4. POST para o FastAPI sidecar
+    let res = state
+        .http_client
+        .post(&url)
+        .json(&body)
+        .send()
+        .await
+        .map_err(|e| {
+            format!(
+                "Erro de rede ao conectar ao sidecar: {}",
+                e
+            )
+        })?;
+
+    let status = res.status();
+    let text = res
+        .text()
+        .await
+        .map_err(|e| format!("Falha ao ler resposta do sidecar: {}", e))?;
+
+    if status.is_success() {
+        println!(
+            "Stark: sidecar retornou {} bytes",
+            text.len()
+        );
+        Ok(text)
+    } else {
+        Err(format!(
+            "Erro no sidecar ({}): {}",
+            status, text
+        ))
     }
-    let mut archives = vec![];
-    for entry in fs::read_dir(path).map_err(|e| e.to_string())? {
-        let entry = entry.map_err(|e| e.to_string())?;
-        let name = entry.file_name().to_string_lossy().to_string();
-        if name.starts_with(&agent) && name.ends_with(".json") {
-            let metadata = entry.metadata().map_err(|e| e.to_string())?;
-            let created = metadata.created().unwrap_or(std::time::SystemTime::now());
-            let date = chrono::DateTime::<chrono::Local>::from(created).format("%d %b %Y").to_string();
-            
-            archives.push(serde_json::json!({
-                "id": name,
-                "name": name,
-                "date": date,
-                "agent": agent
-            }));
-        }
-    }
-    archives.sort_by(|a, b| b["id"].as_str().unwrap().cmp(a["id"].as_str().unwrap())); // Newest first
-    Ok(archives)
 }
 
-#[tauri::command]
-fn load_archived_chat(app: tauri::AppHandle, filename: String) -> Result<Vec<OpenRouterMessage>, String> {
-    let mut path = app.path().app_data_dir().map_err(|e| e.to_string())?;
-    path.push("memory");
-    path.push("archives");
-    path.push(filename);
-    
-    if !path.exists() {
-        return Err("Arquivo de arquivo não encontrado".to_string());
+
+// ─── Astro Engine (HTTP sidecar) ───
+
+/// Verifica se o sidecar FastAPI está respondendo na porta 9876.
+async fn check_sidecar_health(
+    client: &reqwest::Client,
+) -> Result<(), String> {
+    let res = client
+        .get(format!("{}/health", ASTRO_API_URL))
+        .send()
+        .await
+        .map_err(|e| {
+            format!(
+                "Sidecar não está acessível em {}: {}",
+                ASTRO_API_URL, e
+            )
+        })?;
+
+    if res.status().is_success() {
+        Ok(())
+    } else {
+        Err(format!(
+            "Sidecar health check falhou (status {})",
+            res.status()
+        ))
     }
-    let json = fs::read_to_string(path).map_err(|e| e.to_string())?;
-    let history: Vec<OpenRouterMessage> = serde_json::from_str(&json).map_err(|e| e.to_string())?;
-    Ok(history)
 }
 
+/// Obtém as posições de trânsito planetário para uma data e local
+/// específicos.
+///
+/// Injeta `transit: true` no payload e delega para
+/// `run_astro_engine`.
 #[tauri::command]
-// Diary data structures
+async fn get_transit_positions(
+    state: State<'_, AppState>,
+    payload: String,
+) -> Result<String, String> {
+    // Injeta "transit": true no payload se não estiver presente
+    let mut data: serde_json::Value = serde_json::from_str(&payload)
+        .map_err(|e| format!("JSON inválido: {}", e))?;
+
+    if data.get("transit").and_then(|v| v.as_bool()) != Some(true) {
+        data["transit"] = serde_json::json!(true);
+    }
+
+    run_astro_engine(state, Some(data.to_string())).await
+}
+
+// ─── Diary ───
+
+fn default_status() -> String {
+    "idea".to_string()
+}
+
 #[derive(Serialize, Deserialize, Clone)]
 pub struct DiaryEntry {
     pub id: String,
+    #[serde(default)]
+    pub owner_id: String,
     pub title: String,
-    pub content: String, // TipTap JSON stringified
+    pub content: String,       // Markdown plain text
     pub folder_id: String,
-    pub created_at: String, // ISO 8601
-    pub updated_at: String, // ISO 8601
+    pub created_at: String,    // ISO 8601
+    pub updated_at: String,    // ISO 8601
     pub word_count: usize,
+    #[serde(default = "default_status")]
+    pub status: String,        // "idea" | "draft" | "done"
 }
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct DiaryFolder {
     pub id: String,
+    #[serde(default)]
+    pub owner_id: String,
     pub name: String,
-    pub icon: String, // emoji
+    pub icon: String,          // emoji
     pub order: usize,
-    pub created_at: String, // ISO 8601
+    pub created_at: String,    // ISO 8601
 }
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct DiaryTabsState {
+    #[serde(default)]
+    pub owner_id: String,
     pub open_tab_ids: Vec<String>,
     pub active_tab_id: Option<String>,
 }
 
 // Helper functions for diary persistence
-fn get_diary_dir(app: &tauri::AppHandle) -> Result<PathBuf, String> {
-    let mut dir = app.path().app_data_dir().map_err(|e| e.to_string())?;
-    dir.push("memory/diary");
-    fs::create_dir_all(&dir).map_err(|e| format!("Falha ao criar diretório do diário: {}", e))?;
+
+fn sanitize_filename(name: &str) -> String {
+    let invalid_chars = ['<', '>', ':', '"', '/', '\\', '|', '?', '*'];
+    let mut sanitized: String = name.chars()
+        .map(|c| if invalid_chars.contains(&c) { '_' } else { c })
+        .collect();
+    sanitized = sanitized.trim().to_string();
+    if sanitized.is_empty() {
+        sanitized = "Nota sem titulo".to_string();
+    }
+    sanitized
+}
+
+fn normalize_diary_entry_owner(entry: &mut DiaryEntry, owner_id: &str) -> Result<bool, String> {
+    if entry.owner_id.is_empty() {
+        entry.owner_id = owner_id.to_string();
+        return Ok(true);
+    }
+    if entry.owner_id == owner_id {
+        Ok(false)
+    } else {
+        Err("A entrada solicitada pertence a outro propriet\u{e1}rio.".to_string())
+    }
+}
+
+fn normalize_diary_folder_owner(folder: &mut DiaryFolder, owner_id: &str) -> Result<bool, String> {
+    if folder.owner_id.is_empty() {
+        folder.owner_id = owner_id.to_string();
+        return Ok(true);
+    }
+    if folder.owner_id == owner_id {
+        Ok(false)
+    } else {
+        Err("A pasta solicitada pertence a outro propriet\u{e1}rio.".to_string())
+    }
+}
+
+fn get_folder_name(app: &tauri::AppHandle, folder_id: &str) -> String {
+    if folder_id == "general" {
+        return "Geral".to_string();
+    }
+    if let Ok(folders) = diary_list_folders(app.clone()) {
+        if let Some(f) = folders.iter().find(|f| f.id == folder_id) {
+            return sanitize_filename(&f.name);
+        }
+    }
+    "Geral".to_string()
+}
+
+fn get_diary_dir(
+    app: &tauri::AppHandle,
+) -> Result<PathBuf, String> {
+    let owner_id = current_owner()?;
+    let dir = owner_mem_path(app, &owner_id, "diary")?;
+    fs::create_dir_all(&dir).map_err(|e| {
+        format!(
+            "Falha ao criar diretório do diário: {}",
+            e
+        )
+    })?;
     Ok(dir)
 }
 
-fn get_entry_path(app: &tauri::AppHandle, entry_id: &str) -> Result<PathBuf, String> {
+fn get_entry_path(
+    app: &tauri::AppHandle,
+    entry_id: &str,
+) -> Result<PathBuf, String> {
+    validate_private_id(entry_id, "entry_id")?;
     let mut path = get_diary_dir(app)?;
     path.push("entries");
     path.push(format!("{}.json", entry_id));
     Ok(path)
 }
 
-fn get_folders_path(app: &tauri::AppHandle) -> Result<PathBuf, String> {
+fn get_folders_path(
+    app: &tauri::AppHandle,
+) -> Result<PathBuf, String> {
     let mut path = get_diary_dir(app)?;
     path.push("folders.json");
     Ok(path)
 }
 
-fn get_tabs_path(app: &tauri::AppHandle) -> Result<PathBuf, String> {
+fn get_tabs_path(
+    app: &tauri::AppHandle,
+) -> Result<PathBuf, String> {
     let mut path = get_diary_dir(app)?;
     path.push("tabs.json");
     Ok(path)
 }
 
 // Ensure default "Geral" folder exists
-fn ensure_default_folder(app: &tauri::AppHandle) -> Result<(), String> {
+fn ensure_default_folder(
+    app: &tauri::AppHandle,
+) -> Result<(), String> {
+    let owner_id = current_owner()?;
     let folders_path = get_folders_path(app)?;
     if !folders_path.exists() {
         let folder = DiaryFolder {
             id: "general".to_string(),
+            owner_id,
             name: "Geral".to_string(),
             icon: "📁".to_string(),
             order: 0,
@@ -754,324 +903,269 @@ fn ensure_default_folder(app: &tauri::AppHandle) -> Result<(), String> {
         };
         let folders = vec![folder];
         let json = serde_json::to_string_pretty(&folders)
-            .map_err(|e| format!("Falha ao serializar pastas: {}", e))?;
-        fs::write(&folders_path, json)
-            .map_err(|e| format!("Falha ao salvar pastas: {}", e))?;
+            .map_err(|e| {
+                format!(
+                    "Falha ao serializar pastas: {}",
+                    e
+                )
+            })?;
+        fs::write(&folders_path, json).map_err(|e| {
+            format!("Falha ao salvar pastas: {}", e)
+        })?;
+    }
+    // Ensure Geral directory exists in Obsidian
+    if let Ok(vault) = get_obsidian_diary_vault(app) {
+        let geral_dir = vault.join("Geral");
+        fs::create_dir_all(&geral_dir).ok();
     }
     Ok(())
 }
 
-fn get_total_tokens(app: tauri::AppHandle) -> Result<u64, String> {
-    let path = get_mem_path(&app, "usage.json")?;
-    if !path.exists() {
-        return Ok(0);
-    }
-    let content = fs::read_to_string(path).map_err(|e| e.to_string())?;
-    let usage_data: serde_json::Value = serde_json::from_str(&content).map_err(|e| e.to_string())?;
-    Ok(usage_data["total_tokens"].as_u64().unwrap_or(0))
-}
-
 #[tauri::command]
-fn archive_chat(app: tauri::AppHandle, agent: String) -> Result<(), String> {
-    let source_path = get_mem_path(&app, &format!("{}.json", agent))?;
-    if !source_path.exists() {
-        return Ok(()); // Nothing to archive
-    }
-    
-    let mut target_dir = app.path().app_data_dir().map_err(|e| e.to_string())?;
-    target_dir.push("memory");
-    target_dir.push("archives");
-    if !target_dir.exists() {
-        fs::create_dir_all(&target_dir).map_err(|e| e.to_string())?;
-    }
-
-    let timestamp = chrono::Local::now().format("%Y%m%d_%H%M%S").to_string();
-    let target_path = target_dir.join(format!("{}_{}.json", agent, timestamp));
-    
-    fs::rename(source_path, target_path).map_err(|e| e.to_string())?;
-    Ok(())
-}
-
-
-
-#[tauri::command]
-fn list_lab_files() -> Result<Vec<serde_json::Value>, String> {
-    let path = Path::new("C:\\AureaSolaris\\Laboratorio_Stark");
-    if !path.exists() {
-        fs::create_dir_all(path).map_err(|e| e.to_string())?;
-    }
-    let mut files = vec![];
-    for entry in fs::read_dir(path).map_err(|e| e.to_string())? {
-        let entry = entry.map_err(|e| e.to_string())?;
-        let metadata = entry.metadata().map_err(|e| e.to_string())?;
-        files.push(serde_json::json!({
-            "name": entry.file_name().to_string_lossy(),
-            "isDirectory": metadata.is_dir(),
-            "size": metadata.len(),
-            "path": entry.path().to_string_lossy()
-        }));
-    }
-    Ok(files)
-}
-
-#[tauri::command]
-fn read_text_file(path: String) -> Result<String, String> {
-    fs::read_to_string(path).map_err(|e| e.to_string())
-}
-
-#[tauri::command]
-async fn run_astro_engine(payload: Option<String>) -> Result<String, String> {
-    use std::process::Command;
-
-    // Localizar o diretório raiz do projeto fixed em dev: C:\AureaSolaris
-    let project_root = std::path::PathBuf::from("C:\\AureaSolaris");
-    let astro_path = project_root.join("astro_engine.py");
-
-    println!("Stark: Executando astro_engine.py em {:?}", astro_path);
-
-    // No Windows, usar python.exe é mais seguro que python
-    let mut cmd = Command::new("python.exe");
-    cmd.arg(&astro_path)
-       .current_dir(&project_root);
-
-    if let Some(p) = payload {
-        cmd.arg(p);
-    }
-
-    let output = cmd.output().map_err(|e| format!("Falha ao executar python.exe ou localizar o motor em {:?}: {}.", astro_path, e))?;
-
-    if output.status.success() {
-        let result = String::from_utf8_lossy(&output.stdout).to_string();
-        println!("Stark: astro_engine.py retornou {} bytes", result.len());
-        Ok(result)
-    } else {
-        let err = String::from_utf8_lossy(&output.stderr).to_string();
-        Err(format!("Erro no Astro Engine (Python): {}", err))
-    }
-}
-
-#[tauri::command]
-fn run_agm_engine(payload: Option<String>) -> Result<String, String> {
-    use std::process::Command;
-    let project_root = std::path::PathBuf::from("C:\\AureaSolaris");
-    let agm_path = project_root.join("Laboratorio_Stark").join("agm_engine.py");
-
-    println!("Stark: Executando antigravity_engine.py em {:?}", agm_path);
-
-    let mut cmd = Command::new("python.exe");
-    cmd.arg(&agm_path)
-       .current_dir(&project_root);
-
-    if let Some(p) = payload {
-        cmd.arg(p);
-    }
-
-    let output = cmd.output().map_err(|e| format!("Falha ao executar python.exe para AGM: {}", e))?;
-
-    if output.status.success() {
-        let result = String::from_utf8_lossy(&output.stdout).to_string();
-        Ok(result)
-    } else {
-        let err = String::from_utf8_lossy(&output.stderr).to_string();
-        Err(format!("Erro no AGM (Python): {}", err))
-    }
-}
-
-/// Obtém as posições de trânsito planetário para uma data e local específicos.
-///
-/// # Parâmetros
-/// - `payload`: JSON com `year`, `month`, `day`, `hour` (número ou string), `lat`, `lon`, `include_asteroids`.
-///   Se algum campo numérico for omitido, usa a data/hora atual e coordenadas de Brasília.
-///
-/// # Retorno
-/// JSON com dados dos trânsitos planetários.
-#[tauri::command]
-async fn get_transit_positions(payload: String) -> Result<String, String> {
-    // Parse do JSON
-    let data: serde_json::Value = serde_json::from_str(&payload)
-        .map_err(|e| format!("JSON inválido: {}", e))?;
-    
-    // Extrair parâmetros
-    let now = chrono::Local::now();
-    
-    // Helper closures to parse numeric values from JSON, supporting both number and string types
-    let parse_i64 = |key: &str, default: i64| -> i64 {
-        match data[key].as_i64() {
-            Some(v) => v,
-            None => {
-                if let Some(s) = data[key].as_str() {
-                    s.parse::<i64>().unwrap_or(default)
-                } else {
-                    default
-                }
-            }
-        }
-    };
-    
-    let parse_f64 = |key: &str, default: f64| -> f64 {
-        match data[key].as_f64() {
-            Some(v) => v,
-            None => {
-                if let Some(s) = data[key].as_str() {
-                    s.parse::<f64>().unwrap_or(default)
-                } else {
-                    default
-                }
-            }
-        }
-    };
-    
-    let year = parse_i64("year", now.year() as i64) as i32;
-    let month = parse_i64("month", now.month() as i64) as u32;
-    let day = parse_i64("day", now.day() as i64) as u32;
-    let hour = parse_f64("hour", now.hour() as f64 + now.minute() as f64 / 60.0);
-    let lat = parse_f64("lat", -15.7833);
-    let lon = parse_f64("lon", -47.9333);
-    let include_asteroids = data["include_asteroids"].as_bool().unwrap_or(false);
-    
-    // Validação de parâmetros
-    if !(1..=12).contains(&month) {
-        return Err(format!("Mês deve estar entre 1 e 12, recebido: {}", month));
-    }
-    if !(1..=31).contains(&day) {
-        return Err(format!("Dia deve estar entre 1 e 31, recebido: {}", day));
-    }
-    if !(0.0..=24.0).contains(&hour) {
-        return Err(format!("Hora deve estar entre 0 e 24, recebido: {}", hour));
-    }
-    // year validation: reasonably between 1900 and 2100
-    if year < 1900 || year > 2100 {
-        return Err(format!("Ano deve estar entre 1900 e 2100, recebido: {}", year));
-    }
-    
-    // Construir payload para Python
-    let python_payload = serde_json::json!({
-        "year": year,
-        "month": month,
-        "day": day,
-        "hour": hour,
-        "lat": lat,
-        "lon": lon,
-        "include_asteroids": include_asteroids,
-        "transit": true
-    });
-    
-    // Chamar motor Python (usando run_astro_engine)
-    let result = run_astro_engine(Some(python_payload.to_string())).await?;
-    
-    Ok(result)
-}
-
-// Google integration will use Composio MCP - no manual OAuth2 needed
-
-// Diary command implementations
-#[tauri::command]
-pub fn diary_create_entry(app: tauri::AppHandle, title: String, folder_id: String) -> Result<DiaryEntry, String> {
+#[allow(non_snake_case)]
+fn diary_create_entry(
+    app: tauri::AppHandle,
+    title: String,
+    folder_id: Option<String>,
+    folderId: Option<String>,
+    status: Option<String>,
+) -> Result<DiaryEntry, String> {
+    let owner_id = current_owner()?;
     let entry_id = uuid::Uuid::new_v4().to_string();
     let now = chrono::Utc::now().to_rfc3339();
-    
+
+    let resolved_folder_id = folder_id.or(folderId);
+
     let entry = DiaryEntry {
         id: entry_id.clone(),
+        owner_id,
         title,
-        content: "".to_string, // Starts empty
-        folder_id: if folder_id.is_empty() { "general".to_string() } else { folder_id },
+        content: "".to_string(), // Starts empty
+        folder_id: match resolved_folder_id {
+            Some(ref id) if !id.is_empty() => id.clone(),
+            _ => "general".to_string(),
+        },
         created_at: now.clone(),
         updated_at: now.clone(),
         word_count: 0,
+        status: status.unwrap_or_else(|| "idea".to_string()),
     };
-    
+
     // Ensure default folder exists
     let _ = ensure_default_folder(&app);
-    
+
     // Save entry to file
     let entry_path = get_entry_path(&app, &entry_id)?;
     let json = serde_json::to_string_pretty(&entry)
-        .map_err(|e| format!("Falha ao serializar entrada: {}", e))?;
-    fs::write(&entry_path, json)
-        .map_err(|e| format!("Falha ao salvar entrada: {}", e))?;
-    
+        .map_err(|e| {
+            format!("Falha ao serializar entrada: {}", e)
+        })?;
+    fs::write(&entry_path, json).map_err(|e| {
+        format!("Falha ao salvar entrada: {}", e)
+    })?;
+
+    // Save to Obsidian vault
+    if let Ok(vault) = get_obsidian_diary_vault(&app) {
+        let folder_name = get_folder_name(&app, &entry.folder_id);
+        let file_title = sanitize_filename(&entry.title);
+        let path = vault.join(&folder_name).join(format!("{}.md", file_title));
+        if let Some(parent) = path.parent() {
+            fs::create_dir_all(parent).ok();
+        }
+        // Write initial empty content or prompt template
+        fs::write(path, "").ok();
+    }
+
     Ok(entry)
 }
 
 #[tauri::command]
-pub fn diary_update_entry(
+#[allow(non_snake_case)]
+fn diary_update_entry(
     app: tauri::AppHandle,
     id: String,
     title: Option<String>,
     content: Option<String>,
-    folder_id: Option<String>
+    folder_id: Option<String>,
+    folderId: Option<String>,
+    status: Option<String>,
 ) -> Result<DiaryEntry, String> {
+    let owner_id = current_owner()?;
     // Load existing entry
     let entry_path = get_entry_path(&app, &id)?;
-    let mut entry: DiaryEntry = fs::read_to_string(&entry_path)
-        .map_err(|e| format!("Falha ao ler entrada: {}", e))?
-        .parse::<serde_json::Value>()
-        .map_err(|e| format!("Falha ao parsear entrada JSON: {}", e))?
-        .serde_deserialize()
-        .map_err(|e| format!("Falha ao desserializar entrada: {}", e))?;
-    
+    let entry_data = fs::read_to_string(&entry_path)
+        .map_err(|e| {
+            format!("Falha ao ler entrada: {}", e)
+        })?;
+    let mut entry: DiaryEntry = serde_json::from_str(&entry_data)
+        .map_err(|e| {
+            format!(
+                "Falha ao desserializar entrada: {}",
+                e
+            )
+        })?;
+    normalize_diary_entry_owner(&mut entry, &owner_id)?;
+
+    let resolved_folder_id = folder_id.or(folderId);
+
+    // Calculate old Obsidian file path
+    let old_folder_name = get_folder_name(&app, &entry.folder_id);
+    let old_file_title = sanitize_filename(&entry.title);
+    let vault = get_obsidian_diary_vault(&app).ok();
+    let old_obsidian_path = vault.as_ref().map(|v| v.join(&old_folder_name).join(format!("{}.md", old_file_title)));
+
     // Update fields provided
     if let Some(t) = title {
         entry.title = t;
     }
     if let Some(c) = content {
-        entry.content = c;
-        // Update word count
         entry.word_count = c.split_whitespace().count();
+        entry.content = c;
     }
-    if let Some(f) = folder_id {
+    if let Some(f) = resolved_folder_id {
         if !f.is_empty() {
             entry.folder_id = f;
         }
     }
+    if let Some(s) = status {
+        entry.status = s;
+    }
     entry.updated_at = chrono::Utc::now().to_rfc3339();
-    
+
     // Save updated entry
     let json = serde_json::to_string_pretty(&entry)
-        .map_err(|e| format!("Falha ao serializar entrada atualizada: {}", e))?;
-    fs::write(&entry_path, json)
-        .map_err(|e| format!("Falha ao salvar entrada atualizada: {}", e))?;
-    
+        .map_err(|e| {
+            format!(
+                "Falha ao serializar entrada atualizada: {}",
+                e
+            )
+        })?;
+    fs::write(&entry_path, json).map_err(|e| {
+        format!(
+            "Falha ao salvar entrada atualizada: {}",
+            e
+        )
+    })?;
+
+    // Update in Obsidian
+    if let Some(ref v) = vault {
+        let new_folder_name = get_folder_name(&app, &entry.folder_id);
+        let new_file_title = sanitize_filename(&entry.title);
+        let new_obsidian_path = v.join(&new_folder_name).join(format!("{}.md", new_file_title));
+
+        // If path changed, remove the old file
+        if let Some(ref old_path) = old_obsidian_path {
+            if old_path.exists() && *old_path != new_obsidian_path {
+                fs::remove_file(old_path).ok();
+            }
+        }
+
+        // Write the content to the new path
+        if let Some(parent) = new_obsidian_path.parent() {
+            fs::create_dir_all(parent).ok();
+        }
+        fs::write(&new_obsidian_path, &entry.content).ok();
+    }
+
     Ok(entry)
 }
 
 #[tauri::command]
-pub fn diary_delete_entry(app: tauri::AppHandle, id: String) -> Result<(), String> {
+fn diary_delete_entry(
+    app: tauri::AppHandle,
+    id: String,
+) -> Result<(), String> {
+    let owner_id = current_owner()?;
     let entry_path = get_entry_path(&app, &id)?;
-    fs::remove_file(&entry_path)
-        .map_err(|e| format!("Falha ao excluir entrada: {}", e))?;
+
+    if let Ok(entry_data) = fs::read_to_string(&entry_path) {
+        if let Ok(entry) = serde_json::from_str::<DiaryEntry>(&entry_data) {
+            if entry.owner_id.is_empty() || entry.owner_id == owner_id {
+            if let Ok(vault) = get_obsidian_diary_vault(&app) {
+                let folder_name = get_folder_name(&app, &entry.folder_id);
+                let file_title = sanitize_filename(&entry.title);
+                let obsidian_path = vault.join(&folder_name).join(format!("{}.md", file_title));
+                if obsidian_path.exists() {
+                    fs::remove_file(obsidian_path).ok();
+                }
+            }
+            } else {
+                return Err("A entrada solicitada pertence a outro propriet\u{e1}rio.".to_string());
+            }
+        }
+    }
+
+    fs::remove_file(&entry_path).map_err(|e| {
+        format!("Falha ao excluir entrada: {}", e)
+    })?;
     Ok(())
 }
 
 #[tauri::command]
-pub fn diary_list_entries(app: tauri::AppHandle, folder_id: Option<String>) -> Result<Vec<DiaryEntry>, String> {
+#[allow(non_snake_case)]
+fn diary_list_entries(
+    app: tauri::AppHandle,
+    folder_id: Option<String>,
+    folderId: Option<String>,
+) -> Result<Vec<DiaryEntry>, String> {
+    let owner_id = current_owner()?;
     let diary_dir = get_diary_dir(&app)?;
     let entries_dir = diary_dir.join("entries");
-    
+
+    let resolved_folder_id = folder_id.or(folderId);
+
     // Check if entries directory exists
     if !entries_dir.exists() {
         return Ok(Vec::new());
     }
-    
+
     let mut entries = Vec::new();
-    
+
     // Read all JSON files in entries directory
-    for entry in fs::read_dir(&entries_dir)
-        .map_err(|e| format!("Falha ao ler diretório de entradas: {}", e))? {
+    for entry in fs::read_dir(&entries_dir).map_err(|e| {
+        format!(
+            "Falha ao ler diretório de entradas: {}",
+            e
+        )
+    })? {
         let entry_path = entry
-            .map_err(|e| format!("Falha ao obter entrada do diretório: {}", e))?
+            .map_err(|e| {
+                format!(
+                    "Falha ao obter entrada do diretório: {}",
+                    e
+                )
+            })?
             .path();
-        
-        if entry_path.extension().and_then(|s| s.to_str()) == Some("json") {
+
+        if entry_path.extension().and_then(|s| s.to_str())
+            == Some("json")
+        {
             let entry_data = fs::read_to_string(&entry_path)
-                .map_err(|e| format!("Falha ao ler arquivo de entrada: {}", e))?;
-            
-            let entry: DiaryEntry = serde_json::from_str(&entry_data)
-                .map_err(|e| format!("Falha ao desserializar entrada: {}", e))?;
-            
+                .map_err(|e| {
+                    format!(
+                        "Falha ao ler arquivo de entrada: {}",
+                        e
+                    )
+                })?;
+
+            let mut entry: DiaryEntry =
+                serde_json::from_str(&entry_data).map_err(
+                    |e| {
+                        format!(
+                            "Falha ao desserializar entrada: {}",
+                            e
+                        )
+                    },
+                )?;
+            let was_legacy = normalize_diary_entry_owner(&mut entry, &owner_id)?;
+            if was_legacy {
+                let normalized = serde_json::to_string_pretty(&entry).map_err(|e| e.to_string())?;
+                fs::write(&entry_path, normalized).map_err(|e| e.to_string())?;
+            }
+
             // Filter by folder if specified
-            if let Some(ref folder_id) = folder_id {
-                if entry.folder_id == *folder_id {
+            if let Some(ref f_id) = resolved_folder_id {
+                if entry.folder_id == *f_id {
                     entries.push(entry);
                 }
             } else {
@@ -1079,218 +1173,541 @@ pub fn diary_list_entries(app: tauri::AppHandle, folder_id: Option<String>) -> R
             }
         }
     }
-    
+
     // Sort by creation date (newest first)
     entries.sort_by(|a, b| b.created_at.cmp(&a.created_at));
-    
+
     Ok(entries)
 }
 
 #[tauri::command]
-pub fn diary_get_entry(app: tauri::AppHandle, id: String) -> Result<Option<DiaryEntry>, String> {
+fn diary_get_entry(
+    app: tauri::AppHandle,
+    id: String,
+) -> Result<Option<DiaryEntry>, String> {
+    let owner_id = current_owner()?;
     let entry_path = get_entry_path(&app, &id)?;
-    
+
     if !entry_path.exists() {
         return Ok(None);
     }
-    
+
     let entry_data = fs::read_to_string(&entry_path)
-        .map_err(|e| format!("Falha ao ler arquivo de entrada: {}", e))?;
-    
-    let entry: DiaryEntry = serde_json::from_str(&entry_data)
-        .map_err(|e| format!("Falha ao desserializar entrada: {}", e))?;
-    
+        .map_err(|e| {
+            format!(
+                "Falha ao ler arquivo de entrada: {}",
+                e
+            )
+        })?;
+
+    let mut entry: DiaryEntry = serde_json::from_str(&entry_data)
+        .map_err(|e| {
+            format!(
+                "Falha ao desserializar entrada: {}",
+                e
+            )
+        })?;
+    if normalize_diary_entry_owner(&mut entry, &owner_id)? {
+        let normalized = serde_json::to_string_pretty(&entry).map_err(|e| e.to_string())?;
+        fs::write(&entry_path, normalized).map_err(|e| e.to_string())?;
+    }
+
+    // Read content from Obsidian if it exists
+    if let Ok(vault) = get_obsidian_diary_vault(&app) {
+        let folder_name = get_folder_name(&app, &entry.folder_id);
+        let file_title = sanitize_filename(&entry.title);
+        let path = vault.join(&folder_name).join(format!("{}.md", file_title));
+        if path.exists() {
+            if let Ok(content) = fs::read_to_string(path) {
+                entry.content = content;
+                entry.word_count = entry.content.split_whitespace().count();
+            }
+        }
+    }
+
     Ok(Some(entry))
 }
 
 #[tauri::command]
-pub fn diary_create_folder(app: tauri::AppHandle, name: String, icon: String) -> Result<DiaryFolder, String> {
+fn diary_create_folder(
+    app: tauri::AppHandle,
+    name: String,
+    icon: String,
+) -> Result<DiaryFolder, String> {
+    let owner_id = current_owner()?;
     let folder_id = uuid::Uuid::new_v4().to_string();
     let now = chrono::Utc::now().to_rfc3339();
-    
+
     // Load existing folders to determine order
-    let mut folders = diary_list_folders(&app)?;
+    let mut folders = diary_list_folders(app.clone())?;
     let order = folders.len();
-    
+
     let folder = DiaryFolder {
         id: folder_id.clone(),
+        owner_id,
         name,
         icon,
         order,
         created_at: now.clone(),
     };
-    
+
     // Add new folder to list
     folders.push(folder.clone());
-    
+
     // Save updated folder list
     let folders_path = get_folders_path(&app)?;
     let json = serde_json::to_string_pretty(&folders)
-        .map_err(|e| format!("Falha ao serializar pastas: {}", e))?;
-    fs::write(&folders_path, json)
-        .map_err(|e| format!("Falha ao salvar pastas: {}", e))?;
-    
+        .map_err(|e| {
+            format!("Falha ao serializar pastas: {}", e)
+        })?;
+    fs::write(&folders_path, json).map_err(|e| {
+        format!("Falha ao salvar pastas: {}", e)
+    })?;
+
+    // Create Obsidian folder directory
+    if let Ok(vault) = get_obsidian_diary_vault(&app) {
+        let folder_dir = vault.join(sanitize_filename(&folder.name));
+        fs::create_dir_all(&folder_dir).ok();
+    }
+
     Ok(folder)
 }
 
 #[tauri::command]
-pub fn diary_list_folders(app: tauri::AppHandle) -> Result<Vec<DiaryFolder>, String> {
+fn diary_list_folders(
+    app: tauri::AppHandle,
+) -> Result<Vec<DiaryFolder>, String> {
+    let owner_id = current_owner()?;
     let folders_path = get_folders_path(&app)?;
-    
-    // If file doesn't exist, return empty vector (will be handled by frontend)
+
+    // If file doesn't exist, return empty vector
     if !folders_path.exists() {
         return Ok(Vec::new());
     }
-    
+
     let folders_data = fs::read_to_string(&folders_path)
-        .map_err(|e| format!("Falha ao ler arquivo de pastas: {}", e))?;
-    
-    let folders: Vec<DiaryFolder> = serde_json::from_str(&folders_data)
-        .map_err(|e| format!("Falha ao desserializar pastas: {}", e))?;
-    
+        .map_err(|e| {
+            format!("Falha ao ler arquivo de pastas: {}", e)
+        })?;
+
+    let mut folders: Vec<DiaryFolder> =
+        serde_json::from_str(&folders_data).map_err(|e| {
+            format!(
+                "Falha ao desserializar pastas: {}",
+                e
+            )
+        })?;
+
+    let mut was_legacy = false;
+    for folder in &mut folders {
+        was_legacy |= normalize_diary_folder_owner(folder, &owner_id)?;
+    }
+    if was_legacy {
+        let normalized = serde_json::to_string_pretty(&folders).map_err(|e| e.to_string())?;
+        fs::write(&folders_path, normalized).map_err(|e| e.to_string())?;
+    }
+
     Ok(folders)
 }
 
 #[tauri::command]
-pub fn diary_delete_folder(app: tauri::AppHandle, id: String) -> Result<(), String> {
+fn diary_delete_folder(
+    app: tauri::AppHandle,
+    id: String,
+) -> Result<(), String> {
     // Load folders
-    let mut folders = diary_list_folders(&app)?;
-    
+    let mut folders = diary_list_folders(app.clone())?;
+
     // Find folder to delete
     let folder_index = folders
         .iter()
         .position(|f| f.id == id)
         .ok_or_else(|| "Pasta não encontrada".to_string())?;
-    
+
     let folder_to_delete = folders.remove(folder_index);
-    
+
     // Protect default "Geral" folder
-    if folder_to_delete.name == "Geral" && folder_to_delete.icon == "📁" {
-        return Err("Não é permitido excluir a pasta Geral padrão".to_string());
+    if folder_to_delete.name == "Geral"
+        && folder_to_delete.icon == "📁"
+    {
+        return Err(
+            "Não é permitido excluir a pasta Geral padrão"
+                .to_string(),
+        );
     }
-    
+
     // Move entries from deleted folder to "Geral"
     let geral_folder = folders
         .iter()
         .find(|f| f.name == "Geral" && f.icon == "📁")
-        .ok_or_else(|| "Pasta Geral não encontrada".to_string())?;
-    
-    let mut entries = diary_list_entries(&app, None)?;
+        .ok_or_else(|| {
+            "Pasta Geral não encontrada".to_string()
+        })?;
+
+    let mut entries =
+        diary_list_entries(app.clone(), None, None)?;
+
+    let old_folder_name = sanitize_filename(&folder_to_delete.name);
+    let new_folder_name = "Geral".to_string();
+    let vault = get_obsidian_diary_vault(&app).ok();
+
     for entry in &mut entries {
         if entry.folder_id == id {
             entry.folder_id = geral_folder.id.clone();
+
+            if let Some(ref v) = vault {
+                let entry_title = sanitize_filename(&entry.title);
+                let old_path = v.join(&old_folder_name).join(format!("{}.md", entry_title));
+                let new_path = v.join(&new_folder_name).join(format!("{}.md", entry_title));
+                if old_path.exists() {
+                    if let Some(parent) = new_path.parent() {
+                        fs::create_dir_all(parent).ok();
+                    }
+                    fs::rename(old_path, new_path).ok();
+                }
+            }
+
             // Update entry with new folder
             diary_update_entry(
                 app.clone(),
                 entry.id.clone(),
                 None,
                 None,
-                Some(geral_folder.id.clone())
+                Some(geral_folder.id.clone()),
+                None,
+                None,
             )?;
         }
     }
-    
+
+    if let Some(ref v) = vault {
+        let old_dir = v.join(&old_folder_name);
+        if old_dir.exists() {
+            fs::remove_dir(old_dir).ok();
+        }
+    }
+
     // Update orders of remaining folders
     for (i, folder) in folders.iter_mut().enumerate() {
         folder.order = i;
     }
-    
+
     // Save updated folder list
     let folders_path = get_folders_path(&app)?;
     let folders_json = serde_json::to_string_pretty(&folders)
-        .map_err(|e| format!("Falha ao serializar pastas: {}", e))?;
-    fs::write(&folders_path, folders_json)
-        .map_err(|e| format!("Falha ao salvar pastas: {}", e))?;
-    
+        .map_err(|e| {
+            format!("Falha ao serializar pastas: {}", e)
+        })?;
+    fs::write(&folders_path, folders_json).map_err(|e| {
+        format!("Falha ao salvar pastas: {}", e)
+    })?;
+
     Ok(())
 }
 
 #[tauri::command]
-pub fn diary_save_tabs(app: tauri::AppHandle, open_ids: Vec<String>, active_id: Option<String>) -> Result<(), String> {
+fn diary_save_tabs(
+    app: tauri::AppHandle,
+    open_ids: Vec<String>,
+    active_id: Option<String>,
+) -> Result<(), String> {
+    let owner_id = current_owner()?;
     let tabs_state = DiaryTabsState {
+        owner_id,
         open_tab_ids: open_ids,
         active_tab_id: active_id,
     };
-    
+
     let tabs_path = get_tabs_path(&app)?;
     let json = serde_json::to_string_pretty(&tabs_state)
-        .map_err(|e| format!("Falha ao serializar estado das abas: {}", e))?;
-    fs::write(&tabs_path, json)
-        .map_err(|e| format!("Falha ao salvar estado das abas: {}", e))?;
-    
+        .map_err(|e| {
+            format!(
+                "Falha ao serializar estado das abas: {}",
+                e
+            )
+        })?;
+    fs::write(&tabs_path, json).map_err(|e| {
+        format!(
+            "Falha ao salvar estado das abas: {}",
+            e
+        )
+    })?;
+
     Ok(())
 }
 
 #[tauri::command]
-pub fn diary_load_tabs(app: tauri::AppHandle) -> Result<DiaryTabsState, String> {
+fn diary_load_tabs(
+    app: tauri::AppHandle,
+) -> Result<DiaryTabsState, String> {
+    let owner_id = current_owner()?;
     let tabs_path = get_tabs_path(&app)?;
-    
+
     // If file doesn't exist, return default state
     if !tabs_path.exists() {
         return Ok(DiaryTabsState {
+            owner_id,
             open_tab_ids: Vec::new(),
             active_tab_id: None,
         });
     }
-    
+
     let tabs_data = fs::read_to_string(&tabs_path)
-        .map_err(|e| format!("Falha ao ler arquivo de abas: {}", e))?;
-    
-    let tabs_state: DiaryTabsState = serde_json::from_str(&tabs_data)
-        .map_err(|e| format!("Falha ao desserializar estado das abas: {}", e))?;
-    
+        .map_err(|e| {
+            format!("Falha ao ler arquivo de abas: {}", e)
+        })?;
+
+    let mut tabs_state: DiaryTabsState =
+        serde_json::from_str(&tabs_data).map_err(|e| {
+            format!(
+                "Falha ao desserializar estado das abas: {}",
+                e
+            )
+        })?;
+
+    if tabs_state.owner_id.is_empty() {
+        tabs_state.owner_id = owner_id;
+        let normalized = serde_json::to_string_pretty(&tabs_state).map_err(|e| e.to_string())?;
+        fs::write(&tabs_path, normalized).map_err(|e| e.to_string())?;
+    } else if tabs_state.owner_id != owner_id {
+        return Err("O estado das abas pertence a outro propriet\u{e1}rio.".to_string());
+    }
+
     Ok(tabs_state)
 }
 
+// ─── Obsidian Diary Commands ───
+
+fn get_obsidian_diary_vault(_app: &tauri::AppHandle) -> Result<PathBuf, String> {
+    let home = dirs_next::home_dir().ok_or("Não foi possível encontrar o diretório home")?;
+    let _ = home;
+    owner_diary_vault(&current_owner()?)
+}
+
+fn obsidian_date_parts(date: &str) -> Result<(&str, &str), String> {
+    let bytes = date.as_bytes();
+    let valid = bytes.len() == 10
+        && bytes[4] == b'-'
+        && bytes[7] == b'-'
+        && bytes.iter().enumerate().all(|(index, byte)| matches!(index, 4 | 7) || byte.is_ascii_digit());
+    if !valid {
+        return Err("Data inv\u{e1}lida para o di\u{e1}rio.".to_string());
+    }
+    Ok((&date[..4], &date[5..7]))
+}
+
+#[tauri::command]
+fn obsidian_diary_list_entries(app: tauri::AppHandle) -> Result<Vec<serde_json::Value>, String> {
+    let owner_id = current_owner()?;
+    let vault = get_obsidian_diary_vault(&app)?;
+    let mut entries = Vec::new();
+    if let Ok(years) = fs::read_dir(&vault) {
+        for year in years.flatten() {
+            if !year.file_type().map(|ft| ft.is_dir()).unwrap_or(false) { continue; }
+            if let Ok(months) = fs::read_dir(year.path()) {
+                for month in months.flatten() {
+                    if !month.file_type().map(|ft| ft.is_dir()).unwrap_or(false) { continue; }
+                    if let Ok(files) = fs::read_dir(month.path()) {
+                        for file in files.flatten() {
+                            if file.path().extension().and_then(|e| e.to_str()) == Some("md") {
+                                let name = file.file_name().to_string_lossy().to_string();
+                                let content = fs::read_to_string(file.path()).unwrap_or_default();
+                                let date = name.replace(".md", "");
+                                entries.push(serde_json::json!({
+                                    "owner_id": owner_id,
+                                    "date": date,
+                                    "filename": name,
+                                    "path": file.path().to_string_lossy().to_string(),
+                                    "preview": content.lines().take(5).collect::<Vec<_>>().join("\n")
+                                }));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    entries.sort_by(|a, b| b["date"].as_str().cmp(&a["date"].as_str()));
+    Ok(entries)
+}
+
+#[tauri::command]
+fn obsidian_diary_read_entry(app: tauri::AppHandle, date: String) -> Result<serde_json::Value, String> {
+    let owner_id = current_owner()?;
+    let vault = get_obsidian_diary_vault(&app)?;
+    let (year, month) = obsidian_date_parts(&date)?;
+    let path = vault.join(year).join(month).join(format!("{}.md", date));
+    if !path.exists() {
+        return Err(format!("Entrada não encontrada: {}", date));
+    }
+    let content = fs::read_to_string(&path).map_err(|e| e.to_string())?;
+    Ok(serde_json::json!({
+        "owner_id": owner_id,
+        "date": date,
+        "content": content,
+        "path": path.to_string_lossy().to_string()
+    }))
+}
+
+#[tauri::command]
+fn obsidian_diary_save_entry(app: tauri::AppHandle, date: String, content: String) -> Result<(), String> {
+    let vault = get_obsidian_diary_vault(&app)?;
+    let (year, month) = obsidian_date_parts(&date)?;
+    let dir = vault.join(year).join(month);
+    fs::create_dir_all(&dir).map_err(|e| e.to_string())?;
+    let path = dir.join(format!("{}.md", date));
+    fs::write(path, content).map_err(|e| e.to_string())?;
+    Ok(())
+}
+
+#[tauri::command]
+fn obsidian_diary_delete_entry(app: tauri::AppHandle, date: String) -> Result<(), String> {
+    let vault = get_obsidian_diary_vault(&app)?;
+    let (year, month) = obsidian_date_parts(&date)?;
+    let path = vault.join(year).join(month).join(format!("{}.md", date));
+    if path.exists() {
+        fs::remove_file(path).map_err(|e| e.to_string())?;
+    }
+    Ok(())
+}
+
+#[tauri::command]
+fn obsidian_diary_get_vault_path(app: tauri::AppHandle) -> Result<String, String> {
+    let vault = get_obsidian_diary_vault(&app)?;
+    Ok(vault.to_string_lossy().to_string())
+}
+
+// ─── App Entry Point ───
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+    // Arc compartilhado entre setup e cleanup
+    let sidecar_for_setup = Arc::new(SidecarState::new());
+    let sidecar_for_cleanup = sidecar_for_setup.clone();
+
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_dialog::init())
-         .invoke_handler(tauri::generate_handler![
-             openrouter_chat,
-             ollama_chat,
-             ollama_chat_stream,
-             openrouter_chat_stream,
-             save_history, 
-             load_history,
-             list_chat_sessions,
-             delete_chat_session,
-             get_todoist_tasks,
-             add_todoist_task,
-             delete_todoist_task,
-             toggle_todoist_task,
-             postpone_todoist_task,
-             add_google_event,
-             delete_google_event,
-             send_telegram_message,
-             save_board,
-             load_board,
-             get_sys_info,
-             save_asset,
-             archive_chat,
-             list_archived_chats,
-             load_archived_chat,
-             get_total_tokens,
-             read_text_file,
-             run_astro_engine,
-             list_lab_files,
-             run_agm_engine,
-             get_transit_positions,
-             get_google_events,
-             // Diary commands
-             diary_create_entry,
-             diary_update_entry,
-             diary_delete_entry,
-             diary_list_entries,
-             diary_get_entry,
-             diary_create_folder,
-             diary_list_folders,
-             diary_delete_folder,
-             diary_save_tabs,
-             diary_load_tabs
-         ])
-        .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+        .setup(move |app| {
+            // 1. Carrega variáveis de ambiente uma única vez
+            dotenvy::from_filename(".env").ok();
+            dotenvy::from_filename(".env.local").ok();
+
+            // 2. Cria http_client global com timeout generoso
+            let http_client = reqwest::Client::builder()
+                .timeout(std::time::Duration::from_secs(30))
+                .build()
+                .expect("Falha ao criar cliente HTTP global");
+
+            let app_state = AppState {
+                http_client,
+            };
+            app.manage(app_state);
+
+            // 4. Inicia o sidecar Python FastAPI
+            // Desenvolvimento: o motor vive na raiz do projeto. A instalação final
+            // usará o executável empacotado; nunca um caminho acima da pasta atual.
+            let api_path = app.path().resource_dir().map_err(|e| e.to_string())?.join("binaries").join("astro-engine-x86_64-pc-windows-msvc.exe");
+            let data_dir = app.path().app_data_dir().map_err(|e| e.to_string())?.join("data");
+
+            if api_path.exists() {
+                if let Err(e) =
+                    sidecar_for_setup.start(&api_path, &data_dir)
+                {
+                    eprintln!(
+                        "[AureaSolaris] AVISO: Não foi possível iniciar sidecar: {}",
+                        e
+                    );
+                    eprintln!(
+                        "[AureaSolaris] O app funcionará, mas cálculos astrológicos falharão."
+                    );
+                }
+            } else {
+                eprintln!(
+                    "[AureaSolaris] AVISO: main_api.py não encontrado em {:?}. Sidecar não iniciado.",
+                    api_path
+                );
+            }
+
+            // 5. Registra o SidecarState
+            app.manage(sidecar_for_setup);
+
+            // 6. Configura o Tray Icon
+            let icon = app.default_window_icon().cloned().unwrap();
+            let _tray = tauri::tray::TrayIconBuilder::new()
+                .icon(icon)
+                .tooltip("Aurea Solaris")
+                .on_tray_icon_event(|tray, event| match event {
+                    tauri::tray::TrayIconEvent::Click {
+                        button: tauri::tray::MouseButton::Left,
+                        button_state: tauri::tray::MouseButtonState::Up,
+                        ..
+                    } => {
+                        let app = tray.app_handle();
+                        if let Some(window) = app.get_webview_window("main") {
+                            let _ = window.show();
+                            let _ = window.set_focus();
+                        }
+                    }
+                    _ => {}
+                })
+                .build(app);
+
+            // 7. Intercepta fechar janela → minimize para tray
+            if let Some(window) = app.get_webview_window("main") {
+                let window_clone = window.clone();
+                window.on_window_event(move |event| {
+                    if let tauri::WindowEvent::CloseRequested { api, .. } = event {
+                        api.prevent_close();
+                        let _ = window_clone.hide();
+                    }
+                });
+            }
+
+            Ok(())
+        })
+        .invoke_handler(tauri::generate_handler![
+            private_session_open,
+            private_account_register,
+            private_sidecar_request,
+            private_session_close,
+            remembered_owner_set,
+            remembered_owner_get,
+            remembered_owner_clear,
+            save_board,
+            load_board,
+            list_boards,
+            delete_board,
+            load_health_memory,
+            save_health_memory,
+            get_sys_info,
+            run_astro_engine,
+            get_transit_positions,
+            // Diary commands
+            diary_create_entry,
+            diary_update_entry,
+            diary_delete_entry,
+            diary_list_entries,
+            diary_get_entry,
+            diary_create_folder,
+            diary_list_folders,
+            diary_delete_folder,
+            diary_save_tabs,
+            diary_load_tabs,
+            // Obsidian Diary commands
+            obsidian_diary_list_entries,
+            obsidian_diary_read_entry,
+            obsidian_diary_save_entry,
+            obsidian_diary_delete_entry,
+            obsidian_diary_get_vault_path
+        ])
+        .build(tauri::generate_context!())
+        .expect("error while running tauri application")
+        .run(move |_app_handle, event| {
+            if let tauri::RunEvent::Exit = event {
+                // Cleanup: encerrar sidecar quando o app fecha
+                sidecar_for_cleanup.stop();
+            }
+        });
 }

@@ -1,400 +1,202 @@
-import { useState, useMemo, useEffect } from 'react';
-import { Star, Moon, Sun, Activity, Ear, Radio, Leaf, FileText, UploadCloud, Loader2 } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
+import { Activity, FileText, Loader2, Moon, UploadCloud } from 'lucide-react';
 import { invoke } from '@tauri-apps/api/core';
-import { SectionTitle } from './common/UIComponents';
 import { useAstroData } from '../hooks/useAstroData';
 import { useAgendaContext } from '../context/AgendaContext';
-import { calcHyleg, calcTemperament } from '../utils/astro-dignity';
-import { getMedicalPlanetInfo, getLunarAlchemyAdvice, MEDICAL_ASTROLOGY } from '../utils/AstromedicinaUtils';
 import { readConfirmedBirthInput } from '../utils/confirmedBirthInput';
+import { readCertifiedCalculation } from '../utils/certifiedCalculation';
+
+type HealthRecord = {
+  id: string;
+  date: string;
+  fileName: string;
+  rawText?: string;
+};
 
 export const SaudeView = () => {
-  const { profiles, activeProfileId, getPlanetaryHour, getPlanetaryDayRegent } = useAgendaContext();
-  
-  // Local state to allow viewing health data for family members without changing global active profile
-  const [viewingProfileId, setViewingProfileId] = useState(activeProfileId);
-  const viewingProfile = useMemo(() => profiles.find(p => p.id === viewingProfileId) || profiles[0], [profiles, viewingProfileId]);
-
-  // Health Memory State
-  const [healthHistory, setHealthHistory] = useState<any[]>([]);
+  const {
+    profiles,
+    mapSubjects,
+    activeProfileId,
+    activeSubjectId,
+    setActiveSubjectId,
+  } = useAgendaContext();
+  const [healthHistory, setHealthHistory] = useState<HealthRecord[]>([]);
   const [isUploading, setIsUploading] = useState(false);
+  const [notice, setNotice] = useState<string | null>(null);
+
+  const availableMaps = useMemo(() => {
+    const subjects = mapSubjects?.filter((map) => map.ownerProfileId === activeProfileId) || [];
+    return subjects.length
+      ? subjects
+      : profiles
+        .filter((profile) => profile.id === activeProfileId)
+        .map((profile) => ({ id: profile.id, name: profile.name, kind: 'profile' as const, ownerProfileId: profile.id, source: profile }));
+  }, [activeProfileId, mapSubjects, profiles]);
+
+  const focusedMap = availableMaps.find((map) => map.id === activeSubjectId) || availableMaps[0];
+  const focusedSubjectId = focusedMap?.id || '';
+  const birthData = useMemo(() => readConfirmedBirthInput(focusedMap?.source), [focusedMap]);
+  const { data, loading, error } = useAstroData(birthData, Boolean(birthData));
+  const certifiedNatal = readCertifiedCalculation(data, 'natal');
+  const natalMoon = data?.planets?.Moon;
 
   useEffect(() => {
-    loadHealthMemory(viewingProfileId);
-  }, [viewingProfileId]);
-
-  const loadHealthMemory = async (profileId: string) => {
-    try {
-      const data = await invoke<any[]>('load_health_memory', { profileId });
-      setHealthHistory(data || []);
-    } catch (e) {
-      console.error('Failed to load health memory:', e);
+    if (!focusedSubjectId) {
+      setHealthHistory([]);
+      return;
     }
-  };
 
-  const saveHealthMemory = async (memory: any[]) => {
-    try {
-      await invoke('save_health_memory', { profileId: viewingProfileId, memory });
-    } catch (e) {
-      console.error('Failed to save health memory:', e);
-    }
-  };
+    let active = true;
+    invoke<HealthRecord[]>('load_health_memory', { profileId: focusedSubjectId })
+      .then((records) => {
+        if (active) setHealthHistory(Array.isArray(records) ? records : []);
+      })
+      .catch(() => {
+        if (active) setNotice('O histórico privado não pôde ser aberto neste momento.');
+      });
+    return () => { active = false; };
+  }, [focusedSubjectId]);
 
   const handleUploadExam = async () => {
+    if (!focusedSubjectId) return;
+    setNotice(null);
     try {
       const { open } = await import('@tauri-apps/plugin-dialog');
       const selected = await open({
         multiple: false,
-        filters: [{ name: 'Documentos Médicos', extensions: ['pdf'] }]
+        filters: [{ name: 'Documentos PDF', extensions: ['pdf'] }],
       });
+      if (!selected || Array.isArray(selected)) return;
 
-      if (selected && !Array.isArray(selected)) {
-        setIsUploading(true);
-        // 1. Extract Text
-        const extRes = await fetch('http://127.0.0.1:9876/extract_pdf', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ file_path: selected })
-        });
-        
-        if (!extRes.ok) throw new Error('Falha ao extrair texto do PDF');
-        const extData = await extRes.json();
-        const extractedText = extData.text;
-
-        // 2. Send to Hermes for analysis
-        const hermesPrompt = `Atue como Hermes, sábio astromédico e alquimista. Acabei de receber este laudo/exame médico. Analise-o brevemente e traduza para mim o que significa. Relacione com vitalidade geral. Não faça diagnósticos definitivos, apenas aconselhe hermeticamente.\n\nCONTEÚDO DO LAUDO:\n${extractedText.substring(0, 3000)}`;
-        
-        const chatRes = await fetch('http://127.0.0.1:9876/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            messages: [{ role: 'user', content: hermesPrompt }],
-            context: 'Usuário enviou um exame para análise.'
-          })
-        });
-
-        let hermesAnalysis = 'Análise hermética indisponível no momento.';
-        if (chatRes.ok) {
-          const chatData = await chatRes.json();
-          hermesAnalysis = chatData.reply || hermesAnalysis;
-        }
-
-        // 3. Save to Memory
-        const fileName = selected.split(/[\\/]/).pop() || 'Exame.pdf';
-        const newRecord = {
-          id: Date.now().toString(),
-          date: new Date().toISOString(),
-          fileName,
-          analysis: hermesAnalysis,
-          rawText: extractedText.substring(0, 500) // save a snippet
-        };
-
-        const updated = [newRecord, ...healthHistory];
-        setHealthHistory(updated);
-        await saveHealthMemory(updated);
-      }
-    } catch (err) {
-      console.error('Upload falhou:', err);
-      alert('Falha ao processar o exame. Verifique se o backend Python está rodando e o arquivo é um PDF válido.');
+      setIsUploading(true);
+      const extraction = await fetch('http://127.0.0.1:9876/extract_pdf', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ file_path: selected }),
+      });
+      if (!extraction.ok) throw new Error('Não foi possível ler este PDF no serviço local.');
+      const extracted = await extraction.json() as { text?: string };
+      const record: HealthRecord = {
+        id: crypto.randomUUID(),
+        date: new Date().toISOString(),
+        fileName: selected.split(/[\\/]/).pop() || 'Documento.pdf',
+        // Guardamos apenas uma prévia para identificar o documento. A leitura
+        // clínica não é produzida pelo Aurea sem revisão humana e consentimento.
+        rawText: typeof extracted.text === 'string' ? extracted.text.slice(0, 500) : undefined,
+      };
+      const updated = [record, ...healthHistory];
+      await invoke('save_health_memory', { profileId: focusedSubjectId, memory: updated });
+      setHealthHistory(updated);
+      setNotice('Documento registrado no histórico privado deste mapa.');
+    } catch (uploadError) {
+      setNotice(uploadError instanceof Error ? uploadError.message : 'Não foi possível registrar o documento.');
     } finally {
       setIsUploading(false);
     }
   };
 
-  const now = new Date();
-  const planetaryHour = getPlanetaryHour(now);
-  const dayRegent = getPlanetaryDayRegent(now);
-
-  const birthData = useMemo(() => readConfirmedBirthInput(viewingProfile), [viewingProfile]);
-  const { data, loading: loadingNatal, error: natalError } = useAstroData(birthData, Boolean(birthData));
-
-  const hyleg = useMemo(() => data?.planets ? calcHyleg(data.planets) : null, [data]);
-  const temperament = useMemo(() => {
-    const ascDegree = data?.planets?.ASC?.degree;
-    const moonPhase = data?.moon_phase?.phase;
-    if (!data?.planets || !Number.isFinite(ascDegree) || !moonPhase) return null;
-    return calcTemperament(data.planets, ascDegree, moonPhase);
-  }, [data]);
-
-  const natalMoonSign = data?.planets?.Moon?.sign ?? null;
-  const lunarAdvice = natalMoonSign ? getLunarAlchemyAdvice(natalMoonSign) : null;
-  const natalUnavailableMessage = !birthData
-    ? 'Indisponível: complete os dados de nascimento no perfil.'
-    : loadingNatal
-      ? 'Calculando com o motor local...'
-      : natalError
-        ? 'Cálculo indisponível; nenhum valor será estimado.'
-        : 'Indisponível: o recibo natal não contém dados suficientes.';
-
-  const hourPlanetInfo = getMedicalPlanetInfo(planetaryHour.name);
-  const dayPlanetInfo = getMedicalPlanetInfo(dayRegent.name);
+  const calculationStatus = !birthData
+    ? 'Complete data, hora, local, coordenadas e fuso IANA no perfil para calcular este mapa.'
+    : loading
+      ? 'Calculando no motor local…'
+      : error
+        ? `Cálculo indisponível: ${error}`
+        : certifiedNatal
+          ? 'Valores recebidos do motor local com recibo auditável.'
+          : 'O motor respondeu sem recibo auditável; nenhum valor será apresentado como confirmado.';
 
   return (
-    <div className="space-y-8 pb-32 animate-in fade-in max-w-5xl mx-auto">
-      
-      {/* Header: Seletor de Perfil */}
-      <div className="flex justify-between items-center background: var(--aurea-bg-deep) p-6 rounded-2xl border border-color: rgba(217,166,83,0.3) shadow-lg">
-        <div>
-          <h2 className="text-xl font-black color: var(--aurea-text) uppercase tracking-widest flex items-center gap-3">
-            <Activity className="color: var(--aurea-gold)" size={24} />
-            Saúde & Alquimia
-          </h2>
-          <p className="text-xs color: var(--aurea-gold)/70 mt-1 tracking-wide">
-            Astromedicina, Frequências e Curas Vibracionais
-          </p>
-        </div>
-        <div className="flex items-center gap-3">
-          <span className="text-xs color: var(--aurea-text-muted) font-bold uppercase tracking-widest">Mapa Base:</span>
-          <select 
-            value={viewingProfileId}
-            onChange={(e) => setViewingProfileId(e.target.value)}
-            className="background: var(--aurea-surface) color: var(--aurea-text) border border-color: rgba(38,54,66,0.9) rounded-lg px-4 py-2 text-sm outline-none focus:border-color: rgba(217,166,83,0.5) cursor-pointer"
-          >
-            {profiles.map(p => (
-              <option key={p.id} value={p.id}>{p.name}</option>
-            ))}
-          </select>
-        </div>
-      </div>
-
-      {!birthData && (
-        <div role="status" className="rounded-xl border border-color: rgba(217,166,83,0.25) background: rgba(217,166,83,0.08) px-5 py-4 text-sm color: var(--aurea-gold-deep)">
-          A constituição natal astromédica está indisponível. Informe data, hora, local, coordenadas e fuso IANA no perfil antes de calcular.
-        </div>
-      )}
-      {birthData && natalError && (
-        <div role="alert" className="rounded-xl border border-color: rgba(239,68,68,0.3) background: rgba(239,68,68,0.08) px-5 py-4 text-sm color: #EF4444">
-          O cálculo natal está indisponível. {natalError}
-        </div>
-      )}
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* COLUNA ESQUERDA: O Momento Alquímico (Trânsitos Atuais) */}
-        <div className="lg:col-span-1 space-y-6">
-          <SectionTitle>I. Vitalidade do Momento</SectionTitle>
-          
-          <div className="background: var(--aurea-surface) rounded-2xl p-6 border border-color: rgba(38,54,66,0.7) shadow-sm space-y-6">
-            {/* Influência Lunar */}
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <h4 className="text-[10px] font-bold color: var(--aurea-text-muted) uppercase tracking-widest flex items-center gap-1.5">
-                  <Moon size={12} /> Lua no Mapa Natal
-                </h4>
-                {natalMoonSign && (
-                  <span className="text-[10px] font-bold color: var(--aurea-gold) background: rgba(217,166,83,0.08) px-2 py-0.5 rounded-sm">Lua em {natalMoonSign}</span>
-                )}
-              </div>
-              <p className="text-[12px] color: var(--aurea-text) leading-relaxed font-medium background: rgba(3,10,17,0.4) p-4 rounded-xl border border-color: rgba(38,54,66,0.6)">
-                {lunarAdvice || (
-                  !birthData
-                    ? 'Indisponível até informar dados completos de nascimento no perfil.'
-                    : loadingNatal
-                      ? 'Calculando a Lua natal com o motor local...'
-                      : natalError
-                        ? 'Cálculo indisponível; nenhum valor será estimado.'
-                        : 'Indisponível: o motor não devolveu a Lua natal auditável.'
-                )}
-              </p>
-            </div>
-
-            <hr className="border-color: rgba(38,54,66,0.6)" />
-
-            {/* Apotecário Alquímico - Hora Atual */}
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <h4 className="text-[10px] font-bold color: var(--aurea-text-muted) uppercase tracking-widest flex items-center gap-1.5">
-                  <Sun size={12} /> Apotecário Alquímico
-                </h4>
-                <span className="text-[10px] font-bold color: var(--aurea-gold-deep) background: rgba(217,166,83,0.08) px-2 py-0.5 rounded-sm border border-color: rgba(217,166,83,0.2)">
-                  Hora de {planetaryHour.name} ({planetaryHour.icon})
-                </span>
-              </div>
-              
-              {hourPlanetInfo ? (
-                <div className="space-y-4">
-                  <div className="background: rgba(217,166,83,0.08)/50 p-4 rounded-xl border border-color: rgba(217,166,83,0.25)">
-                    <p className="text-[10px] font-bold color: var(--aurea-gold) uppercase tracking-wider mb-2">Ervas & Banhos Recomendados Agora</p>
-                    <div className="flex flex-wrap gap-2">
-                      {hourPlanetInfo.herbs.map((h, i) => (
-                        <span key={i} className="text-[11px] color: var(--aurea-gold-deep) background: rgba(217,166,83,0.15) px-2.5 py-1 rounded-md font-medium flex items-center gap-1.5 border border-color: rgba(217,166,83,0.3)">
-                          <Leaf size={10} /> {h}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                  <p className="text-[11px] color: var(--aurea-text-muted) leading-relaxed font-medium">
-                    <strong className="color: var(--aurea-text)">Uso Hermético:</strong> {hourPlanetInfo.remedy}
-                  </p>
-                </div>
-              ) : (
-                <p className="text-xs color: var(--aurea-text-muted)">Sintonizando alquimia...</p>
-              )}
-            </div>
-          </div>
-
-          <SectionTitle>II. Cura Vibracional</SectionTitle>
-          <div className="background: var(--aurea-surface-light) rounded-2xl p-6 border border-color: rgba(217,166,83,0.3) shadow-sm space-y-5">
-            <h4 className="text-[10px] font-bold color: var(--aurea-gold) uppercase tracking-widest flex items-center gap-1.5">
-              <Ear size={12} /> Frequências de Harmonização
-            </h4>
-            <p className="text-[11px] color: var(--aurea-text-muted) font-medium">
-              Baseado na tensão energética do dia regido por {dayRegent.name} e hora de {planetaryHour.name}, utilize estas frequências durante a meditação ou sono:
+    <div className="mx-auto max-w-6xl space-y-6 pb-16">
+      <header className="aurea-page-header flex flex-col gap-4 rounded-2xl p-5 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-start gap-3">
+          <span className="aurea-card-gold flex h-11 w-11 shrink-0 items-center justify-center rounded-xl" aria-hidden="true">
+            <Activity size={20} />
+          </span>
+          <div>
+            <h1 className="text-base font-bold tracking-wide">Saúde & registros privados</h1>
+            <p className="mt-1 text-sm" style={{ color: 'var(--aurea-text-muted)' }}>
+              Observações e documentos pessoais — não é diagnóstico nem prescrição.
             </p>
-            <div className="space-y-3">
-               {dayPlanetInfo && (
-                 <div className="p-3 background: var(--aurea-surface) rounded-lg border border-color: rgba(217,166,83,0.18) flex items-center justify-between shadow-sm">
-                   <div>
-                     <p className="text-[9px] color: var(--aurea-text-muted) font-bold uppercase tracking-wider mb-0.5">Frequência Regente (Dia)</p>
-                     <p className="text-[11px] color: var(--aurea-text) font-bold flex items-center gap-2"><Radio size={12} className="color: var(--aurea-gold)"/> {dayPlanetInfo.frequency}</p>
-                   </div>
-                 </div>
-               )}
-               {hourPlanetInfo && (
-                 <div className="p-3 background: var(--aurea-surface) rounded-lg border border-color: rgba(217,166,83,0.18) flex items-center justify-between shadow-sm">
-                   <div>
-                     <p className="text-[9px] color: var(--aurea-text-muted) font-bold uppercase tracking-wider mb-0.5">Foco de Radiestesia (Hora)</p>
-                     <p className="text-[11px] color: var(--aurea-text) font-bold flex items-center gap-2"><Activity size={12} className="color: var(--aurea-gold-light)"/> Limpeza: {hourPlanetInfo.chakra}</p>
-                   </div>
-                 </div>
-               )}
-            </div>
-          </div>
-          
-          <SectionTitle>III. Arquivo Clínico & Laudos</SectionTitle>
-          <div className="background: var(--aurea-surface) rounded-2xl p-6 border border-color: rgba(38,54,66,0.7) shadow-sm space-y-5">
-            <div className="flex items-center justify-between">
-              <h4 className="text-[10px] font-bold color: var(--aurea-text-muted) uppercase tracking-widest flex items-center gap-1.5">
-                <FileText size={12} /> Histórico de Exames (Hermes)
-              </h4>
-              <button 
-                onClick={handleUploadExam}
-                disabled={isUploading}
-                className="flex items-center gap-2 px-3 py-1.5 background: rgba(217,166,83,0.08) color: var(--aurea-gold) rounded-lg text-[10px] font-bold uppercase hover:bg-indigo-100 transition-colors disabled:opacity-50"
-              >
-                {isUploading ? <Loader2 size={12} className="animate-spin" /> : <UploadCloud size={12} />}
-                {isUploading ? 'Analisando...' : 'Enviar Laudo (PDF)'}
-              </button>
-            </div>
-            
-            <div className="space-y-4 max-h-64 overflow-y-auto pr-2 custom-scrollbar">
-              {healthHistory.length === 0 ? (
-                <p className="text-[11px] color: var(--aurea-text-muted) italic text-center py-4">
-                  Nenhum exame analisado ainda. Faça o upload do seu primeiro laudo para Hermes criar seu histórico.
-                </p>
-              ) : (
-                healthHistory.map((record) => (
-                  <div key={record.id} className="p-4 background: rgba(3,10,17,0.4) rounded-xl border border-color: rgba(38,54,66,0.6) space-y-2">
-                    <div className="flex justify-between items-center">
-                      <span className="text-[11px] font-bold color: var(--aurea-text)">{record.fileName}</span>
-                      <span className="text-[9px] font-bold color: var(--aurea-text-muted)">{new Date(record.date).toLocaleDateString('pt-BR')}</span>
-                    </div>
-                    <div className="text-[11px] color: var(--aurea-text-muted) leading-relaxed max-h-32 overflow-y-auto">
-                      <strong className="color: var(--aurea-gold) block mb-1">Análise de Hermes:</strong>
-                      {record.analysis}
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
           </div>
         </div>
+        <label className="aurea-input flex min-w-[220px] flex-col gap-1 rounded-xl px-3 py-2">
+          <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--aurea-text-muted)' }}>Mapa em foco</span>
+          <select
+            value={focusedSubjectId}
+            onChange={(event) => setActiveSubjectId(event.target.value)}
+            className="bg-transparent text-sm font-semibold outline-none"
+            aria-label="Mapa em foco na Saúde"
+          >
+            {availableMaps.map((map) => <option key={map.id} value={map.id}>{map.name}</option>)}
+          </select>
+        </label>
+      </header>
 
-        {/* COLUNA DIREITA: Astromedicina Natal (Constituição) */}
-        <div className="lg:col-span-2 space-y-6">
-          <SectionTitle>III. Constituição Natal Astromédica</SectionTitle>
+      <section className="aurea-card-gold rounded-xl p-4 text-sm leading-relaxed">
+        <strong>Critério de verdade. </strong>
+        A base editorial da Engenharia Astral ainda está em auditoria externa. Por isso esta aba mostra apenas dados calculados com recibo e registros pessoais; não associa órgãos, chakras, ervas, frequências ou tratamentos ao mapa.
+      </section>
 
-          {/* Hyleg e Temperamento */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="bg-emerald-50/50 p-5 rounded-2xl border border-emerald-100 shadow-sm flex flex-col justify-center relative overflow-hidden">
-              <div className="absolute -right-4 -bottom-4 opacity-10">
-                <Star size={100} />
+      {notice && <p role="status" className="panel-light rounded-xl px-4 py-3 text-sm">{notice}</p>}
+
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
+        <section className="panel-light rounded-2xl p-5">
+          <div className="flex items-center gap-2">
+            <Moon size={18} style={{ color: 'var(--aurea-gold-deep)' }} />
+            <h2 className="text-sm font-bold">Dados astronômicos disponíveis</h2>
+          </div>
+          <p className="mt-3 text-sm leading-relaxed" style={{ color: 'var(--aurea-text-muted)' }}>{calculationStatus}</p>
+
+          {certifiedNatal && natalMoon && (
+            <dl className="mt-5 grid gap-3 sm:grid-cols-2">
+              <div className="aurea-card-soft rounded-xl p-4">
+                <dt className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--aurea-text-muted)' }}>Lua natal</dt>
+                <dd className="mt-1 text-base font-bold">{natalMoon.sign} {typeof natalMoon.degree === 'number' ? `· ${natalMoon.degree.toFixed(2)}°` : ''}</dd>
               </div>
-              <h5 className="text-[10px] font-black uppercase text-emerald-700 tracking-[0.2em] mb-1">Doador da Vida (Hyleg)</h5>
-              {hyleg ? (
-                <>
-                  <p className="text-xl font-bold text-emerald-900 mb-2">{hyleg.planetPt} em {hyleg.signPt}</p>
-                  <p className="text-[11px] text-emerald-800 leading-relaxed font-medium max-w-[85%]">
-                    Representa a raiz da sua força vital inata. Proteger os órgãos regidos por {hyleg.planetPt} é essencial para sua longevidade energética.
-                  </p>
-                </>
-              ) : (
-                <p className="text-xs text-emerald-600">{natalUnavailableMessage}</p>
-              )}
-            </div>
+              <div className="aurea-card-soft rounded-xl p-4">
+                <dt className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--aurea-text-muted)' }}>Proveniência</dt>
+                <dd className="mt-1 text-sm font-semibold">Recibo técnico disponível no mapa</dd>
+              </div>
+            </dl>
+          )}
+        </section>
 
-            <div className="background: rgba(217,166,83,0.08)/50 p-5 rounded-2xl border border-color: rgba(217,166,83,0.2) shadow-sm flex flex-col justify-center">
-              <h5 className="text-[10px] font-black uppercase color: var(--aurea-gold-deep) tracking-[0.2em] mb-1 flex items-center gap-2">
-                Humor Dominante 
-                <span className="text-[14px]">
-                  {temperament?.dominante === 'Colerico' || temperament?.dominante === 'Colérico' ? '🔥' : 
-                   temperament?.dominante === 'Sanguineo' || temperament?.dominante === 'Sanguíneo' ? '💨' :
-                   temperament?.dominante === 'Melancolico' || temperament?.dominante === 'Melancólico' ? '🌍' : '💧'}
-                </span>
-              </h5>
-              {temperament ? (
-                <>
-                  <p className="text-xl font-bold color: var(--aurea-gold-deep) mb-2">{temperament.dominante}</p>
-                  <div className="grid grid-cols-4 gap-2 text-center mt-2">
-                    <div className="bg-red-100/50 rounded-lg p-2"><p className="text-[9px] text-red-600 font-bold uppercase">Fogo</p><p className="text-sm font-bold text-red-800">{temperament.colerico}%</p></div>
-                    <div className="bg-sky-100/50 rounded-lg p-2"><p className="text-[9px] text-sky-600 font-bold uppercase">Ar</p><p className="text-sm font-bold text-sky-800">{temperament.sanguineo}%</p></div>
-                    <div className="background: rgba(217,166,83,0.15) rounded-lg p-2"><p className="text-[9px] color: var(--aurea-gold-deep) font-bold uppercase">Terra</p><p className="text-sm font-bold color: var(--aurea-gold)">{temperament.melancolico}%</p></div>
-                    <div className="bg-blue-100/50 rounded-lg p-2"><p className="text-[9px] text-blue-600 font-bold uppercase">Água</p><p className="text-sm font-bold text-blue-800">{temperament.fleumatico}%</p></div>
-                  </div>
-                </>
-              ) : (
-                <p className="text-xs color: var(--aurea-gold-deep)">{natalUnavailableMessage}</p>
-              )}
+        <section className="panel-light rounded-2xl p-5">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <h2 className="text-sm font-bold">Documentos do mapa</h2>
+              <p className="mt-1 text-xs" style={{ color: 'var(--aurea-text-muted)' }}>Arquivo privado, separado por mapa.</p>
             </div>
+            <button
+              type="button"
+              onClick={() => void handleUploadExam()}
+              disabled={isUploading || !focusedSubjectId}
+              className="aurea-button-primary inline-flex items-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold disabled:opacity-50"
+            >
+              {isUploading ? <Loader2 size={15} className="animate-spin" /> : <UploadCloud size={15} />}
+              {isUploading ? 'Lendo…' : 'Registrar PDF'}
+            </button>
           </div>
-
-          {/* Mapeamento Planetário dos Órgãos */}
-          <div className="background: var(--aurea-surface) rounded-2xl border border-color: rgba(38,54,66,0.7) shadow-sm overflow-hidden">
-            <div className="p-5 border-b border-color: rgba(38,54,66,0.6) background: rgba(3,10,17,0.4)/50 flex justify-between items-center">
-              <h4 className="text-[11px] font-bold color: var(--aurea-text) uppercase tracking-widest flex items-center gap-2">
-                <Star size={14} className="color: var(--aurea-gold)" />
-                Mapeamento Somático e Chakras
-              </h4>
-            </div>
-            
-            <div className="divide-y divide-gray-100">
-              {['Sol', 'Lua', 'Mercúrio', 'Vênus', 'Marte', 'Júpiter', 'Saturno'].map(planet => {
-                const info = MEDICAL_ASTROLOGY[planet];
-                if (!info) return null;
-                const natPos = data?.planets?.[planet === 'Sol' ? 'Sun' : planet === 'Lua' ? 'Moon' : planet === 'Mercúrio' ? 'Mercury' : planet === 'Vênus' ? 'Venus' : planet === 'Marte' ? 'Mars' : planet === 'Júpiter' ? 'Jupiter' : 'Saturn'];
-                
-                return (
-                  <div key={planet} className="p-5 hover:background: rgba(3,10,17,0.4)/50 transition-colors flex gap-6">
-                    <div className="w-24 shrink-0 flex flex-col items-center justify-center background: var(--aurea-surface-light) rounded-xl p-3 border border-color: rgba(217,166,83,0.18)">
-                      <span className="text-2xl mb-1 color: var(--aurea-gold)">
-                        {planet === 'Sol' ? '☉' : planet === 'Lua' ? '☽' : planet === 'Mercúrio' ? '☿' : planet === 'Vênus' ? '♀' : planet === 'Marte' ? '♂' : planet === 'Júpiter' ? '♃' : '♄'}
-                      </span>
-                      <span className="text-[10px] font-bold uppercase tracking-wider color: var(--aurea-text-muted)">{planet}</span>
-                      {natPos && <span className="text-[9px] font-bold color: var(--aurea-text-muted) mt-1">{natPos.signPt}</span>}
-                    </div>
-
-                    <div className="flex-1 space-y-3">
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <p className="text-[9px] color: var(--aurea-text-muted) font-bold uppercase tracking-widest mb-1">Órgãos Regidos</p>
-                          <p className="text-[11px] color: var(--aurea-text) font-medium">{info.organ}</p>
-                        </div>
-                        <div>
-                          <p className="text-[9px] color: var(--aurea-text-muted) font-bold uppercase tracking-widest mb-1">Chakra (Centro de Força)</p>
-                          <p className="text-[11px] text-indigo-700 font-bold background: rgba(217,166,83,0.08) inline-block px-2 py-0.5 rounded-sm">{info.chakra}</p>
-                        </div>
-                      </div>
-                      <div className="pt-2 border-t border-gray-50">
-                        <p className="text-[10px] text-red-400/80 font-bold uppercase tracking-wider mb-1">Sintomas de Desequilíbrio Astrológico</p>
-                        <p className="text-[11px] text-gray-500 italic">{info.imbalance}</p>
-                      </div>
-                    </div>
+          <div className="mt-4 space-y-3">
+            {healthHistory.length === 0 ? (
+              <p className="aurea-card-soft rounded-xl p-4 text-sm" style={{ color: 'var(--aurea-text-muted)' }}>
+                Nenhum documento registrado para este mapa.
+              </p>
+            ) : healthHistory.map((record) => (
+              <article key={record.id} className="aurea-card-soft rounded-xl p-4">
+                <div className="flex gap-2">
+                  <FileText size={16} className="mt-0.5 shrink-0" style={{ color: 'var(--aurea-gold-deep)' }} />
+                  <div className="min-w-0">
+                    <h3 className="truncate text-sm font-semibold">{record.fileName}</h3>
+                    <p className="mt-1 text-xs" style={{ color: 'var(--aurea-text-muted)' }}>{new Date(record.date).toLocaleDateString('pt-BR')}</p>
+                    {record.rawText && <p className="mt-2 line-clamp-3 text-xs leading-relaxed" style={{ color: 'var(--aurea-text-muted)' }}>{record.rawText}</p>}
                   </div>
-                );
-              })}
-            </div>
+                </div>
+              </article>
+            ))}
           </div>
-
-        </div>
+        </section>
       </div>
     </div>
   );

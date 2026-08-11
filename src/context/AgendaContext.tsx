@@ -1,15 +1,13 @@
 import { createContext, useContext, useState, useEffect, ReactNode, useMemo } from 'react';
-import { safeInvoke } from '../utils/tauri';
-import { createPasswordVerifier, PasswordVerifier, validatePassword, verifyPassword } from '../utils/auth';
+import { validatePassword } from '../utils/auth';
 
 export interface AureaProfile {
   id: string;
   name: string;
   active: boolean;
   natal?: any;
+  birthData?: any;
   connections?: any[];
-  /** Nunca é uma senha; é somente um verificador derivado. */
-  passwordVerifier?: PasswordVerifier;
   birthDate?: string;
   birthTime?: string;
   birthCity?: string;
@@ -27,11 +25,21 @@ export interface AureaTask {
   profileId?: string;
 }
 
+export interface AstroMapSubject {
+  id: string;
+  name: string;
+  kind: 'profile' | 'connection';
+  ownerProfileId: string;
+  source: AureaProfile | any;
+}
+
 export interface AureaEvent {
   id: string;
   title: string;
   start: string;
   type?: string;
+  /** Legacy browser-local event; private storage migration is tracked separately. */
+  profileId?: string;
 }
 
 export interface AureaDocument {
@@ -45,11 +53,13 @@ export interface AureaDocument {
 
 interface AgendaContextType {
   profiles: AureaProfile[];
+  mapSubjects?: AstroMapSubject[];
   activeProfile: AureaProfile | null;
   activeProfileId: string;
   setActiveProfileId: (id: string) => void;
-  addProfile: (name: string, password: string) => Promise<AureaProfile>;
-  authenticateProfile: (id: string, password: string) => Promise<{ ok: boolean; error?: string }>;
+  activeSubjectId: string;
+  setActiveSubjectId: (id: string) => void;
+  addProfile: (name: string, password: string, id?: string) => Promise<AureaProfile>;
   addConnection: (name: string, birthData: { date: string, time: string, location: string, lat: number, lng: number, timezone: string }) => void;
   updateProfile: (id: string, updates: Partial<AureaProfile>) => void;
   houseSystem: string;
@@ -90,13 +100,13 @@ export const AgendaProvider = ({ children }: { children: ReactNode }) => {
         if (p.id === 'damiao' || p.name === 'Damiao') return false;
         // Remove only the exact profile old builds created without user action.
         const isGeneratedVivianeSeed = p.id === 'viviane' && p.name === 'Viviane'
-          && !p.passwordVerifier && !p.birthDate && !p.birthTime && !p.birthCity && !p.natal
+          && !p.birthDate && !p.birthTime && !p.birthCity && !p.natal
           && (!Array.isArray(p.connections) || p.connections.length === 0);
         return !isGeneratedVivianeSeed;
       });
       
       const sanitized = filtered.map((p: any) => {
-        const { password: _legacyPassword, todoistToken: _legacyTodoist, composioKey: _legacyComposio, ...safeProfile } = p;
+        const { password: _legacyPassword, passwordVerifier: _legacyVerifier, composioKey: _legacyComposio, ...safeProfile } = p;
         return {
           ...safeProfile,
           connections: p.connections || []
@@ -113,9 +123,44 @@ export const AgendaProvider = ({ children }: { children: ReactNode }) => {
     return localStorage.getItem('aurea_active_id') || '';
   });
 
+  const [activeSubjectId, setActiveSubjectIdState] = useState(() => (
+    localStorage.getItem(`aurea_active_subject:${localStorage.getItem('aurea_active_id') || ''}`) || localStorage.getItem('aurea_active_id') || ''
+  ));
+
   const activeProfile = useMemo(() => 
     profiles.find(p => p.id === activeProfileId) || null
   , [profiles, activeProfileId]);
+
+  // One canonical list is shared by Mandala, Saúde, Agenda and Caderno.
+  // A connected natal map is a study subject, not a second login/profile.
+  const mapSubjects = useMemo<AstroMapSubject[]>(() => profiles.flatMap(profile => [
+    { id: profile.id, name: profile.name, kind: 'profile' as const, ownerProfileId: profile.id, source: profile },
+    ...(Array.isArray(profile.connections) ? profile.connections : []).map((connection: any) => ({
+      id: connection.id,
+      name: connection.name,
+      kind: 'connection' as const,
+      ownerProfileId: profile.id,
+      source: connection,
+    })),
+  ]), [profiles]);
+
+  useEffect(() => {
+    const ownerSubjects = mapSubjects.filter(subject => subject.ownerProfileId === activeProfileId);
+    if (!ownerSubjects.length) {
+      setActiveSubjectIdState('');
+      return;
+    }
+    if (!ownerSubjects.some(subject => subject.id === activeSubjectId)) {
+      setActiveSubjectIdState(ownerSubjects[0].id);
+    }
+  }, [activeProfileId, activeSubjectId, mapSubjects]);
+
+  const setActiveSubjectId = (id: string) => {
+    const subject = mapSubjects.find(candidate => candidate.id === id && candidate.ownerProfileId === activeProfileId);
+    if (!subject) return;
+    setActiveSubjectIdState(id);
+    localStorage.setItem(`aurea_active_subject:${activeProfileId}`, id);
+  };
   
   const [documents, setDocuments] = useState<AureaDocument[]>(() => {
     const saved = localStorage.getItem('aurea_documents');
@@ -128,8 +173,25 @@ export const AgendaProvider = ({ children }: { children: ReactNode }) => {
     return sanitized;
   });
 
-  const [tasks, setTasks] = useState<AureaTask[]>([]);
-  const [events, setEvents] = useState<AureaEvent[]>([]);
+  const [tasks, setTasks] = useState<AureaTask[]>(() => {
+    const saved = localStorage.getItem('aurea_tasks');
+    return saved ? JSON.parse(saved) : [];
+  });
+  const [events, setEvents] = useState<AureaEvent[]>(() => {
+    const saved = localStorage.getItem('aurea_events');
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  const persistTasks = (updated: AureaTask[]) => {
+    setTasks(updated);
+    localStorage.setItem('aurea_tasks', JSON.stringify(updated));
+  };
+
+  const persistEvents = (updated: AureaEvent[]) => {
+    setEvents(updated);
+    localStorage.setItem('aurea_events', JSON.stringify(updated));
+  };
+
   const [selectedDay, setSelectedDay] = useState(new Date());
   const [houseSystem, setHouseSystem] = useState(
     () => localStorage.getItem('aurea_house_system') || 'Regiomontanus'
@@ -140,15 +202,14 @@ export const AgendaProvider = ({ children }: { children: ReactNode }) => {
     return d;
   });
 
-  const addProfile = async (name: string, password: string): Promise<AureaProfile> => {
+  const addProfile = async (name: string, password: string, id?: string): Promise<AureaProfile> => {
     const passwordError = validatePassword(password);
     if (passwordError) throw new Error(passwordError);
     const newProfile: AureaProfile = { 
-      id: name.toLowerCase().replace(/\s+/g, '_') + '_' + Date.now(), 
+      id: id || `${name.toLowerCase().replace(/\s+/g, '_')}_${Date.now()}`,
       name, 
       active: true,
       connections: [],
-      passwordVerifier: await createPasswordVerifier(password)
     };
     const updated = [...profiles, newProfile];
     setProfiles(updated);
@@ -156,39 +217,6 @@ export const AgendaProvider = ({ children }: { children: ReactNode }) => {
     setActiveProfileId(newProfile.id);
     localStorage.setItem('aurea_active_id', newProfile.id);
     return newProfile;
-  };
-
-  const authenticateProfile = async (id: string, password: string) => {
-    const profile = profiles.find((candidate: any) => candidate.id === id) as (AureaProfile & { password?: string }) | undefined;
-    if (!profile) return { ok: false, error: 'Perfil não encontrado.' };
-
-    if (profile.passwordVerifier) {
-      return (await verifyPassword(password, profile.passwordVerifier))
-        ? { ok: true }
-        : { ok: false, error: 'Senha incorreta.' };
-    }
-
-    // Migração única de perfis legados: a senha antiga não sobrevive após uma entrada válida.
-    if (typeof profile.password === 'string' && profile.password.length > 0) {
-      if (profile.password !== password) return { ok: false, error: 'Senha incorreta.' };
-      const passwordVerifier = await createPasswordVerifier(password);
-      const updated = profiles.map((candidate: any) => {
-        if (candidate.id !== id) return candidate;
-        const { password: _legacyPassword, ...safeProfile } = candidate;
-        return { ...safeProfile, passwordVerifier };
-      });
-      setProfiles(updated);
-      localStorage.setItem('aurea_profiles', JSON.stringify(updated));
-      return { ok: true };
-    }
-
-    const passwordError = validatePassword(password);
-    if (passwordError) return { ok: false, error: `Defina a senha inicial deste perfil. ${passwordError}` };
-    const passwordVerifier = await createPasswordVerifier(password);
-    const updated = profiles.map(candidate => candidate.id === id ? { ...candidate, passwordVerifier } : candidate);
-    setProfiles(updated);
-    localStorage.setItem('aurea_profiles', JSON.stringify(updated));
-    return { ok: true };
   };
 
   const addConnection = (name: string, birthData: { date: string, time: string, location: string, lat: number, lng: number, timezone: string }) => {
@@ -236,41 +264,9 @@ export const AgendaProvider = ({ children }: { children: ReactNode }) => {
     localStorage.setItem('aurea_documents', JSON.stringify(updated));
   };
 
-  const fetchTasks = async () => {
-    // Never read integration credentials from browser storage.
-    let tRes = await safeInvoke<any>('get_todoist_tasks', {});
-    if (tRes) {
-      try {
-        const parsed = typeof tRes === 'string' ? JSON.parse(tRes) : tRes;
-        setTasks(parsed);
-      } catch (e) {
-        console.error("[AgendaContext] Error parsing tasks", e);
-      }
-    }
-
-    let eRes = await safeInvoke<any>('get_google_events', {});
-    if (eRes) {
-      try {
-        const parsed = typeof eRes === 'string' ? JSON.parse(eRes) : eRes;
-        // Transformar se necessário (Composio retorna campos específicos)
-        const formatted = Array.isArray(parsed) ? parsed.map((e: any) => ({
-          id: e.id || Math.random().toString(),
-          title: e.summary || e.title || 'Sem título',
-          start: e.start?.dateTime || e.start || '',
-          type: 'google'
-        })) : [];
-        setEvents(formatted);
-      } catch (e) {
-        console.error("[AgendaContext] Error parsing events", e);
-      }
-    }
+  const refreshTasks = async () => {
+    return;
   };
-
-  useEffect(() => {
-    fetchTasks();
-    const interval = setInterval(fetchTasks, 60000);
-    return () => clearInterval(interval);
-  }, [activeProfileId]);
 
   const weekDays = Array.from({ length: 7 }, (_, i) => {
     const d = new Date(weekStart);
@@ -291,37 +287,50 @@ export const AgendaProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const addTask = async (content: string) => {
-    const created = await safeInvoke('add_todoist_task', { content });
-    if (created === null) throw new Error('Não foi possível criar a tarefa. A integração está indisponível.');
-    await fetchTasks();
+    const newTask: AureaTask = {
+      id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+      content,
+      completed: false,
+      is_completed: false,
+    };
+    const updated = [...tasks, newTask];
+    persistTasks(updated);
   };
 
   const deleteTask = async (id: string) => {
-    await safeInvoke('delete_todoist_task', { id });
-    await fetchTasks();
+    const updated = tasks.filter(task => task.id !== id);
+    persistTasks(updated);
   };
 
   const toggleTask = async (id: string, completed: boolean) => {
-    const toggled = await safeInvoke('toggle_todoist_task', { id, completed });
-    if (toggled === null) throw new Error('Não foi possível atualizar a tarefa.');
-    await fetchTasks();
+    const updated = tasks.map(task =>
+      task.id === id ? { ...task, completed, is_completed: completed } : task
+    );
+    persistTasks(updated);
   };
 
   const postponeTask = async (id: string) => {
-    const postponed = await safeInvoke('postpone_todoist_task', { id });
-    if (postponed === null) throw new Error('Não foi possível adiar a tarefa.');
-    await fetchTasks();
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const updated = tasks.map(task =>
+      task.id === id ? { ...task, due: tomorrow.toISOString() } : task
+    );
+    persistTasks(updated);
   };
 
   const addEvent = async (title: string, start: string) => {
-    const created = await safeInvoke('add_google_event', { title, start });
-    if (created === null) throw new Error('Não foi possível criar o compromisso. A integração está indisponível.');
-    await fetchTasks();
+    const event: AureaEvent = {
+      id: `event-${Date.now()}-${Math.random().toString(16).slice(2)}`,
+      title,
+      start,
+      type: 'local',
+      profileId: activeProfileId || undefined,
+    };
+    persistEvents([...events, event]);
   };
 
   const deleteEvent = async (id: string) => {
-    await safeInvoke('delete_google_event', { id });
-    await fetchTasks();
+    persistEvents(events.filter(event => event.id !== id));
   };
 
   const executeInsight = async (insight: any) => {
@@ -330,7 +339,7 @@ export const AgendaProvider = ({ children }: { children: ReactNode }) => {
     } else {
       await addEvent(insight.suggestion || insight.content, new Date().toISOString());
     }
-    await fetchTasks();
+    await refreshTasks();
   };
 
   const getMetrics = () => {
@@ -373,11 +382,11 @@ export const AgendaProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <AgendaContext.Provider value={{
-      profiles, activeProfile, activeProfileId, setActiveProfileId, addProfile, authenticateProfile, addConnection, updateProfile,
+      profiles, mapSubjects, activeProfile, activeProfileId, setActiveProfileId, activeSubjectId, setActiveSubjectId, addProfile, addConnection, updateProfile,
       tasks, events, selectedDay, setSelectedDay, weekStart, weekDays, nextWeek, prevWeek,
       addTask, deleteTask, toggleTask, postponeTask, addEvent, deleteEvent, executeInsight,
       documents, addDocument,
-      getMetrics, getPlanetaryHour, getPlanetaryDayRegent, getPlanetRegency: getPlanetaryDayRegent, getHermesInsights, refreshTasks: fetchTasks,
+      getMetrics, getPlanetaryHour, getPlanetaryDayRegent, getPlanetRegency: getPlanetaryDayRegent, getHermesInsights, refreshTasks,
       houseSystem,
       setHouseSystem: (hs: string) => {
         setHouseSystem(hs);
