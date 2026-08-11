@@ -2,10 +2,24 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Send, Sparkles, X } from 'lucide-react';
 import { useGlobalContext } from '../context/GlobalContext';
 import { parseConfirmedBirthDate, readCertifiedCalculation } from '../utils/certifiedCalculation';
+import {
+  appendHermesMessage,
+  getHermesThreadContext,
+  HermesStoredMessage,
+  openHermesThread,  proposeHermesMemory,  sendChatMessage, sendChatMessageStream,
+} from '../services/chat';
 
 interface ChatMessage {
   role: 'user' | 'assistant';
   content: string;
+}
+
+function storedMessageToChat(message: HermesStoredMessage): ChatMessage | null {
+  if (message.role === 'user') return { role: 'user', content: message.content };
+  if (message.role === 'hermes' || message.role === 'system') {
+    return { role: 'assistant', content: message.content };
+  }
+  return null;
 }
 
 function reduceToSingle(n: number): number {
@@ -159,7 +173,7 @@ Retrogradações: ${certifiedRetrogrades.length ? certifiedRetrogrades.join(', '
   // ── Tarefas ──
   const pendingTasks = agenda.tasks.filter((t: any) => !t.completed && !t.is_completed);
   const completedTasks = agenda.tasks.filter((t: any) => t.completed || t.is_completed);
-  const taskSection = `--- TAREFAS (Todoist) ---
+  const taskSection = `--- TAREFAS ---
 Pendentes: ${pendingTasks.length}
 Completas: ${completedTasks.length}
 Progresso: ${agenda.metrics.done}%
@@ -229,7 +243,7 @@ REGRAS DE INTERPRETAÇÃO HERMÉTICA:
 - Seja direto e técnico nos dados, mas elevado no significado
 - Máximo 3-4 parágrafos por resposta
 - Responda SEMPRE em português
-- Privacy: NENHUM dado sai desta máquina. Tudo é local.
+- Privacidade: esta conversa usa somente o serviço local. Um provedor externo só pode receber dados após autorização explícita da pessoa para aquela conversa.
 - "Conhece-te a ti mesmo" é o norte — sempre guie ao autoconhecimento
 
 CONTRATO DE PROVENIÊNCIA:
@@ -259,6 +273,17 @@ Status: ${system.status}
 Conectividade: OK`;
 }
 
+function summarizeSystemPrompt(full: string): string {
+  if (!full) return '';
+  // If already short, return as-is
+  if (full.length <= 1200) return full;
+  // Prefer cutting at a nearby newline for readability
+  const snippet = full.slice(0, 1200);
+  const lastNewline = snippet.lastIndexOf('\n');
+  const cut = lastNewline > 200 ? snippet.slice(0, lastNewline) : snippet;
+  return cut + '\n\n[...resumo do contexto. Ative "Ver contexto" para o prompt completo]';
+}
+
 export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {
   const ctx = useGlobalContext();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -266,6 +291,14 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
   const [loading, setLoading] = useState(false);
   const [initialized, setInitialized] = useState(false);
   const [showProvenance, setShowProvenance] = useState(false);
+  const [threadId, setThreadId] = useState<string | null>(null);
+  const [memoryStatus, setMemoryStatus] = useState('Memoria local: aguardando perfil.');
+  const [systemPrompt, setSystemPrompt] = useState<string | null>(null);
+  const [systemPromptSummary, setSystemPromptSummary] = useState<string | null>(null);
+  const [lastLatencyMs, setLastLatencyMs] = useState<number | null>(null);
+  const [streamingEnabled, setStreamingEnabled] = useState<boolean>(true);
+  const assistantIndexRef = useRef<number | null>(null);
+  const [useFullPrompt, setUseFullPrompt] = useState<boolean>(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Refs for current state inside event listener
@@ -285,6 +318,82 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
     window.addEventListener('send-hermes-msg', handleExternal);
     return () => window.removeEventListener('send-hermes-msg', handleExternal);
   }, [ctx]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    let cancelled = false;
+    const profile = ctx.agenda.activeProfile;
+    setThreadId(null);
+    setInitialized(false);
+
+    if (!profile) {
+      setMemoryStatus('Memoria local indisponivel: entre em um perfil.');
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    const topicKey = `hermes:profile:${profile.id}:geral`;
+    const title = `Hermes - ${profile.name}`;
+
+    const openPersistentThread = async () => {
+      setMemoryStatus('Abrindo memoria local...');
+      const opened = await openHermesThread({
+        ownerId: profile.id,
+        topicKey,
+        title,
+      });
+      const context = await getHermesThreadContext({
+        ownerId: profile.id,
+        threadId: opened.thread.id,
+        limit: 50,
+      });
+
+      if (cancelled) return;
+      const restoredMessages = context.messages
+        .map(storedMessageToChat)
+        .filter((message): message is ChatMessage => Boolean(message));
+      setThreadId(opened.thread.id);
+      setMemoryStatus(
+        restoredMessages.length
+          ? `Memoria local ativa: ${restoredMessages.length} mensagens recuperadas.`
+          : 'Memoria local ativa: novo fio de estudo.',
+      );
+      if (restoredMessages.length) {
+        setMessages(restoredMessages);
+      }
+      // build and cache the system prompt once after restoring context
+      try {
+        const prompt = buildSystemPrompt(ctx);
+        setSystemPrompt(prompt);
+        try {
+          setSystemPromptSummary(summarizeSystemPrompt(prompt));
+        } catch {
+          setSystemPromptSummary(null);
+        }
+      } catch (err) {
+        // ignore; fallback to on-demand build during send
+        setSystemPrompt(null);
+        setSystemPromptSummary(null);
+      }
+      setInitialized(true);
+    };
+
+    openPersistentThread().catch(error => {
+      if (cancelled) return;
+      const message = error instanceof Error ? error.message : 'falha desconhecida';
+      setMemoryStatus(`Memoria local indisponivel: ${message}`);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    isOpen,
+    ctx.agenda.activeProfile?.id,
+    ctx.agenda.activeProfile?.name,
+  ]);
 
   // Mensagem de boas-vindas com contexto
   useEffect(() => {
@@ -320,36 +429,153 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
     const text = overrideText || input;
     const { messages: currMsgs, loading: currLoading } = stateRef.current;
     if (!text.trim() || currLoading) return;
-    
+
     const userMsg: ChatMessage = { role: 'user', content: text };
     const newMessages = [...currMsgs, userMsg];
     setMessages(newMessages);
     if (!overrideText) setInput('');
     setLoading(true);
 
-    // Monta o system prompt com TODOS os dados do sistema
-    const systemPrompt = buildSystemPrompt(ctx);
+    // Monta o contexto local necessário. O backend recusa qualquer provedor
+    // externo até existir consentimento explícito para a conversa.
+    const ownerId = ctx.agenda.activeProfile?.id;
+    const currentThreadId = threadId;
 
     try {
-      const response = await fetch('http://127.0.0.1:9876/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          messages: newMessages.slice(-10), // Últimas 10 mensagens de histórico
-          system_prompt_override: systemPrompt
-        })
-      });
+      if (ownerId && currentThreadId) {
+        appendHermesMessage({
+          ownerId,
+          threadId: currentThreadId,
+          role: 'user',
+          content: text,
+          provenanceKind: 'personal_statement',
+        }).catch(() => {
+          setMemoryStatus('Memoria local indisponivel: a sua mensagem nao foi gravada.');
+        });
+      }
 
-      const data = await response.json();
-      const reply = data.reply || 'Desculpe, não consegui processar.';
-      setMessages([...newMessages, { role: 'assistant', content: reply }]);
+      // Choose which prompt to use. If the user requested full prompt for
+      // the next message, use it and reset the flag; otherwise prefer the
+      // summarized prompt for speed.
+      let promptToUse: string;
+      if (useFullPrompt) {
+        promptToUse = (systemPrompt as string) ?? buildSystemPrompt(ctx);
+        setUseFullPrompt(false);
+      } else {
+        promptToUse = (systemPromptSummary as string) ?? (systemPrompt as string) ?? buildSystemPrompt(ctx);
+      }
+      const contextMessages = newMessages.slice(-6).map(message => ({ role: message.role, content: message.content }));
+      if (streamingEnabled) {
+        // create assistant placeholder message
+        const withPlaceholder = [...newMessages, { role: 'assistant', content: '' } as ChatMessage];
+        assistantIndexRef.current = withPlaceholder.length - 1;
+        setMessages(withPlaceholder);
+        const t0 = Date.now();
+        let finalText = '';
+        await new Promise<void>((resolve, reject) => {
+          sendChatMessageStream(
+            contextMessages,
+            promptToUse,
+            (chunk) => {
+              finalText += chunk;
+              setMessages(prev => {
+                const copy = prev.slice();
+                const idx = assistantIndexRef.current ?? (copy.length - 1);
+                if (idx >= 0 && idx < copy.length) {
+                  copy[idx] = { ...copy[idx], content: finalText };
+                }
+                return copy;
+              });
+            },
+            () => {
+              const latency = Date.now() - t0;
+              setLastLatencyMs(latency);
+              setMemoryStatus(`Memoria local ativa: ultima troca gravada. (resposta em ${Math.round(latency)} ms)`);
+              // persist the final assistant message
+              if (ownerId && currentThreadId) {
+                appendHermesMessage({
+                  ownerId,
+                  threadId: currentThreadId,
+                  role: 'hermes',
+                  content: finalText,
+                  provenanceKind: 'hermes_inference',
+                }).then(() => setMemoryStatus('Memoria local ativa: ultima troca gravada.')).catch(() => setMemoryStatus('Memoria local indisponivel: a resposta nao foi gravada.'));
+              }
+              resolve();
+            },
+            (err) => {
+              reject(err);
+            }
+          );
+        });
+      } else {
+        const t0 = Date.now();
+        const reply = await sendChatMessage(
+          contextMessages,
+          undefined,
+          promptToUse,
+        );
+        const latency = Date.now() - t0;
+        setLastLatencyMs(latency);
+        setMemoryStatus(`Memoria local ativa: ultima troca gravada. (resposta em ${Math.round(latency)} ms)`);
+
+        if (ownerId && currentThreadId) {
+          appendHermesMessage({
+            ownerId,
+            threadId: currentThreadId,
+            role: 'hermes',
+            content: reply,
+            provenanceKind: 'hermes_inference',
+          }).then(() => {
+            setMemoryStatus('Memoria local ativa: ultima troca gravada.');
+          }).catch(() => {
+            setMemoryStatus('Memoria local indisponivel: a resposta nao foi gravada.');
+          });
+        }
+        setMessages([...newMessages, { role: 'assistant', content: reply } as ChatMessage]);
+      }
     } catch (e) {
+      const message = e instanceof Error ? e.message : 'Não foi possível contatar o serviço local do Hermes.';
+      if (ownerId && currentThreadId) {
+        await appendHermesMessage({
+          ownerId,
+          threadId: currentThreadId,
+          role: 'system',
+          content: message,
+          provenanceKind: 'system_notice',
+        }).catch(() => {
+          setMemoryStatus('Memoria local indisponivel: nao foi possivel gravar o aviso.');
+        });
+      }
       setMessages([...newMessages, {
         role: 'assistant',
-        content: '⚠️ Hermes está indisponível. Verifique se o gateway está rodando na porta 9876.'
+        content: `⚠️ ${message}`
       }]);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const proposeHermesMemoryFromMessage = async (message: ChatMessage) => {
+    const ownerId = ctx.agenda.activeProfile?.id;
+    const currentThreadId = threadId;
+    if (!ownerId || !currentThreadId || message.role !== 'assistant') return;
+
+    setMemoryStatus('Propondo memória Hermes...');
+    try {
+      await proposeHermesMemory({
+        ownerId,
+        content: message.content,
+        memoryType: 'study_note',
+        evidenceNote: `Memória proposta a partir da conversa Hermes no tópico ${currentThreadId}.`,
+        topicKey: `hermes:profile:${ownerId}:geral`,
+        sourceThreadId: currentThreadId,
+        confidence: 'inferred',
+      });
+      setMemoryStatus('Memória Hermes proposta com sucesso.');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'falha ao propor memoria';
+      setMemoryStatus(`Memória local indisponível: ${message}`);
     }
   };
 
@@ -363,24 +589,40 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
   const calculationReady = Boolean(certifiedTransit);
 
   return (
-    <div className="fixed inset-x-3 bottom-3 z-50 flex h-[min(560px,calc(100dvh-24px))] flex-col overflow-hidden rounded-2xl border border-color: rgba(217,166,83,0.3) background: var(--aurea-surface) shadow-2xl animate-in slide-in-from-bottom-10 fade-in sm:inset-x-auto sm:bottom-6 sm:right-6 sm:h-[560px] sm:w-[400px]">
+    <div className="hermes-panel fixed inset-x-3 bottom-3 z-50 flex h-[min(620px,calc(100dvh-24px))] flex-col overflow-hidden rounded-2xl aurea-modal animate-in slide-in-from-bottom-10 fade-in sm:inset-x-auto sm:bottom-6 sm:right-6">
       {/* Header */}
-      <div className="px-4 py-3 background: var(--aurea-bg-deep) flex items-center justify-between shrink-0">
+      <div className="aurea-shell-dark px-4 py-3 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-full bg-gold/20 flex items-center justify-center">
-            <Sparkles size={16} className="color: var(--aurea-gold)" />
+            <Sparkles size={16} className="text-[var(--aurea-gold)]" />
           </div>
           <div>
             <p className="text-[11px] font-bold text-white uppercase tracking-wider">Hermes</p>
-            <p className="text-[8px] color: var(--aurea-gold)/70 uppercase tracking-widest">
+            <p className="text-[8px] text-[var(--aurea-gold)]/70 uppercase tracking-widest">
               {ctx.agenda.activeProfile ? `${ctx.agenda.activeProfile.name} · ${ctx.astro.planetaryHour?.icon || '🌙'} ${ctx.astro.planetaryHour?.name || ''}` : 'Assistente Pessoal'}
             </p>
           </div>
         </div>
         <div className="flex items-center gap-2">
           <button
+            type="button"
+            onClick={() => setStreamingEnabled(s => !s)}
+            className={`rounded px-2 py-1 text-sm font-medium transition ${streamingEnabled ? 'bg-emerald-600 text-white' : 'bg-stone-200 text-stone-800'}`}
+            title={streamingEnabled ? 'Streaming: ligado' : 'Streaming: desligado'}
+          >
+            {streamingEnabled ? 'Streaming' : 'No Stream'}
+          </button>
+          <button
+            type="button"
+            onClick={() => setUseFullPrompt(true)}
+            className="rounded px-2 py-1 text-sm font-medium bg-yellow-400 text-stone-900 hover:bg-yellow-500 transition"
+            title="Enviar prompt completo na próxima mensagem"
+          >
+            Modo Completo
+          </button>
+          <button
             onClick={onClose}
-            className="rounded p-1 text-white/50 transition-colors hover:background: var(--aurea-surface)/10 hover: color: var(--aurea-text) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+            className="rounded p-2 text-white/80 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
             aria-label="Fechar Hermes"
             title="Fechar Hermes"
           >
@@ -390,7 +632,7 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
       </div>
 
       {/* Context bar — mostra dados resumidos */}
-      <div className="px-3 py-1.5 background: var(--aurea-bg-deep)/90 border-t border-color: rgba(217,166,83,0.18) flex items-center gap-3 text-[8px] color: rgba(241,233,220,0.55) shrink-0">
+      <div className="aurea-shell-dark px-3 py-2 border-t border-white/10 flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] text-[var(--aurea-text-on-dark)] shrink-0">
         <span>Regra temporal: {ctx.astro.planetaryHour?.name || 'indisponível'}</span>
         <span>|</span>
         <span>Céu: {certifiedTransit ? 'certificado' : 'indisponível'}</span>
@@ -400,19 +642,25 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
         <span>Trânsitos pessoais: conexão pendente</span>
         <span>|</span>
         <span>📋 {ctx.agenda.tasks.filter((t: any) => !t.completed && !t.is_completed).length} pendentes</span>
+        <span>|</span>
+        {lastLatencyMs !== null && (
+          <span title={`Última resposta em ${Math.round(lastLatencyMs)} ms`} className="font-mono">Última resposta: {(lastLatencyMs / 1000).toFixed(2)}s</span>
+        )}
+        <span>|</span>
+        <span>{memoryStatus}</span>
       </div>
 
-      <div className="border-b border-gray-100 background: var(--aurea-surface) px-3 py-2">
+      <div className="border-b border-gray-100 bg-[var(--aurea-surface)] px-3 py-2">
         <button
           type="button"
           onClick={() => setShowProvenance(value => !value)}
-          className="text-[9px] font-bold uppercase tracking-wide color: var(--aurea-text-muted) transition hover:text-[#c5a059]"
+          className="text-[10px] font-bold uppercase tracking-wide text-[#596a76] transition hover:text-[var(--aurea-gold-deep)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--aurea-gold)] focus-visible:ring-offset-2"
           aria-expanded={showProvenance}
         >
           {showProvenance ? 'Ocultar contexto e proveniência' : 'Ver contexto e proveniência'}
         </button>
         {showProvenance && (
-          <div className="mt-2 flex flex-wrap gap-1.5 text-[8px] font-bold uppercase tracking-wide">
+          <div className="mt-2 flex flex-wrap gap-1.5 text-[10px] font-bold uppercase tracking-wide">
         <span className={calculationReady ? 'rounded bg-emerald-100 px-1.5 py-1 text-emerald-800' : 'rounded bg-amber-100 px-1.5 py-1 text-amber-800'} title={calculationReady ? 'Valores recebidos do motor' : 'Nenhum valor verificável foi recebido do motor'}>Cálculo {calculationReady ? 'recebido' : 'indisponível'}</span>
         <span className="rounded bg-amber-100 px-1.5 py-1 text-amber-800" title="Uma regra só é usada quando a escola estiver declarada">Regra: não selecionada</span>
         <span className="rounded bg-sky-100 px-1.5 py-1 text-sky-800" title="Nenhuma fonte editorial foi carregada nesta conversa">Fonte: não selecionada</span>
@@ -423,25 +671,36 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-3 background: rgba(3,10,17,0.4)">
+      <div className="messages-area flex-1 overflow-y-auto p-4 space-y-3 bg-[rgb(15,23,42)]">
+        {messages.length === 0 && !loading && (
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-4 text-[0.95rem] leading-relaxed text-[#f8fafc]">
+            Hermes está pronto para conversar. Envie uma pergunta para iniciar a investigação.
+          </div>
+        )}
         {messages.map((m, i) => (
           <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-            <div className={`max-w-[85%] px-3 py-2 rounded-xl text-[11px] leading-relaxed whitespace-pre-line ${
-              m.role === 'user'
-                ? 'background: var(--aurea-bg-deep) text-white rounded-br-sm'
-                : 'background: var(--aurea-surface) text-gray-700 border border-gray-100 shadow-sm rounded-bl-sm'
-            }`}>
-              {m.content}
+            <div className={`message-bubble ${m.role === 'user' ? 'user-bubble text-right' : 'assistant-bubble text-left'}`}>
+              <div>{m.content}</div>
+              {m.role === 'assistant' && ctx.agenda.activeProfile && threadId && (
+                <div className="message-action flex justify-end">
+                  <button
+                    type="button"
+                    onClick={() => void proposeHermesMemoryFromMessage(m)}
+                    className="rounded-full border border-[var(--aurea-gold)] bg-[var(--aurea-gold)/10] px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--aurea-gold)] transition hover:bg-[var(--aurea-gold)/20]"
+                  >
+                    Salvar como memória
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         ))}
         {loading && (
           <div className="flex justify-start">
-            <div className="background: var(--aurea-surface) border border-gray-100 shadow-sm px-3 py-2 rounded-xl rounded-bl-sm">
-              <div className="flex gap-1">
-                <span className="w-1.5 h-1.5 bg-gold rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                <span className="w-1.5 h-1.5 bg-gold rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                <span className="w-1.5 h-1.5 bg-gold rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+            <div className="message-bubble assistant-bubble px-3 py-2 rounded-3xl">
+              <div className="flex items-center gap-2 text-[0.8rem] text-[#e7e7ea]">
+                <span className="inline-flex h-2.5 w-2.5 animate-pulse rounded-full bg-[var(--aurea-gold)]" />
+                Hermes está pensando...
               </div>
             </div>
           </div>
@@ -450,11 +709,12 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
       </div>
 
       {/* Input */}
-      <div className="p-3 border-t border-gray-100 background: var(--aurea-surface) shrink-0">
+      <div className="p-3 border-t border-[var(--aurea-line)] bg-[var(--aurea-surface)] shrink-0">
         <div className="flex gap-2">
           <input
-            className="flex-1 background: rgba(3,10,17,0.4) rounded-xl px-3 py-2 text-[11px] outline-none border border-color: rgba(38,54,66,0.7) focus: border-color: rgba(217,166,83,0.45) transition-colors focus-visible:ring-2 focus-visible: ring-color: var(--aurea-gold)"
+            className="aurea-input flex-1 rounded-xl px-3 py-2 text-[13px] outline-none transition-colors focus-visible:ring-2 focus-visible:ring-[var(--aurea-gold)]"
             placeholder="Pergunte ao Hermes..."
+            aria-label="Pergunte ao Hermes"
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && !e.shiftKey && sendMessage()}
@@ -462,7 +722,7 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
           <button
             onClick={() => sendMessage()}
             disabled={loading || !input.trim()}
-            className="w-8 h-8 rounded-xl background: var(--aurea-bg-deep) color: var(--aurea-gold) flex items-center justify-center transition-all hover: background: var(--aurea-gold) hover: color: var(--aurea-text) focus-visible:outline-none focus-visible:ring-2 focus-visible: ring-color: var(--aurea-gold) focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-30"
+            className="aurea-button-primary flex h-[42px] w-[42px] items-center justify-center rounded-xl transition-all hover:bg-[var(--aurea-gold)] hover:text-[var(--aurea-navy)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--aurea-gold)] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-30"
             aria-label="Enviar mensagem ao Hermes"
             title="Enviar"
           >
