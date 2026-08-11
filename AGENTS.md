@@ -52,6 +52,8 @@ Pesquisa externa só ocorre dentro dos filtros de fontes configurados e com tran
 - Documentação, migração e teste são parte da entrega. Atualize a Constituição quando a decisão muda o produto; atualize docs técnicas quando muda a implementação.
 - Prefira comandos não interativos e valide de forma proporcional: TypeScript, Rust, testes do motor, testes de migração e teste manual do instalador quando aplicável.
 - Não use `npm audit fix --force` nem atualizações de dependência em massa sem revisão.
+- Antes de concluir uma tarefa, confira `git status --short --branch`, `git diff` e os arquivos não rastreados. Todo arquivo intencionalmente alterado deve estar commitado; não declare a branch pronta enquanto houver mudança ou arquivo não rastreado não explicado.
+- Faça commits pequenos e descritivos, confira o conteúdo staged antes do commit e repita a verificação do worktree depois dele. O handoff deve informar o hash do commit e qualquer pendência de push/merge.
 
 ## Mapa de código atual
 
@@ -80,4 +82,6 @@ O build do instalador requer o sidecar astrológico empacotado em `src-tauri/bin
 
 ## Comunicação de agentes
 
-Declare de forma breve: objetivo, arquivos afetados, risco para dados e como foi validado. Peça autorização antes de ações externas, destrutivas ou que alterem contas/integrações. Não invente conclusão de teste, fonte ou cálculo. Ao concluir, registre pendências reais e entregue caminhos/artefatos verificáveis.
+Declara de forma breve: objetivo, arquivos afetados, risco para dados e como foi validado. A pessoa que organiza a criação deste projeto não tem conhecimento de desenvolvimento de software; portanto, explique decisões, riscos, erros e próximos passos em linguagem simples, defina termos técnicos quando forem necessários e forneça comandos prontos para copiar. Nunca presuma que ela consegue revisar código ou diagnosticar logs sozinha.
+
+Peça autorização antes de ações externas, destrutivas ou que alterem contas/integrações. Não invente conclusão de teste, fonte ou cálculo. Ao concluir, registre pendências reais, informe o hash do commit, confirme se o worktree está limpo e entregue caminhos/artefatos verificáveis.
