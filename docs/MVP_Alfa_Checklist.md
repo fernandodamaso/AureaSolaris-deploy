@@ -92,7 +92,7 @@
 - [ ] Testar fluxo completo: Login → Astrologia → Mandala → Rafiki → Agenda → Finanças → Strange
 - [ ] Testar persistência: fechar e reabrir app, dados mantidos
 - [x] Testar Google Calendar: CRUD real de eventos via Composio (DONE) ✅
-- [x] Testar Todoist: sincronização bidirecional via tokens pessoais (DONE) ✅
+- [x] Integrations de terceiros: Todoist foi despriorizado no escopo atual (LEGACY) ✅
 - [ ] Empacotamento Windows: `npm run tauri build`
 
 ---
@@ -105,14 +105,13 @@
 
 ### Tauri IPC Implementado
 - [x] `src/utils/tauri.ts` com `safeInvoke()` funcionando ✅
-- [x] Comandos mock para desenvolvimento (`ollama_chat`, `openrouter_chat`, etc.) ✅
+- [x] Comandos locais para persistência e motor astrológico ✅
 
 ### Testes Automatizados
-- [x] `src/__tests__/utils/tauri.test.ts` — Testes de IPC mock ✅
-- [x] `src/__tests__/hooks/useTransitData.test.ts` — Testes de hook ✅
-- [x] `src/__tests__/utils/transitAspects.test.ts` — Testes de aspectos ✅
-- [x] `src/__tests__/hooks/useFinancasData.test.ts` — Testes financeiros ✅
-- [x] `src/__tests__/utils/mockData.test.ts` — Testes de mock data ✅
+- [x] `src/__tests__/utils/tauri.test.ts` — Testes de IPC ✅
+- [x] `src/__tests__/utils/astroDignity.test.ts` — Testes de dignidade ✅
+- [x] `src/__tests__/utils/certifiedCalculation.test.ts` — Testes de certificação de cálculo ✅
+- [x] `src/__tests__/utils/confirmedBirthInput.test.ts` — Testes de entrada de nascimento ✅
 
 ---
 
@@ -123,7 +122,7 @@
 | Mandala não renderiza | `MandalaView.tsx` | FIXED |
 | Chat não mantém sessões | `AgentChat.tsx` | FIXED |
 | Strange sem contexto | `App.tsx` | FIXED |
-| Calendar é mock | `lib.rs` | REAL (Composio) |
+| Calendar é mock | `lib.rs` | LOCAL-FIRST |
 | Tipagem inconsistente | Sistema | RESOLVIDO (Fase 8) |
 | Performance lenta | App.tsx | OTIMIZADO (Fase 9) |
 
@@ -133,6 +132,6 @@
 | Termo | Significado |
 |-------|------------|
 | **IPC** | Inter-Process Communication — comunicação entre React e Rust |
-| **Composio** | Plataforma de conectividade para agentes de IA |
+| **Composio** | Plataforma de conectividade legada (removida do escopo) |
 | **Strange** | Supervisor Supremo do sistema |
 | **Trânsitos** | Aspectos entre planetas atuais e mapa natal |

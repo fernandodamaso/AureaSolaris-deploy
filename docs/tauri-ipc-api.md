@@ -53,13 +53,7 @@ const result = await safeInvoke<T>('comando', { param1: value1 });
 
 | Comando | Parâmetros | Retorno | Descrição |
 |---------|-----------|---------|-----------|
-| `get_todoist_tasks` | — | `Task[]` | Lista tarefas Todoist |
-| `create_todoist_task` | `{ content }` | `Task` | Cria tarefa no Todoist |
-| `toggle_todoist_task` | `{ id }` | `Task` | Conclui/desconclui tarefa |
-| `postpone_todoist_task` | `{ id }` | `Task` | Adia tarefa para amanhã |
-| `list_google_calendar_events` | — | `Event[]` | Lista eventos do Google Calendar |
-| `add_google_event` | `{ title, start, end }` | `Event` | Cria evento no Google Calendar |
-| `delete_google_event` | `{ id }` | `()` | Deleta evento |
+| *(nenhuma integração externa obrigatória no escopo atual)* | — | — | Agenda e tarefas são persistidas localmente primeiro; adapters de calendário são opcionais e consentidos. |
 
 ### Sistema
 

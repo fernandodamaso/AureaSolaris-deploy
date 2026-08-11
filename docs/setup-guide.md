@@ -69,7 +69,6 @@ npm run build
 | Variable | Required For |
 |----------|--------------|
 | `OPENROUTER_API_KEY` | Cloud AI agents |
-| `TODOIST_TOKEN` | Todoist integration |
 | `TELEGRAM_TOKEN` | Telegram notifications |
 | `VITE_COMPOSIO_API_KEY` | Google Calendar |
 
