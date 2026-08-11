@@ -1,4 +1,4 @@
-﻿status: draft
+status: review
 id: "fomalhaut_atlas"
 nome: "Fomalhaut — Atlas Simbólico"
 tradicoes:
@@ -11,6 +11,13 @@ origens_e_divergencias:
   tradicional: "Ptolomeu, Al-Battani — Fomalhaut = Peixe Austral; iluminação espiritual, sabedoria oculta."
   moderna: "Astrologia moderna mantém; acrescenta misticismo, ocultismo, cura por água."
   nota: "Classificada como estrela de natureza Vênus/Mercúrio por tradição."
+referencias:
+  - {autor: "Claudius Ptolemy", obra: "Almagest", natureza: "primária astronômica", localizador: "VII–VIII, Piscis Austrinus"}
+  - {autor: "Al-Sufi", obra: "Book of Fixed Stars", natureza: "medieval árabe", localizador: "Piscis Austrinus"}
+  - {autor: "Claudius Ptolemy", obra: "Tetrabiblos", natureza: "primária astrológica", localizador: "I.9"}
+  - {autor: "Vivian E. Robson", obra: "The Fixed Stars and Their Interpretation", natureza: "compilação moderna", localizador: "Fomalhaut"}
+uso_tecnico: "Conjunção tropical, paran ou culminação com método explicitado; recalcular por época."
+divergencias_documentadas: "Vênus/Mercúrio e a classificação moderna como estrela real não são equivalentes; preservar ambas as camadas."
 
 atlas_simbolico:
   pessoas_arquetipos: "Místico, curador espiritual, visionário, pessoa oculta"

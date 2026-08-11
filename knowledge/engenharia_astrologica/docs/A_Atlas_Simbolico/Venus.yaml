@@ -1,4 +1,4 @@
-﻿status: draft
+status: review
 id: "venus_atlas"
 nome: "Vênus — Atlas Simbólico"
 tradicoes:
@@ -10,7 +10,23 @@ subtema: "Correspondências de Vênus"
 origens_e_divergencias:
   tradicional: "Hipócrates, Agrippa — Vênus = cobre, beleza, amor, harmonia, Vênus/Afrodite."
   moderna: "Psicológica — Vênus como função sentimentos/valores. Evolutiva — Vênus como capacidade de amar e ser amado."
-  nota: "Regência unânime de Touro e Libra. Nenhuma divergência."
+  nota: "A regência de Touro e Libra é tradicional no ocidente; correspondências modernas, evolutivas e psicológicas ampliam o simbolismo. ‘Lição cármica’ pertence a escolas evolutivas."
+
+referencias:
+  - autor: "Doroteu de Sidon"
+    obra: "Carmen Astrologicum"
+    natureza: "primária/helenística"
+    localizador: "Livro I, significações de Vênus"
+  - autor: "Heinrich Cornelius Agrippa"
+    obra: "Three Books of Occult Philosophy"
+    natureza: "renascentista/hermética"
+    localizador: "Livro I, caps. 23–26"
+  - autor: "Liz Greene"
+    obra: "The Astrology of Fate"
+    natureza: "moderna/psicológica"
+    localizador: "Vênus, desejo e vínculos"
+
+limite_documental: "Plantas, pedras, órgãos e Tarot provêm de camadas distintas; citar cada tradição separadamente."
 
 atlas_simbolico:
   pessoas_arquetipos:

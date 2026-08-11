@@ -1,4 +1,4 @@
-﻿status: draft
+status: review
 id: "ferramentas_bibliografia"
 nome: "Ferramentas e Bibliografia"
 tradicoes:
@@ -81,6 +81,33 @@ fontes_principais:
     obra: "The Inner Sky"
     tradicao: "Evolutiva"
     link: "N/A"
+
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    data: "século II"
+    funcao: "fonte técnica greco-romana; indicar o tradutor da edição utilizada"
+  - autor: "Vettius Valens"
+    obra: "Anthologies"
+    data: "século II"
+    funcao: "narrativas e técnicas helenísticas"
+  - autor: "Benjamin N. Dykes"
+    obra: "Traditional Astrology for Today"
+    data: "2007"
+    funcao: "manual moderno de leitura de fontes tradicionais, não fonte antiga"
+  - autor: "Swiss Ephemeris / Astrodienst"
+    obra: "Swiss Ephemeris Documentation"
+    data: "versão do pacote usada pelo projeto"
+    funcao: "efemérides e cálculo astronômico; registrar versão e parâmetros"
+  - autor: "Faculty of Astrological Studies"
+    obra: "Library and course materials"
+    data: "consulta contemporânea"
+    funcao: "fonte didática moderna; distinguir ensino institucional de fonte histórica"
+
+revisao_editorial:
+  atribuicao: "A bibliografia reúne fontes primárias, traduções, estudos historiográficos, escolas modernas e ferramentas de cálculo. Uma página ou software não substitui a obra que fundamenta uma regra."
+  divergencias: "Astro.com, Astro-Seek e Solar Fire são calculadoras/repositórios de opções, não autoridades únicas sobre interpretação. Sistemas de casas, orbes e dignidades devem registrar a convenção selecionada."
+  uso_no_motor: "Antes de calcular, registrar efeméride, versão, fuso IANA, zodíaco, sistema de casas, orbes e fonte de regra; manter links e data de consulta como metadados, sem tratar resultados de sites como verdade canônica."
 
 ferramentas:
   - nome: "Ephemeris software"

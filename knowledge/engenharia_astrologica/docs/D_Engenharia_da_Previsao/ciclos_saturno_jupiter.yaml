@@ -1,4 +1,4 @@
-﻿status: draft
+status: review
 id: "ciclos_saturno_jupiter"
 nome: "Ciclos de Saturno e Júpiter"
 tradicoes:
@@ -8,9 +8,27 @@ tipo: "Engenharia da Previsão"
 subtema: "Ciclos planetários longos"
 
 origens_e_divergencias:
-  tradicional: "Hellenística e medieval — ciclos de Saturno (~29,5 anos) e Júpiter (~12 anos) como marcos de vida."
-  moderna: "Astrologia evolutiva e psicológica — ciclos como 'maturidade' e 'expansão'."
-  nota: "Revisar ao citar — marca a escola usada."
+  tradicional: "A astrologia helenística e medieval acompanha retornos e conjunções dos planetas visíveis; os ciclos são marcos cronológicos, não uma regra única de personalidade."
+  moderna: "Na astrologia psicológica do século XX (Dane Rudhyar e Liz Greene), o retorno de Saturno é narrado como maturação e o de Júpiter como expansão."
+  divergencias: "O primeiro retorno de Saturno ocorre por volta de 29–30 anos, não 21–22; a conjunção Saturno–Júpiter (~20 anos) é outro ciclo."
+  nota: "Correspondências míticas e médicas são camadas tradicionais/herméticas, não consenso."
+referencias:
+  - autor: "Vettius Valens"
+    obra: "Anthologiae, livros IV–V"
+    periodo: "século II, helenística"
+    uso: "períodos planetários e cronologia de vida"
+  - autor: "Abu Ma'shar al-Balkhi"
+    obra: "The Great Introduction to Astrology; On the Great Conjunctions"
+    periodo: "século IX, persa/árabe medieval"
+    uso: "conjunções Júpiter–Saturno e ciclos mundanos"
+  - autor: "Dane Rudhyar"
+    obra: "The Astrology of Personality"
+    periodo: "1936, moderna"
+    uso: "leitura psicológica dos ciclos"
+  - autor: "Liz Greene"
+    obra: "The Astrology of Fate"
+    periodo: "1984, psicológica"
+    uso: "retorno de Saturno e desenvolvimento"
 
 atlas_simbolico:
   pessoas_arquetipos: "O mestre do tempo, o professor, o estruturante"
@@ -42,7 +60,7 @@ camada_energetica:
 
 ciclos_saturno:
   duracao: "~29,5 anos"
-  marcos: ["21-22 (primeiro retorno)", "29-30 (segundo retorno)", "44-45 (meio-ciclo)", "58-59 (terceiro retorno)"]
+  marcos: ["14-15 (oposição)", "29-30 (primeiro retorno)", "44-45 (oposição)", "58-60 (segundo retorno)"]
   tema: "Estrutura, maturidade, limites, concretização"
   como_usar: "Cada retorno de Saturno é uma PROVA. O que aguenta, fica. O que não aguenta, cai."
 

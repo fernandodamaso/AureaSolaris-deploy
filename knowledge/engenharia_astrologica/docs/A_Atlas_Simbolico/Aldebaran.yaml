@@ -1,4 +1,4 @@
-﻿status: draft
+status: review
 id: "aldebaran_atlas"
 nome: "Aldebaran — Atlas Simbólico"
 tradicoes:
@@ -11,6 +11,13 @@ origens_e_divergencias:
   tradicional: "Ptolomeu, Al-Battani — Aldebaran = olho do Touro; força física, sucesso por luta."
   moderna: "Astrologia moderna mantém; acrescenta determinação e ambição."
   nota: "Classificada como estrela de natureza marte/júpiter por tradição."
+referencias:
+  - {autor: "Claudius Ptolemy", obra: "Tetrabiblos", natureza: "primária astrológica", localizador: "I.9"}
+  - {autor: "Claudius Ptolemy", obra: "Almagest", natureza: "primária astronômica", localizador: "VII–VIII"}
+  - {autor: "Abū al-Rayḥān al-Bīrūnī", obra: "Book of Instruction in the Elements of the Art of Astrology", natureza: "medieval árabe", localizador: "estrelas fixas"}
+  - {autor: "Vivian E. Robson", obra: "The Fixed Stars and Their Interpretation", natureza: "compilação moderna", localizador: "Aldebaran"}
+uso_tecnico: "Conjunção com planeta, ângulo ou parte; recalcular longitude tropical pela época e declarar orbe e escola."
+divergencias_documentadas: "A natureza Marte/Júpiter é uma variante de catálogos; o Atlas preserva também mitos e aparências sem tratá-los como consenso."
 
 atlas_simbolico:
   pessoas_arquetipos: "Guerreiro, conquistador, atleta, negociante ambicioso"

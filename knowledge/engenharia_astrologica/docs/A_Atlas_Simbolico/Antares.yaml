@@ -1,4 +1,4 @@
-﻿status: draft
+status: review
 id: "antares_atlas"
 nome: "Antares — Atlas Simbólico"
 tradicoes:
@@ -11,6 +11,13 @@ origens_e_divergencias:
   tradicional: "Ptolomeu — Antares = coração do Escorpião; opositor de Marte/Regulus; intensidade, risco."
   moderna: "Astrologia moderna mantém; acrescenta obsessão, sexo, poder."
   nota: "Estrela considerada perigosa por excesso; interpretar com cautela."
+referencias:
+  - {autor: "Claudius Ptolemy", obra: "Tetrabiblos", natureza: "primária astrológica", localizador: "I.9"}
+  - {autor: "Claudius Ptolemy", obra: "Almagest", natureza: "primária astronômica", localizador: "VII–VIII, Escorpião"}
+  - {autor: "Manilius", obra: "Astronomica", natureza: "poética romana", localizador: "Livro I"}
+  - {autor: "Vivian E. Robson", obra: "The Fixed Stars and Their Interpretation", natureza: "compilação moderna", localizador: "Antares"}
+uso_tecnico: "Conjunção longitudinal ou por declinação; registrar época, posição aparente e orbe."
+divergencias_documentadas: "Marte/Júpiter, Marte/Saturno e apenas marcial aparecem em fontes diferentes; cada atribuição permanece identificada."
 
 atlas_simbolico:
   pessoas_arquetipos: "Místico intenso, estrategista, cirurgião, investigador"

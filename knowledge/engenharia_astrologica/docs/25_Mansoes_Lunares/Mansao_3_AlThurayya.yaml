@@ -1,12 +1,12 @@
-﻿status: draft
+status: review
 
 id: "mansao_3_al-thurayya"
-nome: "Mansão 3 — Al-Thurayya (As Plêiades / 5°20'–8°0' Touro)"
+nome: "Mansão 3 — Al-Thurayya (As Plêiades / aprox. 25°42' Áries–8°34' Touro)"
 tradicoes:
   - "arabes ocidentais"
   - "medievais"
-regente: "Marte (Dorotheus)"
-qualidade: "Maléfica (drama, luta, beleza perigosa)"
+regente: "Varia por autor; não há base segura para atribuir Marte a Doroteu"
+qualidade: "Varia: as Plêiades podem ser descritas como férteis, nebulosas, perigosas ou favoráveis"
 atlas_simbolico:
   pessoas_arquetipos: "O agrupado, o que brilha junto, o coletivo"
   lugares_fisicos: "Grupos, clubes, espaços coletivos, redes"
@@ -34,9 +34,23 @@ porque_simbolico: |
   Al-Thurayya = AS PLÊIADES (árabe) = o aglomerado de estrelas no pescoço de Touro — BELEZA e também PERDA (as plêiades 'choram' na mitologia).
   Marte = DRAMA, LUTA. A mansão 3 = 'a beleza que corta' (como os chifres de Touro).
 
-linha_tradicao: "Dorotheus: mansão 3 = Marte = 'beleza perigosa, drama, luta'."
+linha_tradicao: "Al-Thurayya é a estação das Plêiades; a tradição árabe associa o asterismo a fertilidade, reunião e, em certos catálogos, visão obscurecida ou perigo."
 origens_e_divergencias:
-  tradicional: "Simbólica astronômica/tradicional dos textos clássicos de astrologia."
-  moderna: "Uso contemporâneo como recurso gráfico de memorização e estudo visual."
-  nota: "Manter fidelidade ao glyph canônico; variações estilísticas são permitidas para caderno."
+  tradicional: "Manāzil árabes, astronomia estelar greco-árabe e magia astral medieval tratam al-Thurayya como grupo visível de estrelas, não como signo tropical fixo."
+  moderna: "Autores modernos projetam a estação em graus tropicais e acrescentam linguagem psicológica/arquetípica."
+  divergencias: "A divisão uniforme coloca a terceira mansão em 25°42' Áries–8°34' Touro; fronteiras por estrelas mudam com precessão. A antiga faixa era incorreta."
+  nota: "Marte, drama ou beleza fatal são variantes interpretativas, não atribuição documental segura a Doroteu."
+referencias:
+  - autor: "al-Biruni"
+    obra: "The Book of Instruction in the Elements of the Art of Astrology"
+    periodo: "século XI"
+    uso: "manāzil, Plêiades e posições"
+  - autor: "Picatrix"
+    obra: "Livro I, mansões lunares"
+    periodo: "século XI–XIII"
+    uso: "eleições e imagens talismânicas"
+  - autor: "James Herschel Holden"
+    obra: "The Royal Stars of Persia and the 28 Lunar Mansions"
+    periodo: "1990, historiografia moderna"
+    uso: "síntese ocidental e variantes"
 

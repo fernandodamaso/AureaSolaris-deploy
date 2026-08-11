@@ -15,7 +15,25 @@ sentido_do_calculo: |
 origens_e_divergencias:
   tradicional: "Helenística (Ptolomeu, Vettius Valens) — lotes como pontos matemáticos."
   moderna: "Evolutiva/moderna (Steven Forrest, Jeffrey Green) — lotes como 'pontos sensíveis da jornada'."
-  nota: "Revisar ao citar — marca a escola usada."
+nota: "Revisar ao citar — marca a escola usada."
+revisao_editorial:
+  estado: "draft_enriquecido"
+  atribuicao: "Partes relativas a pais/progenitores são atestadas em compilações helenísticas e medievais, mas as fórmulas Sol–Saturno e suas inversões não são uniformes entre autores."
+  divergencias: "A oposição pai/mãe não deve ser projetada como regra universal: algumas fontes distribuem os pais por Sol/Lua, outras por casas 4/10 ou por sect. A linguagem de 'internalização' é moderna."
+  uso_no_motor: "Exigir fonte, sect e regra parental escolhidas pelo usuário; apresentar Casa 4/10 e Sol/Lua como alternativas independentes."
+referencias:
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    data: "século II"
+    funcao: "técnicas de família, pais e lotes"
+  - autor: "Dorotheus of Sidon"
+    obra: "Carmen Astrologicum"
+    data: "século I"
+    funcao: "testemunho antigo sobre pais e progenitores"
+  - autor: "Benjamin Dykes (trad.)"
+    obra: "On the Heavenly Spheres / Persian Nativities"
+    data: "2010–2014"
+    funcao: "variantes medievais e distinção de regras"
 atlas_simbolico:
   pessoas_arquetipos: "O pai, a mãe, os progenitores"
   lugares_fisicos: "Lares, terras, campos, lugares de origem"

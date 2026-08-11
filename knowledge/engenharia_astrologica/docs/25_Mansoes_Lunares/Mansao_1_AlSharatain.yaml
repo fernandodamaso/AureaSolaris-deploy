@@ -1,12 +1,12 @@
-﻿status: draft
+status: review
 
 id: "mansao_1_alsharatain"
-nome: "Mansão 1 — Al-Sharatain (Os Dois Chifres / 0°–2°40' Áries)"
+nome: "Mansão 1 — Al-Sharatain (Os Dois Sinais / aprox. 0°–12°51' Áries)"
 tradicoes:
   - "arabes ocidentais"
   - "medievais"
-regente: "Saturno (Dorotheus)"
-qualidade: "Maléfica (corte, perigo)"
+regente: "Varia por autor; não atribuir Saturno a Doroteu sem edição verificável"
+qualidade: "Varia: catálogos medievais registram usos favoráveis e desfavoráveis"
 atlas_simbolico:
   pessoas_arquetipos: "O pioneiro, o que inicia, o guerreiro"
   lugares_fisicos: "Campos de batalha, fronteiras, lugares de início"
@@ -34,9 +34,23 @@ porque_simbolico: |
   Al-Sharatain = 'OS DOIS CHIFRES' (árabe) = os chifres de Áries (o carneiro). São a PARTIDA, mas também o PERIGO (chifres cortam).
   Regente Saturno = 'cabeça pesada' — nascer na mansão 1 = 'peso no nascimento', 'fome de fazer'.
 
-linha_tradicao: "Dorotheus: mansão 1 = Saturno = 'perigo, mas sucesso se cauteloso'."
+linha_tradicao: "Manāzil árabes: al-Sharatayn é a primeira estação lunar, associada às estrelas Sheratan e Mesarthim; regências e julgamentos mudam conforme o autor."
 origens_e_divergencias:
-  tradicional: "Simbólica astronômica/tradicional dos textos clássicos de astrologia."
-  moderna: "Uso contemporâneo como recurso gráfico de memorização e estudo visual."
-  nota: "Manter fidelidade ao glyph canônico; variações estilísticas são permitidas para caderno."
+  tradicional: "Tradição árabe de manāzil al-qamar, preservada em al-Biruni, Abu Ma'shar e no Ghāyat al-Ḥakīm (Picatrix)."
+  moderna: "Autores ocidentais modernos adaptam as 28 estações a graus tropicais para estudo e eleição."
+  divergencias: "Cada mansão mede 360°/28 = 12°51'26''; limites por estrelas mudam com precessão. A faixa de 2°40' era incompatível com 28 mansões e foi corrigida."
+  nota: "Não confundir manāzil árabes com nakṣatras indianos, fora do escopo."
+referencias:
+  - autor: "Abu al-Rayhan al-Biruni"
+    obra: "The Book of Instruction in the Elements of the Art of Astrology"
+    periodo: "século XI, persa/árabe"
+    uso: "manāzil e astronomia lunar"
+  - autor: "Abu Ma'shar"
+    obra: "The Abbreviation of the Introduction to Astrology"
+    periodo: "século IX, árabe"
+    uso: "estações lunares"
+  - autor: "Picatrix (Ghāyat al-Ḥakīm)"
+    obra: "Livro I, capítulos sobre mansões"
+    periodo: "século XI–XIII, magia astral árabe/latina"
+    uso: "eleições e talismãs"
 

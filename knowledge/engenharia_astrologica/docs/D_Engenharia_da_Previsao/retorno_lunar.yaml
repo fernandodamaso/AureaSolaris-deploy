@@ -1,4 +1,4 @@
-﻿status: draft
+status: review
 id: "retorno_lunar"
 nome: "Retorno Lunar"
 tradicoes:
@@ -8,9 +8,21 @@ tipo: "Engenharia da Previsão"
 subtema: "Timing mensal"
 
 origens_e_divergencias:
-  tradicional: "Hellenística — retorno lunar como 'ciclo emocional'."
-  moderna: "Evolutiva — retorno lunar como 'necessidade emocional'."
-  nota: "Revisar ao citar — marca a escola usada."
+  tradicional: "Retornos planetários existiam na astrologia antiga, mas a aplicação mensal do retorno da Lua como técnica autónoma é sobretudo moderna."
+  moderna: "Autores do século XX, como Alexander Volguine, usam o mapa do instante em que a Lua retorna ao grau natal para ciclos de cerca de 27,3 dias."
+  divergencias: "Alguns usam retorno sideral da Lua (27,3 dias), outros o mês sinódico (~29,5 dias); este arquivo trata do retorno ao grau natal. Local e casas devem ser declarados."
+referencias:
+  - autor: "Alexander Volguine"
+    obra: "The Technique of Solar Returns"
+    periodo: "século XX, moderna"
+    uso: "tradição de revoluções"
+  - autor: "Robert Hand"
+    obra: "Planets in Transit"
+    periodo: "1976, moderna"
+    uso: "retornos e ciclos"
+protocolo_calculo:
+  - "Encontrar por busca numérica o instante em que a longitude geocêntrica da Lua iguala a natal."
+  - "Calcular mapa para o local escolhido e registrar explicitamente a escolha."
 
 atlas_simbolico:
   pessoas_arquetipos: "A nutridora, a sensitiva, o ciclo"

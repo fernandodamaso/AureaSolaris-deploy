@@ -1,12 +1,28 @@
-﻿status: draft
+status: review
 id: "yod"
 nome: "Yod — A 'Mão de Deus'"
 formato: "Dois planetas em sextil, ambos em quincúncio (150°) com um terceiro (o 'dedo' / ápice)"
 
 origens_e_divergencias:
-  tradicional: "Ptolomeu (Tetrabiblos) — aspectos ptolomaicos e orbes."
-  moderna: "Astrologia psicológica moderna (aspectos como 'qualidade da correnteza')."
-  nota: "Revisar ao citar — marca a escola usada."
+  tradicional: "Não há evidência de que a figura Yod (‘Mão de Deus’) seja nomeada na astrologia helenística ou medieval; o quincúncio não integra os aspectos clássicos de Ptolomeu."
+  moderna: "Configuração popularizada na astrologia do século XX: dois sextis a um ápice em quincúncio; ‘Mão de Deus’ é rótulo moderno."
+  nota: "A leitura cármica é linguagem de escolas modernas, não técnica antiga."
+
+referencias:
+  - autor: "Cláudio Ptolomeu"
+    obra: "Tetrabiblos"
+    natureza: "primária/tradicional"
+    localizador: "Livro I, caps. 12–14; aspectos clássicos, não Yod"
+  - autor: "Alexandre Volguine"
+    obra: "The Yod Book"
+    natureza: "moderna/especializada"
+    localizador: "estudo moderno da configuração"
+  - autor: "Jeffrey Wolf Green"
+    obra: "Pluto: The Evolutionary Journey of the Soul"
+    natureza: "moderna/evolutiva"
+    localizador: "linguagem evolutiva/cármica"
+
+limite_documental: "Quincúncio, orbes e critérios de ápice variam entre autores modernos; tratar como configuração opcional com parâmetros explícitos."
 atlas_simbolico:
   pessoas_arquetipos: "O escolhido, o enviado, o mensageiro divino"
   lugares_fisicos: "Templos, locais de destino, montanhas sagradas"

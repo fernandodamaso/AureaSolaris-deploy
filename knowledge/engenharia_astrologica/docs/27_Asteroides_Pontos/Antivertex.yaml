@@ -1,4 +1,4 @@
-﻿status: draft
+﻿status: review
 id: "antivertex"
 nome: "Antivertex (Anti-Vértice — O Que a Pessoa Traz)"
 tradicoes:
@@ -84,4 +84,22 @@ origens_e_divergencias:
     autores: [Liz Greene, autores de astrologia de relacionamentos]
     conceito: "O que você traz para o encontro — oposto ao Vertex (o que o destino traz para você)."
   por_que_da_divergencia: "Antivertex é ponto matemático moderno, parte do sistema Vertex/Antivertex."
+
+referencias:
+  - autor: "Charles A. Jayne"
+    obra: "The Horoscope and the Vertex (literatura do Vertex, séc. XX)"
+    natureza: "fonte moderna do eixo Vertex/Antivertex"
+    localizador: "Conferir a edição/artigo adotado; atribuições do eixo variam."
+  - autor: "Astro.com"
+    obra: "Astro-Dienst Astrowiki: Vertex"
+    natureza: "referência técnica contemporânea"
+    localizador: "Descrição do cálculo do Vertex e do ponto oposto; acesso online."
+
+limites_e_divergencias:
+  - "Antivertex não possui dignidades essenciais canônicas; ervas, pedras e ‘missão’ são overlays modernos do Atlas."
+  - "A leitura de ‘o que a pessoa traz’ é convenção relacional moderna, não significador helenístico."
+  - "O motor deve calcular o ponto oposto ao Vertex com zodíaco, casas e precisão declarados; não inferir causalidade."
+
+## ✏️ Minhas Anotações
+notas_pessoais: []
 

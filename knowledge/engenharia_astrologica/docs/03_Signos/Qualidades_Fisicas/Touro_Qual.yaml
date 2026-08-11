@@ -1,4 +1,4 @@
-status: draft
+status: review
 id: touro_qualidades
 nome: Touro — Qualidades Físicas
 cor: Verde-esmeralda, rosa, dourado-suave
@@ -35,3 +35,23 @@ porque_simbolico: 'Touro = PESCOÇO/GARGANTA — é o ''pescoço'' do zodíaco a
   VERDE-ESMERALDA = cor da NATUREZA que brota (Touro = terra que floresce). ROSA = flor do prazer (Vênus rege Touro).
 
   '
+
+aparencia_nas_tradicoes:
+  descricao: "Na fisionomia astrológica tradicional, Touro ou Ascendente taurino pode ser descrito como de constituição sólida, pescoço forte, traços estáveis e voz marcada; é uma doutrina morfológica de autores e períodos, não consenso universal."
+  porque: "A imagem deriva do touro, da qualidade fixa/terrosa e da atribuição anatômica da garganta e do pescoço."
+  variantes: "Alguns autores privilegiam Ascendente e regente; outros combinam Vênus, Lua, dignidades e planetas angulares."
+  limite: "Registrar fonte e método; não converter uma doutrina histórica em fenótipo ou destino."
+
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "fonte primária histórica"
+    localizador: "Livro I, qualidades dos signos e correspondências corporais."
+  - autor: "Heinrich Cornelius Agrippa"
+    obra: "De occulta philosophia libri tres"
+    natureza: "fonte primária renascentista"
+    localizador: "Livro I, cadeias de Vênus, cores, plantas, pedras e metais."
+  - autor: "Nicholas Culpeper"
+    obra: "Astrological Judgement of Diseases from the Decumbiture of the Sick"
+    natureza: "fonte histórica"
+    localizador: "Correspondências de Vênus e garganta; não usar como diagnóstico."

@@ -1,4 +1,4 @@
-﻿status: draft
+﻿status: review
 id: "casa_9_atlas"
 nome: "Casa 9 — O Horizonte / A Fé"
 tradicoes:
@@ -10,7 +10,7 @@ subtema: "Correspondências da Casa 9"
 origens_e_divergencias:
   tradicional: "Ptolomeu (Tetrabiblos) — significados tradicionais das 12 casas."
   moderna: "Astrologia psicológica/evolutiva — casa 9 como fé e filosofia."
-  nota: "Revisar ao citar — marca a escola usada."
+  nota: "A casa 9 é uma síntese: religião/viagens/estudos aparecem em fontes tradicionais; fé, sentido e publicação são ampliações modernas."
 
 atlas_simbolico:
   pessoas_arquetipos: "O filósofo, o professor, o sacerdote, o estrangeiro, o viajante"
@@ -44,4 +44,27 @@ camada_energetica:
 
 ver_mais:
   - "../05_Casas/Casa_9.yaml"
+
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "fonte antiga greco-romana"
+    localizador: "Livro III, tópicos de religião e viagens; a divisão em casas varia por tradução."
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    natureza: "fonte helenística"
+    localizador: "Livro II, tópicos de lugares e viagens; consultar tradução de Mark Riley."
+  - autor: "Dane Rudhyar"
+    obra: "The Astrology of Personality"
+    ano: 1936
+    natureza: "fonte moderna psicológica"
+    localizador: "Leitura de sentido e filosofia; não substituir a significação tradicional."
+
+limites_e_divergencias:
+  - "‘Fé’ pode significar religião institucional, filosofia ou busca de sentido conforme a escola; não é sinônimo universal de dogma."
+  - "Correspondências de Júpiter, quinta-feira, fígado e pedras são camadas tradicionais/modernas distintas; cada uma deve ser rotulada."
+  - "O motor deve preservar sistema de casas e tradição selecionados; a casa 9 não determina viagens, vocação religiosa ou doença."
+
+## ✏️ Minhas Anotações
+notas_pessoais: []
 

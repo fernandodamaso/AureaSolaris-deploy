@@ -1,4 +1,4 @@
-﻿status: draft
+status: review
 id: direcoes_primarias_eng
 nome: Direções Primárias e Simbólicas
 tradicoes:
@@ -7,9 +7,29 @@ tradicoes:
 tipo: Engenharia da Previsão
 subtema: Timing planetário avançado
 origens_e_divergencias:
-  tradicional: Hellenística — direções como 'movimento simbólico do mapa'.
-  moderna: Forrest, Rudhyar — direções como 'interiorização do tempo'.
-  nota: Revisar ao citar — marca a escola usada.
+  tradicional: "Ptolomeu, Doroteu, al-Qabisi e autores medievais descrevem direções como conversão do movimento diurno em tempo."
+  moderna: "Direções simbólicas e progressões de um grau por ano foram rearticuladas por Sepharial e Alan Leo; não são idênticas às direções primárias."
+  divergencias: "Primárias usam arco no equador e podem usar conversão Naibod, Ptolomeu ou chave de 1°=1 ano; mundanas e zodiacais, diretas e conversas produzem resultados diferentes."
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos, III.14–15"
+    periodo: "século II, helenística"
+    uso: "direções/conversão temporal"
+  - autor: "Abu Ali al-Khayyat"
+    obra: "The Judgments of Nativities"
+    periodo: "século IX, árabe medieval"
+    uso: "direções e significadores"
+  - autor: "John Gadbury"
+    obra: "Genethlialogia"
+    periodo: "1658, inglesa tradicional"
+    uso: "prática de direções"
+  - autor: "Alan Leo"
+    obra: "The Progressed Horoscope"
+    periodo: "1906, moderna"
+    uso: "direção/progressão simbólica"
+protocolo_calculo:
+  - "Converter a diferença de ascensão reta entre significador e promissor em arco; registrar sistema, latitude, chave e direção/conversão."
+  - "Aplicar aspecto dirigido ao grau natal e registrar orbe; não misturar com progressão secundária."
 atlas_simbolico:
   pessoas_arquetipos: O estrategista, o temporizador, o navegador
   lugares_fisicos: Mapas, efemérides, relógios

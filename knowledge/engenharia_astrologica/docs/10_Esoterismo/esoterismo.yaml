@@ -1,4 +1,4 @@
-﻿status: draft
+status: review
 id: "esoterismo"
 nome: "Esoterismo"
 tradicoes:
@@ -10,7 +10,28 @@ subtema: "Ocultismo, magia, tradições esotéricas"
 origens_e_divergencias:
   tradicional: "Hermetismo, alquimia, cabala, magia cerimonial."
   moderna: "Jung, psicologia arquetípica, esoterismo contemporâneo."
-  nota: "Conteúdo sensível — usar como referência simbólica, não como manual."
+nota: "Conteúdo sensível — usar como referência simbólica, não como manual."
+revisao_editorial:
+  estado: "draft_enriquecido"
+  atribuicao: "'Esoterismo' é um rótulo moderno para correntes heterogêneas: hermetismo tardo-antigo, magia astral medieval/renascentista, alquimia, Cabala cristã e ocultismo moderno. Não são uma escola única nem uma cadeia histórica linear."
+  divergencias: "Hermetismo, Cabala judaica, Cabala cristã, magia salomônica, teosofia e psicologia junguiana devem permanecer separadas; correspondências planetárias variam por corpus."
+  uso_no_motor: "Tratar correspondências como camadas selecionáveis e atribuídas; nunca convertê-las em regra astronômica ou afirmação histórica universal."
+  escopo: "O rótulo inclui práticas e textos diferentes: filosofia hermética, magia astral, alquimia, Cabala cristã e ocultismo moderno. A ficha registra famílias de fontes, não uma genealogia única."
+  divergencias_de_correspondencias: "Agrippa organiza planetas, metais, plantas e anjos segundo sua magia natural; a Golden Dawn rearranja letras, tarot e caminhos; a teosofia e Jung usam outras linguagens. O motor deve exibir a escola escolhida e não mesclar tabelas."
+  limite: "Afirmações de eficácia ritual, anjos e causalidade espiritual são crenças internas das fontes, não resultados calculáveis pelo engine."
+referencias:
+  - autor: "Brian P. Copenhaver (ed.)"
+    obra: "Hermetica"
+    data: "1992"
+    funcao: "fontes herméticas tardo-antigas"
+  - autor: "Frances A. Yates"
+    obra: "Giordano Bruno and the Hermetic Tradition"
+    data: "1964"
+    funcao: "história do hermetismo renascentista"
+  - autor: "Heinrich Cornelius Agrippa"
+    obra: "Three Books of Occult Philosophy"
+    data: "1533"
+    funcao: "correspondências planetárias e magia natural renascentista"
 
 atlas_simbolico:
   pessoas_arquetipos: "O ocultista, o alquimista, o buscador do oculto"

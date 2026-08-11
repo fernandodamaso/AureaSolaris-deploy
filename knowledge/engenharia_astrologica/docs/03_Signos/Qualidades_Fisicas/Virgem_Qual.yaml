@@ -1,4 +1,4 @@
-status: draft
+status: review
 id: virgem_qualidades
 nome: Virgem — Qualidades Físicas
 cor: Verde-claro, marrom-terra, verde-oliva
@@ -35,3 +35,23 @@ porque_simbolico: 'Virgem = INTESTINOS — órgão que CLASSIFICA e ELIMINA. O i
   VERDE-OLIVA = cor da TERRA FÉRTIL (Virgem = terra que cultiva). MARROM = cor do ''solo'' (base do método).
 
   '
+
+aparencia_nas_tradicoes:
+  descricao: "Manuais fisionômicos podem descrever Virgem ou Ascendente virginiano como corpo mais enxuto ou contido, gestos precisos e olhar observador; depende do autor e dos significadores julgados."
+  porque: "A imagem deriva da qualidade mutável/terrosa, de Mercúrio e da atribuição anatômica ao ventre e intestinos, órgãos de seleção na lógica antiga."
+  variantes: "Algumas escolas privilegiam Ascendente e regente; outras acrescentam Mercúrio, Lua, aspectos e condição elemental."
+  limite: "Preservar como doutrina histórica de aparência, com fonte e período; não tratar como fenótipo, diagnóstico ou destino."
+
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "fonte primária histórica"
+    localizador: "Livro I, qualidades dos signos e melothesia."
+  - autor: "Heinrich Cornelius Agrippa"
+    obra: "De occulta philosophia libri tres"
+    natureza: "fonte primária renascentista"
+    localizador: "Livro I, Mercúrio e cadeias de ervas, pedras, metais e cores."
+  - autor: "Nicholas Culpeper"
+    obra: "Astrological Judgement of Diseases from the Decumbiture of the Sick"
+    natureza: "fonte histórica"
+    localizador: "Correspondências mercuriais e digestivas; não usar como diagnóstico."

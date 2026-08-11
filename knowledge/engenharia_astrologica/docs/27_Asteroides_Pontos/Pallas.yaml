@@ -1,4 +1,4 @@
-﻿status: draft
+﻿status: review
 id: "pallas"
 nome: "Pallas (Asteroide 2 Pallas)"
 tradicoes:
@@ -117,4 +117,23 @@ origens_e_divergencias:
     autores: [Demetra George, Liz Greene]
     conceito: "Planeta da estratégia, da arte e da justiça prática — a guerreira sábia."
   por_que_da_divergencia: "Pallas é moderna por definição: entrou no mapa no século XIX como segundo asteroide descoberto."
+
+referencias:
+  - autor: "Demetra George e Douglas Bloch"
+    obra: "Asteroid Goddesses"
+    ano: 1986
+    natureza: "fonte moderna mitológica/psicológica"
+    localizador: "Pallas como inteligência estratégica, criatividade e padrão de justiça."
+  - autor: "NASA/JPL"
+    obra: "Small-Body Database: 2 Pallas"
+    natureza: "fonte astronômica"
+    localizador: "Designação e dados orbitais; não valida significados astrológicos."
+
+limites_e_divergencias:
+  - "Virgem como domicílio e Peixes como detrimento são propostas modernas, não dignidades clássicas."
+  - "A deusa Atena/Pallas tem tradições míticas distintas; o arquivo preserva a síntese moderna, mas não deve atribuí-la a uma única fonte antiga."
+  - "O motor deve informar corpo, orbe e regra escolhida; ‘justiça’ ou ‘estratégia’ são interpretações, não resultados astronômicos."
+
+## ✏️ Minhas Anotações
+notas_pessoais: []
 

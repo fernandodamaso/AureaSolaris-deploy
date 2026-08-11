@@ -1,13 +1,13 @@
-﻿status: draft
+status: review
 id: "tradicao_caldeia_egipcia_mesopotamica"
 nome: "Tradição Caldaica, Egípcia e Mesopotâmica"
 tipo: "Tradições Antigas"
 subtema: "Origens da astrologia"
 
 origens_e_divergencias:
-  tradicional: "Fontes antigas — Babilônia, Egito, tradição caldaica."
-  moderna: "Reconstrução histórica e simbólica."
-  nota: "Fontes fragmentadas — reconstrução é interpretação."
+  tradicional: "Mesopotâmia preserva séries de presságios e observações; o Egito desenvolveu decanos e calendários; 'caldaico' designa tanto sacerdotes babilônicos quanto uma recepção greco-romana posterior."
+  moderna: "A história é reconstruída por tábuas, papiros e textos greco-egípcios; não há uma linha simples Babilônia → Egito → Grécia."
+  nota: "Fontes fragmentárias e línguas diferentes exigem separar dado textual, reconstrução acadêmica e lenda hermética."
 
 atlas_simbolico:
   pessoas_arquetipos: "O mago, o sacerdote, o astrônomo antigo"
@@ -50,5 +50,31 @@ tradicoes:
   - nome: "Caldaica"
     periodo: "200 a.C. — 400 d.C."
     contribuicao: "Tradição Caldaica, oráculos caldeus, Jâmblico"
-    fontes: "Oracles Chaldaeans, Jâmblico, Proclus"
+    fontes: "Chaldaean Oracles, Jâmblico, Proclo"
+
+referencias:
+  - autor: "Astronomical Diaries and Related Texts from Babylonia"
+    obra: "Babylonian Astronomical Diaries"
+    data: "séculos VII–I a.C."
+    funcao: "registros astronômicos mesopotâmicos; não são horóscopos modernos"
+  - autor: "Hermann Hunger e S. M. R. Finkelstein (eds.)"
+    obra: "Astrological Reports to Assyrian Kings"
+    data: "1992"
+    funcao: "presságios e contexto neoassírio"
+  - autor: "Francesca Rochberg"
+    obra: "The Heavenly Writing: Divination, Horoscopy, and Astronomy in Mesopotamian Culture"
+    data: "2004"
+    funcao: "historiografia da astrologia mesopotâmica"
+  - autor: "Dorian Gieseler Greenbaum"
+    obra: "The Daimon in Hellenistic Astrology"
+    data: "2016"
+    funcao: "ponte documental entre horoscopia helenística e conceitos de daimon"
+  - autor: "Otto Neugebauer"
+    obra: "Egyptian Astronomical Texts"
+    data: "1960–1969"
+    funcao: "edição e estudo de material astronômico egípcio"
+
+revisao_editorial:
+  divergencias: "Não atribuir zodíaco tropical, casas e horoscopia individual aos períodos em que a evidência registra apenas presságios mundanos ou calendários. 'Hermes Trismegisto' é corpus greco-egípcio tardio, não testemunha direta do Egito faraônico."
+  uso_no_motor: "Usar esta ficha para contexto histórico e escolha de camada de tradição; nenhuma regra mesopotâmica, egípcia ou caldaica entra no cálculo sem fórmula e fonte textual identificadas."
 

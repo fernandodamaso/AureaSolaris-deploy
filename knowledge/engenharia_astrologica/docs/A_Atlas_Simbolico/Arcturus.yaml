@@ -1,4 +1,4 @@
-﻿status: draft
+status: review
 id: "arcturus_atlas"
 nome: "Arcturus — Atlas Simbólico"
 tradicoes:
@@ -11,6 +11,13 @@ origens_e_divergencias:
   tradicional: "Ptolomeu, Manilius — Arcturus = pastor/guardião; riqueza, proteção, viagem."
   moderna: "Astrologia moderna mantém; acrescenta missão de cura/serviço."
   nota: "Estrela associada a Saturno/Júpiter; benéfica por tradição."
+referencias:
+  - {autor: "Claudius Ptolemy", obra: "Tetrabiblos", natureza: "primária astrológica", localizador: "I.9"}
+  - {autor: "Aratus", obra: "Phaenomena", natureza: "poética grega", localizador: "Boieiro"}
+  - {autor: "Hyginus", obra: "De Astronomia", natureza: "mitográfica romana", localizador: "Boötes"}
+  - {autor: "Vivian E. Robson", obra: "The Fixed Stars and Their Interpretation", natureza: "compilação moderna", localizador: "Arcturus"}
+uso_tecnico: "Conjunção estreita ou angular; não inferir orbe a partir do nome da constelação."
+divergencias_documentadas: "Júpiter/Marte e Saturno/Júpiter são variantes; guardião, riqueza e serviço pertencem a camadas distintas."
 
 atlas_simbolico:
   pessoas_arquetipos: "Pastor, guia, protetor, viajante sábio, pessoa de serviço"

@@ -1,6 +1,6 @@
 # Aurea Solaris
 
-Aurea Solaris is a local-first application for astrological study, personal organization, and reflection. Its current primary experience is a local web app opened in Chrome by a one-click Windows launcher. Tauri remains available as a deferred native compatibility path. It is maintained through AI agents, so the repository's documentation is optimized for machine task routing and safe, small changes.
+Aurea Solaris is a local-first application for astrological study, personal organization, and reflection. Its current primary experience is a local web app opened in Chrome at `127.0.0.1`. Tauri and native installers are not the current focus. It is maintained through AI agents, so the repository's documentation is optimized for machine task routing and safe, small changes.
 
 ## Start Aurea in Chrome
 

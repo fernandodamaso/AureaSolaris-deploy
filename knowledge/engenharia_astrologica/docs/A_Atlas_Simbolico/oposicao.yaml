@@ -1,4 +1,4 @@
-﻿status: draft
+status: review
 id: "oposicao_atlas"
 nome: "Oposição — Atlas Simbólico"
 tradicoes:
@@ -10,7 +10,23 @@ subtema: "Correspondências da Oposição"
 origens_e_divergencias:
   tradicional: "Ptolomeu (Tetrabiblos) — aspectos ptolomaicos e orbes."
   moderna: "Astrologia psicológica moderna — oposição como tensão polar."
-  nota: "Revisar ao citar — marca a escola usada."
+  nota: "Ptolomeu descreve a oposição como aspecto diametral; a leitura psicológica de polarização é uma camada moderna, não uma equivalência histórica."
+
+referencias:
+  - autor: "Cláudio Ptolomeu"
+    obra: "Tetrabiblos"
+    natureza: "primária/tradicional"
+    localizador: "Livro I, caps. 12–14"
+  - autor: "Dane Rudhyar"
+    obra: "The Astrology of Personality"
+    natureza: "moderna/psicológica"
+    localizador: "capítulos sobre polaridade"
+  - autor: "Liz Greene"
+    obra: "The Development of the Personality"
+    natureza: "moderna/psicológica"
+    localizador: "tensão e projeção nos aspectos"
+
+limite_documental: "Correspondências de animais, cores, doenças e objetos são atlas editorial/arquetípico; não são listas atribuíveis integralmente a Ptolomeu. Orbe, aplicação e separação dependem da escola."
 
 atlas_simbolico:
   pessoas_arquetipos: "Par oposto, dupla polar, adversário, espelho"

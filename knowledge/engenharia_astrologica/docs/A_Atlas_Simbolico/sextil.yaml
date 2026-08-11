@@ -1,4 +1,4 @@
-﻿status: draft
+status: review
 id: "sextil_atlas"
 nome: "Sextil — Atlas Simbólico"
 tradicoes:
@@ -10,7 +10,23 @@ subtema: "Correspondências do Sextil"
 origens_e_divergencias:
   tradicional: "Ptolomeu (Tetrabiblos) — aspectos ptolomaicos e orbes."
   moderna: "Astrologia psicológica — sextil como oportunidade."
-  nota: "Revisar ao citar — marca a escola usada."
+  nota: "O sextil é aspecto de 60°; ‘oportunidade que exige ação’ é formulação especialmente moderna."
+
+referencias:
+  - autor: "Cláudio Ptolomeu"
+    obra: "Tetrabiblos"
+    natureza: "primária/tradicional"
+    localizador: "Livro I, caps. 12–14"
+  - autor: "Robert Hand"
+    obra: "Horoscope Symbols"
+    natureza: "moderna/histórico-comparativa"
+    localizador: "capítulos sobre aspectos menores"
+  - autor: "Stephen Arroyo"
+    obra: "Chart Interpretation Handbook"
+    natureza: "moderna/psicológica"
+    localizador: "seção de sextis"
+
+limite_documental: "O atlas de ponte, cores, ervas e doenças é camada editorial; registrar sempre orbe e escola."
 
 atlas_simbolico:
   pessoas_arquetipos: "Par em diálogo, oportunidade, ponte"

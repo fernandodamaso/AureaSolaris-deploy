@@ -1,4 +1,4 @@
-﻿status: draft
+status: review
 id: "firdarias_profeccoes"
 nome: "Firdárias e Profeções"
 tradicoes:
@@ -8,9 +8,25 @@ tipo: "Engenharia da Previsão"
 subtema: "Timing anual e mensal tradicional"
 
 origens_e_divergencias:
-  tradicional: "Hellenística — firdárias e profeções como divisão do tempo de vida."
-  moderna: "Astrologia tradicional contemporânea — firdárias como 'governo planetário por período'."
-  nota: "Revisar ao citar — marca a escola usada."
+  tradicional: "Profeções anuais são atestadas em Vettius Valens; firdárias são uma técnica persa/árabe medieval transmitida por Abu Ma'shar e al-Qabisi."
+  moderna: "A astrologia tradicional contemporânea reintroduziu ambas, frequentemente combinando profector, senhor do ano e firdar; essa síntese é moderna."
+  divergencias: "A ordem das firdárias varia entre sistemas diurno/noturno e autores; a lista fixa abaixo não é universal. Profeção mensal também é desenvolvimento posterior."
+referencias:
+  - autor: "Vettius Valens"
+    obra: "Anthologiae, livro IV"
+    periodo: "século II, helenística"
+    uso: "profeções e cronocratores"
+  - autor: "Abu Ma'shar"
+    obra: "On the Revolutions of the Years of Nativities"
+    periodo: "século IX, persa/árabe"
+    uso: "firdárias e revoluções"
+  - autor: "al-Qabisi"
+    obra: "Introduction to the Art of Astrology"
+    periodo: "século X, árabe medieval"
+    uso: "firdárias"
+protocolo_calculo:
+  - "Na profeção anual, avançar uma casa por ano a partir do Ascendente natal; identificar o senhor da casa profectada e sua condição natal."
+  - "Para firdárias, declarar diurna/noturna e a sequência do autor; registrar período maior, subperíodo e planeta ativado."
 
 atlas_simbolico:
   pessoas_arquetipos: "O temporizador, o governante, o ciclico"

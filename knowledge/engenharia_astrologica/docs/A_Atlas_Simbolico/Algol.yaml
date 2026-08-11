@@ -1,4 +1,4 @@
-﻿status: draft
+status: review
 id: "algol_atlas"
 nome: "Algol — Atlas Simbólico"
 tradicoes:
@@ -11,6 +11,13 @@ origens_e_divergencias:
   tradicional: "Ptolomeu, Al-Battani — Algol = Demônio/Cabeça da Medusa; estrela mais perigosa."
   moderna: "Astrologia moderna mantém; acrescenta trauma, violência, morte violenta."
   nota: "Interpretar com cuidado; não é sentença, é alerta para padrão sombra."
+referencias:
+  - {autor: "Claudius Ptolemy", obra: "Almagest", natureza: "primária astronômica", localizador: "VII–VIII, Perseu"}
+  - {autor: "Eratosthenes", obra: "Catasterismi", natureza: "mitográfica antiga", localizador: "Perseu e Medusa"}
+  - {autor: "Abū Maʿshar", obra: "Great Introduction", natureza: "medieval árabe", localizador: "estrelas fixas"}
+  - {autor: "Vivian E. Robson", obra: "The Fixed Stars and Their Interpretation", natureza: "compilação moderna", localizador: "Algol"}
+uso_tecnico: "Conjunção estreita ou angular segundo a escola; separar a posição astronômica da narrativa Medusa."
+divergencias_documentadas: "A fama maléfica vem de tradições específicas; outras leituras modernas estudam resistência e sombra sem fatalismo."
 
 atlas_simbolico:
   pessoas_arquetipos: "Vilão, monstro, pessoa ferida, vingadora"

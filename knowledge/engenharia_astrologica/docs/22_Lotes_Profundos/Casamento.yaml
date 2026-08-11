@@ -18,7 +18,25 @@ sentido_do_calculo: |
 origens_e_divergencias:
   tradicional: "Helenística (Ptolomeu, Vettius Valens) — lotes como pontos matemáticos."
   moderna: "Evolutiva/moderna (Steven Forrest, Jeffrey Green) — lotes como 'pontos sensíveis da jornada'."
-  nota: "Revisar ao citar — marca a escola usada."
+nota: "Revisar ao citar — marca a escola usada."
+revisao_editorial:
+  estado: "draft_enriquecido"
+  atribuicao: "A existência de um lote de casamento é atestada na tradição árabe-medieval; as fórmulas por sexo e sect variam entre manuscritos e autores e não devem ser tratadas como universais."
+  divergencias: "A fórmula exibida é uma variante a confirmar na edição-fonte; não confundir com a Parte de Eros nem com a Casa 7. A leitura moderna evolutiva é uma camada posterior, não origem helenística."
+  uso_no_motor: "Exigir seleção explícita da fórmula, sect e fonte; sem fórmula selecionada, não calcular silenciosamente."
+referencias:
+  - autor: "Paulus Alexandrinus"
+    obra: "Introductory Matters"
+    data: "século IV"
+    funcao: "contexto dos lotes e do uso de sect"
+  - autor: "Benjamin Dykes (trad.)"
+    obra: "Works of Sahl and Abu Ma'shar"
+    data: "2010–2013"
+    funcao: "transmissão árabe-medieval e variantes de partes"
+  - autor: "Robert Schmidt (trad.)"
+    obra: "Project Hindsight: Hellenistic Astrology"
+    data: "1990s"
+    funcao: "distinção entre lotes helenísticos e releituras modernas"
 atlas_simbolico:
   pessoas_arquetipos: "O parceiro, o cônjuge, o aliado"
   lugares_fisicos: "Tribunais, templos, locais de parceria"

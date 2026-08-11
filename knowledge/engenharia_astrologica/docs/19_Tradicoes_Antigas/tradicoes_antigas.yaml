@@ -1,4 +1,4 @@
-﻿status: draft
+status: review
 id: "tradicoes_antigas"
 nome: "Tradições Antigas"
 tradicoes:
@@ -8,9 +8,9 @@ tipo: "Aprofundamento"
 subtema: "História da astrologia"
 
 origens_e_divergencias:
-  tradicional: "Astrologia babilônica → egípcia → grega → romana → medieval → renascentista."
-  moderna: "Rudhyar, Greene — releitura moderna dos textos antigos."
-  nota: "Revisar ao citar — marca a escola usada."
+  tradicional: "Há transmissões e reinterpretações entre Mesopotâmia, Egito, mundo helenístico, Roma, árabe-latim, Bizâncio e Europa renascentista; não uma sucessão homogênea."
+  moderna: "Rudhyar, Greene e o revival tradicional moderno selecionam fontes antigas de maneiras diferentes."
+  nota: "Toda afirmação histórica deve marcar período, língua, obra e grau de reconstrução."
 
 atlas_simbolico:
   pessoas_arquetipos: "O astrólogo antigo, o sacerdote, o filósofo, o matemático"
@@ -58,4 +58,29 @@ fontes_principais:
   - "Abu Ma'shar — De Magnis Coniunctionibus"
   - "Guido Bonatti — Liber Astronomiae"
   - "William Lilly — Christian Astrology"
+
+referencias:
+  - autor: "Francesca Rochberg"
+    obra: "The Heavenly Writing"
+    data: "2004"
+    funcao: "história crítica da divinação astral mesopotâmica"
+  - autor: "Tamsyn Barton"
+    obra: "Ancient Astrology"
+    data: "1994"
+    funcao: "panorama histórico greco-romano"
+  - autor: "James Herschel Holden"
+    obra: "A History of Horoscopic Astrology"
+    data: "1996"
+    funcao: "história de horoscopia ocidental e suas transmissões"
+  - autor: "S. Jim Tester"
+    obra: "A History of Western Astrology"
+    data: "1987"
+    funcao: "síntese histórica medieval e renascentista"
+  - autor: "Nicholas Campion"
+    obra: "The Book of World Horoscopes"
+    data: "2004"
+    funcao: "exemplo moderno de astrologia mundial; não fonte antiga"
+
+revisao_editorial:
+  uso_no_motor: "Esta ficha é índice histórico. O motor consulta a ficha técnica da escola escolhida; nunca usa a ordem cronológica como regra de cálculo."
 

@@ -1,4 +1,4 @@
-﻿status: draft
+status: review
 id: "castor_atlas"
 nome: "Castor — Atlas Simbólico"
 tradicoes:
@@ -11,6 +11,13 @@ origens_e_divergencias:
   tradicional: "Ptolomeu — Castor = gêmeo imortal; viagens, comércio, eloquência, morte súbita."
   moderna: "Astrologia moderna mantém; acrescenta comunicação, irmãos, viagens curtas."
   nota: "Castor e Pollux são gêmeos mitológicos; Castor é mortal, Pollux imortal."
+referencias:
+  - {autor: "Claudius Ptolemy", obra: "Tetrabiblos", natureza: "primária astrológica", localizador: "I.9"}
+  - {autor: "Eratosthenes", obra: "Catasterismi", natureza: "mitográfica antiga", localizador: "Dioscuri"}
+  - {autor: "Apollodorus", obra: "Bibliotheca", natureza: "mitográfica grega", localizador: "III.10"}
+  - {autor: "Vivian E. Robson", obra: "The Fixed Stars and Their Interpretation", natureza: "compilação moderna", localizador: "Castor"}
+uso_tecnico: "Registrar conjunção, orbe e natureza planetária; não fundir Castor com Pollux."
+divergencias_documentadas: "Mercúrio e misturas Mercúrio/Marte aparecem em autores diferentes; a leitura moderna de comunicação é uma extensão."
 
 atlas_simbolico:
   pessoas_arquetipos: "Gêmeo, comerciante, mensageiro, irmão, viajante"
