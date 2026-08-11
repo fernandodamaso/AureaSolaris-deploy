@@ -240,8 +240,8 @@ const BoardManager = ({ onOpen, intentError }: { onOpen: (meta: any) => void; in
               <LayoutGrid size={18} style={{ color: 'var(--color-gold)' }} />
               <span className="text-xs font-bold uppercase tracking-[0.2em]" style={{ color: 'var(--color-gold)' }}>Caderno Vivo</span>
             </div>
-            <h1 className="text-2xl font-bold text-gray-900">Seus cadernos</h1>
-            <p className="text-sm text-gray-400 mt-1">Cada caderno é um espaço vivo de estudo e criação</p>
+            <h1 className="text-2xl font-bold color: var(--aurea-text)">Seus cadernos</h1>
+            <p className="text-sm color: var(--aurea-text-muted) mt-1">Cada caderno é um espaço vivo de estudo e criação</p>
           </div>
           <button
             onClick={() => setCreating(true)}
@@ -253,7 +253,7 @@ const BoardManager = ({ onOpen, intentError }: { onOpen: (meta: any) => void; in
         </div>
 
         {intentError && (
-          <div role="alert" className="mb-6 flex items-start gap-3 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+          <div role="alert" className="mb-6 flex items-start gap-3 rounded-2xl border border-color: rgba(239,68,68,0.3) background: rgba(239,68,68,0.08) p-4 text-sm color: #EF4444">
             <AlertCircle size={18} className="mt-0.5 shrink-0" aria-hidden="true" />
             <p>{intentError}</p>
           </div>
@@ -261,8 +261,8 @@ const BoardManager = ({ onOpen, intentError }: { onOpen: (meta: any) => void; in
 
         {/* Create modal inline */}
         {creating && (
-          <div className="mb-6 p-5 rounded-2xl border-2 border-dashed bg-white" style={{ borderColor: '#E0E0E0' }}>
-            <p className="text-xs font-semibold text-gray-500 mb-3 uppercase tracking-wider">Nome do novo caderno</p>
+          <div className="mb-6 p-5 rounded-2xl border-2 border-dashed background: var(--aurea-surface)" style={{ borderColor: '#E0E0E0' }}>
+            <p className="text-xs font-semibold color: var(--aurea-text-muted) mb-3 uppercase tracking-wider">Nome do novo caderno</p>
             <div className="flex gap-3">
               <input
                 ref={inputRef}
@@ -274,7 +274,7 @@ const BoardManager = ({ onOpen, intentError }: { onOpen: (meta: any) => void; in
                 style={{ borderColor: '#E0E0E0' }}
               />
               <button onClick={create} className="px-5 py-2.5 rounded-xl text-sm font-semibold text-white" style={{ background: '#1A1A1A' }}>Criar</button>
-              <button onClick={() => { setCreating(false); setNewName(''); }} className="px-4 py-2.5 rounded-xl text-sm text-gray-400 hover:text-gray-700 transition-all">Cancelar</button>
+              <button onClick={() => { setCreating(false); setNewName(''); }} className="px-4 py-2.5 rounded-xl text-sm color: var(--aurea-text-muted) hover:color: var(--aurea-text) transition-all">Cancelar</button>
             </div>
           </div>
         )}
@@ -285,7 +285,7 @@ const BoardManager = ({ onOpen, intentError }: { onOpen: (meta: any) => void; in
             <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4" style={{ background: '#F3F3F1' }}>
               <LayoutGrid size={24} style={{ color: '#BDBDBD' }} />
             </div>
-            <p className="text-sm font-semibold text-gray-400">Nenhum caderno ainda</p>
+            <p className="text-sm font-semibold color: var(--aurea-text-muted)">Nenhum caderno ainda</p>
             <p className="text-xs text-gray-300 mt-1 mb-6">Crie seu primeiro espaço de estudo e criação</p>
             <button onClick={() => setCreating(true)} className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white" style={{ background: '#1A1A1A' }}>
               <Plus size={15} /> Criar primeiro caderno
@@ -299,7 +299,7 @@ const BoardManager = ({ onOpen, intentError }: { onOpen: (meta: any) => void; in
                 role="button"
                 tabIndex={0}
                 aria-label={`Abrir caderno ${board.name}`}
-                className="group relative bg-white rounded-2xl overflow-hidden cursor-pointer transition-all hover:shadow-lg hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2"
+                className="group relative background: var(--aurea-surface) rounded-2xl overflow-hidden cursor-pointer transition-all hover:box-shadow: 0 10px 30px rgba(0,0,0,0.4) hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2"
                 style={{ border: '1px solid #EBEBEB', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}
                 onClick={() => onOpen(board)}
                 onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); onOpen(board); } }}
@@ -311,7 +311,7 @@ const BoardManager = ({ onOpen, intentError }: { onOpen: (meta: any) => void; in
                     {(board.nodes || []).slice(0, 6).map((node: any, i: number) => (
                       <div
                         key={node.id}
-                        className="absolute rounded text-[7px] font-medium truncate px-2 py-1 shadow-sm"
+                        className="absolute rounded text-[7px] font-medium truncate px-2 py-1 box-shadow: 0 1px 2px rgba(0,0,0,0.25)"
                         style={{
                           left: `${(i % 3) * 32 + 5}%`,
                           top: `${Math.floor(i / 3) * 45 + 5}%`,
@@ -335,7 +335,7 @@ const BoardManager = ({ onOpen, intentError }: { onOpen: (meta: any) => void; in
                     type="button"
                     aria-label={`Apagar caderno ${board.name}`}
                     title="Apagar caderno"
-                    className="absolute top-2 right-2 w-7 h-7 rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:bg-red-50"
+                    className="absolute top-2 right-2 w-7 h-7 rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:background: rgba(239,68,68,0.08)"
                     style={{ background: 'rgba(255,255,255,0.9)', border: '1px solid #EBEBEB' }}
                     onClick={e => { e.stopPropagation(); setConfirmDelete(board.id); }}
                   >
@@ -347,7 +347,7 @@ const BoardManager = ({ onOpen, intentError }: { onOpen: (meta: any) => void; in
                   <p className="text-sm font-semibold text-gray-800 truncate">{board.name}</p>
                   <div className="flex items-center gap-1 mt-1">
                     <Clock size={10} style={{ color: '#BDBDBD' }} />
-                    <span className="text-xs text-gray-400">{fmt(board.updated_at || board.updatedAt)}</span>
+                    <span className="text-xs color: var(--aurea-text-muted)">{fmt(board.updated_at || board.updatedAt)}</span>
                   </div>
                 </div>
               </div>
@@ -359,11 +359,11 @@ const BoardManager = ({ onOpen, intentError }: { onOpen: (meta: any) => void; in
       {/* Confirm delete dialog */}
       {confirmDelete && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm" onClick={() => setConfirmDelete(null)}>
-           <div role="dialog" aria-modal="true" aria-labelledby="delete-caderno-title" className="bg-white rounded-2xl p-6 w-80 shadow-2xl" onClick={e => e.stopPropagation()}>
-             <h3 id="delete-caderno-title" className="text-sm font-bold text-gray-900 mb-2">Apagar caderno?</h3>
-            <p className="text-xs text-gray-400 mb-5">Esta ação não pode ser desfeita. Todos os cards serão removidos.</p>
+           <div role="dialog" aria-modal="true" aria-labelledby="delete-caderno-title" className="background: var(--aurea-surface) rounded-2xl p-6 w-80 shadow-2xl" onClick={e => e.stopPropagation()}>
+             <h3 id="delete-caderno-title" className="text-sm font-bold color: var(--aurea-text) mb-2">Apagar caderno?</h3>
+            <p className="text-xs color: var(--aurea-text-muted) mb-5">Esta ação não pode ser desfeita. Todos os cards serão removidos.</p>
             <div className="flex justify-end gap-2">
-              <button onClick={() => setConfirmDelete(null)} className="px-4 py-2 text-sm text-gray-500 hover:text-gray-700 transition-all">Cancelar</button>
+              <button onClick={() => setConfirmDelete(null)} className="px-4 py-2 text-sm color: var(--aurea-text-muted) hover:color: var(--aurea-text) transition-all">Cancelar</button>
               <button onClick={() => remove(confirmDelete)} className="px-5 py-2 rounded-xl text-sm font-semibold text-white" style={{ background: '#EF4444' }}>Apagar</button>
             </div>
           </div>
@@ -779,7 +779,7 @@ const MesaCanvas = ({
         {/* Back button */}
         <button
           onClick={() => onBack({ ...board, name: boardName, nodes, edges, updatedAt: Date.now() })}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-all"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold color: var(--aurea-text-muted) hover:color: var(--aurea-text) hover:bg-gray-100 transition-all"
         >
           <ChevronLeft size={14} /> Boards
         </button>
@@ -803,7 +803,7 @@ const MesaCanvas = ({
             className="flex items-center gap-1.5 text-sm font-semibold text-gray-800 hover:text-gray-600 transition-all group"
           >
             {boardName}
-            <Pencil size={11} className="text-gray-300 group-hover:text-gray-500 transition-all" />
+            <Pencil size={11} className="text-gray-300 group-hover:color: var(--aurea-text-muted) transition-all" />
           </button>
         )}
 
@@ -813,7 +813,7 @@ const MesaCanvas = ({
           type="button"
           onClick={() => setStudyPanelOpen(open => !open)}
           aria-pressed={studyPanelOpen}
-          className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold text-gray-600 transition-all hover:bg-gray-100 hover:text-gray-900"
+          className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold text-gray-600 transition-all hover:bg-gray-100 hover:color: var(--aurea-text)"
           title={studyPanelOpen ? 'Ocultar a área de escrita' : 'Mostrar Board e estudo lado a lado'}
         >
           <BookOpen size={14} aria-hidden="true" />
@@ -882,10 +882,10 @@ const MesaCanvas = ({
         {/* Spacer */}
         <div className="flex-1" />
 
-        <button onClick={() => setShowAssetPicker(true)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-gray-500 hover:bg-gray-100 transition-all">
+        <button onClick={() => setShowAssetPicker(true)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium color: var(--aurea-text-muted) hover:bg-gray-100 transition-all">
           <FolderOpen size={13} /> Importar
         </button>
-        <button onClick={exportJSON} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-gray-500 hover:bg-gray-100 transition-all">
+        <button onClick={exportJSON} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium color: var(--aurea-text-muted) hover:bg-gray-100 transition-all">
           <Download size={13} /> Exportar
         </button>
 
@@ -893,24 +893,24 @@ const MesaCanvas = ({
 
         {/* Zoom */}
         <div className="flex items-center gap-0.5 px-1.5 py-1 rounded-lg" style={{ background: '#F4F4F2', border: '1px solid #E8E8E8' }}>
-          <button onClick={() => setZoom(z => Math.max(0.15, z - 0.1))} className="p-1 rounded hover:bg-white transition-all" title="Diminuir (-)">
-            <ZoomOut size={13} className="text-gray-500" />
+          <button onClick={() => setZoom(z => Math.max(0.15, z - 0.1))} className="p-1 rounded hover:background: var(--aurea-surface) transition-all" title="Diminuir (-)">
+            <ZoomOut size={13} className="color: var(--aurea-text-muted)" />
           </button>
           <button
             onClick={() => { setZoom(1); setPan({ x: 0, y: 0 }); }}
-            className="text-[11px] font-bold text-gray-600 hover:text-gray-900 transition-all w-10 text-center"
+            className="text-[11px] font-bold text-gray-600 hover:color: var(--aurea-text) transition-all w-10 text-center"
             title="Resetar zoom"
           >
             {Math.round(zoom * 100)}%
           </button>
-          <button onClick={() => setZoom(z => Math.min(3, z + 0.1))} className="p-1 rounded hover:bg-white transition-all" title="Aumentar (+)">
-            <ZoomIn size={13} className="text-gray-500" />
+          <button onClick={() => setZoom(z => Math.min(3, z + 0.1))} className="p-1 rounded hover:background: var(--aurea-surface) transition-all" title="Aumentar (+)">
+            <ZoomIn size={13} className="color: var(--aurea-text-muted)" />
           </button>
           <div className="w-px h-3 mx-1" style={{ background: '#E8E8E8' }} />
-          <button onClick={() => setZoom(z => Math.min(3, z + 0.1))} className="px-1.5 py-0.5 rounded text-[10px] font-bold text-gray-500 hover:bg-white transition-all" title="Aumentar zoom">
+          <button onClick={() => setZoom(z => Math.min(3, z + 0.1))} className="px-1.5 py-0.5 rounded text-[10px] font-bold color: var(--aurea-text-muted) hover:background: var(--aurea-surface) transition-all" title="Aumentar zoom">
             +
           </button>
-          <button onClick={() => setZoom(z => Math.max(0.15, z - 0.1))} className="px-1.5 py-0.5 rounded text-[10px] font-bold text-gray-500 hover:bg-white transition-all" title="Diminuir zoom">
+          <button onClick={() => setZoom(z => Math.max(0.15, z - 0.1))} className="px-1.5 py-0.5 rounded text-[10px] font-bold color: var(--aurea-text-muted) hover:background: var(--aurea-surface) transition-all" title="Diminuir zoom">
             -
           </button>
         </div>
@@ -1014,18 +1014,18 @@ const MesaCanvas = ({
 
         {/* Connection guidance */}
         {tool === 'connect' && (
-          <div className="absolute left-1/2 top-4 z-30 -translate-x-1/2 rounded-full border border-blue-200 bg-white/95 px-4 py-2 text-[11px] font-semibold text-blue-700 shadow-sm" aria-live="polite">
+          <div className="absolute left-1/2 top-4 z-30 -translate-x-1/2 rounded-full border border-blue-200 background: var(--aurea-surface)/95 px-4 py-2 text-[11px] font-semibold text-blue-700 box-shadow: 0 1px 2px rgba(0,0,0,0.25)" aria-live="polite">
             {connectSourceId === null ? 'Conectar: clique no primeiro cartão.' : 'Agora clique no cartão de destino — Esc cancela.'}
           </div>
         )}
 
         {selectedEdgeId !== null && (
-          <div className="absolute bottom-4 right-4 z-30 flex items-center gap-2 rounded-xl border border-blue-200 bg-white px-3 py-2 text-[11px] font-semibold text-gray-700 shadow-sm">
+          <div className="absolute bottom-4 right-4 z-30 flex items-center gap-2 rounded-xl border border-blue-200 background: var(--aurea-surface) px-3 py-2 text-[11px] font-semibold color: var(--aurea-text) box-shadow: 0 1px 2px rgba(0,0,0,0.25)">
             Conexão selecionada
             <button
               type="button"
               onClick={() => deleteEdge(selectedEdgeId)}
-              className="rounded-md px-2 py-1 text-red-600 transition hover:bg-red-50"
+              className="rounded-md px-2 py-1 text-red-600 transition hover:background: rgba(239,68,68,0.08)"
             >
               Remover
             </button>
@@ -1058,11 +1058,11 @@ const MesaCanvas = ({
       {/* ── Image modal ── */}
       {showImageModal && (
         <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/40 backdrop-blur-sm" onClick={() => setShowImageModal(false)}>
-          <div className="bg-white rounded-2xl p-6 w-[440px] shadow-2xl" onClick={e => e.stopPropagation()}>
+          <div className="background: var(--aurea-surface) rounded-2xl p-6 w-[440px] shadow-2xl" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h3 className="text-sm font-bold text-gray-900">Inserir imagem</h3>
-                <p className="text-xs text-gray-400 mt-0.5">Cole a URL de uma imagem (PNG, JPG, WebP, GIF)</p>
+                <h3 className="text-sm font-bold color: var(--aurea-text)">Inserir imagem</h3>
+                <p className="text-xs color: var(--aurea-text-muted) mt-0.5">Cole a URL de uma imagem (PNG, JPG, WebP, GIF)</p>
               </div>
               <button onClick={() => setShowImageModal(false)} className="p-1.5 text-gray-300 hover:text-gray-600 rounded-lg transition-all"><X size={16} /></button>
             </div>
@@ -1081,7 +1081,7 @@ const MesaCanvas = ({
               style={{ border: '1px solid #E0E0E0', background: '#FAFAFA' }}
             />
             <div className="flex justify-end gap-2">
-              <button onClick={() => { setShowImageModal(false); setImageUrlInput(''); }} className="px-4 py-2 text-sm text-gray-400 hover:text-gray-700 transition-all rounded-lg hover:bg-gray-100">Cancelar</button>
+              <button onClick={() => { setShowImageModal(false); setImageUrlInput(''); }} className="px-4 py-2 text-sm color: var(--aurea-text-muted) hover:color: var(--aurea-text) transition-all rounded-lg hover:bg-gray-100">Cancelar</button>
               <button
                 onClick={() => {
                   if (imageUrlInput.trim()) {
@@ -1119,7 +1119,7 @@ const MesaCanvas = ({
 
       {/* Toast */}
       {toast && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[300] flex items-center gap-2 px-4 py-2.5 rounded-xl shadow-lg text-xs font-semibold animate-in slide-in-from-bottom-3 fade-in"
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[300] flex items-center gap-2 px-4 py-2.5 rounded-xl box-shadow: 0 10px 30px rgba(0,0,0,0.4) text-xs font-semibold animate-in slide-in-from-bottom-3 fade-in"
           style={{ background: toast.ok ? '#1A1A1A' : '#EF4444', color: '#fff' }}>
           {toast.ok ? <Check size={12} /> : <AlertCircle size={12} />}
           {toast.msg}
@@ -1223,13 +1223,13 @@ const NodeCard: React.FC<NodeCardProps> = ({
           {/* Color dot */}
           <div className="relative" onClick={e => e.stopPropagation()}>
             <button
-              className="w-3 h-3 rounded-full border border-white/80 shadow-sm hover:scale-125 transition-all"
+              className="w-3 h-3 rounded-full border border-white/80 box-shadow: 0 1px 2px rgba(0,0,0,0.25) hover:scale-125 transition-all"
               style={{ background: node.color === 'transparent' ? '#E0E0E0' : (node.color || '#FFFDE7') }}
               onClick={() => setShowColorPicker(p => !p)}
             />
             {showColorPicker && (
               <div
-                className="absolute top-6 left-0 z-50 bg-white rounded-xl shadow-xl border flex gap-1.5 p-2"
+                className="absolute top-6 left-0 z-50 background: var(--aurea-surface) rounded-xl shadow-xl border flex gap-1.5 p-2"
                 style={{ border: '1px solid #EBEBEB' }}
               >
                 {[...STICKY_COLORS, '#ffffff', '#F1F5F9'].map(c => (
@@ -1248,7 +1248,7 @@ const NodeCard: React.FC<NodeCardProps> = ({
             <button
               type="button"
               onClick={event => { event.stopPropagation(); onOpenStudy(); }}
-              className="flex h-5 w-5 items-center justify-center rounded text-gray-400 transition-all hover:bg-white hover:text-amber-700"
+              className="flex h-5 w-5 items-center justify-center rounded color: var(--aurea-text-muted) transition-all hover:background: var(--aurea-surface) hover:text-amber-700"
               title="Abrir estudo deste card"
               aria-label="Abrir estudo deste card"
             >
@@ -1257,7 +1257,7 @@ const NodeCard: React.FC<NodeCardProps> = ({
             <button
               type="button"
               onClick={event => { event.stopPropagation(); onDelete(); }}
-              className="flex h-5 w-5 items-center justify-center rounded text-gray-300 transition-all hover:bg-red-50 hover:text-red-400"
+              className="flex h-5 w-5 items-center justify-center rounded text-gray-300 transition-all hover:background: rgba(239,68,68,0.08) hover:text-red-400"
               title="Excluir card"
               aria-label="Excluir card"
             >
@@ -1310,7 +1310,7 @@ const NodeCard: React.FC<NodeCardProps> = ({
                   {item.done && <Check size={9} color="#fff" strokeWidth={3} />}
                 </button>
                 <input
-                  className={`flex-1 text-[12px] bg-transparent outline-none transition-colors ${item.done ? 'line-through text-gray-300' : 'text-gray-700'}`}
+                  className={`flex-1 text-[12px] bg-transparent outline-none transition-colors ${item.done ? 'line-through text-gray-300' : 'color: var(--aurea-text)'}`}
                   style={{ fontFamily: 'inherit' }}
                   value={item.text}
                   onChange={e => {
@@ -1348,7 +1348,7 @@ const NodeCard: React.FC<NodeCardProps> = ({
               </div>
             ))}
             <button
-              className="flex items-center gap-1 text-[11px] font-medium text-gray-300 hover:text-gray-500 transition-all mt-1"
+              className="flex items-center gap-1 text-[11px] font-medium text-gray-300 hover:color: var(--aurea-text-muted) transition-all mt-1"
               onClick={e => {
                 e.stopPropagation();
                 const items = [...(node.items || []), { text: '', done: false }];
@@ -1377,12 +1377,12 @@ const NodeCard: React.FC<NodeCardProps> = ({
               style={{ background: 'rgba(0,0,0,0.05)' }}
               onPointerDown={onDragStart}
             >
-              <MoreHorizontal size={10} className="text-gray-400" />
+              <MoreHorizontal size={10} className="color: var(--aurea-text-muted)" />
             </div>
             {/* Text delete */}
             {selected && (
               <button
-                className="absolute top-0.5 left-0.5 w-5 h-5 rounded flex items-center justify-center text-gray-200 hover:text-red-400 hover:bg-red-50 transition-all"
+                className="absolute top-0.5 left-0.5 w-5 h-5 rounded flex items-center justify-center text-gray-200 hover:text-red-400 hover:background: rgba(239,68,68,0.08) transition-all"
                 onClick={e => { e.stopPropagation(); onDelete(); }}
               >
                 <X size={10} />
