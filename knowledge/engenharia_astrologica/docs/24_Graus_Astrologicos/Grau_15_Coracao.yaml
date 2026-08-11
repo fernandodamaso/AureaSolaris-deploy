@@ -1,0 +1,48 @@
+status: review
+id: "grau_15_coracao"
+nome: "15° e a Imagem do Coração do Signo"
+tipo: "Grau astrológico"
+tradicoes: ["simbólica moderna", "graus e subdivisões tradicionais"]
+
+escopo:
+  definicao: "Estudo da interpretação moderna do centro geométrico do signo e das dignidades/subdivisões tradicionais que podem ocupar essa região."
+  precisao: "Em longitude interna ao signo, o centro exato é 15°00'00''. Na contagem ordinal tradicional, o 16º grau abrange 15°00'00''–15°59'59''."
+
+origens_e_divergencias:
+  geometria: "Cada signo mede 30°; por isso 15° é seu ponto médio matemático."
+  tradicional: "Não há consenso clássico geral de que todo 15° seja 'coração', máximo de força ou grau crítico. A força tradicional depende de dignidades, casas, sect, aspectos, velocidade e subdivisões específicas."
+  moderna: "Algumas leituras simbólicas usam centro, coração, maturidade ou concentração da qualidade do signo. Outras listas de graus críticos atribuem valores diferentes por modalidade e não equivalem ao simples 15°."
+  decisao_editorial: "Preservar 'coração do signo' como imagem moderna útil, nunca como dignidade essencial automática."
+
+calculo:
+  regra: "grau_no_signo = longitude_ecliptica mod 30; considerar o ponto exato quando grau_no_signo = 15°."
+  tolerancia: "Uma faixa ao redor de 15° só existe se a escola a definir. O motor não deve criar orbe padrão para um grau simbólico."
+  dependencias: ["zodíaco escolhido", "longitude sem arredondamento", "convenção ordinal/numérica"]
+
+camadas_de_leitura:
+  simbolica: "Centro, coração, eixo, culminação interna e capacidade de sustentar a expressão do signo."
+  tradicional: "Consultar termo, face/decanato, monomoiria e demais condições do planeta; o valor provém da técnica escolhida, não do número 15 isolado."
+  curiosidade_linguistica: "'Coração' é metáfora de centro e núcleo. Não deve ser confundido com cazimi, 'no coração do Sol', que é uma condição solar específica."
+  sombra: "A imagem de centralidade pode tornar-se rigidez ou excesso de identificação; isso é elaboração simbólica, não prognóstico."
+
+uso_interpretativo:
+  metodo:
+    - "Confirmar posição exata e convenção de grau."
+    - "Ler planeta, signo, casa e regência antes da camada numérica."
+    - "Aplicar dignidades/subdivisões conforme a tabela tradicional escolhida."
+    - "Apresentar 'coração' como nota simbólica se essa escola estiver ativa."
+  limites:
+    - "Não declarar força, equilíbrio, saúde ou destino por estar em 15°."
+    - "Não atribuir a Ptolomeu a doutrina moderna do coração do signo sem passagem específica."
+
+referencias:
+  primarias:
+    - "Ptolemy. Tetrabiblos, livro I, capítulos sobre dignidades e subdivisões; tradução consultada."
+  secundarias:
+    - "Holden, James H. A History of Horoscopic Astrology. AFA, 1996."
+    - "Rudhyar, Dane. An Astrological Mandala. Vintage, 1974; exemplo de simbolismo moderno grau a grau, não prova da regra de 15°."
+  tecnicas: []
+
+relacoes:
+  depende_de: ["graus_geral", "dignidades_essenciais"]
+  ver_tambem: ["decanatos", "termos", "cazimi"]

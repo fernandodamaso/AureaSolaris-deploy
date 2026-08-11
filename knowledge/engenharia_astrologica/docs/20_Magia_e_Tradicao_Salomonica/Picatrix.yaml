@@ -1,0 +1,49 @@
+status: review
+id: "picatrix"
+nome: "Picatrix"
+tradicoes:
+  - "renascentista"
+  - "salomonica"
+  - "hermetica"
+tema: "Manual hermético de magia astrológica — construção de imagens, eleições, talismãs."
+
+essencia:
+  - "O Picatrix latino é uma tradução/adaptação medieval do Ghāyat al-Ḥakīm, texto central para o estudo da magia astrológica medieval e renascentista."
+  - "Contém: eleições, imagens talismânicas, quadrados mágicos, influências por graus."
+  - "Liga a técnica astrológica à prática operativa hermética."
+
+origens_e_divergencias:
+  tradicional: "Texto árabe e latino medieval; sua circulação se cruza com outras correntes de magia astral, mas não prova uma origem única da tradição salomônica."
+  moderna: "Edições e recepções contemporâneas diferem; a prática moderna não deve ser retroprojetada no texto medieval."
+  nota: "Classificar como documento de magia astrológica histórica, não técnica de julgamento natal e não manual de execução."
+
+referencias:
+  - autor: "Dan Attrell e David Porreca (trad.)"
+    obra: "Picatrix: A Grimoire of Astrological Magic"
+    ano: 2019
+    natureza: "fonte primária traduzida"
+    localizador: "Introdução e livros I–IV; distinguir instruções textuais de interpretações atuais"
+  - autor: "David Pingree (ed.)"
+    obra: "Picatrix: The Latin Version of the Ghāyat al-Ḥakīm"
+    ano: 1986
+    natureza: "edição crítica / secundária filológica"
+    localizador: "História textual árabe-latina"
+
+camada_energetica:
+  impressao_mental: "Ver o mapa como matriz de construção de símbolos/objetos."
+  permeacao_emocional: "Encantamento, intencionalidade, foco."
+  manifestacao_externa: "Criação de talismãs, imagens, práticas guiadas por eleição."
+  como_guiar_o_astral: "O timing astrológico precede o símbolo; a técnica fornece a estrutura, a magia fornece o foco."
+
+elementos:
+  imagens_talismaticas: "Desenhos/símbolos construídos segundo planeta/signo/grau."
+  eleicoes: "Escolha de momento por dignidades e ausência de aflições."
+  quadrados_magicos: "Estruturas numéricas ligadas a planetas/tempos."
+  graus_zodiacais: "Graus específicos com significado próprio em operações."
+
+ver_mais:
+  - "../20_Magia_e_Tradicao_Salomonica/Selos_Planetarios_Quadrado_Magico.yaml"
+  - "../20_Magia_e_Tradicao_Salomonica/Anjos_e_Inteligências_Planetárias.yaml"
+
+## ✏️ Minhas Anotações
+

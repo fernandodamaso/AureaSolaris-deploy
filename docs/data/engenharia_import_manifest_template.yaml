@@ -1,0 +1,33 @@
+snapshot_id: "engenharia-astrologica-YYYY-MM-DD-a"
+source_project: "Engenharia Astrológica"
+source_root: "knowledge/engenharia_astrologica"
+captured_at: "YYYY-MM-DDTHH:MM:SS-03:00"
+editorial_branch_or_context: "vendored-corpus"
+contract_version: "knowledge_contract_aurea_solaris@2026-08-11"
+hash_algorithm: "sha256"
+root_hash: "PREENCHER"
+
+counts:
+  file_count: 0
+  document_count: 0
+  by_status:
+    draft: 0
+    review: 0
+    complete: 0
+  with_pendencias_de_fonte: 0
+  with_divergencias_explicitas: 0
+
+validation_summary:
+  yaml_errors: 0
+  strict_blocks: 0
+  atlas_placeholder: 0
+
+artifacts:
+  manifest_path: "data/imports/engenharia_astrologica/<snapshot-id>/manifest.yaml"
+  checksums_path: "data/imports/engenharia_astrologica/<snapshot-id>/checksums.txt"
+  import_report_path: "data/imports/engenharia_astrologica/<snapshot-id>/import-report.json"
+  compiled_snapshot_path: "knowledge/engenharia_astrologica/knowledge/build/editorial_current.sqlite"
+
+notes:
+  - "Preencher somente apos auditoria editorial e hash final."
+  - "Nao promover este snapshot a ativo sem relatorio de importacao."

@@ -1,0 +1,47 @@
+﻿status: draft
+id: "casa_10_atlas"
+nome: "Casa 10 — O Trono / A Missão Pública"
+tradicoes:
+  - "atlas simbolico editorial"
+  - "sintese multiescola"
+tipo: "Atlas Simbólico"
+subtema: "Correspondências da Casa 10"
+
+origens_e_divergencias:
+  tradicional: "Ptolomeu (Tetrabiblos) — significados tradicionais das 12 casas."
+  moderna: "Astrologia profissional — casa 10 como carreira e reputação."
+  nota: "Revisar ao citar — marca a escola usada."
+
+atlas_simbolico:
+  pessoas_arquetipos: "O rei, a rainha, o executivo, a autoridade pública"
+  lugares_fisicos: "Palácios, prédios governamentais, escritórios de chefia"
+  objetos_materia: "Coroa, cetro, crachá de autoridade, troféus"
+  eventos_tipicos: "Promoções, coroações, reputação, queda de poder"
+  animais: "Leão, águia, falcão, cavalo branco"
+  plantas_ervas: "Louro, girassol, canela, camomila romana"
+  metais_pedras: "Ouro, topázio imperial, citrino, âmbar, diamante"
+  cores_sons:
+    cores: ["Ouro", "amarelo-dourado", "laranja", "branco-radiante"]
+    sons: ["Trombeta", "ressoar de sino", "canto coral"]
+  numeros: [10]
+  dias_semana: ["Domingo"]
+  doencas_corpo:
+    doencas: ["Problemas cardíacos", "pressão alta", "coluna dorsal"]
+    partes_corpo: ["Coração", "coluna dorsal", "olhos"]
+  arquetipos_mitologicos:
+    - "Zeus (trono)"
+    - "Hera (reputação)"
+    - "Rá (autoridade solar)"
+  mitos_historias: "Zeus e o trono do Olimpo; Hércules e os trabalhos (reconhecimento)"
+  sonhos_simbolos_inconsciente: "Coroações, tronos, fama, reputação"
+  expressao_elevada_sombra: "Elevada: liderança autêntica, reputação merecida | Sombra: ambição desmedida, arrogância, medo de queda"
+
+camada_energetica:
+  impressao_mental: "A mente que AMBICIONA E LIDERA. 'O que eu vim fazer de grande?'."
+  permeacao_emocional: "Autoestima ligada à reputação. Quando saudável: orgulho justo. Quando ferido: vaidade, medo de fracasso."
+  manifestacao_externa: "Eventos prováveis de promoção, reputação, autoridade. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a LIDERAR COM SERVIÇO. Casa 10 é o trono, não a coroa vazia."
+
+ver_mais:
+  - "../05_Casas/Casa_10.yaml"
+

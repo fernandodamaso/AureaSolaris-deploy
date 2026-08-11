@@ -1,0 +1,60 @@
+﻿status: review
+id: "recepcao_mutua_dispositores"
+nome: "Recepção Mútua e Dispositores"
+tradicoes:
+  - "tradicional"
+  - "helenistica"
+  - "medieval"
+tema: "Troca de dignidades entre planetas e seus dispositores."
+
+essencia:
+  - "Recepção mútua: dois planetas no domicílio/exaltação um do outro."
+  - "Dispositor: planeta que rege o signo onde outro planeta está colocado."
+  - "Rede de dispositores = mapa das forças operativas do mapa."
+
+origens_e_divergencias:
+  tradicional: "Recepção é desenvolvida com diferentes alcances em tradições helenísticas, medievais e horárias. Recepção por domicílio e exaltação costuma ter mais peso; termos, faces e triplicidade dependem do autor."
+  moderna: "Dispositor é vocabulário moderno útil para mapear regências; leituras de cooperação psicológica são camada interpretativa, não substituto do julgamento técnico."
+  nota: "Recepção não apaga debilidade, impedimento, combustão ou ausência de aspecto. Deve-se distinguir recepção unilateral, mútua e simples cadeia de dispositores."
+
+camada_energetica:
+  impressao_mental: "Ver alianças internas entre planetas antes aparentemente separados."
+  permeacao_emocional: "Sentir-se apoiado por partes de si mesmo que pareciam opostas."
+  manifestacao_externa: "Eventos onde duas áreas se ajudam; parcerias entre temas distintos."
+  como_guiar_o_astral: "Ajudar a pessoa a ver que conflito interno pode virar cooperação."
+
+tecnicas:
+  recepcao_mutua: "Se A ocupa uma dignidade de B e B ocupa dignidade correspondente de A, há recepção mútua segundo a dignidade e o autor declarados."
+  dispositor: "Regente do signo de um planeta. Sua condição informa a cadeia de dependências, mas não libera automaticamente o planeta disposto."
+  rede_dispositores: "Traçar regências até encontrar ciclo, planeta final ou distribuição; contagem de dependentes não é, sozinha, prova de dominância."
+
+procedimento:
+  - "Declarar regências tradicionais ou modernas; não misturar sem rotular."
+  - "Registrar qual dignidade estabelece a recepção e se há aspecto entre os planetas quando a técnica exigir."
+  - "Avaliar a condição de cada planeta e do dispositor antes de inferir auxílio, transferência ou cooperação."
+  - "Apresentar cadeias/ciclos de dispositores como estrutura de leitura, não hierarquia automática."
+
+referencias:
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    natureza: "primária histórica"
+    localizador: "Livro I; dignidades, recepção e aplicação, conferir edição."
+  - autor: "Guido Bonatti"
+    obra: "Liber Astronomiae"
+    natureza: "primária histórica"
+    localizador: "Recepção e julgamento por dignidades; conferir tradução/edição."
+  - autor: "Benjamin Dykes"
+    obra: "Introductions to Traditional Astrology"
+    natureza: "secundária técnica"
+    localizador: "Explicação contemporânea de dignidades e recepção; conferir edição."
+
+validacao_de_fontes:
+  base: "A ficha separa recepção, disposição e dominância, evitando tratá-las como sinônimos."
+  limite: "O motor não deve afirmar que recepção resolve qualquer conflito ou garante parceria/evento."
+
+ver_mais:
+  - "../07_Dignidades/Almuten_Hyleg_Alcocoden.yaml"
+  - "../07_Dignidades/Recepcao.yaml"
+
+## ✏️ Minhas Anotações
+

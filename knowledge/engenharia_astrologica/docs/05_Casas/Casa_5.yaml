@@ -1,0 +1,67 @@
+status: review
+id: "casa_5"
+tradicoes:
+  - "helenística"
+  - "medieval"
+  - "renascentista"
+  - "moderna (camadas psicológica e sistêmica explicitamente separadas)"
+tipo: "conceito técnico de casa astrológica"
+escopo_documental:
+  tecnica_historica:
+    - "significação tradicional da casa, sua relação com ângulos, casas sucedentes/cadentes e tópicos derivados"
+  camadas_modernas: "Atlas simbólico, Tarot, medicina, arquétipos e leitura sistêmica permanecem separados da regra histórica."
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "primária"
+    localizador: "Livro IV e passagens sobre configuração e significação dos lugares"
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    natureza: "primária"
+    localizador: "Livros II–IV, tópicos das casas e julgamento natal"
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    natureza: "primária"
+    localizador: "Livro I, significações das casas e regras de julgamento"
+validacao_de_fontes:
+  base: "A significa??o hist?rica dos lugares ? sustentada por Ptolomeu, Valens e Lilly, nas refer?ncias estruturadas da ficha."
+  escopo: "Tarot, Atlas simb?lico, medicina, psicologia e leitura sist?mica s?o camadas de estudo rotuladas; n?o substituem a t?cnica hist?rica de casas."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+numero: 5
+nome: "Casa 5 — O Trono do Prazer / Criação"
+tema: "Como me expresso e dou à luz"
+
+origens_e_divergencias:
+  tradicional: "Ptolomeu (Tetrabiblos) — significados tradicionais das 12 casas."
+  moderna: "Astrologia psicológica/sistêmica (Liz Greene, escola de relações familiares)."
+  nota: "Revisar ao citar — marca a escola usada."
+atlas_simbolico:
+  pessoas_arquetipos: "A criança, o artista, o amante, o criador"
+  lugares_fisicos: "Teatros, jardins de infância, lugares de diversão, estádios"
+  objetos_materia: "Brinquedos, obras de arte, jóias, jogos"
+  eventos_tipicos: "Nascimentos, casamentos, criações, festas, jogos"
+  animais: "Leão, pavão, cavalo nobre"
+  plantas_ervas: "Girassol, heliotropo, rosa, laranjeira"
+  metais_pedras: "Ouro, âmbar, topázio, citrino"
+  cores_sons: "Amarelo-dourado, laranja; notas Dó e Sol"
+  numeros: "1 (criação), 5 (expressão), 9 (completude)"
+  dias_semana: "Domingo (Sol)"
+  doencas_corpo: "Coração, costas, coluna dorsal"
+  arquetipos_mitologicos: "Apolo, Dioniso, Eros/Cupido"
+  mitos_historias: "Apolo e a música; Dioniso e o teatro; Eros e Psique"
+  sonhos_simbolos_inconsciente: "Crianças, festas, jogos, arte, corações"
+  expressao_elevada_sombra: "Elevada: criatividade radiante, amor generoso | Sombra: drama, excesso, necessidade de atenção"
+
+camada_energetica:
+  campo_mental: "Foco em criatividade, prazer, jogo e autoria."
+  permeacao_emocional: "Alegria de 'fazer por fazer', 'o que é meu e me diverte'."
+  manifestacao_externa: "Eventos prováveis de criação, filhos, prazer, jogo. Arquétipos: o Artista, o Filho. Inclinação, não destino."
+  como_guiar_o_astral: "Casa 5 pede PRAZER CRIATIVO — a pessoa 'tem que fazer o que ama'."
+
+significados_derivados:
+  dinheiro_parceiro: false
+  filhos: "Casa 5 = filhos LITERAIS (criação biológica)."
+  criatividade: "O que a pessoa CRIA (arte, ideias, projetos)."
+  romance_leve: "Casos, paqueras, 'amor sem compromisso' (diferente de Casa 7 que é compromisso)."
+  jogo: "Apostas, risco, 'o que ganho por sorte'."
+  diversao: "Esportes, hobbies, 'o que me diverte'."

@@ -1,0 +1,51 @@
+status: complete
+id: "combustao"
+nome: "Combustão"
+tradicoes:
+  - "helenística"
+  - "medieval"
+  - "renascentista"
+  - "tradicional"
+  - "moderna ocidental (camada interpretativa separada)"
+tipo: "condição solar debilitante (fundamento tradicional; alojamento editorial de legado)"
+classificacao_editorial:
+  nucleo_conceitual: "Condições planetárias tradicionais / condições solares"
+  localizacao_atual: "09_Tecnicas_Modernas por legado de organização; não é técnica moderna de origem"
+  regra_de_apresentacao: "A faixa técnica e a autoridade precedem qualquer releitura psicológica."
+escopo_documental:
+  tecnica_historica:
+    - "proximidade ao Sol com perda de visibilidade e/ou enfraquecimento"
+    - "distinção entre sob os raios, combustão e cazimi"
+    - "dependência do orbe adotado pela escola"
+  calculo_e_regra: "O motor deve declarar os limites usados para sob os raios, combustão e cazimi. Não existe um único corte universalmente aceito em todos os autores."
+  divergencias_de_escola: "Linhas modernas muitas vezes transformam combustão em pura leitura psicológica de ego ou identidade; isso não substitui sua função técnica tradicional."
+referencias:
+  - autor: "William Lilly"
+    obra: "Christian Astrology, 1647, Livro I, pp. 112–113 (definições de sob os raios, combustão e cazimi)."
+    natureza: "fonte primária histórica"
+    localizador: "Livro I, definições de estado planetário"
+  - autor: "Guido Bonatti; trad. Benjamin N. Dykes"
+    obra: "Book of Astronomy, 2 vols., Cazimi Press, 2007–2009."
+    natureza: "fonte primária medieval em tradução moderna"
+    localizador: "passagens sobre aflições e condições planetárias"
+definicao_tecnica: "Combustão designa a condição de um planeta suficientemente próximo ao Sol para ser considerado enfraquecido, obscurecido ou queimado por sua luz, segundo a convenção da escola."
+distincoes_internas:
+  convencao_lilly_1647:
+    sob_os_raios: "De 8°30' até 17° do Sol; o limite externo de 17° é a convenção de Lilly, não um universal."
+    combustao_propriamente_dita: "Dentro de 8°30' do Sol, excetuado o cazimi; convenção de Lilly."
+    cazimi: "Dentro de 17' do Sol; exceção tratada separadamente por Lilly."
+  politica_do_corpus: "O perfil padrão nomeado é Lilly-1647, em longitude geocêntrica eclíptica. Outras escolas não podem substituir esses limites sem perfil explícito."
+uso_interpretativo:
+  regra_geral: "Na tradição, a combustão costuma indicar dificuldade de agir livremente, perda de autonomia, ocultação ou dano à significação do planeta."
+  mitigacoes: "Recepção, dignidade, secta, condição acidental e contexto podem modificar a leitura."
+camada_moderna:
+  uso_psicologico: "Pode ser lida como função absorvida pelo princípio solar, centralidade de identidade ou pouca separação psíquica."
+  regra_documental: "Essa camada deve aparecer como releitura moderna, não como substituto técnico."
+nao_confundir_com:
+  - "cazimi"
+  - "conjunção solar comum fora da faixa técnica"
+camada_energetica:
+  impressao_mental: "O planeta perde autonomia dentro do campo solar."
+  permeacao_emocional: "Na linguagem moderna, pode ser vivido como ofuscamento ou forte identificação."
+  manifestacao_externa: "Em leitura técnica, sugere limitação da eficácia ou da visibilidade do planeta."
+  como_guiar_o_astral: "Declarar sempre o orbe adotado e se o caso é sob os raios, combustão ou cazimi."

@@ -1,0 +1,56 @@
+﻿status: draft
+id: "decanato_aries_3"
+nome: "Decanato 3 de Áries (20°–30°) — Áries amadurecido por Sagitário"
+tradicoes:
+  - "convenção por signos da mesma triplicidade"
+  - "camada simbólica moderna atribuída"
+regente: "Júpiter (Sagitário/Júpiter na convenção por triplicidade; face caldaica correspondente: Vênus)"
+
+origens_e_divergencias:
+  sistema_adotado: "Convenção posterior/moderna por signos da mesma triplicidade: 20°–<30° de Áries recebe a cor de Sagitário/Júpiter."
+  faces_caldaicas: "A face caldaica de 20°–<30° de Áries é Vênus; portanto, as tabelas divergem materialmente neste grau."
+  decanos_egipcios: "Sistema distinto; requer sua própria tabela de estrelas/decanos."
+  nota: "Não chamar Júpiter de regente tradicional desta faixa sem nomear a convenção por triplicidade."
+
+calculo_e_escopo:
+  intervalo: "Áries tropical 20°–<30°; 30° exatos são 0° de Touro."
+  uso: "Refinamento opcional; não estabelece missão, maturidade objetiva ou urgência de fim de signo."
+  camada_simbolica: "Seta, horizonte e narrativas de fechamento são associações modernas atribuídas."
+referencias:
+  - autor: "Engenharia Astrológica"
+    obra: "Decanatos"
+    natureza: "fonte editorial"
+    localizador: "Tabela comparativa em 03_Signos/Decanatos.yaml."
+  - autor: "Cláudio Ptolomeu"
+    obra: "Tetrabiblos"
+    natureza: "primária histórica"
+    localizador: "Faces; tabela caldaica da faixa é Vênus, não Júpiter."
+limite_documental: "Permanece draft: a convenção por triplicidade necessita fonte específica antes de promoção."
+atlas_simbolico:
+  pessoas_arquetipos: "O Seta, o que expressa Fogo Mutável"
+  lugares_fisicos: "Lugares de Fogo Mutável"
+  objetos_materia: "Objetos de Fogo Mutável"
+  eventos_tipicos: "Eventos de Fogo Mutável"
+  animais: "Animais de Fogo Mutável"
+  plantas_ervas: "Plantas de Fogo Mutável"
+  metais_pedras: "Metais de Fogo Mutável"
+  cores_sons: "Cores de Fogo Mutável"
+  numeros: "Números de Fogo Mutável"
+  dias_semana: "Dias de Fogo Mutável"
+  doencas_corpo: "Partes do corpo de Fogo Mutável"
+  arquetipos_mitologicos: "Arquétipos de Fogo Mutável"
+  mitos_historias: "Mitologias de Fogo Mutável"
+  sonhos_simbolos_inconsciente: "Símbolos de Fogo Mutável"
+  expressao_elevada_sombra: "Elevada: Fogo Mutável consciente | Sombra: Fogo Mutável descontrolado"
+
+camada_energetica:
+  impressao_mental: "Áries com CAMADA de sentido e expansão — a ação agora 'quer fazer sentido' e crescer."
+  permeacao_emocional: "Impulso + fé = energia que 'acredita no que faz' — mas pode virar precipitação otimista."
+  manifestacao_externa: "Eventos PROVÁVEIS de ação com propósito, expansão, risco calculado ou não. Arquétipos: o Explorador, o Misionário. Inclinação, não destino."
+  como_guiar_o_astral: "Canalizar para 'fazer e expandir' — este decanato aprende quando parar e refletir (Júpiter pede sabedoria)."
+
+porque_simbolico: "Sagitário matiza Áries com Fogo mutável: a iniciativa ganha HORIZONTE. Júpiter é expansão e sentido — por isso o 3º decanato de Áries tende a 'fazer por crer'."
+foco_especial:
+  carmico: "Decanato 3 (20-30°) é a 'última chamada' do signo — Áries 28-30° pode ter urgência de 'fechar a jornada ariana'."
+
+

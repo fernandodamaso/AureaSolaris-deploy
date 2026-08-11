@@ -1,0 +1,57 @@
+﻿status: review
+id: "casa_4_atlas"
+nome: "Casa 4 — O Templo / O Lar"
+tradicoes:
+  - "atlas simbolico editorial"
+  - "sintese multiescola"
+tipo: "Atlas Simbólico"
+subtema: "Correspondências da Casa 4"
+
+origens_e_divergencias:
+  tradicional: "Ptolomeu (Tetrabiblos) — significados tradicionais das 12 casas."
+  moderna: "Astrologia psicológica/sistêmica — casas como áreas de desenvolvimento."
+  nota: "Revisar ao citar — marca a escola usada."
+
+atlas_simbolico:
+  pessoas_arquetipos: "A mãe, o lar, a raiz, o fim"
+  lugares_fisicos: "Lar, propriedades rurais, tumbas, locais de origem"
+  objetos_materia: "Chaves, fotos de família, heranças, móveis"
+  eventos_tipicos: "Mudanças de lar, fim de ciclos, morte de entes"
+  animais: "Caranguejo, lobo, coruja"
+  plantas_ervas: "Lírio, jasmim noturno, alface, couve"
+  metais_pedras: "Prata, pedra da lua, pérola"
+  cores_sons:
+    cores: ["Prata", "branco luar", "azul-prateado"]
+    sons: ["Flauta", "murmúrio d'água"]
+  numeros: [4]
+  dias_semana: ["Segunda-feira"]
+  doencas_corpo:
+    doencas: ["Problemas digestivos", "ansiedade", "insônia"]
+    partes_corpo: ["Estômago", "útero", "seios"]
+  arquetipos_mitologicos:
+    - "Deméter"
+    - "Héstia"
+  mitos_historias: "Deméter e Perséfone; Héstia e o fogo sagrado"
+  sonhos_simbolos_inconsciente: "Lares, mães, raízes"
+  expressao_elevada_sombra: "Elevada: pertencimento, segurança interior | Sombra: apego, prisão doméstica"
+
+revisao_editorial:
+  origem_e_linguagem: "A quarta casa se relaciona ao fundo do céu em muitas leituras, mas cúspide, IC e casa quatro não são automaticamente idênticos em todos os sistemas. Lar, raiz e fundamento são linguagem simbólica."
+  mito_arquetipo_e_porque: "Caverna, solo, ancestralidade e lar oferecem imagens de enraizamento; não provam uma história familiar ou origem social determinada."
+  limite_tecnico: "A analogia com Câncer/Lua é moderna. O sistema de casas e a distinção entre IC e cúspide devem ser declarados."
+referencias:
+  primarias:
+    - "Lilly, William. Christian Astrology. 1647, livro II: significações da quarta casa."
+  secundarias:
+    - "Houlding, Deborah. The Houses: Temples of the Sky. The Wessex Astrologer, 1996."
+  tecnicas:
+    - "Registrar sistema de casas, local e horário de nascimento antes de interpretar raízes ou propriedade."
+camada_energetica:
+  impressao_mental: "Como eu me enraízo. 'Onde é meu lar?'"
+  permeacao_emocional: "Segurança, pertencimento, memória familiar."
+  manifestacao_externa: "Eventos prováveis de mudanças de lar, fim de ciclos. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a SENTIR-SE EM CASA EM QUALQUER LUGAR. Casa 4 é a raiz, não a prisão."
+
+ver_mais:
+  - "../05_Casas/Casa_4.yaml"
+

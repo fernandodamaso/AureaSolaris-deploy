@@ -1,0 +1,81 @@
+﻿status: review
+id: "linguagem_planetas_verbos"
+nome: "Planetas como Verbos"
+tradicoes:
+  - "editorial"
+  - "pedagogica"
+  - "multiescola"
+tipo: "Linguagem Astrológica"
+subtema: "Planetas como ações"
+
+origens_e_divergencias:
+  tradicional: "Planetas como 'regentes' e 'significadores' — cada planeta carrega um conjunto de significados fixos."
+  moderna: "Planetas como funções psicológicas (Rudhyar) — cada planeta é um VERBO, não um substantivo."
+  nota: "A linguagem de verbo é uma metáfora pedagógica moderna; não substitui os significadores, dignidades e regras de julgamento de cada tradição."
+
+limites_de_uso:
+  - "Os verbos resumem uma função para estudo; não autorizam inferir um evento sem casas, aspecto, condição e contexto."
+  - "A associação de planetas exteriores a funções psicológicas é própria de escolas modernas e deve aparecer identificada como tal."
+
+atlas_simbolico:
+  pessoas_arquetipos:
+    - "O que age"
+    - "O que sente"
+    - "O que pensa"
+    - "O que ama"
+    - "O que luta"
+    - "O que expande"
+  lugares_fisicos:
+    - "Planetas = funções ativas"
+    - "Não têm lugar físico, mas atuam em todos os lugares"
+  objetos_materia:
+    - "Ferramentas de ação"
+    - "Instrumentos de expressão"
+  eventos_tipicos:
+    - "Ações"
+    - "Decisões"
+    - "Expressões"
+  animais:
+    - "Cada planeta tem seus animais simbólicos (ver atlas do planeta)"
+  plantas_ervas:
+    - "Cada planeta tem suas plantas (ver atlas do planeta)"
+  metais_pedras:
+    - "Cada planeta tem seus metais (ver atlas do planeta)"
+  cores_sons:
+    cores: ["Cores do planeta correspondente"]
+    sons: ["Sons do planeta correspondente"]
+  numeros: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+  dias_semana: ["Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado"]
+  doencas_corpo:
+    doencas: ["Cada planeta rege partes do corpo (ver atlas do planeta)"]
+    partes_corpo: ["Cada planeta rege partes do corpo (ver atlas do planeta)"]
+  arquetipos_mitologicos:
+    - "Planetas = deuses gregos/romanos"
+  mitos_historias:
+    - "Mitos de cada planeta correspondente"
+  expressao_elevada_sombra: "Elevada: ação consciente, expressão autêntica | Sombra: ação inconsciente, expressão destrutiva"
+
+camada_energetica:
+  impressao_mental: "Os planetas são os VERBOS do mapa. Sol = EU SOU, Lua = EU SINTO, Mercúrio = EU PENSO, Vênus = EU AMO, Marte = EU AGO, Júpiter = EU EXPANDO, Saturno = EU ESTRUTURO, Urano = EU INOVO, Netuno = EU TRANSCENDO, Plutão = EU TRANSFORMO."
+  permeacao_emocional: "Cada planeta carrega uma qualidade emocional que se expressa como AÇÃO."
+  manifestacao_externa: "Eventos PROVÁVEIS que seguem o verbo do planeta em evidência. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a IDENTIFICAR QUAL É O VERBO PRINCIPAL DO MAPA. O planeta mais forte = o verbo que mais governa a vida."
+
+tarot_relacionado:
+  carta: "Cada planeta corresponde a um arcano (ver atlas do planeta)"
+  conexao: "Os planetas são verbos; os arcanos são ações arquetípicas."
+
+foco_especial:
+  infantil: "A criança aprende os planetas como AÇÕES: 'Eu sou', 'Eu sinto', 'Eu penso'."
+  familiar: "Cada membro da família 'vibra' um planeta diferente."
+  carmico_espiritual: "Planetas indicam as LIÇÕES DE AÇÃO da alma."
+
+referencias:
+  primarias:
+    - "Ptolomeu. Tetrabiblos, livro I: naturezas e qualidades dos planetas."
+  secundarias:
+    - "Rudhyar, Dane. The Astrology of Personality. Lucis Publishing, 1936; reedições posteriores."
+    - "Greene, Liz. The Astrology of Fate. Samuel Weiser, 1984."
+  tecnicas:
+    - "Ver também 04_Planetas/ para significadores e 17_Metodologia_de_Leitura/ para hierarquia de julgamento."
+

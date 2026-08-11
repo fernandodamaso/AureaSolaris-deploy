@@ -1,0 +1,57 @@
+﻿status: draft
+id: "decanato_peixes_1"
+nome: "Decanato 1 de Peixes (0°–10°) — Peixes puro"
+tradicoes:
+  - "convenção por signos da mesma triplicidade"
+  - "releitura moderna transaturnina explicitada"
+regente: "Júpiter (Peixes/Júpiter na convenção por triplicidade; Netuno somente em releitura moderna; face caldaica: Saturno)"
+
+origens_e_divergencias:
+  sistema_adotado: "Convenção posterior/moderna por signos da mesma triplicidade: 0°–<10° de Peixes recebe a cor de Peixes/Júpiter."
+  releitura_moderna: "Netuno pode ser incluído em perfil moderno; não é regente de face caldaica tradicional."
+  faces_caldaicas: "A face caldaica de 0°–<10° de Peixes é Saturno; as tabelas divergem."
+  nota: "Dissolução, mediunidade, karma ou vidas passadas são linguagens de escola e não propriedades técnicas do intervalo."
+
+calculo_e_escopo:
+  intervalo: "Peixes tropical 0°–<10°; 10° exatos iniciam o segundo decanato."
+  uso: "Exibir Júpiter/Netuno somente segundo perfil de convenção declarado."
+  camada_simbolica: "Fim do zodíaco, oceano e renascimento são associações de estudo atribuídas."
+referencias:
+  - autor: "Engenharia Astrológica"
+    obra: "Decanatos"
+    natureza: "fonte editorial"
+    localizador: "Tabela comparativa em 03_Signos/Decanatos.yaml."
+  - autor: "Cláudio Ptolomeu"
+    obra: "Tetrabiblos"
+    natureza: "primária histórica"
+    localizador: "Faces; a faixa caldaica é Saturno."
+limite_documental: "Permanece draft: fonte específica da convenção por triplicidade ainda precisa ser conferida."
+atlas_simbolico:
+  pessoas_arquetipos: "O Nascente espiritual, o que expressa Água Cardinal"
+  lugares_fisicos: "Lugares de Água Cardinal"
+  objetos_materia: "Objetos de Água Cardinal"
+  eventos_tipicos: "Eventos de Água Cardinal"
+  animais: "Animais de Água Cardinal"
+  plantas_ervas: "Plantas de Água Cardinal"
+  metais_pedras: "Metais de Água Cardinal"
+  cores_sons: "Cores de Água Cardinal"
+  numeros: "Números de Água Cardinal"
+  dias_semana: "Dias de Água Cardinal"
+  doencas_corpo: "Partes do corpo de Água Cardinal"
+  arquetipos_mitologicos: "Arquétipos de Água Cardinal"
+  mitos_historias: "Mitologias de Água Cardinal"
+  sonhos_simbolos_inconsciente: "Símbolos de Água Cardinal"
+  expressao_elevada_sombra: "Elevada: Água Cardinal consciente | Sombra: Água Cardinal descontrolado"
+
+camada_energetica:
+  impressao_mental: "Peixes cru — imaginação pura, empatia, 'tudo é um'. A mente dissolve as fronteiras."
+  permeacao_emocional: "Compaixão universal, mas risco de 'absorver o que não é seu'."
+  manifestacao_externa: "Eventos PROVÁVEIS de encontro espiritual, arte, compaixão. Arquétipos: o Místico, o Artista. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a ter 'limite compassivo' — o 1º decanato de Peixes tende a 'dar de si até secar'."
+
+porque_simbolico: "Netuno rege Peixes = planeta da dissolução e do oceano. 0° de Peixes = o final do zodíaco — tudo se dissolve para recomeçar. É a 'morte antes do renascimento' (Ponto Gama no zero de Áries)."
+foco_especial:
+  carmico: "Decanato 1 de Peixes pode ter 'dívida de alma' — atração por vidas passadas, mediunidade, carma de perdão."
+  infantil: "Criança em Peixes 1 = criança que 'sente tudo' — pode ser 'diferente' ou 'sensível demais'."
+
+

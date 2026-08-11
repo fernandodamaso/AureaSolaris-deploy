@@ -1,0 +1,79 @@
+status: review
+id: firdarias
+tradicoes:
+- persa/árabe
+- medieval
+- moderna (recepção ocidental explicitamente separada)
+tipo: senhor do tempo
+escopo_documental:
+  tecnica_historica:
+  - sequência, duração, período maior/menor, condição diurna/noturna e fonte da tabela
+  variantes: Sequências e subperíodos variam; profecções e firdária não devem ser amalgamadas sem declaração.
+  camada_simbolica: Correspondências psicológicas ou cármicas são notas modernas atribuídas.
+referencias:
+- autor: Abu Ma'shar
+  obra: On the Revolutions of the Years of Nativities
+  natureza: primária/secundária histórica
+  localizador: Chronocrators, annual periods, and period rulership in the Arabic-Persian lineage
+- autor: Al-Qabisi
+  obra: Introduction to Astrology
+  natureza: primária/secundária histórica
+  localizador: Chapters on chronocrators and period doctrine; use only with the chosen translation
+- autor: James Holden
+  obra: A History of Horoscopic Astrology
+  natureza: secundária histórica
+  localizador: Recepção medieval e persa-árabe; conferir capítulo
+validacao_de_fontes:
+  base: "As refer?ncias estruturadas identificam a linhagem hist?rica, moderna ou astron?mica pertinente a esta t?cnica preditiva."
+  escopo: "Uma implementa??o deve declarar edi??o, algoritmo, efem?ride, escala de tempo e variante de escola; esta exig?ncia ? uma regra de reprodu??o, n?o uma lacuna de fonte."
+  limite: "A ficha permanece em review e n?o converte hip?tese, aproxima??o pedag?gica ou releitura moderna em previs?o determinista."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+nome: Firdárias
+tema: 'Sistema de timing persa/islâmico: períodos regentes por planeta.'
+essencia:
+- Cada período (firdaria) é regido por um planeta.
+- Há sequências e ordens documentadas; a ordem Sol–Lua–Mercúrio–Vênus–Marte–Júpiter–Saturno é uma variante que deve ser nomeada, não um universal.
+- Usado para previsão de temas e eventos por período cronológico.
+- Subperíodos só entram quando a fonte adotada os prescrever; profecções são uma técnica distinta.
+origens_e_divergencias:
+  tradicional: Persa/islâmica tradicional; usado em astrologia medieval.
+  moderna: Adotado por modernos como técnica de timing cronológica; validar com fontes específicas.
+  nota: Sequência, duração e subperíodos variam por tradição; preferir fonte persa/árabe identificada.
+atlas_simbolico:
+  pessoas_arquetipos: senhores do tempo, administradores de per?odos, planetas-regentes de cap?tulos da vida
+  lugares_fisicos: linhas do tempo, tabelas planet?rias, calend?rios de reg?ncia
+  objetos_materia: t?buas cronol?gicas, seq??ncias diurnas e noturnas, diagramas de per?odos
+  eventos_tipicos: mudan?a de cap?tulo, altern?ncia de ?nfase planet?ria, subper?odos
+  arquetipos_mitologicos: o planeta que governa uma esta??o da vida
+  expressao_elevada_sombra: 'Elevada: leitura de ciclos com contexto | Sombra: determinismo cronol?gico, tabelismo vazio'
+camada_energetica:
+  campo_mental: Linha do tempo como ciclo planetário; fase atual = planeta regente.
+  permeacao_emocional: Ansiedade ou alívio conforme entendimento do período.
+  manifestacao_externa: Eventos PROVÁVEIS condizentes com o planeta regente do período.
+  como_guiar_o_astral: Mostrar período atual como capítulo; não como destino; agir alinhado ao planeta.
+tecnicas:
+  sequencia_diurna:
+  - Sol
+  - Venus
+  - Mercurio
+  - Lua
+  - Saturno
+  - Jupiter
+  - Marte
+  sequencia_noturna:
+  - Lua
+  - Saturno
+  - Jupiter
+  - Marte
+  - Sol
+  - Venus
+  - Mercurio
+  inicio:
+    regra: 'Em tabelas ocidentais medievais comuns, a firdaria maior comeca pelo luminar da seita: Sol em mapa diurno, Lua em mapa noturno.'
+    variacao: Nodos, subperiodos e certas ordens menores variam por transmissao; registrar a fonte antes de calcular.
+  leitura:
+    regra: Temas do planeta regente dominam o período.
+    exemplo: Período de Saturno = estrutura, limites, provas, maturidade.
+ver_mais:
+- ../11_Previsao/Firdarias_e_Profeccoes.yaml
+- ../D_Engenharia_da_Previsao/firdarias_profeccoes.yaml

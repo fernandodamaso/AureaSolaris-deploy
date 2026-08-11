@@ -1,0 +1,88 @@
+status: review
+id: timing
+tradicoes:
+- helenística
+- medieval
+- persa/árabe
+- renascentista
+- moderna
+tipo: índice comparativo de técnicas preditivas
+escopo_documental:
+  tecnica_historica:
+  - direções, profecções, firdária, liberação, trânsitos, progressões, eclipses, revoluções e retornos como famílias distintas
+  regra_do_projeto: A combinação de técnicas é uma política de síntese do projeto; cada técnica conserva sua linhagem, fórmula e limites.
+  camada_simbolica: Notas psicológicas, cármicas e sistêmicas não alteram o cálculo da técnica.
+referencias:
+- autor: Claudius Ptolemy
+  obra: Tetrabiblos
+  natureza: primária
+  localizador: Livros II–III, prognóstico e técnicas relacionadas
+- autor: Vettius Valens
+  obra: Anthology
+  natureza: primária
+  localizador: Livros IV–VI, cronologia e técnicas preditivas
+- autor: Abu Ma'shar
+  obra: On the Revolutions of the Years of Nativities
+  natureza: primária/secundária histórica
+  localizador: Revoluções e senhores do tempo; conferir edição
+- autor: Jean-Baptiste Morin de Villefranche
+  obra: Astrologia Gallica
+  natureza: primária
+  localizador: Livros XXII–XXIII; conferir edição
+nome: Timing
+tema: Técnicas para determinar quando um evento astrológico se manifesta.
+essencia:
+- 'Trânsitos: planetas ativam pontos do mapa natal em tempo real.'
+- 'Progressões: desenvolvimento interno por dias/anos.'
+- 'Direções: família própria de técnicas de arco/tempo; não sinônimo universal de ''1 grau por ano''.'
+- 'Firdarias: períodos planetários fixos (persa).'
+- 'Revolução Solar: mapa do ano.'
+- 'Lunações: fases e sizígias podem servir como contexto cíclico; seu peso depende da escola.'
+protocolos_por_familia:
+  regra_geral:
+  - Cada técnica conserva fórmula, cronologia, orbes e hierarquia próprios.
+  - O índice comparativo não autoriza misturar resultados como se todas as técnicas fossem equivalentes.
+  atribuicoes_historicas:
+  - Não atribuir firdária a Ptolomeu, Morin ou Lilly sem fonte específica.
+  - Não atribuir liberação zodiacal ou distribuições por termos à astrologia moderna genérica sem declarar a reconstrução.
+  - Não tratar retornos, trânsitos e direções como variantes nominais da mesma técnica.
+  uso_no_projeto:
+  - A combinação de técnicas é política editorial do projeto, não lei histórica universal.
+  - Uma síntese robusta deve registrar qual técnica é principal e quais entram só como confirmação ou contexto.
+regras_para_motor:
+  saida_minima_obrigatoria:
+  - Técnica principal declarada, janela temporal, parâmetros de cálculo, escola/linhagem e critérios de confirmação.
+  - Se houver combinação de técnicas, registrar a precedência entre elas.
+  guardrails:
+  - Não produzir data única como certeza se a técnica só fornece janela ou período.
+  - Não aplicar a mesma tabela de orbes a todas as famílias sem convenção explícita.
+origens_e_divergencias:
+  tradicional: Direções, trânsitos e outras técnicas têm linhagens próprias; firdária é persa/árabe e não deve ser atribuída automaticamente a Ptolomeu, Morin ou Lilly.
+  moderna: Combinação de técnicas; validação por múltiplos métodos.
+  nota: Não confiar em método único; cruzamento de técnicas aumenta confiança.
+atlas_simbolico:
+  pessoas_arquetipos: tecel?es do tempo, leitores de janelas, combinadores de rel?gios astrol?gicos
+  lugares_fisicos: calend?rios, quadros de planejamento, mapas com camadas temporais
+  objetos_materia: rel?gios simb?licos, grades de compara??o, tabelas de converg?ncia
+  eventos_tipicos: converg?ncia de t?cnicas, abertura de janela temporal, confirma??o de per?odo
+  arquetipos_mitologicos: a janela celeste, o entrela?amento dos ciclos
+  expressao_elevada_sombra: 'Elevada: timing como janela e contexto | Sombra: obsess?o com datas, colagem de m?todos'
+camada_energetica:
+  campo_mental: Ver o tempo como camadas sobrepostas, não como linha única.
+  permeacao_emocional: Ansiedade por datas vs serenidade de que há múltiplas camadas.
+  manifestacao_externa: Eventos PROVÁVEIS quando 2+ técnicas convergem.
+  como_guiar_o_astral: Ensinar o consulente a ver o timing como JANELA, não como data exata.
+tecnicas:
+  cruzamento:
+    regra: 2+ técnicas ativando o mesmo ponto = maior confiança.
+    exemplo: Trânsito Saturno quadratura Saturno natal + Progressão Lua conjunção Saturno = prova.
+  orbes:
+    tradicional: Orbes menores em direções que em trânsitos.
+    moderna: Orbes generosos; usar como guia, não como regra rígida.
+  prioridade:
+    regra: Trânsito rápido (Lua/Marte/Mercúrio) = humor/rotina; trânsito lento (Júpiter/Saturno/Urano/Netuno/Plutão) = estrutura.
+  confirmacao:
+    regra: Revolução Solar e Firdaria confirmam tema do ano/período.
+ver_mais:
+- ../11_Previsao/Transitos.yaml
+- ../D_Engenharia_da_Previsao/transitos.yaml

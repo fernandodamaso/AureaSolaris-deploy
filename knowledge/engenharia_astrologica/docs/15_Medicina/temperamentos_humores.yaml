@@ -1,0 +1,93 @@
+status: review
+id: "temperamentos_humores"
+nome: "Temperamentos e Humores"
+tradicoes:
+  - "medica historica ocidental"
+  - "moderna simbolica"
+tipo: "Astrologia Médica"
+subtema: "Base médica astrológica"
+
+origens_e_divergencias:
+  tradicional: "Hipócrates, Galeno — 4 temperamentos ligados aos 4 elementos."
+  moderna: "Overlay psicológico — temperamento como base de personalidade."
+  nota: "Base de toda a astrologia médica."
+
+referencias:
+  - autor: "Hippocrates"
+    obra: "On the Nature of Man"
+    natureza: "fonte antiga atribuída à tradição humoral"
+    localizador: "Humores e constituição; consultar edição/tradução"
+  - autor: "Galen"
+    obra: "On Temperaments"
+    natureza: "fonte antiga"
+    localizador: "Teoria dos temperamentos; consultar edição/tradução"
+  - autor: "Nicholas Culpeper"
+    obra: "Semeiotica Uranica"
+    ano: 1651
+    natureza: "fonte histórica de astrologia médica"
+    localizador: "Recepção pré-moderna; não evidência médica contemporânea"
+
+limites_de_uso: ["Humores e temperamentos são modelos históricos de medicina e cosmologia.", "Não classificam saúde contemporânea, personalidade clínica nem indicam tratamento."]
+
+atlas_simbolico:
+  pessoas_arquetipos: "O curador, o médico, o herbalista"
+  lugares_fisicos: "Hospitais, clínicas, herbários"
+  objetos_materia: "Instrumentos médicos, livros de medicina"
+  eventos_tipicos: "Diagnósticos, curas, crises"
+  animais: "Coruja (sabedoria), formiga (organização)"
+  plantas_ervas: "Sálvia, hera, ervas medicinais"
+  metais_pedras: "Prata, cristal, jaspe"
+  cores_sons:
+    cores: ["Prata", "azul-claro", "verde-oliva"]
+    sons: ["Dó", "lá", "vento"]
+  numeros: [4, 3, 6]
+  dias_semana: ["Quarta-feira"]
+  doencas_corpo:
+    doencas: ["Problemas de equilíbrio", "crises de saúde"]
+    partes_corpo: ["Sistema digestivo", "cérebro"]
+  arquetipos_mitologicos:
+    - "Hipócrates (medicina)"
+    - "Asclépio (cura)"
+  mitos_historias: "Hipócrates e os 4 humores; Asclépio e a serpente"
+  expressao_elevada_sombra: "Elevada: cura consciente | Sombra: diagnóstico como sentença"
+
+camada_energetica:
+  impressao_mental: "Temperamento = 'como o corpo reage ao cosmos'. 4 elementos = 4 humores."
+  permeacao_emocional: "Equilíbrio emocional ligado ao corpo. Quando saudável: harmonia. Quando ferido: desequilíbrio."
+  manifestacao_externa: "Eventos prováveis de crises de saúde, curas. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a EQUILIBRAR OS HUMORES. Temperamento não é destino — é tendência."
+
+humores:
+  - elemento: "Fogo"
+    humor: "Bile amarela"
+    qualidades: "Quente e seco"
+    planetas: ["Sol", "Marte", "Júpiter"]
+    temperamento: "Colérico"
+    caracteristicas: "Energia, liderança, impulsividade"
+    equilibrio: "Canalizar energia para ação construtiva"
+    desequilibrio: "Irritabilidade, agressividade, inflamação"
+  - elemento: "Terra"
+    humor: "Bile negra"
+    qualidades: "Frio e seco"
+    planetas: ["Saturno"]
+    temperamento: "Melancólico"
+    caracteristicas: "Análise, estrutura, pessimismo"
+    equilibrio: "Usar análise para construir"
+    desequilibrio: "Depressão, rigidez, obsessão"
+  - elemento: "Ar"
+    humor: "Sangue"
+    qualidades: "Quente e úmido"
+    planetas: ["Mercúrio", "Vênus", "Júpiter"]
+    temperamento: "Sanguíneo"
+    caracteristicas: "Comunicação, sociabilidade, otimismo"
+    equilibrio: "Canalizar comunicação para diálogo"
+    desequilibrio: "Tagarelice, superficialidade, ansiedade"
+  - elemento: "Água"
+    humor: "Fleuma"
+    qualidades: "Frio e úmido"
+    planetas: ["Lua", "Vênus", "Saturno"]
+    temperamento: "Flemático"
+    caracteristicas: "Nutrição, calma, intuição"
+    equilibrio: "Usar intuição para nutrir"
+    desequilibrio: "Passividade, apego, depressão"
+

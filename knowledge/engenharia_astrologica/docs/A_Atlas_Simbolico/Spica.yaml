@@ -1,0 +1,46 @@
+﻿status: draft
+id: "spica_atlas"
+nome: "Spica — Atlas Simbólico"
+tradicoes:
+  - "atlas simbolico editorial"
+  - "sintese multiescola"
+tipo: "Atlas Simbólico"
+subtema: "Correspondências de Spica"
+
+origens_e_divergencias:
+  tradicional: "Ptolomeu — Spica = estrela da Virgem; ligada a colheita, prosperidade, medicina."
+  moderna: "Astrologia moderna mantém; acrescenta saúde, trabalho significativo."
+  nota: "Classificada como estrela benéfica por tradição."
+
+atlas_simbolico:
+  pessoas_arquetipos: "Curandeiro, agricultor sábio, artesão, pessoa de serviço"
+  lugares_fisicos: "Campos férteis, jardins, hortas, oficinas, hospitais"
+  objetos_materia: "Ferramentas de trabalho, sementes, livros de medicina, cestas"
+  eventos_tipicos: "Colheita, cura, trabalho recompensado, sucesso por esforço"
+  animais: "Borboleta (transformação), abelha (trabalho), cobra (medicina)"
+  plantas_ervas: "Trigo, ervas medicinais, rosas, oliveira"
+  metais_pedras: "Cobre, esmeralda, jaspe verde, prata"
+  cores_sons:
+    cores: ["Verde-esmeralda", "dourado", "marrom-terra"]
+    sons: ["Canto de ave", "vento nas folhas", "instrumentos suaves"]
+  numeros: [6, 12, 24]
+  dias_semana: ["Quarta-feira (Mercúrio)", "Sexta-feira (Vênus)"]
+  doencas_corpo:
+    doencas: ["Problemas digestivos", "dor lombar"]
+    partes_corpo: ["Intestinos", "abdômen", "coluna lombar"]
+  arquetipos_mitologicos: ["Deméter/Ceres", "Esculápio", "Virgem Maria"]
+  mitos_historias: "Deméter e a colheita; Virgem associada à abundância e pureza"
+  sonhos_simbolos_inconsciente: "Colheitas, luz dourada, ervas, trabalho digno"
+  expressao_elevada_sombra: "Elevada: cura, trabalho significativo, serviço dedicado | Sombra: perfeccionismo, trabalho compulsivo, cura desviada"
+
+camada_energetica:
+  impressao_mental: "Mentalidade de produtividade saudável; trabalho como forma de amor."
+  permeacao_emocional: "Satisfação no serviço; frustração quando o trabalho é vazio."
+  manifestacao_externa: "Eventos PROVÁVEIS de promoção por mérito, cura, colheita de esforço."
+  como_guiar_o_astral: "Validar o valor do trabalho simples; mostrar que prosperidade pode vir sem grandes gestos."
+
+ver_mais:
+  - "../07_Estrelas_Fixas/Spica.yaml"
+
+## ✏️ Minhas Anotações
+

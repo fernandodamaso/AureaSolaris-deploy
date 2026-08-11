@@ -1,0 +1,63 @@
+status: review
+id: "trigono"
+nome: "Trígono"
+tradicoes:
+  - "helenística"
+  - "medieval"
+  - "renascentista"
+  - "tradicional"
+  - "moderna ocidental"
+tipo: "aspecto por longitude eclíptica"
+angulo: "120°"
+natureza: "harmonia, afinidade e fluxo favorecido"
+escopo_documental:
+  tecnica_historica:
+    - "configuração por signo e por grau"
+    - "aplicação e separação"
+    - "beneficência relativa conforme natureza dos planetas e contexto"
+  calculo_e_orbes: "O motor deve calcular a proximidade de 120° segundo orbe declarado e distinguir trígono por signo de trígono partil."
+  divergencias_de_escola: "Na tradição, o trígono é aspecto de concordância e apoio. Em leituras modernas, também pode ser descrito como talento espontâneo ou fluxo psíquico confortável."
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "primária"
+    localizador: "Livro I, capítulos sobre aspectos, configurações e orbes"
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    natureza: "primária"
+    localizador: "Livros I-II, relações planetárias e julgamentos configuracionais"
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    natureza: "primária/secundária histórica"
+    localizador: "Livro I, aspectos e orbes; conferir edição"
+validacao_de_fontes:
+  base: "As refer?ncias estruturadas sustentam as distin??es hist?ricas e t?cnicas; signo, grau, partil, paralelo e contraparalelo n?o s?o tratados como sin?nimos."
+  escopo: "Orbes permanecem par?metros de escola e corpo, declarados pela t?cnica escolhida; a ficha n?o imp?e um valor universal."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+definicao_tecnica: "Dois fatores se encontram em signos do mesmo elemento ou a aproximadamente 120° de distância em longitude eclíptica."
+por_signo_vs_por_grau:
+  por_signo: "O trígono zodiacal expressa afinidade entre signos do mesmo triplicidade/elemento."
+  por_grau: "A exatidão amplia a força do testemunho favorável."
+aplicativo_separativo:
+  aplicativo: "O acordo e o auxílio estão se formando."
+  separativo: "O contato exato já ocorreu, mas o bom testemunho permanece relevante."
+julgamento_tradicional:
+  regra_geral: "O trígono costuma significar auxílio, facilidade, proteção relativa, concordância e circulação mais fluida dos significados."
+  nota: "Isso não torna todo trígono automaticamente excelente: um trígono entre maléficos ou entre planetas muito debilitados ainda pede nuance."
+camada_moderna:
+  uso_psicologico: "Autores modernos frequentemente o descrevem como talento natural, função integrada ou facilidade que corre sem esforço."
+  regra_documental: "O sistema pode expor essa camada como leitura moderna, sem apagar o juízo técnico sobre condição planetária."
+nao_confundir_com:
+  - "Grande trígono: padrão aspectual composto que exige leitura do conjunto."
+  - "Facilidade absoluta: trígono não cancela debilidade essencial, combustão ou dano de casa."
+atlas_simbolico:
+  pessoas_arquetipos: "artista, mediador, benfeitor, talento natural"
+  objetos_materia: "ponte, corrente lisa, via aberta"
+  eventos_tipicos: "acordo, apoio, fluidez, realização facilitada"
+  arquetipos_mitologicos: "graça, dom, corrente favorável"
+camada_energetica:
+  impressao_mental: "Os princípios conversam com pouca resistência."
+  permeacao_emocional: "Há conforto e sensação de curso natural."
+  manifestacao_externa: "Tende a abrir saídas mais fáceis, recursos ou cooperação."
+  como_guiar_o_astral: "Usar o trígono como evidência de apoio, mas sempre pesar a qualidade real dos planetas que trocam esse apoio."
+exemplo_pratico: "Vênus em trígono com Júpiter pode favorecer afeto, generosidade e sociabilidade, mas o efeito concreto depende de dignidades, casas e contexto da leitura."

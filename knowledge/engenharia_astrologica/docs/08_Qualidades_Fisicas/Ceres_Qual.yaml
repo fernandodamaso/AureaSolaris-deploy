@@ -1,0 +1,61 @@
+status: review
+
+id: "ceres_qualidades"
+nome: "Ceres — Qualidades Fídicas"
+cor: "Verde-terra, amarelo-trigo, marrom-nutriente"
+metal: "Cobre (nutritivo)"
+planta: "Trigo, milho, cevada, romã, figo, lentilha"
+elemento_fisico: "Terra (frio, úmido na agricultura)"
+parte_do_corpo: "Estômago, sistema digestivo, útero (nutrição e gestação)"
+qualidade_termica: "Fria e úmida (terra fértil)"
+chakra_overlay: "Sacro (2º) — nutrição e maternidade"
+
+origens_e_divergencias:
+  tradicional: "Doutrina das Assinaturas moderna: Ceres = trigo, romã, útero, fertilidade."
+  moderna: "Astrologia psicológica (Liz Greene) — corpo como linguagem simbólica."
+  nota: "Chakra overlay = sincretismo Nova Era, não canônico."
+atlas_simbolico:
+  pessoas_arquetipos: "Mãe, nutriz, agricultor, cuidador"
+  lugares_fisicos: "Campos, jardins, fazendas, cozinhas"
+  objetos_materia: "Ferramentas de colheita, panelas, alimentos"
+  eventos_tipicos: "Colheitas, nutrições, gravidez, partos"
+  animais: "Touro, vaca, cavalo de carga, cisne"
+  plantas_ervas: "Videira, trigo, roseira, oliveira, hera"
+  metais_pedras: "Cobre, bronze, esmeralda, turquesa, topázio"
+  cores_sons: "Verde, rosa, marrom; notas Lá e Ré; flauta, violão"
+  numeros: "2 (dualidade), 6 (nutrição), 8 (colheita)"
+  dias_semana: "Sexta-feira (Vênus)"
+  doencas_corpo: "Estômago, sistema digestivo, seios, útero"
+  arquetipos_mitologicos: "Deméter, Ceres, Héstia"
+  mitos_historias: "Deméter e Perséfone; A colheita e o inverno"
+  sonhos_simbolos_inconsciente: "Campos, colheitas, comida, maternidade"
+  expressao_elevada_sombra: "Elevada: nutrição generosa, cuidado | Sombra: possessividade, apego"
+
+camada_energetica:
+  impressao_mental: "Ceres é NUTRIÇÃO e CUIDADO — a mente 'alimenta' o que ama."
+  permeacao_emocional: "Amor maternal, cuidado, medo da perda do filho."
+  manifestacao_externa: "Estilo verde/amarelo-terra; tende a ter 'cara de nutriz'. Arquétipos: a Mãe Terra, a Colheita. Inclinação, não destino."
+  como_guiar_o_astral: "Ceres pede CUIDADO — a pessoa 'dá de si' e precisa aprender a RECEBER."
+
+porque_simbolico: |
+  CERES = deusa da AGRICULTURA e da COLHEITA — TRIGO/MILHO são os frutos dela.
+  VERDE-TERRA = cor da terra FÉRTIL. AMARELO-TRIGO = cor do grão maduro.
+  ÚTERO = 'terra que gesta' (Ceres = mãe que nutre o filho na terra/útero).
+
+linha_tradicao: "Doutrina das Assinaturas moderna: Ceres = trigo, romã, útero, fertilidade."
+chakra_nota: "Overlay sincretico."
+tradicoes:
+  - "astrologia moderna de asteroides"
+  - "mitologia greco-romana"
+  - "correspondências simbólicas editoriais"
+revisao_editorial:
+  atribuicao: "Ceres é deusa romana da agricultura; o corpo celeste 1 Ceres foi descoberto em 1801. Trigo, romã, cuidado e cultivo são associações míticas/modernas, não parte do septenário clássico."
+  limite: "Útero, digestão e gestação são imagens simbólicas de nutrição; não são diagnóstico, prognóstico ou regra médica. Cores, cobre e plantas não formam tabela canônica única."
+  chakra: "Overlay sincrético contemporâneo, não doutrina da astrologia ocidental nem equivalência tântrica canônica."
+referencias:
+  primarias:
+    - "Hesíodo. Teogonia e Trabalhos e Dias: Deméter/Ceres e o ciclo agrícola, conforme tradução/edição declarada."
+  secundarias:
+    - "George, Demetra; Bloch, Douglas. Asteroid Goddesses. ACS Publications, 1986."
+  tecnicas:
+    - "Usar efemérides que identifiquem o asteroide 1 Ceres e declarar o método de cálculo."

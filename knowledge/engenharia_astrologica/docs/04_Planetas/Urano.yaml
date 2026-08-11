@@ -1,0 +1,146 @@
+status: review
+id: "urano"
+tradicoes:
+  - "moderna"
+  - "psicológica"
+  - "humanista"
+  - "cármica/evolutiva (quando explicitamente indicada)"
+escopo_documental:
+  tecnica_historica:
+    - "história da descoberta e incorporação astrológica do corpo"
+  camadas_modernas: "Significados psicológicos, humanistas, evolutivos, mitológicos e sistêmicos são mantidos como linhagens modernas, não como dignidade helenística retroativa."
+referencias:
+  - autor: "Liz Greene"
+    obra: "Astrology: A Cosmic Science"
+    natureza: "secundária/moderna"
+    localizador: "Capítulos sobre planetas exteriores e interpretação psicológica; conferir edição"
+  - autor: "Jeffrey Green"
+    obra: "Pluto: The Evolutionary Journey of the Soul"
+    natureza: "secundária/moderna"
+    localizador: "Obra de referência para a linhagem evolutiva; conferir capítulos conforme o corpo"
+validacao_de_fontes:
+  base: "As refer?ncias estruturadas sustentam a camada hist?rica ou moderna explicitamente declarada para este corpo."
+  escopo: "Mitologia, psicologia, evolu??o, medicina, sist?mica e Atlas permanecem camadas de estudo rotuladas, sem substituir dado astron?mico ou regra de escola."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+nome: "Urano"
+tipo: "Planeta (Transpessoal)"
+tradicao_primaria: ["moderna", "psicológica"]
+
+essencia:
+  - "Ruptura"
+  - "Inovação"
+  - "Liberdade"
+  - "Originalidade"
+
+atlas_simbolico:
+  pessoas_arquetipos:
+    - "Inventor"
+    - "Gênio louco"
+    - "Reformador"
+    - "Hacker"
+    - "Gênio da lâmpada"
+    - "Anarquista"
+  lugares:
+    - "Laboratório"
+    - "Clube de tecnologia"
+    - "Fábrica abandonada"
+    - "Arranha-céu de vidro"
+    - "Campo de pouso"
+    - "Futuro distópico"
+  objetos_materia:
+    - "Eletricidade (raio)"
+    - "Lâmpada (ideia)"
+    - "Computador"
+    - "Avião"
+    - "Bomba (explosão)"
+    - "Rede de fios"
+    - "Sino de Alarme"
+  eventos_tipicos:
+    - "Invenção"
+    - "Rebelião"
+    - "Acidente elétrico"
+    - "Golpe de Estado"
+    - "Surpresa repentina"
+    - "Mudança radical de vida"
+    - "Terrorismo"
+  animais:
+    - "Tubarão"
+    - "Águia-real"
+    - "Cobra elétrica (eel)"
+    - "Toupeira (subsolo)"
+    - "Gafanhoto (praga repentina)"
+    - "Polvo (tentáculos)"
+  plantas_ervas:
+    - "Orquídea rara"
+    - "Raio de sol"
+    - "Erva digitalis"
+    - "Planta carnívora"
+    - "Kava-kava"
+    - "Ginseng"
+  metais_pedras:
+    - "Urânio"
+    - "Alumínio"
+    - "Zircônio"
+    - "Ametrina"
+    - "Pedra elétrica (turmalina)"
+    - "Diamante negro"
+  cores_sons:
+    cores: ["Azul-elétrico", "Violeta", "Prata-cromada", "Verde-fluorescente"]
+    sons: ["Trovão", "Zumbido de gerador", "Sirene", "Estalo de circuito", "Grito de surpresa"]
+  numeros: [4, 7, 11, 13, 22, 33]
+  dias_semana: ["Sábado (compartilhado com Saturno)"]
+  doencas_corpo:
+    doencas: ["Espasmos", "Eletrocussão", "Doenças nervosas", "Problemas de circulação"]
+    partes_corpo: ["Sistema nervoso", "Tornozelos", "Panturrilhas", "Rede neural"]
+  arquetipos_mitologicos:
+    - "Prometeu (roubo do fogo)"
+    - "Perseu (corte da cabeça = ruptura)"
+    - "Heptá (sete = número de Urano)"
+    - "Vishvakarma (arquiteto divino)"
+  mitos_historias:
+    - "Prometeu roubando o fogo dos deuses (revolução)"
+    - "Icaro voando alto (excesso de liberdade)"
+    - "Gênio da lâmpada (liberdade concedida)"
+    - "Mito de Frankenstein (ciência que rompe limites)"
+  sonhos_inconsciente:
+    - "Raio caindo = ruptura súbita de padrão"
+    - "Máquina do tempo = desejo de escapar do tempo linear"
+    - "Fogo eletrizante = insight criativo"
+    - "Asas = liberdade repentina"
+    - "Labirinto de fios = confusão mental"
+  expressao_elevada_vs_sombra:
+    elevada: "Inovador ético, reformador que liberta, que traz novas ideias sem destruir o que importa."
+    sombra: "Tirano da originalidade, rebeldia sem causa, acidente por excesso de risco, 'sou melhor que todos'."
+
+camada_energetica:
+  impressao_mental: "A mente de 'e se?'. Inovação, ruptura de padrão, originalidade. Quando atrito: rebeldia sem causa, ansiedade de liberdade, 'ninguém me entende'."
+  permeacao_emocional: "Choque e excitação. Quando bloqueado: estagnação, sentimento de aprisionamento. Quando solto: entusiasmo, surpresa."
+  manifestacao_externa: "Eventos prováveis de ruptura, invenção, mudança radical, acidente. Trânsitos tendem a trazer surpresas e rupturas."
+  como_guiar_o_astral: "Ajudar a mente a escolher onde ser original — nem toda ruptura é saudável. Urano pede inovação com consciência."
+
+representa:
+  pessoas: ["Inventor", "Reformador", "Cientista", "Hacker", "Rebelde"]
+  eventos: ["Invenção", "Rebelião", "Acidente elétrico", "Mudança radical"]
+  corpo: ["Sistema nervoso", "Tornozelos", "Panturrilhas"]
+
+dignidades_essenciais:
+  domicilio: ["Aquário"]
+  exaltacao: ["Escorpião"]
+  detrimento: ["Leão"]
+  queda: ["Touro"]
+
+combinacoes_exemplo:
+  casa_11:
+    temas: ["amigos", "grupos", "causas", "futuro"]
+    possiveis_efeitos: ["amizades originais", "envolvimento em causas tecnológicas", "desejo de mudança social"]
+    reforcado_por: ["mercurio_conjunto", "ascendente_em_ar"]
+    amenizado_por: ["saturno_conjunto", "sol_conjunto"]
+
+origens_e_divergencias:
+  escola_tradicional:
+    autores: []
+    conceito: "Não tradicional — descoberto em 1781 por Herschel."
+  escola_moderna:
+    autores: [Rudhyar, Green]
+    conceito: "Planeta da inovação, da ruptura, da liberdade e do futuro."
+  por_que_da_divergencia: "Urano é moderno por definição: entrou no mapa astrológico após a Revolução Industrial e a descoberta da eletricidade."

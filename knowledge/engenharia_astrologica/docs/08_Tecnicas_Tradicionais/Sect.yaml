@@ -1,0 +1,60 @@
+﻿status: review
+id: "sect"
+nome: "Sect"
+tradicoes:
+  - "tradicional"
+  - "helenistica"
+  - "medieval"
+tema: "Classificação diurna/noturna como critério de dignidade e interpretação."
+
+essencia:
+  - "Mapa diurno: Sol acima do horizonte; mapa noturno: Sol abaixo."
+  - "Planetas diurnos por default: Sol, Júpiter, Saturno."
+  - "Planetas noturnos por default: Lua, Vênus, Marte."
+  - "Mercúrio é híbrido: depende da posição relativa ao Sol."
+
+origens_e_divergencias:
+  tradicional: "A seita é princípio helenístico de afinidade entre carta diurna/noturna, luminares e planetas. Ela é uma condição entre outras, não sinônimo de dignidade essencial ou de saúde."
+  moderna: "Foi retomada por linhas tradicionais contemporâneas; grande parte da astrologia moderna não a utiliza."
+  nota: "Mercúrio exige regra explícita: muitos autores o consideram diurno quando oriental/matutino e noturno quando ocidental/vespertino; convenções diferem."
+
+camada_energetica:
+  impressao_mental: "A seita organiza a adequação relativa dos planetas ao regime de luz da carta; não é tipologia psicológica de extroversão."
+  permeacao_emocional: "Pode informar uma leitura tradicional de suporte/contrariedade, sempre junto a dignidades e aspectos."
+  manifestacao_externa: "Não prediz por si vida pública/privada ou eventos preferenciais."
+  como_guiar_o_astral: "Mostrar a regra de cálculo e explicar que seita é um fator de julgamento entre vários."
+
+aplicacao:
+  diurno: "Sol acima do horizonte. Sol, Júpiter e Saturno pertencem à seita diurna; Marte é contrário à seita, com nuances adicionais de hemisfério em autores tradicionais."
+  noturno: "Sol abaixo do horizonte. Lua, Vênus e Marte pertencem à seita noturna; Saturno é contrário à seita, com nuances adicionais."
+  hibrido: "Mercúrio é comum às duas seitas conforme regra de visibilidade/orientalidade escolhida; registrar a convenção usada."
+
+procedimento:
+  - "Determinar dia/noite pela posição do Sol em relação ao horizonte local, com data, local e sistema de casas registrados."
+  - "Aplicar os grupos diurno/noturno e a regra de Mercúrio da escola selecionada."
+  - "Cruzar seita com dignidade, casa, fase, aspecto e condição do planeta; não produzir pontuação universal sem método."
+
+referencias:
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    natureza: "primária histórica"
+    localizador: "Livros I-II; seita e condições planetárias, conferir edição."
+  - autor: "Paulus Alexandrinus"
+    obra: "Introductory Matters"
+    natureza: "primária histórica"
+    localizador: "Seita e classificação planetária; conferir tradução/edição."
+  - autor: "Chris Brennan"
+    obra: "Hellenistic Astrology"
+    natureza: "secundária técnica/historiográfica"
+    localizador: "Capítulos sobre seita e condições planetárias; conferir edição."
+
+validacao_de_fontes:
+  base: "A ficha define seita como regra astronômica/técnica da carta, não como rótulo de personalidade."
+  limite: "O motor não deve chamar planeta fora de seita de doente, mau ou inevitavelmente desafiador."
+
+ver_mais:
+  - "../07_Dignidades/Almuten_Hyleg_Alcocoden.yaml"
+  - "../08_Tecnicas_Tradicionais/Recepcao_Mutua_Dispositores.yaml"
+
+## ✏️ Minhas Anotações
+

@@ -1,0 +1,61 @@
+status: review
+id: "davison"
+nome: "Davison"
+tradicoes:
+  - "moderna ocidental"
+  - "relacional"
+tipo: "mapa relacional derivado"
+escopo_documental:
+  tecnica_historica:
+    - "cálculo da carta do ponto médio real entre dois nascimentos, usando data, hora e lugar medianos"
+  origem_do_metodo: "Método moderno do século XX associado a Ronald C. Davison."
+  camada_simbolica: "Leituras psicológicas, sistêmicas e cármicas podem ser acrescentadas, desde que não substituam o cálculo específico do método."
+referencias:
+  - autor: "Ronald C. Davison"
+    obra: "Synastry: Understanding Human Relations Through Astrology"
+    natureza: "moderna de referência"
+    localizador: "Aurora Press, 1983; relationship horoscope e métodos de comparação"
+  - autor: "Astrodienst Astrowiki"
+    obra: "Davison Relationship Chart"
+    natureza: "referência técnica contemporânea"
+    localizador: "definição do método e distinção em relação ao composite"
+  - autor: "John Townley"
+    obra: "Composite Charts: The Astrology of Relationships"
+    natureza: "comparativa moderna"
+    localizador: "distinção entre composite e outras cartas relacionais; conferir edição"
+validacao_de_fontes:
+  base: "As refer?ncias estruturadas identificam autores e m?todos modernos de compara??o, composto e mapa Davison."
+  escopo: "Sinastria, composite e Davison permanecem m?todos distintos; a falta de precedente id?ntico na Antiguidade n?o autoriza retroproje??o hist?rica."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+tema: "Carta relacional calculada pelo ponto médio real de tempo e lugar entre dois nascimentos."
+
+essencia:
+  - "Usa data, hora e local medianos, não midpoint planetário por planeta."
+  - "Produz uma carta com existência espaço-temporal calculada, diferindo do composite."
+  - "É um método moderno de relacionamento, não uma técnica helenística ou medieval."
+
+origens_e_divergencias:
+  tradicional: "Não pertence ao repertório técnico clássico."
+  moderna: "Método moderno associado a Ronald C. Davison e ao estudo relacional do século XX."
+  nota: "Não tratar Davison como sinônimo de composite; são cartas diferentes, com pressupostos diferentes."
+
+camada_energetica:
+  impressao_mental: "Davison pergunta como a relação se manifesta como acontecimento localizado no tempo e no espaço."
+  permeacao_emocional: "A relação ganha um corpo simbólico mais concreto, como se tivesse uma biografia própria."
+  manifestacao_externa: "Pode ser usada para observar temas, eventos e desenvolvimento do vínculo segundo uma carta relacional específica."
+  como_guiar_o_astral: "Explicar primeiro a diferença de cálculo. Só depois abrir leituras simbólicas, psicológicas ou cármicas."
+
+como_usar: |
+  1. Reunir data, hora e lugar corretos dos dois nascimentos.
+  2. Calcular o ponto médio cronológico entre as duas datas e horas.
+  3. Calcular o ponto médio geográfico entre as duas localidades.
+  4. Erguer a carta para esse instante e esse lugar medianos.
+  5. Ler a carta resultante como mapa relacional próprio, sem confundi-la com composite.
+
+relacoes:
+  ver_tambem:
+    - "sinastria"
+    - "composite_davison"
+    - "mapa_relacionamento"
+
+anotacoes_pessoais: []

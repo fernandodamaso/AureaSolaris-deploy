@@ -1,0 +1,49 @@
+﻿status: draft
+id: "lote_casamento"
+nome: "Parte do Casamento"
+tradicoes:
+  - "helenistica"
+  - "arabe-medieval"
+formula_diurna_f: "Asc + Saturno − Vênus (feminino)"
+formula_diurna_m: "Asc + Vênus − Saturno (masculino)"
+formula_noturna_f: "Asc + Vênus − Saturno"
+formula_noturna_m: "Asc + Saturno − Vênus"
+tema: "Uniões, contratos, parceria estável"
+
+sentido_do_calculo: |
+  Vênus (atração) e Saturno (compromisso/limite) são os dois polos da união.
+  A fórmula mede onde a ATRAÇÃO encontra o COMPROMISSO a partir do Ascendente — o ponto sensível da UNIÃO estável.
+  A inversão diurno/noturno e masculino/feminino reflete quem 'puxa' o compromisso (Saturno) ou quem 'atrai' (Vênus).
+
+origens_e_divergencias:
+  tradicional: "Helenística (Ptolomeu, Vettius Valens) — lotes como pontos matemáticos."
+  moderna: "Evolutiva/moderna (Steven Forrest, Jeffrey Green) — lotes como 'pontos sensíveis da jornada'."
+  nota: "Revisar ao citar — marca a escola usada."
+atlas_simbolico:
+  pessoas_arquetipos: "O parceiro, o cônjuge, o aliado"
+  lugares_fisicos: "Tribunais, templos, locais de parceria"
+  objetos_materia: "Alianças, contratos, documentos de casamento"
+  eventos_tipicos: "Casamentos, contratos, parcerias, união"
+  animais: "Cervo, cisne, pomba"
+  plantas_ervas: "Rosa, violeta, madressilva"
+  metais_pedras: "Cobre, ouro rosa, diamante, esmeralda"
+  cores_sons: "Rosa, verde-claro; notas Lá e Ré"
+  numeros: "6 (harmonia), 7 (justiça), 8 (equilíbrio)"
+  dias_semana: "Sexta-feira (Vênus)"
+  doencas_corpo: "Rins, pele, adrenais"
+  arquetipos_mitologicos: "Hera/Juno, Afrodite/Vênus, Themis"
+  mitos_historias: "O julgamento de Páris; Afrodite e a união"
+  sonhos_simbolos_inconsciente: "Casamentos, alianças, festas, justiça"
+  expressao_elevada_sombra: "Elevada: parceria equilibrada, união consciente | Sombra: dependência, superficialidade"
+
+camada_energetica:
+  impressao_mental: "Onde a mente busca 'o outro' para se comprometer."
+  permeacao_emocional: "Vínculo e o medo de perder liberdade (Saturno na fórmula)."
+  manifestacao_externa: "Eventos prováveis de união/contrato. Arquétipos: os Anéis, a Aliança. Inclinação, não destino."
+  como_guiar_o_astral: "Ler junto com Casa 7 e Vênus — a Parte mostra o 'ponto sensível' da união."
+
+como_usar: "Ler signo/casa/regente para o 'ponto de compromisso'. Em sinastria: onde a Parte de Casamento de um cai no mapa do outro indica atração de compromisso."
+foco_especial:
+  familiar: "Em sinastria, onde a Parte de Casamento de um cai no mapa do outro indica atração de compromisso."
+regente: "Regente do signo onde cai; lido por casa e aspectos."
+

@@ -1,0 +1,58 @@
+id: coascendente_ascendente_polar
+nome: 'Co-Ascendente e Ascendente Polar: variantes de pontos pessoais'
+tipo: angulo_derivado_local
+tradicoes:
+- moderna ocidental
+status: review
+definicao: 'Co-Ascendente e Ascendente Polar são nomes usados para pontos derivados
+  de hora e latitude. Não há uma definição universal: a documentação técnica registra
+  ao menos duas construções diferentes chamadas Co-Ascendente. O nome da ficha, portanto,
+  nunca é suficiente para reproduzir o cálculo.'
+variantes_documentadas:
+  coascendente_de_walter_koch:
+    regra: Tomar a ascensão reta do Fundo do Céu (ARIC) como ARMC, calcular o Ascendente
+      para a latitude natal e tomar a oposição do resultado.
+    observacao: É uma definição distinta da de Munkasey, embora use o mesmo nome.
+  coascendente_de_michael_munkasey:
+    regra: Calcular um Ascendente com o ARMC natal e a latitude complementar indicada
+      pelo sistema de Munkasey (90° menos a latitude natal), mantendo explícita a
+      convenção de hemisfério adotada pelo programa.
+  ascendente_polar_de_munkasey:
+    regra: Oposto ao Co-Ascendente definido por Walter Koch, segundo a documentação
+      do Swiss Ephemeris.
+    nao_confundir_com: Não é o Ascendente calculado no polo geográfico; essa construção
+      produziria outro resultado.
+dados_e_reprodutibilidade:
+- Data/hora em UTC, latitude e longitude, escala de tempo, ARMC, obliquidade, variante
+  e software/versão.
+- Registrar se a latitude foi inserida com sinal, complemento absoluto ou convenção
+  particular do software.
+- Verificar a saída em segundo programa ou por cálculo documentado antes de interpretar.
+uso_e_limites:
+- São pontos adicionais modernos, não ângulos clássicos equivalentes a Ascendente
+  ou MC.
+- A expressão 'pontos pessoais sensíveis' designa um sistema moderno específico; não
+  implica uso helenístico, medieval ou horário.
+- 'Não existe orbe universal: a escola, o contexto e o tipo de contato devem ser registrados.'
+referencias:
+- autor: Swiss Ephemeris
+  obra: General Documentation, §6.3
+  natureza: definições geométricas, variantes e distinções de nomenclatura
+  url: https://www.astro.com/swisseph/swisseph.htm
+- autor: Michael Munkasey
+  obra: The Astrological Thesaurus
+  natureza: autor associado aos Personal Sensitive Points; confirmar edição e páginas
+    antes de citar regras interpretativas
+validacao_de_fontes:
+  base: "As refer?ncias estruturadas distinguem defini??o geom?trica, c?lculo reprodut?vel e uso interpretativo moderno."
+  escopo: "Pontos calculados e seus orbes dependem de conven??o declarada; interpreta??es modernas s?o notas de estudo, n?o consenso universal."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+origens_e_divergencias:
+  tradicional: Conceito/técnica presente na tradição astrológica ocidental.
+  moderna: Possível ressignificação contemporânea.
+  nota: Rotular a escola quando divergir.
+camada_energetica:
+  impressao_mental: Campo conceitual do tema/técnica.
+  permeacao_emocional: Como o tema toca a experiência subjetiva.
+  manifestacao_externa: Como aparece em comportamentos e eventos.
+  como_guiar_o_astral: Como usar este conhecimento na leitura prática.

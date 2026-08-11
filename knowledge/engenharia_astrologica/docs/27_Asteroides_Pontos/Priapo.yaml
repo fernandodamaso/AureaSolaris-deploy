@@ -1,0 +1,63 @@
+id: priapo
+nome: 'Priapo: perigeu lunar e variantes de cálculo'
+tipo: ponto_orbital_lunar
+tradicoes:
+- moderna ocidental
+- cálculo astronômico de apsides lunares
+status: review
+definicao: 'Priapo é o nome astrológico moderno mais comum para o perigeu lunar: a
+  direção orbital em que a Lua está mais próxima da Terra. Não é um corpo celeste.
+  Sua posição depende de qual modelo de apside foi escolhido e não deve ser presumida
+  como a oposição exata de toda variante chamada Lilith.'
+variantes_que_devem_ser_declaradas:
+  perigeu_medio: Oposto ao apogeu lunar médio; elemento médio da órbita lunar.
+  perigeu_osculante: Oposto ao apogeu osculante no modelo de elipse instantânea. A
+    osculação da órbita lunar produz oscilações mensais que a documentação técnica
+    trata como efeito importante do modelo de dois corpos.
+  perigeu_natural_ou_interpolado: Variante calculada a partir dos eventos efetivos
+    de perigeu; no algoritmo natural/interpolado o perigeu e o apogeu normalmente
+    não são opostos exatos. É a variante que alguns programas identificam como Priapo.
+procedimento_de_calculo:
+- 'Registrar efeméride, versão, data/hora, escala de tempo e a variante: média, osculante
+  ou natural/interpolada.'
+- Não deduzir a posição apenas acrescentando 180° à Lilith sem antes identificar qual
+  Lilith foi calculada.
+- Guardar longitude e latitude eclípticas quando a técnica usar declinação.
+- Ao comparar programas, comparar primeiro a variante, o centro de cálculo e a época;
+  o glifo não basta.
+relacoes_e_limites:
+  lilith: Lilith/Lua Negra pode designar apogeu médio, apogeu osculante, apogeu natural
+    ou outros objetos; Priapo só é seu oposto automático na variante correspondente
+    que realmente forme um eixo de apsides.
+  astronomia: Perigeu e apogeu descrevem extremos da distância lunar; não fornecem,
+    por si, uma interpretação simbólica.
+  uso_moderno: Leituras de polaridade, excesso ou incorporação pertencem a autores
+    e escolas modernas e devem ser atribuídas, não universalizadas.
+camada_linguistica_e_historica:
+  termo: Priapo é um nome mitológico adotado em literatura astrológica moderna; não
+    é a denominação astronômica do ponto.
+  cuidado: A etimologia ou a figura mitológica não prova uma significação técnica
+    natal.
+referencias:
+- autor: Swiss Ephemeris
+  obra: General Documentation, §§2.2.1 e 2.2.4
+  natureza: definição, variantes e implementação de apogeu/perigeu lunar
+  url: https://www.astro.com/swisseph/swisseph.htm
+- autor: Dieter Koch; Bernhard Rindgen
+  obra: Lilith und Priapus
+  ano: 2000
+  natureza: referência técnica indicada pela documentação do Swiss Ephemeris; confirmar
+    edição e páginas
+validacao_de_fontes:
+  base: "As refer?ncias estruturadas distinguem defini??o geom?trica, c?lculo reprodut?vel e uso interpretativo moderno."
+  escopo: "Pontos calculados e seus orbes dependem de conven??o declarada; interpreta??es modernas s?o notas de estudo, n?o consenso universal."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+origens_e_divergencias:
+  tradicional: Conceito/técnica presente na tradição astrológica ocidental.
+  moderna: Possível ressignificação contemporânea.
+  nota: Rotular a escola quando divergir.
+camada_energetica:
+  impressao_mental: Campo conceitual do tema/técnica.
+  permeacao_emocional: Como o tema toca a experiência subjetiva.
+  manifestacao_externa: Como aparece em comportamentos e eventos.
+  como_guiar_o_astral: Como usar este conhecimento na leitura prática.

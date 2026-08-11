@@ -1,0 +1,57 @@
+status: review
+id: "lote_eros"
+nome: "Parte de Eros"
+tradicoes:
+  - "helenistica"
+  - "arabe-medieval"
+formula_diurna: "Asc + Vênus − Espírito"
+formula_noturna: "Asc + Espírito − Vênus"
+tema: "Desejo, amor, atração"
+
+sentido_do_calculo: |
+  Vênus é o DESEJO/atração; o Espírito é a direção intencional.
+  A fórmula mede a distância entre 'o que atrai' e 'para onde a pessoa vai' — ou seja, onde o desejo se encaixa (ou não) na jornada.
+  DIURNO: Asc+Vênus−Espírito (o desejo guia a partir da intenção). NOTURNO: Asc+Espírito−Vênus (a intenção busca o desejo).
+
+origens_e_divergencias:
+  tradicional: "Eros aparece em diferentes tradições helenísticas com fórmulas não idênticas; a ficha usa a variante planetária de Paulus, vinculada a Vênus e Espírito."
+  moderna: "Leituras de romance, desejo ou 'contrato de alma' precisam declarar autoria e não são equivalentes universais de Eros."
+  nota: "Exibir fonte da fórmula; não extrapolar o lote para outra pessoa ou resultado relacional literal."
+
+referencias:
+  - autor: "Paulus Alexandrinus"
+    obra: "Introductory Matters"
+    edicao_ou_traducao: "Dorian Gieseler Greenbaum, tradução inglesa"
+    natureza: "fonte primária helenística"
+    localizador: "Capítulo 23, lote de Eros"
+  - autor: "Dorian Gieseler Greenbaum"
+    obra: "From Love to Desire: The Lot of Eros in Hellenistic Astrology"
+    ano: 2015
+    natureza: "secundária filológica"
+    localizador: "Fórmulas Valens/Firmicus e Paulus; divergências de transmissão"
+atlas_simbolico:
+  pessoas_arquetipos: "O amante, o apaixonado, o que ama"
+  lugares_fisicos: "Jardins, templos do amor, locais de romance"
+  objetos_materia: "Anéis, corações, flores, cartas de amor"
+  eventos_tipicos: "Paixões, romances, casamentos, encontros"
+  animais: "Cisne, pomba, golfinho"
+  plantas_ervas: "Rosa, violeta, madressilva"
+  metais_pedras: "Cobre, ouro rosa, diamante, esmeralda"
+  cores_sons: "Rosa, verde-claro; notas Lá e Ré"
+  numeros: "6 (amor), 7 (atração), 8 (paixão)"
+  dias_semana: "Sexta-feira (Vênus)"
+  doencas_corpo: "Rins, sistema urinário, adrenais"
+  arquetipos_mitologicos: "Eros/Cupido, Afrodite/Vênus"
+  mitos_historias: "Eros e Psique; Afrodite e o amor"
+  sonhos_simbolos_inconsciente: "Corações, flores, romance, paixão"
+  expressao_elevada_sombra: "Elevada: amor generoso, paixão consciente | Sombra: obsessão, ciúme, possessividade"
+
+camada_energetica:
+  impressao_mental: "O que a mente deseja como 'outro' — o impulso de amor/atração."
+  permeacao_emocional: "Paixão e o risco de confundir desejo com vínculo."
+  manifestacao_externa: "Eventos prováveis de encontros e atração. Arquétipos: o Flecha de Cupido, o Imã. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a distinguir Eros (desejo) de compromisso (Casa 7 / Casamento)."
+
+como_usar: "Ler onde cai para ver o 'ponto sensível do desejo'. Cruzar com a Parte de Casamento para entender se atração vira união."
+regente: "Regente do signo onde cai; lido por casa e aspectos."
+

@@ -1,0 +1,121 @@
+﻿status: draft
+id: "juno"
+nome: "Juno (Asteroide 3 Juno)"
+tradicoes:
+  - "moderna ocidental"
+  - "pontos calculados"
+tema: "Parceria, igualdade, contrato, sombra do casamento"
+
+essencia:
+  - "Parceria igualitária"
+  - "Contrato"
+  - "Fidelidade"
+  - "Sombra do casamento"
+
+atlas_simbolico:
+  pessoas_arquetipos:
+    - "Esposa/marido leal"
+    - "Advogado de família"
+    - "Parceiro de negócios"
+    - "Cônjuge ciumento"
+    - "Mediador de divórcio"
+    - "Pessoa que não se casa (rejeição)"
+  lugares:
+    - "Cartório"
+    - "Igreja (casamento)"
+    - "Fórum (divórcio)"
+    - "Escritório de advocacia"
+    - "Sala de tribunal"
+    - "Casa de festas"
+  objetos_materia:
+    - "Aliança"
+    - "Contrato"
+    - "Caneta de ouro"
+    - "Balança da justiça"
+    - "Convite de casamento"
+    - "Prenupcial"
+    - "Foto de família"
+  eventos_tipicos:
+    - "Casamento"
+    - "Divórcio"
+    - "Assinatura de contrato"
+    - "Ciúme"
+    - "Infidelidade"
+    - "Sociedade empresarial"
+    - "Mediação de conflito"
+  animais:
+    - "Cisne (fidelidade)"
+    - "Pavão (juno = pavão)"
+    - "Lobo (parceria)"
+    - "Águia (contrato de poder)"
+    - "Raposa (astúcia conjugal)"
+  plantas_ervas:
+    - "Rosa branca (casamento)"
+    - "Hera (união)"
+    - "Madressilva"
+    - "Oliveira (paz)"
+    - "Videira (união)"
+  metais_pedras:
+    - "Ouro branco"
+    - "Platina"
+    - "Diamante (aliança)"
+    - "Jade"
+    - "Turquesa azul"
+  cores_sons:
+    cores: ["Branco-casamento", "Azul-céu", "Verde-esperança", "Ouro-branco"]
+    sons: ["Votos de casamento", "Sino de casamento", "Assinatura de caneta", "Choro de noiva"]
+  numeros: [3, 6, 7, 12, 21]
+  dias_semana: ["Sexta-feira (compartilhado com Vênus)"]
+  doencas_corpo:
+    doencas: ["Problemas renais (ciúme)", "Doenças sexualmente transmissíveis (infidelidade)"]
+    partes_corpo: ["Rins", "Lombar", "Órgãos genitais"]
+  arquetipos_mitologicos:
+    - "Juno/Hera (deusa do casamento)"
+    - "Hera (ciúme divino)"
+    - "Pavão de Juno"
+  mitos_historias:
+    - "Juno e Júpiter (casamento divino)"
+    - "Hera perseguindo amantes de Zeus (ciúme destrutivo)"
+    - "Juno como deusa do parto (fertilidade matrimonial)"
+  sonhos_inconsciente:
+    - "Casamento = desejo de união estável"
+    - "Divórcio = medo de perder vínculo"
+    - "Aliança quebrada = traição"
+    - "Cartório = formalização de relação"
+  expressao_elevada_vs_sombra:
+    elevada: "Parceiro leal, que honra o contrato com presença, não só papel."
+    sombra: "Cônjuge ciumento, obsessão por fidelidade, casamento por status, 'eu te amo se você for meu'."
+
+camada_energetica:
+  impressao_mental: "A mente de 'como eu me uno?'. Parceria, igualdade, contrato. Quando atrito: ciúme, possessividade, 'se eu não controlo, não amo'."
+  permeacao_emocional: "Desejo de fusão estável. Quando bloqueado: medo de abandono, solidão a dois. Quando solto: parceria madura."
+  manifestacao_externa: "Eventos prováveis de casamento, divórcio, contrato, sociedade. Trânsitos marcam compromissos ou rupturas."
+  como_guiar_o_astral: "Ajudar a mente a ver que união não é posse: Juno pede igualdade, não fusão; contrato, não corrente."
+
+representa:
+  pessoas: ["Esposo/marido", "Parceiro de negócios", "Advogado"]
+  eventos: ["Casamento", "Divórcio", "Assinatura", "Sociedade"]
+  corpo: ["Rins", "Lombar", "Órgãos genitais"]
+
+dignidades_essenciais:
+  domicilio: ["Libra (moderno)"]
+  exaltacao: ["Peixes"]
+  detrimento: ["Áries"]
+  queda: ["Virgem"]
+
+combinacoes_exemplo:
+  casa_7:
+    temas: ["casamento", "parceria", "inimigos abertos"]
+    possiveis_efeitos: ["união estável", "parceiro igualitário", "ciúmes"]
+    reforcado_por: ["venus_conjunto", "lua_conjunto"]
+    amenizado_por: ["marte_aflito", "plutao_conjunto"]
+
+origens_e_divergencias:
+  escola_tradicional:
+    autores: []
+    conceito: "Não tradicional — descoberto em 1804."
+  escola_moderna:
+    autores: [Demetra George, Liz Greene]
+    conceito: "Planeta da parceria igualitária, do contrato, do casamento como espelho."
+  por_que_da_divergencia: "Juno é moderna por definição: entrou no mapa no século XIX, junto com os movimentos feministas."
+

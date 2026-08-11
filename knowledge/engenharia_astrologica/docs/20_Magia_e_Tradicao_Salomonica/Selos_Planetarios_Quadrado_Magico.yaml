@@ -1,0 +1,49 @@
+status: review
+id: "selos_planetarios_quadrado_magico"
+nome: "Selos Planetários e Quadrado Mágico"
+tradicoes:
+  - "renascentista"
+  - "salomonica"
+  - "hermetica"
+tema: "Símbolos salomônicos/planetários para construção de ferramentas mágicas."
+
+essencia:
+  - "Selos e caracteres planetários são gravuras e diagramas que certas fontes mágicas vinculam a planetas; as atribuições dependem do texto e da edição."
+  - "Quadrado Mágico: tabela numérica com propriedades planetárias/temporais."
+  - "Usados em eleições, talismãs, horóscopos operativos."
+
+origens_e_divergencias:
+  tradicional: "Agrippa, Picatrix e textos salomônicos apresentam repertórios distintos; não devem ser reduzidos a uma única lista."
+  moderna: "Uso meditativo ou decorativo é releitura contemporânea, não equivalência histórica automática."
+  nota: "Classificar como história das correspondências mágicas e registrar o texto de origem de cada figura; não é técnica de julgamento."
+
+referencias:
+  - autor: "Heinrich Cornelius Agrippa"
+    obra: "Three Books of Occult Philosophy"
+    natureza: "fonte primária renascentista"
+    localizador: "Livro II, números, quadrados e caracteres planetários; conferir edição"
+  - autor: "Dan Attrell e David Porreca (trad.)"
+    obra: "Picatrix: A Grimoire of Astrological Magic"
+    ano: 2019
+    natureza: "fonte primária traduzida"
+    localizador: "Imagens, eleições e talismãs nos livros correspondentes"
+
+camada_energetica:
+  impressao_mental: "Ver símbolos como chaves de ativação do padrão planetário."
+  permeacao_emocional: "Reverência, concentração, intencionalidade."
+  manifestacao_externa: "Uso em horóscopos eleitorais, talismãs, práticas guiadas."
+  como_guiar_o_astral: "O símbolo organiza a intenção, mas o timing do mapa continua sendo a estrutura."
+
+elementos:
+  selos:
+    funcao: "Ativar a frequência planetária de forma visual/sensível."
+    uso: "Meditação, papel, sigilos."
+  quadrado_magico:
+    funcao: "Estrutura numérica que materializa energia planetária no tempo."
+    uso: "Construção de talismãs, escolha de datas."
+
+ver_mais:
+  - "../20_Magia_e_Tradicao_Salomonica/magia_salomonica.yaml"
+
+## ✏️ Minhas Anotações
+

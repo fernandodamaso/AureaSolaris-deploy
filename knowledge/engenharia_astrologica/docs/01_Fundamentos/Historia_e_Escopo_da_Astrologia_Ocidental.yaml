@@ -1,0 +1,59 @@
+status: review
+id: "historia_escopo_astrologia_ocidental"
+nome: "História e Escopo da Astrologia Ocidental"
+tipo: "fundamento histórico e editorial"
+tradicao_primaria: ["historiográfica", "tradicional", "moderna"]
+
+escopo:
+  definicao_operacional: "Mapa histórico mínimo para situar as técnicas do corpus sem reduzir tradições diferentes a uma linhagem única e homogênea."
+  inclui:
+    - "Antecedentes mesopotâmicos, formação helenística, transmissões em árabe e latim, renascimento e correntes modernas ocidentais."
+    - "Distinção entre textos históricos, reconstruções acadêmicas e usos contemporâneos."
+  nao_inclui:
+    - "Alegação de que todas as escolas ocidentais compartilham as mesmas regras ou pressupostos."
+    - "Validação científica de alegações interpretativas astrológicas."
+  exclusoes_do_projeto:
+    - "Astrologia indiana/Jyotisha, chinesa, zodíaco sideral e escolas Uraniana/Hamburgo como campos de estudo."
+
+fundamento:
+  descricao: "A astrologia ocidental reúne práticas e textos produzidos em contextos diferentes. O corpus usa 'ocidental' como recorte editorial, não como rótulo para apagar mediações mesopotâmicas, gregas, árabes, persas, latinas ou modernas."
+  contexto_historico: "A documentação mesopotâmica preserva observação, cálculo e divinação celeste; o horóscopo e diversas técnicas recebem formulações helenísticas; materiais são traduzidos, adaptados e debatidos em ambientes árabes, latinos, renascentistas e modernos. Cada ficha deve identificar o contexto do qual está falando."
+
+procedimento:
+  pre_requisitos:
+    - "Nomear o autor, a obra, a data/edição ou a fonte quando se fizer uma atribuição histórica."
+  passos:
+    - "Classificar a afirmação como fonte primária, reconstrução historiográfica ou interpretação contemporânea."
+    - "Indicar se o uso é tradicional, psicológico, humanista, evolutivo, hermético ou sistêmico."
+  parametros_de_calculo: []
+
+uso_interpretativo:
+  pergunta_que_ajuda_a_responder:
+    - "De qual escola vem esta técnica e quais pressupostos ela carrega?"
+  como_ponderar: "A origem de uma técnica orienta seu uso, mas não substitui a análise técnica do mapa nem autoriza misturar escolas sem aviso."
+  limites:
+    - "Cronologias resumidas não substituem estudo das obras e de suas traduções."
+    - "A relação entre tradições deve ser descrita com fontes, não presumida por semelhança simbólica."
+
+divergencias_de_tradicao:
+  consenso: "Há ampla diversidade de práticas sob o nome de astrologia ocidental."
+  divergencias:
+    - "A tradição histórica privilegia técnicas e textos situados; leituras modernas podem priorizar linguagem psicológica ou espiritual."
+    - "Hermetismo, Cabala, alquimia e tradições salomônicas requerem tratamento histórico próprio; não são sinônimos de astrologia helenística ou medieval."
+  decisao_editorial: "Cada ficha deve declarar sua tradição primária e explicitar quando uma associação é moderna, devocional ou especulativa."
+
+referencias:
+  primarias:
+    - "Ptolemaeus. Tetrabiblos. Tradução de F. E. Robbins. Loeb Classical Library, 1940."
+    - "Vettius Valens. The Anthology. Tradução de Mark Riley, 2010."
+  secundarias:
+    - "Rochberg, Francesca. The Heavenly Writing: Divination, Horoscopy, and Astronomy in Mesopotamian Culture. Cambridge University Press, 2004."
+    - "Tester, Jim. A History of Western Astrology. Boydell Press, 1987."
+    - "Brown, David. The Cuneiform Conception of Celestial Space and Time. Cambridge Archaeological Journal 10(1), 2000. DOI: 10.1017/S0959774300000044."
+  tecnicas: []
+
+relacoes:
+  depende_de: ["zodiaco_tropical", "esfera_celeste_coordenadas"]
+  ver_tambem: ["tradicoes_antigas", "autores_e_bibliografia", "metodologia_de_leitura"]
+
+anotacoes_pessoais: []

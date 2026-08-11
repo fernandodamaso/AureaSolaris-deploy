@@ -1,0 +1,3 @@
+# Editorial source snapshots are preserved byte-for-byte, including Markdown
+# hard breaks and legacy trailing whitespace required by their source format.
+knowledge/engenharia_astrologica/** -whitespace

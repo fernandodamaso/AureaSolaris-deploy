@@ -1,0 +1,72 @@
+id: distribuicoes_por_termos
+nome: Distribuições pelos termos (direção pelos limites)
+tipo: tecnica_de_senhores_do_tempo_e_direcao
+tradicoes:
+- helenística e tardo-antiga
+- medieval e renascentista
+- tradicional contemporânea
+status: review
+definicao: Técnica que dirige um ponto significador — com frequência o Ascendente
+  — através dos termos ou limites planetários. Cada termo confere um regente de período.
+  Ela combina divisão desigual do zodíaco e movimento direcional; por isso, exige
+  tanto uma tabela de termos quanto um método de direção.
+elementos_necessarios:
+  termos: Escolher termos egípcios, ptolomaicos ou outra tabela explicitamente atribuída;
+    elas não são intercambiáveis.
+  ponto_dirigido: Ascendente, hyleg ou outro significador conforme a escola; a escolha
+    muda o sentido da técnica.
+  medida_de_tempo: Ascensões e arcos do método adotado convertem a passagem pelo termo
+    em duração; não usar comprimento eclíptico simples sem declarar a simplificação.
+  distribuidor: Regente do termo atravessado pelo ponto dirigido.
+  participante: Em algumas escolas, fator que aspecta ou participa da distribuição;
+    o vocabulário deve seguir o autor.
+procedimento:
+- Fixar os dados natais, a tabela de termos e a espécie de direção.
+- Selecionar e justificar o significador dirigido conforme o assunto.
+- Calcular a passagem sucessiva pelos limites, anotando grau de entrada, saída, datas
+  e regentes.
+- Avaliar o distribuidor por sua condição natal, casas, regências, aspectos e recepções.
+- Integrar participantes/direções concorrentes somente se a fonte os prescrever.
+- Comparar com revolução ou outra técnica sem converter a distribuição em equivalência
+  de trânsito.
+nao_confundir_com:
+- 'Dignidade por termos: propriedade natal de um planeta situado num limite.'
+- 'Direção primária ampla: as distribuições são uma aplicação específica que usa termos.'
+- 'Firdária e decênios: sistemas de senhores do tempo com outras sequências e períodos.'
+camada_simbolica:
+  imagem: O significador percorre fronteiras planetárias irregulares; cada limite
+    funciona como uma administração temporal.
+  linguistica: Termos e limites traduzem horia/oria, 'fronteiras'; a irregularidade
+    da divisão é elemento técnico, não erro de cálculo.
+divergencias_e_limites:
+- Tabelas de termos e métodos de direção produzem calendários diferentes; ambos devem
+  constar no resultado.
+- A atribuição de Ascendente como ponto padrão é frequente, mas não universal.
+- Grande parte do ensino contemporâneo resume a técnica; a base deve conservar fontes
+  e variantes em vez de uma única tabela descontextualizada.
+referencias:
+- autor: Ptolemaeus
+  obra: Tetrabiblos
+  natureza: fonte clássica para limites/termos e técnicas correlatas; conferir livro/capítulo
+    na edição
+- autor: Benjamin N. Dykes
+  obra: Distributions Through the Bounds
+  natureza: material técnico contemporâneo; especificar edição/gravação no estudo
+- autor: Kepler College
+  obra: Hellenistic Timing Techniques
+  natureza: mapeamento pedagógico que inclui circumambulação dos termos
+  url: https://www.keplercollege.org/certificates/hellenistic-timing-techniques/
+validacao_de_fontes:
+  base: "As refer?ncias estruturadas identificam a linhagem hist?rica, moderna ou astron?mica pertinente a esta t?cnica preditiva."
+  escopo: "Uma implementa??o deve declarar edi??o, algoritmo, efem?ride, escala de tempo e variante de escola; esta exig?ncia ? uma regra de reprodu??o, n?o uma lacuna de fonte."
+  limite: "A ficha permanece em review e n?o converte hip?tese, aproxima??o pedag?gica ou releitura moderna em previs?o determinista."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+origens_e_divergencias:
+  tradicional: Conceito/técnica presente na tradição astrológica ocidental.
+  moderna: Possível ressignificação contemporânea.
+  nota: Rotular a escola quando divergir.
+camada_energetica:
+  impressao_mental: Campo conceitual do tema/técnica.
+  permeacao_emocional: Como o tema toca a experiência subjetiva.
+  manifestacao_externa: Como aparece em comportamentos e eventos.
+  como_guiar_o_astral: Como usar este conhecimento na leitura prática.

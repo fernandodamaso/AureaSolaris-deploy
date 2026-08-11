@@ -1,0 +1,59 @@
+status: review
+id: "dias_da_semana"
+nome: "Dias da Semana Planetários"
+tradicoes:
+  - "tradicional"
+  - "aplicada"
+tema: "Cada dia da semana é regido por um planeta (origem dos nomes)"
+
+essencia:
+  - "Domingo = Sol (Sunday/Sonntag)"
+  - "Segunda = Lua (Monday/Montag)"
+  - "Terça = Marte (Tuesday/Tiwaz)"
+  - "Quarta = Mercúrio (Wednesday/Woden)"
+  - "Quinta = Júpiter (Thursday/Thor)"
+  - "Sexta = Vênus (Friday/Frigg)"
+  - "Sábado = Saturno (Saturday/Sonnabend)"
+
+origens_e_divergencias:
+  tradicional: "A sucessão semanal deriva da ordem caldaica e da alternância de regentes após vinte e quatro horas planetárias; é distinta de numerologia moderna."
+  moderna: "Associações psicológicas ou mágicas contemporâneas devem ser rotuladas como extensão."
+  nota: "Regente do dia é convenção de calendário astrológico; não determina eventos nem substitui eleição."
+
+referencias:
+  - autor: "Heinrich Cornelius Agrippa"
+    obra: "Three Books of Occult Philosophy"
+    natureza: "fonte renascentista"
+    localizador: "Livro II, dias e horas planetárias; consultar edição"
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    ano: 1647
+    natureza: "fonte primária renascentista"
+    localizador: "Convenções de calendário e tempo; conferir edição"
+atlas_simbolico:
+  pessoas_arquetipos: "O que segue o ritmo, o disciplinado, o que honra o tempo"
+  lugares_fisicos: "Lugares de tempo: relógios, calendários, templos"
+  objetos_materia: "Relógios, calendários, instrumentos de tempo"
+  eventos_tipicos: "Eventos de tempo: ciclos, retornos, ritmos"
+  animais: "Leão (domingo), touro (sexta), etc."
+  plantas_ervas: "Plantas de dia: girassol (domingo), etc."
+  metais_pedras: "Ouro (domingo), cobre (sexta), etc."
+  cores_sons: "Cores de dia: dourado (domingo), etc."
+  numeros: "1 (domingo), 2 (segunda), 3 (terça), etc."
+  dias_semana: "Todos os dias da semana"
+  doencas_corpo: "Sistema nervoso, coração, sistema digestivo"
+  arquetipos_mitologicos: "Helios (domingo), Selene (segunda), Ares (terça), etc."
+  mitos_historias: "Mitologias dos dias da semana"
+  sonhos_simbolos_inconsciente: "Tempo, ciclos, ritmos, dias"
+  expressao_elevada_sombra: "Elevada: tempo consciente, disciplina | Sombra: rigidez, obsessão por tempo"
+
+camada_energetica:
+  impressao_mental: "O dia carrega o 'tempero mental' do planeta regente — a semana é uma rotação dos 7 princípios."
+  permeacao_emocional: "Cada dia tende a ativar a emoção do regente (ex.: segunda = Lua = sensibilidade; sábado = Saturno = seriedade)."
+  manifestacao_externa: "Eventos PROVÁVEIS favorecem a natureza do planeta do dia. Inclinação, não destino."
+  como_guiar_o_astral: "Usar como 'calendário simbólico' — certas ações combinam com certos dias (eleição simples)."
+
+origens: "Astrologia caldeu/babilônica; os nomes germânicos preservam os deuses equivalentes aos planetas."
+foco_especial:
+  infantil: "Criancas sentem o 'clima do dia'; segunda costuma ser dia de sensibilidade maior."
+

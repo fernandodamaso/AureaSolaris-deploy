@@ -1,0 +1,89 @@
+status: review
+id: "revolucao_solar"
+tradicoes:
+  - "helenística"
+  - "árabe/medieval"
+  - "renascentista"
+  - "moderna"
+tipo: "retorno solar e carta anual"
+escopo_documental:
+  tecnica_historica:
+    - "retorno exato do Sol à longitude natal, local do retorno, casas, aspectos e regras anuais da linhagem adotada"
+  variantes: "Local natal, local do aniversário, sistema de casas e técnica de comparação devem ser declarados."
+  camada_moderna: "A leitura de temas psicológicos anuais é uma camada moderna; não substitui o método natal ou a fonte escolhida."
+referencias:
+  - autor: "Abu Ma'shar"
+    obra: "On the Revolutions of the Years of Nativities"
+    natureza: "primária/secundária histórica"
+    localizador: "Annual revolutions, yearly rulers, and judgment logic in the Arabic-medieval lineage"
+  - autor: "Jean-Baptiste Morin de Villefranche"
+    obra: "Astrologia Gallica"
+    natureza: "primária"
+    localizador: "Book XXIII in the chosen edition; keep Morin's annual-return logic separate from generic modern solar-return practice"
+  - autor: "Faculty of Astrological Studies"
+    obra: "Solar return teaching material"
+    natureza: "pedagógica contemporânea"
+    localizador: "Modern pedagogical support for return-chart practice, never a substitute for the historical lineage selected"
+validacao_de_fontes:
+  base: "As refer?ncias estruturadas identificam a linhagem hist?rica, moderna ou astron?mica pertinente a esta t?cnica preditiva."
+  escopo: "Uma implementa??o deve declarar edi??o, algoritmo, efem?ride, escala de tempo e variante de escola; esta exig?ncia ? uma regra de reprodu??o, n?o uma lacuna de fonte."
+  limite: "A ficha permanece em review e n?o converte hip?tese, aproxima??o pedag?gica ou releitura moderna em previs?o determinista."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+nome: "Revolução Solar"
+tema: "Mapa do retorno do Sol ao grau natal — tema do ano."
+
+essencia:
+  - "Momento em que o Sol transita pelo grau e minuto natal."
+  - "Mapa do ano: casas e aspectos indicam temas dominantes."
+  - "Comparar com mapa natal e trânsitos para contexto."
+  - "Revolução Lunar também existe, mas Solar é a mais usada."
+
+origens_e_divergencias:
+  tradicional: "Revoluções anuais aparecem em tradições helenísticas e árabes/medievais; a atribuição precisa a cada autor deve ser conferida no texto primário."
+  moderna: "Técnica popular; validar por aspectos e cúspides, não só por casas."
+  nota: "Revolução não substitui o mapa natal; é camada anual sobreposta."
+
+atlas_simbolico:
+  pessoas_arquetipos: "O renascido, o anual, o ciclo solar"
+  lugares_fisicos: "Lugares de retorno, templos solares, celebrações"
+  objetos_materia: "Calendário, vela, carta anual, diário"
+  eventos_tipicos: "Aniversários, recomeços, marcos anuais"
+  animais: "Leão, falcão, galo, cavalo branco"
+  plantas_ervas: "Girassol, louro, camomila, heliotrópio"
+  metais_pedras: "Ouro, topázio imperial, citrino, diamante"
+  cores_sons:
+    cores: ["Ouro", "amarelo-solar", "laranja", "branco-radiante"]
+    sons: ["Trombeta", "canto coral", "sino solar"]
+  numeros: [1, 6, 10, 19]
+  dias_semana: ["Domingo (Sol)"]
+  doencas_corpo:
+    doencas: ["Coração", "coluna", "olhos"]
+    partes_corpo: ["Coração", "coluna dorsal", "olhos"]
+  arquetipos_mitologicos: ["Apolo", "Hélio", "Rá", "Amaterasu"]
+  mitos_historias: "Retorno anual do Sol; renascimento simbólico; ciclo de luz"
+  sonhos_simbolos_inconsciente: "Sóis, coroas, renascimentos, ciclos"
+  expressao_elevada_sombra: "Elevada: renascimento autêntico, ciclo saudável | Sombra: pressão de 'ano novo eu', frustração por não mudar"
+
+camada_energetica:
+  campo_mental: "Ano como mandala solar; mapa anual sobreposto ao natal."
+  permeacao_emocional: "Renascimento emocional; expectativa vs aceitação."
+  manifestacao_externa: "Eventos PROVÁVEIS na casa do Sol revolucionado; temas do ano por cúspide."
+  como_guiar_o_astral: "Mostrar Revolução Solar como mapa de TEMAS, não como sentença de ano bom/ruim."
+
+tecnicas:
+  momento:
+    regra: "Usar o retorno exato do Sol ao grau natal, no lugar de residência."
+    variacao: "Local de nascimento, residencia ou local fisico no instante sao variantes modernas de localidade; registrar uma unica escolha e nao substitui-la por aniversario civil."
+  leitura:
+    casas: "Casa do Sol Revolucionado = área principal do ano."
+    aspectos: "Aspectos entre planetas revolucionados e natal = ativação de temas."
+    lua_revolucionada: "Lua Revolucionada = clima emocional do ano."
+  limites:
+    regra: "Revolução é camada, não destino. Confirmar com trânsitos/progressões."
+    erro: "Nao usar o aniversario civil como se fosse automaticamente o retorno solar astronomico, nem usar a revolucao como unica base para decisoes radicais."
+
+ver_mais:
+  - "../11_Previsao/Revolucao_Solar.yaml"
+  - "../D_Engenharia_da_Previsao/revolucao_solar.yaml"
+
+## ✏️ Minhas Anotações

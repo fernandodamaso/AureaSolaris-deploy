@@ -1,0 +1,93 @@
+id: ciclo_saturno_jupiter
+nome: Ciclo Saturno–Júpiter e grandes conjunções
+tipo: ciclo_mundano_e_sinodico
+tradicoes:
+- medieval árabe e latina
+- renascentista
+- mundana contemporânea
+status: review
+definicao: Ciclo sinódico formado pelas conjunções, quadraturas e oposições entre
+  Júpiter e Saturno. A conjunção é chamada de grande conjunção na tradição mundana.
+  O ciclo é astronomicamente uma relação recorrente de longitude; as leituras de eras,
+  religiões, dinastias ou elementos pertencem a escolas históricas específicas e não
+  a uma consequência física da conjunção.
+fundamento_astronomico:
+  conjuncao: Ocorre quando as longitudes geocêntricas de Júpiter e Saturno coincidem;
+    há uma grande conjunção aproximadamente a cada 20 anos.
+  fases: Conjunção inicia um ciclo sinódico; quadraturas e oposição são relações angulares
+    posteriores a calcular com data/hora e orbe declarados.
+  retrogradacao: Algumas conjunções podem envolver passagens múltiplas aparentes;
+    registrar a sequência direta/retrógrada/direta.
+  trigonos: A sucessão de grandes conjunções desenha padrões de longo prazo no zodíaco,
+    mas o esquema de triplicidades e suas durações varia entre autores.
+linhas_historicas:
+- Textos árabes e latinos de astrologia histórica usaram grandes conjunções na leitura
+  de períodos coletivos, povos, religiões e dinastias.
+- Abu Ma'shar é fonte central para a astrologia histórica das conjunções; Kepler também
+  elaborou modelos de sucessões Jupiter–Saturno.
+- A prática moderna pode lê-las como ciclos sociais, mas deve separar essa síntese
+  de atribuições históricas textualmente determinadas.
+procedimento_mundano:
+- Calcular a conjunção exata, incluindo ocorrências retrógradas, signo, latitude,
+  visibilidade e localidade da carta.
+- 'Escolher o autor/escola para a hierarquia: conjunções menores, médias/maiores,
+  triplicidades, ingressos ou regentes de período.'
+- Relacionar a conjunção com ingresso, sizígia, eclipse e cartas territoriais somente
+  pelas regras de combinação da tradição escolhida.
+- Definir claramente o escopo coletivo (região, Estado, cultura, período), evitando
+  inferir o mesmo efeito para toda pessoa individual.
+- Separar a série de dados históricos da interpretação astrológica proposta no estudo
+  de casos.
+nao_confundir_com:
+- 'Retorno de Júpiter ou Saturno: retorno de longitude natal individual, não relação
+  entre dois planetas.'
+- 'Conjunção visual especialmente próxima: proximidade angular observável e conjunção
+  eclíptica não são critérios idênticos.'
+- 'Cronocrator individual: a grande conjunção é técnica mundana; usos pessoais são
+  adaptações posteriores.'
+camada_simbolica:
+  imagem: Júpiter e Saturno reabrem periodicamente uma articulação entre expansão,
+    legislação, estrutura e sucessão histórica conforme a linguagem das escolas.
+  curiosidade: O nome 'grande conjunção' é tradicional para Júpiter–Saturno; não significa,
+    em astronomia, que os planetas estejam fisicamente próximos.
+divergencias_e_limites:
+- Durações, elementação das triplicidades, regências de épocas e uso de grandes/médias/menores
+  conjunções não são unânimes.
+- A categoria histórica de 'era' não deve ser usada sem a definição temporal exata
+  do autor.
+- A frequência aproximada de 20 anos é dado de calendário; a significação mundana
+  é uma operação astrológica histórica.
+referencias:
+- autor: Abū Ma'shar
+  obra: 'On Historical Astrology: The Book of Religions and Dynasties (On the Great
+    Conjunctions)'
+  tradutor: Keiji Yamamoto e Charles Burnett
+  editora: Brill
+  natureza: fonte medieval e edição/tradução acadêmica
+  url: https://brill.com/downloadpdf/edcollbook/title/17142.pdf
+- autor: Johannes Kepler
+  obra: De Stella Nova
+  ano: 1606
+  natureza: fonte renascentista/primeira modernidade sobre o padrão das conjunções
+- autor: Astrodienst
+  obra: Great Conjunction
+  natureza: referência moderna resumida de periodicidade
+  url: https://www.astro.com/astrowiki/en/Great_Conjunction
+- autor: NASA
+  obra: The 'Great' Conjunction of Jupiter and Saturn
+  natureza: contexto astronômico de conjunções e observação
+  url: https://www.nasa.gov/solar-system/the-great-conjunction-of-jupiter-and-saturn/
+validacao_de_fontes:
+  base: "As refer?ncias estruturadas identificam a linhagem hist?rica, moderna ou astron?mica pertinente a esta t?cnica preditiva."
+  escopo: "Uma implementa??o deve declarar edi??o, algoritmo, efem?ride, escala de tempo e variante de escola; esta exig?ncia ? uma regra de reprodu??o, n?o uma lacuna de fonte."
+  limite: "A ficha permanece em review e n?o converte hip?tese, aproxima??o pedag?gica ou releitura moderna em previs?o determinista."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+origens_e_divergencias:
+  tradicional: Conceito/técnica presente na tradição astrológica ocidental.
+  moderna: Possível ressignificação contemporânea.
+  nota: Rotular a escola quando divergir.
+camada_energetica:
+  impressao_mental: Campo conceitual do tema/técnica.
+  permeacao_emocional: Como o tema toca a experiência subjetiva.
+  manifestacao_externa: Como aparece em comportamentos e eventos.
+  como_guiar_o_astral: Como usar este conhecimento na leitura prática.

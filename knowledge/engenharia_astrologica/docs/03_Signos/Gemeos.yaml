@@ -1,0 +1,86 @@
+status: review
+id: "gemeos"
+nome: "Gêmeos"
+tradicoes:
+  - "helenística"
+  - "medieval"
+  - "renascentista"
+  - "moderna (somente camadas explicitamente modernas)"
+escopo_documental:
+  tecnica_historica:
+    - "elemento, modalidade, regência, dignidade e estrutura zodiacal"
+    - "divergências modernas de regência ou leitura entram como nota explícita, sem substituir silenciosamente a camada histórica"
+  camadas_modernas: "Atlas simbólico, Tarot, correspondências médicas e releituras contemporâneas permanecem separados da regra histórica e devem ser apresentados como camada interpretativa rotulada."
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "primária"
+    localizador: "Livro I, capítulos sobre signos, qualidades e regências"
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    natureza: "primária"
+    localizador: "Livros I–II, passagens sobre signos e regentes"
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    natureza: "primária"
+    localizador: "Livro I, descrição dos signos e significadores"
+validacao_de_fontes:
+  base: "A regra zodiacal hist?rica ? sustentada por Ptolomeu, Valens e Lilly, nas refer?ncias estruturadas da ficha."
+  escopo: "Tarot, Atlas simb?lico, mitologia, correspond?ncias m?dicas e psicologia s?o camadas de estudo rotuladas; n?o s?o consenso nem substituem a regra hist?rica."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+elemento: "Ar"
+modalidade: "Mutável"
+regente: "Mercúrio"
+
+origens_e_divergencias:
+  tradicional: "Mercúrio (comunicação, curiosidade, dualidade)."
+  moderna: "Mercúrio (mesmo). Sem divergência significativa."
+  nota: "Regência unânime."
+
+essencia:
+  - "Comunicação"
+  - "Curiosidade"
+  - "Dualidade"
+
+simbologia_elemento:
+  elemento: "Ar"
+  modalidade: "Mutável"
+  simbolo: "Corrente de ar / Vento que troca informações"
+  analogia: "Ar Mutável — como o vento que carrega sementes e notícias."
+  porque: "Ar Mutável é o ar em MOVIMENTO constante: troca, dispersão, curiosidade. Gêmeos é o terceiro signo, onde a energia se diversifica em múltiplas direções. O vento representa a mente que navega entre ideias sem se fixar."
+atlas_simbolico:
+  pessoas_arquetipos: "Mensageiro, escritor, jornalista, vendedor, estudante, criança curiosa"
+  lugares_fisicos: "Mercados, escolas, bibliotecas, ruas movimentadas, cruzamentos, estações"
+  objetos_materia: "Livros, cartas, telefones, bilhetes, documentos, instrumentos de escrita"
+  eventos_tipicos: "Visitas, mudanças curtas, negociações, aulas, conversas, notícias"
+  animais: "Macaco, raposa, papagaio, esquilo, cão de caça, borboleta"
+  plantas_ervas: "Lavanda, menta, verbena, hera, madressilva, noz-moscada"
+  metais_pedras: "Mercúrio (metal), ágata, citrino, olivina, pedra da lua"
+  cores_sons: "Amarelo, cinza, verde-claro; notas Mi e Lá; tamborim, gaita, rádio"
+  numeros: "3 (comunicação trina), 5 (cinco sentidos), 8 (duplicidade)"
+  dias_semana: "Quarta-feira (dia de Mercúrio)"
+  doencas_corpo: "Pulmões, braços, mãos, sistema nervoso periférico, ansiedade, insônia"
+  arquetipos_mitologicos: "Hermes/Mercúrio, Apolo, Atena, Castor e Pólux"
+  mitos_historias: "Hermes mensageiro dos deuses; Os gêmeos Castor e Pólux (constelação de Gêmeos)"
+  sonhos_simbolos_inconsciente: "Cartas, bilhetes, espelhos, estradas, crianças, cães"
+  expressao_elevada_sombra: "Elevada: comunicação clara, versatilidade, aprendizado contínuo | Sombra: fofoca, superficialidade, duplicidade, mentira"
+
+tarot:
+  carta: "Os Enamorados"
+  explicacao: "Carta 6 — escolha, comunicação, dualidade. Gêmeos são os Enamorados porque ambos representam a mente que hesita entre dois caminhos e precisa escolher com o coração, não só com a lógica."
+
+camada_energetica:
+  impressao_mental: "A mente que salta e nomeia. Curiosidade ágil, troca constante. Quando atrito: dispersão, fofoca, ansiedade mental."
+  permeacao_emocional: "Leveza e variação. Dificuldade de sustentar uma única emoção por muito tempo."
+  manifestacao_externa: "Eventos prováveis de viagens curtas, estudos, notícias, redes. Trânsitos mexem na comunicação e no entorno."
+  como_guiar_o_astral: "Ajudar a pessoa a aprofundar o que só roça. Gêmeos brilha quando conecta, mas precisa de foco."
+
+decanatos:
+  - "0-10: Gêmeos (Mercúrio) — palavra e agilidade"
+  - "10-20: Libra (Vênus) — relação e equilíbrio"
+  - "20-30: Aquário (Saturno) — originalidade e rede"
+
+foco_especial:
+  infantil: "A criança Gêmeos aprende falando. Precisa de estímulo mental e contato com irmãos/colegas."
+  familiar: "O membro que leva notícia e conversa para o lar. Dinâmica ágil, às vezes instável."
+

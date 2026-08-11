@@ -1,0 +1,103 @@
+﻿status: review
+id: "leao_atlas"
+nome: "Leão — Atlas Simbólico"
+tradicoes:
+  - "atlas simbolico editorial"
+  - "sintese multiescola"
+tipo: "Atlas Simbólico"
+subtema: "Correspondências de Leão"
+
+origens_e_divergencias:
+  tradicional: "Sol — fogo fixo, liderança, orgulho, criatividade."
+  moderna: "Sol (mesmo). Sem divergência."
+  nota: "Regência unânime."
+
+atlas_simbolico:
+  pessoas_arquetipos:
+    - "O rei"
+    - "O artista"
+    - "O líder"
+    - "O criador"
+    - "O performer"
+    - "O generoso"
+  lugares_fisicos:
+    - "Palácios"
+    - "Teatros"
+    - "Arenas"
+    - "Locais de celebridade"
+    - "Lugares quentes e solares"
+  objetos_materia:
+    - "Coroa"
+    - "Cetro"
+    - "Joias"
+    - "Ouro"
+    - "Espelhos"
+  eventos_tipicos:
+    - "Coroações"
+    - "Estreias"
+    - "Festas"
+    - "Reconhecimento"
+    - "Nascimentos"
+  animais:
+    - "Leão"
+    - "Galo"
+    - "Águia"
+    - "Falcão"
+    - "Cavalo"
+  plantas_ervas:
+    - "Girassol"
+    - "Rosa amarela"
+    - "Louro"
+    - "Canela"
+    - "Camomila"
+  metais_pedras:
+    - "Ouro"
+    - "Topázio"
+    - "Citrino"
+    - "Diamante"
+  cores_sons:
+    cores: ["Ouro", "Amarelo-dourado", "Laranja", "Branco-radiante"]
+    sons: ["Trombeta", "Ópera", "Canto coral"]
+  numeros: [1, 5, 9]
+  dias_semana: ["Domingo"]
+  doencas_corpo:
+    doencas: ["Problemas cardíacos", "Pressão alta", "Coluna dorsal", "Olhos"]
+    partes_corpo: ["Coração", "Coluna dorsal", "Olhos"]
+  arquetipos_mitologicos:
+    - "Hércules (leão de Nemeia)"
+    - "Rá"
+    - "Apolo"
+  mitos_historias:
+    - "Hércules e o Leão de Nemeia"
+    - "Rá e Apófis"
+  expressao_elevada_sombra: "Elevada: generosidade, criatividade, liderança inspiradora | Sombra: orgulho, arrogância, egocentrismo"
+
+revisao_editorial:
+  origem_e_linguagem: "Leão vem do latim leo; o leão é figura zodiacal antiga, enquanto o signo tropical é uma divisão de 30° e não a constelação."
+  mito_arquetipo_e_porque: "Luz, realeza, coração e animal solar são imagens de transmissão variada; Apolo, Hélio, Rá e outras divindades devem permanecer culturalmente identificados."
+  limite_tecnico: "O Sol é regente tradicional; criatividade, filhos, autoridade ou reconhecimento exigem julgamento por casas, aspectos e contexto."
+referencias:
+  primarias:
+    - "Ptolomeu. Tetrabiblos, livro I: signos e qualidades, conforme edição declarada."
+  secundarias:
+    - "Greene, Liz. The Luminaries: The Psychology of the Sun and Moon in the Horoscope. Samuel Weiser, 1992."
+  tecnicas:
+    - "Ver 02_Astronomia/Zodiaco_Tropical.yaml e 04_Planetas/Sol.yaml."
+camada_energetica:
+  impressao_mental: "A mente que BRILHA e CRIA. Vontade central, 'quem eu sou no fundo'."
+  permeacao_emocional: "Autoestima e vitalidade. Quando saudável: generosidade. Quando ferido: vaidade, depressão."
+  manifestacao_externa: "Eventos PROVÁVEIS de reconhecimento, liderança, marcos. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a BRILHAR SEM QUEIMAR. Leão é o centro, não o sol que cega."
+
+tarot_relacionado:
+  carta: "A Força (VIII) / O Sol (XIX)"
+  conexao: "A Força é Leão: coragem, domínio do instinto, força serena."
+
+foco_especial:
+  infantil: "A criança Leão precisa ser vista, reconhecida, celebrada."
+  familiar: "O rei/rainha da família. O que representa a família para o mundo."
+  carmico_espiritual: "Leão indica a LIÇÃO DE EXPRESSÃO. Casa Leão = onde a pessoa aprende a brilhar."
+
+ver_mais:
+  - "../03_Signos/Leao.yaml"
+

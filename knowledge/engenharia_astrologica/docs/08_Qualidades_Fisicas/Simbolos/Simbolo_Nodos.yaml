@@ -1,0 +1,131 @@
+status: review
+id: simbolo_nodos
+nome: Símbolo dos Nodos Lunares — ☊ (Norte) e ☋ (Sul)
+planeta: Nodos Lunares
+significado_visual: '☊ (Norte) = CRESCENTE LUA (inconsciente, passado) + SETA PARA CIMA (direção, crescimento).
+
+  ☋ (Sul) = CRESCENTE LUA + SETA PARA BAIXO (recolhimento, passado).
+
+  O crescente representa a Lua = memória, padrão, karma.
+
+  A seta indica direção: Norte = subir, crescer; Sul = descer, repetir.
+
+  Juntos formam o EIXO DO DRAGÃO = linha de destino da alma.
+
+  '
+origem: Símbolos tradicionais da astrologia helenística (Cabeça e Cauda do Dragão).
+atlas_simbolico:
+  pessoas_arquetipos:
+  - Viajante do tempo
+  - Professor do destino
+  - Guia de almas
+  - Pessoa em transição
+  - Gênio incompreendido (Sul)
+  - Aluno corajoso (Norte)
+  lugares:
+  - Encruzilhada
+  - Fronteira entre mundos
+  - Templo de iniciação
+  - Aeroporto (partida/chegada)
+  - Casa de conhecidos (Sul = lar familiar)
+  objetos_materia:
+  - Mapa do tesouro
+  - Bússola
+  - Passaporte
+  - Carta antiga
+  - Chave que não abre nada
+  - Livro de vidas passadas
+  eventos_tipicos:
+  - Encontro de destino
+  - Mudança de país
+  - Iniciação espiritual
+  - Repetição de padrão
+  - Crise de meia-idade
+  - Retorno à terra natal
+  animais:
+  - Dragão (eixo do dragão)
+  - Tartaruga (longevidade)
+  - Borboleta (metamorfose)
+  - Pássaro migratório
+  - Cão de duas cabeças (Norte/Sul)
+  plantas_ervas:
+  - Samambaia (se reproduz por esporos = passado/futuro)
+  - Raiz de mandrágora
+  - Rosa de Jericó (ressurreição)
+  - Lótus (nascimento espiritual)
+  metais_pedras:
+  - Ferro
+  - Aço
+  - Obsidiana
+  - Turmalina preta
+  - Pedra de lua (memória)
+  cores_sons:
+    cores:
+    - Violeta
+    - Azul-meia-noite
+    - Prata
+    - Preto
+    sons:
+    - Apito de trem
+    - Vento na fronteira
+    - Canto de baleia
+    - Tic-tac de relógio
+  numeros:
+  - 12
+  - 18
+  - 24
+  - 36
+  - 180
+  - 360
+  dias_semana:
+  - Nenhum (ponto matemático)
+  doencas_corpo:
+    doencas:
+    - Problemas de equilíbrio
+    - Doenças neurodegenerativas
+    partes_corpo:
+    - Cérebro
+    - Equilíbrio vestibular
+  arquetipos_mitologicos:
+  - Cabeça e Cauda do Dragão
+  - Anúbis (guia das almas)
+  - Hermes psicopompo
+  - Kali (destruição e renovação)
+  mitos_historias:
+  - Dragão devorando o sol (eclipse = Nodo)
+  - Anúbis guiando Osíris (passagem entre mundos)
+  - Mito da encruzilhada (escolha de caminho)
+  - Percurso de Heracles (trabalhos = jornada nodal)
+  sonhos_inconsciente:
+  - Mapa antigo = padrão cármico
+  - Perder o passaporte = medo de não crescer
+  - Voltar para casa antiga = repetição do Sul
+  - Estrada que se bifurca = encruzilhada nodal
+  - Trem que parte = chamado do Norte
+  expressao_elevada_vs_sombra:
+    elevada: Viajante consciente, que honra o passado e abraça o futuro, guia de almas.
+    sombra: Vitimista do destino, que culpa 'vidas passadas' por tudo, repetidor compulsivo.
+origens_e_divergencias:
+  tradicional: Símbolo padrão da astrologia ocidental.
+  moderna: Mantido o símbolo tradicional; algumas variantes modernas existem.
+  nota: Símbolo é convenção visual, não técnica.
+tradicoes:
+  - "astrologia helenística, medieval e moderna"
+  - "notação astronômica e astrológica ocidental"
+  - "leituras cármicas/evolutivas modernas"
+revisao_editorial:
+  origem_do_glifo: "☊ e ☋ são os sinais de cabeça e cauda do dragão (caput/cauda draconis) usados na tradição astrológica. Não são, historicamente, crescentes com setas; a imagem de eixo, memória e crescimento pertence a leituras modernas específicas."
+  curiosidade: "Os nodos são pontos geométricos de interseção entre a eclíptica e a órbita lunar, não corpos celestes. A metáfora do dragão ajuda a lembrar sua história simbólica."
+  convencao_nao_tecnica: "O glifo identifica os nodos; o motor precisa declarar se calcula nodo verdadeiro ou médio e não deduz karma/destino a partir do símbolo."
+referencias:
+  primarias:
+    - "Ptolomeu. Tetrabiblos: nodos e tradição antiga, conforme tradução/edição declarada."
+  secundarias:
+    - "Brennan, Chris. Hellenistic Astrology: The Study of Fate and Fortune. Amor Fati Publications, 2017."
+  tecnicas:
+    - "Unicode Consortium. The Unicode Standard, bloco Miscellaneous Symbols: U+260A ASCENDING NODE e U+260B DESCENDING NODE."
+camada_energetica:
+  impressao_mental: Símbolo gráfico do planeta/corpo celeste.
+  permeacao_emocional: Reconhecimento visual do arquétipo.
+  manifestacao_externa: Uso em mapas, fichas e leitura visual.
+  como_guiar_o_astral: Fixar o símbolo como atalho visual do planeta.

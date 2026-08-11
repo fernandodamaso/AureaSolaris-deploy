@@ -1,0 +1,54 @@
+﻿status: draft
+id: "sextil_atlas"
+nome: "Sextil — Atlas Simbólico"
+tradicoes:
+  - "atlas simbolico editorial"
+  - "sintese multiescola"
+tipo: "Atlas Simbólico"
+subtema: "Correspondências do Sextil"
+
+origens_e_divergencias:
+  tradicional: "Ptolomeu (Tetrabiblos) — aspectos ptolomaicos e orbes."
+  moderna: "Astrologia psicológica — sextil como oportunidade."
+  nota: "Revisar ao citar — marca a escola usada."
+
+atlas_simbolico:
+  pessoas_arquetipos: "Par em diálogo, oportunidade, ponte"
+  lugares_fisicos: "Lugares de encontro, mercados, escolas"
+  objetos_materia: "Ponte, ferramenta de ligação, livro"
+  eventos_tipicos: "Oportunidades, encontros úteis, diálogos"
+  animais: "Pássaros que voam juntos, peixes em cardume"
+  plantas_ervas: "Hera, hera, madressilva"
+  metais_pedras: "Cobre, bronze, turquesa"
+  cores_sons:
+    cores: ["Verde", "amarelo", "azul claro"]
+    sons: ["Voz amigável", "vento leve"]
+  numeros: [6]
+  dias_semana: ["Quarta-feira", "Sexta-feira"]
+  doencas_corpo:
+    doencas: ["Problemas respiratórios leves"]
+    partes_corpo: ["Pulmões", "braços", "mãos"]
+  arquetipos_mitologicos:
+    - "Hermes (ponte)"
+    - "Atena (diálogo)"
+  mitos_historias: "Hermes mediando conflitos"
+  sonhos_simbolos_inconsciente: "Pontes, diálogos, oportunidades"
+  expressao_elevada_sombra: "Elevada: oportunidade aproveitada, diálogo | Sombra: oportunidade perdida, superficialidade"
+
+camada_energetica:
+  impressao_mental: "A mente que VÊ OPORTUNIDADES. Pensamento ligado, 'e se?'."
+  permeacao_emocional: "Diálogo emocional. Quando saudável: conexão. Quando ferido: diálogo superficial."
+  manifestacao_externa: "Eventos prováveis de encontros, oportunidades. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a AGIR NA OPORTUNIDADE. Sextil é a porta — se não abrir, esfria."
+
+consenso_tradicional: "Aspecto menor de harmonia; oportunidade que pede ação."
+
+arquetipos_simbolicos: ["A ponte", "o diálogo", "a oportunidade"]
+
+aplicativo_separativo: "Aplicativo: o sextil se FORMANDO — oportunidade chega. Separativa: sextil se DISSOLVENDO — a porta fecha."
+
+exemplo_pratico: "Sol sextil Mercúrio: 'você se expressa bem, mas precisa usar essa habilidade' — oportunidade de comunicação."
+
+ver_mais:
+  - "../06_Aspectos/Sextil.yaml"
+

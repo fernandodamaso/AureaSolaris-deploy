@@ -1,0 +1,60 @@
+status: review
+id: "lote_base"
+nome: "Parte da Base / Nemesis"
+tradicoes:
+  - "helenistica"
+  - "arabe-medieval"
+formula_diurna: "Asc + Espírito − Fortuna, pelo arco menor entre os dois lotes"
+formula_noturna: "Asc + Fortuna − Espírito, pelo arco menor entre os dois lotes"
+tema: "Fundação / base: relação técnica entre Fortuna e Espírito"
+
+sentido_do_calculo: |
+  Em Valens, a Base é calculada do arco entre Fortuna e Daimon/Espírito, contado a
+  partir do Ascendente; a direção se inverte por sect e usa-se o arco menor. Não é
+  um lote de Saturno, Nemesis ou "karma familiar". Esses temas pertencem a outros
+  lotes ou a leituras modernas e não devem ser fundidos silenciosamente.
+
+origens_e_divergencias:
+  tradicional: "Valens apresenta Base em relação com Fortuna e Daimon e orienta examinar o lugar e seu regente."
+  moderna: "Extensões a ancestralidade, peso, trauma ou karma devem ser atribuídas a autor/escola e não substituem o procedimento antigo."
+  nota: "Conservar o nome Base/Fundação; não a renomear Nemesis. O motor precisa registrar a regra do arco menor e a convenção de sect."
+
+referencias:
+  - autor: "Vettius Valens"
+    obra: "The Anthology"
+    edicao_ou_traducao: "Mark Riley, tradução inglesa"
+    natureza: "fonte primária helenística"
+    localizador: "Livro II, Lot of Basis; cálculo pelo arco Fortuna–Daimon e regente do lugar"
+  - autor: "Dorian Gieseler Greenbaum"
+    obra: "Late Classical Astrology: Paulus Alexandrinus and Olympiodorus"
+    ano: 2001
+    natureza: "secundária/filológica"
+    localizador: "Contexto dos lotes helenísticos e variantes de transmissão"
+atlas_simbolico:
+  pessoas_arquetipos: "O fundador, o que tem base, o estruturante"
+  lugares_fisicos: "Fundações, bases, estruturas, subsolo"
+  objetos_materia: "Ferramentas de construção, bases, estruturas"
+  eventos_tipicos: "Construções, fundações, estruturas, bases"
+  animais: "Cabra, tartaruga, caracol"
+  plantas_ervas: "Alecrim, mirra, sálvia"
+  metais_pedras: "Chumbo, ferro, ônix, granada"
+  cores_sons: "Preto, marrom; notas Lá e Sol"
+  numeros: "4 (estrutura), 8 (materialidade), 10 (autoridade)"
+  dias_semana: "Sábado (Saturno)"
+  doencas_corpo: "Ossos, articulações, sistema esquelético"
+  arquetipos_mitologicos: "Cronos/Saturno, Héstia/Vesta, Janus"
+  mitos_historias: "Cronos e o tempo; Héstia e o fogo sagrado"
+  sonhos_simbolos_inconsciente: "Estruturas, bases, construções, fundações"
+  expressao_elevada_sombra: "Elevada: base sólida, estrutura que serve | Sombra: rigidez, apego excessivo"
+
+camada_energetica:
+  impressao_mental: "Onde a mente carrega o 'peso herdado' — o que limita e, se trabalhado, sustenta."
+  permeacao_emocional: "Senso de dever/culpa ou de base sólida, conforme a dignidade."
+  manifestacao_externa: "Eventos prováveis de responsabilidade e limite. Arquétipos: o Alicerce, a Pedra. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a transformar a Base em alicerce, não em carga."
+
+como_usar: "Ler o lugar, seu regente e a relação com Fortuna/Espírito dentro da técnica escolhida. Não usar como diagnóstico de herança, culpa ou punição."
+foco_especial:
+  carmico: "Leituras cármicas são extensões modernas opcionais e precisam de fonte própria; não pertencem à definição técnica de Base."
+regente: "Regente do signo onde cai; lido por casa e aspectos."
+

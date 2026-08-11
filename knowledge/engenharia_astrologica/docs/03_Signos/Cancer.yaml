@@ -1,0 +1,86 @@
+status: review
+id: "cancer"
+nome: "Câncer"
+tradicoes:
+  - "helenística"
+  - "medieval"
+  - "renascentista"
+  - "moderna (somente camadas explicitamente modernas)"
+escopo_documental:
+  tecnica_historica:
+    - "elemento, modalidade, regência, dignidade e estrutura zodiacal"
+    - "divergências modernas de regência ou leitura entram como nota explícita, sem substituir silenciosamente a camada histórica"
+  camadas_modernas: "Atlas simbólico, Tarot, correspondências médicas e releituras contemporâneas permanecem separados da regra histórica e devem ser apresentados como camada interpretativa rotulada."
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "primária"
+    localizador: "Livro I, capítulos sobre signos, qualidades e regências"
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    natureza: "primária"
+    localizador: "Livros I–II, passagens sobre signos e regentes"
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    natureza: "primária"
+    localizador: "Livro I, descrição dos signos e significadores"
+validacao_de_fontes:
+  base: "A regra zodiacal hist?rica ? sustentada por Ptolomeu, Valens e Lilly, nas refer?ncias estruturadas da ficha."
+  escopo: "Tarot, Atlas simb?lico, mitologia, correspond?ncias m?dicas e psicologia s?o camadas de estudo rotuladas; n?o s?o consenso nem substituem a regra hist?rica."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+elemento: "Água"
+modalidade: "Cardinal"
+regente: "Lua"
+
+origens_e_divergencias:
+  tradicional: "Lua (emoção, ninho, proteção)."
+  moderna: "Lua (mesmo). Sem divergência significativa."
+  nota: "Regência unânime."
+
+essencia:
+  - "Acolhimento"
+  - "Raiz"
+  - "Proteção"
+
+simbologia_elemento:
+  elemento: "Água"
+  modalidade: "Cardinal"
+  simbolo: "Nascente / Gota d'água inicial"
+  analogia: "Água Cardinal — como a primeira gota que forma um rio."
+  porque: "Água Cardinal é o PRIMEIRO sentimento: germinação, proteção, nutrição. Câncer é o quarto signo, onde a energia se emociona e busca segurança. A gota representa o potencial emocional que ainda não se expandiu, mas já existe."
+atlas_simbolico:
+  pessoas_arquetipos: "Mãe, cuidador, criança, família, dona de casa, protetor do lar"
+  lugares_fisicos: "Lares, rios, lagos, praias, cavernas, lugares próximos à água"
+  objetos_materia: "Panelas, fotografias, álbuns, cobertores, baús, conchas"
+  eventos_tipicos: "Casamentos, nascimentos, mudanças de lar, reuniões familiares, memórias"
+  animais: "Caranguejo, lagosta, marisco, cisne, golfinho, cão de água"
+  plantas_ervas: "Lírio, jasmim, rosa branca, melão, pepino, lótus"
+  metais_pedras: "Prata, pérola, pedra da lua, cristal, madrepérola"
+  cores_sons: "Branco, prata, azul-claro; notas Dó e Lá; harpa, sino d'água"
+  numeros: "2 (dualidade mãe-filho), 4 (lar/segurança), 6 (nutrição)"
+  dias_semana: "Segunda-feira (dia da Lua)"
+  doencas_corpo: "Estômago, seios, útero, sistema digestivo, útero, fluídos corporais"
+  arquetipos_mitologicos: "Hera/Juno, Deméter/Ceres (mãe), Hécate, Perséfone"
+  mitos_historias: "O caranguejo na luta de Hércules contra a Hidra; Deméter e Perséfone"
+  sonhos_simbolos_inconsciente: "Água parada, casas, mãe, bebês, prata, lua cheia"
+  expressao_elevada_sombra: "Elevada: cuidado compassivo, memória afetiva, lar como refúgio | Sombra: apego excessivo, dependência emocional, vitimização"
+
+tarot:
+  carta: "A Lua"
+  explicacao: "Carta 18 — imaginação, memória, medo, intuição. Câncer é a Lua porque ambos representam o mundo emocional noturno: marés, sonhos, mãe, medos ocultos. A Lua ilumina sem queimar."
+
+camada_energetica:
+  impressao_mental: "A mente que protege e se apegã. 'Meu' em sentido emocional. Quando atrito: defensividade, mau humor, cling."
+  permeacao_emocional: "O corpo emocional em si. Profundo, variável, ligado ao lar e à mãe."
+  manifestacao_externa: "Eventos prováveis de mudança de lar, assuntos familiares, gestação, ciclos. Trânsitos mexem no fundo afetivo."
+  como_guiar_o_astral: "Ajudar a pessoa a distinguir cuidado de controle. Câncer precisa de lar interno, não de muro."
+
+decanatos:
+  - "0-10: Câncer (Lua) — instinto e acolhimento"
+  - "10-20: Escorpião (Marte) — profundidade"
+  - "20-30: Peixes (Júpiter) — sensibilidade e fusão"
+
+foco_especial:
+  infantil: "A criança Câncer é a mais sensível ao clima do lar. O lar é o umbigo emocional dela."
+  familiar: "O membro que sustenta o ninho. Eixo central das relações familiares no seu projeto."
+

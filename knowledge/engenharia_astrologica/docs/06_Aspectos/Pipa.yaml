@@ -1,0 +1,49 @@
+﻿status: review
+id: "balde_bucket"
+nome: "Balde / Bucket"
+formato: "Vários planetas de um lado, um 'punho' (handle) em oposição a todos eles"
+
+origens_e_divergencias:
+  tradicional: "Não é configuração da astrologia helenística ou ptolomaica. É padrão de distribuição planetária associado à tipologia de Marc Edmund Jones no século XX."
+  moderna: "Pode ser usado como descrição estrutural do mapa; interpretações de personalidade atribuídas ao padrão são modernas e não substituem o julgamento de planetas, casas e aspectos."
+  nota: "Balde/Bucket não é Pipa/Kite. A Pipa requer um grande trígono e uma oposição que forma dois sextis; ela possui ficha própria."
+atlas_simbolico:
+  pessoas_arquetipos: "O visionário, o profeta, o que vê o futuro"
+  lugares_fisicos: "Montanhas, torres, mirantes, templos"
+  objetos_materia: "Bastões, mapas, instrumentos de visão"
+  eventos_tipicos: "Revelações, visões, profecias, insights"
+  animais: "Águia, falcão, serpente"
+  plantas_ervas: "Sálvia, hortelã, verbena"
+  metais_pedras: "Ouro, lápis-lazúli, safira"
+  cores_sons: "Azul-royal, roxo; notas Lá e Dó"
+  numeros: "5 (visão), 7 (profecia), 9 (completude)"
+  dias_semana: "Quinta-feira (Júpiter), domingo (Sol)"
+  doencas_corpo: "Olhos, sistema nervoso central"
+  arquetipos_mitologicos: "Cassandra, Apolo, Atena"
+  mitos_historias: "Cassandra e a profecia; Apolo e a visão"
+  sonhos_simbolos_inconsciente: "Visões, profecias, montanhas, torres"
+  expressao_elevada_sombra: "Elevada: visão clara, profecia útil | Sombra: visão distorcida, profecia cega"
+
+camada_energetica:
+  impressao_mental: "Toda a energia do mapa 'desagua' em um único ponto (o punho). A mente opera em torno desse planeta como eixo."
+  permeacao_emocional: "Concentração emotiva no planeta-punho — tudo o mais canaliza por ele."
+  manifestacao_externa: "Eventos PROVÁVEIS giram em torno do tema do punho. Arquétipos: o Balde, o Alavanca, o Canal. Inclinação, não destino."
+  como_guiar_o_astral: "Mostrar que o punho é a 'válvula' da pessoa — onde ela descarrega tudo. Trabalhar aquele planeta é trabajar o mapa inteiro."
+
+consenso_tradicional: "Não existe consenso tradicional para este padrão. No método de Jones, o planeta-punho é interpretado como canal de expressão do conjunto; é hipótese tipológica, não regra isolada de dominância."
+arquetipos_simbolicos: ["O Balde", "A Alavanca", "O Canal"]
+
+referencias:
+  - autor: "Marc Edmund Jones"
+    obra: "The Guide to Horoscope Interpretation"
+    natureza: "primária moderna"
+    localizador: "Tipologias de distribuição planetária; conferir edição."
+  - autor: "Dane Rudhyar"
+    obra: "The Astrology of Personality"
+    natureza: "secundária moderna"
+    localizador: "Discussão moderna de padrões de distribuição e gestalt do mapa; conferir edição."
+
+validacao_de_fontes:
+  base: "A ficha corrige a classificação: trata-se de Balde/Bucket, não de Pipa/Kite."
+  limite: "O planeta-punho não substitui avaliação de angularidade, regência, dignidade, fase e aspectos."
+

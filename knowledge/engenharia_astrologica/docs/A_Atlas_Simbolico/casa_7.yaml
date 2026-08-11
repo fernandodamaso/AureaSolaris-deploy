@@ -1,0 +1,62 @@
+﻿status: review
+id: "casa_7_atlas"
+nome: "Casa 7 — O Espelho / O Outro"
+tradicoes:
+  - "atlas simbolico editorial"
+  - "sintese multiescola"
+tipo: "Atlas Simbólico"
+subtema: "Correspondências da Casa 7"
+
+origens_e_divergencias:
+  tradicional: "Ptolomeu (Tetrabiblos) — significados tradicionais das 12 casas."
+  moderna: "Astrologia psicológica/sistêmica — casas como áreas de desenvolvimento."
+  nota: "Revisar ao citar — marca a escola usada."
+
+atlas_simbolico:
+  pessoas_arquetipos: "O parceiro, o espelho, o outro, o cônjuge"
+  lugares_fisicos: "Locais de encontro, tribunais, locais de parceria"
+  objetos_materia: "Alianças, contratos, espelhos, fotografias de casal"
+  eventos_tipicos: "Casamentos, divórcios, sociedades, acordos"
+  animais:
+    - "Pomba"
+    - "Cisne"
+    - "Golfinho"
+    - "Lobo como parceiro"
+  plantas_ervas: "Rosa, violeta, maçã (flor), ervas de amor"
+  metais_pedras: "Cobre, bronze, esmeralda, jade, diamante"
+  cores_sons:
+    cores: ["Verde-esmeralda", "rosa", "dourado claro"]
+    sons: ["Harpa", "canto coral"]
+  numeros: [7]
+  dias_semana: ["Sexta-feira"]
+  doencas_corpo:
+    doencas: ["Problemas renais", "problemas de pele", "dor lombar"]
+    partes_corpo: ["Rins", "região lombar", "pele"]
+  arquetipos_mitologicos:
+    - "Afrodite (amor)"
+    - "Hera (casamento)"
+    - "Hermes (aliança)"
+  mitos_historias: "Hera e Zeus; Afrodite e Eros"
+  sonhos_simbolos_inconsciente: "Parceiros, espelhos, casamentos"
+  expressao_elevada_sombra: "Elevada: parceria autêntica, amor maduro | Sombra: dependência, manipulação, medo de solidão"
+
+revisao_editorial:
+  origem_e_linguagem: "A sétima casa se inicia no Descendente/horizonte ocidental em muitos sistemas; espelho e outro são imagens pedagógicas para relação, contrato e oposição."
+  mito_arquetipo_e_porque: "Encontro, pacto, rival e reflexo ajudam a estudar a casa, mas não determinam casamento, separação ou a conduta de terceiros."
+  limite_tecnico: "A analogia com Libra/Vênus é moderna. Sinastria, composto e Davison são técnicas distintas e não podem ser substituídas pela casa natal isolada."
+referencias:
+  primarias:
+    - "Lilly, William. Christian Astrology. 1647, livro II: significações da sétima casa."
+  secundarias:
+    - "Houlding, Deborah. The Houses: Temples of the Sky. The Wessex Astrologer, 1996."
+  tecnicas:
+    - "Declarar sistema de casas e técnica relacional antes de qualquer síntese."
+camada_energetica:
+  impressao_mental: "A mente que se encontra no outro. 'Quem eu sou quando estou com alguém?'."
+  permeacao_emocional: "Amor como espelho. Quando saudável: relação. Quando ferido: apego."
+  manifestacao_externa: "Eventos prováveis de casamentos, sociedades, acordos. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a encontrar-se antes de se juntar. Casa 7 é o espelho, não a metade."
+
+ver_mais:
+  - "../05_Casas/Casa_7.yaml"
+

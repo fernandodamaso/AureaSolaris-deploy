@@ -1,0 +1,67 @@
+status: review
+
+id: "padroes_aspecto"
+nome: "Padrões de Aspecto (Configurações)"
+tradicoes:
+  - "editorial"
+  - "multiescola"
+tema: "A forma que os aspectos desenham no mapa"
+
+essencia:
+  - "Stellium (3+ em signo/casa)"
+  - "Grande Trígono (facilidade)"
+  - "Grande Cruz (tensão nos 4 eixos)"
+  - "T-Square (tensão focada)"
+  - "Yod (pressão de destino)"
+  - "Pipa / Kite (configuração de aspectos)"
+  - "Balde / Bucket (padrão de distribuição)"
+  - "Estrela dos Magos (Grande Trígono com dois sextis = 'casa dos magos')"
+  - "Estrela de Davi (Grande Sextil de 6 planetas)"
+
+origens_e_divergencias:
+  tradicional: "Aspectos maiores possuem longa tradição, mas nomes de figuras e regras de configuração variam e muitos padrões são classificações modernas."
+  moderna: "Grande Trígono, T-square, Yod, Kite e padrões de distribuição são convenções editoriais/modernas com definições não unânimes."
+  nota: "Definir aspectos aceitos, orbes, número de corpos e necessidade de figuras fechadas. Termos como 'destino' ou 'casa dos magos' são notas simbólicas, não regras de cálculo."
+
+referencias:
+  - autor: "Marc Edmund Jones"
+    obra: "The Guide to Horoscope Interpretation"
+    ano: 1941
+    natureza: "fonte moderna de padrões de distribuição"
+    localizador: "Formas globais da figura; conferir tipologia"
+  - autor: "Bruno e Louise Huber"
+    obra: "Aspect Pattern Astrology"
+    natureza: "fonte moderna de configurações"
+    localizador: "Definições e leitura de padrões; não universalizar"
+
+regras_de_calculo:
+  entrada: "Corpos incluídos, aspectos, orbes e algoritmo de detecção declarados."
+  saida: "Exibir a figura detectada, seus critérios e fatores que ficaram fora; não inferir destino ou caráter isoladamente."
+atlas_simbolico:
+  pessoas_arquetipos: "O padronizado, o estruturado, o tenso"
+  lugares_fisicos: "Lugares de padrão: estruturas, tensões, harmonia"
+  objetos_materia: "Instrumentos de padrão: ferramentas, estruturas"
+  eventos_tipicos: "Eventos de padrão: construções, tensões, harmonia"
+  animais: "Leão, touro, escorpião, cisne"
+  plantas_ervas: "Alecrim, rosa, lírio, hera"
+  metais_pedras: "Ferro, ouro, obsidiana, esmeralda"
+  cores_sons: "Vermelho, dourado, preto, verde"
+  numeros: "4 (padrão), 7 (tensão), 8 (harmonia)"
+  dias_semana: "Terça-feira, domingo, sábado, sexta-feira"
+  doencas_corpo: "Coração, sistema circulatório, ossos, pele"
+  arquetipos_mitologicos: "Hércules, Apolo, Atena, Dioniso"
+  mitos_historias: "Os 12 trabalhos; Padrões mitológicos"
+  sonhos_simbolos_inconsciente: "Padrões, tensões, harmonia"
+  expressao_elevada_sombra: "Elevada: padrão consciente, estrutura que serve | Sombra: padrão opressivo, rigidez"
+
+camada_energetica:
+  campo_mental: "O padrão mostra COMO a mente se organiza estruturalmente. Stellium=foco obsessivo; T-Square=conflito motriz; Yod=tensão de 'missão'."
+  permeacao_emocional: "Padrões tensos trazem inquietação crônica; harmônicos trazem paz, mas risco de estagnação."
+  manifestacao_externa: "Eventos PROVÁVEIS se repetem na 'forma' do padrão. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a usar a tensão como motor (não como peso). T-Square vira direção quando se assume o eixo livre; Yod vira entrega quando se aceita o 'inacabado'."
+
+consenso_geral: "Toda configuração é uma 'música' do mapa — a leitura é do TODO, não de cada aspecto isolado."
+foco_especial:
+  infantil: "Criança com T-Square precisa de saída construtiva para a tensão; com Grande Trígono, de desafio para não acomodar."
+  familiar: "Padrões em sinastria mostram onde a família 'trava' ou 'flui'."
+

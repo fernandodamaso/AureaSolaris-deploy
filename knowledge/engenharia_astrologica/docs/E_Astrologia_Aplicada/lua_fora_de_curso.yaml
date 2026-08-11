@@ -1,0 +1,67 @@
+status: review
+id: "lua_fora_de_curso"
+nome: "Lua Fora de Curso"
+tradicoes:
+  - "aplicada contemporanea"
+  - "tradicional quando explicitado"
+tipo: "Astrologia Aplicada"
+subtema: "Ritmo lunar cotidiano"
+
+origens_e_divergencias:
+  tradicional: "A formulação de Lua void of course é especialmente associada à horária medieval/renascentista; definições dependem de aspecto, signo, orbe e autor."
+  moderna: "Leituras cotidianas de pausa/interiorização são releituras contemporâneas e não consenso técnico."
+  nota: "Declarar se a definição é 'a Lua não perfeccionará aspecto maior antes de sair do signo' ou outra variante. Não transformar a condição em proibição absoluta."
+
+referencias:
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    ano: 1647
+    natureza: "fonte primária renascentista"
+    localizador: "Livro II, condições e julgamento da Lua"
+  - autor: "Guido Bonatti"
+    obra: "Book of Astronomy"
+    edicao_ou_traducao: "Benjamin Dykes, Cazimi Press, 2007"
+    natureza: "fonte medieval traduzida"
+    localizador: "Condições da Lua e julgamento; conferir variante"
+
+regras_de_calculo:
+  entrada: "Longitude lunar, posições dos significadores, zodíaco, lista de aspectos, orbes, instante e escola."
+  procedimento: "Verificar os aspectos aplicativos que a Lua pode perfeccionar antes do limite de signo adotado; relatar a variante e os contraexemplos."
+  limite: "Não inferir fracasso, perigo ou estado de saúde automaticamente."
+
+atlas_simbolico:
+  pessoas_arquetipos: "A sensitiva, a viajante noturna, a que espera"
+  lugares_fisicos: "Lares, jardins noturnos, lugares de espera"
+  objetos_materia: "Relógios lunares, velas, álbuns"
+  eventos_tipicos: "Esperas, pausas, introspecção, sonhos"
+  animais: "Caranguejo, gato, coruja, lebre"
+  plantas_ervas: "Lírio, jasmim noturno, alface, melissa"
+  metais_pedras: "Prata, pedra da lua, pérola"
+  cores_sons:
+    cores: ["Prata", "branco luar", "azul-prateado"]
+    sons: ["Flauta", "murmúrio d'água", "canto noturno"]
+  numeros: [2, 4]
+  dias_semana: ["Segunda-feira"]
+  doencas_corpo:
+    doencas: ["Ansiedade", "insônia", "problemas digestivos"]
+    partes_corpo: ["Estômago", "útero", "seios"]
+  arquetipos_mitologicos:
+    - "Artemis"
+    - "Hécate"
+    - "Selene"
+  mitos_historias: "Lua e Endimion"
+  expressao_elevada_sombra: "Elevada: introspecção consciente | Sombra: evitação, ansiedade"
+
+camada_energetica:
+  impressao_mental: "Lua fora de curso = 'mente em pausa'. Não é tempo de decisão — é tempo de espera."
+  permeacao_emocional: "Introspecção emocional. Quando saudável: descanso. Quando ferido: ansiedade por esperar."
+  manifestacao_externa: "Eventos prováveis de pausa, espera, introspecção. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a RESPEITAR A PAUSA. Lua fora de curso não é 'tempo perdido' — é tempo de mergulhar."
+
+como_usar: |
+  Quando a Lua não faz aspectos antes de sair do signo:
+  - Evite decisões importantes.
+  - Evite inícios.
+  - Aproveite para descansar, refletir, cuidar de casa.
+  - A Lua voltará a fazer aspectos — espere.
+

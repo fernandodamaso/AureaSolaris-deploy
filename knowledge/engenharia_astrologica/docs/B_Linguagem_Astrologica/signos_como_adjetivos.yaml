@@ -1,0 +1,83 @@
+﻿status: review
+id: "signos_como_adjetivos"
+nome: "Signos como Adjetivos"
+tradicoes:
+  - "editorial"
+  - "pedagogica"
+  - "multiescola"
+tipo: "Linguagem Astrológica"
+subtema: "Signos como qualidades"
+
+origens_e_divergencias:
+  tradicional: "Signos como qualidades fixas da natureza."
+  moderna: "Signos como modos de ser (Rudhyar) — não são 'coisas' são 'maneiras de fazer'."
+  nota: "A linguagem de adjetivo é recurso pedagógico moderno; qualidades elementais e modalidades pertencem a vocabulários tradicionais, mas variam por escola."
+
+limites_de_uso:
+  - "O adjetivo descreve a modulação de um fator, não uma identidade fixa nem um diagnóstico de personalidade."
+  - "Correspondências de Tarot, mitos ou arquétipos devem permanecer atribuídas à sua linhagem, quando forem usadas."
+
+atlas_simbolico:
+  pessoas_arquetipos:
+    - "O ariano: impulsivo"
+    - "O taurino: estável"
+    - "O geminiano: versátil"
+    - "O canceriano: sensível"
+    - "O leonino: brilhante"
+    - "O virgem: analítico"
+    - "O libriano: harmônico"
+    - "O escorpiano: intenso"
+    - "O sagitariano: filosófico"
+    - "O capricorniano: estruturado"
+    - "O aquariano: inovador"
+    - "O pisciano: transcendente"
+  lugares_fisicos:
+    - "Cada signo tem seus lugares (ver atlas do signo)"
+  objetos_materia:
+    - "Cada signo tem seus objetos (ver atlas do signo)"
+  eventos_tipicos:
+    - "Cada signo tem seus eventos (ver atlas do signo)"
+  animais:
+    - "Cada signo tem seus animais (ver atlas do signo)"
+  plantas_ervas:
+    - "Cada signo tem suas plantas (ver atlas do signo)"
+  metais_pedras:
+    - "Cada signo tem seus metais (ver atlas do signo)"
+  cores_sons:
+    cores: ["Cada signo tem suas cores (ver atlas do signo)"]
+    sons: ["Cada signo tem seus sons (ver atlas do signo)"]
+  numeros: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+  dias_semana: ["Cada signo tem seus dias (ver atlas do signo)"]
+  doencas_corpo:
+    doencas: ["Cada signo tem suas doenças (ver atlas do signo)"]
+    partes_corpo: ["Cada signo tem suas partes (ver atlas do signo)"]
+  arquetipos_mitologicos:
+    - "Cada signo tem seus mitos (ver atlas do signo)"
+  mitos_historias: "Cada signo tem suas histórias (ver atlas do signo)"
+  sonhos_simbolos_inconsciente: "Cada signo tem seus sonhos (ver atlas do signo)"
+  expressao_elevada_sombra: "Elevada: qualidade positiva do signo | Sombra: qualidade negativa do signo"
+
+camada_energetica:
+  impressao_mental: "Os signos são os ADJETIVOS do mapa. Modificam os planetas: Sol em Áries = 'eu sou impulsivo'; Lua em Câncer = 'eu sinto profundamente'."
+  permeacao_emocional: "Cada signo colore a emoção do planeta."
+  manifestacao_externa: "Eventos PROVÁVEIS que refletem o ADJETIVO do signo. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a RECONHECER SEU ADJETIVO SEM SER PRISIONEIRA DELE. Signo é cor, não gaiola."
+
+tarot_relacionado:
+  carta: "Cada signo corresponde a uma carta (ver atlas do signo)"
+  conexao: "Os signos são adjetivos; os arcanos são ações."
+
+foco_especial:
+  infantil: "A criança aprende os signos como 'como eu sou': 'eu sou ariano' = 'eu sou impulsivo'."
+  familiar: "Cada membro da família tem um 'adjetivo' astrológico."
+  carmico_espiritual: "Signos indicam como a alma aprende: através da QUALIDADE do signo."
+
+referencias:
+  primarias:
+    - "Ptolomeu. Tetrabiblos, livro I: signos, qualidades e aspectos."
+  secundarias:
+    - "Rudhyar, Dane. The Astrological Signs: The Pulse of Life. Harper & Row, 1971."
+    - "Hand, Robert. Horoscope Symbols. Schiffer Publishing, 1981."
+  tecnicas:
+    - "Ver 03_Signos/ para elementos, modalidades e polaridades com as divergências próprias de cada escola."
+

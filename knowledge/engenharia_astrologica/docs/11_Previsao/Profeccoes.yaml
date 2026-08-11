@@ -1,0 +1,62 @@
+status: review
+id: "profeccoes"
+nome: "Profeções Anuais"
+tipo: "técnica de senhores do tempo"
+tradicao_primaria: ["helenística", "tradicional"]
+
+escopo:
+  definicao_operacional: "Técnica que avança um signo por ano a partir do Ascendente natal para identificar o signo anual, sua casa correspondente e o senhor do ano."
+  inclui:
+    - "Profeção anual de casas e signos a partir do Ascendente."
+    - "Regente do signo profectado como senhor do ano, avaliado no natal e nas técnicas de tempo escolhidas."
+  nao_inclui:
+    - "Profeções mensais, diárias ou outros desdobramentos sem declarar o método."
+    - "Previsão isolada de eventos factuais."
+  exclusoes_do_projeto: []
+
+fundamento:
+  descricao: "A técnica organiza a vida em ciclos de doze anos. No aniversário, a profeção retorna ao Ascendente e reinicia o ciclo; a casa/signo ativado orienta a seleção de temas e significadores para o período."
+  contexto_historico: "Profeções aparecem em textos helenísticos e foram transmitidas em tradições posteriores. A aplicação contemporânea varia: alguns combinam com revolução solar e trânsitos; outros mantêm regras mais restritas."
+
+procedimento:
+  pre_requisitos:
+    - "Ascendente natal calculado com dados de nascimento confiáveis ou incerteza declarada."
+    - "Regências tradicionais e sistema zodiacal declarados."
+  passos:
+    - "Contar um signo/casa por ano de vida a partir do Ascendente; idade 0 corresponde à casa 1."
+    - "Identificar o signo e a casa profectados no aniversário analisado."
+    - "Identificar o regente tradicional do signo profectado como senhor do ano."
+    - "Avaliar a condição natal do senhor do ano e suas ativações na revolução solar, trânsitos ou outra técnica declarada."
+  parametros_de_calculo:
+    - "idade no aniversário"
+    - "ascendente natal"
+    - "regências tradicionais"
+    - "data e local da revolução solar, se usada"
+
+uso_interpretativo:
+  pergunta_que_ajuda_a_responder:
+    - "Quais temas de casa e qual senhor recebem ênfase técnica neste ano de vida?"
+  como_ponderar: "Ler o senhor do ano em sua condição natal primeiro; só depois combinar com a revolução e os trânsitos. O tema da casa não substitui os significadores específicos da pergunta."
+  limites:
+    - "Hora natal incerta fragiliza a profeção de casas."
+    - "A técnica sinaliza ênfase e timing, não garantia de evento."
+
+divergencias_de_tradicao:
+  consenso: "O ciclo anual de doze signos e a centralidade do senhor do ano são elementos comuns na prática tradicional contemporânea de profeções."
+  divergencias:
+    - "Há variações sobre profeções mensais, uso de casas por signo inteiro e combinação com outras técnicas."
+  decisao_editorial: "O corpus apresentará primeiro a profeção anual com regências tradicionais e registrará qualquer extensão como variante atribuída."
+
+referencias:
+  primarias:
+    - "Vettius Valens. The Anthology. Tradução de Mark Riley, 2010."
+    - "Paulus Alexandrinus. Introduction to Astrology. Tradução de Dorian Gieseler Greenbaum. ARHAT, 2001."
+  secundarias:
+    - "Schmidt, Robert. Hellenistic Astrology: The Study of Fate and Fortune. The Golden Hind Press, 1997."
+  tecnicas: []
+
+relacoes:
+  depende_de: ["ascendente", "regencias", "protocolo_calculo_reproduzivel"]
+  ver_tambem: ["revolucao_solar", "firdaria", "senhores_do_tempo", "transitos"]
+
+anotacoes_pessoais: []

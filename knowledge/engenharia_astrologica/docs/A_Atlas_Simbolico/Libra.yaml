@@ -1,0 +1,105 @@
+﻿status: review
+id: "libra_atlas"
+nome: "Libra — Atlas Simbólico"
+tradicoes:
+  - "atlas simbolico editorial"
+  - "sintese multiescola"
+tipo: "Atlas Simbólico"
+subtema: "Correspondências de Libra"
+
+origens_e_divergencias:
+  tradicional: "Vênus — ar, equilíbrio, justiça, beleza."
+  moderna: "Vênus (mesmo). Sem divergência."
+  nota: "Regência unânime."
+
+atlas_simbolico:
+  pessoas_arquetipos:
+    - "O juiz"
+    - "O diplomata"
+    - "O amante"
+    - "O esteta"
+    - "O negociador"
+    - "O equilibrista"
+  lugares_fisicos:
+    - "Tribunais"
+    - "Galerias de arte"
+    - "Salas de estar"
+    - "Lugares de encontro"
+    - "Locais de paz"
+  objetos_materia:
+    - "Balança"
+    - "Espelhos"
+    - "Joias"
+    - "Pinturas"
+    - "Contratos"
+  eventos_tipicos:
+    - "Casamentos"
+    - "Concordias"
+    - "Assinaturas"
+    - "Julgamentos"
+    - "Uniões"
+  animais:
+    - "Cisne"
+    - "Veado"
+    - "Pomba"
+    - "Golfinho"
+    - "Cobra"
+  plantas_ervas:
+    - "Rosa"
+    - "Violeta"
+    - "Maçã (flor)"
+    - "Aveia"
+    - "Trigo"
+  metais_pedras:
+    - "Cobre"
+    - "Bronze"
+    - "Esmeralda"
+    - "Jade"
+    - "Turquesa"
+    - "Diamante"
+  cores_sons:
+    cores: ["Verde-esmeralda", "Rosa", "Azul-celeste", "Dourado claro"]
+    sons: ["Harpa", "Flauta", "Canto coral"]
+  numeros: [2, 6, 15]
+  dias_semana: ["Sexta-feira"]
+  doencas_corpo:
+    doencas: ["Problemas renais", "Problemas de pele"]
+    partes_corpo: ["Rins", "Região lombar", "Pele"]
+  arquetipos_mitologicos:
+    - "Astraea (justiça)"
+    - "Afrodite"
+    - "Themis (lei divina)"
+  mitos_historias:
+    - "A balança da justiça"
+    - "Afrodite e a harmonia"
+  expressao_elevada_sombra: "Elevada: justiça, beleza, harmonia, relacionamento autêntico | Sombra: indecisão, manipulação, superficialidade"
+
+revisao_editorial:
+  origem_e_linguagem: "Libra vem do latim libra, 'balança'. Entre os signos, sua figura é instrumento e não animal; signo tropical e constelação permanecem referências distintas."
+  mito_arquetipo_e_porque: "Equilíbrio, medida, troca e justiça são imagens simbólicas; associações a Têmis, Astreia ou Vênus devem ser registradas por linhagem cultural/escola."
+  limite_tecnico: "Vênus é regente tradicional; relação, harmonia e justiça não se afirmam como traços deterministas de quem possui um fator em Libra."
+referencias:
+  primarias:
+    - "Ptolomeu. Tetrabiblos, livro I: signos e qualidades, conforme edição declarada."
+  secundarias:
+    - "Rudhyar, Dane. The Astrological Signs: The Pulse of Life. Harper & Row, 1971."
+  tecnicas:
+    - "Ver 02_Astronomia/Zodiaco_Tropical.yaml e 04_Planetas/Venus.yaml."
+camada_energetica:
+  impressao_mental: "A mente que BUSCA EQUILÍBRIO. Pensamento relacional, 'o que é justo?'."
+  permeacao_emocional: "Amor como harmonia. Quando saudável: relação. Quando ferido: dependência, indecisão."
+  manifestacao_externa: "Eventos PROVÁVEIS de uniões, julgamentos, contratos. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a DECIDIR SEM MEDO DE PERDER. Libra é a balança, não a corda bamba."
+
+tarot_relacionado:
+  carta: "A Justiça (XI) / Os Enamorados (VI)"
+  conexao: "A Justiça é Libra: balança, lei, equilíbrio. Os Enamorados é escolha amorosa."
+
+foco_especial:
+  infantil: "A criança Libra precisa de harmonia, beleza, relações equilibradas."
+  familiar: "O mediador da família. O que traz paz ou indecisão."
+  carmico_espiritual: "Libra indica a LIÇÃO DE RELAÇÃO. Casa Libra = onde a pessoa aprende a amar e equilibrar."
+
+ver_mais:
+  - "../03_Signos/Libra.yaml"
+

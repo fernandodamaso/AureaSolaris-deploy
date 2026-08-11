@@ -1,0 +1,49 @@
+﻿status: review
+id: "sincronicidade"
+nome: "Sincronicidade"
+tradicoes:
+  - "moderna"
+  - "editorial"
+tema: "Conceito moderno de coincidências significativas sem nexo causal linear; uso possível como moldura reflexiva para a experiência astrológica."
+
+essencia:
+  - "Eventos simultâneos com significado, sem causalidade linear."
+  - "Jung + Pauli: acausal connecting principle."
+  - "Em astrologia: trânsito + evento vivido — sincronicidade, não magia."
+
+origens_e_divergencias:
+  tradicional: "Não é conceito clássico; sem correspondente exato em Ptolomeu/Bonatti."
+  moderna: "Jung formulou o conceito no século XX e o desenvolveu em diálogo com Wolfgang Pauli. Não é uma técnica de cálculo nem prova histórica da astrologia."
+  nota: "Permite registrar uma experiência de sentido sem transformar um trânsito em causa demonstrada, destino ou evidência automática."
+
+camada_energetica:
+  impressao_mental: "Perceber padrões onde outros veem acaso."
+  permeacao_emocional: "Assombro sagrado, curiosidade, sentido de 'alguém me dizendo algo'."
+  manifestacao_externa: "Encontros surpreendentes, 'acertos' no timing, eventos em espelho."
+  como_guiar_o_astral: "Usar sincronicidade como convite à observação, não como aposta."
+
+aplicacao_astrologica:
+  mapas: "Uma correspondência de grau pode ser anotada como observação interpretativa; não basta, por si só, para estabelecer relação."
+  trânsitos: "Trânsito e evento significativo podem ser estudados em diário com data, técnica, orbe e contexto, sem inferir causalidade."
+  releituras: "Revolução solar e progressões pertencem a técnicas próprias; a noção de sincronicidade não substitui suas regras de cálculo."
+
+referencias:
+  - autor: "C. G. Jung"
+    obra: "Synchronicity: An Acausal Connecting Principle"
+    natureza: "primária moderna"
+    localizador: "Ensaio de 1952; definição e limites do conceito."
+  - autor: "C. G. Jung e Wolfgang Pauli"
+    obra: "The Interpretation of Nature and the Psyche"
+    natureza: "primária moderna"
+    localizador: "Volume que reúne o ensaio de Jung e o estudo de Pauli; conferir edição."
+
+validacao_de_fontes:
+  base: "A ficha atribui sincronicidade a Jung/Pauli e não a Ptolomeu, Bonatti ou à técnica helenística."
+  limite: "Não apresentar coincidência significativa como cálculo astrológico, mecanismo causal ou confirmação empírica."
+
+ver_mais:
+  - "../00_Filosofia/7_Leis_Hermeticas.yaml"
+  - "../00_Filosofia/Macrocosmo_Microcosmo.yaml"
+
+## ✏️ Minhas Anotações
+

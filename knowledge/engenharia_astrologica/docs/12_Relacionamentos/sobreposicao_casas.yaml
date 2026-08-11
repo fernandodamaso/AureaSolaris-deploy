@@ -1,0 +1,59 @@
+status: review
+id: "sobreposicao_casas"
+nome: "Sobreposição de Casas"
+tradicoes:
+  - "moderna ocidental"
+  - "relacional"
+tipo: "Relacionamentos"
+subtema: "Mapas em diálogo — casas"
+
+origens_e_divergencias:
+  tradicional: "A sobreposição de casas, tal como praticada na sinastria contemporânea, não é uma técnica helenística padronizada; significadores relacionais tradicionais têm outra lógica."
+  moderna: "Sinastria por casas é prática moderna ocidental e depende de dados natais, sistema de casas e política de orbes declarados."
+  nota: "Descreve uma hipótese de ênfase simbólica entre duas cartas, não a intenção, o caráter ou o destino da outra pessoa."
+
+referencias:
+  - autor: "Ronald C. Davison"
+    obra: "Synastry: Understanding Human Relations through Astrology"
+    natureza: "fonte moderna relacional"
+    localizador: "Métodos comparativos de duas cartas; conferir edição utilizada"
+  - autor: "Faculty of Astrological Studies"
+    obra: "The Astrology of the Family"
+    natureza: "fonte contemporânea de estudo"
+    localizador: "Contexto relacional e familiar; não confundir com regra histórica universal"
+
+atlas_simbolico:
+  pessoas_arquetipos: "O parceiro, o complemento, o espelho"
+  lugares_fisicos: "Locais de encontro, tribunais"
+  objetos_materia: "Alianças, contratos, mapas sobrepostos"
+  eventos_tipicos: "Casamentos, divórcios, sociedades"
+  animais: "Pomba, cisne, golfinho"
+  plantas_ervas: "Rosa, violeta, maçã (flor)"
+  metais_pedras: "Cobre, bronze, esmeralda, jade"
+  cores_sons:
+    cores: ["Verde-esmeralda", "rosa", "dourado claro"]
+    sons: ["Harpa", "canto coral"]
+  numeros: [7]
+  dias_semana: ["Sexta-feira"]
+  doencas_corpo:
+    doencas: ["Problemas renais", "dor lombar"]
+    partes_corpo: ["Rins", "região lombar", "pele"]
+  arquetipos_mitologicos:
+    - "Afrodite (amor)"
+    - "Hera (casamento)"
+    - "Hermes (aliança)"
+  mitos_historias: "Hera e Zeus; Afrodite e Eros"
+  expressao_elevada_sombra: "Elevada: relação autêntica | Sombra: dependência, manipulação"
+
+camada_energetica:
+  impressao_mental: "Sobreposição de casas = 'onde eu entro na sua vida e você entra na minha'."
+  permeacao_emocional: "Amor como território compartilhado. Quando saudável: troca. Quando ferido: invasão."
+  manifestacao_externa: "Eventos prováveis de encontros, uniões, separações. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a RESPEITAR O TERRITÓRIO DO OUTRO. Sobreposição não é posse."
+
+como_usar: |
+  1. Sobreponha os dois mapas: planeta de A na casa de B.
+  2. Leia: 'meu Sol está na sua Casa 7 = eu brilho no seu relacionamento'.
+  3. Planetas nas casas do outro = áreas de ativação mútua.
+  4. SEMPRE como tendência, não como sentença.
+

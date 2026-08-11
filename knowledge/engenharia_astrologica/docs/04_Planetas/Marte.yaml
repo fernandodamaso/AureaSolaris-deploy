@@ -1,0 +1,168 @@
+status: review
+id: "marte"
+tradicoes:
+  - "helenística"
+  - "medieval"
+  - "renascentista"
+  - "moderna (camada psicológica explicitamente separada)"
+escopo_documental:
+  tecnica_historica:
+    - "natureza, significações, regência, dignidades, sect e condições planetárias conforme a linhagem selecionada"
+  camadas_modernas: "Psicologia, evolução, sistêmica, mitologia e correspondências contemporâneas permanecem identificadas como camadas próprias."
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "primária"
+    localizador: "Livros I–II, natureza, significações e condições dos planetas"
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    natureza: "primária"
+    localizador: "Livros I–II, significadores e julgamento natal"
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    natureza: "primária"
+    localizador: "Livro I, significações, dignidades e condições planetárias"
+validacao_de_fontes:
+  base: "As refer?ncias estruturadas sustentam a camada hist?rica ou moderna explicitamente declarada para este corpo."
+  escopo: "Mitologia, psicologia, evolu??o, medicina, sist?mica e Atlas permanecem camadas de estudo rotuladas, sem substituir dado astron?mico ou regra de escola."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+nome: "Marte"
+tipo: "Planeta"
+tradicao_primaria: ["tradicional", "psicológica"]
+
+essencia:
+  - "Ação"
+  - "Impulso"
+  - "Confronto"
+  - "Desejo"
+
+atlas_simbolico:
+  pessoas_arquetipos:
+    - "Guerreiro"
+    - "Atleta"
+    - "Militar"
+    - "Amante (desejo)"
+    - "Cirurgião"
+    - "Campeão"
+    - "Aggressor (modo sombra)"
+  lugares:
+    - "Arena"
+    - "Academia"
+    - "Campo de batalha"
+    - "Hospital (sala de cirurgia)"
+    - "Garagem"
+    - "Fábrica"
+    - "Quadra de esportes"
+  objetos_materia:
+    - "Espada"
+    - "Ferramenta"
+    - "Machado"
+    - "Fogo (fogão, isqueiro)"
+    - "Pistola"
+    - "Bomba"
+    - "Escudo"
+    - "Ferramenta de corte"
+  eventos_tipicos:
+    - "Conflito"
+    - "Acidente"
+    - "Iniciativa"
+    - "Conquista"
+    - "Cirurgia"
+    - "Competição"
+    - "Assalto"
+    - "Guerra"
+  animais:
+    - "Leão"
+    - "Tigre"
+    - "Cobra"
+    - "Escorpião"
+    - "Touro"
+    - "Lobo"
+    - "Cavalo de guerra"
+  plantas_ervas:
+    - "Pimenta"
+    - "Mostarda"
+    - "Alho"
+    - "Fogo-vivo (erva)"
+    - "Urtiga"
+    - "Cacto espinhoso"
+    - "Gengibre"
+  metais_pedras:
+    - "Ferro"
+    - "Aço"
+    - "Hematita"
+    - "Granada"
+    - "Rubi"
+    - "Ágata de fogo"
+  cores_sons:
+    cores: ["Vermelho", "Laranja-fogo", "Marrom-avermelhado"]
+    sons: ["Trovão", "Sirene", "Buzina", "Grito de guerra", "Tiro"]
+  numeros: [1, 5, 9, 16, 27]
+  dias_semana: ["Terça-feira"]
+  doencas_corpo:
+    doencas: ["Febre", "Inflamação", "Acidentes", "Problemas de pressão arterial"]
+    partes_corpo: ["Músculos", "Sangue", "Cabeça", "Genitália", "Sistema adrenal"]
+  arquetipos_mitologicos:
+    - "Ares/Marte (deus da guerra)"
+    - "Hércules (força física)"
+    - "Thor (guardião com martelo)"
+    - "Kali (destruição criativa)"
+    - "Seth (força bruta)"
+  mitos_historias:
+    - "Ares e a Guerra de Troia (violência que move história)"
+    - "Hércules e os 12 trabalhos (ação que transforma)"
+    - "Thor e oMjolnir (força que protege)"
+    - "Mito do Sangue de Marte (ferida que marca)"
+  sonhos_inconsciente:
+    - "Guerra = conflito interno"
+    - "Espada = necessidade de cortar o que não serve"
+    - "Fogo = paixão destrutiva"
+    - "Assalto = medo de ser invadido"
+    - "Vitória esportiva = desejo de reconhecimento"
+  expressao_elevada_vs_sombra:
+    elevada: "Guerreiro ético, defensor dos fracos, que usa a força para proteger."
+    sombra: "Aggressor, violento, impulsivo, 'guerra por guerra', que destrói por prazer."
+
+camada_energetica:
+  impressao_mental: "A mente de 'vou atrás'. Impulso, coragem, raiva, desejo de conquistar. Quando atrito: irritação, pressa, agressividade defensiva."
+  permeacao_emocional: "Paixão e o fogo do desejo. Quando bloqueado vira frustração acumulada; quando solto demais, queima tudo."
+  manifestacao_externa: "Eventos prováveis de ação, conflito, acidentes, sexo, competição. Trânsitos tendem a acelerar ou inflamar situações."
+  como_guiar_o_astral: "Canalizar a ação em vez de reprimir. Marte mal dirigido vira explosão; bem dirigido vira iniciativa. Ajudar a mente a 'escolher a batalha'."
+
+representa:
+  pessoas: ["Guerreiro", "Atleta", "Militar", "Amante (desejo)", "Cirurgião"]
+  eventos: ["Conflito", "Acidente", "Iniciativa", "Conquista", "Cirurgia"]
+  corpo: ["Músculos", "Sangue", "Cabeça", "Genitália"]
+
+dignidades_essenciais:
+  domicilio: ["Áries", "Escorpião"]
+  exaltacao: ["Capricórnio"]
+  detrimento: ["Libra", "Touro"]
+  queda: ["Câncer"]
+
+astronomia_e_regras_de_julgamento:
+  astronomia_observacional:
+    - "Planeta de ciclo sinó­dico marcante, com estações e retrogradações que podem prolongar uma mesma zona zodiacal."
+    - "Seu brilho, velocidade e condição retrógrada devem ser registrados em técnicas de trânsito e retorno."
+  criterios_tradicionais:
+    - "Como maléfico, sua força destrutiva ou cirúrgica depende de dignidade, casa, recepção, aspectos e sect."
+    - "Fora de seita, tende a ser julgado como mais áspero em muitas leituras tradicionais."
+  notas_de_motor:
+    - "Não reduzir Marte a agressividade psicológica: corte, febre, separação, conflito, cirurgia, coragem e técnica pertencem ao núcleo histórico."
+    - "Ao calcular repetições por retrogradação, registrar cada passagem em vez de fundir tudo num único evento."
+
+combinacoes_exemplo:
+  casa_1:
+    temas: ["corpo", "identidade em ação", "vitalidade"]
+    possiveis_efeitos: ["impetuosidade", "coragem física", "tendência a brigas"]
+    reforcado_por: ["sol_dignificado", "ascendente_em_fogo"]
+    amenizado_por: ["venus_conjunto", "lua_forte"]
+
+origens_e_divergencias:
+  escola_tradicional:
+    autores: [Ptolomeu, Bonatti]
+    conceito: "O Maléfico Menor, calor e secura, conflito, feridas, ação direta."
+  escola_moderna:
+    autores: [Liz Greene, Jung]
+    conceito: "A assertividade, a libido (vontade de viver), a energia vital de realização."
+  por_que_da_divergencia: "De 'maléfico que fere' a 'energia de realização' — a moderna ressignificou Marte como motor saudável da ação."

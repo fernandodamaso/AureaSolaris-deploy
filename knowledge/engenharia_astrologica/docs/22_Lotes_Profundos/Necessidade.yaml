@@ -1,0 +1,58 @@
+status: review
+id: "lote_necessidade"
+nome: "Parte da Necessidade"
+tradicoes:
+  - "helenistica"
+  - "arabe-medieval"
+formula_diurna: "Asc + Fortuna − Mercúrio (Paulus Alexandrinus)"
+formula_noturna: "Asc + Mercúrio − Fortuna (Paulus Alexandrinus)"
+tema: "Necessidade: lote hermético associado a Hermes/Mercúrio em uma variante de Paulus"
+
+sentido_do_calculo: |
+  Na variante de Paulus, conta-se de Mercúrio até Fortuna em carta diurna e o
+  inverso em carta noturna, projetando o arco no Ascendente. Outras tradições
+  preservam fórmulas e sentidos distintos para Necessidade; o nome não autoriza
+  reduzi-la a carência psicológica ou necessidade básica.
+
+origens_e_divergencias:
+  tradicional: "Paulus inclui Necessidade entre os lotes planetários; testemunhos helenísticos também mostram diferenças de fórmula e de significação."
+  moderna: "Leituras de carência, dependência ou desenvolvimento pessoal são extensões modernas e não equivalem ao uso antigo."
+  nota: "O motor deve exigir a fonte da fórmula — ao menos Paulus, Valens/Firmicus ou uma transmissão medieval identificada — e nunca apresentar uma versão como universal."
+
+referencias:
+  - autor: "Paulus Alexandrinus"
+    obra: "Introductory Matters"
+    edicao_ou_traducao: "Dorian Gieseler Greenbaum, tradução inglesa"
+    natureza: "fonte primária helenística"
+    localizador: "Capítulo 23, Lot of Necessity; fórmula ligada a Mercúrio e Fortuna"
+  - autor: "Dorian Gieseler Greenbaum"
+    obra: "From Love to Desire: The Lot of Eros in Hellenistic Astrology"
+    ano: 2015
+    natureza: "secundária filológica"
+    localizador: "Discussão das fórmulas Valens/Firmicus e Paulus para Eros e Necessidade"
+atlas_simbolico:
+  pessoas_arquetipos: "O necessitado, o carente, o que precisa"
+  lugares_fisicos: "Lugares de necessidade, hospitais, locais de carência"
+  objetos_materia: "Ferramentas de necessidade, objetos de carência"
+  eventos_tipicos: "Necessidades, carências, dependências"
+  animais: "Cão de caça, abutre, caranguejo"
+  plantas_ervas: "Camomila, sabugueiro, carqueja"
+  metais_pedras: "Mercúrio, jaspe, ágata"
+  cores_sons: "Verde-claro, cinza; notas Mi e Dó"
+  numeros: "6 (necessidade), 8 (cura), 9 (transcendência)"
+  dias_semana: "Quarta-feira (Mercúrio)"
+  doencas_corpo: "Intestinos, sistema digestivo, baço"
+  arquetipos_mitologicos: "Héstia/Vesta, Atena, Deméter/Ceres"
+  mitos_historias: "Deméter e a colheita; Héstia e o serviço"
+  sonhos_simbolos_inconsciente: "Necessidades, carências, dependências"
+  expressao_elevada_sombra: "Elevada: necessidade consciente, serviço | Sombra: dependência, vitimização"
+
+camada_energetica:
+  impressao_mental: "O que a mente sente que PRECISA para funcionar — e onde há carência."
+  permeacao_emocional: "Insegurança ligada ao que parece faltar."
+  manifestacao_externa: "Eventos prováveis de 'preciso resolver isso'. Arquétipos: o Vazio que puxa, a Carência. Inclinação, não destino."
+  como_guiar_o_astral: "Mostrar que a Necessidade aponta o apoio que a pessoa busca — e onde ela se apoia demais."
+
+como_usar: "Registrar fórmula, fonte, sect, signo, lugar e regente; interpretar somente no contexto da técnica declarada. Não usar para diagnosticar dependência, privação ou saúde."
+regente: "Regente do signo onde cai; lido por casa e aspectos."
+

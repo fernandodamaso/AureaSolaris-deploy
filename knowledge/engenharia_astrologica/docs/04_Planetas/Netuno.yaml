@@ -1,0 +1,147 @@
+status: review
+id: "netuno"
+tradicoes:
+  - "moderna"
+  - "psicológica"
+  - "humanista"
+  - "cármica/evolutiva (quando explicitamente indicada)"
+escopo_documental:
+  tecnica_historica:
+    - "história da descoberta e incorporação astrológica do corpo"
+  camadas_modernas: "Significados psicológicos, humanistas, evolutivos, mitológicos e sistêmicos são mantidos como linhagens modernas, não como dignidade helenística retroativa."
+referencias:
+  - autor: "Liz Greene"
+    obra: "Astrology: A Cosmic Science"
+    natureza: "secundária/moderna"
+    localizador: "Capítulos sobre planetas exteriores e interpretação psicológica; conferir edição"
+  - autor: "Jeffrey Green"
+    obra: "Pluto: The Evolutionary Journey of the Soul"
+    natureza: "secundária/moderna"
+    localizador: "Obra de referência para a linhagem evolutiva; conferir capítulos conforme o corpo"
+validacao_de_fontes:
+  base: "As refer?ncias estruturadas sustentam a camada hist?rica ou moderna explicitamente declarada para este corpo."
+  escopo: "Mitologia, psicologia, evolu??o, medicina, sist?mica e Atlas permanecem camadas de estudo rotuladas, sem substituir dado astron?mico ou regra de escola."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+nome: "Netuno"
+tipo: "Planeta (Transpessoal)"
+tradicao_primaria: ["moderna", "psicológica", "evolutiva"]
+
+essencia:
+  - "Dissolução"
+  - "Idealização"
+  - "Mística"
+  - "Compaixão"
+
+atlas_simbolico:
+  pessoas_arquetipos:
+    - "Místico"
+    - "Artista visionário"
+    - "Médium"
+    - "Viciado (modo sombra)"
+    - "Salvador iludido"
+    - "Poeta"
+  lugares:
+    - "Mar aberto"
+    - "Mosteiro"
+    - "Hospital psiquiátrico"
+    - "Ilha deserta"
+    - "Teatro de ilusões"
+    - "Templo"
+  objetos_materia:
+    - "Vinho"
+    - "Ópio, éter"
+    - "Véu"
+    - "Máscara"
+    - "Câmara escura (fotografia)"
+    - "Instrumento de sopro"
+    - "Flor de lótus"
+  eventos_tipicos:
+    - "Inspiração artística"
+    - "Fuga da realidade"
+    - "Idealização que desaba"
+    - "Experiência mística"
+    - "Doença psicossomática"
+    - "Encontro com viciados"
+    - "Falência por ilusão"
+  animais:
+    - "Golfinho"
+    - "Cavalo-marinho"
+    - "Baleia"
+    - "Foca"
+    - "Polvo (muda de cor)"
+    - "Cisne negro"
+  plantas_ervas:
+    - "Papoula"
+    - "Lótus"
+    - "Videira"
+    - "Macieira (fruto proibido)"
+    - "Hortelã-pimenta (névoa)"
+    - "Lavanda"
+    - "Camomila"
+  metais_pedras:
+    - "Platina"
+    - "Turquesa"
+    - "Água-marinha"
+    - "Opala"
+    - "Jade branco"
+    - "Coral"
+  cores_sons:
+    cores: ["Azul-marinho", "Violeta-neblina", "Verde-água", "Branco-transparente"]
+    sons: ["Órgão de igreja", "Ondas do mar", "Canto gregoriano", "Suspiro"]
+  numeros: [7, 12, 21, 33]
+  dias_semana: ["Quinta-feira"]
+  doencas_corpo:
+    doencas: ["Doenças psicossomáticas", "Vícios", "Hipersensibilidade", "Confusão mental"]
+    partes_corpo: ["Pés", "Sistema linfático", "Glândulas", "Cérebro (emocional)"]
+  arquetipos_mitologicos:
+    - "Netuno/Poseidon (deus dos mares, do inconsciente)"
+    - "Dioniso (êxtase, dissolução)"
+    - "Vishnu (o que permeia tudo)"
+    - "Oceano (primordial)"
+  mitos_historias:
+    - "Netuno e Anfitrite (casamento no fundo do mar)"
+    - "Dioniso e as bacantes (êxtase que dissolve o eu)"
+    - "Mito do Éter (quinto elemento, o que une tudo)"
+    - "Arca de Noé (água que dissolve e recomeça)"
+  sonhos_inconsciente:
+    - "Afogamento = medo de se perder na emoção"
+    - "Nadar no mar = dissolução saudável"
+    - "Ilusão que desaba = véu que se rasga"
+    - "Estrelas no mar = inspiração espiritual"
+    - "Fumaça = confusão mental"
+  expressao_elevada_vs_sombra:
+    elevada: "Artista visionário, místico compassivo, que dissolve o ego para conectar com o todo."
+    sombra: "Viciado, iludido, vitimista, confunde empatia com dependência, foge da realidade."
+
+camada_energetica:
+  impressao_mental: "A mente de 'como o todo me toca?'. Idealização, imaginação, dissolução do ego. Quando atrito: confusão, ilusão, 'fuga' da realidade."
+  permeacao_emocional: "Névoa, transpasse. Quando bloqueado: insensibilidade, frieza. Quando solto: compaixão, arte, êxtase."
+  manifestacao_externa: "Eventos prováveis de inspiração, vício, espiritualidade, arte. Trânsitos trazem névoa ou clareza mística."
+  como_guiar_o_astral: "Ajudar a mente a distinguir o que é inspiração do que é ilusão. Netuno pede compaixão, não escapismo."
+
+representa:
+  pessoas: ["Místico", "Artista", "Médium", "Viciado (sombra)", "Poeta"]
+  eventos: ["Inspiração artística", "Fuga da realidade", "Idealização", "Doença psicossomática"]
+  corpo: ["Pés", "Sistema linfático", "Glândulas"]
+
+dignidades_essenciais:
+  domicilio: ["Peixes"]
+  exaltacao: ["Câncer"]
+  detrimento: ["Virgem"]
+  queda: ["Capricórnio"]
+
+combinacoes_exemplo:
+  casa_12:
+    temas: ["inconsciente", "espiritualidade", "isolamento"]
+    possiveis_efeitos: ["dons mediúnicos", "tendência a se perder", "capacidade de cura espiritual"]
+    reforcado_por: ["lua_conjunto", "neptuno_dignificado"]
+    amenizado_por: ["saturno_conjunto", "marte_conjunto"]
+
+origens_e_divergencias:
+  escola_tradicional:
+    autores: []
+    conceito: "Não tradicional — descoberto em 1846."
+  escola_moderna:
+    autores: [Liz Greene, Jung]
+    conceito: "Planeta da dissolução, da compaixão, da arte e do sofrimento espiritual."
+  por_que_da_divergencia: "Netuno é moderno por definição: entrou no mapa após a Revolução Francesa e a popularização do espiritismo."

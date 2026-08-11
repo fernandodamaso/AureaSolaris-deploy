@@ -1,0 +1,54 @@
+﻿status: draft
+id: "oposicao_atlas"
+nome: "Oposição — Atlas Simbólico"
+tradicoes:
+  - "atlas simbolico editorial"
+  - "sintese multiescola"
+tipo: "Atlas Simbólico"
+subtema: "Correspondências da Oposição"
+
+origens_e_divergencias:
+  tradicional: "Ptolomeu (Tetrabiblos) — aspectos ptolomaicos e orbes."
+  moderna: "Astrologia psicológica moderna — oposição como tensão polar."
+  nota: "Revisar ao citar — marca a escola usada."
+
+atlas_simbolico:
+  pessoas_arquetipos: "Par oposto, dupla polar, adversário, espelho"
+  lugares_fisicos: "Lugares de tensão, tribunais, fronteiras, campos de batalha"
+  objetos_materia: "Espelhos opostos, balanças, espadas duplas"
+  eventos_tipicos: "Conflitos, separações, debates, polarizações, reconciliações"
+  animais: "Lobo e cordeiro, águia e serpente, touros em luta"
+  plantas_ervas: "Hera e hera venenosa, rosas e espinhos"
+  metais_pedras: "Ferro e prata, diamante e obsidiana"
+  cores_sons:
+    cores: ["Vermelho e azul", "preto e branco", "dourado e prata"]
+    sons: ["Tambor de guerra", "grito", "silêncio tenso"]
+  numeros: [2, 6, 7]
+  dias_semana: ["Segunda-feira", "Terça-feira"]
+  doencas_corpo:
+    doencas: ["Problemas de equilíbrio", "conflitos internos"]
+    partes_corpo: ["Coluna dorsal", "rins", "joelhos"]
+  arquetipos_mitologicos:
+    - "Castor e Pólux (gêmeos opostos)"
+    - "Luz e sombra"
+  mitos_historias: "A guerra dos deuses; luz vs sombra"
+  sonhos_simbolos_inconsciente: "Espelhos, duelos, separações"
+  expressao_elevada_sombra: "Elevada: polaridade consciente, tensão criativa | Sombra: conflito destrutivo, polarização cega"
+
+camada_energetica:
+  impressao_mental: "A mente que ENXERGA O CONTRÁRIO. Tensão, espelho, 'o outro lado'."
+  permeacao_emocional: "Atração-repulsão. Quando saudável: diálogo de polos. Quando ferido: guerra, separação."
+  manifestacao_externa: "Eventos prováveis de conflito, polarização, encontro com o outro. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a ENXERGAR O ESPELHO DO OUTRO. Oposição não é briga — é reconhecimento do que falta."
+
+consenso_tradicional: "Aspecto de maior tensão angular; os planetas se polarizam e se atraem/repelem."
+
+arquetipos_simbolicos: ["O espelho", "a balança", "luz e sombra"]
+
+aplicativo_separativo: "Aplicativa: a oposição está se FORMANDO — tensão crescente. Separativa: a oposição se DISSOLVENDO — a energia perde força."
+
+exemplo_pratico: "Sol oposto Saturno: identidade vs estrutura. 'Você brilha contra a regra' ou 'você se esconde atrás da regra'."
+
+ver_mais:
+  - "../06_Aspectos/Oposicao.yaml"
+

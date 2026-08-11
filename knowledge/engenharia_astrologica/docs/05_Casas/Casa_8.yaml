@@ -1,0 +1,67 @@
+status: review
+id: "casa_8"
+tradicoes:
+  - "helenística"
+  - "medieval"
+  - "renascentista"
+  - "moderna (camadas psicológica e sistêmica explicitamente separadas)"
+tipo: "conceito técnico de casa astrológica"
+escopo_documental:
+  tecnica_historica:
+    - "significação tradicional da casa, sua relação com ângulos, casas sucedentes/cadentes e tópicos derivados"
+  camadas_modernas: "Atlas simbólico, Tarot, medicina, arquétipos e leitura sistêmica permanecem separados da regra histórica."
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "primária"
+    localizador: "Livro IV e passagens sobre configuração e significação dos lugares"
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    natureza: "primária"
+    localizador: "Livros II–IV, tópicos das casas e julgamento natal"
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    natureza: "primária"
+    localizador: "Livro I, significações das casas e regras de julgamento"
+validacao_de_fontes:
+  base: "A significa??o hist?rica dos lugares ? sustentada por Ptolomeu, Valens e Lilly, nas refer?ncias estruturadas da ficha."
+  escopo: "Tarot, Atlas simb?lico, medicina, psicologia e leitura sist?mica s?o camadas de estudo rotuladas; n?o substituem a t?cnica hist?rica de casas."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+numero: 8
+nome: "Casa 8 — A Transformação / O Mistério"
+tema: "O que se aprofunda e se transmite"
+
+origens_e_divergencias:
+  tradicional: "Ptolomeu (Tetrabiblos) — significados tradicionais das 12 casas."
+  moderna: "Astrologia psicológica/sistêmica (Liz Greene, escola de relações familiares)."
+  nota: "Revisar ao citar — marca a escola usada."
+atlas_simbolico:
+  pessoas_arquetipos: "O mago, o herdeiro, o cirurgião, o detetive"
+  lugares_fisicos: "Lugares profundos, subterrâneos, penínsulas, fontes termais"
+  objetos_materia: "Faca de cirurgia, espada, veneno, elixir"
+  eventos_tipicos: "Heranças, cirurgias, mortes, transformações"
+  animais: "Escorpião, serpente, phoenix"
+  plantas_ervas: "Papoula, açafrão, mandrágora, heléboro"
+  metais_pedras: "Ferro, obsidiana, granada, rubi"
+  cores_sons: "Vermelho-escuro, preto; notas Dó e Sol"
+  numeros: "4 (morte/renascimento), 8 (transformação)"
+  dias_semana: "Terça-feira (Marte/Plutão)"
+  doencas_corpo: "Órgãos sexuais, bexiga, intestino grosso, próstata"
+  arquetipos_mitologicos: "Hades/Plutão, Hécate, Esculápio"
+  mitos_historias: "Rapto de Perséfone; Esculápio e a ressurreição"
+  sonhos_simbolos_inconsciente: "Águas profundas, escorpiões, tesouros ocultos"
+  expressao_elevada_sombra: "Elevada: regeneração, cura pelo confronto | Sombra: vingança, manipulação"
+
+camada_energetica:
+  campo_mental: "Foco no que é tabu, profundo, compartilhado e finito."
+  permeacao_emocional: "Intensidade, medo da perda, 'o que não se mostra'."
+  manifestacao_externa: "Eventos prováveis de crise, morte/renascimento, dinheiro do outro. Arquétipos: o Abismo, a Porta. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a 'entrar no abismo sem medo' — a Casa 8 é transformação, não destruição."
+
+significados_derivados:
+  dinheiro_parceiro: true  # EXEMPLO PEDIDO: dinheiro do parceiro
+  heranca: "Casa 8 = herança, dinheiro de terceiros, bens compartilhados."
+  morte: "Casa 8 = 'morte simbólica' (transformação), não morte literal (é Casa 8, não Casa 12)."
+  impostos: "Impostos, dívidas, 'o que deve ao outro'."
+  sexualidade_profunda: "Sexo como troca de energia, não só prazer (Casa 5 = prazer; Casa 8 = fusão)."
+  crises: "Crises que transformam — 'o que não mata, fortalece' (Casa 8)."

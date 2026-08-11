@@ -1,0 +1,66 @@
+status: review
+id: "casa_6"
+tradicoes:
+  - "helenística"
+  - "medieval"
+  - "renascentista"
+  - "moderna (camadas psicológica e sistêmica explicitamente separadas)"
+tipo: "conceito técnico de casa astrológica"
+escopo_documental:
+  tecnica_historica:
+    - "significação tradicional da casa, sua relação com ângulos, casas sucedentes/cadentes e tópicos derivados"
+  camadas_modernas: "Atlas simbólico, Tarot, medicina, arquétipos e leitura sistêmica permanecem separados da regra histórica."
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "primária"
+    localizador: "Livro IV e passagens sobre configuração e significação dos lugares"
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    natureza: "primária"
+    localizador: "Livros II–IV, tópicos das casas e julgamento natal"
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    natureza: "primária"
+    localizador: "Livro I, significações das casas e regras de julgamento"
+validacao_de_fontes:
+  base: "A significa??o hist?rica dos lugares ? sustentada por Ptolomeu, Valens e Lilly, nas refer?ncias estruturadas da ficha."
+  escopo: "Tarot, Atlas simb?lico, medicina, psicologia e leitura sist?mica s?o camadas de estudo rotuladas; n?o substituem a t?cnica hist?rica de casas."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+numero: 6
+nome: "Casa 6 — O Serviço / A Rotina"
+tema: "Como me mantenho e sirvo"
+
+origens_e_divergencias:
+  tradicional: "Ptolomeu (Tetrabiblos) — significados tradicionais das 12 casas."
+  moderna: "Astrologia psicológica/sistêmica (Liz Greene, escola de relações familiares)."
+  nota: "Revisar ao citar — marca a escola usada."
+atlas_simbolico:
+  pessoas_arquetipos: "O servo, o cuidador, o operário, o médico"
+  lugares_fisicos: "Hospitais, laboratórios, escritórios, fazendas"
+  objetos_materia: "Ferramentas, instrumentos de trabalho, plantas medicinais"
+  eventos_tipicos: "Cura, recuperação, exames, rotinas, trabalho"
+  animais: "Galinha, cão de caça, abutre"
+  plantas_ervas: "Trigo, centeio, hortelã, camomila"
+  metais_pedras: "Mercúrio, jaspe, ágata"
+  cores_sons: "Verde-claro, cinza; notas Mi e Dó"
+  numeros: "5 (serviço), 6 (cura), 8 (análise)"
+  dias_semana: "Quarta-feira (Mercúrio)"
+  doencas_corpo: "Intestinos, baço, pâncreas, sistema digestivo"
+  arquetipos_mitologicos: "Atena, Héstia/Vesta, Esculápio"
+  mitos_historias: "Esculápio e a cura; Héstia e o serviço"
+  sonhos_simbolos_inconsciente: "Ferramentas, hospitais, limpeza, análise"
+  expressao_elevada_sombra: "Elevada: serviço desapegado, cura | Sombra: crítica, perfeccionismo, hipocondria"
+
+camada_energetica:
+  campo_mental: "Foco em organização, saúde, dever e ajuste diário."
+  permeacao_emocional: "Senso de 'preciso funcionar', 'como cuido de mim e dos outros'."
+  manifestacao_externa: "Eventos prováveis de rotina, saúde, trabalho servil. Arquétipos: o Cuidador, o Funcionário. Inclinação, não destino."
+  como_guiar_o_astral: "Casa 6 pede SERVIÇO — a pessoa 'cuida do mundo' e precisa lembrar de se cuidar."
+
+significados_derivados:
+  dinheiro_parceiro: false
+  saude: "Casa 6 = saúde, doença, rotina de autocuidado."
+  trabalho_servil: "Emprego, serviço, 'o que faço para sobreviver' (diferente de Casa 10 que é carreira)."
+  animais: "Pets, animais de estimação — 'quem eu cuido que não é humano'."
+  servico: "Onde a pessoa serve — 'o que faço de útil para o mundo'."

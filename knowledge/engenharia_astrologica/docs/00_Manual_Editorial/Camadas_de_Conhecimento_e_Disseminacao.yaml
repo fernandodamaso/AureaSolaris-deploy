@@ -1,0 +1,72 @@
+status: review
+id: camadas_conhecimento_disseminacao
+nome: Camadas de Conhecimento, Interpretação e Disseminação
+exige_tradicao: false
+justificativa_sem_tradicao: Documento de governan?a editorial; organiza camadas de
+  apresenta??o e n?o afirma uma t?cnica ou tradi??o astrol?gica pr?pria.
+tipo: política editorial
+principio: O corpus preserva o que as fontes históricas e as escolas realmente ensinam.
+  Simbolismo, técnica, origem, etimologia e curiosidade são conhecimento central;
+  atribuição, comparação e orientação de uso são camadas distintas que se reforçam,
+  sem apagar umas às outras.
+camadas:
+  documentacao_historica_tecnica:
+    objetivo: Registrar conceitos, procedimentos, correspondências e afirmações de
+      uma fonte/escola com autoria, obra, data/edição, trecho ou seção quando disponível.
+    regra: Não suprimir uma correspondência tradicional, médica, cármica, mágica ou
+      espiritual por ser controversa; qualificá-la por fonte, período e escola.
+  simbolismo_origem_e_linguagem:
+    objetivo: Conservar os porquês das associações, mitos, imagens, etimologias, origem
+      das palavras, história dos glifos, correspondências e curiosidades que produzem
+      compreensão simbólica.
+    regra: Sempre que possível, associar o símbolo à sua fonte, período, língua ou
+      escola. O momento 💎 Ahhhhh... é parte da aprendizagem e não um apêndice decorativo.
+    conteudo:
+    - mito
+    - imagem
+    - etimologia
+    - glifo
+    - história do termo
+    - analogia
+    - curiosidade astronômica
+    - porquê técnico
+  analise_comparativa:
+    objetivo: Expor convergências, divergências, traduções, mudanças históricas e
+      pressupostos entre escolas.
+    regra: Distinguir regra histórica, leitura moderna, hipótese interpretativa e
+      associação pessoal do caderno.
+  visoes_crencas_e_correspondencias:
+    objetivo: Preservar e desenvolver as descrições de aparência física, linguagem
+      cármica, arquétipos, mitos e correspondências ensinadas pelas diferentes escolas.
+    regra: Não remover nem neutralizar uma visão por não ser consenso. Identificar
+      escola, autor ou período, explicar sua lógica simbólica, registrar variantes e
+      discordâncias e separar essa camada de cálculo, diagnóstico ou regra universal.
+  aplicacao_e_disseminacao:
+    objetivo: Guardar orientações para futura comunicação a terceiros, consentimento,
+      linguagem e limites de atuação.
+    regra: Esta camada não altera nem remove o conteúdo documental; ela regula apenas
+      como uma leitura é apresentada fora do estudo pessoal.
+requisitos_por_ficha:
+- Identificar tradição, autor ou fonte quando houver atribuição.
+- Separar descrição do que uma escola ensina de decisão editorial do projeto.
+- Preservar origem, simbolismo, linguagem e porquê técnico quando forem constitutivos
+  do conceito.
+- Usar status review enquanto faltarem fonte, edição, passagem ou controvérsia relevante.
+- Adicionar orientação de disseminação somente quando a ficha tiver aplicação potencial
+  sobre outra pessoa.
+referencias:
+  primarias: []
+  secundarias:
+  - 'Manual Editorial do próprio corpus: regras de rastreabilidade, origem das associações
+    e divergências.'
+  tecnicas: []
+anotacoes_pessoais: []
+origens_e_divergencias:
+  tradicional: Conceito/técnica presente na tradição astrológica ocidental.
+  moderna: Possível ressignificação contemporânea.
+  nota: Rotular a escola quando divergir.
+camada_energetica:
+  impressao_mental: Campo conceitual do tema/técnica.
+  permeacao_emocional: Como o tema toca a experiência subjetiva.
+  manifestacao_externa: Como aparece em comportamentos e eventos.
+  como_guiar_o_astral: Como usar este conhecimento na leitura prática.

@@ -1,0 +1,72 @@
+status: review
+id: "protocolo_calculo_reproduzivel"
+nome: "Protocolo de Cálculo Reproduzível"
+tipo: "padrão técnico"
+tradicao_primaria: ["astronomia de apoio", "editorial"]
+
+escopo:
+  definicao_operacional: "Conjunto mínimo de dados e convenções que permite reproduzir uma carta ou técnica calculada."
+  inclui:
+    - "Registro de entrada temporal e geográfica."
+    - "Registro de efeméride, sistema zodiacal, casas, nós, pontos e orbes."
+    - "Separação entre dado calculado, convenção e interpretação."
+  nao_inclui:
+    - "Preencher hora, fuso, coordenadas ou sistema de casas por suposição silenciosa."
+    - "Usar uma saída calculada como evidência de uma afirmação interpretativa."
+  exclusoes_do_projeto: []
+
+fundamento:
+  descricao: "O mesmo nascimento ou evento pode gerar resultados diferentes quando hora, fuso, horário de verão, local, efeméride, sistema de casas ou convenção de pontos são alterados. A ficha calculada deve preservar esses parâmetros junto ao resultado."
+  contexto_historico: "A necessidade de registrar dados de observação e convenções cresce com o uso de efemérides algorítmicas e software, mas é compatível com a prática histórica de tabelas e efemérides."
+
+procedimento:
+  pre_requisitos:
+    - "Data local informada pela fonte."
+    - "Hora local e precisão conhecida; declarar se é aproximada ou retificada."
+    - "Local com latitude, longitude e identificação geográfica."
+    - "Fuso IANA ou regra histórica de fuso/horário de verão verificável."
+  passos:
+    - "Converter data/hora local para UTC sem substituir dados ausentes por padrão."
+    - "Calcular dia juliano e a escala de tempo exigida pela efeméride; registrar tratamento de Delta T quando aplicável."
+    - "Calcular posições e casas com motor, versão e arquivos de efeméride identificados."
+    - "Guardar a configuração inteira com a carta: tropical/sideral, geocêntrica/topocêntrica, nós, Lilith, casas, orbes e pontos derivados."
+    - "Apresentar incerteza quando a hora ou o local não forem confirmados."
+  parametros_de_calculo:
+    - "data_hora_local"
+    - "fuso_horario_e_regra_historica"
+    - "UTC"
+    - "latitude_e_longitude"
+    - "dia_juliano_e_escala_de_tempo"
+    - "motor_efemeride_versao_e_arquivos"
+    - "zodiaco_tropical"
+    - "referencial_geocentrico_ou_topocentrico"
+    - "sistema_de_casas"
+    - "nos_verdadeiros_ou_medios"
+    - "orbes_e_regras_de_aspecto"
+
+uso_interpretativo:
+  pergunta_que_ajuda_a_responder:
+    - "Outra pessoa consegue recalcular esta carta e entender de onde veio cada saída?"
+  como_ponderar: "Sem configuração reproduzível, uma leitura deve ser apresentada como provisória, sobretudo para casas, ângulos, Lua, pontos derivados e técnicas de tempo."
+  limites:
+    - "Precisão de cálculo não valida automaticamente interpretação astrológica."
+    - "Dados de nascimento incertos exigem declaração de incerteza ou técnica de retificação documentada."
+
+divergencias_de_tradicao:
+  consenso: "Técnicas diferem em parâmetros, mas devem explicitar os parâmetros utilizados."
+  divergencias:
+    - "Há escolhas legítimas de sistema de casas, nós, orbes e pontos; elas não são intercambiáveis sem aviso."
+  decisao_editorial: "O Aurea e toda ficha calculada devem exibir a configuração efetiva e jamais aplicar defaults invisíveis."
+
+referencias:
+  primarias: []
+  secundarias:
+    - "U.S. Naval Observatory. Astronomical Applications Department: definições de UTC, dia juliano, equinócio e coordenadas. https://aa.usno.navy.mil/faq/asa_glossary (acesso em 2026-08-10)."
+  tecnicas:
+    - "Swiss Ephemeris. swephprg programming interface. https://www.astro.com/swisseph-download/doc/swephprg.2.10.htm (acesso em 2026-08-10)."
+
+relacoes:
+  depende_de: []
+  ver_tambem: ["zodiaco_tropical", "esfera_celeste_coordenadas", "retificacao_natal", "sistemas_de_casas"]
+
+anotacoes_pessoais: []

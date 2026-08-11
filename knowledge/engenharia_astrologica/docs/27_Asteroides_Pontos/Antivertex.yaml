@@ -1,0 +1,87 @@
+﻿status: draft
+id: "antivertex"
+nome: "Antivertex (Anti-Vértice — O Que a Pessoa Traz)"
+tradicoes:
+  - "moderna ocidental"
+  - "pontos calculados"
+tema: "Oposto ao Vertex: o que a pessoa traz para o encontro"
+
+atlas_simbolico:
+  pessoas_arquetipos:
+    - "Pessoa que traz aprendizado"
+    - "Parceiro espelhado"
+    - "Mestre que chega"
+    - "Alguém que você ensina"
+  lugares:
+    - "Lugar onde você se encontra"
+    - "Trabalho (você traz sua contribuição)"
+  objetos_materia:
+    - "Presente que você dá"
+    - "Ferramenta que você domina"
+    - "Lição que você carrega"
+  eventos_tipicos:
+    - "Encontro onde você é o professor"
+    - "Relação onde você dá mais do que recebe"
+    - "Missão de ensino"
+  animais:
+    - "Professor (coruja)"
+    - "Guia (cão)"
+    - "Mensageiro (borboleta)"
+  plantas_ervas:
+    - "Louro (vitória)"
+    - "Manjericão (sabedoria)"
+  metais_pedras:
+    - "Ouro"
+    - "Topázio"
+  cores_sons:
+    cores: ["Dourado", "Azul-escuro"]
+    sons: ["Aplauso", "Canto de sabedoria"]
+  numeros: [7, 12]
+  dias_semana: ["Nenhum (ponto matemático)"]
+  doencas_corpo:
+    doencas: []
+    partes_corpo: ["Mãos (o que você dá)"]
+  arquetipos_mitologicos:
+    - "Hermes guia (o que você traz para o caminho)"
+  mitos_historias:
+    - "Mito do mestre que chega para o aluno"
+  sonhos_inconsciente:
+    - "Dar algo a alguém = Antivertex em ação"
+    - "Ensinar = missão do Antivertex"
+  expressao_elevada_vs_sombra:
+    elevada: "Mestre generoso, que compartilha sem esperar retorno."
+    sombra: "Aquele que 'sabe tudo', que usa o ensino para dominar."
+
+camada_energetica:
+  impressao_mental: "A mente de 'o que eu trago para o outro?'. O que você oferece no encontro. Quando atrito: expectativa de retorno, 'eu ensino para você me admirar'."
+  permeacao_emocional: "Generosidade e troca. Quando bloqueado: sensação de ser usado, 'só dou, não recebo'. Quando solto: troca equilibrada."
+  manifestacao_externa: "Eventos prováveis de encontros onde você é o professor, o guia, o que traz algo. Trânsitos marcam trocas."
+  como_guiar_o_astral: "Ajudar a mente a dar sem esperar retorno: Antivertex pede generosidade, não troca comercial."
+
+representa:
+  pessoas: ["Mestre", "Guia", "Professor", "Pessoa que traz algo"]
+  eventos: ["Encontro de aprendizado", "Troca de saberes", "Missão de ensino"]
+  corpo: ["Mãos", "Braços"]
+
+dignidades_essenciais:
+  domicilio: ["Oposto ao Vertex"]
+  exaltacao: [""]
+  detrimento: [""]
+  queda: [""]
+
+combinacoes_exemplo:
+  casa_1:
+    temas: ["identidade", "o que eu trago"]
+    possiveis_efeitos: ["personalidade que ensina", "identidade de guia"]
+    reforcado_por: ["jupiter_conjunto", "mercurio_conjunto"]
+    amenizado_por: ["saturno_conjunto"]
+
+origens_e_divergencias:
+  escola_tradicional:
+    autores: []
+    conceito: "Não tradicional — oposto ao Vertex."
+  escola_moderna:
+    autores: [Liz Greene, autores de astrologia de relacionamentos]
+    conceito: "O que você traz para o encontro — oposto ao Vertex (o que o destino traz para você)."
+  por_que_da_divergencia: "Antivertex é ponto matemático moderno, parte do sistema Vertex/Antivertex."
+

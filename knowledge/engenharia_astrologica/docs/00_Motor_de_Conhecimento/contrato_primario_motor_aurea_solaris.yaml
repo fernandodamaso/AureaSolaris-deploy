@@ -1,0 +1,107 @@
+versao: "0.2"
+nome: "Contrato primario do conhecimento astrologico - Aurea Solaris"
+status: "ativo_no_caderno"
+proposito: >-
+  Fazer da Engenharia Astrologica a fonte normativa, rastreavel e plural do
+  motor. O sistema calcula e apresenta uma regra de uma escola identificada;
+  nao inventa, nao mistura tradicoes silenciosamente e nao troca uma variante
+  por outra sem mostrar.
+
+principios_primarios:
+  preservacao_historica:
+    - "Preservar o que a fonte ou escola ensina dentro do escopo escolhido, incluindo simbolismos, etimologias, curiosidades e camadas esotericas quando documentadas."
+    - "Nao converter releitura moderna em regra antiga nem atribuir a um autor o que pertence a outro."
+    - "Quando houver divergencia legitima, manter variantes lado a lado com rotulo de escola, periodo e fonte."
+  verdade_documental:
+    - "Separar fato astronomico, regra historica, interpretacao moderna, hipotese do projeto e curiosidade de estudo."
+    - "Cada regra computavel deve carregar escola, periodo, autor/obra e parametros tecnicos sempre que disponiveis."
+    - "Se fonte ou calculo nao puderem ser confirmados, retornar audit_required ou unknown; nunca preencher por invencao."
+  rotulagem_obrigatoria:
+    - "consenso_da_escola"
+    - "variante_da_escola"
+    - "nota_divergente"
+    - "hipotese_do_projeto"
+    - "curiosidade_etimologica"
+  escolas_do_projeto:
+    inclui:
+      - "astrologia ocidental tradicional"
+      - "helenistica"
+      - "medieval"
+      - "renascentista"
+      - "moderna"
+      - "psicologica"
+      - "humanista"
+      - "carmica/evolutiva"
+      - "esoterica e hermetica"
+    exclui:
+      - "jyotisha/indiana"
+      - "chinesa"
+      - "zodiaco sideral como escola padrao"
+      - "uraniana/hamburgo"
+      - "cosmobiologia"
+
+selecao_de_regra:
+  obrigatoria_quando_houver_variantes: true
+  comportamento:
+    - "Expor ao usuario a escola e a variante usadas antes ou junto do resultado."
+    - "Permitir escolha entre variantes legitimas como Placidus, Regiomontanus, Whole Sign ou Equal quando suportadas."
+    - "Nao misturar em silencio casas, orbes, lotes, dignidades ou aspectos de escolas diferentes."
+
+orbes:
+  principio: "Orbe e parametro de escola, aspecto, corpo e contexto; nao e licenca para ampliar um aspecto ate caber."
+  requisitos:
+    - "Guardar angulo exato, distancia circular, orbe aplicado, limite maximo e politica usada."
+    - "Permitir politica por escola e contexto: natal, horaria, eletiva, preditiva."
+    - "Marcar audit_required quando o limite aplicavel nao puder ser identificado."
+
+dominio_dos_corpos:
+  invariantes:
+    - regra: "Sol nunca pode ser feral."
+      razao: "Feral e estado aplicado somente a corpos elegiveis segundo a escola; o Sol nao entra nessa classe."
+    - regra: "Sol nunca pode ser retrogrado, lento, combusto ou cazimi."
+      razao: "Combustao e cazimi descrevem a relacao de outro corpo com o Sol; o Sol nao recebe esse estado."
+    - regra: "Lua nao pode ser retrograda."
+    - regra: "ASC, MC, DSC e IC nao recebem estados planetarios."
+    - regra: "Mercurio, Venus e demais corpos com movimento aparente devem expor longitude, velocidade, direcao e estado estacionario quando aplicavel."
+    - regra: "Rapido/lento so pode ser emitido com referencia de escola declarada."
+
+calculo_reproduzivel:
+  cadeia_obrigatoria:
+    - "validar dados de entrada e fuso IANA"
+    - "resolver instante UTC sem ambiguidade"
+    - "registrar motor, efemeride, versao e arquivos"
+    - "aplicar zodiaco, casas, pontos, lotes e orbes escolhidos"
+    - "executar invariantes de dominio e consistencia"
+    - "emitir recibo reprodutivel com parametros e hash"
+  proibido:
+    - "fallback silencioso"
+    - "troca silenciosa de efemeride"
+    - "troca silenciosa de sistema de casas"
+    - "alargamento de orbe para forcar aspecto"
+    - "posicao inventada"
+
+contradicoes:
+  politica: "Contradicoes entre escolas sao dados de primeira classe."
+  saida_minima:
+    - "variante_selecionada"
+    - "variantes_disponiveis"
+    - "diferenca_de_regra"
+    - "fontes"
+    - "resultado_da_variante"
+
+camadas_de_resposta:
+  ordem:
+    - "calculo astronomico"
+    - "regra da escola selecionada"
+    - "interpretacao atribuida"
+    - "comparacao entre escolas"
+    - "hipotese ou linguagem propria da Engenharia Astrologica"
+  regra: "Uma camada nunca se apresenta como outra."
+
+certificacao:
+  exige:
+    - "fixture de referencia aprovada"
+    - "teste de invariantes do dominio dos corpos"
+    - "teste comparativo por sistema de casas suportado"
+    - "teste de orbes e distancia circular"
+    - "recibo com efemeride, versao, parametros e hash"

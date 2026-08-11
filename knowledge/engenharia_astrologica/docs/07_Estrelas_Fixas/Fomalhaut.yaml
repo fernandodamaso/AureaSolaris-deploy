@@ -1,0 +1,71 @@
+status: review
+id: "fomalhaut"
+tradicoes:
+  - "helenística"
+  - "árabe/medieval"
+  - "renascentista"
+  - "moderna (catálogos e interpretações explicitamente separados)"
+tipo: "estrela fixa"
+escopo_documental:
+  astronomia: "Nome próprio, designação Bayer, constelação, magnitude e longitude eclíptica devem registrar época, sistema de coordenadas e fonte astronômica."
+  tecnica_historica: "Natureza estelar, uso por conjunção e critérios de orbe pertencem à linhagem astrológica identificada."
+  camadas_modernas: "Correspondências psicológicas, mitológicas e do Atlas permanecem notas de estudo, não equivalem automaticamente à natureza de Ptolomeu."
+calculo_e_orbes: "Registrar longitude tropical/sistema adotado, época de referência, precessão, posição aparente ou média e orbe por escola."
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "primária"
+    localizador: "Livro I, capítulo 9, naturezas das estrelas fixas"
+  - autor: "Claudius Ptolemy"
+    obra: "Almagest"
+    natureza: "primária astronômica"
+    localizador: "Livros VII–VIII, catálogo e coordenadas; conferir edição"
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    natureza: "secundária histórica"
+    localizador: "Livro I, estrelas fixas e conjunções; conferir edição"
+  - autor: "Vivian E. Robson"
+    obra: "The Fixed Stars and Their Interpretation"
+    natureza: "secundária moderna"
+    localizador: "Compilação moderna; não substituir a fonte histórica"
+validacao_de_fontes:
+  base: "A natureza tradicional est? atribu?da ?s obras citadas; cat?logo, coordenada, ?poca e orbe devem ser escolhidos e registrados pela implementa??o."
+  escopo: "Magnitude e longitude textuais s?o indicadores editoriais dependentes de ?poca; n?o s?o uma efem?ride vigente. O Atlas e releituras modernas permanecem separados da camada hist?rica."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+nome: "Fomalhaut (α Piscis Austrini — Boca do Peixe)"
+magnitude: 1.16
+constelacao: "Peixe Austral"
+coordenadas: "3°52' Peixes (na eclíptica)"
+
+origens_e_divergencias:
+  tradicional: "Ptolomeu (Tetrabiblos) + tradição árabe."
+  moderna: "None"
+  nota: "Revisar ao citar — marca a escola usada."
+atlas_simbolico:
+  pessoas_arquetipos: "O visionário, o poeta, o que vê o futuro"
+  lugares_fisicos: "Montanhas, torres, mirantes, templos"
+  objetos_materia: "Instrumentos de visão, mapas, poções"
+  eventos_tipicos: "Revelações, visões, poesias, insights"
+  animais: "Águia, falcão, peixe voador"
+  plantas_ervas: "Sálvia, hortelã, verbena"
+  metais_pedras: "Ouro, lápis-lazúli, safira"
+  cores_sons: "Azul-royal, roxo; notas Lá e Dó"
+  numeros: "5 (visão), 7 (profecia), 9 (completude)"
+  dias_semana: "Quinta-feira (Júpiter), domingo (Sol)"
+  doencas_corpo: "Olhos, sistema nervoso central"
+  arquetipos_mitologicos: "Cassandra, Apolo, Atena"
+  mitos_historias: "Cassandra e a profecia; Apolo e a visão"
+  sonhos_simbolos_inconsciente: "Visões, profecias, montanhas, torres"
+  expressao_elevada_sombra: "Elevada: visão clara, poesia consciente | Sombra: visão distorcida, ilusão"
+
+camada_energetica:
+  impressao_mental: "Fomalhaut = IDEALISMO e PROMESSA — a mente 'sonha com o invisível'."
+  permeacao_emocional: "Esperança mística, 'algo maior vem'."
+  manifestacao_externa: "Eventos PROVÁVEIS de inspiração, arte, espiritualidade. Arquétipos: a Boca que Canta, o Poeta. Inclinação, não destino."
+  como_guiar_o_astral: "Fomalhaut pede MATERIALIZAÇÃO — o sonho precisa de 'pés no chão' (Pegasus = asa; Peixe = pé)."
+
+porque_simbolico: |
+  Fomalhaut = 'BOCA DO PEIXE' (árabe) = o peixe que ABRE a boca para o invisível.
+  Está em PEIXES = signo da dissolução — Fomalhaut = 'a promessa que vem do mar'.
+
+linha_tradicao: "Ptolomeu: Fomalhaut = natureza de Vênus + Mercúrio (arte, idealismo)."

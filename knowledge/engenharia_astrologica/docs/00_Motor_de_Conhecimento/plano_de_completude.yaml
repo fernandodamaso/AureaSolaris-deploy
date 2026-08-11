@@ -1,0 +1,172 @@
+meta:
+  nome: "Plano de completude do corpus ocidental"
+  status: "ativo"
+  fonte_canonica: "Somente docs/**/*.yaml alimenta o banco editorial."
+  principio: "Planejamento não equivale a conteúdo publicado; cada item só se torna complete após fontes, divergências e revisão."
+
+escopo:
+  inclui:
+    - "Astrologia ocidental: helenística, medieval, renascentista, tradicional, moderna, psicológica, humanista, evolutiva, hermética e aplicações contemporâneas delimitadas."
+    - "História, astronomia de apoio, cálculo reproduzível, técnicas de interpretação e bibliografia verificável."
+  exclui:
+    - "Astrologia indiana/Jyotisha"
+    - "Astrologia chinesa"
+    - "Zodíaco sideral como escola de estudo"
+    - "Astrologia Uraniana/Hamburgo, cosmobiologia e dial de 90° como escolas de estudo"
+  nota_sobre_pontos_medios: "Pontos médios tradicionais e modernos podem ser estudados sem incorporar a escola Uraniana/Hamburgo."
+
+distincoes_historicas_obrigatorias:
+  - "Distinguir Corpus Hermeticum de formulações modernas atribuídas ao hermetismo, inclusive os Sete Princípios do Kybalion."
+  - "Distinguir tradição salomônica textual, recepções renascentistas e vínculos posteriores com correntes iniciáticas; não presumir continuidade histórica sem fonte."
+  - "Distinguir técnica astrológica histórica de interpretação psicológica, espiritual ou sistêmica contemporânea."
+
+lotes_editoriais:
+  lote_0_fundamento_e_calculo:
+    prioridade: 1
+    objetivo: "Fixar vocabulário astronômico, zodíaco tropical, protocolo de cálculo e regras de evidência."
+    itens:
+      - "História e escopo da astrologia ocidental"
+      - "Cosmologia tradicional como objeto histórico"
+      - "Zodíaco tropical"
+      - "Esfera celeste e coordenadas"
+      - "Protocolo de cálculo reproduzível"
+  lote_1_julgamento_tradicional:
+    prioridade: 2
+    objetivo: "Completar dignidades, condições, relações e hierarquia de julgamento."
+    itens:
+      - "Dignidades essenciais e acidentais"
+      - "Planeta feral, aversão, superação, recepção, enclausuramento e luz"
+      - "Thema Mundi, alegrias planetárias e ordem caldaica"
+      - "Declinação: paralelo, contraparalelo e fora dos limites"
+      - "Metodologia de síntese e peso de fatores"
+  lote_2_tempo_e_tecnicas:
+    prioridade: 3
+    objetivo: "Completar previsão, horária e eletiva com procedimentos verificáveis."
+    itens:
+      - "Consolidar profecções, liberação zodiacal, distribuições por termos e decênios com tabelas e edições-base"
+      - "Consolidar direções primárias, secundárias e terciárias, arcos solares, revoluções solar/lunar e retornos planetários"
+      - "Documentar linhagens de julgamento preditivo: Morin, Ptolomeu, Valens, Abu Ma'shar, Lilly e autores posteriores, sem amalgamar regras"
+      - "Materializar trânsitos, ciclos, retornos planetários e Saros com procedimentos de cálculo e fontes"
+      - "Horária: radicalidade, tradução/coleção de luz, proibição, refreação e frustração"
+      - "Eletiva como disciplina própria"
+  lote_3_aplicacoes_e_relacoes:
+    prioridade: 4
+    objetivo: "Completar relacionamento, localidade, vocação e medicina com limites claros."
+    itens:
+      - "Sinastria, composto e Davison"
+      - "Astrocartografia, relocação, Local Space e parans"
+      - "Astrologia vocacional"
+      - "Astrologia médica histórica e suas aplicações documentadas, preservadas como material de estudo com atribuição de escola, época e fonte"
+      - "Astrologia sistêmica como lente contemporânea, não tradição histórica"
+  lote_4_historia_esoterismo_e_fontes:
+    prioridade: 5
+    objetivo: "Completar história das tradições e fontes, distinguindo uso devocional de evidência histórica."
+    itens:
+      - "Mesopotâmia, Caldeia, Pérsia/zoroastrismo e contexto dos Magos"
+      - "Pitagorismo, platonismo e neoplatonismo"
+      - "Hermetismo, alquimia, Cabala ocidental e tradição salomônica"
+      - "Autores, obras, edições, traduções e bibliografia anotada"
+  lote_5_expansoes_modernas_delimitadas:
+    prioridade: 6
+    objetivo: "Incluir abordagens modernas apenas com origem, escopo e controvérsias explícitas."
+    itens:
+      - "Teoria das oitavas planetárias"
+      - "Astrologia harmônica e mapas harmônicos"
+      - "Astrologia sistêmica e dinâmica familiar"
+      - "Intercepções, hemisférios, quadrantes e singletons"
+      - "Graus simbólicos e asteroides/planetas anões selecionados"
+
+auditoria_de_blocos_lacunares:
+  escopo_da_auditoria: "Fichas canônicas em docs/**/*.yaml; snapshot editorial de 2026-08-10."
+  panorama:
+    fichas_draft: 82
+    distribuicao_das_drafts:
+      decanatos_e_qualidades_de_signo: 34
+      qualidades_fisicas_e_simbolos: 31
+      tipos_de_mapa: 8
+      mansoes_lunares: 6
+      astrologia_medica: 2
+      autor_e_bibliografia: 1
+    alerta: "O status é documental, não uma medida de verdade astrológica. Nenhuma ficha deve passar para complete sem cumprir os critérios do bloco e o criterio_de_pronto global."
+
+  checklist_priorizado:
+    p0_rastreabilidade_e_seguranca:
+      motivo: "Os blocos lacunares acumulam fichas draft e há fichas complete legadas sem referências formais; o status complete não deve substituir prova editorial."
+      itens:
+        - "Conferir id, status, tradição/linhagem, definição, uso, divergências e referências formais em cada ficha que avançar de status."
+        - "Usar fonte primária ou edição/tradução identificada para técnica histórica; usar fonte secundária acadêmica quando a transmissão histórica for discutida."
+        - "Separar associação simbólica, reconstrução moderna e afirmação histórica em campos distintos."
+        - "Preservar afirmações médicas/diagnósticas históricas como material de estudo quando atribuídas; separar tradição, correspondência simbólica e aplicação moderna, sem convertê-las em consenso universal."
+      aceite:
+        - "A auditoria editorial retorna zero erros de YAML e zero fichas sem status."
+        - "Toda ficha review ou complete possui referências formais estruturadas e tradição primária/linhagem declarada quando aplicável."
+        - "Todo conteúdo médico identifica sua camada (histórica, simbólica ou moderna), escola e fonte; orientações de ética e disseminação para terceiros ficam em camada separada do corpus de estudo."
+
+    p1_decanatos_termos_faces_e_duades:
+      estado_atual: "Há 18 fichas individuais de decanato e quatro resumos elementais; faltam 18 das 36 fichas individuais. Termos, faces como dignidade e duades não têm cobertura própria suficiente."
+      lacunas_reais:
+        - "Completar Gêmeos, Leão, Virgem, Sagitário, Capricórnio e Aquário, com três decanatos cada."
+        - "Distinguir decanos egípcios, faces caldaicas, esquemas por triplicidade e releituras modernas; não converter um sistema no outro."
+        - "Documentar Termos/Limites e Duades como técnicas distintas de subdivisão zodiacal."
+      aceite:
+        - "Existem 36 fichas individuais, uma para cada faixa de 10°, e um índice que aponta a regra de cálculo."
+        - "Cada ficha informa sistema, tabela ou texto de origem, regente segundo esse sistema e aplicação permitida; leitura psicológica moderna fica rotulada."
+        - "Nenhuma ficha usa planeta exterior como regente de face tradicional sem identificar a adaptação moderna."
+
+    p1_mansoes_lunares_ocidentais_arabes:
+      estado_atual: "Há uma ficha geral e cinco fichas individuais; faltam 23 das 28 mansões previstas."
+      lacunas_reais:
+        - "Completar a série de 28 sem pressupor que toda nomenclatura, limite ou uso mágico pertença a uma única fonte."
+        - "Fixar tabela adotada, zodíaco/longitude, época, nomes transliterados, limites e fontes antes de atribuir imagens, regentes ou operações."
+        - "Separar uso histórico em eleição, magia, agricultura ou medicina de releitura natal/psicológica contemporânea."
+      aceite:
+        - "O índice apresenta as 28 mansões, seus limites e a tabela/fontes escolhidas."
+        - "Cada ficha individual traz nomenclaturas alternativas, cálculo reproduzível, fonte e limites de uso."
+        - "Afirmações médicas, talismânicas ou eletivas são atribuídas a texto/tradição específicos e não apresentadas como orientação prática universal."
+
+    p1_tipos_de_mapa_e_relacionamentos:
+      estado_atual: "Há oito fichas draft, incluindo Composite, Mapa de Relacionamento, Sect, Oriental/Ocidental, Progressão e Retorno Solar. Sinastria e Davison continuam sem ficha canônica própria."
+      lacunas_reais:
+        - "Criar fichas distintas para sinastria e Davison; não tratá-las como sinônimos de Composite."
+        - "Definir para cada carta derivada os dados de entrada, fórmula, convenção para pontos médios, casas e finalidade interpretativa."
+        - "Resolver a navegação: progressões e retornos pertencem também a 11_Previsao; sect, orientalidade e padrões são fatores de leitura, não substitutos de tipo de mapa."
+      aceite:
+        - "Sinastria, Composite e Davison possuem método de cálculo, origem/linhagem, diferenças e limites comparativos explícitos."
+        - "Cada ficha de 23_Tipos_de_Mapa aponta para sua ficha técnica canônica, sem regras divergentes duplicadas."
+        - "Nenhum mapa derivado usa dados de nascimento incompletos sem registrar a incerteza e a convenção aplicada."
+
+    p1_qualidades_fisicas_e_correspondencias:
+      estado_atual: "Há 31 fichas draft em 08_Qualidades_Fisicas e 12 fichas draft de qualidades físicas de signos. O bloco mistura correspondência histórica, simbólica, médica e overlay sincrético."
+      lacunas_reais:
+        - "Separar qualidades elementais e correspondências materiais históricas de atlas simbólico contemporâneo."
+        - "Identificar fonte e época para cor, metal, planta, qualidade térmica/úmida e símbolo; divergências não podem ser resolvidas por amalgamação."
+        - "Retirar o overlay de chakras do núcleo ocidental ou mantê-lo apenas como referência externa explicitamente não-canônica, sem expandi-lo."
+      aceite:
+        - "Cada correspondência possui tradição/linhagem e referência; listas genéricas não passam para complete."
+        - "A ficha informa se a associação é histórica, moderna, simbólica ou sincrética."
+        - "Conteúdo corporal aponta para 15_Medicina quando necessário e não formula alegação diagnóstica."
+
+    p1_medicina_astrologica:
+      estado_atual: "Treze fichas estão marcadas complete sem referências formais; duas fichas seguem draft. Sistema_Urinario declara duplicação com Rins."
+      lacunas_reais:
+        - "Estabelecer uma matriz editorial para melotesia, temperamentos, humores e iatroastrologia histórica antes de ampliar órgãos isolados."
+        - "Reconciliar Rins e Sistema_Urinario por escopo, remissão cruzada e fonte, sem apagar a distinção anatômica se a fonte a fizer."
+        - "Revisar as associações modernas de Urano/Aquário e sistema nervoso autônomo: não atribuir retroativamente a autores antigos o que não está na fonte."
+      aceite:
+        - "Cada ficha médica declara se descreve tradição histórica, correspondência simbólica ou leitura moderna."
+        - "As referências permitem localizar autor, obra, edição/tradução e trecho ou capítulo quando disponível."
+        - "A linguagem permanece educacional/histórica, sem atribuir doença, causa, tratamento ou risco a uma posição astrológica."
+
+    p2_autores_e_bibliografia:
+      estado_atual: "Abu Ma'shar é a única ficha draft no bloco de autores; o plano prevê bibliografia anotada, mas ela ainda não organiza obras/edições por técnica."
+      lacunas_reais:
+        - "Completar a ficha de Abu Ma'shar com obra, edição/tradução, técnica atribuída, contexto e distinções entre recepções posteriores."
+        - "Criar bibliografia anotada por linhagem e técnica antes de elevar fichas históricas a complete."
+      aceite:
+        - "Cada autor tem pelo menos uma obra identificada e relação verificável com as técnicas às quais é ligado."
+        - "A bibliografia distingue texto primário, tradução/edição, comentário moderno e fonte web de orientação."
+
+criterio_de_pronto:
+  draft: "Estrutura criada; pesquisa em andamento."
+  review: "Definição, escopo, referências e divergências preenchidos; aguarda revisão editorial."
+  complete: "Revisão concluída, fontes verificáveis e relações internas conferidas."

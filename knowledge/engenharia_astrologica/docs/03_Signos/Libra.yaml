@@ -1,0 +1,86 @@
+status: review
+id: "libra"
+nome: "Libra"
+tradicoes:
+  - "helenística"
+  - "medieval"
+  - "renascentista"
+  - "moderna (somente camadas explicitamente modernas)"
+escopo_documental:
+  tecnica_historica:
+    - "elemento, modalidade, regência, dignidade e estrutura zodiacal"
+    - "divergências modernas de regência ou leitura entram como nota explícita, sem substituir silenciosamente a camada histórica"
+  camadas_modernas: "Atlas simbólico, Tarot, correspondências médicas e releituras contemporâneas permanecem separados da regra histórica e devem ser apresentados como camada interpretativa rotulada."
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "primária"
+    localizador: "Livro I, capítulos sobre signos, qualidades e regências"
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    natureza: "primária"
+    localizador: "Livros I–II, passagens sobre signos e regentes"
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    natureza: "primária"
+    localizador: "Livro I, descrição dos signos e significadores"
+validacao_de_fontes:
+  base: "A regra zodiacal hist?rica ? sustentada por Ptolomeu, Valens e Lilly, nas refer?ncias estruturadas da ficha."
+  escopo: "Tarot, Atlas simb?lico, mitologia, correspond?ncias m?dicas e psicologia s?o camadas de estudo rotuladas; n?o s?o consenso nem substituem a regra hist?rica."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+elemento: "Ar"
+modalidade: "Cardinal"
+regente: "Vênus"
+
+origens_e_divergencias:
+  tradicional: "Vênus (harmonia, relação, beleza)."
+  moderna: "Vênus (mesmo). Sem divergência significativa."
+  nota: "Regência unânime."
+
+essencia:
+  - "Equilíbrio"
+  - "Relação"
+  - "Beleza"
+
+simbologia_elemento:
+  elemento: "Ar"
+  modalidade: "Cardinal"
+  simbolo: "Brisa / Sopro inicial do vento"
+  analogia: "Ar Cardinal — como a brisa que começa a mover as folhas."
+  porque: "Ar Cardinal é o PRIMEIRO movimento do ar: início de troca, harmonia, relação. Libra é o sétimo signo, onde a energia se abre para o outro. A brisa representa o primeiro contato — ainda não é vendaval, mas já direciona."
+atlas_simbolico:
+  pessoas_arquetipos: "Juiz, diplomata, artista, parceiro, advogado, mediador, esteta"
+  lugares_fisicos: "Tribunais, galerias de arte, consultórios, locais de parceria, jardins belos"
+  objetos_materia: "Balanças, espelhos, jóias, livros de direito, arte, contratos"
+  eventos_tipicos: "Casamentos, contratos, acordos, julgamentos, festas elegantes, diplomacia"
+  animais: "Cervo, fênix, cisne, cão de caça, pomba, lebre"
+  plantas_ervas: "Rosa, violeta, madressilva, orquídea, oliveira, videira"
+  metais_pedras: "Cobre, ouro rosa, diamante, esmeralda, safira, opala"
+  cores_sons: "Rosa, verde-claro, azul-claro; notas Lá e Ré; violino, piano, harpa"
+  numeros: "6 (harmonia), 7 (justiça), 8 (equilíbrio)"
+  dias_semana: "Sexta-feira (dia de Vênus)"
+  doencas_corpo: "Rins, lombar, pele, adrenais, sistema urinário, coluna lombar"
+  arquetipos_mitologicos: "Themis (justiça), Hera/Juno, Afrodite/Vênus, Zeus/Júpiter"
+  mitos_historias: "A balança de Themis; O julgamento de Páris; Afrodite e a maçã de ouro"
+  sonhos_simbolos_inconsciente: "Balanças, espelhos, festas, casamentos, justiça, arte"
+  expressao_elevada_sombra: "Elevada: justiça equilibrada, arte harmoniosa, parceria verdadeira | Sombra: indecisão crônica, superficialidade, dependência do outro"
+
+tarot:
+  carta: "A Justiça"
+  explicacao: "Carta 8 — equilíbrio, contrato, causa e consequência. Libra é a Justiça porque ambos representam a balança que pesa sem pressa: relação, acordo, o que é justo para os dois lados."
+
+camada_energetica:
+  impressao_mental: "A mente que pesa e harmoniza. 'O que é justo?'. Busca parceria. Quando atrito: indecisão, agradar demais, conflito velado."
+  permeacao_emocional: "Afeto mediado pelo outro. Precisa de espelho para sentir; desequilibrado busca validação externa."
+  manifestacao_externa: "Eventos prováveis de uniões, contratos, ajustes de convívio. Trânsitos mexem nas relações e no senso de justiça."
+  como_guiar_o_astral: "Ajudar a pessoa a decidir sem perder a si. Libra floresce em parceria, mas precisa de centro próprio."
+
+decanatos:
+  - "0-10: Libra (Vênus) — harmonia e vínculo"
+  - "10-20: Aquário (Saturno) — originalidade e grupo"
+  - "20-30: Gêmeos (Mercúrio) — comunicação e rede"
+
+foco_especial:
+  infantil: "A criança Libra aprende no 'nós'. Precisa de parceria e de modelo de convivência justa."
+  familiar: "O membro que busca equilíbrio no lar. Media conflitos, mas foge dos diretos."
+

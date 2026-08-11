@@ -1,0 +1,56 @@
+﻿status: draft
+id: "decanato_aries_2"
+nome: "Decanato 2 de Áries (10°–20°) — Áries matizado por Leão"
+tradicoes:
+  - "convenção por signos da mesma triplicidade"
+  - "camada simbólica moderna atribuída"
+regente: "Sol (Leão/Sol na convenção por triplicidade; também Sol na face caldaica correspondente)"
+
+origens_e_divergencias:
+  sistema_adotado: "Convenção posterior/moderna por signos da mesma triplicidade: 10°–<20° de Áries recebe a cor de Leão/Sol."
+  faces_caldaicas: "A face caldaica de 10°–<20° de Áries também é do Sol, por ordem caldaica e não por triplicidade."
+  decanos_egipcios: "Sistema distinto; não inferir equivalência sem tabela específica."
+  nota: "A coincidência de Sol não transforma a convenção por triplicidade em fonte helenística única."
+
+calculo_e_escopo:
+  intervalo: "Áries tropical 10°–<20°; 20° exatos iniciam o terceiro decanato."
+  uso: "Refinamento opcional; não equivale a uma dignidade essencial."
+  camada_simbolica: "Imagens de brilho, heroísmo e performance são associações interpretativas da convenção adotada."
+referencias:
+  - autor: "Engenharia Astrológica"
+    obra: "Decanatos"
+    natureza: "fonte editorial"
+    localizador: "Tabela de sistemas e limites em 03_Signos/Decanatos.yaml."
+  - autor: "Cláudio Ptolomeu"
+    obra: "Tetrabiblos"
+    natureza: "primária histórica"
+    localizador: "Faces e divisões zodiacais; consultar edição para a tabela caldaica."
+limite_documental: "Permanece draft: falta fonte específica para a leitura por signos de mesma triplicidade e seus símbolos."
+atlas_simbolico:
+  pessoas_arquetipos: "O Fornalha, o que expressa Fogo Fixo"
+  lugares_fisicos: "Lugares de Fogo Fixo"
+  objetos_materia: "Objetos de Fogo Fixo"
+  eventos_tipicos: "Eventos de Fogo Fixo"
+  animais: "Animais de Fogo Fixo"
+  plantas_ervas: "Plantas de Fogo Fixo"
+  metais_pedras: "Metais de Fogo Fixo"
+  cores_sons: "Cores de Fogo Fixo"
+  numeros: "Números de Fogo Fixo"
+  dias_semana: "Dias de Fogo Fixo"
+  doencas_corpo: "Partes do corpo de Fogo Fixo"
+  arquetipos_mitologicos: "Arquétipos de Fogo Fixo"
+  mitos_historias: "Mitologias de Fogo Fixo"
+  sonhos_simbolos_inconsciente: "Símbolos de Fogo Fixo"
+  expressao_elevada_sombra: "Elevada: Fogo Fixo consciente | Sombra: Fogo Fixo descontrolado"
+
+camada_energetica:
+  impressao_mental: "Áries com CAMADA de orgulho e criatividade — a iniciativa agora quer 'brilhar', não só acontecer."
+  permeacao_emocional: "Impulso + desejo de reconhecimento = energia performática."
+  manifestacao_externa: "Eventos PROVÁVEIS de liderança criativa. Arquétipos: o Herói, o Artista da ação. Inclinação, não destino."
+  como_guiar_o_astral: "Canalizar para 'fazer e mostrar' — o 2º decanato de Áries não contente em 'fazer', quer que seja VISTO."
+
+porque_simbolico: "Leão matiza Áries com Fogo fixo: a iniciativa (Áries) ganha ESTABILIDADE de identidade (Leão). O Sol é 'eu quero brilhar' — por isso este decanato tende a querer liderar de forma magnética."
+foco_especial:
+  infantil: "Criança aqui tende a ser 'a protagonista' — canalizar com arte/performance evita a frustração de não ser vista."
+
+

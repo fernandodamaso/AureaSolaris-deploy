@@ -1,0 +1,48 @@
+version: "0.1"
+installed_at: "2026-08-11"
+source_role: "mother-guidelines for engine and knowledge import"
+
+editorial_source_of_truth:
+  canonical_corpus: "Engenharia Astrologica"
+  sync_mode: "manual snapshot until approved importer/editor exists"
+  editable_in_aurea: true
+  rule: "Aurea may document and prepare import logic locally, but large editorial revisions remain anchored in the source corpus until round-trip governance exists."
+
+principles:
+  - "Expose school, variant, parameters, and source with each computational rule."
+  - "Preserve contradictions between traditions as explicit alternatives."
+  - "Never silently swap house system, orb policy, ephemeris, or lineage."
+  - "Keep non-canonical, minority, or disputed material as study notes, not silent defaults."
+  - "Return audit_required or unknown when certainty cannot be justified."
+
+body_domain_invariants:
+  - rule: "Sun cannot be feral"
+  - rule: "Sun cannot be retrograde"
+  - rule: "Sun cannot be combust"
+  - rule: "Sun cannot be cazimi"
+  - rule: "Moon cannot be retrograde"
+  - rule: "Angles do not receive planetary-condition states"
+  - rule: "Fast/slow labels require declared school reference"
+
+selection_rules:
+  user_choice_required_for:
+    - "house systems"
+    - "orb policies"
+    - "lot formulas"
+    - "dignity tables"
+    - "predictive variants"
+  default_policy: "Only approved explicit defaults may be used, and they must be shown."
+
+reproducibility:
+  required_receipt_fields:
+    - "utc_instant"
+    - "iana_timezone"
+    - "location"
+    - "zodiac"
+    - "ayanamsa_when_applicable"
+    - "house_system"
+    - "orbs"
+    - "points"
+    - "ephemeris"
+    - "engine_version"
+    - "input_hash"

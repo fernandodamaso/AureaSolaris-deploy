@@ -1,0 +1,105 @@
+id: metodo_preditivo_de_morin
+nome: 'Método preditivo de Morin: determinações, direções e revoluções'
+tipo: linhagem_e_metodologia_preditiva
+tradicoes:
+- astrologia renascentista e francesa do século XVII
+- sistema moriniano
+status: review
+definicao: 'Conjunto articulado de princípios de Jean-Baptiste Morin de Villefranche
+  (1583–1656), desenvolvido na Astrologia Gallica. Não é apenas uma lista de ''regras
+  de Morin'': a previsão deriva de uma teoria de determinações natais, seguida pelo
+  emprego de direções e revoluções. A base deve estudar os livros e as traduções,
+  e não atribuir a Morin toda regra posterior chamada moriniana.'
+arquitetura_dos_livros_relevantes:
+  livro_XVIII: Forças e debilidades dos planetas; fundamento da condição planetária
+    na obra.
+  livro_XXI: Método geral de interpretação e teoria das determinações astrológicas.
+  livro_XXII: Direções; método e regras para seu julgamento.
+  livro_XXIII: Revoluções solares e lunares; métodos preditivos anuais e mensais.
+  nota: A numeração descreve a edição de 1661 da Astrologia Gallica; conferir capítulo
+    e tradução ao usar uma regra específica.
+principios_de_estudo:
+  determinacao_natal: Antes de perguntar pelo tempo, definir de que coisas um planeta,
+    casa ou configuração é significador por natureza, posição, regência, aspectos
+    e contexto da carta.
+  assunto_preciso: A escolha de significador não pode depender apenas de uma palavra-chave
+    de casa; ela é uma síntese de determinações.
+  condicao: Força, debilidade, relação com ângulos, casas e aspectos qualificam como
+    um fator pode operar dentro do método.
+  ativacao_temporal: Direções e revoluções organizam quando uma determinação natal
+    se torna pertinente na sequência temporal do sistema.
+  sintese: O método procura pesar fatores convergentes, em vez de transformar um único
+    aspecto ou trânsito em veredito.
+regras_operacionais_a_documentar:
+- Nunca iniciar por uma técnica temporal sem estabelecer primeiro os significadores
+  natais do assunto.
+- Declarar se a regra usada vem de Morin, de uma reconstrução moderna do sistema ou
+  de outro autor tradicional.
+- Para direções, definir significador, promissor, espécie de direção, chave de tempo
+  e se é direta ou conversa.
+- Para revoluções, fixar o retorno exato, a localidade e a relação da figura com as
+  determinações natais.
+- Distinguir significação natural, determinação acidental e manifestação temporal;
+  os termos não são sinônimos.
+- Registrar exceções e tensões na carta; o método é combinatório, não uma tabela de
+  equivalências isoladas.
+relacao_com_outros_tipos_de_previsao:
+  direcoes_primarias: Núcleo técnico moriniano no Livro XXII, porém a variante exata
+    precisa ser indicada.
+  revolucoes_solar_e_lunar: Núcleo técnico moriniano no Livro XXIII; não confundir
+    com todo uso moderno de retorno.
+  profeccoes_e_firdaria: Podem ser comparadas em estudo contemporâneo, mas pertencem
+    a outras genealogias e não devem ser retroprojetadas como regras de Morin.
+  transitos_e_progressoes: Podem servir a escolas modernas; não são o centro histórico
+    da arquitetura de Morin.
+  horaria_e_eletiva: Disciplinas distintas, com seus próprios critérios de julgamento.
+camada_simbolica_e_linguistica:
+  determinacao: No vocabulário do método, designa a especificação do que um fator
+    significa numa carta concreta; não apenas um destino abstrato.
+  imagem: A natividade fornece disposições e relações; os relógios preditivos mostram
+    quando a rede de determinações é convocada.
+  curiosidade_historica: A Astrologia Gallica foi publicada postumamente em latim,
+    em 1661, em 26 livros; o estudo moderno depende fortemente de traduções parciais.
+divergencias_e_limites:
+- 'Traduções em inglês do Livro XXI diferem na cadeia de transmissão: há tradução
+  do latim e tradução feita a partir de versão francesa. A edição deve ser citada.'
+- O uso moderno de planetas exteriores dentro de um sistema moriniano é uma extensão
+  posterior, não regra automática do autor.
+- Esta ficha é um mapa de leitura. As regras detalhadas por capítulo somente receberão
+  status complete após colação com o texto/edição indicada.
+referencias:
+- autor: Jean-Baptiste Morin de Villefranche
+  obra: Astrologia Gallica
+  ano: 1661
+  natureza: fonte primária; edição latina digitalizada
+  url: https://wellcomecollection.org/works/n624jvza
+- autor: Jean-Baptiste Morin de Villefranche
+  obra: 'Astrologia Gallica, Livro XXII: Directions'
+  tradutor: James Herschel Holden
+  editora: American Federation of Astrologers
+  ano: 1994
+  isbn: 0-86690-425-5
+  natureza: tradução inglesa do livro técnico de direções
+- autor: Richard S. Baldwin
+  obra: The Morinus System of Horoscope Interpretation
+  editora: American Federation of Astrologers
+  ano: 1974
+  natureza: tradução do Livro XXI, do latim
+- autor: Thomas Callanan
+  obra: The Astrology of Jean Baptiste Morin
+  natureza: fonte secundária introdutória; não substitui o texto de Morin
+  url: https://www.skyscript.co.uk/morin.html
+validacao_de_fontes:
+  base: "As refer?ncias estruturadas identificam a linhagem hist?rica, moderna ou astron?mica pertinente a esta t?cnica preditiva."
+  escopo: "Uma implementa??o deve declarar edi??o, algoritmo, efem?ride, escala de tempo e variante de escola; esta exig?ncia ? uma regra de reprodu??o, n?o uma lacuna de fonte."
+  limite: "A ficha permanece em review e n?o converte hip?tese, aproxima??o pedag?gica ou releitura moderna em previs?o determinista."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+origens_e_divergencias:
+  tradicional: Conceito/técnica presente na tradição astrológica ocidental.
+  moderna: Possível ressignificação contemporânea.
+  nota: Rotular a escola quando divergir.
+camada_energetica:
+  impressao_mental: Campo conceitual do tema/técnica.
+  permeacao_emocional: Como o tema toca a experiência subjetiva.
+  manifestacao_externa: Como aparece em comportamentos e eventos.
+  como_guiar_o_astral: Como usar este conhecimento na leitura prática.

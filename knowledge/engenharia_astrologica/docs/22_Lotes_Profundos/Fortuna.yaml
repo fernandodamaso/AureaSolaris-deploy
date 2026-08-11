@@ -1,0 +1,60 @@
+status: review
+id: "lote_fortuna"
+nome: "Parte da Fortuna"
+tradicoes:
+  - "helenistica"
+  - "arabe-medieval"
+formula_diurna: "Asc + Lua − Sol"
+formula_noturna: "Asc + Sol − Lua"
+tema: "Corpo, sorte material, o que nutre"
+
+sentido_do_calculo: |
+  O lote transfere ao Ascendente o arco entre os luminares. Na fórmula com inversão
+  por sect, Fortuna é Asc + Lua − Sol em carta diurna e Asc + Sol − Lua em carta
+  noturna; Espírito usa o arco complementar. Esse é um procedimento técnico,
+  não uma prova de que Lua, Sol ou Ascendente descrevam uma única psicologia.
+  Algumas práticas modernas usam uma fórmula fixa; o motor deve oferecer a regra
+  escolhida e exibir a diferença, sem tratá-las como idênticas.
+
+origens_e_divergencias:
+  tradicional: "Valens associa Fortuna a corpo, circunstância e matéria de vida em sua própria doutrina; o peso exato depende da técnica e do autor."
+  moderna: "Extensões a dinheiro, saúde, vocação ou linguagem psicológica devem indicar a escola; não são sinônimos automáticos de Fortuna."
+  nota: "Interpretar signo, casa, regente, aspectos e ativação dentro de uma técnica declarada; não inferir ganho ou enfermidade por um único lote."
+
+referencias:
+  - autor: "Vettius Valens"
+    obra: "The Anthology"
+    edicao_ou_traducao: "Mark Riley, tradução inglesa"
+    natureza: "fonte primária helenística"
+    localizador: "Livro II, Parte da Fortuna e seus desdobramentos"
+  - autor: "Paulus Alexandrinus"
+    obra: "Introductory Matters"
+    edicao_ou_traducao: "Dorian Gieseler Greenbaum, tradução inglesa"
+    natureza: "fonte primária helenística"
+    localizador: "Seções sobre lotes"
+atlas_simbolico:
+  pessoas_arquetipos: "O afortunado, o felizardo, o que tem sorte"
+  lugares_fisicos: "Lugares de sorte, tesouros, locais de abundância"
+  objetos_materia: "Moedas, jóias, objetos de valor"
+  eventos_tipicos: "Ganhos inesperados, sorte, prosperidade"
+  animais: "Touro, cavalo de carga, cisne"
+  plantas_ervas: "Videira, trigo, oliveira, hera"
+  metais_pedras: "Cobre, bronze, esmeralda, turquesa"
+  cores_sons: "Verde, rosa; notas Lá e Ré"
+  numeros: "1 (início), 6 (sorte), 8 (prosperidade)"
+  dias_semana: "Sexta-feira (Vênus), domingo (Sol)"
+  doencas_corpo: "Garganta, pescoço, tireoide"
+  arquetipos_mitologicos: "Fortuna/Tyche, Hermes/Mercúrio"
+  mitos_historias: "Fortuna e a roda da sorte; Hermes e a prosperidade"
+  sonhos_simbolos_inconsciente: "Tesouros, sorte, prosperidade, ganhos"
+  expressao_elevada_sombra: "Elevada: sorte consciente, generosidade | Sombra: ganância, superficialidade"
+
+camada_energetica:
+  impressao_mental: "Para onde a atenção volta para se sentir 'realizado no mundo material'."
+  permeacao_emocional: "Bem-estar ligado a ter o que é seu e circular com segurança."
+  manifestacao_externa: "Eventos prováveis de ganho, saúde, circulação. Arquétipos: a Cornucópia, o Corpo que prospera. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a encontrar onde ela 'prospera' de fato — corpo e recursos, não apenas dinheiro."
+
+como_usar: "Ler o signo (QUALIDADE do que nutre), a casa (ONDE na vida) e o regente (COMO se acessa). Quando ativada por trânsito, é janela de favorecimento material/saúde."
+regente: "Regente do signo onde cai; lido por casa e aspectos."
+

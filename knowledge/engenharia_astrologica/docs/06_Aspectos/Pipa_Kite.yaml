@@ -1,0 +1,34 @@
+status: review
+id: pipa_kite
+nome: "Pipa / Kite"
+tradicoes:
+  - moderna ocidental
+tipo: "configuração de aspectos"
+formato: "Um grande trígono atravessado por uma oposição a um de seus vértices; os outros dois vértices fazem sextil ao planeta oposto."
+
+origens_e_divergencias:
+  tradicional: "Não é figura técnica canônica de Ptolomeu, Valens ou Lilly. Usa aspectos maiores, mas a leitura da figura como unidade é formulação moderna."
+  moderna: "A oposição pode dar direção/tensão ao fluxo do grande trígono. Não há consenso de que toda figura visual deva ser interpretada como configuração relevante."
+  nota: "Distinguir a Pipa do Balde/Bucket: o Balde é padrão de distribuição; a Pipa é geometria de aspectos."
+
+procedimento:
+  - "Confirmar três trígonos que formem um grande trígono dentro da política de orbes escolhida."
+  - "Confirmar oposição de um quarto fator a um vértice do triângulo."
+  - "Confirmar dois sextis entre esse fator e os dois vértices restantes."
+  - "Registrar corpos, orbes, aplicação/separação e se a figura permanece válida sem misturar orbes de escolas distintas."
+
+uso_interpretativo: "Ler os aspectos componentes antes da figura. Na linguagem moderna, a oposição pode mobilizar o fluxo do grande trígono; isso é uma hipótese interpretativa, não previsão necessária."
+
+referencias:
+  - autor: "Dane Rudhyar"
+    obra: "The Astrology of Personality"
+    natureza: "primária moderna"
+    localizador: "Padrões e gestalt do mapa; conferir edição."
+  - autor: "Marc Edmund Jones"
+    obra: "The Guide to Horoscope Interpretation"
+    natureza: "primária moderna"
+    localizador: "Contexto da leitura de padrões do mapa; conferir edição."
+
+validacao_de_fontes:
+  base: "A ficha documenta a geometria da Pipa e sua natureza moderna."
+  limite: "Não aceitar apenas uma aparência visual: a configuração depende de aspectos e orbes explicitamente calculados."

@@ -1,0 +1,56 @@
+status: review
+id: "almuten"
+nome: "Almuten"
+tradicoes:
+  - "helenística"
+  - "medieval"
+  - "tradicional"
+tipo: "avaliação de dignidade essencial"
+escopo_documental:
+  tecnica_historica:
+    - "soma ponderada de dignidades essenciais num grau ou ponto"
+    - "distinção entre almuten de figura, de casa, de grau e de tema"
+    - "uso em julgamento, promessa e hierarquia de significadores"
+  calculo_e_regra: "O almuten depende da tabela de domicílios, exaltações, triplicidades, termos e faces adotada. O motor deve declarar a tabela usada e o sistema de pontuação."
+  divergencias_de_escola: "Nem toda tradição usa o almuten com o mesmo peso nem com a mesma contagem de pontos."
+referencias:
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    natureza: "primária/secundária histórica"
+    localizador: "Partes introdutórias sobre dignidades essenciais e acidentais"
+  - autor: "Guido Bonatti"
+    obra: "Liber Astronomiae"
+    natureza: "primária histórica"
+    localizador: "Seções sobre dignidades e julgamento"
+  - autor: "Abu Ma'shar"
+    obra: "The Great Introduction"
+    natureza: "primária histórica"
+    localizador: "Tratamento medieval das dignidades; conferir edição"
+validacao_de_fontes:
+  base: "As refer?ncias estruturadas sustentam a terminologia de dignidade, debilidade, recep??o e condi??o dentro das linhagens declaradas."
+  escopo: "Diferen?as entre autores permanecem vis?veis e n?o devem ser convertidas em regra ?nica do motor sem sele??o expl?cita de escola."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+definicao_tecnica: "Almuten é o planeta que reúne a maior soma de dignidades essenciais num grau, cúspide, ponto ou conjunto de pontos, segundo uma tabela de pesos declarada."
+componentes_usados:
+  - "domicílio"
+  - "exaltação"
+  - "triplicidade"
+  - "termos"
+  - "faces"
+tipos_comuns:
+  almuten_de_grau: "Planeta com maior pontuação no grau exato analisado."
+  almuten_de_casa: "Pode ser calculado para a cúspide ou para um conjunto de posições ligadas à casa, conforme a escola."
+  almuten_figura: "Síntese mais ampla da carta segundo método declarado; não é sinônimo simples de dominante moderno."
+uso_interpretativo:
+  regra_geral: "Serve para localizar qual planeta tem maior autoridade essencial sobre um assunto ou ponto do mapa."
+  limites: "Não substitui dignidade acidental, recepção, secta, casa, aspecto nem condição solar. Um almuten fraco acidentalmente não atua do mesmo modo que um almuten forte e angular."
+nao_confundir_com:
+  - "regente do signo: um ponto pode ter almuten diferente do mero regente domiciliar"
+  - "planeta dominante moderno: categoria interpretativa distinta"
+camada_moderna:
+  nota: "Algumas escolas modernas assimilam o almuten à ideia de planeta regente mais forte do tema, mas isso simplifica demais a técnica medieval."
+camada_energetica:
+  impressao_mental: "O almuten indica qual planeta tem maior título formal para falar por aquele ponto."
+  permeacao_emocional: "Pode ser lido como a via principal pela qual um tema ganha corpo e direção."
+  manifestacao_externa: "Ajuda a hierarquizar significadores em leitura natal, horária e outras técnicas tradicionais."
+  como_guiar_o_astral: "Antes de interpretar, declarar sempre qual tabela e qual método de soma estão sendo usados."

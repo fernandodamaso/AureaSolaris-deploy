@@ -1,0 +1,61 @@
+﻿status: draft
+id: "tradicoes_antigas"
+nome: "Tradições Antigas"
+tradicoes:
+  - "historica"
+  - "filosofica"
+tipo: "Aprofundamento"
+subtema: "História da astrologia"
+
+origens_e_divergencias:
+  tradicional: "Astrologia babilônica → egípcia → grega → romana → medieval → renascentista."
+  moderna: "Rudhyar, Greene — releitura moderna dos textos antigos."
+  nota: "Revisar ao citar — marca a escola usada."
+
+atlas_simbolico:
+  pessoas_arquetipos: "O astrólogo antigo, o sacerdote, o filósofo, o matemático"
+  lugares_fisicos: "Zigurates, templos, bibliotecas de Alexandria, observatórios"
+  objetos_materia: "Tábuas cuneiformes, papiros, astrolábios, relógios de sol"
+  eventos_tipicos: "Descobertas, observações, registros, transmissões"
+  animais: "Águia (olho celeste), gato (Egito), serpente (sabedoria)"
+  plantas_ervas: "Lótus (Egito), hera (Grécia), carvalho (Europa)"
+  metais_pedras: "Ouro, prata, cobre, jaspe"
+  cores_sons:
+    cores: ["Ouro", "azul-royal", "verde-oliva"]
+    sons: ["Órgão", "tambor", "canto gregoriano"]
+  numeros: [7, 12, 360]
+  dias_semana: ["Domingo"]
+  doencas_corpo:
+    doencas: ["Problemas de visão", "ansiedade"]
+    partes_corpo: ["Olhos", "cérebro"]
+  arquetipos_mitologicos:
+    - "Hermes Trismegisto"
+    - "Pitágoras"
+    - "Ptolomeu"
+  mitos_historias: "A criação da astrologia; a transmissão dos conhecimentos"
+  expressao_elevada_sombra: "Elevada: sabedoria ancestral | Sombra: dogma, crença sem questionamento"
+
+camada_energetica:
+  impressao_mental: "A astrologia nasce da OBSERVAÇÃO. Os antigos olharam o céu e viram PADRÕES."
+  permeacao_emocional: "Tradição como raiz. Quando saudável: respeito. Quando ferido: dogma, rigidez."
+  manifestacao_externa: "Eventos prováveis de redescoberta, estudo de textos antigos. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a HONRAR A RAIZ SEM SER PRISIONEIRA. Tradição é base, não gaiola."
+
+como_usar: |
+  Ordem histórica:
+  1. Babilônia (1800 a.C.) — primeiro registro de planetas
+  2. Egito (1500 a.C.) — decanos, casas
+  3. Grécia (500 a.C.) — Ptolomeu, aspectos, dignidades
+  4. Roma — difusão
+  5. Idade Média — preservação árabe
+  6. Renascimento — nova interpretação
+  7. Modernidade — psicologia e evolução
+
+fontes_principais:
+  - "Ptolomeu — Tetrabiblos"
+  - "Vettius Valens — Anthologiae"
+  - "Paulus Alexandrinus — Introductorius"
+  - "Abu Ma'shar — De Magnis Coniunctionibus"
+  - "Guido Bonatti — Liber Astronomiae"
+  - "William Lilly — Christian Astrology"
+

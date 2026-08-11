@@ -1,0 +1,56 @@
+﻿status: draft
+id: "decanato_escorpiao_1"
+nome: "Decanato 1 de Escorpião (0°–10°) — Escorpião puro"
+tradicoes:
+  - "convenção por signos da mesma triplicidade"
+  - "releitura moderna transaturnina explicitada"
+regente: "Marte (Escorpião/Marte na convenção por triplicidade e na face caldaica; Plutão somente em releitura moderna)"
+
+origens_e_divergencias:
+  sistema_adotado: "Convenção posterior/moderna por signos da mesma triplicidade: 0°–<10° de Escorpião recebe a cor de Escorpião/Marte."
+  releitura_moderna: "Plutão é co-regente moderno em algumas escolas; não pertence à tabela tradicional de faces."
+  faces_caldaicas: "A face caldaica de 0°–<10° de Escorpião também é Marte, por sequência caldaica distinta."
+  nota: "A coincidência de Marte não autoriza projetar o vocabulário moderno de Plutão em fontes antigas."
+
+calculo_e_escopo:
+  intervalo: "Escorpião tropical 0°–<10°; 10° exatos iniciam o segundo decanato."
+  uso: "Refinamento opcional; não converte crises, segredos ou traumas em previsão necessária."
+  camada_simbolica: "Fênix, decomposição e renascimento são imagens culturais de estudo atribuídas à leitura moderna."
+referencias:
+  - autor: "Engenharia Astrológica"
+    obra: "Decanatos"
+    natureza: "fonte editorial"
+    localizador: "Tabela comparativa em 03_Signos/Decanatos.yaml."
+  - autor: "Cláudio Ptolomeu"
+    obra: "Tetrabiblos"
+    natureza: "primária histórica"
+    localizador: "Faces; a faixa caldaica é Marte."
+limite_documental: "Permanece draft: a convenção por triplicidade e a camada simbólica ainda requerem fonte específica."
+atlas_simbolico:
+  pessoas_arquetipos: "O Nascente profunda, o que expressa Água Cardinal"
+  lugares_fisicos: "Lugares de Água Cardinal"
+  objetos_materia: "Objetos de Água Cardinal"
+  eventos_tipicos: "Eventos de Água Cardinal"
+  animais: "Animais de Água Cardinal"
+  plantas_ervas: "Plantas de Água Cardinal"
+  metais_pedras: "Metais de Água Cardinal"
+  cores_sons: "Cores de Água Cardinal"
+  numeros: "Números de Água Cardinal"
+  dias_semana: "Dias de Água Cardinal"
+  doencas_corpo: "Partes do corpo de Água Cardinal"
+  arquetipos_mitologicos: "Arquétipos de Água Cardinal"
+  mitos_historias: "Mitologias de Água Cardinal"
+  sonhos_simbolos_inconsciente: "Símbolos de Água Cardinal"
+  expressao_elevada_sombra: "Elevada: Água Cardinal consciente | Sombra: Água Cardinal descontrolado"
+
+camada_energetica:
+  impressao_mental: "Escorpião cru — intensidade, penetração, 'o que está oculto'. A mente opera na sombra."
+  permeacao_emocional: "Intensidade pura, magnetismo, medo da entrega."
+  manifestacao_externa: "Eventos PROVÁVEIS de crises, encontros profundos, transformações. Arquétipos: o Fênix, o Cão de Guarda. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a confiar SEM controlar — o 1º decanato de Escorpião tende a 'testar' antes de entregar."
+
+porque_simbolico: "Plutão rege Escorpião = planeta da morte/renascimento. 0° de Escorpião cai no ponto médio da estação outonal — a natureza MORRE para renascer (queda de folhas, decomposição). A intensidade é a 'podridão que vira adubo'."
+foco_especial:
+  carmico: "Decanato 1 de Escorpião pode carregar 'histórias de família' intensas — segredos, traumas, pactos."
+
+

@@ -1,0 +1,84 @@
+status: review
+id: "fluxogramas"
+tradicoes:
+  - "didática do projeto"
+  - "moderna"
+tipo: "ferramenta de método e estudo"
+escopo_documental:
+  tecnica_historica:
+    - "Não é técnica astrológica canônica; é uma representação visual da ordem de julgamento escolhida."
+  camada_do_projeto: "O fluxograma deve declarar qual método, escola e hierarquia está visualizando."
+referencias:
+  - autor: "Engenharia Astrológica"
+    obra: "Manual Editorial e Roteiro de Estudos"
+    natureza: "interna/do projeto"
+    localizador: "Regra de rastreabilidade, hierarquia e transparência nas divergências"
+nome: "Fluxogramas"
+tema: "Mapas visuais de leitura astrológica — fluxo de interpretação."
+
+essencia:
+  - "Fluxograma visual: ordem de análise do mapa."
+  - "Estrutura típica: planets → aspects → houses → timing."
+  - "Ferramenta de ensino e consulta rápida."
+
+protocolo_documental:
+  obrigatorios:
+    - "Todo fluxograma deve declarar método representado, linhagem, fonte ou regra interna do projeto e data de revisão."
+    - "Quando representar um autor histórico, citar o trecho ou a ficha operacional correspondente."
+  limites:
+    - "Fluxograma não cria doutrina: apenas visualiza uma hierarquia já definida em texto."
+    - "Se duas escolas divergirem, gerar dois fluxogramas distintos em vez de fundi-las silenciosamente."
+
+regras_para_motor:
+  uso_permitido:
+    - "Usar fluxogramas como apoio de navegação, nunca como única fonte de regra."
+    - "Associar cada nó do fluxograma a uma ficha textual auditável."
+
+origens_e_divergencias:
+  tradicional: "Não é técnica canônica; é ferramenta didática moderna."
+  moderna: "Amplamente usada em cursos, leituras guiadas."
+  nota: "Criar e manter próprios fluxogramas; adaptar ao método de leitura."
+
+atlas_simbolico:
+  pessoas_arquetipos: "Professor, guia, mentor"
+  lugares_fisicos: "Quadros brancos, cadernos, salas de aula"
+  objetos_materia: "Canetas, post-its, quadro, fluxograma impresso"
+  eventos_tipicos: "Aulas, mentorias, revisões de método"
+  animais: "Coruja (sabedoria)"
+  plantas_ervas: "Sálvia (memória)"
+  metais_pedras: "Cristal (clareza)"
+  cores_sons:
+    cores: ["Azul", "verde", "amarelo"]
+    sons: ["Caneta no papel", "voz explicando"]
+  numeros: [3, 5, 7]
+  dias_semana: ["Quarta-feira (Mercúrio)"]
+  doencas_corpo:
+    doencas: ["Sistema nervoso"]
+    partes_corpo: ["Cérebro", "olhos"]
+  arquetipos_mitologicos: ["Hermes/Mercúrio"]
+  mitos_historias: "Hermes como guia e comunicador"
+  sonhos_simbolos_inconsciente: "Mapas, caminhos, guias"
+  expressao_elevada_sombra: "Elevada: ensino claro, caminho visível | Sombra: dogmatismo, rigidez excessiva"
+
+camada_energetica:
+  campo_mental: "Ver o mapa como sistema, não como lista de partes."
+  permeacao_emocional: "Clareza ao seguir passos; ansiedade se o fluxo for confuso."
+  manifestacao_externa: "Aulas, consultas estruturadas, material didático."
+  como_guiar_o_astral: "Oferecer fluxogramas como 'mapa do mapa' — o consulente entende o processo."
+
+tecnicas:
+  ordem:
+    - "1. Planetas por dignidade/força"
+    - "2. Aspectos por orbe e natureza"
+    - "3. Casas por cúspides e regentes"
+    - "4. Timing por trânsitos/progressões"
+  exemplo: "Fluxograma de leitura de relacionamento: Saturno em Casa 7 → falta de limite → trânsito Saturno em Casa 7 → prova de compromisso."
+  adaptacao:
+    regra: "Cada leitor deve ter seu fluxograma pessoal."
+    cuidado: "Fluxograma não substitui intuição; é apoio."
+
+ver_mais:
+  - "../11_Previsao/Timing.yaml"
+  - "../17_Metodologia_de_Leitura/metodologia_leitura.yaml"
+
+## ✏️ Minhas Anotações

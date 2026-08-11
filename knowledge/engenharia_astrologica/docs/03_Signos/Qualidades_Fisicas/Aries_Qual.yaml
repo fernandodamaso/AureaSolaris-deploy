@@ -1,0 +1,62 @@
+status: review
+id: aries_qualidades
+nome: Áries — Qualidades Físicas
+cor: Vermelho, laranja-fogo, carmim
+tradicoes: [tradicional, médica histórica, moderna, editorial]
+parte_do_corpo: Cabeça e face; cérebro é uma extensão moderna e não deve ser apresentado como equivalência anatômica única
+elemento_fisico: Fogo (quente, seco)
+qualidade_termica: Quente e seca
+origens_e_divergencias:
+  tradicional: "A melothesia inicia a sequência zodiacal na cabeça; Marte sustenta as correspondências com calor, ferro, corte e vermelho."
+  moderna: "A astrologia moderna pode ler cabeça e impulso como metáforas de iniciativa, mas essa psicologização não substitui a correspondência histórica."
+  nota: "Correspondência simbólica não determina aparência, temperamento, acidente ou doença."
+atlas_simbolico:
+  pessoas_arquetipos: Guerreiro, pioneiro, líder espontâneo, atleta, soldado, competidor
+  lugares_fisicos: Campos de batalha, arenas, lugares altos, regiões quentes e secas, forjas
+  objetos_materia: Espadas, machados, capacetes, fogo, aço, artefatos de guerra
+  eventos_tipicos: Guerras, nascimentos, competições, inaugurações, explosões, acidentes por pressa
+  animais: Carneiro, touro, cavalo de guerra, lobo, leão, águia
+  plantas_ervas: Alecrim, pimenta, urtiga, plantas espinhosas, hera
+  metais_pedras: Ferro, aço, rubi, jaspe, diamante, granada
+  cores_sons: Vermelho, laranja, dourado; notas Si e Dó; instrumentos de percussão
+  numeros: 1 (início), 7 (guerra/espírito), 11 (duplo fogo)
+  dias_semana: Terça-feira (dia de Marte)
+  doencas_corpo: "Na medicina astrológica histórica: cabeça, face e afecções quentes/agudas atribuídas a Marte. Não usar para diagnóstico ou previsão de acidente."
+  arquetipos_mitologicos: Ares/Marte, Perseu, Jasão, Ulisses, Hércules (início da jornada)
+  mitos_historias: 'Mit grego: Ares na Guerra de Troia; Jasão e os Argonautas; O Velocino de Ouro'
+  sonhos_simbolos_inconsciente: Fogo, espadas, guerra, corridas, nascimentos, montanhas
+  expressao_elevada_sombra: 'Elevada: coragem autêntica, liderança inspiradora, iniciativa justa | Sombra: agressividade destrutiva, impulsividade violenta, egoísmo guerreiro'
+camada_energetica:
+  impressao_mental: A cor vermelha no mapa = 'fogo na cabeça' — iniciativa mental direta.
+  permeacao_emocional: Impulsividade, coragem, 'vou primeiro'.
+  manifestacao_externa: "O Batedor é um arquétipo interpretativo; aparência, postura e estilo não se deduzem de Áries isoladamente."
+  como_guiar_o_astral: "Usar vermelho, ferro e cabeça para compreender a cadeia Marte–calor–início, sem atribuir efeito terapêutico ao símbolo."
+porque_simbolico: 'Áries = primeiro signo = CABEÇA (o ''cabeça'' do zodíaco anatômico). A cabeça é onde COMEÇA a ação (decidir, avançar).
+
+  VERMELHO = cor do SANGUE e do FOGO — Áries = fogo que age. A cabeça ''esquenta'' quando Áries está ativado (enxaqueca de impulsividade).
+
+  '
+leitura_corporal:
+  regra: "Áries corresponde à cabeça na sequência anatômica tradicional; isso não equivale a 'ter cabeça ariana'."
+  uso: "Estudo de melothesia, assinaturas e linguagem simbólica; qualquer julgamento histórico exigia o mapa e seus significadores, nunca somente o signo solar."
+aparencia_nas_tradicoes:
+  descricao: "Manuais de fisionomia astrológica atribuem a Áries traços definidos, olhar direto, postura pronta e possíveis marcas na cabeça ou face."
+  porque: "A imagem deriva de Marte, do fogo cardinal e da cabeça como primeiro segmento da melothesia."
+  variantes: "Alguns autores julgam sobretudo o Ascendente e seu regente; outros combinam signo solar, Marte e planetas angulares."
+  limite: "Preservar como doutrina morfológica de autores/escolas, não como consenso universal ou prova de identidade."
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "primária histórica"
+    localizador: "Livro I; qualidades de Marte, signos e membros do corpo."
+  - autor: "Nicholas Culpeper"
+    obra: "Astrological Judgement of Diseases from the Decumbiture of the Sick"
+    natureza: "primária histórica"
+    localizador: "Correspondências de Marte e da cabeça; consultar edição utilizada."
+  - autor: "Heinrich Cornelius Agrippa"
+    obra: "De occulta philosophia"
+    natureza: "primária histórica"
+    localizador: "Livro I; correspondências de cores, metais e qualidades planetárias."
+validacao_de_fontes:
+  base: "Cabeça, calor, vermelho e ferro pertencem a cadeias tradicionais distintas, aqui explicitadas."
+  limite: "Não usar como fenótipo, prognóstico clínico ou recomendação terapêutica."

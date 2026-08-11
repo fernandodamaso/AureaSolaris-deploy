@@ -1,0 +1,56 @@
+﻿status: draft
+id: "decanato_libra_2"
+nome: "Decanato 2 de Libra (10°–20°) — Libra matizado por Aquário"
+tradicoes:
+  - "convenção por signos da mesma triplicidade"
+  - "releitura moderna transaturnina explicitada"
+regente: "Saturno (Aquário/Saturno na convenção por triplicidade; Urano somente em releitura moderna; face caldaica: Saturno)"
+
+origens_e_divergencias:
+  sistema_adotado: "Convenção posterior/moderna por signos da mesma triplicidade: 10°–<20° de Libra recebe a cor de Aquário/Saturno."
+  releitura_moderna: "Urano pode ser acrescentado como co-regente moderno de Aquário mediante escolha explícita."
+  faces_caldaicas: "A face caldaica correspondente também é Saturno, mas por ordem caldaica e não por triplicidade."
+  nota: "A coincidência de Saturno não elimina a distinção entre sistemas."
+
+calculo_e_escopo:
+  intervalo: "Libra tropical 10°–<20°; 20° exatos iniciam o terceiro decanato."
+  uso: "Não usar Urano no perfil tradicional; não reduzir justiça social a consequência de um intervalo."
+  camada_simbolica: "Juiz, grupo e humanitário são imagens interpretativas atribuídas."
+referencias:
+  - autor: "Engenharia Astrológica"
+    obra: "Decanatos"
+    natureza: "fonte editorial"
+    localizador: "Tabela comparativa em 03_Signos/Decanatos.yaml."
+  - autor: "Cláudio Ptolomeu"
+    obra: "Tetrabiblos"
+    natureza: "primária histórica"
+    localizador: "Faces; a faixa caldaica é Saturno."
+limite_documental: "Permanece draft: requer fonte específica para a convenção por triplicidade."
+atlas_simbolico:
+  pessoas_arquetipos: "O Céu estrelado, o que expressa Ar Fixo"
+  lugares_fisicos: "Lugares de Ar Fixo"
+  objetos_materia: "Objetos de Ar Fixo"
+  eventos_tipicos: "Eventos de Ar Fixo"
+  animais: "Animais de Ar Fixo"
+  plantas_ervas: "Plantas de Ar Fixo"
+  metais_pedras: "Metais de Ar Fixo"
+  cores_sons: "Cores de Ar Fixo"
+  numeros: "Números de Ar Fixo"
+  dias_semana: "Dias de Ar Fixo"
+  doencas_corpo: "Partes do corpo de Ar Fixo"
+  arquetipos_mitologicos: "Arquétipos de Ar Fixo"
+  mitos_historias: "Mitologias de Ar Fixo"
+  sonhos_simbolos_inconsciente: "Símbolos de Ar Fixo"
+  expressao_elevada_sombra: "Elevada: Ar Fixo consciente | Sombra: Ar Fixo descontrolado"
+
+camada_energetica:
+  impressao_mental: "Libra + justiça social — a mente agora QUESTIONA o equilíbrio coletivo. Harmonia vira justiça."
+  permeacao_emocional: "Busca de igualdade, mas risco de frialdade no julgamento."
+  manifestacao_externa: "Eventos PROVÁVEIS de causas, grupos, justiça. Arquétipos: o Juiz, o Humanitário. Inclinação, não destino."
+  como_guiar_o_astral: "Canalizar para 'equilibrar pelo coletivo' — este decanato tem talento de mediação social."
+
+porque_simbolico: "Aquário matiza Libra com Ar fixo: a HARMONIA ganha JUSTIÇA. Saturno tradicional = estrutura e lei — daí o juiz que pondera."
+foco_especial:
+  familiar: "Decanato 2 de Libra em Casa 7 = pessoa que traz 'justiça' para os relacionamentos — não só paz, mas equidade."
+
+

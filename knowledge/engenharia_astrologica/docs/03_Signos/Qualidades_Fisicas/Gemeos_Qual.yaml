@@ -1,0 +1,51 @@
+status: review
+id: gemeos_qualidades
+nome: Gêmeos — Qualidades Físicas
+cor: Amarelo, verde-claro, prateado
+tradicoes: [tradicional, médica histórica, moderna, editorial]
+parte_do_corpo: Ombros, braços, mãos e pulmões; sistema nervoso é ampliação mercurial moderna
+elemento_fisico: Ar
+qualidade_termica: Quente e úmida
+origens_e_divergencias:
+  tradicional: "A melothesia associa Gêmeos a ombros, braços e mãos; pulmões aparecem pela duplicidade e pelo ar. Mercúrio sustenta troca, voz, mobilidade e escrita."
+  moderna: "Sistema nervoso, ansiedade e rapidez mental são extensões modernas do simbolismo mercurial."
+  nota: "Distinguir a região zodiacal das extensões gerais de Mercúrio; nenhuma delas determina aparência ou condição clínica."
+atlas_simbolico:
+  pessoas_arquetipos: Mensageiro, escritor, jornalista, vendedor, estudante, criança curiosa
+  lugares_fisicos: Mercados, escolas, bibliotecas, ruas movimentadas, cruzamentos, estações
+  objetos_materia: Livros, cartas, telefones, bilhetes, documentos, instrumentos de escrita
+  eventos_tipicos: Visitas, mudanças curtas, negociações, aulas, conversas, notícias
+  animais: Macaco, raposa, papagaio, esquilo, cão de caça, borboleta
+  plantas_ervas: Lavanda, menta, verbena, hera, madressilva, noz-moscada
+  metais_pedras: Mercúrio (metal), ágata, citrino, olivina, pedra da lua
+  cores_sons: Amarelo, cinza, verde-claro; notas Mi e Lá; tamborim, gaita, rádio
+  numeros: 3 (comunicação trina), 5 (cinco sentidos), 8 (duplicidade)
+  dias_semana: Quarta-feira (dia de Mercúrio)
+  doencas_corpo: "Na medicina astrológica histórica: ombros, braços, mãos e pulmões; sistema nervoso, ansiedade e insônia são ampliações modernas. Não usar para diagnóstico."
+  arquetipos_mitologicos: Hermes/Mercúrio, Apolo, Atena, Castor e Pólux
+  mitos_historias: Hermes mensageiro dos deuses; Os gêmeos Castor e Pólux (constelação de Gêmeos)
+  sonhos_simbolos_inconsciente: Cartas, bilhetes, espelhos, estradas, crianças, cães
+  expressao_elevada_sombra: 'Elevada: comunicação clara, versatilidade, aprendizado contínuo | Sombra: fofoca, superficialidade, duplicidade, mentira'
+camada_energetica:
+  impressao_mental: A cor amarela no mapa = 'mente que troca'.
+  permeacao_emocional: Curiosidade leve, 'sempre aberto ao novo'.
+  manifestacao_externa: "O Curioso e as 'mãos que falam' preservam uma leitura fisionômica moderna; devem ser combinados com Ascendente, regente e Mercúrio."
+  como_guiar_o_astral: "Usar mãos, respiração e amarelo para estudar troca e mediação, sem promessa terapêutica."
+porque_simbolico: 'Gêmeos = BRAÇOS/MÃOS — são os ''instrumentos de troca'' (cumprimentar, pegar, escrever). Os pulmões = ''troca de ar'' (respirar = trocar com o mundo).
+
+  AMARELO = cor da LUZ e da COMUNICAÇÃO (sol da manhã, energia de troca).
+
+  '
+leitura_corporal:
+  regra: "Gêmeos corresponde a ombros, braços, mãos e pulmões na melothesia."
+  uso: "Camada histórica/simbólica; o mapa inteiro e a técnica declarada condicionam qualquer leitura."
+aparencia_nas_tradicoes:
+  descricao: "Manuais descrevem tipo geminiano/mercurial como ágil, juvenil, expressivo, de gestos rápidos e mãos móveis."
+  porque: "A figura deriva do ar mutável, dos gêmeos e de Mercúrio mensageiro."
+  variantes: "Alguns autores atribuem o tipo a Mercúrio dominante; outros ao Ascendente em Gêmeos ou ao signo solar."
+  limite: "Crença fisionômica situada, não identificação automática nem diagnóstico de ansiedade."
+referencias:
+  - {autor: "Claudius Ptolemy", obra: "Tetrabiblos", natureza: "primária histórica", localizador: "Livro I; signos, Mercúrio e membros do corpo."}
+  - {autor: "Nicholas Culpeper", obra: "Astrological Judgement of Diseases from the Decumbiture of the Sick", natureza: "primária histórica", localizador: "Correspondências mercuriais e médico-astrológicas."}
+  - {autor: "William Lilly", obra: "Christian Astrology", natureza: "primária histórica", localizador: "Descrições de signos e planetas; fisionomia julgada por significadores, não por signo solar isolado."}
+validacao_de_fontes: {base: "A ficha separa melothesia, Mercúrio e releitura nervosa moderna.", limite: "Não usar como fenótipo obrigatório, diagnóstico ou prescrição."}

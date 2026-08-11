@@ -1,0 +1,86 @@
+status: review
+id: "aries"
+nome: "Áries"
+tradicoes:
+  - "helenística"
+  - "medieval"
+  - "renascentista"
+  - "moderna (somente camadas explicitamente modernas)"
+escopo_documental:
+  tecnica_historica:
+    - "elemento, modalidade, regência, dignidade e estrutura zodiacal"
+    - "divergências modernas de regência ou leitura entram como nota explícita, sem substituir silenciosamente a camada histórica"
+  camadas_modernas: "Atlas simbólico, Tarot, correspondências médicas e releituras contemporâneas permanecem separados da regra histórica e devem ser apresentados como camada interpretativa rotulada."
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "primária"
+    localizador: "Livro I, capítulos sobre signos, qualidades e regências"
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    natureza: "primária"
+    localizador: "Livros I–II, passagens sobre signos e regentes"
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    natureza: "primária"
+    localizador: "Livro I, descrição dos signos e significadores"
+validacao_de_fontes:
+  base: "A regra zodiacal hist?rica ? sustentada por Ptolomeu, Valens e Lilly, nas refer?ncias estruturadas da ficha."
+  escopo: "Tarot, Atlas simb?lico, mitologia, correspond?ncias m?dicas e psicologia s?o camadas de estudo rotuladas; n?o s?o consenso nem substituem a regra hist?rica."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+elemento: "Fogo"
+modalidade: "Cardinal"
+regente: "Marte"
+
+origens_e_divergencias:
+  tradicional: "Marte (guerra, impulso, avanço)."
+  moderna: "Marte (mesmo). Sem divergência significativa."
+  nota: "Regência unânime."
+
+essencia:
+  - "Iniciativa"
+  - "Coragem"
+  - "Eu que parte"
+
+simbologia_elemento:
+  elemento: "Fogo"
+  modalidade: "Cardinal"
+  simbolo: "Faísca / Centelha inicial"
+  analogia: "Fogo inicial — como uma faísca que acende a mata."
+  porque: "Fogo Cardinal é o PRIMEIRO fogo: impulso, nascimento, ação que parte do nada. Áries é o início do zodíaco, a ignição pura. A faísca representa o potencial que ainda não tem forma, mas já tem direção."
+atlas_simbolico:
+  pessoas_arquetipos: "Guerreiro, pioneiro, líder espontâneo, atleta, soldado, competidor"
+  lugares_fisicos: "Campos de batalha, arenas, lugares altos, regiões quentes e secas, forjas"
+  objetos_materia: "Espadas, machados, capacetes, fogo, aço, artefatos de guerra"
+  eventos_tipicos: "Guerras, nascimentos, competições, inaugurações, explosões, acidentes por pressa"
+  animais: "Carneiro, touro, cavalo de guerra, lobo, leão, águia"
+  plantas_ervas: "Alecrim, pimenta, urtiga, plantas espinhosas, hera"
+  metais_pedras: "Ferro, aço, rubi, jaspe, diamante, granada"
+  cores_sons: "Vermelho, laranja, dourado; notas Si e Dó; instrumentos de percussão"
+  numeros: "1 (início), 7 (guerra/espírito), 11 (duplo fogo)"
+  dias_semana: "Terça-feira (dia de Marte)"
+  doencas_corpo: "Cefaleias, febres, inflamações, cortes, queimaduras, olhos, cabeça"
+  arquetipos_mitologicos: "Ares/Marte, Perseu, Jasão, Ulisses, Hércules (início da jornada)"
+  mitos_historias: "Mit grego: Ares na Guerra de Troia; Jasão e os Argonautas; O Velocino de Ouro"
+  sonhos_simbolos_inconsciente: "Fogo, espadas, guerra, corridas, nascimentos, montanhas"
+  expressao_elevada_sombra: "Elevada: coragem autêntica, liderança inspiradora, iniciativa justa | Sombra: agressividade destrutiva, impulsividade violenta, egoísmo guerreiro"
+
+tarot:
+  carta: "O Carro"
+  explicacao: "Carta 7 — vontade pura, direção, impulso controlado. Áries é o Carro porque ambos representam a força que avança sem dúvida, puxada por cavalos de fogo. O Carro tem dois cavalos (um branco, um negro) = dualidade do impulso: precisa de direção senão se destrói."
+
+camada_energetica:
+  impressao_mental: "A mente que parte primeiro. Impulso, 'vamos lá', urgência de começar. Quando atrito: pressa sem meta, teimosia."
+  permeacao_emocional: "Entusiasmo quente e rápido que esfria fácil. Paixão de estouro, não de sustentação."
+  manifestacao_externa: "Eventos prováveis de começos, disputas, acidentes de pressa, liderança espontânea. Trânsitos tendem a acelerar a ação."
+  como_guiar_o_astral: "Ajudar a pessoa a mirar antes de disparar. Áries precisa de causa, não de corrida vazia."
+
+decanatos:
+  - "0-10: Áries (Marte) — fogo puro, impulso"
+  - "10-20: Leão (Sol) — liderança e brilho"
+  - "20-30: Sagitário (Júpiter) — expansão e ideal"
+
+foco_especial:
+  infantil: "A criança Áries é quem chega primeiro, a pioneira. Precisa de desafio e movimento, não de contenção excessiva."
+  familiar: "O membro que puxa a família para a ação. Conflitos diretos, mas que passam rápido."
+

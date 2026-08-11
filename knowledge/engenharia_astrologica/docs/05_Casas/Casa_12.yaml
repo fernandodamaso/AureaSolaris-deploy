@@ -1,0 +1,67 @@
+status: review
+id: "casa_12"
+tradicoes:
+  - "helenística"
+  - "medieval"
+  - "renascentista"
+  - "moderna (camadas psicológica e sistêmica explicitamente separadas)"
+tipo: "conceito técnico de casa astrológica"
+escopo_documental:
+  tecnica_historica:
+    - "significação tradicional da casa, sua relação com ângulos, casas sucedentes/cadentes e tópicos derivados"
+  camadas_modernas: "Atlas simbólico, Tarot, medicina, arquétipos e leitura sistêmica permanecem separados da regra histórica."
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "primária"
+    localizador: "Livro IV e passagens sobre configuração e significação dos lugares"
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    natureza: "primária"
+    localizador: "Livros II–IV, tópicos das casas e julgamento natal"
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    natureza: "primária"
+    localizador: "Livro I, significações das casas e regras de julgamento"
+validacao_de_fontes:
+  base: "A significa??o hist?rica dos lugares ? sustentada por Ptolomeu, Valens e Lilly, nas refer?ncias estruturadas da ficha."
+  escopo: "Tarot, Atlas simb?lico, medicina, psicologia e leitura sist?mica s?o camadas de estudo rotuladas; n?o substituem a t?cnica hist?rica de casas."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+numero: 12
+nome: "Casa 12 — O Silêncio / O Oceano"
+tema: "O que se dissolve e se esconde"
+
+origens_e_divergencias:
+  tradicional: "Ptolomeu (Tetrabiblos) — significados tradicionais das 12 casas."
+  moderna: "Astrologia psicológica/sistêmica (Liz Greene, escola de relações familiares)."
+  nota: "Revisar ao citar — marca a escola usada."
+atlas_simbolico:
+  pessoas_arquetipos: "O místico, o doente, o prisioneiro, o sonhador"
+  lugares_fisicos: "Conventos, hospitais, prisões, ilhas, locais de retiro"
+  objetos_materia: "Velas, incenso, poções, sonhos"
+  eventos_tipicos: "Mistérios, iniciações, mortes simbólicas, compaixão"
+  animais: "Baleia, golfinho, cisne, peixe"
+  plantas_ervas: "Lótus, papoula, adormeceira, jasmim"
+  metais_pedras: "Estanho, marfim, ametista, opala"
+  cores_sons: "Azul-mar, roxo; notas Lá e Dó"
+  numeros: "3 (misticismo), 6 (serviço), 9 (transcendência)"
+  dias_semana: "Quinta-feira (Júpiter/Netuno)"
+  doencas_corpo: "Pés, sistema linfático, imunidade, vícios"
+  arquetipos_mitologicos: "Netuno, Hécate, Anúbis, Jesus Cristo"
+  mitos_historias: "Dioniso e a dualidade; Jesus sobre as águas; Dilúvio"
+  sonhos_simbolos_inconsciente: "Águas profundas, névoa, barcos, música"
+  expressao_elevada_sombra: "Elevada: compaixão universal, arte transcendente | Sombra: escape, vícios, vitimização"
+
+camada_energetica:
+  campo_mental: "Foco no que escapa à consciência: imaginação, isolamento, o invisível."
+  permeacao_emocional: "Solidão, medo do 'invisível', 'o que não se nomeia'."
+  manifestacao_externa: "Eventos prováveis de isolamento, doença oculta, espiritualidade. Arquétipos: o Oceano, o Mosteiro. Inclinação, não destino."
+  como_guiar_o_astral: "Casa 12 pede ENTREGA — a pessoa 'precisa perder o controle para encontrar'."
+
+significados_derivados:
+  dinheiro_parceiro: false
+  isolamento: "Casa 12 = 'lugar fechado' (hospitais, prisões, mosteiros, terapia)."
+  inimigos_ocultos: "Inimigos INVISÍVEIS (diferente de Casa 7 que é inimigo declarado)."
+  espiritualidade: "Casa 12 = 'o sagrado que não se vê' — meditação, oração, invisível."
+  animais_adotivos: "Animais resgatados, 'o que acolho sem ver'."
+  karma: "Casa 12 = karma, dívidas passadas, 'o que veio de antes' (oferecer a quem ressona)."

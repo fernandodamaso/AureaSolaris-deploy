@@ -1,0 +1,51 @@
+status: complete
+id: "velocidade_planetaria"
+nome: "Velocidade Planetária"
+tradicoes:
+  - "helenística"
+  - "medieval"
+  - "tradicional"
+  - "moderna ocidental"
+tipo: "condição de movimento aparente (fundamento tradicional; alojamento editorial de legado)"
+classificacao_editorial:
+  nucleo_conceitual: "Astronomia aplicada e condição planetária acidental"
+  localizacao_atual: "09_Tecnicas_Modernas por legado de organização; não é técnica moderna de origem"
+  regra_de_apresentacao: "Exibir velocidade, unidade, referencial e régua; nunca rotular apenas por simbolismo."
+escopo_documental:
+  tecnica_historica:
+    - "comparação entre velocidade atual e estado esperado do planeta"
+    - "relação entre rapidez, lentidão, estação e retrogradação"
+    - "uso como condição acidental"
+  calculo_e_regra: "O motor deve comparar velocidade longitudinal aparente com a referência adotada e registrar a efeméride. Não basta rotular um planeta como 'rápido' ou 'lento' sem base numérica."
+  divergencias_de_escola: "Alguns autores usam velocidade como critério forte de condição acidental; outros lhe dão peso secundário."
+referencias:
+  - autor: "William Lilly"
+    obra: "Christian Astrology, 1647, Livro I (condições de movimento e fortaleza acidental)."
+    natureza: "fonte primária histórica"
+    localizador: "Livro I, comparação de rapidez e lentidão"
+  - autor: "Swiss Ephemeris"
+    obra: "Swiss Ephemeris Programmer's Documentation."
+    natureza: "referência técnica"
+    localizador: "https://www.astro.com/swisseph/swephprg.htm; velocidades e cálculo reproduzível"
+definicao_tecnica: "Velocidade planetária é a taxa de deslocamento aparente do corpo ao longo do zodíaco no intervalo temporal observado, normalmente em longitude eclíptica."
+regras_importantes:
+  - "rápido e lento são qualificações relativas ao planeta e ao critério adotado"
+  - "um planeta pode estar direto e lento, retrógrado e rápido em módulo, ou quase estacionário"
+  - "Mercúrio, Vênus e Marte exigem atenção especial por suas grandes variações sinódicas"
+politica_de_classificacao_do_corpus:
+  dado_base: "Velocidade longitudinal eclíptica geocêntrica em graus/dia, fornecida com a efeméride e sua versão."
+  rapido_lento: "São comparações relativas ao mesmo planeta em movimento direto, contra uma tabela versionada de faixas; não há uma tabela histórica universal que o corpus possa fingir ser canônica."
+  estacionario: "É definido pelo evento de mudança de sinal, conforme a ficha Estação Planetária; uma faixa de interface deve ser explicitamente configurada."
+  limite_de_implementacao: "Antes de o motor publicar rápido/lento, a tabela por planeta, efeméride e versão precisa estar registrada como perfil selecionável. Até lá, mostrar o valor numérico e o estado direto/retrógrado sem classificação inventada."
+uso_interpretativo:
+  tradicional: "Rapidez tende a favorecer eficácia; lentidão tende a dificultar ou retardar."
+  moderna: "Pode ser lida como intensidade de processamento, aceleração ou desaceleração subjetiva do tema."
+  regra_documental: "O corpus deve evitar frases absolutas sem comparação numérica real."
+nao_confundir_com:
+  - "velocidade planetária não é o mesmo que velocidade orbital física absoluta"
+  - "rapidez não anula outras debilidades"
+camada_energetica:
+  impressao_mental: "A velocidade mostra com que prontidão ou arrasto o tema planetário tende a operar."
+  permeacao_emocional: "Na leitura moderna, pode ser sentida como urgência, fluidez, travamento ou suspensão."
+  manifestacao_externa: "Em previsão e julgamento, ajuda a medir disponibilidade, demora e força de execução."
+  como_guiar_o_astral: "Sempre mostrar o dado calculado e a régua usada para classificá-lo."

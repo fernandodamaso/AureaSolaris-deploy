@@ -1,0 +1,148 @@
+status: review
+id: simbolo_plutao
+nome: Símbolo de Plutão — ♇ (Sol + Cruz + Lua)
+planeta: Plutão
+significado_visual: '♇ = CÍRCULO (Sol) + CRUZ (matéria, morte) + LUA CRESCENTE (emocional, inconsciente).
+
+  O círculo é o EU; a cruz é a MORTE/RENASCIMENTO; a lua é o INCONSCIENTE EMOCIONAL.
+
+  Juntos = o EU que MORRE (cruz) no INCONSCIENTE (lua) para RENASCER (círculo = novo eu).
+
+  Outra leitura: a Lua está SOBRE a cruz = a emoção que ''morre'' para o eu renascer.
+
+  O símbolo também lembra a letra P (Plutão) = o nome do planeta disfarçado no glyph.
+
+  '
+interpretacao_esoterica: 'Plutão é o ''deus do inferno'' (Hades) — o símbolo é o EU (círculo) que ENCONTRA a MORTE (cruz) no INCONSCIENTE (lua) para RENASCER.
+
+  A ordem dos traços: Sol (eu) → cruz (morte) → Lua (emoção/inconsciente) = a jornada de Plutão: ''eu morro no fundo do mar emocional para renascer transformado''.
+
+  A Lua POR CIMA da cruz = a emoção que ''mergulha'' na morte — Plutão é a ''descida ao inferno'' (inconsciente) para ''subir transformado''.
+
+  '
+uso_pratico: Meditar no ♇ é lembrar da 'transformação' — usar como amuleto de cura, renascimento, poder pessoal. O símbolo é a 'assinatura do phoenix'.
+atlas_simbolico:
+  pessoas_arquetipos:
+  - Mago/alquimista
+  - Terapeuta de profundidade
+  - Detetive
+  - Vingador (modo sombra)
+  - Cirurgião
+  - Xamã
+  - Pessoa que passou por morte simbólica
+  lugares:
+  - Subterrâneo, caverna
+  - Cripta
+  - Hospital psiquiátrico
+  - Lixão, esgoto (transformação)
+  - Vulcão
+  - Centro da Terra
+  objetos_materia:
+  - Escaravelho (renascimento)
+  - Caveira
+  - Fênix (cinza que renasce)
+  - Pedra de fogo
+  - Chave de cofre
+  - Tesouro enterrado
+  eventos_tipicos:
+  - Morte de ente querido
+  - Relação de poder
+  - Crise financeira profunda
+  - Ressurreição de projeto
+  - Abuso sexual/trauma
+  - Renascimento após derrota
+  - Crise de 30/40/50 anos
+  animais:
+  - Escorpião
+  - Fênix
+  - Lobo solitário
+  - Cobra (muda de pele)
+  - Abutre (transforma morte em vida)
+  - Aranha (tece destino)
+  plantas_ervas:
+  - Cogumelo (cogumelo psicoativo)
+  - Hortelã-pimenta
+  - Raiz de ginseng
+  - Papoula (óbito/renascimento)
+  - Samambaia (se reproduz por esporos)
+  metais_pedras:
+  - Plutônio (artificial)
+  - Obsidiana
+  - Granada
+  - Rubi negro
+  - Turmalina negra
+  - Magnetita
+  cores_sons:
+    cores:
+    - Preto
+    - Vermelho-sangue
+    - Violeta-escuro
+    - Cinza-fumaça
+    sons:
+    - Tremor de terra
+    - Erupção
+    - Grito abafado
+    - Tambor xamânico
+  numeros:
+  - 0
+  - 8
+  - 13
+  - 26
+  - 29 (anaretic)
+  dias_semana:
+  - Terça-feira (compartilhado com Marte)
+  doencas_corpo:
+    doencas:
+    - Câncer
+    - Disfunções sexuais
+    - Problemas de eliminação
+    - Transtornos obsessivos
+    partes_corpo:
+    - Órgãos genitais
+    - Ânus
+    - Intestino grosso
+    - Tecido necrosado
+  arquetipos_mitologicos:
+  - Hades/Plutão (rei do submundo)
+  - Perséfone (descida e retorno)
+  - Osíris (morte e ressurreição)
+  - Xerxes (poder absoluto)
+  - Deméter/Ceres (perda e reencontro)
+  mitos_historias:
+  - Rapto de Perséfone (morte que gera vida)
+  - Osíris desmembrado e reconstruído (transformação total)
+  - Teseu e o Minotauro (descida ao inferno)
+  - Mito de Psiquê (iniciação por sofrimento)
+  sonhos_inconsciente:
+  - Morte de pessoa querida = morte de parte de si
+  - Subir escada no escuro = processo de transformação
+  - Fênix = renascimento espiritual
+  - Caveira = confronto com a finitude
+  - Água suja = emoção que precisa ser transformada
+  expressao_elevada_vs_sombra:
+    elevada: Terapeuta, cirurgião da alma, que guia o outro por morte e renascimento sem medo.
+    sombra: Vingador, controlador por medo, obsessivo, que 'mata' para não ser morto, abuso de poder.
+origens_e_divergencias:
+  tradicional: Símbolo padrão da astrologia ocidental.
+  moderna: Mantido o símbolo tradicional; algumas variantes modernas existem.
+  nota: Símbolo é convenção visual, não técnica.
+tradicoes:
+  - "notação moderna de planetas exteriores"
+  - "mitologia greco-romana"
+  - "astrologia psicológica moderna"
+revisao_editorial:
+  origem_do_glifo: "♇ é uma forma moderna de notação de Plutão; coexistem variantes tipográficas, inclusive monograma PL. A leitura de sol, lua e cruz é simbólica/editorial, não uma origem documental única."
+  curiosidade: "Plutão foi descoberto em 1930 e depois classificado astronomicamente como planeta anão; a escolha de seu nome remete ao deus romano do submundo."
+  convencao_nao_tecnica: "O glifo identifica Plutão. O motor deve calcular posição por efeméride e declarar a política de pontos, sem derivar transformação ou destino do desenho."
+referencias:
+  primarias:
+    - "Tombaugh, Clyde W. Registros da descoberta de Plutão, 1930; consultar arquivo/edição declarada."
+  secundarias:
+    - "Greene, Liz. The Astrology of Fate. Samuel Weiser, 1984."
+  tecnicas:
+    - "Unicode Consortium. The Unicode Standard, bloco Miscellaneous Symbols: U+2647 PLUTO."
+camada_energetica:
+  impressao_mental: Símbolo gráfico do planeta/corpo celeste.
+  permeacao_emocional: Reconhecimento visual do arquétipo.
+  manifestacao_externa: Uso em mapas, fichas e leitura visual.
+  como_guiar_o_astral: Fixar o símbolo como atalho visual do planeta.

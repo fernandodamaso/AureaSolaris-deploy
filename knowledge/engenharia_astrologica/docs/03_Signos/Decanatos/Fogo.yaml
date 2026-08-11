@@ -1,0 +1,66 @@
+﻿status: draft
+id: "decanatos_fogo"
+nome: "Decanatos do Elemento Fogo (Áries, Leão, Sagitário)"
+tradicoes:
+  - "convenção por signos da mesma triplicidade"
+  - "camada simbólica moderna atribuída"
+elemento: "Fogo"
+tema: "Os 9 decanatos de Fogo (3 por signo)"
+
+origens_e_divergencias:
+  sistema_adotado: "Convenção posterior/moderna que percorre Áries, Leão e Sagitário dentro do elemento Fogo. Não é tabela caldaica nem regra tradicional de dignidade."
+  regencias: "Marte, Sol e Júpiter provêm dos regentes tradicionais dos três signos. A fórmula 'Sol/Sol/Sol' não é usada aqui como tabela universal."
+  faces_caldaicas: "As faces seguem sequência própria e divergem desta convenção em várias faixas."
+  nota: "Regente planetário e nome do signo não devem ser confundidos nas linhas da lista."
+atlas_simbolico:
+  pessoas_arquetipos: "O foguista, o pioneiro, o guerreiro"
+  lugares_fisicos: "Campos de batalha, forjas, desertos"
+  objetos_materia: "Espadas, fogo, instrumentos de guerra"
+  eventos_tipicos: "Guerras, nascimentos, competições"
+  animais: "Leão, carneiro, cavalo de guerra"
+  plantas_ervas: "Alecrim, pimenta, urtiga"
+  metais_pedras: "Ferro, aço, rubi, jaspe"
+  cores_sons: "Vermelho, laranja, dourado; notas Si e Dó"
+  numeros: "1 (início), 7 (guerra), 11 (duplo fogo)"
+  dias_semana: "Terça-feira (Marte), domingo (Sol)"
+  doencas_corpo: "Cabeça, olhos, sistema nervoso"
+  arquetipos_mitologicos: "Ares/Marte, Hércules, Apolo"
+  mitos_historias: "Hércules e os trabalhos; Ares e a guerra"
+  sonhos_simbolos_inconsciente: "Fogo, guerra, nascimentos, corridas"
+  expressao_elevada_sombra: "Elevada: coragem autêntica, ação justa | Sombra: agressividade, impulsividade"
+
+camada_energetica:
+  campo_mental: "Fogo puro (Áries 0-10°) = iniciativa crua. Fogo matizado (Leão 10-20°) = iniciativa com identidade. Fogo amadurecido (Sagitário 20-30°) = iniciativa com sentido."
+  permeacao_emocional: "Do impulso direto à fé expansiva — cada decanato acrescenta uma camada emocional."
+  manifestacao_externa: "Eventos PROVÁVEIS de ação, liderança e expressão criativa. Inclinação, não destino."
+  como_guiar_o_astral: "Usar o decanato para entender QUEM age (Áries), COM QUE IDENTIDADE (Leão), COM QUE SENTIDO (Sagitário)."
+
+decanatos:
+  - "Aries 1 (0-10°): Marte — Áries puro / o Batedor"
+  - "Aries 2 (10-20°): Sol — Áries matizado por Leão / o Herói"
+  - "Aries 3 (20-30°): Júpiter — Áries amadurecido por Sagitário / o Explorador"
+  - "Leao 1 (0-10°): Sol — Leão puro / o Brilho"
+  - "Leao 2 (10-20°): Júpiter — Leão matizado por Sagitário / o Mestre"
+  - "Leao 3 (20-30°): Marte — Leão amadurecido por Áries / o Líder"
+  - "Sagitario 1 (0-10°): Júpiter — Sagitário puro / o Filósofo"
+  - "Sagitario 2 (10-20°): Marte — Sagitário matizado por Áries / o Pioneiro"
+  - "Sagitario 3 (20-30°): Sol — Sagitário amadurecido por Leão / o Mestre"
+
+foco_especial:
+  infantil: "Criança de Fogo em 1º decanato = energia 'aberta'; 3º = energia 'experiente' (pode parecer madura)."
+calculo_e_escopo:
+  calculo: "Localizar signo tropical e intervalo de 10°; aplicar a convenção por triplicidade apenas se selecionada."
+  simbolismo: "Coragem, guerra, heroísmo e propósito são camadas simbólicas atribuídas, não efeitos necessários."
+  divergencia: "Não confundir esta convenção com faces ou com qualquer tabela simplificada de Sol para todos os decanatos de Fogo."
+referencias:
+  - autor: "Engenharia Astrológica"
+    obra: "Decanatos"
+    natureza: "fonte editorial"
+    localizador: "Distinção de sistemas em 03_Signos/Decanatos.yaml."
+  - autor: "Cláudio Ptolomeu"
+    obra: "Tetrabiblos"
+    natureza: "primária histórica"
+    localizador: "Faces tradicionais como tabela alternativa."
+limite_documental: "Permanece draft até haver fonte específica para esta tabela por triplicidade e suas associações."
+
+

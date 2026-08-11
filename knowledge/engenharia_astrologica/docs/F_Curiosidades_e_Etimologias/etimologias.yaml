@@ -1,0 +1,141 @@
+﻿status: review
+id: etimologias
+nome: Etimologias Astrológicas
+tradicoes:
+  - "historica"
+  - "etimologica"
+  - "editorial"
+tema: Raiz das palavras que fundam a linguagem astrológica.
+essencia:
+- Etimologia é ponte entre linguagem e símbolo astrológico.
+- Cada termo carrega a visão de mundo da época em que nasceu.
+- Decifrar a origem amplia a compreensão do símbolo.
+origens_e_divergencias:
+  tradicional: Latim, grego, árabe — termos clássicos da astrologia ocidental.
+  moderna: Revisão etimológica contemporânea; algumas conexões são reinterpretadas.
+  nota: Etimologia não é dogma; é pista de leitura simbólica.
+
+limites_de_uso:
+  - "Uma etimologia explica a história de uma palavra; ela não prova, por si, uma doutrina astrológica."
+  - "Conexões poéticas do caderno devem ser lidas como associações simbólicas, não como tradução filológica literal."
+  - "A origem de Saturno é debatida na filologia latina; a associação com 'satur' deve permanecer hipótese/analogia, não fato encerrado."
+camada_energetica:
+  impressao_mental: A etimologia como chave que abre o símbolo.
+  permeacao_emocional: Maravilha ao descobrir origens; insight repentino.
+  manifestacao_externa: Estudo, escrita, ensino, 'ah!' moments.
+  como_guiar_o_astral: Mostrar a raiz da palavra para fixar o símbolo no corpo.
+etimologias:
+- termo: Considerar
+  origem: cum + sidera
+  significado: Olhar junto para as estrelas
+  conexao_astrologica: Astrologia é olhar junto com o cosmos, não ver sozinho.
+- termo: Desastre
+  origem: dis + astrum
+  significado: Mau astro
+  conexao_astrologica: Desastre não é azar; é astro mal aspectado ou ignorado.
+- termo: Influência
+  origem: influere
+  significado: Fluir para dentro (dos astros)
+  conexao_astrologica: Astros influenciam, não determinam. Fluem, não comandam.
+- termo: Lunático
+  origem: luna
+  significado: Afectado pela Lua
+  conexao_astrologica: Lua afeta emoções. 'Lunático' é quem não regula emoções lunares.
+- termo: Mercúrio
+  origem: Mercator
+  significado: Comerciante, mediador
+  conexao_astrologica: Mercúrio é o mensageiro, comerciante de ideias entre mundos.
+- termo: Saturno
+  origem: Satur / Saturnus
+  significado: Saciado, completo → tempo como consumidor
+  conexao_astrologica: Saturno é o tempo que consome tudo. Saciado = completo = fim.
+- termo: Júpiter
+  origem: Iuppiter / Iovis Pater
+  significado: Pai Júpiter
+  conexao_astrologica: Júpiter = expansão paterna, lei, proteção, abundância por herança.
+- termo: Marte
+  origem: Mars / Māors
+  significado: Deus da guerra, do arado, da defesa
+  conexao_astrologica: 'Marte é força que corta: pode ser guerra ou proteção, depende
+    do contexto.'
+- termo: Vênus
+  origem: Venus / Venustus
+  significado: Bela, desejável
+  conexao_astrologica: Vênus = atração, valores, prazer, arte.
+- termo: Astrologia
+  origem: astron + logia
+  significado: Estudo/razão dos astros
+  conexao_astrologica: Astrologia não é adivinhação; é estudo racional dos movimentos
+    e seus significados.
+- termo: Período
+  origem: periodos (gr.)
+  significado: Retorno cíclico; em astrologia = ciclo planetário ou fase de vida.
+  conexao_astrologica: 'Cada planeta tem seu período: Júpiter ~12 anos, Saturno ~29.5.'
+- termo: Natal
+  origem: natus (lat.)
+  significado: Nascimento; em astrologia = mapa do momento do nascimento.
+  conexao_astrologica: Mapa natal = instantâneo do céu no nascimento.
+- termo: Arquétipo
+  origem: archetypon (gr.)
+  significado: Modelo original; em astrologia = os 12 signos como padrões universais.
+  conexao_astrologica: 'Jung + Junguianos: signos = arquétipos do inconsciente coletivo.'
+- termo: Sangue
+  origem: sanguis (lat.)
+  significado: Líquido vital; em astrologia = associado a Marte (cabeça) e Lua (fluidos).
+  conexao_astrologica: Marte = fogo vital; Lua = fluxo. Sangue = vida em movimento.
+- termo: Fase
+  origem: phasis (gr.)
+  significado: Aparência; em astrologia = fases da Lua (Nova, Cheia, quartos).
+  conexao_astrologica: Lua Nova = início; Cheia = clímax; quartos = ajuste.
+- termo: Inconsciente
+  origem: inconscius (lat.)
+  significado: Não consciente; em astrologia = Lua (pessoal) e Netuno (coletivo).
+  conexao_astrologica: Lua = memória emocional; Netuno = mar do inconsciente.
+- termo: Retorno
+  origem: return (en.)
+  significado: Volta; em astrologia = retorno solar/lunar = ciclo que se completa.
+  conexao_astrologica: Retorno Solar = ano novo astrológico; Lunar = mês emocional.
+- termo: Revolução
+  origem: revolutio (lat.)
+  significado: Volta completa; em astrologia = revolução solar = ciclo anual.
+  conexao_astrologica: Revolução Solar = mapa do ano; revolução = renovação cíclica.
+- termo: Queda
+  origem: fall (en.)
+  significado: Queda; em astrologia = planeta em exílio relativo.
+  conexao_astrologica: Queda ≠ exílio; é segunda dignidade negativa, menos intensa.
+- termo: Casa
+  origem: casa (lat./port.)
+  significado: Morada; em astrologia = área da vida onde planeta se manifesta.
+  conexao_astrologica: Casa 1 = eu; Casa 7 = outro. Cada casa = cômodo do mapa.
+- termo: Signo
+  origem: signum (lat.)
+  significado: Marca, sinal; em astrologia = divisão de 30° do zodíaco.
+  conexao_astrologica: Signo ≠ constelação; é divisão matemática tropical.
+- termo: Orbe
+  origem: orbis (lat.)
+  significado: Círculo, esfera; em astrologia = margem de tolerância do aspecto.
+  conexao_astrologica: Orbe maior = aspecto mais amplo; menor = mais preciso.
+- termo: Horário
+  origem: hora (lat./port.)
+  significado: Divisão do dia; em astrologia = hora planetária.
+  conexao_astrologica: Cada hora do dia regida por um planeta; timing mágico.
+- termo: Mundana
+  origem: mundus (lat.)
+  significado: Mundo; em astrologia = astrologia de coletividades.
+  conexao_astrologica: Mapa mundano = nascimento de um país/evento coletivo.
+- termo: Horária
+  origem: hora (lat./port.)
+  significado: Astrologia de perguntas feitas na hora.
+  conexao_astrologica: Pergunta lançada = mapa da pergunta; os significadores e o julgamento dependem da escola e das regras horárias adotadas.
+referencias:
+  primarias:
+    - "Lewis, Charlton T.; Short, Charles. A Latin Dictionary. Oxford University Press, 1879."
+    - "Liddell, H. G.; Scott, R.; Jones, H. S. A Greek-English Lexicon. Oxford University Press, 1940."
+  secundarias:
+    - "de Vaan, Michiel. Etymological Dictionary of Latin and the other Italic Languages. Brill, 2008."
+  tecnicas:
+    - "Consultar dicionários etimológicos e edições críticas antes de usar uma origem como citação literal."
+ver_mais:
+- ../F_Curiosidades_e_Etimologias/Frases_Celebres.yaml
+- ../F_Curiosidades_e_Etimologias/Historico_de_Conceitos.yaml
+

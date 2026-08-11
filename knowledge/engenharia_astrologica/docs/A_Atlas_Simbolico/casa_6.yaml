@@ -1,0 +1,57 @@
+﻿status: review
+id: "casa_6_atlas"
+nome: "Casa 6 — O Serviço / A Saúde"
+tradicoes:
+  - "atlas simbolico editorial"
+  - "sintese multiescola"
+tipo: "Atlas Simbólico"
+subtema: "Correspondências da Casa 6"
+
+origens_e_divergencias:
+  tradicional: "Ptolomeu (Tetrabiblos) — significados tradicionais das 12 casas."
+  moderna: "Astrologia médica — casa 6 como saúde e serviço."
+  nota: "Revisar ao citar — marca a escola usada."
+
+atlas_simbolico:
+  pessoas_arquetipos: "O servidor, o curador, o empregado, o animal"
+  lugares_fisicos: "Hospitais, clínicas, escritórios, fazendas"
+  objetos_materia: "Instrumentos cirúrgicos, ferramentas, uniformes"
+  eventos_tipicos: "Doenças, serviços, curas, rotinas"
+  animais: "Cães, gatos, animais de estimação, animais de trabalho"
+  plantas_ervas: "Ervas medicinais, hortelã, camomila, aloe"
+  metais_pedras: "Mercúrio, prata, cristal, jaspe"
+  cores_sons:
+    cores: ["Verde-oliva", "amarelo", "marrom"]
+    sons: ["Ruído de ambiente", "sino de hospital"]
+  numeros: [6]
+  dias_semana: ["Quarta-feira", "Segunda-feira"]
+  doencas_corpo:
+    doencas: ["Problemas intestinais", "ansiedade", "problemas de pele"]
+    partes_corpo: ["Intestinos", "aparelho digestivo", "sistema nervoso"]
+  arquetipos_mitologicos:
+    - "Asclépio (medicina)"
+    - "Héstia (serviço)"
+  mitos_historias: "Asclépio e a serpente da cura"
+  sonhos_simbolos_inconsciente: "Serviço, doença, cura, rotina"
+  expressao_elevada_sombra: "Elevada: serviço autêntico, cura, saúde | Sombra: vitimização, perfeccionismo, crítica"
+
+revisao_editorial:
+  origem_e_linguagem: "A sexta casa é cadente; trabalho cotidiano, serviço, pequenos animais e enfermidade aparecem em tradições de casas. Serviço e saúde são campos históricos de significação."
+  mito_arquetipo_e_porque: "Oficina, rotina, cuidado e tarefa dão o porquê simbólico da casa; não são prova de doença, obrigação ou subordinação de uma pessoa."
+  limite_tecnico: "A analogia com Virgem/Mercúrio é moderna. Correspondências médicas são estudo histórico-simbólico, nunca diagnóstico, prescrição ou certeza corporal."
+referencias:
+  primarias:
+    - "Lilly, William. Christian Astrology. 1647, livro II: significações da sexta casa."
+  secundarias:
+    - "Houlding, Deborah. The Houses: Temples of the Sky. The Wessex Astrologer, 1996."
+  tecnicas:
+    - "Aplicar limites da seção de Astrologia Médica e declarar sistema de casas."
+camada_energetica:
+  impressao_mental: "A mente que SERVE e CURA. Pensamento analítico, 'como eu ajudo?'."
+  permeacao_emocional: "Serviço como forma de amor. Quando saudável: cuidado. Quando ferido: crítica."
+  manifestacao_externa: "Eventos PROVÁVEIS de saúde, serviço, rotina. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a SERVIR SEM SE PERDER. Casa 6 é o serviço, não a servidão."
+
+ver_mais:
+  - "../05_Casas/Casa_6.yaml"
+

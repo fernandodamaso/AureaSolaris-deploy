@@ -1,0 +1,54 @@
+﻿status: draft
+id: "tradicao_caldeia_egipcia_mesopotamica"
+nome: "Tradição Caldaica, Egípcia e Mesopotâmica"
+tipo: "Tradições Antigas"
+subtema: "Origens da astrologia"
+
+origens_e_divergencias:
+  tradicional: "Fontes antigas — Babilônia, Egito, tradição caldaica."
+  moderna: "Reconstrução histórica e simbólica."
+  nota: "Fontes fragmentadas — reconstrução é interpretação."
+
+atlas_simbolico:
+  pessoas_arquetipos: "O mago, o sacerdote, o astrônomo antigo"
+  lugares_fisicos: "Zigurates, templos, bibliotecas de Alexandria"
+  objetos_materia: "Tábuas cuneiformes, papiros, astrolábios"
+  eventos_tipicos: "Presságios, observações, rituais"
+  animais: "Águia (olho celeste), gato (Egito), serpente (sabedoria)"
+  plantas_ervas: "Lótus (Egito), hera (Grécia), carvalho (Europa)"
+  metais_pedras: "Ouro, prata, cobre, jaspe"
+  cores_sons:
+    cores: ["Ouro", "azul-royal", "verde-oliva"]
+    sons: ["Órgão", "tambor", "canto gregoriano"]
+  numeros: [7, 12, 360]
+  dias_semana: ["Domingo"]
+  doencas_corpo:
+    doencas: ["Problemas de visão", "ansiedade"]
+    partes_corpo: ["Olhos", "cérebro"]
+  arquetipos_mitologicos:
+    - "Hermes Trismegisto"
+    - "Pitágoras"
+    - "Ptolomeu"
+  mitos_historias: "A criação da astrologia; a transmissão dos conhecimentos"
+  expressao_elevada_sombra: "Elevada: sabedoria ancestral | Sombra: dogma, crença sem questionamento"
+
+camada_energetica:
+  impressao_mental: "A astrologia nasce da OBSERVAÇÃO do céu e da BUSCA DE PADRÕES."
+  permeacao_emocional: "Tradição como raiz. Quando saudável: respeito. Quando ferido: dogma."
+  manifestacao_externa: "Eventos prováveis de redescoberta, estudo de textos antigos. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a HONRAR A RAIZ SEM SER PRISIONEIRA. Tradição é base, não gaiola."
+
+tradicoes:
+  - nome: "Mesopotâmica"
+    periodo: "1800 a.C. — 500 a.C."
+    contribuicao: "Primeiros registros de planetas, presságios, zodíaco lunar"
+    fontes: "Tábuas cuneiformes, Enuma Anu Enlil"
+  - nome: "Egípcia"
+    periodo: "1500 a.C. — 500 a.C."
+    contribuicao: "Decanos, casas, zodíaco solar, Hermetismo primordial"
+    fontes: "Papiros de astronomia, Hermes Trismegisto"
+  - nome: "Caldaica"
+    periodo: "200 a.C. — 400 d.C."
+    contribuicao: "Tradição Caldaica, oráculos caldeus, Jâmblico"
+    fontes: "Oracles Chaldaeans, Jâmblico, Proclus"
+

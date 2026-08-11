@@ -1,0 +1,71 @@
+status: review
+id: "sirius"
+tradicoes:
+  - "helenística"
+  - "árabe/medieval"
+  - "renascentista"
+  - "moderna (catálogos e interpretações explicitamente separados)"
+tipo: "estrela fixa"
+escopo_documental:
+  astronomia: "Nome próprio, designação Bayer, constelação, magnitude e longitude eclíptica devem registrar época, sistema de coordenadas e fonte astronômica."
+  tecnica_historica: "Natureza estelar, uso por conjunção e critérios de orbe pertencem à linhagem astrológica identificada."
+  camadas_modernas: "Correspondências psicológicas, mitológicas e do Atlas permanecem notas de estudo, não equivalem automaticamente à natureza de Ptolomeu."
+calculo_e_orbes: "Registrar longitude tropical/sistema adotado, época de referência, precessão, posição aparente ou média e orbe por escola."
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "primária"
+    localizador: "Livro I, capítulo 9, naturezas das estrelas fixas"
+  - autor: "Claudius Ptolemy"
+    obra: "Almagest"
+    natureza: "primária astronômica"
+    localizador: "Livros VII–VIII, catálogo e coordenadas; conferir edição"
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    natureza: "secundária histórica"
+    localizador: "Livro I, estrelas fixas e conjunções; conferir edição"
+  - autor: "Vivian E. Robson"
+    obra: "The Fixed Stars and Their Interpretation"
+    natureza: "secundária moderna"
+    localizador: "Compilação moderna; não substituir a fonte histórica"
+validacao_de_fontes:
+  base: "A natureza tradicional est? atribu?da ?s obras citadas; cat?logo, coordenada, ?poca e orbe devem ser escolhidos e registrados pela implementa??o."
+  escopo: "Magnitude e longitude textuais s?o indicadores editoriais dependentes de ?poca; n?o s?o uma efem?ride vigente. O Atlas e releituras modernas permanecem separados da camada hist?rica."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+nome: "Sirius (α Canis Major — Estrela do Cão)"
+magnitude: -1.46 (a mais brilhante do céu)
+constelacao: "Cão Maior"
+coordenadas: "14° Câncer (na eclíptica)"
+
+origens_e_divergencias:
+  tradicional: "Ptolomeu (Tetrabiblos) + tradição árabe."
+  moderna: "None"
+  nota: "Revisar ao citar — marca a escola usada."
+atlas_simbolico:
+  pessoas_arquetipos: "O iluminado, o escolhido, o que tem missão"
+  lugares_fisicos: "Templos, montanhas, locais de revelação"
+  objetos_materia: "Estrelas, mapas celestes, instrumentos de visão"
+  eventos_tipicos: "Revelações, missões, encontros de destino"
+  animais: "Águia, falcão, fênix"
+  plantas_ervas: "Sálvia, mirra, açafrão"
+  metais_pedras: "Ouro, lápis-lazúli, safira"
+  cores_sons: "Azul-royal, roxo; notas Lá e Dó"
+  numeros: "3 (trindade), 7 (espiritualidade), 9 (completude)"
+  dias_semana: "Quinta-feira (Júpiter), domingo (Sol)"
+  doencas_corpo: "Sistema nervoso central, olhos"
+  arquetipos_mitologicos: "Os Magos, Apolo, Atena"
+  mitos_historias: "Os Reis Magos; A estrela de Belém"
+  sonhos_simbolos_inconsciente: "Estrelas, mapas, revelações, missões"
+  expressao_elevada_sombra: "Elevada: missão cumprida, visão clara | Sombra: fanatismo, crença cega"
+
+camada_energetica:
+  impressao_mental: "Sirius = BRILHO e PROTECÃO — a mente 'guia os outros'."
+  permeacao_emocional: "Lealdade, proteção, 'sou o farol'."
+  manifestacao_externa: "Eventos PROVÁVEIS de fama, proteção, 'chegada de mestre'. Arquétipos: o Cão de Guarda, o Farol. Inclinação, não destino."
+  como_guiar_o_astral: "Sirius pede SERVIR COM BRILHO — a pessoa 'é vista' e precisa 'guiar'."
+
+porque_simbolico: |
+  Sirius = 'QUEIMANDO' (grego). É a estrela MAIS BRILHANTE do céu — o 'sol do solstício de verão' (egípcios alinhavam a pirâmide a ela).
+  CÃO MAIOR = animal de PROTECÃO e FIDELIDADE. Sirius = 'o cão que guia'.
+
+linha_tradicao: "Ptolomeu: Sirius = natureza de Vênus + Júpiter (fama, sorte, proteção)."

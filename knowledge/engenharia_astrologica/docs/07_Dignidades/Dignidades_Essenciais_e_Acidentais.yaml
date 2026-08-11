@@ -1,0 +1,65 @@
+status: review
+id: "dignidades_essenciais_acidentais"
+nome: "Dignidades Essenciais e Acidentais"
+tipo: "técnica de avaliação tradicional"
+tradicao_primaria: ["helenística", "medieval", "tradicional"]
+
+escopo:
+  definicao_operacional: "Conjunto de critérios tradicionais para qualificar a condição de um planeta. Dignidade essencial trata da relação do planeta com o signo e suas subdivisões; condição ou dignidade acidental trata de circunstâncias de posição, movimento, visibilidade e relação com a figura."
+  inclui:
+    - "Domicílio, exaltação, triplicidade, termos e faces; seus opostos quando a tabela adotada os define."
+    - "Angularidade, velocidade, direção, combustão/visibilidade, sect, casa, recepção e relação com benéficos/maléficos como condições a analisar."
+  nao_inclui:
+    - "Uma pontuação universal que substitua julgamento."
+    - "Juízo de valor moral sobre a pessoa ou o planeta."
+  exclusoes_do_projeto: []
+
+fundamento:
+  descricao: "A condição essencial pergunta se um planeta dispõe de recursos segundo a economia de signos adotada; a condição acidental pergunta como ele está situado e pode operar na carta ou técnica. Os dois planos não são sinônimos e podem apontar em direções diferentes."
+  contexto_historico: "Tabelas, pesos e listas variam em autores helenísticos, árabes, medievais e renascentistas. Sistemas de pontuação são ferramentas de certas escolas, não uma regra única da tradição."
+
+procedimento:
+  pre_requisitos:
+    - "Tabela de dignidades e tradição declaradas."
+    - "Sect, sistema de casas, posições, velocidades e aspectos calculados de modo reproduzível."
+  passos:
+    - "Identificar significadores pertinentes à pergunta ou técnica."
+    - "Avaliar dignidade essencial do planeta no signo, grau e triplicidade conforme a tabela escolhida."
+    - "Avaliar condição acidental: casa/ângulos, movimento, visibilidade, sect, recepção e aspectos."
+    - "Sintetizar fatores concordantes e contrários sem reduzir o resultado a uma soma mecânica."
+  parametros_de_calculo:
+    - "tabela de triplicidades, termos e faces"
+    - "sect"
+    - "sistema de casas"
+    - "velocidade e direção"
+    - "orbes e aspectos"
+
+uso_interpretativo:
+  pergunta_que_ajuda_a_responder:
+    - "Quais recursos, limitações e vias de expressão este significador possui dentro desta técnica?"
+  como_ponderar: "Dar precedência ao significador e à pergunta. Uma dignidade forte não anula condições contrárias; uma debilidade não equivale a incapacidade ou dano inevitável."
+  limites:
+    - "Não misturar tabelas de tradições diferentes sem identificá-las."
+    - "Não usar pontuações para declarar superioridade pessoal, moral ou espiritual."
+
+divergencias_de_tradicao:
+  consenso: "Domicílio, exaltação e as relações de queda/exílio são categorias amplamente usadas em linhas tradicionais."
+  divergencias:
+    - "Triplicidades, termos, faces, pesos e critérios acidentais diferem entre autores."
+    - "Linhas modernas podem dispensar dignidades ou reinterpretá-las simbolicamente."
+  decisao_editorial: "Toda ficha derivada deverá declarar a tabela e a escola; o corpus apresentará pontuações somente como métodos atribuídos."
+
+referencias:
+  primarias:
+    - "Ptolemaeus. Tetrabiblos. Tradução de F. E. Robbins. Loeb Classical Library, 1940."
+    - "Vettius Valens. The Anthology. Tradução de Mark Riley, 2010."
+    - "Lilly, William. Christian Astrology. Londres, 1647."
+  secundarias:
+    - "Dykes, Benjamin. Introdução e notas em Perso-Arabic Astrology: Dorotheus of Sidon. Cazimi Press, 2017."
+  tecnicas: []
+
+relacoes:
+  depende_de: ["zodiaco_tropical", "sistemas_de_casas", "sect"]
+  ver_tambem: ["recepcao", "almuten", "planeta_peregrino", "condicoes_planetarias"]
+
+anotacoes_pessoais: []

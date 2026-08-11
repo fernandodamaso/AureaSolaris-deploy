@@ -1,0 +1,85 @@
+﻿status: review
+id: "graus_astrologicos"
+nome: "Graus Astrológicos"
+tradicoes:
+  - "simbolica moderna"
+  - "tradicional quando explicitada"
+tema: "O significado do grau exato (0° a 30° por signo) e graus especiais"
+
+essencia:
+  - "Grau exato por longitude eclíptica — dado de cálculo"
+  - "Listas de graus críticos e anaretic — convenções de autores/escolas, não universais"
+  - "Grau do Solstício/Equinócio (0° de Áries, Câncer, Libra, Capricórnio)"
+  - "Hyleg/aphēta — técnica própria, não categoria geral de grau"
+  - "15° de cada signo — ponto médio geométrico, com leituras simbólicas de escola"
+  - "Graus das Faces / Decanatos (0-10, 10-20, 20-30)"
+  - "Exaltações, termos e faces — dignidades/tabelas próprias; não 'graus vazios' universais"
+
+origens_e_divergencias:
+  tradicional: "Fontes antigas usam graus, termos, faces e divisões zodiacais, mas não oferecem uma única lista canônica de graus críticos, anaretic ou 'coração' válida para todos os signos."
+  moderna: "Listas de grau anaretic, crítico, kármico e interpretação psicológica por grau circulam em escolas modernas; devem ser atribuídas ao autor/tabela."
+  nota: "Grau é primeiro uma coordenada. O motor deve separar cálculo exato de listas simbólicas escolhidas pela pessoa usuária."
+
+atlas_simbolico:
+  pessoas_arquetipos: "O numerólogo, o místico, o que vê padrões"
+  lugares_fisicos: "Lugares de padrão: templos, bibliotecas, locais de estudo"
+  objetos_materia: "Instrumentos de medição, números, símbolos"
+  eventos_tipicos: "Eventos de padrão: ciclos, retornos, sincronicidades"
+  animais: "Cobra (que troca de pele), fênix (renascimento)"
+  plantas_ervas: "Lótus, papoula, girassol"
+  metais_pedras: "Ouro, prata, cristal de rocha"
+  cores_sons: "Dourado, prata, violeta; notas Dó e Lá"
+  numeros: "1-9 (pitagórico), 10 (completude), 12 (ciclo)"
+  dias_semana: "Todos os dias"
+  doencas_corpo: "Sistema nervoso, cérebro, pele"
+  arquetipos_mitologicos: "Pitágoras, Hermes/Mercúrio, Atena"
+  mitos_historias: "Pitágoras e os números; Hermes e a sabedoria"
+  sonhos_simbolos_inconsciente: "Números, padrões, ciclos, sincronicidades"
+  expressao_elevada_sombra: "Elevada: padrão consciente, numerologia viva | Sombra: superstição, rigidez numérica"
+
+camada_energetica:
+  campo_mental: "O grau exato permite distinguir posições dentro do signo e calcular aspectos, divisões e ativações conforme uma técnica."
+  permeacao_emocional: "Sentidos de limiar, centro ou encerramento pertencem a escolas simbólicas e devem ser oferecidos como tal."
+  manifestacao_externa: "Ativações exatas podem ser observadas em técnicas que usem grau/orbe declarado; não demonstram por si evento obrigatório."
+  como_guiar_o_astral: "Exibir primeiro coordenada, técnica e tabela; depois, se escolhida, a camada simbólica atribuída."
+
+topicos_detalhados:
+  - "0°–<1°: primeiro grau técnico do signo; leituras de começo dependem de escola"
+  - "9°, 13°, 21°, 27°: listas críticas variam por tradição, elemento e autor; não usar sem tabela citada"
+  - "15°: ponto médio geométrico; 'coração' é linguagem simbólica, não força universal"
+  - "29°–<30°: último grau técnico; 'anaretic' e 'kármico' são leituras modernas atribuídas"
+  - "0° de Áries (Ponto Gama / início do zodíaco) — grau do impulso primordial"
+  - "Faces (10° cada) e Decanatos (10° cada) — subdivisão por regente"
+  - "Termos — divisão desigual por dignidade essencial (tradicional)"
+
+foco_especial:
+  infantil: "Não inferir maturidade precoce ou pressão de vida a partir do 29° isolado."
+  carmico: "O 29° pode aparecer em escolas cármicas como nota atribuída; não é diagnóstico de alma ou vidas passadas."
+  futuro: "Mansões Lunares (28), Termos e Decanos entram como expansão deste arquivo (ver nota abaixo)."
+
+nota_expansao: "Mansões Lunares (28 divisões de ~12,8°), Termos e Decanatos serão YAMLs próprios em 24_Graus_Astrologicos/ — a criar sob demanda (mantém o arquivo enxuto por enquanto)."
+
+procedimento_de_calculo:
+  - "Converter longitude eclíptica tropical para faixa de 0° a <360°."
+  - "Determinar signo por intervalos de 30° e grau interno por resto da divisão."
+  - "Usar intervalos semiabertos: 0°–<1° é primeiro grau; 29°–<30° é último grau."
+  - "Aplicar listas de graus especiais somente com nome de autor/tradição, versão e orbe quando aplicável."
+
+referencias:
+  - autor: "Cláudio Ptolomeu"
+    obra: "Tetrabiblos"
+    natureza: "primária histórica"
+    localizador: "Divisões zodiacais, termos e faces; conferir edição."
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    natureza: "primária histórica"
+    localizador: "Graus e divisões em técnicas helenísticas; conferir edição."
+  - autor: "Swiss Ephemeris"
+    obra: "Programmer's Documentation"
+    natureza: "referência técnica"
+    localizador: "Coordenadas e longitude eclíptica; registrar versão usada."
+
+validacao_de_fontes:
+  base: "A ficha documenta grau como coordenada e mantém listas simbólicas como camadas de escola."
+  limite: "O motor não deve inventar lista de graus críticos, chamar 29° de karma factual ou aplicar força universal ao 15°."
+

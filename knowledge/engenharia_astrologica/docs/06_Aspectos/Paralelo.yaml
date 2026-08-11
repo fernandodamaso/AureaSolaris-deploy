@@ -1,0 +1,62 @@
+status: review
+id: "paralelo"
+nome: "Paralelo de declinação"
+tradicoes:
+  - "astronomia matemática"
+  - "moderna ocidental"
+  - "tradição ocidental (genealogia histórica a consolidar)"
+tipo: "relação por declinação"
+angulo: "mesma declinação ou declinação muito próxima no mesmo hemisfério celeste"
+natureza: "aproximação e reforço por coordenada equatorial"
+escopo_documental:
+  tecnica_historica:
+    - "comparação de declinações norte/norte ou sul/sul"
+    - "distinção entre longitude eclíptica e coordenadas equatoriais"
+    - "analogia interpretativa com conjunção como hipótese de escola, não identidade geométrica literal"
+  calculo_e_orbes: "O motor deve comparar declinações com efeméride identificada e orbe explícito por escola. Paralelo não usa longitude zodiacal."
+  divergencias_de_escola: "Há uso moderno difundido do paralelo como vínculo análogo à conjunção. A genealogia histórica precisa ser documentada com mais precisão antes de automatizações fortes."
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "primária"
+    localizador: "Passagens astronômicas e de configuração; conferir tratamento exato de declinação"
+  - autor: "Charles E. O. Carter"
+    obra: "The Astrological Aspects"
+    natureza: "secundária/moderna"
+    localizador: "Capítulos sobre paralelos e declinação; conferir edição"
+  - autor: "Faculty of Astrological Studies"
+    obra: "Materiais de ensino sobre aspectos e declinação"
+    natureza: "secundária pedagógica"
+    localizador: "Unidade/edição a localizar"
+validacao_de_fontes:
+  base: "As refer?ncias estruturadas sustentam as distin??es hist?ricas e t?cnicas; signo, grau, partil, paralelo e contraparalelo n?o s?o tratados como sin?nimos."
+  escopo: "Orbes permanecem par?metros de escola e corpo, declarados pela t?cnica escolhida; a ficha n?o imp?e um valor universal."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+definicao_tecnica: "Dois fatores possuem declinações de magnitude igual ou muito próxima e estão no mesmo hemisfério em relação ao equador celeste."
+calculo:
+  regra: "Comparar a distância absoluta entre as declinações mantendo o mesmo sinal norte/norte ou sul/sul."
+  exemplo: "Se um corpo está em +16°40' e outro em +16°55', a diferença é 0°15'; dentro do orbe declarado, há paralelo."
+  aplicativo: "O vínculo é aplicativo quando a diferença de declinação diminui."
+  separativo: "O vínculo é separativo quando a diferença aumenta após a perfeição."
+julgamento_tecnico:
+  regra_geral: "Muitos autores modernos tratam o paralelo como reforço comparável a uma conjunção por declinação."
+  nota: "Essa analogia deve ser apresentada como aproximação interpretativa de escola, não como equivalência geométrica absoluta."
+nao_confundir_com:
+  - "Conjunção zodiacal: relação por longitude eclíptica."
+  - "Latitude eclíptica: coordenada diferente de declinação."
+  - "Contraparalelo: exige hemisférios opostos."
+origens_e_divergencias:
+  tradicional: "A presença histórica exata e a forma de uso precisam ser consolidadas documentalmente."
+  moderna: "Uso difundido como aspecto complementar por declinação."
+  nota: "Se o motor exibir paralelo, deve declarar claramente a escola e a política de orbe adotadas."
+atlas_simbolico:
+  pessoas_arquetipos: "duplo oculto, vínculo silencioso, afinidade implícita"
+  objetos_materia: "espelho alinhado, fio paralelo, linha dupla"
+  eventos_tipicos: "reforço discreto, ressonância, coincidência significativa"
+  arquetipos_mitologicos: "eco, sombra gêmea, duplicação"
+camada_energetica:
+  impressao_mental: "Há uma linha de reforço menos visível no mapa comum por longitude."
+  permeacao_emocional: "Pode ser sentida como afinidade ou intensificação silenciosa."
+  manifestacao_externa: "Funciona como vínculo adicional e não substitui a rede principal de aspectos por longitude."
+  como_guiar_o_astral: "Usar o paralelo para acrescentar nuance, nunca para apagar o que o mapa zodiacal já mostra."
+exemplo_pratico: "Sol paralelo a Plutão pode ser lido, em escolas que usam declinação, como reforço de intensidade e concentração de presença; o peso final depende do restante da configuração."

@@ -1,0 +1,58 @@
+status: review
+id: "mapa_vocacional"
+nome: "Astrologia Vocacional"
+tipo: "Astrologia Aplicada"
+subtema: "Ofício, aptidões, contribuição, carreira e condições de trabalho"
+tradicoes: ["helenística", "tradicional", "psicológica", "humanista", "aplicada contemporânea"]
+
+escopo:
+  definicao: "Leitura do mapa natal orientada a aptidões, modos de contribuição, ambientes de trabalho e trajetórias profissionais possíveis."
+  principio: "Vocação é uma síntese, não um indicador único nem uma lista automática de profissões."
+
+origens_e_divergencias:
+  helenistica_tradicional: "Fontes antigas julgam profissão/ação por significadores como Sol, Lua, Mercúrio, Vênus e Marte, sua condição e relação com ângulos; autores e traduções variam."
+  medieval_renascentista: "Casas, regentes, dignidades e testemunhos são ponderados hierarquicamente; não basta equiparar Casa 10 a emprego."
+  moderna: "Amplia a pergunta para realização, valores, criatividade, propósito e desenvolvimento do Self."
+  contemporanea: "Distingue ocupação, renda, serviço, status, chamado e condições reais do mercado."
+
+hierarquia_de_leitura:
+  - "Dados natais e confiabilidade da hora; MC e casas são sensíveis ao horário."
+  - "Ascendente e regente: modo geral de agir e conduzir a vida."
+  - "MC/Casa 10 e seus regentes segundo o sistema de casas escolhido: ação pública, reputação e direção."
+  - "Casas 2 e 6 conforme a escola: recursos/renda e trabalho cotidiano/serviço; não são sinônimos de vocação."
+  - "Sol, Lua, Mercúrio, Vênus, Marte e demais planetas por condição, regência e repetição temática."
+  - "Elementos, modalidades, aspectos, configurações e dominantes."
+  - "Técnicas de tempo para fases de mudança, nunca como ordem automática de carreira."
+
+metodo:
+  passos:
+    - "Separar talentos, motivações, valores, ambiente preferido, restrições e oportunidades."
+    - "Construir famílias de atividades e competências antes de sugerir cargos concretos."
+    - "Comparar a leitura com formação, experiência, recursos, acessibilidade e realidade econômica."
+    - "Apresentar alternativas e experimentos reversíveis; registrar o que veio do mapa e o que veio da biografia."
+  perguntas: ["Que tipo de problema mobiliza a pessoa?", "Como prefere contribuir?", "Que ambiente sustenta sua energia?", "Que competências deseja desenvolver?"]
+
+camadas_simbolicas:
+  arquetipos: ["artesão", "mensageiro", "estrategista", "cuidador", "governante", "inventor", "servidor"]
+  mito: "Hefesto, Atena, Hermes e Apolo podem ilustrar estilos de ofício e contribuição. São imagens comparativas, não correspondências exclusivas nem prescrições."
+  carmica: "Linhas cármicas podem compreender vocação como aprendizado ou serviço da alma; a escola e sua lógica devem ser nomeadas e comparadas com a leitura concreta."
+
+limites:
+  - "Não prometer emprego, renda, promoção ou sucesso."
+  - "Não limitar profissão por gênero, classe, deficiência ou um único planeta/signo."
+  - "Não substituir orientação profissional, educação, planejamento financeiro ou condições de mercado."
+  - "Não confundir Casa 10, MC, Casa 6, Casa 2 e 'propósito' como se fossem o mesmo objeto."
+
+referencias:
+  primarias:
+    - "Ptolemy. Tetrabiblos, livro IV, capítulo sobre qualidade da ação/profissão; tradução consultada."
+    - "Vettius Valens. Anthology, passagens sobre ações e ocupações; tradução consultada."
+  secundarias:
+    - "Sasportas, Howard. The Twelve Houses. Thorsons, edição consultada."
+    - "Greene, Liz. Saturn: A New Look at an Old Devil. Samuel Weiser, edição consultada."
+    - "Faculty of Astrological Studies. Materiais de interpretação e consulta ética vigentes; registrar versão/data consultada."
+  tecnicas: []
+
+relacoes:
+  depende_de: ["mapa_natal", "casas", "dignidades", "metodologia_de_leitura"]
+  ver_tambem: ["casa_2", "casa_6", "casa_10", "meio_do_ceu", "astrologia_psicologica"]

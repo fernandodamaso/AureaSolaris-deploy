@@ -1,0 +1,162 @@
+status: review
+id: "saturno"
+tradicoes:
+  - "helenística"
+  - "medieval"
+  - "renascentista"
+  - "moderna (camada psicológica explicitamente separada)"
+escopo_documental:
+  tecnica_historica:
+    - "natureza, significações, regência, dignidades, sect e condições planetárias conforme a linhagem selecionada"
+  camadas_modernas: "Psicologia, evolução, sistêmica, mitologia e correspondências contemporâneas permanecem identificadas como camadas próprias."
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "primária"
+    localizador: "Livros I–II, natureza, significações e condições dos planetas"
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    natureza: "primária"
+    localizador: "Livros I–II, significadores e julgamento natal"
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    natureza: "primária"
+    localizador: "Livro I, significações, dignidades e condições planetárias"
+validacao_de_fontes:
+  base: "As refer?ncias estruturadas sustentam a camada hist?rica ou moderna explicitamente declarada para este corpo."
+  escopo: "Mitologia, psicologia, evolu??o, medicina, sist?mica e Atlas permanecem camadas de estudo rotuladas, sem substituir dado astron?mico ou regra de escola."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+nome: "Saturno"
+tipo: "Planeta"
+tradicao_primaria: ["tradicional", "psicológica", "evolutiva"]
+
+essencia:
+  - "Tempo"
+  - "Limite"
+  - "Estrutura"
+  - "Responsabilidade"
+
+atlas_simbolico:
+  pessoas_arquetipos:
+    - "Ancião"
+    - "Professor rigoroso"
+    - "Juiz"
+    - "Pai autoritário"
+    - "Escravo (modo sombra)"
+    - "Rei deposto"
+  lugares:
+    - "Montanha"
+    - "Castelo antigo"
+    - "Cadeia, prisão"
+    - "Deserto"
+    - "Pedreira"
+    - "Igreja gótica"
+  objetos_materia:
+    - "Relógio de pêndulo"
+    - "Foice"
+    - "Cadeado"
+    - "Cristal negro"
+    - "Ossos"
+    - "Tijolo, pedra"
+    - "Cronômetro"
+  eventos_tipicos:
+    - "Separação"
+    - "Perda de emprego"
+    - "Doença crônica"
+    - "Maturidade tardia"
+    - "Prova, exame"
+    - "Isolamento voluntário"
+    - "Morte (Cronos)"
+  animais:
+    - "Tartaruga"
+    - "Crocodilo"
+    - "Corvo"
+    - "Bode"
+    - "Serpente antiga"
+    - "Formiga (trabalho lento)"
+  plantas_ervas:
+    - "Hortelã-pimenta"
+    - "Arruda"
+    - "Samambaia"
+    - "Pinheiro"
+    - "Bétula"
+    - "Raiz de mandrágora"
+    - "Cacto"
+  metais_pedras:
+    - "Chumbo"
+    - "Ônix preto"
+    - "Ônix branco"
+    - "Obsidiana"
+    - "Turmalina negra"
+    - "Ferro"
+  cores_sons:
+    cores: ["Preto", "Marrom-escuro", "Cinza-chumbo", "Azul-meia-noite"]
+    sons: ["Sino de igreja distante", "Ranger de porta", "Tique-taque lento", "Tambor fúnebre"]
+  numeros: [3, 8, 15, 21, 28, 33, 42]
+  dias_semana: ["Sábado"]
+  doencas_corpo:
+    doencas: ["Artrite", "Osteoporose", "Depressão crônica", "Envelhecimento precoce", "Problemas dentários"]
+    partes_corpo: ["Ossos", "Joelhos", "Pele", "Dentes", "Sistema esquelético"]
+  arquetipos_mitologicos:
+    - "Cronos/Saturno — o tempo que devora"
+    - "Kronos — o que estrutura o caos"
+    - "Saturno devorando os filhos"
+    - "Senhor da Morte (limitador)"
+  mitos_historias:
+    - "Saturno devorando os filhos (medo de ser destronado)"
+    - "Prometeu acorrentado (sofrimento por conhecimento)"
+    - "São Pedro com as chaves (autoridade que fecha e abre)"
+    - "Mito de Sísifo (trabalho repetitivo, resignação)"
+  sonhos_inconsciente:
+    - "Montanha alta = obstáculo que preciso escalar"
+    - "Cadeia = sentimento de aprisionamento"
+    - "Relógio parado = bloqueio no tempo"
+    - "Idoso sábio = Saturno positivo como mentor"
+    - "Idoso cruel = Saturno sombra como juiz"
+  expressao_elevada_vs_sombra:
+    elevada: "Mestre da disciplina compassiva, estrutura que liberta, maduro que guia."
+    sombra: "Tirania, depressão, medo de perder controle, trabalho compulsivo, pedra no caminho."
+
+camada_energetica:
+  impressao_mental: "A mente de 'como eu sustento?'. Tempo, limite, estrutura. Quando atrito: medo, rigidez, autocrítica, nunca é suficiente."
+  permeacao_emocional: "Peso, solidez. Quando bloqueado: depressão, solidão, coração duro. Quando solto: maturidade, serenidade."
+  manifestacao_externa: "Eventos prováveis de perda, estrutura, trabalho, tempo. Trânsitos tendem a marcar provas ou amadurecimento."
+  como_guiar_o_astral: "Ajudar a mente a ver o limite como proteção, não punição. Saturno pede paciência e construção realista."
+
+representa:
+  pessoas: ["Ancião", "Professor rigoroso", "Juiz", "Autoridade"]
+  eventos: ["Separação", "Perda de emprego", "Doença crônica", "Prova"]
+  corpo: ["Ossos", "Joelhos", "Dentes", "Pele"]
+
+dignidades_essenciais:
+  domicilio: ["Capricórnio", "Aquário"]
+  exaltacao: ["Libra"]
+  detrimento: ["Câncer", "Leão"]
+  queda: ["Áries"]
+
+astronomia_e_regras_de_julgamento:
+  astronomia_observacional:
+    - "Planeta tradicional mais lento, com permanência prolongada por signo e retrogradações extensas."
+    - "Sua lentidão amplia o peso de repetição temporal, maturação, demora e consolidação em várias técnicas."
+  criterios_tradicionais:
+    - "Como grande maléfico, Saturno deve ser julgado por dignidade, casa, aspectos, recepção, sect e assunto específico."
+    - "Em muitas leituras tradicionais, fora de seita tende a endurecer mais; em boa condição pode estabilizar, preservar e estruturar."
+  notas_de_motor:
+    - "Não reduzir Saturno a trauma ou bloqueio psicológico: tempo, escassez, velhice, limite, rigor, estrutura e persistência pertencem ao núcleo histórico."
+    - "Registrar explicitamente sua função cronológica em ciclos longos, retornos e contatos repetidos."
+
+combinacoes_exemplo:
+  casa_10:
+    temas: ["carreira", "autoridade", "tempo de realização"]
+    possiveis_efeitos: ["amadurecimento tardio", "liderança responsável", "medo de fracasso"]
+    reforcado_por: ["jupiter_conjunto", "venus_dignificada"]
+    amenizado_por: ["lua_conjunto", "sol_conjunto"]
+
+origens_e_divergencias:
+  escola_tradicional:
+    autores: [Ptolomeu, Bonatti, Agrippa]
+    conceito: "O Grande Maléfico, significador da morte, do tempo, das perdas e das estruturas rígidas."
+  escola_psicologica:
+    autores: [Liz Greene, Jung]
+    conceito: "O arquétipo do Pai Crítico Interno, a necessidade de estrutura e limites saudáveis."
+  por_que_da_divergencia: "Tradicional: Saturno = maléfico que limita. Moderna: Saturno = professor que estrutura a personalidade."

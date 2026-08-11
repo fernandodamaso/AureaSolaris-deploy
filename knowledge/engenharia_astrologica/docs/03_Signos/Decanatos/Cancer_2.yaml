@@ -1,0 +1,56 @@
+﻿status: draft
+id: "decanato_cancer_2"
+nome: "Decanato 2 de Câncer (10°–20°) — Câncer matizado por Escorpião"
+tradicoes:
+  - "convenção por signos da mesma triplicidade"
+  - "releitura moderna transaturnina explicitada"
+regente: "Marte (Escorpião/Marte na convenção por triplicidade; Plutão somente em releitura moderna; face caldaica: Mercúrio)"
+
+origens_e_divergencias:
+  sistema_adotado: "Convenção posterior/moderna por signos da mesma triplicidade: 10°–<20° de Câncer recebe a cor de Escorpião/Marte."
+  releitura_moderna: "Alguns autores acrescentam Plutão como co-regente moderno de Escorpião; não inseri-lo numa tabela tradicional sem escolha explícita."
+  faces_caldaicas: "A face caldaica de 10°–<20° de Câncer é Mercúrio, não Marte/Plutão."
+  nota: "Profundidade, cura e segredo são leituras simbólicas atribuídas, não regências universais do intervalo."
+
+calculo_e_escopo:
+  intervalo: "Câncer tropical 10°–<20°; 20° exatos iniciam o terceiro decanato."
+  uso: "Aplicar somente após selecionar a convenção por triplicidade; Plutão deve ser opção de perfil moderno."
+  camada_simbolica: "Imagens de curador e segredo familiar pertencem a leituras contemporâneas e não a fato histórico da tabela."
+referencias:
+  - autor: "Engenharia Astrológica"
+    obra: "Decanatos"
+    natureza: "fonte editorial"
+    localizador: "Tabela comparativa em 03_Signos/Decanatos.yaml."
+  - autor: "Cláudio Ptolomeu"
+    obra: "Tetrabiblos"
+    natureza: "primária histórica"
+    localizador: "Faces; tabela caldaica da faixa é Mercúrio."
+limite_documental: "Permanece draft: fonte específica da convenção por triplicidade e de suas associações ainda precisa ser conferida."
+atlas_simbolico:
+  pessoas_arquetipos: "O Água parada, o que expressa Água Fixo"
+  lugares_fisicos: "Lugares de Água Fixo"
+  objetos_materia: "Objetos de Água Fixo"
+  eventos_tipicos: "Eventos de Água Fixo"
+  animais: "Animais de Água Fixo"
+  plantas_ervas: "Plantas de Água Fixo"
+  metais_pedras: "Metais de Água Fixo"
+  cores_sons: "Cores de Água Fixo"
+  numeros: "Números de Água Fixo"
+  dias_semana: "Dias de Água Fixo"
+  doencas_corpo: "Partes do corpo de Água Fixo"
+  arquetipos_mitologicos: "Arquétipos de Água Fixo"
+  mitos_historias: "Mitologias de Água Fixo"
+  sonhos_simbolos_inconsciente: "Símbolos de Água Fixo"
+  expressao_elevada_sombra: "Elevada: Água Fixo consciente | Sombra: Água Fixo descontrolado"
+
+camada_energetica:
+  impressao_mental: "Câncer + profundidade — a mente agora SENTE com intensidade e lê o que está oculto. Acolhimento vira 'cura'."
+  permeacao_emocional: "Emoção que transforma — medo de se perder no sentimento."
+  manifestacao_externa: "Eventos PROVÁVEIS de encontro emocional profundo, crise de crescimento. Arquétipos: o Guardião do Segredo, o Curador. Inclinação, não destino."
+  como_guiar_o_astral: "Canalizar para 'curar através do sentir' — o 2º decanato de Câncer tem talento de escuta ativa."
+
+porque_simbolico: "Escorpião matiza Câncer com Água fixa: o ACOLHIMENTO ganha PROFUNDIDADE. Plutão = transformação — daí o 'curador' que não só acolhe, mas transforma."
+foco_especial:
+  familiar: "Decanato 2 de Câncer em Casa 4 = pessoa que 'segura os segredos da família' — papel de curador(a) no sistema."
+
+

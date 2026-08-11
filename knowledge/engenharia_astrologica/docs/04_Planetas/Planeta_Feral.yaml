@@ -1,0 +1,63 @@
+status: review
+id: "planeta_feral"
+nome: "Planeta Feral"
+tipo: "condição planetária"
+tradicao_primaria: ["tradicional", "moderna"]
+
+escopo:
+  definicao_operacional: "Para este corpus, planeta feral é um planeta sem aspecto ptolomaico configurado com outro planeta tradicional no mapa, segundo uma regra declarada de aspecto por signo e/ou por orbe."
+  inclui:
+    - "Verificação explícita de conjunção, sextil, quadratura, trígono e oposição."
+    - "Declaração de quais corpos, orbes e regra de configuração foram usados."
+  nao_inclui:
+    - "Lua fora de curso."
+    - "Planeta sem planetas na mesma casa ou sem aspectos menores, se os aspectos maiores existirem."
+    - "Conclusão de isolamento psicológico ou destino inevitável."
+  exclusoes_do_projeto: []
+
+fundamento:
+  descricao: "A condição procura identificar um planeta com poucos vínculos aspectuais dentro de uma regra escolhida. Ela descreve uma configuração, não uma sentença interpretativa."
+  contexto_historico: "O emprego de 'feral' e os critérios de conexão variam por autor e período. A terminologia deve ser conferida na fonte escolhida, especialmente quando aplicada a horária ou natal."
+
+procedimento:
+  pre_requisitos:
+    - "Lista de corpos considerada."
+    - "Aspectos maiores, orbes e regra por signo/orbe declarados."
+  passos:
+    - "Listar todos os aspectos válidos do planeta segundo a configuração escolhida."
+    - "Confirmar se há aspecto por signo e, separadamente, por grau/orbe."
+    - "Se não houver aspecto dentro da regra, registrar a condição como feral e analisar signo, casa, regente, dignidade, velocidade e relação com ângulos."
+  parametros_de_calculo:
+    - "corpos considerados"
+    - "aspectos ptolomaicos"
+    - "orbes"
+    - "critério: por signo, por orbe ou ambos"
+
+uso_interpretativo:
+  pergunta_que_ajuda_a_responder:
+    - "Como este planeta opera quando não participa de uma rede de aspectos maiores definida?"
+  como_ponderar: "Pesar primeiro condição essencial e acidental, casa, regência, sect e técnica em uso. A ausência de aspecto não significa ausência de atuação."
+  limites:
+    - "Não substituir análise de dispositores, casas, aspectos menores ou pontos por uma única etiqueta."
+    - "Não confundir feral com void of course; são critérios distintos."
+
+divergencias_de_tradicao:
+  consenso: "A noção depende da definição de aspecto e dos corpos incluídos."
+  divergencias:
+    - "Alguns autores privilegiam configuração por signo; outros exigem proximidade por orbe."
+    - "Prática moderna pode incluir Urano, Netuno, Plutão e aspectos menores; prática tradicional pode restringir o conjunto."
+  decisao_editorial: "A ficha calculada deve mostrar a lista de aspectos testados e nunca apresentar 'feral' sem a regra usada."
+
+referencias:
+  primarias:
+    - "Lilly, William. Christian Astrology. Londres, 1647. Consultar a edição empregada para a terminologia técnica."
+    - "Bonatti, Guido. Book of Astronomy. Tradução de Benjamin Dykes. Cazimi Press, 2007."
+  secundarias:
+    - "Houlding, Deborah. The Houses: Temples of the Sky. Ascella Publications, 2006."
+  tecnicas: []
+
+relacoes:
+  depende_de: ["aspectos", "orbes", "dignidades_essenciais", "condicoes_planetarias"]
+  ver_tambem: ["lua_fora_de_curso", "aversao", "recepcao", "planeta_peregrino"]
+
+anotacoes_pessoais: []

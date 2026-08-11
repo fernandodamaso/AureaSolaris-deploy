@@ -1,0 +1,59 @@
+status: review
+id: "lote_espirito"
+nome: "Parte do Espírito"
+tradicoes:
+  - "helenistica"
+  - "arabe-medieval"
+formula_diurna: "Asc + Sol − Lua"
+formula_noturna: "Asc + Lua − Sol"
+tema: "Alma, intenção, o que move por dentro"
+
+sentido_do_calculo: |
+  Espírito usa o arco complementar ao da Fortuna: Asc + Sol − Lua em carta diurna
+  e Asc + Lua − Sol em carta noturna na fórmula sectária. Em autores helenísticos,
+  ele participa de juízos sobre ação, escolha e direção de vida, com aplicações
+  que variam. 'Alma', vocação ou espiritualidade são traduções interpretativas,
+  não equivalentes universais do termo técnico.
+
+origens_e_divergencias:
+  tradicional: "Valens e Paulus tratam Espírito em uma doutrina de lotes e cronocratores; a ficha não o reduz a misticismo nem o isola do mapa."
+  moderna: "Leituras de propósito e desenvolvimento podem ser estudadas como extensões modernas, com autoria declarada."
+  nota: "Comparar com Fortuna por fórmula, casa, regente e técnica; não atribuir automaticamente evento, pessoa ou 'contrato espiritual'."
+
+referencias:
+  - autor: "Vettius Valens"
+    obra: "The Anthology"
+    edicao_ou_traducao: "Mark Riley, tradução inglesa"
+    natureza: "fonte primária helenística"
+    localizador: "Livro II, Parte do Espírito e lotes"
+  - autor: "Paulus Alexandrinus"
+    obra: "Introductory Matters"
+    edicao_ou_traducao: "Dorian Gieseler Greenbaum, tradução inglesa"
+    natureza: "fonte primária helenística"
+    localizador: "Seções sobre lotes"
+atlas_simbolico:
+  pessoas_arquetipos: "O espiritual, o místico, o inspirado"
+  lugares_fisicos: "Templos, conventos, locais de retiro"
+  objetos_materia: "Velas, incenso, livros sagrados"
+  eventos_tipicos: "Iniciações, revelações, crises espirituais"
+  animais: "Cisne, baleia, golfinho"
+  plantas_ervas: "Lótus, papoula, jasmim"
+  metais_pedras: "Estanho, ametista, pérola"
+  cores_sons: "Azul-mar, roxo; notas Lá e Dó"
+  numeros: "9 (transcendência), 7 (espiritualidade)"
+  dias_semana: "Quinta-feira (Júpiter), segunda-feira (Lua/Netuno)"
+  doencas_corpo: "Pés, sistema linfático, imunidade"
+  arquetipos_mitologicos: "Netuno, Hécate, Anúbis"
+  mitos_historias: "Dioniso e a iniciação; Jesus e a ressurreição"
+  sonhos_simbolos_inconsciente: "Águas profundas, névoa, barcos, música"
+  expressao_elevada_sombra: "Elevada: serviço espiritual, compaixão | Sombra: escape, vícios, confusão"
+
+camada_energetica:
+  impressao_mental: "De onde vem a direção intencional da pessoa — o 'porquê' que a move."
+  permeacao_emocional: "Sentido e propósito. Quando bloqueado, sensação de vazio de direção."
+  manifestacao_externa: "Eventos prováveis ligados a vocação e expressão da alma. Arquétipos: a Tocha, o Norte interno. Inclinação, não destino."
+  como_guiar_o_astral: "Orientar a pessoa a alinhar ação (Fortuna) e intenção (Espírito)."
+
+como_usar: "Ler como 'bússola de propósito'. Onde cai, é o terreno da vocação e do sentido. Contrastar com a Fortuna: o que nutre (corpo) vs o que move (alma)."
+regente: "Regente do signo onde cai; lido por casa e aspectos."
+

@@ -1,0 +1,67 @@
+﻿status: draft
+id: "decanatos_agua"
+nome: "Decanatos do Elemento Água (Câncer, Escorpião, Peixes)"
+tradicoes:
+  - "convenção por signos da mesma triplicidade"
+  - "releitura moderna transaturnina explicitada"
+elemento: "Água"
+tema: "Os 9 decanatos de Água (3 por signo)"
+
+origens_e_divergencias:
+  sistema_adotado: "Convenção posterior/moderna que percorre Câncer, Escorpião e Peixes dentro do elemento Água. Não é tabela de faces caldaicas nem decanos egípcios."
+  regencias: "A convenção usa Lua, Marte e Júpiter; Plutão e Netuno aparecem somente em releituras modernas selecionáveis."
+  faces_caldaicas: "Possuem sequência própria por signo e divergem desta convenção; consultar a ficha-base."
+  nota: "A lista é mapa editorial da convenção, não consenso de tradição antiga."
+atlas_simbolico:
+  pessoas_arquetipos: "O aquático, o místico, o sonhador"
+  lugares_fisicos: "Rios, lagos, mares, oceanos, ilhas"
+  objetos_materia: "Conchas, velas, instrumentos de água"
+  eventos_tipicos: "Mistérios, iniciações, mortes simbólicas, cura"
+  animais: "Peixe, golfinho, baleia, cisne"
+  plantas_ervas: "Lótus, papoula, adormeceira, jasmim"
+  metais_pedras: "Estanho, prata, pérola, ametista"
+  cores_sons: "Branco, prata, azul-claro, azul-mar; notas Dó e Lá"
+  numeros: "2 (dualidade), 4 (profundidade), 6 (serviço)"
+  dias_semana: "Segunda-feira (Lua), quinta-feira (Júpiter/Netuno)"
+  doencas_corpo: "Estômago, sistema linfático, vícios, imunidade"
+  arquetipos_mitologicos: "Netuno, Poseidon, Hécate, Anúbis"
+  mitos_historias: "Netuno e o mar; Hécate e os cruzamentos"
+  sonhos_simbolos_inconsciente: "Águas profundas, névoa, peixes, ilhas"
+  expressao_elevada_sombra: "Elevada: compaixão universal, arte transcendente | Sombra: escape, vícios, confusão"
+
+camada_energetica:
+  campo_mental: "Água pura (Câncer 0-10°) = sentimento cru. Água matizada (Escorpião 10-20°) = sentimento com profundidade. Água amadurecida (Peixes 20-30°) = sentimento com transcendência."
+  permeacao_emocional: "Do acolhimento à transformação e à dissolução."
+  manifestacao_externa: "Eventos PROVÁVEIS de encontro emocional, cura e mistério. Inclinação, não destino."
+  como_guiar_o_astral: "Usar o decanato para entender a PROFUNDIDADE do sentir (Câncer = raiz; Escorpião = transformação; Peixes = unidade)."
+
+decanatos:
+  - "Cancer 1 (0-10°): Lua — Câncer puro / o Acolhedor"
+  - "Cancer 2 (10-20°): Marte (Plutão em releitura moderna) — Câncer matizado por Escorpião / o Protetor Profundo"
+  - "Cancer 3 (20-30°): Júpiter (Netuno em releitura moderna) — Câncer amadurecido por Peixes / o Sonhador"
+  - "Escorpiao 1 (0-10°): Marte (Plutão em releitura moderna) — Escorpião puro / o Profundo"
+  - "Escorpião 2 (10-20°): Júpiter (Netuno em releitura moderna) — Escorpião matizado por Peixes / o Místico"
+  - "Escorpião 3 (20-30°): Lua — Escorpião amadurecido por Câncer / o Curador"
+  - "Peixes 1 (0-10°): Júpiter (Netuno em releitura moderna) — Peixes puro / o Sonhador"
+  - "Peixes 2 (10-20°): Lua — Peixes matizado por Câncer / o Sensível"
+  - "Peixes 3 (20-30°): Marte (Plutão em releitura moderna) — Peixes amadurecido por Escorpião / o Transformador"
+
+foco_especial:
+  infantil: "Câncer em decanatos = decanato 1 = criança que precisa de 'colo'; decanato 3 = criança que 'cuida dos outros'."
+  familiar: "Escorpião e Peixes em decanatos mostram a 'água familiar' — como o emocional se transmite entre gerações."
+calculo_e_escopo:
+  calculo: "Localizar signo tropical e intervalo de 10°; aplicar somente a convenção por triplicidade explicitamente selecionada."
+  simbolismo: "Atlas, mitos e arquétipos são camada atribuída de estudo; não provam regência nem evento."
+  divergencia: "Não substituir Marte/Júpiter tradicionais por Plutão/Netuno sem perfil moderno escolhido."
+referencias:
+  - autor: "Engenharia Astrológica"
+    obra: "Decanatos"
+    natureza: "fonte editorial"
+    localizador: "Distinção de sistemas em 03_Signos/Decanatos.yaml."
+  - autor: "Cláudio Ptolomeu"
+    obra: "Tetrabiblos"
+    natureza: "primária histórica"
+    localizador: "Faces tradicionais como tabela alternativa; não prova esta convenção por triplicidade."
+limite_documental: "Permanece draft até haver fonte específica para a tabela por triplicidade e suas associações simbólicas."
+
+

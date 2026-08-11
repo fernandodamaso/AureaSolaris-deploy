@@ -1,0 +1,108 @@
+id: direcoes_terciarias
+nome: Direções terciárias (progressões terciárias)
+tipo: tecnica_preditiva_simbolica
+tradicoes:
+- moderna ocidental
+- desenvolvimento técnico do século XX
+status: review
+definicao: 'Família de progressões de escala menor que as secundárias. O nome não
+  aponta uma fórmula única: há, pelo menos, as variantes T I e T II. Uma ficha ou
+  um programa deve indicar qual variante calcula antes de qualquer comparação.'
+variantes_principais:
+  terciaria_I:
+    formula: Um dia após o nascimento corresponde a um mês lunar de vida.
+    unidade_de_vida: Mês lunar; útil, no seu próprio enquadramento, para recortes
+      mais curtos que a progressão secundária.
+  terciaria_II:
+    formula: Um mês sinódico após o nascimento corresponde simbolicamente a um ano
+      de vida.
+    unidade_de_vida: Ano; método distinto que não se obtém trocando apenas o rótulo
+      da variante I.
+  converse: Algumas escolas calculam versões conversas a partir do tempo anterior
+    ao nascimento; a escolha deve ser declarada.
+formula_reproduzivel:
+  terciaria_I: Converter a idade em número de meses sinódicos de vida segundo a convenção
+    escolhida; usar o mesmo número como dias de efeméride após o nascimento. Se for
+    usada duração média, registrar 29,53059 dias; se forem usadas lunações reais,
+    registrar o algoritmo e a sequência de conjunções Sol–Lua.
+  terciaria_II: Para cada ano de vida, avançar a efeméride por um mês sinódico pós-natal,
+    direto ou converso conforme declarado. Não substituir mês sinódico por mês civil
+    nem derivar T II de T I por simples troca de rótulo.
+  angulos: A progressão de ângulos é variante separada. Declarar se usa arco solar
+    do MC, outro método de casas ou se os ângulos não serão interpretados.
+  orbes: Definir orbes próprios para a escala terciária e registrar se o aspecto é
+    entre fatores terciários, terciário–natal ou ambos; não importar sem aviso o regime
+    secundário.
+dados_reproduziveis:
+  obrigatorios:
+  - Instante natal em UTC e fonte/precisão; efeméride e versão; zodíaco e geocentria.
+  - Variante T I ou T II, direto/converso, convenção de mês sinódico e regra de ângulos/casas.
+  - Data/idade de referência, instante de efeméride derivado, fatores, aspectos e
+    orbes.
+  saida_minima: Informar sempre a fórmula e o instante de efeméride; um rótulo genérico
+    de 'terciária' sem T I/T II não é resultado auditável.
+historia_e_linhagem:
+- As direções terciárias foram sistematizadas no século XX por E. H. Troinski, embora
+  usem analogias dia–mês e mês–ano que dialogam com a família maior das progressões.
+- São técnicas modernas e não devem ser apresentadas como método idêntico às direções
+  primárias antigas.
+procedimento_de_calculo:
+- Escolher expressamente T I ou T II, e se o cálculo é direto ou converso.
+- Fixar o instante natal e a data de referência; não converter meses civis em meses
+  lunares sem declarar a convenção.
+- Gerar a figura com efeméride e software que documentem a variante; salvar parâmetros
+  e zona horária.
+- Selecionar fatores e orbes coerentes com a escala curta da técnica, sem importar
+  automaticamente os orbes das progressões secundárias.
+- Comparar a figura com uma técnica de período de escala maior antes de construir
+  a síntese.
+nao_confundir_com:
+- Direções primárias, baseadas no movimento diurno e em arcos.
+- Direções/progressões secundárias, cuja proporção é um dia por ano.
+- Progressões menores e quaternárias, que são outras fórmulas e não entram automaticamente
+  no escopo operacional.
+camada_simbolica:
+  imagem: O relógio terciário desloca o foco da longa espiral anual para uma pulsação
+    lunar menor.
+  linguagem: Terciário indica terceira ordem dentro de uma classificação moderna de
+    ritmos; não atribui hierarquia de valor espiritual.
+divergencias_e_limites:
+- Há escolas que usam somente T I, outras T II, e outras empregam ambas; resultados
+  não devem ser comparados sem registrar a fórmula.
+- A atribuição de significados emocionais, circunstanciais ou materiais às variantes
+  é uma elaboração de escolas modernas, não consenso histórico antigo.
+- A precisão aparente aumenta o risco de seleção retrospectiva; o registro prévio
+  de parâmetros é parte do estudo rigoroso.
+referencias:
+- autor: E. H. Troinski
+  obra: The Tertiary Progression
+  natureza: referência histórica de sistematização; confirmar edição utilizada
+- autor: Astrodienst
+  obra: Tertiary Directions
+  natureza: síntese técnica das variantes T I e T II
+  url: https://www.astro.com/astrowiki/en/Tertiary_Directions
+- autor: Martin Gansten
+  obra: 'Primary Directions: Astrology''s Old Master Technique'
+  natureza: referência de contraste entre família moderna de progressões e direções
+    primárias
+- autor: Troinski, Edmund Herbert
+  obra: 'Das Weltschicksalsjahr 1959: Lehrbuch der Tertiär-Direktionen'
+  edicao_ou_traducao: Baumgartner-Verlag, 1952
+  localizador: Base histórica citada para T I e T II; conferir páginas na consulta
+    direta
+  url: ''
+  natureza: primária moderna — sistematização atribuída das direções terciárias
+validacao_de_fontes:
+  base: "As refer?ncias estruturadas identificam a linhagem hist?rica, moderna ou astron?mica pertinente a esta t?cnica preditiva."
+  escopo: "Uma implementa??o deve declarar edi??o, algoritmo, efem?ride, escala de tempo e variante de escola; esta exig?ncia ? uma regra de reprodu??o, n?o uma lacuna de fonte."
+  limite: "A ficha permanece em review e n?o converte hip?tese, aproxima??o pedag?gica ou releitura moderna em previs?o determinista."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+origens_e_divergencias:
+  tradicional: Conceito/técnica presente na tradição astrológica ocidental.
+  moderna: Possível ressignificação contemporânea.
+  nota: Rotular a escola quando divergir.
+camada_energetica:
+  impressao_mental: Campo conceitual do tema/técnica.
+  permeacao_emocional: Como o tema toca a experiência subjetiva.
+  manifestacao_externa: Como aparece em comportamentos e eventos.
+  como_guiar_o_astral: Como usar este conhecimento na leitura prática.

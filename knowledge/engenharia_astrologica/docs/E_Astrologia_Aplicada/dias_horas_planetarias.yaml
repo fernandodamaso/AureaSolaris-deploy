@@ -1,0 +1,78 @@
+status: review
+id: "dias_planetarios"
+nome: "Dias e Horas Planetárias"
+tradicoes:
+  - "aplicada contemporanea"
+  - "tradicional quando explicitado"
+tipo: "Astrologia Aplicada"
+subtema: "Tempo e ritmo astrológico"
+
+origens_e_divergencias:
+  tradicional: "Dias e horas planetárias usam a ordem caldaica Saturno–Júpiter–Marte–Sol–Vênus–Mercúrio–Lua, difundida em tradições helenísticas, medievais e renascentistas."
+  moderna: "Usos contemporâneos eletivos ou mágicos variam; não são uma regra universal para iniciar ou evitar ações."
+  nota: "O cálculo divide o intervalo nascer do Sol–pôr do Sol em doze horas diurnas e o intervalo pôr–nascer em doze noturnas; as durações variam por local/data. A primeira hora diurna recebe o regente do dia e a sequência segue a ordem caldaica, não uma ordem inversa fixa."
+
+referencias:
+  - autor: "Vettius Valens"
+    obra: "The Anthology"
+    natureza: "fonte primária helenística"
+    localizador: "Ordem planetária e cronologia; conferir edição"
+  - autor: "Heinrich Cornelius Agrippa"
+    obra: "Three Books of Occult Philosophy"
+    natureza: "fonte renascentista"
+    localizador: "Livro II, dias e horas planetárias; consultar edição"
+
+regras_de_calculo:
+  entrada: "Data, coordenadas, fuso/UTC, nascer e pôr do Sol calculados pela convenção declarada."
+  sequencia: "Saturno, Júpiter, Marte, Sol, Vênus, Mercúrio, Lua, repetida ciclicamente."
+  limite: "Não usar hora civil de sessenta minutos como substituto silencioso das horas temporais."
+
+atlas_simbolico:
+  pessoas_arquetipos: "O estrategista, o planejador, o ritualista"
+  lugares_fisicos: "Relógios, calendários, templos"
+  objetos_materia: "Relógios solares, calendários, ampulhetas"
+  eventos_tipicos: "Planejamento, timing, decisões"
+  animais: "Gato (Saturnday), águia (Jupiter), lobo (Mars), leão (Sun), pomba (Venus), lebre (Mercury), caranguejo (Moon)"
+  plantas_ervas: "Hera (Saturno), carvalho (Jupiter), alecrim (Marte), girassol (Sol), rosa (Vênus), verbena (Mercúrio), lírio (Lua)"
+  metais_pedras: "Chumbo (Saturno), estanho (Jupiter), ferro (Marte), ouro (Sol), cobre (Vênus), mercúrio (Mercúrio), prata (Lua)"
+  cores_sons:
+    cores: ["Preto (Saturno)", "azul-royal (Jupiter)", "vermelho (Marte)", "dourado (Sol)", "verde (Vênus)", "amarelo (Mercúrio)", "prata (Lua)"]
+    sons: ["Gongo (Saturno)", "órgão (Jupiter)", "tambor (Marte)", "trombeta (Sol)", "harpa (Vênus)", "silvo (Mercúrio)", "flauta (Lua)"]
+  numeros: [7]
+  dias_semana: ["Sábado", "Quinta-feira", "Terça-feira", "Domingo", "Sexta-feira", "Quarta-feira", "Segunda-feira"]
+  doencas_corpo:
+    doencas: ["Problemas relacionados a cada planeta"]
+    partes_corpo: ["Cada planeta rege partes do corpo (ver atlas do planeta)"]
+  arquetipos_mitologicos:
+    - "Cronos (Saturno)"
+    - "Zeus (Jupiter)"
+    - "Ares (Marte)"
+    - "Apolo (Sol)"
+    - "Afrodite (Vênus)"
+    - "Hermes (Mercúrio)"
+    - "Artemis (Lua)"
+  mitos_historias: "Cada dia tem seu planeta regente (ver mito do planeta)"
+  expressao_elevada_sombra: "Elevada: timing consciente | Sombra: obsessão por timing"
+
+camada_energetica:
+  impressao_mental: "Cada dia/hora tem uma qualidade planetária. 'Hoje é dia de Marte: ação'. 'Esta hora é de Vênus: harmonia'."
+  permeacao_emocional: "Ritmo emocional seguindo os ciclos planetários."
+  manifestacao_externa: "Eventos prováveis de timing, planejamento, ritmo. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a SINCRONIZAR COM O RITMO CÓSMICO. Dia planetário não é regra — é sugestão."
+
+como_usar: |
+  Ordem dos dias:
+  - Sábado = Saturno
+  - Quinta-feira = Júpiter
+  - Terça-feira = Marte
+  - Domingo = Sol
+  - Sexta-feira = Vênus
+  - Quarta-feira = Mercúrio
+  - Segunda-feira = Lua
+
+  Horas planetárias seguem ordem inversa:
+  - 1ª hora = planeta do dia
+  - 2ª hora = próximo planeta
+  - ...até completar 7
+  - repetir ordem inversa para completar 24
+

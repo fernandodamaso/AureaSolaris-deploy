@@ -1,0 +1,140 @@
+id: tipos_de_previsao_e_linhagens
+nome: 'Tipos de previsão: mecanismos e linhagens'
+tipo: taxonomia_metodologica
+tradicoes:
+- ocidental histórica e moderna
+status: review
+definicao: Mapa conceitual das famílias de técnicas que a base chama, por comodidade,
+  de 'previsionais'. A classificação é por mecanismo de tempo e genealogia, não por
+  uma escala de superioridade. Cada técnica deve manter sua fórmula, fonte e regras
+  de julgamento próprias.
+familias:
+  senhores_do_tempo:
+    mecanismo: Um planeta ou ponto recebe administração de um período por uma regra
+      de partilha temporal.
+    exemplos_no_escopo:
+    - profecções
+    - firdária
+    - liberação zodiacal
+    - distribuições por termos
+    - decênios
+    linhagens:
+    - helenística
+    - persa-árabe
+    - medieval latina
+  direcoes:
+    mecanismo: Uma correspondência entre movimento ou arco e idade produz datas ou
+      janelas.
+    exemplos_no_escopo:
+    - direções primárias
+    - direções secundárias
+    - direções terciárias
+    - arcos solares
+    linhagens:
+    - antiga e medieval para primárias
+    - moderna para secundárias/terciárias/arcos
+  retornos:
+    mecanismo: Uma carta é calculada quando um corpo retorna à longitude natal exata.
+    exemplos_no_escopo:
+    - revolução solar
+    - revolução lunar
+    - retornos planetários
+    linhagens:
+    - helenística
+    - medieval
+    - renascentista
+    - moderna
+  transitos_e_ciclos:
+    mecanismo: Geometria presente entre corpos em movimento e fatores natais ou mundanos;
+      inclui fases e ciclos sinódicos.
+    exemplos_no_escopo:
+    - trânsitos
+    - lunações
+    - eclipses
+    - ciclos Saturno–Júpiter
+    - retornos planetários
+    linhagens:
+    - tradicional e moderna, com procedimentos distintos
+  configuracoes_mundanas:
+    mecanismo: Cartas e fenômenos celestes analisados em escala coletiva, territorial
+      e sazonal.
+    exemplos_no_escopo:
+    - ingressos
+    - eclipses visíveis
+    - sizígias
+    - grandes conjunções
+    linhagens:
+    - mesopotâmica
+    - helenística
+    - medieval
+    - renascentista
+  sistemas_integrados:
+    mecanismo: Uma teoria de julgamento articula mapa natal e vários relógios, impondo
+      regras de seleção de significadores.
+    exemplos_no_escopo:
+    - método de Morin
+    - sínteses helenísticas contemporâneas
+    linhagens:
+    - moriniana
+    - tradicional contemporânea
+  questoes_e_eleicoes:
+    mecanismo: Métodos aplicados a uma pergunta ou à escolha de um momento, não simplesmente
+      a uma linha cronológica natal.
+    exemplos_no_escopo:
+    - horária
+    - eletiva
+    linhagens:
+    - helenística
+    - medieval
+    - renascentista
+como_usar_a_taxonomia:
+- Perguntar qual mecanismo produz o período antes de comparar resultados.
+- Distinguir uma técnica histórica de uma adaptação contemporânea que use nome semelhante.
+- Manter uma técnica principal e usar as demais como contexto, não como colagem de
+  palavras-chave.
+- Estudar 'regras de Morin', 'regras de Lilly' ou regras de outro autor como subcamadas
+  de linhagem e julgamento, não como um sétimo tipo de previsão.
+ligacoes_internas:
+- direcoes_primarias
+- progressoes
+- direcoes_terciarias
+- arcos_solares
+- transitos
+- liberacao_zodiacal
+- distribuicoes_por_termos
+- decenios
+- retornos_planetarios
+- revolucao_solar
+- revolucao_lunar
+- metodo_preditivo_de_morin
+- timing
+- julgamento
+referencias:
+- autor: Jean-Baptiste Morin de Villefranche
+  obra: Astrologia Gallica, Livros XXI–XXIII
+  natureza: exemplo de sistema que integra determinações, direções e revoluções
+- autor: Ptolemaeus
+  obra: Tetrabiblos
+  natureza: fonte clássica para técnicas e julgamento de várias escalas
+- autor: Abu Ma'shar
+  obra: On the Revolutions of the Years of Nativities
+  natureza: fonte medieval para revoluções anuais
+- autor: Vettius Valens
+  obra: The Anthology
+  natureza: fonte helenística para senhores do tempo
+protocolo_taxonomico:
+  regra_geral:
+    - "A taxonomia já inclui as famílias atualmente previstas no escopo do projeto."
+    - "Novas técnicas só entram se trouxerem mecanismo temporal, linhagem e ficha própria."
+  guardrails:
+    - "Uma técnica pode aparecer em mais de uma família por mecanismo secundário, mas deve ter família principal declarada."
+    - "Não reclassificar técnica moderna como antiga apenas por semelhança de nome."
+origens_e_divergencias:
+  tradicional: Conceito/técnica presente na tradição astrológica ocidental.
+  moderna: Possível ressignificação contemporânea.
+  nota: Rotular a escola quando divergir.
+camada_energetica:
+  impressao_mental: Campo conceitual do tema/técnica.
+  permeacao_emocional: Como o tema toca a experiência subjetiva.
+  manifestacao_externa: Como aparece em comportamentos e eventos.
+  como_guiar_o_astral: Como usar este conhecimento na leitura prática.

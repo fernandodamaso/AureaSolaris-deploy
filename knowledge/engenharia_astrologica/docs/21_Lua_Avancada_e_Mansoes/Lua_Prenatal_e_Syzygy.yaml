@@ -1,0 +1,62 @@
+status: review
+id: "lua_prenatal_syzygy"
+nome: "Lua Pré-Natal e Sizígia Pré-Natal"
+tipo: "técnica lunar tradicional"
+tradicao_primaria: ["helenística", "medieval", "tradicional"]
+
+escopo:
+  definicao_operacional: "Sizígia pré-natal é a última Lua Nova ou Lua Cheia exata anterior ao nascimento. A expressão 'Lua pré-natal' no corpus designa o estudo dessa lunação e de seu grau, não uma doutrina automática de reencarnação."
+  inclui:
+    - "Identificação da última conjunção ou oposição exata entre Sol e Lua antes do instante natal."
+    - "Avaliação técnica do grau, signo, casa e regente da sizígia, segundo a escola escolhida."
+  nao_inclui:
+    - "Atribuição factual de conteúdo de vidas passadas."
+    - "Confusão com fase lunar natal ou com qualquer Lua Nova/Cheia posterior ao nascimento."
+  exclusoes_do_projeto: []
+
+fundamento:
+  descricao: "A técnica usa a última sizígia anterior ao nascimento como ponto auxiliar em procedimentos tradicionais, especialmente em contextos de natividade e retificação."
+  contexto_historico: "Fontes tradicionais referem a sizígia precedente, mas métodos, significadores e pesos variam. Leituras cármicas modernas precisam ser identificadas como camada adicional e não como consenso histórico."
+
+procedimento:
+  pre_requisitos:
+    - "Data, hora e local natal com precisão declarada."
+    - "Efeméride capaz de localizar a última conjunção/oposição Sol–Lua exata antes do nascimento."
+  passos:
+    - "Calcular as sizígias anteriores ao nascimento e selecionar a última, seja Nova (conjunção), seja Cheia (oposição)."
+    - "Registrar data/hora, fase, longitude, signo, casa e regente da sizígia."
+    - "Avaliar condição do regente e relação com Ascendente, luminares e significadores conforme técnica declarada."
+  parametros_de_calculo:
+    - "instante natal em UTC"
+    - "efeméride e versão"
+    - "zodíaco tropical"
+    - "sistema de casas, se casas da sizígia forem usadas"
+
+uso_interpretativo:
+  pergunta_que_ajuda_a_responder:
+    - "Que fator lunar anterior ao nascimento uma técnica tradicional solicita examinar como auxiliar?"
+  como_ponderar: "Usar apenas no contexto de um método que a peça e sempre depois da estrutura natal principal."
+  limites:
+    - "Não usar como prova de karma, destino ou história familiar."
+    - "Não substituir Ascendente, luminares, regências e julgamento da figura natal."
+
+divergencias_de_tradicao:
+  consenso: "A sizígia precedente é reconhecida como elemento em várias linhas tradicionais."
+  divergencias:
+    - "Autores diferem no uso para retificação, hyleg, animodar e interpretação natal."
+    - "Leituras evolutivas agregam sentidos que não pertencem necessariamente às fontes antigas."
+  decisao_editorial: "A ficha derivada indicará se usa uma regra helenística, medieval ou leitura evolutiva, sem fundi-las."
+
+referencias:
+  primarias:
+    - "Ptolemaeus. Tetrabiblos. Tradução de F. E. Robbins. Loeb Classical Library, 1940."
+    - "Vettius Valens. The Anthology. Tradução de Mark Riley, 2010."
+  secundarias:
+    - "Skyscript Glossary. Syzygy. https://www.skyscript.co.uk/glossary/syzygy/ (acesso em 2026-08-10)."
+  tecnicas: []
+
+relacoes:
+  depende_de: ["protocolo_calculo_reproduzivel", "zodiaco_tropical", "lua"]
+  ver_tambem: ["fases_lunares", "lua_fora_de_curso", "retificacao_natal", "hyleg"]
+
+anotacoes_pessoais: []

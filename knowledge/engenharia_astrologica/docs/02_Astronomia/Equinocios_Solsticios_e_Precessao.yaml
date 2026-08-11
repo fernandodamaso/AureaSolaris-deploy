@@ -1,0 +1,59 @@
+status: review
+id: "equinocios_solsticios_precessao"
+nome: "Equinócios, Solstícios e Precessão"
+tipo: "fundamento astronômico-astrológico"
+tradicao_primaria: ["astronomia de apoio", "ocidental"]
+
+escopo:
+  definicao_operacional: "Conjunto de referências astronômicas que ancora o zodíaco tropical: equinócios como interseções entre eclíptica e equador celeste, solstícios como extremos sazonais do percurso aparente do Sol e precessão como mudança gradual da orientação do eixo terrestre que afeta sistemas de referência."
+  inclui:
+    - "Uso do equinócio vernal como origem de 0° de Áries no zodíaco tropical."
+    - "Necessidade de associar coordenadas e efemérides a época/convenção de referência."
+  nao_inclui:
+    - "Trocar o cálculo tropical por zodíaco sideral."
+    - "Usar precessão como justificativa para significados automáticos de 'eras'."
+  exclusoes_do_projeto: ["Zodíaco sideral como escola interpretativa."]
+
+fundamento:
+  descricao: "O equinócio vernal é a referência geométrica para longitude eclíptica tropical. Como planos e direções de referência mudam ao longo do tempo, efemérides e sistemas de coordenadas precisam explicitar a época e a convenção adotadas."
+  contexto_historico: "O interesse pelos equinócios e pela precessão atravessa astronomia antiga e moderna. Esta ficha trata do requisito geométrico e de cálculo, não de uma doutrina sobre eras astrológicas."
+
+procedimento:
+  pre_requisitos:
+    - "Efeméride e referência de coordenadas identificadas."
+  passos:
+    - "Usar a longitude eclíptica tropical fornecida pela efeméride para o instante calculado."
+    - "Registrar a convenção/época de referência quando o software ou a técnica a expuser."
+    - "Separar o cálculo do zodíaco tropical de qualquer discussão interpretativa sobre precessão."
+  parametros_de_calculo:
+    - "equinócio de referência"
+    - "época/sistema de coordenadas"
+    - "efeméride e versão"
+
+uso_interpretativo:
+  pergunta_que_ajuda_a_responder:
+    - "Qual referência astronômica sustenta as longitudes tropicais desta carta?"
+  como_ponderar: "É fundamento do cálculo, não fator interpretativo isolado."
+  limites:
+    - "Não usar a precessão para misturar signos tropicais e constelações."
+    - "Qualquer leitura de eras deve ter ficha própria, fonte e status de hipótese simbólica."
+
+divergencias_de_tradicao:
+  consenso: "O zodíaco tropical se ancora no equinócio vernal."
+  divergencias:
+    - "Leituras esotéricas podem atribuir significados a eras precessionais; esse uso não decorre automaticamente da geometria."
+  decisao_editorial: "O corpus mantém cálculo tropical e trata precessão interpretativa como tema separado, com fontes e limites próprios."
+
+referencias:
+  primarias: []
+  secundarias:
+    - "U.S. Naval Observatory. Astronomical Applications Department Glossary: equinox, ecliptic longitude e tropical year. https://aa.usno.navy.mil/faq/asa_glossary (acesso em 2026-08-10)."
+    - "U.S. Naval Observatory. International Celestial Reference System. https://aa.usno.navy.mil/faq/ICRS_doc (acesso em 2026-08-10)."
+  tecnicas:
+    - "Swiss Ephemeris. swephprg programming interface. https://www.astro.com/swisseph-download/doc/swephprg.2.10.htm (acesso em 2026-08-10)."
+
+relacoes:
+  depende_de: ["esfera_celeste_coordenadas", "zodiaco_tropical"]
+  ver_tambem: ["protocolo_calculo_reproduzivel", "eras_astrologicas"]
+
+anotacoes_pessoais: []

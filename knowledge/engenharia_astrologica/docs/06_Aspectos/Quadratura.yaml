@@ -1,0 +1,63 @@
+status: review
+id: "quadratura"
+nome: "Quadratura"
+tradicoes:
+  - "helenística"
+  - "medieval"
+  - "renascentista"
+  - "tradicional"
+  - "moderna ocidental"
+tipo: "aspecto por longitude eclíptica"
+angulo: "90°"
+natureza: "atrito, tensão operativa e obstrução dinâmica"
+escopo_documental:
+  tecnica_historica:
+    - "configuração por signo e por grau"
+    - "aplicação e separação"
+    - "avaliação conforme natureza dos planetas e contexto"
+  calculo_e_orbes: "O motor deve calcular a proximidade de 90° segundo orbe declarado e distinguir quadratura por signo de quadratura partil."
+  divergencias_de_escola: "Na tradição, a quadratura é aspecto de dificuldade e ação sob pressão. Em linhas modernas, também pode ser chamada de motor de crescimento; isso é interpretação derivada, não substituto técnico."
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "primária"
+    localizador: "Livro I, capítulos sobre aspectos, configurações e orbes"
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    natureza: "primária"
+    localizador: "Livros I-II, julgamentos por relações planetárias"
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    natureza: "primária/secundária histórica"
+    localizador: "Livro I, aspectos e orbes; conferir edição"
+validacao_de_fontes:
+  base: "As refer?ncias estruturadas sustentam as distin??es hist?ricas e t?cnicas; signo, grau, partil, paralelo e contraparalelo n?o s?o tratados como sin?nimos."
+  escopo: "Orbes permanecem par?metros de escola e corpo, declarados pela t?cnica escolhida; a ficha n?o imp?e um valor universal."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+definicao_tecnica: "Dois fatores se encontram em signos que formam ângulo de quartil ou a aproximadamente 90° de distância em longitude eclíptica."
+por_signo_vs_por_grau:
+  por_signo: "A quadratura zodiacal conecta signos de mesma modalidade e elementos em fricção."
+  por_grau: "Quanto mais exata, mais forte a pressão configuracional."
+aplicativo_separativo:
+  aplicativo: "A dificuldade se forma e tende a exigir resposta."
+  separativo: "O momento exato de fricção já ocorreu, embora seus efeitos permaneçam."
+julgamento_tradicional:
+  regra_geral: "A quadratura costuma significar impedimento, esforço, obstáculo, disputa, dano relativo ou necessidade de ação dura."
+  nota: "Seu efeito varia conforme beneficência/maleficência dos planetas, recepção, dignidade, casas e pergunta/técnica."
+camada_moderna:
+  uso_psicologico: "Frequentemente descrita como conflito interno produtivo, pressão de individuação ou área de trabalho psíquico."
+  regra_documental: "Essa linguagem é válida como nota moderna, mas o sistema não deve suavizar automaticamente quadraturas técnicas difíceis."
+nao_confundir_com:
+  - "Semiquadratura e sesquiquadratura: famílias modernas de aspectos, não equivalentes."
+  - "Quadrado figurativo em padrões de aspecto: a geometria do padrão não substitui a leitura de cada relação individual."
+atlas_simbolico:
+  pessoas_arquetipos: "guerreiro, construtor sob pressão, antagonista funcional"
+  objetos_materia: "muro, martelo, ferramenta de fricção"
+  eventos_tipicos: "crise, esforço, colisão de agendas, construção difícil"
+  arquetipos_mitologicos: "prova, combate, tarefa exigente"
+camada_energetica:
+  impressao_mental: "Os princípios se cruzam de modo pouco confortável e pedem correção de rota."
+  permeacao_emocional: "Produz tensão que pode virar força treinada ou reação defensiva."
+  manifestacao_externa: "Aparece como pressão concreta, resistência, urgência ou exigência de solução."
+  como_guiar_o_astral: "Antes de romantizar a quadratura como crescimento, identificar o tipo de dano, custo ou disciplina que ela realmente pede."
+exemplo_pratico: "Mercúrio em quadratura com Lua pode indicar atrito entre raciocínio e afeto, mas a leitura concreta depende do eixo de casas, da recepção e do contexto técnico."

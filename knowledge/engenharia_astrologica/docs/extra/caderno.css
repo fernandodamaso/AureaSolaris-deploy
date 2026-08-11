@@ -1,0 +1,601 @@
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Inter:wght@400;500;600;700&family=Kalam:wght@300;400;700&family=Pirata+One&display=swap');
+
+/* ============================================
+   ENGENHARIA ASTRAL — Caderno DaVinci Infográfico
+   ============================================ */
+
+:root {
+  --parchment: #F4ECD8;
+  --parchment-dark: #E8DFC8;
+  --ink: #2C1810;
+  --ink-light: #5C4A3A;
+  --gold: #B8860B;
+  --gold-light: #D4AF37;
+  --crimson: #8B0000;
+  --crimson-light: #DC143C;
+  --verde: #2E8B57;
+  --azul: #1E3A5F;
+  --roxo: #6B3FA0;
+  --laranja: #CC5500;
+  --tab-1: #E8B4A0;
+  --tab-2: #A0C4E8;
+  --tab-3: #B4D8A0;
+  --tab-4: #E8D4A0;
+  --tab-5: #C4A0E8;
+  --shadow-deep: rgba(0, 0, 0, 0.25);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: #D4C4A8;
+  background-image:
+    url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E"),
+    radial-gradient(circle at 30% 20%, rgba(184, 134, 11, 0.06) 0%, transparent 50%),
+    radial-gradient(circle at 70% 80%, rgba(139, 0, 0, 0.04) 0%, transparent 50%);
+  font-family: 'Kalam', 'Caveat', cursive;
+  color: var(--ink);
+  min-height: 100vh;
+}
+
+/* ============ HEADER ============ */
+.md-header {
+  background: linear-gradient(135deg, #8B4513 0%, #654321 100%) !important;
+  border-bottom: 3px solid var(--gold) !important;
+  box-shadow: 0 4px 16px var(--shadow-deep);
+  position: relative;
+}
+
+.md-header::before {
+  content: '✧';
+  position: absolute;
+  left: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--gold-light);
+  font-size: 1.5rem;
+  text-shadow: 0 0 10px rgba(212, 175, 55, 0.6);
+}
+
+.md-header__inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding-left: 3rem !important;
+}
+
+.md-logo {
+  font-family: 'Pirata One', cursive;
+  font-size: 1.8rem !important;
+  color: var(--gold-light) !important;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  letter-spacing: 0.05em;
+}
+
+.md-logo__text {
+  font-family: 'Pirata One', cursive;
+}
+
+/* ============ TABS ============ */
+.md-tabs {
+  background: linear-gradient(to bottom, #654321, #4A3219) !important;
+  border-bottom: 2px solid var(--gold) !important;
+}
+
+.md-tabs__item {
+  font-family: 'Kalam', cursive;
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+}
+
+.md-tabs__link {
+  color: #E8D4A0 !important;
+  border-bottom: 2px solid transparent;
+  transition: all 0.3s;
+}
+
+.md-tabs__link--active {
+  color: var(--gold-light) !important;
+  border-bottom-color: var(--gold-light);
+  text-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
+}
+
+/* ============ SIDEBAR ============ */
+.md-sidebar {
+  background: var(--parchment) !important;
+  border-right: 2px solid var(--parchment-dark) !important;
+  box-shadow: 2px 0 8px rgba(0,0,0,0.08);
+}
+
+.md-sidebar--primary {
+  background-image:
+    repeating-linear-gradient(
+      to bottom,
+      transparent,
+      transparent calc(2em - 1px),
+      rgba(139, 115, 85, 0.1) calc(2em - 1px),
+      rgba(139, 115, 85, 0.1) 2em
+    );
+}
+
+.md-nav--primary .md-nav__title {
+  font-family: 'Pirata One', cursive;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--ink);
+  padding: 1rem 1.2rem;
+  background: linear-gradient(to bottom, #F4ECD8, #E8DFC8);
+  border-bottom: 2px solid var(--gold);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+  position: relative;
+}
+
+.md-nav--primary .md-nav__title::before {
+  content: '📖';
+  margin-right: 0.5rem;
+}
+
+.md-nav__item {
+  margin: 0.2rem 0;
+}
+
+.md-nav__link {
+  color: var(--ink-light);
+  font-family: 'Kalam', cursive;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.5rem 1.2rem;
+  border-left: 3px solid transparent;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.md-nav__link:hover {
+  background: rgba(184, 134, 11, 0.1);
+  border-left-color: var(--gold);
+  color: var(--ink);
+}
+
+.md-nav__link--active {
+  color: var(--crimson) !important;
+  background: rgba(139, 0, 0, 0.06);
+  border-left-color: var(--crimson);
+  font-weight: 700;
+}
+
+.md-nav__link--active::after {
+  content: '→';
+  position: absolute;
+  right: 1rem;
+  color: var(--crimson);
+  font-weight: 700;
+}
+
+/* ============ CONTEÚDO PRINCIPAL ============ */
+.md-content {
+  background: var(--parchment);
+  background-image:
+    repeating-linear-gradient(
+      to bottom,
+      transparent,
+      transparent calc(2em - 1px),
+      rgba(139, 115, 85, 0.15) calc(2em - 1px),
+      rgba(139, 115, 85, 0.15) 2em
+    ),
+    url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='paper'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.04' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23paper)' opacity='0.03'/%3E%3C/svg%3E");
+  background-position: 0 0.5em, 0 0;
+  background-size: 100% 2em, 200px 200px;
+  box-shadow:
+    0 0 0 1px rgba(0,0,0,0.05),
+    0 8px 32px var(--shadow-deep),
+    0 2px 8px rgba(0,0,0,0.1),
+    inset 0 0 100px rgba(139, 115, 85, 0.05);
+  border-radius: 3px;
+  max-width: 950px;
+  margin: 2rem auto;
+  padding: 3rem 3rem 4rem 3.5rem !important;
+  position: relative;
+  border: 1px solid var(--parchment-dark);
+}
+
+/* Margem vermelha */
+.md-content::before {
+  content: '';
+  position: absolute;
+  left: 2rem;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(to bottom, 
+    transparent 0%, 
+    var(--crimson-light) 5%, 
+    var(--crimson-light) 95%, 
+    transparent 100%
+  );
+  opacity: 0.5;
+}
+
+/* Abas coloridas laterais */
+.md-content::after {
+  content: '';
+  position: absolute;
+  right: -16px;
+  top: 4rem;
+  width: 16px;
+  height: 80px;
+  background: linear-gradient(to bottom, var(--tab-1), #D4A090);
+  border-radius: 0 6px 6px 0;
+  box-shadow:
+    0 55px 0 var(--tab-2),
+    0 110px 0 var(--tab-3),
+    0 165px 0 var(--tab-4);
+  border: 1px solid rgba(0,0,0,0.1);
+}
+
+/* ============ TIPOGRAFIA ============ */
+.md-typeset {
+  font-family: 'Kalam', cursive;
+  font-size: 1.15rem;
+  line-height: 2.1;
+  color: var(--ink);
+}
+
+.md-typeset h1 {
+  font-family: 'Pirata One', cursive;
+  font-weight: 700;
+  font-size: 3.2rem;
+  color: var(--ink);
+  border-bottom: 3px double var(--gold);
+  padding-bottom: 0.4em;
+  margin-top: 0;
+  margin-bottom: 2rem;
+  letter-spacing: 0.02em;
+  text-shadow: 2px 2px 0 rgba(184, 134, 11, 0.15);
+  position: relative;
+  display: inline-block;
+}
+
+.md-typeset h1::before {
+  content: '✦ ';
+  color: var(--gold);
+  text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+}
+
+.md-typeset h2 {
+  font-family: 'Pirata One', cursive;
+  font-weight: 700;
+  font-size: 1.9rem;
+  color: var(--crimson);
+  border-bottom: 2px solid var(--gold);
+  padding-bottom: 0.3em;
+  margin-top: 3rem;
+  margin-bottom: 1.2rem;
+  position: relative;
+  padding-left: 2rem;
+  letter-spacing: 0.03em;
+}
+
+.md-typeset h2::before {
+  content: '◈ ';
+  position: absolute;
+  left: 0;
+  color: var(--gold);
+  font-size: 1.3rem;
+}
+
+.md-typeset h3 {
+  font-family: 'Kalam', cursive;
+  font-weight: 700;
+  font-size: 1.4rem;
+  color: var(--ink-light);
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  padding-left: 1rem;
+  border-left: 3px solid var(--verde);
+}
+
+/* Links com estilo de anotação */
+.md-typeset a {
+  color: var(--azul);
+  text-decoration: none;
+  border-bottom: 2px dashed var(--azul);
+  transition: all 0.2s;
+  font-weight: 600;
+}
+
+.md-typeset a:hover {
+  background: rgba(30, 58, 95, 0.08);
+  border-bottom-style: solid;
+}
+
+/* Separadores ornamentados */
+.md-typeset hr {
+  border: none;
+  height: 2px;
+  background: linear-gradient(to right, 
+    transparent 0%, 
+    var(--gold) 20%, 
+    var(--gold) 80%, 
+    transparent 100%
+  );
+  margin: 2.5rem 0;
+  position: relative;
+}
+
+.md-typeset hr::before {
+  content: '✦ ✦ ✦';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--parchment);
+  padding: 0 1rem;
+  color: var(--gold);
+  font-size: 0.9rem;
+}
+
+/* ============ TABELAS ============ */
+.md-typeset table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  font-family: 'Kalam', cursive;
+  font-size: 1rem;
+  border: 2px solid var(--gold);
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.md-typeset table th {
+  font-family: 'Pirata One', cursive;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--parchment);
+  background: linear-gradient(135deg, var(--crimson) 0%, #6B0000 100%);
+  border-bottom: 2px solid var(--gold);
+  padding: 0.8rem;
+  text-align: left;
+  letter-spacing: 0.05em;
+}
+
+.md-typeset table td {
+  border-bottom: 1px solid var(--parchment-dark);
+  padding: 0.6rem 0.8rem;
+  background: var(--parchment);
+  transition: background 0.2s;
+}
+
+.md-typeset table tr:hover td {
+  background: rgba(184, 134, 11, 0.08);
+}
+
+/* ============ CODE BLOCKS ============ */
+.md-typeset code {
+  background: #E8DFC8;
+  color: var(--crimson);
+  padding: 0.2em 0.5em;
+  border-radius: 3px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.85em;
+  border: 1px solid var(--parchment-dark);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.md-typeset pre {
+  background: #E8DFC8;
+  background-image:
+    repeating-linear-gradient(
+      to bottom,
+      transparent,
+      transparent calc(1.5em - 1px),
+      rgba(139, 115, 85, 0.1) calc(1.5em - 1px),
+      rgba(139, 115, 85, 0.1) 1.5em
+    );
+  border: 2px solid var(--parchment-dark);
+  border-radius: 4px;
+  padding: 1.2rem;
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.04);
+  position: relative;
+}
+
+.md-typeset pre::before {
+  content: '📜 código';
+  position: absolute;
+  top: -0.6rem;
+  left: 1rem;
+  background: var(--parchment);
+  padding: 0 0.5rem;
+  font-family: 'Kalam', cursive;
+  font-size: 0.85rem;
+  color: var(--gold);
+  font-weight: 700;
+}
+
+/* ============ ADVERTÊNCIAS ============ */
+.md-typeset .admonition {
+  background: rgba(255, 255, 255, 0.6);
+  border: 2px solid var(--gold);
+  border-left: 6px solid var(--gold);
+  border-radius: 4px;
+  padding: 1.2rem 1.5rem;
+  margin: 2rem 0;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  position: relative;
+}
+
+.md-typeset .admonition-title {
+  font-family: 'Pirata One', cursive;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--crimson);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* ============ LISTAS ============ */
+.md-typeset ul, .md-typeset ol {
+  padding-left: 1.5rem;
+}
+
+.md-typeset li {
+  margin: 0.5rem 0;
+  position: relative;
+}
+
+.md-typeset li::marker {
+  color: var(--gold);
+  font-weight: 700;
+}
+
+/* ============ MAPA MENTAL ============ */
+.mapa-mental-wheel {
+  text-align: center;
+  padding: 2.5rem 0;
+  margin: 2.5rem 0;
+  border-top: 2px dashed var(--gold);
+  border-bottom: 2px dashed var(--gold);
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 4px;
+  position: relative;
+  box-shadow: inset 0 0 30px rgba(184, 134, 11, 0.08);
+}
+
+.mapa-mental-wheel::before {
+  content: '🧠 Mapa Mental';
+  position: absolute;
+  top: -0.8rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--parchment);
+  padding: 0 1rem;
+  font-family: 'Pirata One', cursive;
+  font-size: 1rem;
+  color: var(--crimson);
+  letter-spacing: 0.1em;
+}
+
+.mapa-mental-wheel pre {
+  display: inline-block;
+  text-align: left;
+  background: transparent;
+  border: none;
+  font-family: 'Courier New', monospace;
+  font-size: 0.8rem;
+  color: var(--ink-light);
+  line-height: 1.7;
+  padding: 1rem;
+}
+
+/* ============ ANOTAÇÕES ============ */
+.anotacoes-pessoais {
+  background: rgba(255, 255, 255, 0.5);
+  border: 3px dashed var(--gold);
+  border-radius: 4px;
+  padding: 2rem;
+  min-height: 200px;
+  margin: 3rem 0 1rem 0;
+  box-shadow: inset 0 0 40px rgba(184, 134, 11, 0.06);
+  position: relative;
+}
+
+.anotacoes-pessoais::before {
+  content: '✏️ Minhas Anotações';
+  font-family: 'Pirata One', cursive;
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: var(--crimson);
+  display: block;
+  margin-bottom: 1rem;
+  letter-spacing: 0.05em;
+}
+
+/* ============ RODAPÉ ============ */
+.md-footer {
+  background: linear-gradient(135deg, #654321 0%, #4A3219 100%) !important;
+  border-top: 3px solid var(--gold) !important;
+  color: #E8D4A0 !important;
+  font-size: 0.9rem;
+  box-shadow: 0 -4px 16px var(--shadow-deep);
+}
+
+.md-footer__inner {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* ============ SCROLLBAR ============ */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--parchment);
+  border-left: 1px solid var(--parchment-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, var(--gold), #8B6914);
+  border-radius: 6px;
+  border: 2px solid var(--parchment);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, var(--gold-light), var(--gold));
+}
+
+/* ============ RESPONSIVO ============ */
+@media (max-width: 768px) {
+  .md-typeset h1 {
+    font-size: 2.2rem;
+  }
+  
+  .md-typeset h2 {
+    font-size: 1.5rem;
+  }
+  
+  .md-content {
+    padding: 2rem 1.5rem 2.5rem 2rem !important;
+    margin: 1rem 0.5rem;
+  }
+  
+  .md-content::after {
+    display: none;
+  }
+  
+  .md-header__inner {
+    padding-left: 2.5rem !important;
+  }
+}
+
+/* ============ ANIMAÇÕES ============ */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.md-content > * {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+/* Efeito de brilho no ouro */
+@keyframes shimmer {
+  0%, 100% {
+    text-shadow: 0 0 5px rgba(212, 175, 55, 0.4);
+  }
+  50% {
+    text-shadow: 0 0 15px rgba(212, 175, 55, 0.8), 0 0 25px rgba(212, 175, 55, 0.4);
+  }
+}
+
+.md-logo, .md-tabs__link--active {
+  animation: shimmer 3s infinite;
+}

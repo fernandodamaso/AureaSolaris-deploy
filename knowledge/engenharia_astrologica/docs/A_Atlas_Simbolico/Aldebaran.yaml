@@ -1,0 +1,46 @@
+﻿status: draft
+id: "aldebaran_atlas"
+nome: "Aldebaran — Atlas Simbólico"
+tradicoes:
+  - "atlas simbolico editorial"
+  - "sintese multiescola"
+tipo: "Atlas Simbólico"
+subtema: "Correspondências de Aldebaran"
+
+origens_e_divergencias:
+  tradicional: "Ptolomeu, Al-Battani — Aldebaran = olho do Touro; força física, sucesso por luta."
+  moderna: "Astrologia moderna mantém; acrescenta determinação e ambição."
+  nota: "Classificada como estrela de natureza marte/júpiter por tradição."
+
+atlas_simbolico:
+  pessoas_arquetipos: "Guerreiro, conquistador, atleta, negociante ambicioso"
+  lugares_fisicos: "Campos de batalha, mercados, estádios, montanhas"
+  objetos_materia: "Armadura, arco, moeda, martelo, fogo"
+  eventos_tipicos: "Conquista, vitória por esforço, acumulação, disputa"
+  animais: "Touro, lobo, águia, touro selvagem"
+  plantas_ervas: "Cardo, espinheiro, carvalho, café"
+  metais_pedras: "Ferro, rubi, granada, safira"
+  cores_sons:
+    cores: ["Vermelho-fogo", "marrom-terra", "dourado"]
+    sons: ["Trombeta", "tambor de guerra", "vento forte"]
+  numeros: [2, 7, 18]
+  dias_semana: ["Terça-feira (Marte)", "Quinta-feira (Júpiter)"]
+  doencas_corpo:
+    doencas: ["Febres", "dor de cabeça", "inflamações"]
+    partes_corpo: ["Cabeça", "olhos", "pescoço", "garganta"]
+  arquetipos_mitologicos: ["Zeus", "Ares", "Hércules"]
+  mitos_historias: "Zeus como touro; Hércules lutando contra obstáculos; touro selvagem como força bruta"
+  sonhos_simbolos_inconsciente: "Olhos brilhantes, chifres, fogo, lutas, tesouros"
+  expressao_elevada_sombra: "Elevada: coragem persistente, realização por esforço, proteção | Sombra: agressividade descontrolada, cobiça, tirania"
+
+camada_energetica:
+  impressao_mental: "Vontade de lutar; ver a vida como campo de conquista legítima."
+  permeacao_emocional: "Força, determinação. Quando sombra: raiva acumulada, competição destrutiva."
+  manifestacao_externa: "Eventos PROVÁVEIS de disputa, vitória por esforço, início de projetos ambiciosos."
+  como_guiar_o_astral: "Mostrar que força sem direção vira violência; canalizar para conquistas construtivas."
+
+ver_mais:
+  - "../07_Estrelas_Fixas/Aldebaran.yaml"
+
+## ✏️ Minhas Anotações
+

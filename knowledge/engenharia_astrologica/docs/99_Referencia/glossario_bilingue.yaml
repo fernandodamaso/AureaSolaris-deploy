@@ -1,0 +1,646 @@
+﻿status: draft
+id: glossario_bilingue
+nome: Glossário Bilíngue
+tradicoes:
+  - "editorial"
+  - "referencia"
+tipo: Referência
+subtema: Termos astrológicos PT/EN
+origens_e_divergencias:
+  tradicional: Termos originais gregos/latinos.
+  moderna: Traduções modernas e adaptações.
+  nota: Bilingue PT/EN para acesso internacional.
+atlas_simbolico:
+  pessoas_arquetipos: O estudante, o tradutor, o pesquisador
+  lugares_fisicos: Bibliotecas, arquivos
+  objetos_materia: Dicionários, glossários
+  eventos_tipicos: Traduções, estudos
+  animais: Coruja (sabedoria)
+  plantas_ervas: Sálvia (memória)
+  metais_pedras: Prata (lua), cristal (clareza)
+  cores_sons:
+    cores:
+    - Prata
+    - azul-claro
+    sons:
+    - Dó
+    - lá
+  numeros:
+  - 3
+  - 6
+  - 9
+  dias_semana:
+  - Quarta-feira
+  doencas_corpo:
+    doencas:
+    - Problemas nervosos
+    - olhos
+    partes_corpo:
+    - Olhos
+    - cérebro
+  arquetipos_mitologicos:
+  - Hermes (comunicação)
+  - Atena (sabedoria)
+  mitos_historias: Hermes e a escrita
+  expressao_elevada_sombra: 'Elevada: tradução fiel | Sombra: erro de interpretação'
+camada_energetica:
+  impressao_mental: Glossário é a PONTE entre idiomas e tradições.
+  permeacao_emocional: 'Clareza conceitual. Quando saudável: comunicação. Quando ferido:
+    confusão.'
+  manifestacao_externa: Eventos prováveis de estudos, traduções. Inclinação, não destino.
+  como_guiar_o_astral: Ajudar a pessoa a PRECISAR OS TERMOS. Glossário é ferramenta,
+    não fim.
+glossario:
+- pt: Aspecto
+  en: Aspect
+  definicao: Ângulo entre dois planetas. Mede a relação entre duas energias.
+- pt: Casa
+  en: House
+  definicao: Área da vida onde o planeta se manifesta.
+- pt: Dignidade
+  en: Dignity
+  definicao: Força do planeta no signo/casa.
+- pt: Eclipse
+  en: Eclipse
+  definicao: Sombra da Lua ou da Terra sobre o Sol/Lua.
+- pt: Eixo nodoso
+  en: Nodal axis
+  definicao: Nodo Norte (missão) e Nodo Sul (passado).
+- pt: Horário
+  en: Hour
+  definicao: Divisão do dia em 12 partes iguais para timing planetário.
+- pt: Lote
+  en: Lot / Part
+  definicao: Ponto matemático calculado no mapa.
+- pt: Orbe
+  en: Orb
+  definicao: Margem de erro para considerar um aspecto ativo.
+- pt: Parte da Fortuna
+  en: Part of Fortune
+  definicao: Ponto de sorte e prosperidade.
+- pt: Progressão
+  en: Progression
+  definicao: Avanço simbólico do mapa ao longo do tempo.
+- pt: Regente
+  en: Ruler
+  definicao: Planeta que governa um signo/casa.
+- pt: Signo
+  en: Sign
+  definicao: Divisão de 30° do zodíaco. Modo de ser.
+- pt: Trânsito
+  en: Transit
+  definicao: Posição atual de um planeta que ativa o mapa natal.
+- pt: Alcocoden
+  en: Alcocoden
+  definicao: Planeta que indica a duração da vida nativa na astrologia tradicional.
+- pt: Almuten
+  en: Almuten / Almuten figuris
+  definicao: Planeta com maior dignidade essencial no mapa ou em pontos específicos.
+- pt: Anareta
+  en: Anareta
+  definicao: Planeta ou ponto significador de morte/evento terminal na tradição helenística.
+- pt: Apheta
+  en: Apheta
+  definicao: Significador da vida/longevidade; correlaciona-se com Alcocoden/Hyleg.
+- pt: Casa angular
+  en: Angular house
+  definicao: Casa 1, 4, 7, 10 — de ação e manifestação imediata.
+- pt: Casa cadente
+  en: Cadent house
+  definicao: Casa 3, 6, 9, 12 — de internalização e finalização.
+- pt: Casa sucedente
+  en: Succedent house
+  definicao: Casa 2, 5, 8, 11 — de desenvolvimento e acumulação.
+- pt: Combustão
+  en: Combustion
+  definicao: Planeta muito próximo ao Sol, enfraquecido pela luz solar (a menos que
+    Cazimi).
+- pt: Contra-antíscia
+  en: Contra-antiscia
+  definicao: Reflexo de um planeta no ponto oposto do eixo solsticial; relação por
+    declinação.
+- pt: Cronocrator
+  en: Time lord / Chronocrator
+  definicao: Planeta regente de um período temporal em sistemas previsivos (Firdarias,
+    etc).
+- pt: Decano
+  en: Decan
+  definicao: Divisão de 10° dentro de um signo (3 por signo).
+- pt: Declinação
+  en: Declination
+  definicao: Distância angular de um corpo em relação ao equador celeste; base para
+    paralelos.
+- pt: Diurnal/Noturno
+  en: Diurnal/Nocturnal
+  definicao: 'Classificação por sect: planetas diurnos (Sol, Júpiter, Saturno) e noturnos
+    (Lua, Vênus, Marte).'
+- pt: Domicílio
+  en: Domicile
+  definicao: Signo regido naturalmente por um planeta; sua casa.
+- pt: Domificação
+  en: House division
+  definicao: Método de dividir a esfera celeste em 12 casas (Placidus, Koch, Whole
+    Sign, etc).
+- pt: Eleição
+  en: Electional astrology
+  definicao: Escolha de momento auspicioso para iniciar uma ação.
+- pt: Exaltação
+  en: Exaltation
+  definicao: Posição de máxima expressão simbólica do planeta num signo.
+- pt: Exílio
+  en: Detriment
+  definicao: Planeta no signo oposto ao seu domicílio; energia em tensão.
+- pt: Face
+  en: Face
+  definicao: Divisão de 10° dentro de um decanato (3 faces por decanato = 10° cada).
+- pt: Firdaria
+  en: Firdaria / Firdâriyya
+  definicao: 'Sistema de timing medievaliraniano: períodos planetários sucessivos.'
+- pt: Geocêntrico
+  en: Geocentric
+  definicao: Ponto de vista Terra-centrado, padrão em astrologia.
+- pt: Grande Cruz
+  en: Grand Cross
+  definicao: Quadratura entre 4 planetas (2 oposições); tensão máxima.
+- pt: Hyleg
+  en: Hyleg / Al-haylaj
+  definicao: Ponto de partida para cálculo da duração da vida na tradição.
+- pt: Inconsciente
+  en: Unconscious
+  definicao: Conceito junguiano de conteúdos psíquicos não acessíveis diretamente.
+- pt: Individuação
+  en: Individuation
+  definicao: Processo de integração dos arquétipos junguianos; eixo evolutivo.
+- pt: Lilith (Média)
+  en: Mean Lilith / Black Moon
+  definicao: Média do apogeu lunar; não é a mesma que Lilith osculante.
+- pt: Macrocosmo
+  en: Macrocosm
+  definicao: O todo, o universo; paralelo ao microcosmo humano.
+- pt: Melotesia
+  en: Melothesia
+  definicao: Correspondência entre signos/planetas e partes do corpo/doenças.
+- pt: Microcosmo
+  en: Microcosm
+  definicao: O ser humano como espelho do universo.
+- pt: Midpoint
+  en: Midpoint
+  definicao: Ponto médio entre dois planetas; base para técnicas de midpoint relacional.
+- pt: Monômoro
+  en: Monomoirion
+  definicao: Valor numérico de 1° de movimento lunar em horas.
+- pt: Mundos
+  en: Mundane astrology
+  definicao: Astrologia de coletividades, países, eventos mundiais.
+- pt: Nigredo
+  en: Nigredo
+  definicao: Fase alquímica da putrefação/escurecimento; correspondente à crise inicial.
+- pt: Nocturnal/Diurnal
+  en: Nocturnal/Diurnal chart
+  definicao: Mapa com Sol abaixo/above do horizonte; determina sect.
+- pt: Orbe (aplicativo)
+  en: Applying orb
+  definicao: Aspecto que se forma no futuro próximo; aplicação.
+- pt: Orbe (separativo)
+  en: Separating orb
+  definicao: Aspecto que se desfaz; separação.
+- pt: Peregrino
+  en: Peregrine
+  definicao: Planeta sem dignidade essencial no signo onde está.
+- pt: Picatrix
+  en: Picatrix / Ghayat al-Hakim
+  definicao: Tratado de magia astrológica islâmico-espanhol do séc. X-XI.
+- pt: Planeta Feral
+  en: Feral planet
+  definicao: Planeta no signo oposto ao seu domicílio e sem dignidade acidental.
+- pt: Prefeito
+  en: Prefeito / Significador natural
+  definicao: Planeta naturalmente associado ao tema consultado.
+- pt: Priapo
+  en: Priapo / Perigee
+  definicao: Ponto de perigeu lunar; oposto ao apogeu.
+- pt: Profeção
+  en: Profection
+  definicao: 'Técnica de timing: avanço de 1 signo por ano a partir do ASC.'
+- pt: Queda
+  en: Fall
+  definicao: Planeta no signo onde está em exílio relativo; segunda dignidade negativa.
+- pt: Quincúncio
+  en: Quincunx / Inconjunct
+  definicao: 150°; aspecto de desajuste entre elementos/modalities.
+- pt: Receção
+  en: Reception
+  definicao: Dois planetas mutuamente no domicílio/exaltação um do outro.
+- pt: Retorno Solar
+  en: Solar return
+  definicao: Mapa calculado para o momento em que o Sol retorna à posição natal.
+- pt: Saros
+  en: Saros cycle
+  definicao: Período de 223 meses sinódicos que regula a repetição de eclipses.
+- pt: Septo
+  en: Septile
+  definicao: 51.4°; aspecto menor de ordem 7, associado a crises interiores.
+- pt: Stellium
+  en: Stellium
+  definicao: 3+ planetas no mesmo signo/casa; concentração de energia.
+- pt: T-Square
+  en: T-Square
+  definicao: Quadratura com um planeta oposto a outro e terceiro em quadratura aos
+    dois.
+- pt: Termo
+  en: Term
+  definicao: Faixa zodiacal dentro de um signo atribuída a planetas específicos.
+- pt: Topocêntrico
+  en: Topocentric
+  definicao: Ponto de vista localizado na superfície terrestre.
+- pt: Triplicidade
+  en: Triplicity
+  definicao: Grupo de 3 signos do mesmo elemento; dignidade menor.
+- pt: Yod
+  en: Yod
+  definicao: Configuração de 2 sextis + 1 quincúncio; aponta para desajuste/compulsão.
+- pt: Aldebaran
+  en: Aldebaran
+  definicao: Aldebaran — termo do atlas simbólico.
+- pt: Algol
+  en: Algol
+  definicao: Algol — termo do atlas simbólico.
+- pt: Antares
+  en: Antares
+  definicao: Antares — termo do atlas simbólico.
+- pt: Antíscia e Contra-antíscia
+  en: Antíscia e Contra-antíscia
+  definicao: Antíscia e Contra-antíscia — termo do atlas simbólico.
+- pt: Aquário
+  en: Aquarius
+  definicao: Aquário — termo do atlas simbólico.
+- pt: Arcturus
+  en: Arcturus
+  definicao: Arcturus — termo do atlas simbólico.
+- pt: Áries
+  en: Aries
+  definicao: Áries — termo do atlas simbólico.
+- pt: Câncer
+  en: Cancer
+  definicao: Câncer — termo do atlas simbólico.
+- pt: Capricórnio
+  en: Capricorn
+  definicao: Capricórnio — termo do atlas simbólico.
+- pt: Casa 1 — A Procissão / O Eu
+  en: Casa 1 — A Procissão / O Eu
+  definicao: Casa 1 — A Procissão / O Eu — termo do atlas simbólico.
+- pt: Casa 10 — O Trono / A Missão Pública
+  en: Casa 10 — O Trono / A Missão Pública
+  definicao: Casa 10 — O Trono / A Missão Pública — termo do atlas simbólico.
+- pt: Casa 11 — O Clã / O Futuro Coletivo
+  en: Casa 11 — O Clã / O Futuro Coletivo
+  definicao: Casa 11 — O Clã / O Futuro Coletivo — termo do atlas simbólico.
+- pt: Casa 12 — O Invisível / O Além
+  en: Casa 12 — O Invisível / O Além
+  definicao: Casa 12 — O Invisível / O Além — termo do atlas simbólico.
+- pt: Casa 2 — O Tesouro / Os Recursos
+  en: Casa 2 — O Tesouro / Os Recursos
+  definicao: Casa 2 — O Tesouro / Os Recursos — termo do atlas simbólico.
+- pt: Casa 3 — O Mensageiro / A Comunicação
+  en: Casa 3 — O Mensageiro / A Comunicação
+  definicao: Casa 3 — O Mensageiro / A Comunicação — termo do atlas simbólico.
+- pt: Casa 4 — O Templo / O Lar
+  en: Casa 4 — O Templo / O Lar
+  definicao: Casa 4 — O Templo / O Lar — termo do atlas simbólico.
+- pt: Casa 5 — O Trono / A Criação
+  en: Casa 5 — O Trono / A Criação
+  definicao: Casa 5 — O Trono / A Criação — termo do atlas simbólico.
+- pt: Casa 6 — O Serviço / A Saúde
+  en: Casa 6 — O Serviço / A Saúde
+  definicao: Casa 6 — O Serviço / A Saúde — termo do atlas simbólico.
+- pt: Casa 7 — O Espelho / O Outro
+  en: Casa 7 — O Espelho / O Outro
+  definicao: Casa 7 — O Espelho / O Outro — termo do atlas simbólico.
+- pt: Casa 8 — A Transformação / O Outro Mundo
+  en: Casa 8 — A Transformação / O Outro Mundo
+  definicao: Casa 8 — A Transformação / O Outro Mundo — termo do atlas simbólico.
+- pt: Casa 9 — O Horizonte / A Fé
+  en: Casa 9 — O Horizonte / A Fé
+  definicao: Casa 9 — O Horizonte / A Fé — termo do atlas simbólico.
+- pt: Castor
+  en: Castor
+  definicao: Castor — termo do atlas simbólico.
+- pt: Escorpião
+  en: Scorpio
+  definicao: Escorpião — termo do atlas simbólico.
+- pt: Fomalhaut
+  en: Fomalhaut
+  definicao: Fomalhaut — termo do atlas simbólico.
+- pt: Gêmeos
+  en: Gemini
+  definicao: Gêmeos — termo do atlas simbólico.
+- pt: Júpiter
+  en: Jupiter
+  definicao: Júpiter — termo do atlas simbólico.
+- pt: Leão
+  en: Leo
+  definicao: Leão — termo do atlas simbólico.
+- pt: Libra
+  en: Libra
+  definicao: Libra — termo do atlas simbólico.
+- pt: Lua
+  en: Moon
+  definicao: Lua — termo do atlas simbólico.
+- pt: Marte
+  en: Mars
+  definicao: Marte — termo do atlas simbólico.
+- pt: Mercúrio
+  en: Mercury
+  definicao: Mercúrio — termo do atlas simbólico.
+- pt: Netuno
+  en: Neptune
+  definicao: Netuno — termo do atlas simbólico.
+- pt: Oposição
+  en: Opposition
+  definicao: Oposição — termo do atlas simbólico.
+- pt: Peixes
+  en: Pisces
+  definicao: Peixes — termo do atlas simbólico.
+- pt: Plutão
+  en: Pluto
+  definicao: Plutão — termo do atlas simbólico.
+- pt: Pollux
+  en: Pollux
+  definicao: Pollux — termo do atlas simbólico.
+- pt: Quadratura
+  en: Square
+  definicao: Quadratura — termo do atlas simbólico.
+- pt: Quíron
+  en: Chiron
+  definicao: Quíron — termo do atlas simbólico.
+- pt: Regulus
+  en: Regulus
+  definicao: Regulus — termo do atlas simbólico.
+- pt: Sagitário
+  en: Sagittarius
+  definicao: Sagitário — termo do atlas simbólico.
+- pt: Saturno
+  en: Saturn
+  definicao: Saturno — termo do atlas simbólico.
+- pt: Sextil
+  en: Sextile
+  definicao: Sextil — termo do atlas simbólico.
+- pt: Sirius
+  en: Sirius
+  definicao: Sirius — termo do atlas simbólico.
+- pt: Sol
+  en: Sun
+  definicao: Sol — termo do atlas simbólico.
+- pt: Spica
+  en: Spica
+  definicao: Spica — termo do atlas simbólico.
+- pt: Touro
+  en: Taurus
+  definicao: Touro — termo do atlas simbólico.
+- pt: Trígono
+  en: Trine
+  definicao: Trígono — termo do atlas simbólico.
+- pt: Urano
+  en: Uranus
+  definicao: Urano — termo do atlas simbólico.
+- pt: Vega
+  en: Vega
+  definicao: Vega — termo do atlas simbólico.
+- pt: Vênus
+  en: Venus
+  definicao: Vênus — termo do atlas simbólico.
+- pt: Virgem
+  en: Virgo
+  definicao: Virgem — termo do atlas simbólico.
+- pt: Benéfico
+  en: Benefic
+  definicao: 'Planeta tradicionalmente positivo: Júpiter (grande benéfico) e Vênus
+    (pequeno benéfico).'
+- pt: Casa derivada
+  en: Derivative house
+  definicao: 'Casa usada para representar outra pessoa/questão a partir de um ponto
+    focal do mapa (ex.: Casa 7 = parceiro).'
+- pt: Cúspide
+  en: Cusp
+  definicao: Linha divisória entre duas casas ou signos.
+- pt: Descendente
+  en: Descendant
+  definicao: Ponto oposto ao Ascendente; cúspide da Casa 7; representa o outro, parcerias.
+- pt: Direto
+  en: Direct motion
+  definicao: Movimento normal e aparente de um planeta pelo zodíaco, em direção ao
+    leste.
+- pt: Efeméride
+  en: Ephemeris
+  definicao: Tabela de posições planetárias para datas/horas específicas; ferramenta
+    básica do astrólogo.
+- pt: Estação planetária
+  en: Station
+  definicao: Momento em que um planeta aparenta parar antes de mudar de direção (direto/retrógrado).
+- pt: Estrela Fixa
+  en: Fixed star
+  definicao: 'Estrela de primeira magnitude usada como referência em astrologia; ex.:
+    Regulus, Sirius, Aldebaran.'
+- pt: Fogo lunar
+  en: Lunar phase
+  definicao: Fase da Lua vista da Terra; base para timing emocional e eclipses.
+- pt: Grau anaretico
+  en: Anaretic degree
+  definicao: 29° de qualquer signo; grau crítico de finalização, pressão e karmas
+    urgentes.
+- pt: Ímum Coeli
+  en: Imum Coeli
+  definicao: Ponto mais baixo do céu; oposto ao MC; cúspide da Casa 4; lar, raízes,
+    privado.
+- pt: Ingresso
+  en: Ingress
+  definicao: Momento em que um planeta entra num novo signo; muda o tom das matérias
+    que governa.
+- pt: Lua Balsâmica
+  en: Balsamic Moon
+  definicao: Fase final do ciclo lunar (antes da Lua Nova); introspecção, fechamento,
+    cura.
+- pt: Lua Crescente
+  en: Waxing Crescent
+  definicao: Fase após a Lua Nova; início, germinação, novos começos.
+- pt: Lua Gibbous
+  en: Gibbous Moon
+  definicao: Fase entre o quarto crescente e a Lua Cheia; crescimento, análise, ajuste.
+- pt: Luminação
+  en: Luminary
+  definicao: Sol e Lua coletivamente; corpos que emitem ou refletem luz diretamente.
+- pt: Maléfico
+  en: Malefic
+  definicao: 'Planeta tradicionalmente desafiador: Saturno (grande maléfico) e Marte
+    (pequeno maléfico).'
+- pt: MC
+  en: Midheaven
+  definicao: Ponto mais alto do céu; cúspide da Casa 10; carreira, reputação pública,
+    destino social.
+- pt: Meio Céu
+  en: Medium Coeli
+  definicao: Ver MC.
+- pt: Nodo Norte
+  en: North Node
+  definicao: Ponto de crescimento espiritual e direção de vida; eixo nodoso.
+- pt: Nodo Sul
+  en: South Node
+  definicao: Ponto de passado, talentos naturais e padrões cármicos antigos; oposto
+    ao Nodo Norte.
+- pt: Parte do Espírito
+  en: Part of Spirit
+  definicao: Lote calculado por Sol - Lua + ASC; contraparte da Parte da Fortuna;
+    propósito, vontade, carreira ativa.
+- pt: Perigeu
+  en: Perigee
+  definicao: Ponto mais próximo da Terra na órbita da Lua; correlaciona-se com Priapo.
+- pt: Planeta interior
+  en: Inner planet
+  definicao: 'Planetas pessoais e rápidos: Sol, Lua, Mercúrio, Vênus, Marte.'
+- pt: Precessão
+  en: Precession
+  definicao: Movimento lento do eixo terrestre (~26.000 anos); causa a diferença entre
+    zodíaco tropical e sideral.
+- pt: Quente
+  en: Hot planet
+  definicao: 'Planetas quentes por natureza: Sol, Marte, Júpiter; associados a fogo,
+    ação, expansão.'
+- pt: Retorno de Saturno
+  en: Saturn Return
+  definicao: Trânsito de Saturno à sua posição natal, ocorrendo por volta dos 29,
+    58 e 87 anos; amadurecimento, estruturas, responsabilidade.
+- pt: Retrogradação
+  en: Retrogradation
+  definicao: Movimento aparente de um planeta em direção oposta à normal; revisão,
+    internalização.
+- pt: Significador natural
+  en: Natural significator
+  definicao: 'Planeta tradicionalmente associado a um tema (ex.: Júpiter = riqueza,
+    Saturno = tempo).'
+- pt: Signo interceptado
+  en: Intercepted sign
+  definicao: Signo que fica totalmente dentro de uma casa, sem cúspide; energia presa/internalizada.
+- pt: Sincronicidade
+  en: Synchronicity
+  definicao: Coincidência significativa entre evento psíquico e evento externo; Jung
+    + astrologia.
+- pt: Terra
+  en: Earth
+  definicao: 'Signos de Terra: Touro, Virgem, Capricórnio; praticidade, materialidade,
+    estabilidade.'
+- pt: Vento solar
+  en: Solar wind
+  definicao: Fluxo de partículas do Sol; não é termo astrológico tradicional.
+- pt: Água
+  en: Water
+  definicao: 'Signos de Água: Câncer, Escorpião, Peixes; emoção, intuição, profundidade.'
+- pt: Árvore da Vida
+  en: Tree of Life
+  definicao: Diagrama da Cabala com 10 Sephiroth; mapeia a criação divina.
+- pt: Árido
+  en: Barren sign
+  definicao: 'Signos tradicionalmente estéreis: Gêmeos, Leão, Virgem; pouca fertilidade.'
+- pt: Juno
+  en: Juno
+  definicao: 'Asteroides: compromisso, casamento, rivalidade, lealdade.'
+- pt: Pallas
+  en: Pallas
+  definicao: 'Asteroides: estratégia, arte, padrão, proteção.'
+- pt: Vesta
+  en: Vesta
+  definicao: 'Asteroides: devoção, foco, serviço, pureza.'
+- pt: Ceres
+  en: Ceres
+  definicao: 'Asteroides: nutrição, cuidado, colheita, maternidade.'
+- pt: Vertex
+  en: Vertex
+  definicao: Ponto calculado do mapa; porta do destino, encontros fatais.
+- pt: East Point
+  en: East Point
+  definicao: Ponto da eclíptica no horizonte leste no momento do nascimento.
+- pt: Antivertex
+  en: Antivertex
+  definicao: Ponto oposto ao Vertex; liberação de destino.
+- pt: Void-of-course
+  en: Void-of-course Moon
+  definicao: Período em que a Lua não faz mais aspectos antes de mudar de signo; traditionalmente
+    desfavorável para iniciar ações.
+- pt: Profecção anual
+  en: Annual profection
+  definicao: 'Técnica de timing: avanço de 1 signo por ano de vida; destaca área e
+    planeta regente do ano.'
+- pt: Arco solar
+  en: Solar arc
+  definicao: 'Método de direção simbólica: avança todos os pontos pelo mesmo arco
+    do Sol progredido.'
+- pt: Albedo
+  en: Albedo
+  definicao: 'Fase alquímica branca: purificação após a putrefação (nigredo).'
+- pt: Rubedo
+  en: Rubedo
+  definicao: 'Fase alquímica vermelha: consciência iluminada, união dos opostos.'
+- pt: Citrinitas
+  en: Citrinitas
+  definicao: 'Fase alquímica amarela: iluminação solar, despertar da consciência.'
+- pt: Sigilo
+  en: Sigil
+  definicao: Símbolo gráfico de um planeta/espírito; usado em talismãs e operações
+    mágicas.
+- pt: Sephiroth
+  en: Sephiroth
+  definicao: 10 esferas da Árvore da Vida cabalística; emanações divinas.
+- pt: Corpus Hermeticum
+  en: Corpus Hermeticum
+  definicao: Coleção de textos gnósticos/helenísticos atribuídos a Hermes Trismegisto;
+    base da filosofia hermética.
+- pt: Syzygy
+  en: Syzygy
+  definicao: Alinhamento Sol-Lua-Terra; eclipse ou lua nova/cheia; na astrologia lunar
+    avançada = momento de fecundação/formação.
+- pt: Lua Pré-Natal
+  en: Prenatal Syzygy
+  definicao: Última Lua Nova ou Lua Cheia antes do nascimento; ponto formativo do
+    mapa.
+- pt: Retorno Lunar
+  en: Lunar return
+  definicao: Mapa calculado para o momento em que a Lua retorna à posição natal; ciclo
+    de ~27.3 dias.
+- pt: Benéfico/Maléfico
+  en: Benefic/Malefic
+  definicao: 'Classificação tradicional: Júpiter/Vênus = benéficos; Saturno/Marte
+    = maléficos.'
+- pt: Receção mútua
+  en: Mutual reception
+  definicao: Dois planetas mutuamente no domicílio um do outro; atenuação de dificuldades.
+- pt: Regente diurno/nocturno
+  en: Day ruler / Night ruler
+  definicao: 'Para uma triplicidade: planeta diurno rege o dia, nocturno rege a noite.'
+- pt: Dignidade essencial
+  en: Essential dignity
+  definicao: 'Força do planeta por posição no signo/casa: domicílio, exaltação, triplicidade,
+    face, termo.'
+- pt: Dignidade acidental
+  en: Accidental dignity
+  definicao: 'Força do planeta por condições não-essenciais: angularidade, velocidade,
+    aspectos, etc.'
+- pt: Significador acidental
+  en: Accidental significator
+  definicao: Planeta que, por circunstâncias acidentais, assume a regência de um tema
+    no julgamento.
+- pt: Out of bounds
+  en: Out of bounds
+  definicao: Planeta cuja declinação ultrapassa o limite solar máximo; energia mais
+    livre/extrema.
+- pt: Sect
+  en: Sect
+  definicao: 'Classificação do mapa por dia/noite: planetas diurnos (Sol, Júpiter,
+    Saturno) vs. noturnos (Lua, Vênus, Marte); muda dignidades.'
+- pt: Temperamento
+  en: Temperament
+  definicao: 'Constitucional astrológica baseada nos 4 elementos/qualidades: sanguíneo,
+    fleumático, bilioso, melancólico.'
+- pt: Humor
+  en: Humor
+  definicao: 'Fluido corporal na teoria médica astrológica: sangue (ar), fleuma (água),
+    bile amarela (fogo), bile negra (terra).'
+

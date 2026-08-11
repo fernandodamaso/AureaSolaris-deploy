@@ -1,0 +1,104 @@
+﻿status: review
+id: "gemeos_atlas"
+nome: "Gêmeos — Atlas Simbólico"
+tradicoes:
+  - "atlas simbolico editorial"
+  - "sintese multiescola"
+tipo: "Atlas Simbólico"
+subtema: "Correspondências de Gêmeos"
+
+origens_e_divergencias:
+  tradicional: "Mercúrio — ar, dualidade, comunicação, versatilidade."
+  moderna: "Mercúrio (mesmo). Sem divergência."
+  nota: "Regência unânime."
+
+atlas_simbolico:
+  pessoas_arquetipos:
+    - "O mensageiro"
+    - "O estudante"
+    - "O comunicador"
+    - "O duplo"
+    - "O inventor"
+    - "O comerciante"
+  lugares_fisicos:
+    - "Mercados"
+    - "Estradas"
+    - "Cruzamentos"
+    - "Bibliotecas"
+    - "Escolas"
+    - "Postos"
+  objetos_materia:
+    - "Livros"
+    - "Canetas"
+    - "Relógios"
+    - "Ferramentas"
+    - "Moedas"
+  eventos_tipicos:
+    - "Viagens curtas"
+    - "Mudanças"
+    - "Aprendizado"
+    - "Negócios"
+    - "Encontros casuais"
+  animais:
+    - "Gêmeos (castor/pólux)"
+    - "Lebre"
+    - "Cão"
+    - "Gato"
+    - "Pássaro"
+  plantas_ervas:
+    - "Hera"
+    - "Madressilva"
+    - "Verbas"
+    - "Sálvia"
+    - "Menta"
+  metais_pedras:
+    - "Mercúrio"
+    - "Ágata"
+    - "Topázio"
+    - "Opala"
+  cores_sons:
+    cores: ["Amarelo", "Laranja claro", "Violeta", "Prateado"]
+    sons: ["Silvo", "Vento", "Voz"]
+  numeros: [2, 3, 5]
+  dias_semana: ["Quarta-feira"]
+  doencas_corpo:
+    doencas: ["Problemas respiratórios", "Ansiedade", "Problemas nervosos"]
+    partes_corpo: ["Braços", "Mãos", "Pulmões", "Sistema nervoso"]
+  arquetipos_mitologicos:
+    - "Castor e Pólux"
+    - "Hermes"
+    - "Apolo (duplo: luz/escuridão)"
+  mitos_historias:
+    - "Os gêmeos Celestial"
+    - "Hermes e a lira"
+  expressao_elevada_sombra: "Elevada: comunicação, versatilidade, aprendizado | Sombra: tagarelice, mentira, superficialidade"
+
+revisao_editorial:
+  origem_e_linguagem: "Gêmeos vem do latim gemini, 'gêmeos'. O nome do signo tropical e a constelação não são sinônimos astronômicos."
+  mito_arquetipo_e_porque: "Dupla, troca, espelho e mensageiro oferecem porquês simbólicos; Castor e Pólux pertencem a uma narrativa grega específica, não a origem única de toda leitura."
+  limite_tecnico: "Mercúrio é regente tradicional; comunicação, mobilidade e multiplicidade não podem ser concluídas de um signo isolado."
+referencias:
+  primarias:
+    - "Ptolomeu. Tetrabiblos, livro I: signos e qualidades, conforme edição declarada."
+  secundarias:
+    - "Rudhyar, Dane. The Astrological Signs: The Pulse of Life. Harper & Row, 1971."
+  tecnicas:
+    - "Ver 02_Astronomia/Zodiaco_Tropical.yaml e 04_Planetas/Mercurio.yaml."
+camada_energetica:
+  impressao_mental: "A mente que CONECTA e MUDA. Curiosidade, versatilidade, 'e se?'."
+  permeacao_emocional: "Rapidez emocional, troca constante. Quando saudável: diálogo. Quando ferido: ansiedade, dispersão."
+  manifestacao_externa: "Eventos PROVÁVEIS de viagens curtas, encontros, aprendizado, mudanças. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a ESCOLHER UM FOCO. Gêmeos aprende tudo, mas precisa de raiz."
+
+tarot_relacionado:
+  carta: "Os Gêmeos (VI de Ouros) / O Mago (I)"
+  conexao: "Gêmeos é versatilidade pura, múltiplas vozes, aprendizado constante."
+
+foco_especial:
+  infantil: "A criança Gêmeos adora perguntar, aprender, se comunicar. Precisa de estímulo, variedade."
+  familiar: "O irmão, o primo, o que traz notícias."
+  carmico_espiritual: "Gêmeos indica a LIÇÃO DE COMUNICAÇÃO. Casa Gêmeos = onde a pessoa aprende a ouvir e falar."
+
+ver_mais:
+  - "../03_Signos/Gemeos.yaml"
+

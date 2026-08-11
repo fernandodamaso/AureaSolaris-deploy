@@ -1,0 +1,56 @@
+﻿status: draft
+id: "decanato_libra_1"
+nome: "Decanato 1 de Libra (0°–10°) — Libra puro"
+tradicoes:
+  - "convenção por signos da mesma triplicidade"
+  - "camada simbólica moderna atribuída"
+regente: "Vênus (Libra/Vênus na convenção por triplicidade; face caldaica correspondente: Lua)"
+
+origens_e_divergencias:
+  sistema_adotado: "Convenção posterior/moderna por signos da mesma triplicidade: 0°–<10° de Libra recebe a cor de Libra/Vênus."
+  faces_caldaicas: "A face caldaica correspondente é Lua; as tabelas divergem."
+  decanos_egipcios: "Sistema distinto, que exige tabela própria."
+  nota: "Equinócio e Balança são camadas culturais/simbólicas, não demonstração de regência técnica."
+
+calculo_e_escopo:
+  intervalo: "Libra tropical 0°–<10°; 10° exatos iniciam o segundo decanato."
+  uso: "Refinamento opcional após julgamento do planeta, casa e técnica."
+  camada_simbolica: "Harmonia e mediação são associações atribuídas; não determinam comportamento relacional."
+referencias:
+  - autor: "Engenharia Astrológica"
+    obra: "Decanatos"
+    natureza: "fonte editorial"
+    localizador: "Tabela comparativa em 03_Signos/Decanatos.yaml."
+  - autor: "Cláudio Ptolomeu"
+    obra: "Tetrabiblos"
+    natureza: "primária histórica"
+    localizador: "Faces; a faixa caldaica é Lua."
+limite_documental: "Permanece draft: falta fonte específica para esta convenção por triplicidade e seus símbolos."
+atlas_simbolico:
+  pessoas_arquetipos: "O Brisa harmoniosa, o que expressa Ar Cardinal"
+  lugares_fisicos: "Lugares de Ar Cardinal"
+  objetos_materia: "Objetos de Ar Cardinal"
+  eventos_tipicos: "Eventos de Ar Cardinal"
+  animais: "Animais de Ar Cardinal"
+  plantas_ervas: "Plantas de Ar Cardinal"
+  metais_pedras: "Metais de Ar Cardinal"
+  cores_sons: "Cores de Ar Cardinal"
+  numeros: "Números de Ar Cardinal"
+  dias_semana: "Dias de Ar Cardinal"
+  doencas_corpo: "Partes do corpo de Ar Cardinal"
+  arquetipos_mitologicos: "Arquétipos de Ar Cardinal"
+  mitos_historias: "Mitologias de Ar Cardinal"
+  sonhos_simbolos_inconsciente: "Símbolos de Ar Cardinal"
+  expressao_elevada_sombra: "Elevada: Ar Cardinal consciente | Sombra: Ar Cardinal descontrolado"
+
+camada_energetica:
+  impressao_mental: "Libra cru — busca de equilíbrio, harmonia, 'o que é justo'. A mente opera pelo espelhamento."
+  permeacao_emocional: "Necessidade de relação e beleza; medo do desacordo."
+  manifestacao_externa: "Eventos PROVÁVEIS de encontros, acordos, mediações. Arquétipos: a Balança, o Artista. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a equilibrar SEM anular-se — o 1º decanato de Libra pode 'dar razão ao outro' para ter paz."
+
+porque_simbolico: "Vênus rege Libra = planeta da harmonia e da beleza. 0° de Libra = equinócio de outono — dia e noite IGUAIS, a justiça é o ponto de equilíbrio."
+foco_especial:
+  relacional_familiar: "Criança com Sol/ASC/Vênus em Libra 1 = criança que 'apazigua' conflitos no lar."
+
+

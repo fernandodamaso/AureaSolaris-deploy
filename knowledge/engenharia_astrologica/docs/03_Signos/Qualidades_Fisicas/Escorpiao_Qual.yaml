@@ -1,0 +1,53 @@
+status: review
+id: escorpiao_qualidades
+nome: Escorpião — Qualidades Físicas
+cor: Preto, vermelho-sangue, roxo-intenso, marrom-fogo
+parte_do_corpo: Órgãos sexuais, sistema excretor, bexiga, reto
+tradicoes: [tradicional, médica histórica, moderna, editorial]
+elemento_fisico: Água
+qualidade_termica: Fria e úmida
+origens_e_divergencias:
+  tradicional: "A melothesia associa Escorpião aos órgãos genitais e excretores. Marte sustenta imagens de ferro, corte, calor e vermelho; a água é fria e úmida na classificação elementar."
+  moderna: "Plutão, plutônio, psicologia de morte/renascimento e compulsão são sobreposições modernas, não correspondências antigas."
+  nota: "Distinguir a regência tradicional de Marte da corregência moderna de Plutão e evitar converter metáfora em patologia."
+atlas_simbolico:
+  pessoas_arquetipos: Mago, xamã, cirurgião, detetive, psiquiatra, herdeiro, estrategista
+  lugares_fisicos: Lugares profundos, subterrâneos, penínsulas, fontes termais, cemitérios
+  objetos_materia: Faca de cirurgia, espada, veneno, elixir, ouro, pedras preciosas escuras
+  eventos_tipicos: Morte/renascimento, heranças, cirurgias, investigações, transformações
+  animais: Escorpião, serpente, lobo, abutre, phoenix, crocodilo
+  plantas_ervas: Papoula, cannabis, açafrão, ruibarbo, mandrágora, heléboro
+  metais_pedras: "Ferro (Marte, tradicional); plutônio (analogia moderna com Plutão); obsidiana, granada, topázio escuro e rubi variam por tabela"
+  cores_sons: Vermelho-escuro, preto, marrom; notas Dó e Sol; tambor, órgão
+  numeros: 4 (morte/renascimento), 8 (transformação), 13 (morte/renascimento tarot)
+  dias_semana: Terça-feira (dia de Marte/Plutão)
+  doencas_corpo: "Na medicina astrológica histórica: genitais, bexiga e reto. Próstata, sangue e outras extensões variam por autor. Não usar para diagnóstico."
+  arquetipos_mitologicos: Hades/Plutão, Perséfone, Hécate, Esculápio, Anúbis
+  mitos_historias: Rapto de Perséfone; Esculápio e a ressurreição; Hércules e a Hidra
+  sonhos_simbolos_inconsciente: Águas profundas, escorpiões, morte, renascimento, tesouros ocultos
+  expressao_elevada_sombra: 'Elevada: regeneração profunda, cura pelo confronto, sexualidade sagrada | Sombra: vingança, manipulação, ciúme destrutivo, controle'
+camada_energetica:
+  impressao_mental: A cor preta/vermelha no mapa = 'mente que desce ao fundo'.
+  permeacao_emocional: Intensidade, magnetismo, 'o que está oculto'.
+  manifestacao_externa: "A Fênix é um arquétipo moderno possível; olhar, sexualidade, aparência e estilo não se inferem de Escorpião isoladamente."
+  como_guiar_o_astral: "Comparar Marte tradicional e Plutão moderno ao estudar transformação; nenhuma cor ou ritual recebe promessa causal."
+porque_simbolico: 'Escorpião = ORGÃOS SEXUAIS/EXCRETORES — são os órgãos da ''morte e renascimento'' (sexo = vida; excreção = morte do resíduo). São o ''abismo'' do corpo.
+
+  PRETO = cor do ABISMO. VERMELHO-SANGUE = cor da VIDA que brota da dor.
+
+  '
+leitura_corporal:
+  regra: "Escorpião corresponde à região genital e excretora na melothesia; a leitura de regeneração é uma elaboração simbólica."
+  uso: "Estudo histórico e comparativo, nunca inferência clínica ou sexual sobre uma pessoa."
+aparencia_nas_tradicoes:
+  descricao: "Autores modernos descrevem o tipo escorpiano como olhar concentrado ou penetrante, feições marcadas e presença magnética."
+  porque: "A imagem reúne Marte, água fixa, segredo e, modernamente, Plutão e intensidade psíquica."
+  variantes: "A tradição marciana não é idêntica ao modelo plutoniano moderno; algumas escolas só aplicam fisionomia ao Ascendente e seus regentes."
+  limite: "Preservar como crença interpretativa; não inferir sexualidade, periculosidade, trauma ou doença pela aparência."
+referencias:
+  - {autor: "Claudius Ptolemy", obra: "Tetrabiblos", natureza: "primária histórica", localizador: "Livro I; signos, Marte e membros do corpo."}
+  - {autor: "Nicholas Culpeper", obra: "Astrological Judgement of Diseases from the Decumbiture of the Sick", natureza: "primária histórica", localizador: "Correspondências médico-astrológicas; consultar edição utilizada."}
+  - {autor: "Liz Greene", obra: "The Astrology of Fate", natureza: "secundária moderna", localizador: "Leitura psicológica de Plutão e transformação; não é fonte da melothesia antiga."}
+validacao_de_fontes:
+  base: "A ficha separa água fria/úmida, Marte tradicional e Plutão moderno."
+  limite: "Não usar para diagnóstico, inferência de sexualidade, vício ou personalidade."

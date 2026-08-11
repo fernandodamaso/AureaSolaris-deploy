@@ -1,0 +1,59 @@
+﻿status: review
+id: "quincuncio"
+nome: "Quincúncio"
+angulo: "150°"
+natureza: "ajuste (desajuste, necessidade de adaptação)"
+
+origens_e_divergencias:
+  tradicional: "O quincúncio de 150° não integra os cinco aspectos maiores de Ptolomeu. Em muito material helenístico, signos a 150° estão em aversão (sem aspecto por signo); isso não é idêntico ao aspecto moderno por grau."
+  moderna: "A leitura como ajuste, descompasso ou exigência de adaptação é sobretudo moderna. Uso médico, cármico ou psicológico deve ser atribuído à escola, não apresentado como consenso tradicional."
+  nota: "O cálculo deve informar se usa aspecto por longitude, relação por signo, orbe e política de aplicação/separação."
+atlas_simbolico:
+  pessoas_arquetipos: "O ajustador, o curandeiro, o desajustado"
+  lugares_fisicos: "Hospitais, locais de cura, fronteiras"
+  objetos_materia: "Ferramentas de ajuste, poções, instrumentos médicos"
+  eventos_tipicos: "Ajustes, crises de saúde, mudanças de hábito"
+  animais: "Serpente, escorpião, abutre"
+  plantas_ervas: "Papoula, açafrão, heléboro"
+  metais_pedras: "Ferro, obsidiana, granada"
+  cores_sons: "Vermelho-escuro, preto; notas Dó e Sol"
+  numeros: "5 (ajuste), 6 (cura), 9 (transformação)"
+  dias_semana: "Terça-feira (Marte), quarta-feira (Mercúrio)"
+  doencas_corpo: "Sistema digestivo, sistema nervoso"
+  arquetipos_mitologicos: "Esculápio, Hécate, Hermes/Mercúrio"
+  mitos_historias: "Esculápio e a cura; Hécate e os cruzamentos"
+  sonhos_simbolos_inconsciente: "Ajustes, crises, cura, fronteiras"
+  expressao_elevada_sombra: "Elevada: ajuste consciente, cura | Sombra: desajuste crônico, vícios"
+
+camada_energetica:
+  impressao_mental: "Duas correntes mentais sem 'tradução' uma para a outra (signos sem afinidade de elemento ou qualidade). Exige reajuste constante."
+  permeacao_emocional: "Desconforto sutil, 'algo não encaixa'. Pode virar ansiedade de fundo ou sensação de inadequação."
+  manifestacao_externa: "Eventos PROVÁVEIS de ajuste forçado, saúde, detalhe que escapa. Arquétipos: o Nó que não desata, a Peça Trocada. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a aceitar o que não dá para 'resolver' — só ajustar. O quincúncio ensina a flexibilidade sem exigir síntese."
+
+consenso_tradicional: "Não há consenso ptolomaico para tratar 150° como aspecto maior. A aversão por signo descreve ausência de relação configuracional; escolas posteriores podem usar quincúncio por grau como indicador de ajuste."
+arquetipos_simbolicos: ["O Nó que não desata", "A Peça Trocada", "O Ajuste kármico"]
+leitura_carmica: "Nota de escola: linhas cármicas podem ler o aspecto como tema de ajuste. Esta interpretação não deve ser entregue pelo motor como necessidade factual, dívida objetiva ou diagnóstico de vidas passadas."
+
+aplicativo_separativo: "Por ser aspecto de desajuste, o aplicativo traz o 'estranhamento chegando' (algo não encaixa e pede mudança); o separativo é o realinhamento final — o corpo/emocão se acomoda ao ajuste."
+
+exemplo_pratico: "Lua quincúncio Saturno: a necessidade emocional e a estrutura não se traduzem — a pessoa sente que 'nunca está pronta' ou que o cuidado exige sacrifício. Leitura: 'não tente resolver o desajuste; aceite que cuidado e ordem operam em frequências diferentes em você, e negocie os dois'."
+
+referencias:
+  - autor: "Cláudio Ptolomeu"
+    obra: "Tetrabiblos"
+    natureza: "primária histórica"
+    localizador: "Livro I; aspectos maiores e relações configuracionais, conferir tradução/edição."
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    natureza: "primária histórica"
+    localizador: "Livros I-II; relações por signo, aversão e configuração; conferir edição."
+  - autor: "Reinhold Ebertin"
+    obra: "The Combination of Stellar Influences"
+    natureza: "secundária moderna"
+    localizador: "Uso moderno de aspectos e pontos médios; não tratar como fonte helenística."
+
+validacao_de_fontes:
+  base: "A ficha separa a aversão tradicional do quincúncio moderno por longitude."
+  limite: "Não derivar doença, carma ou evento obrigatório exclusivamente deste aspecto."
+

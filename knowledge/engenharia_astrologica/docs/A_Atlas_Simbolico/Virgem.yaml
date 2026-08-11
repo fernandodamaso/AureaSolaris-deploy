@@ -1,0 +1,103 @@
+﻿status: review
+id: "virgem_atlas"
+nome: "Virgem — Atlas Simbólico"
+tradicoes:
+  - "atlas simbolico editorial"
+  - "sintese multiescola"
+tipo: "Atlas Simbólico"
+subtema: "Correspondências de Virgem"
+
+origens_e_divergencias:
+  tradicional: "Mercúrio — terra, análise, serviço, pureza."
+  moderna: "Mercúrio (mesmo). Sem divergência."
+  nota: "Regência unânime."
+
+atlas_simbolico:
+  pessoas_arquetipos:
+    - "O analista"
+    - "O curador"
+    - "O servidor"
+    - "O organizador"
+    - "O estudioso"
+    - "O perfeccionista"
+  lugares_fisicos:
+    - "Escritórios"
+    - "Bibliotecas"
+    - "Hospitais"
+    - "Laboratórios"
+    - "Fazendas"
+  objetos_materia:
+    - "Instrumentos cirúrgicos"
+    - "Livros"
+    - "Ferramentas"
+    - "Lupa"
+    - "Papiro"
+  eventos_tipicos:
+    - "Diagnósticos"
+    - "Organizações"
+    - "Estudos"
+    - "Serviços"
+    - "Cura"
+  animais:
+    - "Gato"
+    - "Cão pequeno"
+    - "Rato"
+    - "Abelha"
+    - "Formiga"
+  plantas_ervas:
+    - "Erva-doce"
+    - "Menta"
+    - "Alfazema"
+    - "Rosmaninho"
+    - "Camomila"
+  metais_pedras:
+    - "Mercúrio"
+    - "Ágata"
+    - "Jaspe"
+    - "Diamante (clareza)"
+  cores_sons:
+    cores: ["Verde-oliva", "Amarelo", "Marrom", "Cinza"]
+    sons: ["Ruído de papel", "Teclado", "Sino pequeno"]
+  numeros: [3, 5, 6]
+  dias_semana: ["Quarta-feira"]
+  doencas_corpo:
+    doencas: ["Problemas intestinais", "Ansiedade", "Neurose"]
+    partes_corpo: ["Intestinos", "Aparelho digestivo", "Sistema nervoso"]
+  arquetipos_mitologicos:
+    - "Deméter (agricultura, pureza)"
+    - "Héstia (serviço, lar)"
+    - "Hera (ordem, matrimônio)"
+  mitos_historias:
+    - "Deméter e Perséfone"
+    - "Héstia e o fogo sagrado"
+  expressao_elevada_sombra: "Elevada: análise, serviço, cura, perfeição construtiva | Sombra: perfeccionismo destrutivo, crítica excessiva, ansiedade"
+
+revisao_editorial:
+  origem_e_linguagem: "Virgem vem do latim virgo, 'jovem/moça'; a figura zodiacal e o signo tropical não devem ser tratados como descrição literal de sexo, pureza ou constelação."
+  mito_arquetipo_e_porque: "Colheita, grão, cuidado, discriminação e artesanato são imagens de estudo; Deméter, Astreia e outras figuras pertencem a mitos específicos."
+  limite_tecnico: "Mercúrio é regente tradicional. Serviço, saúde e perfeccionismo são leituras contextuais, não diagnósticos ou determinismos pessoais."
+referencias:
+  primarias:
+    - "Ptolomeu. Tetrabiblos, livro I: signos e qualidades, conforme edição declarada."
+  secundarias:
+    - "Rudhyar, Dane. The Astrological Signs: The Pulse of Life. Harper & Row, 1971."
+  tecnicas:
+    - "Ver 02_Astronomia/Zodiaco_Tropical.yaml e 04_Planetas/Mercurio.yaml."
+camada_energetica:
+  impressao_mental: "A mente que ANALISA e SERVE. Pensamento detalhado, busca da perfeição, 'como funciona?'."
+  permeacao_emocional: "Serviço como forma de amor. Quando saudável: cuidado. Quando ferido: crítica, perfeccionismo."
+  manifestacao_externa: "Eventos PROVÁVEIS de organização, cura, estudo, serviço. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a PERFEICIONAR SEM SE DESTRUIR. Virgem é o serviço, não a autocrítica."
+
+tarot_relacionado:
+  carta: "A Rainha de Ouros / O Eremita (IX)"
+  conexao: "Virgem é análise pura, serviço, pureza do método."
+
+foco_especial:
+  infantil: "A criança Virgem precisa de ordem, rotina, elogios pelo esforço."
+  familiar: "O membro que organiza e serve. O que traz cura."
+  carmico_espiritual: "Virgem indica a LIÇÃO DE SERVIÇO. Casa Virgem = onde a pessoa aprende a servir e curar."
+
+ver_mais:
+  - "../03_Signos/Virgem.yaml"
+

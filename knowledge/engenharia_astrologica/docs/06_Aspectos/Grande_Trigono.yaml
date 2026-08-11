@@ -1,0 +1,53 @@
+﻿status: review
+id: "grande_trigono"
+nome: "Grande Trígono"
+formato: "Três planetas em trígono mútuo (triângulo equilátero, mesmo elemento)"
+
+origens_e_divergencias:
+  tradicional: "O trígono é aspecto tradicional; o Grande Trígono como figura nomeada de três fatores é uma síntese moderna de três trígonos."
+  moderna: "Facilidade, talento, fluxo e acomodação são leituras modernas recorrentes, não propriedades garantidas do desenho."
+  nota: "Se os fatores estiverem em signos do mesmo elemento, há afinidade elementar; a figura, porém, deve ser verificada por longitude e orbes."
+escopo_documental:
+  significado: "Três fatores em trígonos recíprocos, formando triângulo por grau."
+  porque: "A leitura de circulação decorre do encadeamento de trígonos e, em algumas escolas, da afinidade elementar."
+  origem: "Trígono: antigo; nome e psicologia da configuração: modernos."
+  uso: "Checar os três trígonos, casas e condições planetárias antes de resumir a figura como facilidade."
+  divergencia: "Há escolas que a valorizam como apoio e outras que enfatizam inércia; ambas devem ser atribuídas e não fundidas como consenso."
+referencias:
+  - autor: "Cláudio Ptolomeu"
+    obra: "Tetrabiblos"
+    natureza: "primária histórica"
+    localizador: "Livro I; trígono e configurações, conferir edição."
+  - autor: "Dane Rudhyar"
+    obra: "The Astrology of Personality"
+    natureza: "secundária moderna"
+    localizador: "Padrões do mapa e leitura psicológica moderna; conferir edição."
+validacao_de_fontes:
+  base: "A ficha preserva a imagem do triângulo como camada simbólica, separada da geometria."
+  limite: "Não anunciar talento, sorte ou estagnação sem contexto dos planetas envolvidos."
+atlas_simbolico:
+  pessoas_arquetipos: "O mestre, o artista supremo, o fluente"
+  lugares_fisicos: "Jardins, templos, espaços de harmonia"
+  objetos_materia: "Obras de arte, instrumentos musicais, jóias"
+  eventos_tipicos: "Sucessos fáceis, criações, harmonia duradoura"
+  animais: "Cisne, golfinho, pavão, fênix"
+  plantas_ervas: "Rosa, lírio, girassol, oliveira"
+  metais_pedras: "Ouro, prata, esmeralda, safira"
+  cores_sons: "Verde, azul, violeta; notas Lá e Ré"
+  numeros: "3 (trindade), 6 (harmonia), 8 (fluxo)"
+  dias_semana: "Sexta-feira (Vênus), quinta-feira (Júpiter)"
+  doencas_corpo: "Sistema circulatório, rins, pele"
+  arquetipos_mitologicos: "Apolo, Atena, Dioniso"
+  mitos_historias: "Apolo e a música; Dioniso e o êxtase"
+  sonhos_simbolos_inconsciente: "Música, arte, jardins, harmonia"
+  expressao_elevada_sombra: "Elevada: talento fluido, criatividade suprema | Sombra: complacência, estagnação"
+
+camada_energetica:
+  impressao_mental: "Fluxo natural entre três áreas — a mente 'circula' fácil entre elas, sem atrito."
+  permeacao_emocional: "Paz e facilidade, mas risco de acomodação (o dom corre solto e atrofia)."
+  manifestacao_externa: "Eventos PROVÁVEIS de oportunidade encadeada. Arquétipos: o Triângulo de Ouro, o Rio. Inclinação, não destino."
+  como_guiar_o_astral: "Celebrar o dom, mas instigar DESAFIO — o grande trígono precisa de propósito para não estagnar."
+
+consenso_tradicional: "Aspecto de grande facilidade; na moderna, 'talento que pode atrofiar sem esforço'."
+arquetipos_simbolicos: ["O Triângulo de Ouro", "O Rio que corre só"]
+

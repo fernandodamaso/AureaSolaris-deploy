@@ -1,0 +1,50 @@
+status: review
+id: "grau_29_anaretic"
+nome: "29°: Grau Anarético na Astrologia Moderna"
+tipo: "Grau astrológico"
+tradicoes: ["simbólica moderna", "cármica moderna", "história da astrologia tradicional"]
+
+escopo:
+  definicao: "O intervalo 29°00'00''–29°59'59'' é o último grau numérico de um signo. Muitas escolas modernas o chamam de anarético e o interpretam como culminação, urgência ou transição."
+  convencao_ordinal: "Esse intervalo corresponde ao 30º grau quando os graus são contados ordinalmente."
+
+etimologia_e_historia:
+  etimologia: "Do grego anairetēs, 'destruidor' ou 'aquele que tira'. Na astrologia tradicional, anareta designa um significador destrutivo ou relacionado à duração da vida em técnicas específicas; não era simplesmente sinônimo universal de 29°."
+  moderna: "O uso corrente de 'anaretic degree' para 29° pertence sobretudo à astrologia moderna. Correntes cármicas podem lê-lo como conclusão de aprendizado ou passagem entre ciclos."
+  correcao: "Não atribuir a Ptolomeu uma regra universal '29° = grau cármico/do abandono' sem passagem e tradição intermediária demonstradas."
+
+calculo:
+  regra: "grau_no_signo = longitude_ecliptica mod 30; classificar como 29° quando 29 <= grau_no_signo < 30."
+  cautela_de_arredondamento: "28°59'59.6'' pode ser exibido como 29° por arredondamento, mas sua classe depende da precisão interna. Guardar valor bruto."
+  ingresso: "A distância até o signo seguinte é 30° - grau_no_signo; isso não cria automaticamente aspecto ou evento."
+
+camadas_de_leitura:
+  moderna: "Culminação, intensidade, urgência, domínio incompleto ou necessidade de integração da função planetária."
+  carmica: "Algumas escolas veem memória de experiência, tarefa de fechamento e passagem para uma nova qualidade. Essa leitura deve ser desenvolvida dentro da linhagem adotada, sem ser imposta como universal."
+  arquetipos: ["limiar", "colheita", "última vigília", "porta entre signos", "fim que prepara começo"]
+  divergencias:
+    - "Alguns autores enfatizam crise; outros maturidade ou concentração."
+    - "Signos, planetas, casas, dignidades e aspectos alteram a interpretação."
+    - "Listas de graus críticos tradicionais ou modernas não são uniformes."
+
+uso_interpretativo:
+  metodo:
+    - "Confirmar grau sem arredondamento e distinguir 29° numérico de 29º ordinal."
+    - "Interpretar a condição completa do planeta."
+    - "Nomear a escola antes de acrescentar urgência, encerramento ou karma."
+    - "Buscar repetição simbólica; um grau isolado não governa o mapa."
+  limites:
+    - "Não predizer morte, crise, maturidade precoce ou destino obrigatório."
+    - "Em mapa infantil, não rotular a criança como velha, carregada ou destinada a concluir dívida familiar."
+
+referencias:
+  primarias:
+    - "Ptolemy. Tetrabiblos, livro III, capítulos sobre extensão da vida; para o contexto tradicional de anareta."
+  secundarias:
+    - "Holden, James H. A History of Horoscopic Astrology. AFA, 1996."
+    - "Rudhyar, Dane. An Astrological Mandala. Vintage, 1974; para simbolismo moderno grau a grau."
+  tecnicas: []
+
+relacoes:
+  depende_de: ["graus_geral"]
+  ver_tambem: ["grau_zero", "graus_criticos", "astrologia_carmica"]

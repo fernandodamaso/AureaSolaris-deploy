@@ -1,0 +1,58 @@
+﻿status: review
+id: "sesquiquadrato"
+nome: "Sesquiquadrato"
+angulo: "135°"
+natureza: "tensão (como a quadratura, mas mais instável)"
+
+origens_e_divergencias:
+  tradicional: "O sesquiquadrato de 135° não pertence aos cinco aspectos maiores de Ptolomeu. É aspecto menor de tradição moderna, relacionado à divisão do círculo por oito."
+  moderna: "A leitura de irritação, tensão ou necessidade de ajuste é convenção interpretativa; não equivale à quadratura de 90° nem possui peso universal."
+  nota: "O termo significa literalmente uma quadratura e meia. Não confundir com semiquadratura (45°)."
+escopo_documental:
+  significado: "Aspecto menor por longitude de 135° (3/8 do círculo)."
+  porque: "Deriva da família harmônica do oito, que algumas escolas modernas usam para observar atrito e mobilização."
+  origem: "Pós-ptolomaico; difundido em repertórios modernos de aspectos menores."
+  uso: "Avaliar com orbe estreito definido pelo perfil; comparar com quadraturas, oposições e condições dos planetas."
+  divergencia: "Há desacordo tanto sobre o orbe quanto sobre sua intensidade; muitas escolas o omitem."
+referencias:
+  - autor: "Reinhold Ebertin"
+    obra: "The Combination of Stellar Influences"
+    natureza: "secundária moderna"
+    localizador: "Aspectos e relações modernas; conferir edição."
+  - autor: "John Addey"
+    obra: "Harmonics in Astrology"
+    natureza: "secundária moderna"
+    localizador: "Famílias harmônicas e relações angulares; conferir edição."
+validacao_de_fontes:
+  base: "A ficha identifica a origem moderna e a etimologia do termo."
+  limite: "Não tratar sesquiquadrato como quadratura plena nem como causa suficiente de crise."
+atlas_simbolico:
+  pessoas_arquetipos: "O desafiador, o construtor sob tensão"
+  lugares_fisicos: "Campos de batalha, construções, locais de desafio"
+  objetos_materia: "Ferramentas de tensão, estruturas desafiadoras"
+  eventos_tipicos: "Desafios, crises construtivas, tensão produtiva"
+  animais: "Touro, escorpião, lobo"
+  plantas_ervas: "Alecrim, urtiga, plantas espinhosas"
+  metais_pedras: "Ferro, aço, jaspe"
+  cores_sons: "Vermelho, marrom; notas Si e Dó"
+  numeros: "4 (tensão), 8 (desafio), 12 (crise)"
+  dias_semana: "Terça-feira (Marte), sábado (Saturno)"
+  doencas_corpo: "Ossos, articulações, sistema digestivo"
+  arquetipos_mitologicos: "Hércules, Teseu, Prometeu"
+  mitos_historias: "Os 12 trabalhos; Prometeu acorrentado"
+  sonhos_simbolos_inconsciente: "Tensões, desafios, construções"
+  expressao_elevada_sombra: "Elevada: tensão como alavanca | Sombra: tensão paralisante"
+
+camada_energetica:
+  impressao_mental: "Semelhante à quadratura, mas com 'dobra' — a tensão vem em surtos e é mais difícil de localizar."
+  permeacao_emocional: "Irritação crônica de fundo, impaciência que explode e some."
+  manifestacao_externa: "Eventos PROVÁVEIS de crises repetitivas que pedem ajuste. Arquétipos: a Mola Tensionada, o Curto-circuito. Inclinação, não destino."
+  como_guiar_o_astral: "Mostrar que a tensão é cíclica — identificar o gatilho evita o curto-circuito."
+
+consenso_tradicional: "Visto como 'quadratura menor/instável'."
+arquetipos_simbolicos: ["A Mola tensionada", "O Curto-circuito"]
+
+aplicativo_separativo: "Aplicativa: a tensão se ARMA (o gatilho se aproxima). Separativa: a tensão se DESARMA (o ciclo esfria)."
+
+exemplo_pratico: "Marte sesquiquadrato Lua: irritação que vem 'do nada' e some — a ação e a emoção se chocam em surtos. Leitura: 'identifique o gatilho; a raiva não é do outro, é o curto-circuito interno'."
+

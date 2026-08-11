@@ -1,0 +1,77 @@
+﻿status: review
+
+id: "qualidades_fisicas"
+nome: "Qualidades Físicas (Planetas, Signos, Decanatos)"
+tradicoes:
+  - "editorial"
+  - "correspondencias simbolicas"
+tema: "Cor, planta, metal, parte do corpo, qualidade térmica, umidade, elemento físico — e overlay chakra (rotulado como sincretismo)"
+
+origens_e_divergencias:
+  tradicional: "Doutrina das Assinaturas (Culpeper/Agrippa) — cor, metal, planta, elemento físico."
+  moderna: "Astrologia psicológica (Liz Greene) — corpo como linguagem simbólica + overlay chakra (sincretismo)."
+  divergencia: "Chakras NÃO são astrológicos (tântrica/hindu). Incluir rotulado como overlay sincretico, não como canônico."
+
+limites_de_uso:
+  - "Correspondências corporais, botânicas, metálicas e cromáticas pertencem a sistemas históricos de correspondência; não são evidência clínica nem regra de diagnóstico."
+  - "O overlay de chakras é um sincretismo contemporâneo de estudo e não uma doutrina canônica da astrologia ocidental nem da tradição tântrica."
+  - "Aparência, saúde e temperamento não devem ser inferidos como certezas a partir de um único fator do mapa."
+
+essencia:
+  - "Cada planeta tem cor, metal, qualidade térmica (quente/frio/seco/úmido)"
+  - "Cada signo tem cor, parte do corpo, elemento físico"
+  - "Cada decanato tem nuance física"
+  - "Chakras = OVERLAY sincretico (não-canônico; tradição tântrica/hindu sobreposta). Rotular como tal."
+atlas_simbolico:
+  pessoas_arquetipos: "O físico, o que manifesta, o corpo"
+  lugares_fisicos: "Lugares de corpo: superfície, limites"
+  objetos_materia: "Corpo, instrumentos de medida"
+  eventos_tipicos: "Eventos de corpo: saúde, doença, transformação"
+  animais: "Todos os animais"
+  plantas_ervas: "Todas as plantas"
+  metais_pedras: "Todos os metais e pedras"
+  cores_sons: "Todas as cores e sons"
+  numeros: "Todos os números"
+  dias_semana: "Todos os dias"
+  doencas_corpo: "Todo o corpo"
+  arquetipos_mitologicos: "Todos os arquétipos"
+  mitos_historias: "Todas as mitologias"
+  sonhos_simbolos_inconsciente: "Todos os sonhos"
+  expressao_elevada_sombra: "Elevada: corpo consciente | Sombra: corpo negado"
+
+camada_energetica:
+  campo_mental: "O corpo físico é a 'roupa' do mapa — a cor do planeta no signo 'pinta' a expressão física do nativo."
+  permeacao_emocional: "A cor que a pessoa 'sente como sua' frequentemente é a cor do signo/planeta dominante."
+  manifestacao_externa: "Aparência, saúde, estilo, 'aura' — tudo manifesta a cor do mapa. Inclinação, não destino."
+  como_guiar_o_astral: "Usar como 'linguagem simbólica' — não como predição de aparência, mas como chave de leitura."
+
+topicos:
+  - "Planetas: cor, metal, qualidade térmica, umidade, parte do corpo"
+  - "Signos: cor, parte do corpo (Zodíaco Anatômico), elemento físico"
+  - "Decanatos: nuance de cor/textura"
+  - "Chakras: overlay sincretico (7 chakras × 7 planetas/signos — ver nota)"
+  - "Doutrina das Assinaturas (Culpeper/Agrippa): planta = planeta"
+
+nota_chakras: "Chakras NÃO são astrológicos. São tradição tântrica/hindu. O overlay 'chakra por planeta/signo' é SINCRETISMO Nova Era moderno — incluir rotulado como tal, não como canônico."
+overlay_chakras_sugerido:
+  - "Raiz (1º): Saturno/Capricórnio — base, estrutura, 'chão'"
+  - "Sacro (2º): Vênus/Touro — prazer, corpo, 'sentir'"
+  - "Plexo Solar (3º): Marte/Áries — ação, fogo, 'vou'"
+  - "Coração (4º): Sol/Leão — centro, amor, 'brilho'"
+  - "Garganta (5º): Mercúrio/Gêmeos — comunicação, 'falo'"
+  - "Terceira Visão (6º): Lua/Câncer — imaginação, 'sinto'"
+  - "Coroa (7º): Netuno/Peixes — transcendência, 'uno'"
+
+foco_especial:
+  infantil: "Criança com 'cor de planeta dominante' tende a se vestir/brincar com aquela cor — é simbólico, não moda."
+  familiar: "A 'cor da família' (planetas angulares) aparece na decoração, roupas, gostos."
+
+referencias:
+  primarias:
+    - "Agrippa, Heinrich Cornelius. Three Books of Occult Philosophy, livro I: correspondências planetárias, metais, cores e plantas."
+    - "Culpeper, Nicholas. The English Physitian / Complete Herbal, 1653: regências e virtudes atribuídas às plantas."
+  secundarias:
+    - "Rudhyar, Dane. The Astrology of Personality. Lucis Publishing, 1936; para leitura simbólica moderna."
+  tecnicas:
+    - "A camada médica permanece estudo histórico-simbólico; consultar 10_Astrologia_Medica/ e 15_Medicina/ com seus limites explícitos."
+

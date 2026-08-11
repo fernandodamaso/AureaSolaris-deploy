@@ -1,0 +1,63 @@
+﻿status: review
+id: "casa_1_atlas"
+nome: "Casa 1 — A Procissão / O Eu"
+tradicoes:
+  - "atlas simbolico editorial"
+  - "sintese multiescola"
+tipo: "Atlas Simbólico"
+subtema: "Correspondências da Casa 1"
+
+origens_e_divergencias:
+  tradicional: "Ptolomeu (Tetrabiblos) — significados tradicionais das 12 casas."
+  moderna: "Astrologia psicológica/sistêmica — casas como áreas de desenvolvimento."
+  nota: "Revisar ao citar — marca a escola usada."
+
+atlas_simbolico:
+  pessoas_arquetipos: "O Eu, a primeira impressão, a identidade pura, o espelho"
+  lugares_fisicos: "Lares, lugares de nascimento, frente de casas, espelhos"
+  objetos_materia: "Espelhos, fotografias, crachás, documentos de identidade"
+  eventos_tipicos: "Nascimentos, novos começos, mudanças de aparência, identidade"
+  animais: "Cão de guarda, falcão, águia, carneiro"
+  plantas_ervas: "Alecrim, menta, urtiga, plantas espinhosas"
+  metais_pedras: "Ferro, aço, diamante, jaspe"
+  cores_sons:
+    cores: ["Vermelho", "dourado"]
+    sons: ["Dó", "Si"]
+  numeros: [1]
+  dias_semana: ["Domingo (Sol)"]
+  doencas_corpo:
+    doencas: ["Cabeça", "olhos", "face", "sistema nervoso central"]
+    partes_corpo: ["Cabeça", "olhos", "face", "sistema nervoso central"]
+  arquetipos_mitologicos:
+    - "Janus (portas)"
+    - "Hermes (mensageiro)"
+    - "Apolo (luz)"
+  mitos_historias: "Janus e as duas faces; Apolo e a luz do dia"
+  sonhos_simbolos_inconsciente: "Espelhos, nascimentos, máscaras, rostos"
+  expressao_elevada_sombra: "Elevada: identidade autêntica, iniciativa corajosa | Sombra: ego inflado, máscaras, identidade frágil"
+
+revisao_editorial:
+  origem_e_linguagem: "A primeira casa é o lugar ascendente/horizonte oriental em sistemas de casas; 'eu' e procissão são imagens pedagógicas, não etimologia única."
+  mito_arquetipo_e_porque: "Entrada, rosto, começo e encarnação explicam o porquê simbólico da casa; são mapas de linguagem e não prova de aparência ou caráter."
+  limite_tecnico: "A casa depende de hora/local e sistema de casas declarado. Signo natural de Áries é analogia moderna, não substituto de cálculo."
+referencias:
+  primarias:
+    - "Vettius Valens. Anthology: lugares e Ascendente, conforme tradução/edição declarada."
+  secundarias:
+    - "Houlding, Deborah. The Houses: Temples of the Sky. The Wessex Astrologer, 1996."
+  tecnicas:
+    - "Declarar sistema de casas, UTC, local e coordenadas antes da interpretação."
+camada_energetica:
+  impressao_mental: "Foco na própria identidade e iniciativa. 'Como eu parto?'"
+  permeacao_emocional: "Autoimagem, 'como eu me sinto sendo eu'."
+  manifestacao_externa: "Eventos prováveis de 'novo começo', identidade. Arquétipos: o Espelho, o Primeiro. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a 'ser sem máscara' — Casa 1 é o EU sem filtro."
+
+significados_derivados:
+  corpo: "Casa 1 = corpo físico (primeira casa = pele/cabeça)."
+  identidade: "Quem eu sou, como me apresento, 'a máscara que uso' (no bom sentido)."
+  primeira_impressao: "Como o mundo te vê na primeira olhada (diferente de Casa 10 que é reputação consolidada)."
+
+ver_mais:
+  - "../05_Casas/Casa_1.yaml"
+

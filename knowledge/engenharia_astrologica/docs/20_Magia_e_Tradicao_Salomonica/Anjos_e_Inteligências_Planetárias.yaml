@@ -1,0 +1,47 @@
+status: review
+id: "anjos_inteligencias_planetarias"
+nome: "Anjos e Inteligências Planetárias"
+tradicoes:
+  - "renascentista"
+  - "salomonica"
+  - "hermetica"
+tema: "Hierarquia angelical e inteligências operativas ligadas aos planetas."
+
+essencia:
+  - "Alguns textos de magia astrológica e renascentista associam inteligências, espíritos ou nomes angélicos aos planetas; terminologia e hierarquias variam entre fontes."
+  - "'Inteligência', anjo, espírito e arcanjo não são categorias universalmente equivalentes nas tradições judaica, cristã, hermética e salomônica."
+  - "Usados em invocações, trabalhos planetários, meditações guiadas."
+
+origens_e_divergencias:
+  tradicional: "Agrippa, literatura mágico-astrológica renascentista e textos salomônicos; distinguir esse material do Corpus Hermeticum filosófico e das teologias judaica/cristã."
+  moderna: "New Age e ocultismo contemporâneo transformam em arquétipos psicológicos."
+  nota: "Manter distinção entre técnica astrológica e prática mágica; usar como overlay."
+
+referencias:
+  - autor: "Heinrich Cornelius Agrippa"
+    obra: "Three Books of Occult Philosophy"
+    natureza: "fonte primária renascentista"
+    localizador: "Livro II–III, hierarquias e correspondências; conferir edição"
+  - autor: "Claire Fanger (ed.)"
+    obra: "Invoking Angels: Theurgic Ideas and Practices, Thirteenth to Sixteenth Centuries"
+    ano: 2012
+    natureza: "secundária historiográfica"
+    localizador: "Contexto histórico de práticas teúrgicas e angelológicas"
+
+camada_energetica:
+  impressao_mental: "Ver os planetas também como presenças inteligentes, não só forças."
+  permeacao_emocional: "Abertura sagrada, intencionalidade, respeito pelo invisível."
+  manifestacao_externa: "Práticas guiadas, meditações, invocações simbólicas."
+  como_guiar_o_astral: "Usar como linguagem simbólica; o timing astrológico continua sendo a estrutura."
+
+categorias:
+  anjos: "Força planetária com vontade própria na tradição."
+  inteligencias: "Função operativa do planeta."
+  arcanjos: "Governantes de esferas planetárias superiores."
+
+ver_mais:
+  - "../20_Magia_e_Tradicao_Salomonica/Picatrix.yaml"
+  - "../20_Magia_e_Tradicao_Salomonica/magia_salomonica.yaml"
+
+## ✏️ Minhas Anotações
+

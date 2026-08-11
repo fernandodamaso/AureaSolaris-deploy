@@ -1,0 +1,146 @@
+status: review
+id: "ceres"
+tradicoes:
+  - "moderna"
+  - "psicológica"
+  - "mitológica"
+escopo_documental:
+  tecnica_historica:
+    - "história da descoberta de Ceres e sua entrada na astrologia moderna"
+  camadas_modernas: "A correspondência Deméter/Ceres, nutrição, perda e retorno é uma leitura moderna/mitológica; não é dignidade tradicional dos sete planetas."
+referencias:
+  - autor: "Demetra George"
+    obra: "Asteroid Goddesses"
+    natureza: "secundária/moderna"
+    localizador: "Ceres e asteroides; conferir edição e capítulos"
+  - autor: "Liz Greene"
+    obra: "Astrology: A Cosmic Science"
+    natureza: "secundária/moderna"
+    localizador: "Contexto psicológico moderno; conferir edição"
+validacao_de_fontes:
+  base: "As refer?ncias estruturadas sustentam a camada hist?rica ou moderna explicitamente declarada para este corpo."
+  escopo: "Mitologia, psicologia, evolu??o, medicina, sist?mica e Atlas permanecem camadas de estudo rotuladas, sem substituir dado astron?mico ou regra de escola."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+nome: "Ceres (Asteroide 1 Ceres)"
+tipo: "Asteroide/Dwarf Planet"
+tradicao_primaria: ["moderna", "psicológica", "evolutiva"]
+
+essencia:
+  - "Nutrição"
+  - "Fertilidade"
+  - "Maternidade"
+  - "Cuidado"
+
+atlas_simbolico:
+  pessoas_arquetipos:
+    - "Mãe agrícola"
+    - "Nutricionista"
+    - "Cuidador de crianças"
+    - "Agricultor"
+    - "Mãe que devora (sombra)"
+    - "Pessoa com distúrbio alimentar"
+  lugares:
+    - "Fazenda"
+    - "Cozinha grande"
+    - "Supermercado"
+    - "Despensa"
+    - "Silo de grãos"
+    - "Mercado público"
+  objetos_materia:
+    - "Trigo, espiga"
+    - "Romã"
+    - "Faca de cozinha"
+    - "Pão"
+    - "Cesto de frutas"
+    - "Medidor de alimentos"
+    - "Balança de cozinha"
+  eventos_tipicos:
+    - "Gravidez"
+    - "Nutrição de filhos"
+    - "Crise alimentar"
+    - "Colheita"
+    - "Aborto espontâneo"
+    - "Compulsão alimentar"
+    - "Desnutrição"
+  animais:
+    - "Vaca"
+    - "Porco (fertilidade)"
+    - "Abelha (polinização)"
+    - "Coelho (reprodução)"
+    - "Cavalo de carga"
+    - "Pomba (pão)"
+  plantas_ervas:
+    - "Trigo"
+    - "Romã"
+    - "Centeio"
+    - "Linho"
+    - "Erva-moura"
+    - "Uva"
+    - "Azeitona"
+  metais_pedras:
+    - "Cobre"
+    - "Prata"
+    - "Barro"
+    - "Ágata"
+    - "Pérola"
+    - "Coral"
+  cores_sons:
+    cores: ["Verde-terra", "Marrom", "Dourado-palha", "Branco-leite"]
+    sons: ["Moinho de vento", "Crocante de pão", "Canto de galo", "Ferro batendo"]
+  numeros: [3, 10, 12, 27, 40]
+  dias_semana: ["Segunda-feira (compartilhado com Lua)"]
+  doencas_corpo:
+    doencas: ["Problemas digestivos", "Anorexia/bulimia", "Distúrbios alimentares", "Problemas estomacais"]
+    partes_corpo: ["Estômago", "Útero", "Ovários", "Sistema digestivo"]
+  arquetipos_mitologicos:
+    - "Ceres/Deméter (mãe agrícola, luto por Perséfone)"
+    - "Deméter (estação do inverno = luto materno)"
+    - "Perséfone (filha perdida, retorno)"
+    - "Cibele (mãe dos deuses)"
+  mitos_historias:
+    - "Deméter e Perséfone (mãe que perde a filha = inverno)"
+    - "Ceres e a fundação de Ceres (cidade romana)"
+    - "Mito de Ceres e Triptólemo (ensino da agricultura)"
+    - "Rapto de Perséfone (perda da inocência)"
+  sonhos_inconsciente:
+    - "Trigo dourado = abundância materna"
+    - "Fome em sonho = necessidade de nutrição emocional"
+    - "Perder filho = medo de perda do que se nutre"
+    - "Cozinha vazia = vazio materno"
+    - "Comida estragada = nutrição emocional envenenada"
+  expressao_elevada_vs_sombra:
+    elevada: "Nutridor sábio, que alimenta sem sufocar, que respeita o ciclo de perda e retorno."
+    sombra: "Mãe que devora, obsessão por controle alimentar, 'doar para receber amor', dependência emocional."
+
+camada_energetica:
+  impressao_mental: "A mente de 'como eu nutro?'. Cuidado, fertilidade, posse. Quando atrito: apego, controle alimentar, 'se eu não cuido, ninguém cuida'."
+  permeacao_emocional: "Acolhimento e posse. Quando bloqueado: vazio, culpa materna, 'não sou boa mãe'. Quando solto: generosidade, capacidade de nutrir."
+  manifestacao_externa: "Eventos prováveis de gravidez, nutrição, colheita, perda de filho. Trânsitos marcam ciclos de fertilidade."
+  como_guiar_o_astral: "Ajudar a mente a reconhecer que nutrir não é controlar: Ceres pede confiança no ciclo de perda e retorno."
+
+representa:
+  pessoas: ["Mãe", "Nutricionista", "Agricultor", "Cuidador"]
+  eventos: ["Gravidez", "Nutrição", "Colheita", "Crise alimentar"]
+  corpo: ["Estômago", "Útero", "Ovários", "Sistema digestivo"]
+
+dignidades_essenciais:
+  domicilio: ["Câncer (moderno)"]
+  exaltacao: ["Touro"]
+  detrimento: ["Capricórnio"]
+  queda: [""]
+
+combinacoes_exemplo:
+  casa_4:
+    temas: ["lar", "mãe", "raízes", "fim de vida"]
+    possiveis_efeitos: ["forte ligação com a mãe", "necessidade de ninho", "crise alimentar na família"]
+    reforcado_por: ["lua_conjunto", "venus_conjunto"]
+    amenizado_por: ["saturno_conjunto", "plutao_aflito"]
+
+origens_e_divergencias:
+  escola_tradicional:
+    autores: []
+    conceito: "Não tradicional — descoberto em 1801."
+  escola_moderna:
+    autores: [Liz Greene, Demetra George]
+    conceito: "Planeta do cuidado, da nutrição, do luto materno e da fertilidade."
+  por_que_da_divergencia: "Ceres é moderno por definição: entrou no mapa no século XIX, junto com o feminismo e a descoberta dos primeiros asteroides."

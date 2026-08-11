@@ -1,0 +1,53 @@
+status: review
+id: "recepcao"
+nome: "Recepção"
+tradicoes:
+  - "helenística"
+  - "medieval"
+  - "tradicional"
+tipo: "relação de acolhimento entre significadores"
+escopo_documental:
+  tecnica_historica:
+    - "recepção simples e mútua"
+    - "recepção por domicílio, exaltação, triplicidade, termos e face"
+    - "relação entre recepção, aspecto e perfeição"
+  calculo_e_regra: "O motor deve registrar qual espécie de recepção está ocorrendo e não reduzir toda recepção a 'ajuda automática'."
+  divergencias_de_escola: "Autores diferem sobre o quanto recepções menores mitigam dano, perfeccionam aspecto ou autorizam tradução de luz."
+referencias:
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    natureza: "primária/secundária histórica"
+    localizador: "Capítulos sobre recepção, aplicação e julgamentos"
+  - autor: "Guido Bonatti"
+    obra: "Liber Astronomiae"
+    natureza: "primária histórica"
+    localizador: "Seções sobre recepção e perfeição"
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    natureza: "primária"
+    localizador: "Relações de regência e apoio planetário; conferir edição"
+validacao_de_fontes:
+  base: "As refer?ncias estruturadas sustentam a terminologia de dignidade, debilidade, recep??o e condi??o dentro das linhagens declaradas."
+  escopo: "Diferen?as entre autores permanecem vis?veis e n?o devem ser convertidas em regra ?nica do motor sem sele??o expl?cita de escola."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+definicao_tecnica: "Há recepção quando um planeta ocupa uma dignidade pertencente a outro, de modo que este outro o 'recebe'; na recepção mútua, ambos se recebem reciprocamente."
+especies:
+  por_domicilio: "Forma mais forte e mais citada."
+  por_exaltacao: "Também relevante, embora com lógica distinta da domiciliar."
+  por_triplicidade: "Mais fraca e dependente de contexto/escola."
+  por_termos: "Recepção menor, geralmente de peso reduzido."
+  por_face: "Recepção mínima ou muito leve, conforme o autor."
+uso_interpretativo:
+  regra_geral: "Recepção pode facilitar cooperação, mitigação de dano, disposição a agir em favor do outro ou viabilidade entre significadores."
+  limites: "Recepção não substitui aspecto quando a técnica exige aspecto; tampouco salva automaticamente um planeta muito impedido."
+  horaria: "Em várias escolas, recepção é central para julgar perfeição, disposição e ajuda mútua."
+nao_confundir_com:
+  - "troca de signos sem contato suficiente"
+  - "simples simpatia interpretativa moderna"
+camada_moderna:
+  nota: "Pode ser descrita como empatia estrutural entre funções, mas isso não substitui a mecânica tradicional."
+camada_energetica:
+  impressao_mental: "Recepção mostra que um planeta está em território do outro e, portanto, sob sua autoridade ou hospitalidade."
+  permeacao_emocional: "Na camada moderna, isso pode ser vivido como acolhimento, tolerância ou dependência."
+  manifestacao_externa: "Na prática técnica, recepção ajuda a explicar cooperação, concessão, socorro ou possibilidade de funcionamento conjunto."
+  como_guiar_o_astral: "Indicar sempre quem recebe quem, por qual dignidade e com qual força."

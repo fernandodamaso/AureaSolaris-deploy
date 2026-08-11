@@ -1,0 +1,98 @@
+﻿status: draft
+id: "vertex"
+nome: "Vertex (Vértice — Ponto de Encontro)"
+tradicoes:
+  - "moderna ocidental"
+  - "pontos calculados"
+tema: "Ponto de 'encontro com o outro' (calculado na interseção da eclíptica com o meridiano local)"
+
+atlas_simbolico:
+  pessoas_arquetipos:
+    - "Alma gêmea"
+    - "Pessoa que muda sua vida"
+    - "Mestre espiritual"
+    - "Parceiro kármico"
+    - "Instrutor de vida"
+  lugares:
+    - "Lugar de encontro marcado"
+    - "Templo de iniciação"
+    - "Cidade onde você 'se encontra'"
+    - "Fronteira entre mundos"
+  objetos_materia:
+    - "Anel de compromisso"
+    - "Carta de amor"
+    - "Bilhete de passagem"
+    - "Espelho (encontro com si mesmo)"
+  eventos_tipicos:
+    - "Encontro de destino"
+    - "Casamento relâmpago"
+    - "Mudança de vida por outra pessoa"
+    - "Crise que traz encontro transformador"
+  animais:
+    - "Pomba branca"
+    - "Cisne"
+    - "Borboleta (encontro belo)"
+    - "Golfinho (encontro no oceano)"
+  plantas_ervas:
+    - "Rosa vermelha"
+    - "Jasmim"
+    - "Lótus"
+    - "Hortelã"
+  metais_pedras:
+    - "Prata"
+    - "Pérola"
+    - "Diamante"
+    - "Turquesa"
+  cores_sons:
+    cores: ["Branco", "Prata", "Azul-claro"]
+    sons: ["Canto de pássaro", "Apito do destino", "Ressoar de sino"]
+  numeros: [7, 12, 21, 33]
+  dias_semana: ["Nenhum (ponto matemático)"]
+  doencas_corpo:
+    doencas: []
+    partes_corpo: ["Coração (encontro amoroso)"]
+  arquetipos_mitologicos:
+    - "Hermes psicopompo (encontro entre mundos)"
+    - "Eros (encontro amoroso fatal)"
+  mitos_historias:
+    - "Mito do encontro marcado pelos deuses"
+  sonhos_inconsciente:
+    - "Encontro com estranho = chamado do Vertex"
+    - "Espelho que reflete outro = véu que se rasga"
+  expressao_elevada_vs_sombra:
+    elevada: "Encontro que transforma, parceria que liberta."
+    sombra: "Relacionamento que aprisiona, 'alma gêmea' como dependência."
+
+camada_energetica:
+  impressao_mental: "A mente de 'quem eu encontro muda minha vida'. Ponto de encontro com o outro. Quando atrito: expectativa excessiva sobre relações, 'você me completa'."
+  permeacao_emocional: "Fascínio e entrega. Quando bloqueado: medo de encontros, 'ninguém me entende'. Quando solto: abertura para o outro."
+  manifestacao_externa: "Eventos prováveis de encontros de destino, pessoas que mudam a vida. Trânsitos marcam aberturas."
+  como_guiar_o_astral: "Ajudar a mente a receber o encontro sem projetar salvador: Vertex pede abertura, não dependência."
+
+representa:
+  pessoas: ["Alma gêmea", "Parceiro kármico", "Mestre"]
+  eventos: ["Encontro de destino", "Mudança de vida", "Casamento relâmpago"]
+  corpo: ["Coração"]
+
+dignidades_essenciais:
+  domicilio: ["5º/8º signo da zodíaco (varia)"]
+  exaltacao: [""]
+  detrimento: [""]
+  queda: [""]
+
+combinacoes_exemplo:
+  casa_7:
+    temas: ["parceria", "encontro"]
+    possiveis_efeitos: ["encontro de destino", "parceiro que transforma"]
+    reforcado_por: ["venus_conjunto", "lua_conjunto"]
+    amenizado_por: ["saturno_conjunto", "marte_aflito"]
+
+origens_e_divergencias:
+  escola_tradicional:
+    autores: []
+    conceito: "Não tradicional — ponto matemático calculado."
+  escola_moderna:
+    autores: [Liz Greene, autores de astrologia relacionamentos]
+    conceito: "Ponto de encontro com o outro, significado em relacionamentos e encontros fatais."
+  por_que_da_divergencia: "Vertex é ponto matemático moderno, usado em astrologia de relacionamentos."
+

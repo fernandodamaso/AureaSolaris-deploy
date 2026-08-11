@@ -1,0 +1,59 @@
+status: review
+id: "esfera_celeste_coordenadas"
+nome: "Esfera Celeste, Eclíptica e Coordenadas"
+tipo: "fundamento astronômico"
+tradicao_primaria: ["astronomia de apoio", "tradicional"]
+
+escopo:
+  definicao_operacional: "Vocabulário geométrico para localizar corpos e ângulos no céu: esfera celeste como modelo de observação, eclíptica, equador celeste, horizonte, meridiano, longitude e latitude eclípticas, ascensão reta e declinação."
+  inclui:
+    - "A distinção entre coordenadas eclípticas e equatoriais."
+    - "A relação geométrica entre eclíptica, equador celeste e equinócios."
+  nao_inclui:
+    - "Interpretação astrológica automática de qualquer coordenada."
+    - "Uma cosmologia física literal de esferas materiais."
+  exclusoes_do_projeto: []
+
+fundamento:
+  descricao: "A esfera celeste é um modelo geométrico de observação. Em astrologia tropical, posições zodiacais costumam ser expressas como longitudes eclípticas; casas e ângulos dependem de tempo, latitude geográfica e relação com horizonte e meridiano."
+  contexto_historico: "O vocabulário de esfera, eclíptica e equador atravessa astronomia antiga e contemporânea, ainda que os modelos físicos tenham mudado."
+
+procedimento:
+  pre_requisitos:
+    - "Instante em UTC, coordenadas geográficas e convenção de efeméride."
+  passos:
+    - "Calcular posições eclípticas para os corpos."
+    - "Usar tempo sideral local, latitude e longitude geográfica para obter ângulos e cúspides quando a técnica exigir casas."
+    - "Preservar a coordenada usada em cada técnica; não tratar longitude, latitude e declinação como equivalentes."
+  parametros_de_calculo:
+    - "longitude eclíptica: medida ao longo da eclíptica a partir do equinócio"
+    - "latitude eclíptica: distância angular ao norte/sul da eclíptica"
+    - "ascensão reta e declinação: coordenadas equatoriais"
+
+uso_interpretativo:
+  pergunta_que_ajuda_a_responder:
+    - "Que sistema de coordenadas sustenta a posição, o aspecto, a casa ou a condição técnica em análise?"
+  como_ponderar: "A geometria é pré-requisito do cálculo. Significado interpretativo só pode ser acrescentado quando a técnica e a tradição o justificarem."
+  limites:
+    - "Paralelos, contraparalelos, latitude e declinação exigem fichas e critérios próprios."
+    - "O resultado de casas varia com sistema de casas, local e tempo; esses parâmetros não podem ser omitidos."
+
+divergencias_de_tradicao:
+  consenso: "A distinção entre sistemas de coordenadas é necessária para cálculo reproduzível."
+  divergencias:
+    - "Escolas diferem nas condições astrológicas que atribuem à latitude, declinação e paralelos."
+  decisao_editorial: "Fichas de condição e técnica devem declarar a coordenada e o método usados antes de oferecer interpretação."
+
+referencias:
+  primarias: []
+  secundarias:
+    - "U.S. Naval Observatory. Astronomical Applications Department Glossary: ecliptic longitude, ecliptic latitude e equinox. https://aa.usno.navy.mil/faq/asa_glossary (acesso em 2026-08-10)."
+    - "U.S. Naval Observatory. International Celestial Reference System. https://aa.usno.navy.mil/faq/ICRS_doc (acesso em 2026-08-10)."
+  tecnicas:
+    - "Swiss Ephemeris. swephprg programming interface: swe_calc, swe_houses e swe_sidtime. https://www.astro.com/swisseph-download/doc/swephprg.2.10.htm (acesso em 2026-08-10)."
+
+relacoes:
+  depende_de: ["protocolo_calculo_reproduzivel"]
+  ver_tambem: ["zodiaco_tropical", "sistemas_de_casas", "paralelo", "antiscia"]
+
+anotacoes_pessoais: []

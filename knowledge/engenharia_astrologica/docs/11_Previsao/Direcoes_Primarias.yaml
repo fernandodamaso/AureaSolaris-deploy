@@ -1,0 +1,73 @@
+status: review
+id: direcoes_primarias
+tradicoes:
+- helenística
+- medieval
+- renascentista
+- moriniana
+tipo: técnica preditiva direcional
+escopo_documental:
+  tecnica_historica:
+  - movimento diurno, promissor, significador, arco de direção, semiarco e direções zodiacais/mundanas
+  variantes: Semiarco, mundana, zodiacal, direta/conversa e convenções de conversão de tempo devem ser escolhidas e declaradas.
+  camada_simbolica: Correspondências modernas permanecem como notas de estudo, não como fórmula do cálculo.
+referencias:
+- autor: Claudius Ptolemy
+  obra: Tetrabiblos
+  natureza: primária
+  edicao_ou_traducao: F. E. Robbins, Loeb Classical Library
+  ano: 1940
+  localizador: Book III, chapters on length of life and directed procedures tied to time reckoning
+- autor: Jean-Baptiste Morin de Villefranche
+  obra: Astrologia Gallica
+  natureza: primária
+  localizador: Use only the book numbering and method attested in the chosen edition; do not merge Morin with Ptolemy by shortcut
+- autor: Martin Gansten
+  obra: 'Primary Directions: Astrology''s Old Master Technique'
+  natureza: secundária histórica/técnica
+  ano: 2009
+  localizador: Modern reconstruction of primary direction variants, keys, and computational cautions
+validacao_de_fontes:
+  base: "As refer?ncias estruturadas identificam a linhagem hist?rica, moderna ou astron?mica pertinente a esta t?cnica preditiva."
+  escopo: "Uma implementa??o deve declarar edi??o, algoritmo, efem?ride, escala de tempo e variante de escola; esta exig?ncia ? uma regra de reprodu??o, n?o uma lacuna de fonte."
+  limite: "A ficha permanece em review e n?o converte hip?tese, aproxima??o pedag?gica ou releitura moderna em previs?o determinista."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+nome: Direções Primárias
+tema: 'Timing tradicional helenística: mover a roda por grau/ano — datas de eventos.'
+essencia:
+- Direção primária usa movimento diurno e arcos de ascensão/tempo; 1° = 1 ano é apenas uma aproximação pedagógica e não substitui a conversão da escola escolhida.
+- Promissor (planeta que se move) aplica-se a significador (ângulo/casa).
+- Usada desde Ptolomeu até Morin de Villefranche.
+- Há métodos semiarcos, mundane, zodiacais — cada um com regra própria.
+origens_e_divergencias:
+  tradicional: Ptolomeu, Morin e Lilly tratam direções em linhagens distintas; a ficha não os amalgama em um único método.
+  moderna: Uso moderno menor; substituído por trânsitos e progressões na prática comum.
+  nota: Requer estudo técnico cuidadoso; usar como técnica avançada de leitura.
+atlas_simbolico:
+  pessoas_arquetipos: cronocratores, relojoeiros do c?u, medidores de arco e idade
+  lugares_fisicos: esferas armilares, t?buas de ascens?o reta, oficinas de c?lculo
+  objetos_materia: arcos, tabelas temporais, instrumentos de medida, chaves de dire??o
+  eventos_tipicos: gatilhos de idade, matura??o de promessas natais, ativa??es por arco
+  arquetipos_mitologicos: o rel?gio celeste, a roda que mede a vida
+  expressao_elevada_sombra: 'Elevada: precis?o cronol?gica, disciplina t?cnica | Sombra: pseudoexatid?o, simplifica??o escolar'
+camada_energetica:
+  campo_mental: Tempo como estrutura mensurável; mapa como relógio simbólico.
+  permeacao_emocional: Segurança ou ansiedade dependendo do timing revelado.
+  manifestacao_externa: Eventos PROVÁVEIS em idades-chave quando direção ativa ponto sensível.
+  como_guiar_o_astral: Usar como ALERTA de tempo; não como datação exata; oferecer preparação.
+tecnicas:
+  semiarcos:
+    definicao: Variant that measures mundane arcs and semi-arcs relative to angles and the diurnal rotation; it is not identical to a simple 1 degree = 1 year shortcut.
+    uso: Common in later technical practice when the chosen school explicitly uses mundane arcs.
+  mundane:
+    definicao: Directions judged in the mundane sphere, preserving house and semi-arc logic rather than only zodiacal longitude.
+    uso: Requires exact birth time, latitude, and declared house logic.
+  zodiacais:
+    definicao: Directions expressed by zodiacal longitude under a declared directional key; not interchangeable with mundane directions.
+    uso: Useful only when the edition and key are fixed in advance.
+  leitura:
+    regra: Judge the directed contact through the natal condition of promissor and significator, with the directional key and context declared.
+    cuidado: Use narrow orbs and never treat a pedagogical key as if it were the whole historical method.
+ver_mais:
+- ../11_Previsao/Timing.yaml
+- ../D_Engenharia_da_Previsao/direcoes_primarias.yaml

@@ -1,0 +1,61 @@
+status: review
+id: asteroides_pontos_readme
+nome: "Asteroides e Pontos Matemáticos"
+tradicoes:
+  - "moderna ocidental"
+  - "astronomia matemática"
+  - "pontos calculados"
+tipo: "README de seção"
+escopo_documental:
+  tecnica_historica:
+    - "separação entre corpos físicos, pontos orbitais, ângulos derivados e fórmulas"
+    - "distinção entre nomenclatura astronômica, nomenclatura astrológica e uso interpretativo"
+  regra_do_projeto: "Esta seção não deve tratar todos os itens como equivalentes. Asteroides, apsides lunares, lotes, vertex, pontos médios e ângulos derivados têm genealogias e cálculos diferentes."
+  camada_simbolica: "Curiosidades mitológicas, etimologias e leituras psicológicas podem ser mantidas, desde que não substituam a definição técnica."
+tema: "Catálogo de objetos menores, pontos calculados e derivados usados em parte da astrologia ocidental moderna."
+organizacao_interna:
+  corpos_fisicos:
+    exemplos:
+      - "Juno"
+      - "Vesta"
+      - "Pallas"
+      - "outros asteroides quando o corpus os incluir"
+    regra: "São corpos reais com efemérides próprias; sua interpretação depende de escola e não deve sobrepor os planetas clássicos."
+  apsides_e_pontos_orbitais:
+    exemplos:
+      - "Lilith/Lua Negra"
+      - "Priapo"
+      - "nodos lunares"
+    regra: "Exigem declaração de variante de cálculo: média, verdadeira, osculante, natural/interpolada etc."
+  angulos_derivados:
+    exemplos:
+      - "Vertex"
+      - "Antivertex"
+      - "East Point"
+      - "Co-Ascendente"
+      - "Ascendente Polar"
+    regra: "Dependem fortemente de hora, latitude, longitude, obliquidade e algoritmo."
+  formulaicos_e_simetricos:
+    exemplos:
+      - "lotes/partes"
+      - "pontos médios"
+      - "antíscia e contra-antíscia"
+    regra: "Não são corpos nem ângulos; cada família tem lógica própria."
+notas_editoriais:
+  - "Lilith no uso moderno costuma designar um ponto lunar, não o asteroide 1181 Lilith."
+  - "O projeto exclui astrologia Uraniana/Hamburgo como escola, mas pode registrar pontos médios de forma controlada e rotulada."
+  - "Nem todo ponto calculado merece o mesmo peso interpretativo do mapa natal clássico."
+referencias:
+  - autor: "Swiss Ephemeris"
+    obra: "General Documentation"
+    natureza: "referência técnica"
+    localizador: "Cálculo de nodos, apsides, ângulos derivados e coordenadas"
+validacao_de_fontes:
+  base: "As refer?ncias estruturadas distinguem defini??o geom?trica, c?lculo reprodut?vel e uso interpretativo moderno."
+  escopo: "Pontos calculados e seus orbes dependem de conven??o declarada; interpreta??es modernas s?o notas de estudo, n?o consenso universal."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+camada_energetica:
+  impressao_mental: "Esta seção funciona como camada de refinamento e diferenciação técnica."
+  permeacao_emocional: "Leituras simbólicas adicionais podem enriquecer o estudo, mas pedem hierarquia clara."
+  manifestacao_externa: "No motor, esses fatores devem entrar com cálculo explicitado, peso controlado e escola declarada."
+  como_guiar_o_astral: "Começar sempre pelos planetas, casas e aspectos principais; usar esta seção como aprofundamento e não como substituto."

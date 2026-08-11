@@ -1,0 +1,46 @@
+﻿status: draft
+id: "sirius_atlas"
+nome: "Sirius — Atlas Simbólico"
+tradicoes:
+  - "atlas simbolico editorial"
+  - "sintese multiescola"
+tipo: "Atlas Simbólico"
+subtema: "Correspondências de Sirius"
+
+origens_e_divergencias:
+  tradicional: "Egito, Ptolomeu — Sirius/Estrela do Cão = inundação do Nilo, abundância, renascimento."
+  moderna: "Astrologia moderna mantém; acrescenta associação a iluminação espiritual."
+  nota: "Uma das estrelas mais importantes na astrologia tradicional."
+
+atlas_simbolico:
+  pessoas_arquetipos: "Sacerdote, guia espiritual, salvador, mensageiro"
+  lugares_fisicos: "Templos, rios de abundância, desertos com oásis, ilhas"
+  objetos_materia: "Ankh, cetro, espelho de água, lótus"
+  eventos_tipicos: "Renascimento, abundância, inundação, iniciação espiritual"
+  animais: "Cão, falcão, crocodilo sagrado, gato egípcio"
+  plantas_ervas: "Lótus azul, papiro, cana, mirra"
+  metais_pedras: "Ouro, lápis-lazúli, turquesa, água"
+  cores_sons:
+    cores: ["Azul egípcio", "dourado", "verde esmeralda"]
+    sons: ["Canto ritual", "água corrente", "sopro"]
+  numeros: [1, 4, 19]
+  dias_semana: ["Quarta-feira (Mercúrio/Hermes)", "Sexta-feira (Vênus)"]
+  doencas_corpo:
+    doencas: ["Problemas oculares", "dores de cabeça"]
+    partes_corpo: ["Olhos", "cabeça", "sistema nervoso"]
+  arquetipos_mitologicos: ["Anúbis", "Osíris", "Ísis", "Thoth"]
+  mitos_historias: "Sírio guiando a inundação do Nilo; Osíris renascido; Thoth como escriba divino"
+  sonhos_simbolos_inconsciente: "Águas profundas, luzes brancas, iniciadores, cães-guia"
+  expressao_elevada_sombra: "Elevada: sabedoria egípcia, serviço, iniciação | Sombra: fanatismo, excesso de idealismo, messianismo"
+
+camada_energetica:
+  impressao_mental: "Busca por verdade espiritual mais profunda; necessidade de iniciação."
+  permeacao_emocional: "Profundidade emocional, lealdade, compaixão."
+  manifestacao_externa: "Eventos PROVÁVEIS de renascimento, mudança radical de rumo, encontro com guia."
+  como_guiar_o_astral: "Ajudar a encontrar o próprio guia interior; Sirius é espelho do conhecimento autêntico."
+
+ver_mais:
+  - "../07_Estrelas_Fixas/Sirius.yaml"
+
+## ✏️ Minhas Anotações
+

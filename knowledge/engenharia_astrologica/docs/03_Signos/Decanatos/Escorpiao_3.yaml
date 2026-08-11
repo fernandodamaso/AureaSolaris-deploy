@@ -1,0 +1,56 @@
+﻿status: draft
+id: "decanato_escorpiao_3"
+nome: "Decanato 3 de Escorpião (20°–30°) — Escorpião amadurecido por Câncer"
+tradicoes:
+  - "convenção por signos da mesma triplicidade"
+  - "camada simbólica moderna atribuída"
+regente: "Lua (Câncer/Lua na convenção por triplicidade; face caldaica correspondente: Vênus)"
+
+origens_e_divergencias:
+  sistema_adotado: "Convenção posterior/moderna por signos da mesma triplicidade: 20°–<30° de Escorpião recebe a cor de Câncer/Lua."
+  faces_caldaicas: "A face caldaica de 20°–<30° de Escorpião é Vênus; as tabelas divergem."
+  decanos_egipcios: "Sistema distinto; não inferir equivalência sem tabela própria."
+  nota: "Proteção, clã e lealdade são associações interpretativas da convenção, não definição canônica do intervalo."
+
+calculo_e_escopo:
+  intervalo: "Escorpião tropical 20°–<30°; 30° exatos são 0° de Sagitário."
+  uso: "Refinamento opcional e sempre subordinado a significadores, casas e técnica principal."
+  camada_simbolica: "Guardião e ninho são imagens de estudo atribuídas; não demonstram obrigação familiar."
+referencias:
+  - autor: "Engenharia Astrológica"
+    obra: "Decanatos"
+    natureza: "fonte editorial"
+    localizador: "Tabela comparativa em 03_Signos/Decanatos.yaml."
+  - autor: "Cláudio Ptolomeu"
+    obra: "Tetrabiblos"
+    natureza: "primária histórica"
+    localizador: "Faces; a faixa caldaica é Vênus."
+limite_documental: "Permanece draft: não promover sem fonte específica para a tabela por triplicidade e suas associações."
+atlas_simbolico:
+  pessoas_arquetipos: "O Névoa profunda, o que expressa Água Mutável"
+  lugares_fisicos: "Lugares de Água Mutável"
+  objetos_materia: "Objetos de Água Mutável"
+  eventos_tipicos: "Eventos de Água Mutável"
+  animais: "Animais de Água Mutável"
+  plantas_ervas: "Plantas de Água Mutável"
+  metais_pedras: "Metais de Água Mutável"
+  cores_sons: "Cores de Água Mutável"
+  numeros: "Números de Água Mutável"
+  dias_semana: "Dias de Água Mutável"
+  doencas_corpo: "Partes do corpo de Água Mutável"
+  arquetipos_mitologicos: "Arquétipos de Água Mutável"
+  mitos_historias: "Mitologias de Água Mutável"
+  sonhos_simbolos_inconsciente: "Símbolos de Água Mutável"
+  expressao_elevada_sombra: "Elevada: Água Mutável consciente | Sombra: Água Mutável descontrolado"
+
+camada_energetica:
+  impressao_mental: "Escorpião + raiz emocional — a mente agora PROTEGE o que ama. Intensidade vira lealdade."
+  permeacao_emocional: "Amor profundo, defensivo, que 'segura o ninho'."
+  manifestacao_externa: "Eventos PROVÁVEIS de proteção familiar, estratégia de sobrevivência. Arquétipos: o Guardião, a Mãe/Pai protetor. Inclinação, não destino."
+  como_guiar_o_astral: "Canalizar para 'proteger sem sufocar' — o 3º decanato de Escorpião tende a controlar por amor."
+
+porque_simbolico: "Câncer matiza Escorpião com Água cardinal: a INTENSIDADE ganha NINHO. Lua = mãe/nutrição — daí o 'guardião do clã'."
+foco_especial:
+  familiar: "Decanato 3 de Escorpião em Casa 4 = pessoa que 'defende a família como território' — lealdade blindada."
+
+

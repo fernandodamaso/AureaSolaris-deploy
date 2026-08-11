@@ -1,0 +1,56 @@
+﻿status: draft
+id: "decanato_libra_3"
+nome: "Decanato 3 de Libra (20°–30°) — Libra amadurecido por Gêmeos"
+tradicoes:
+  - "convenção por signos da mesma triplicidade"
+  - "camada simbólica moderna atribuída"
+regente: "Mercúrio (Gêmeos/Mercúrio na convenção por triplicidade; face caldaica correspondente: Júpiter)"
+
+origens_e_divergencias:
+  sistema_adotado: "Convenção posterior/moderna por signos da mesma triplicidade: 20°–<30° de Libra recebe a cor de Gêmeos/Mercúrio."
+  faces_caldaicas: "A face caldaica correspondente é Júpiter; as tabelas divergem."
+  decanos_egipcios: "Sistema distinto; requer tabela própria."
+  nota: "Comunicação e negociação são leituras simbólicas atribuídas, não regência canônica da faixa."
+
+calculo_e_escopo:
+  intervalo: "Libra tropical 20°–<30°; 30° exatos são 0° de Escorpião."
+  uso: "Refinamento opcional e subordinado a fatores principais."
+  camada_simbolica: "Diplomata e escritor são imagens de estudo, não diagnóstico ou vocação garantida."
+referencias:
+  - autor: "Engenharia Astrológica"
+    obra: "Decanatos"
+    natureza: "fonte editorial"
+    localizador: "Tabela comparativa em 03_Signos/Decanatos.yaml."
+  - autor: "Cláudio Ptolomeu"
+    obra: "Tetrabiblos"
+    natureza: "primária histórica"
+    localizador: "Faces; a faixa caldaica é Júpiter."
+limite_documental: "Permanece draft: não promover sem fonte específica para a convenção por triplicidade."
+atlas_simbolico:
+  pessoas_arquetipos: "O Vento que equilibra, o que expressa Ar Mutável"
+  lugares_fisicos: "Lugares de Ar Mutável"
+  objetos_materia: "Objetos de Ar Mutável"
+  eventos_tipicos: "Eventos de Ar Mutável"
+  animais: "Animais de Ar Mutável"
+  plantas_ervas: "Plantas de Ar Mutável"
+  metais_pedras: "Metais de Ar Mutável"
+  cores_sons: "Cores de Ar Mutável"
+  numeros: "Números de Ar Mutável"
+  dias_semana: "Dias de Ar Mutável"
+  doencas_corpo: "Partes do corpo de Ar Mutável"
+  arquetipos_mitologicos: "Arquétipos de Ar Mutável"
+  mitos_historias: "Mitologias de Ar Mutável"
+  sonhos_simbolos_inconsciente: "Símbolos de Ar Mutável"
+  expressao_elevada_sombra: "Elevada: Ar Mutável consciente | Sombra: Ar Mutável descontrolado"
+
+camada_energetica:
+  impressao_mental: "Libra + comunicação — a mente agora NEGOCIA. Equilíbrio vira diálogo."
+  permeacao_emocional: "Racionalidade emocional — 'sinto, mas penso antes de reagir'."
+  manifestacao_externa: "Eventos PROVÁVEIS de comunicação diplomática, contratos, acordos. Arquétipos: o Diplomata, o Escritor. Inclinação, não destino."
+  como_guiar_o_astral: "Canalizar para 'falar o que equilibra' — o 3º decanato de Libra tem talento de negociação verbal."
+
+porque_simbolico: "Gêmeos matiza Libra com Ar mutável: a HARMONIA ganha PALAVRA. Mercúrio = comunicação — daí o negociador que 'fala para acordar'."
+foco_especial:
+  infantil: "Criança em Libra 3 = criança que negocia ('se eu fizer isso, você faz aquilo'). Canalizar para escrita/teatro."
+
+

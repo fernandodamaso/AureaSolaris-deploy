@@ -1,0 +1,86 @@
+status: review
+id: faculty_astrological_studies
+nome: Faculty of Astrological Studies (FAS)
+tipo: instituição e fonte bibliográfica
+tradicao_primaria:
+- moderna
+- psicológica
+- simbólica
+- tradicional
+identificacao:
+  natureza: Instituição educacional astrológica sem fins lucrativos, fundada em Londres
+    em 1948.
+  uso_no_corpus: Fonte secundária prioritária para artigos, materiais de curso, bibliografia,
+    história institucional e perspectivas de estudo.
+  criterio_de_citacao: Citar sempre a página, artigo, autor/tutor, data e URL específicos;
+    'Faculty of Astrological Studies' não substitui a fonte primária de uma afirmação
+    histórica.
+relevancia_para_a_base:
+- Oferece percurso estruturado que começa por esfera celeste, signos, planetas, casas
+  e aspectos antes de técnicas avançadas.
+- Reúne vozes antigas e modernas, simbólicas, psicológicas, tradicionais e esotéricas
+  sem reduzi-las a uma escola única.
+- Mantém biblioteca de artigos, vídeos, leituras e materiais de tutores que pode alimentar
+  fichas por assunto.
+- É especialmente valiosa para relações/família, simbolismo, arte astrológica e percurso
+  pedagógico.
+colecao_prioritaria:
+  historia_institucional:
+    titulo: History of the Faculty
+    uso: Contexto da instituição, linhagens de ensino, autores e posição entre abordagens
+      antigas e modernas.
+    url: https://astrology.org.uk/history/
+  biblioteca:
+    titulo: Astrology Library
+    uso: Catálogo para seleção de artigos, gravações, bibliografias e materiais específicos
+      por tema.
+    url: https://astrology.org.uk/astrology-library/
+  percurso_inicial:
+    titulo: Foundation Course
+    uso: 'Referência de ordenação pedagógica: esfera celeste, signos, planetas, casas,
+      aspectos, contexto histórico e filosofia.'
+    url: https://astrology.org.uk/astrology-learning-options/foundation-course/
+  familia_e_sistemas:
+    titulo: 'The Astrology of the Family: An Astrological Overview of the Family'
+    uso: Fonte secundária para aplicações contemporâneas de astrologia a dinâmica
+      familiar e sistêmica.
+    url: https://astrology.org.uk/extract-from-the-astrology-of-the-family-part-module-article-1-1/
+  estudo_da_astrologia:
+    titulo: Studying with the Faculty
+    uso: Contexto histórico, filosófico, social e cultural da astrologia ocidental.
+    url: https://astrology.org.uk/article-studying-with-the-faculty/
+procedimento_de_incorporacao:
+- Selecionar um artigo ou aula da FAS por tema do backlog.
+- Registrar autor, título, data, URL, tradição e conceitos usados.
+- Confrontar a fonte com textos primários ou bibliografia especializada quando a ficha
+  fizer atribuição histórica.
+- Adicionar divergências se a FAS apresentar abordagem moderna para conceito tradicional.
+referencias:
+  primarias: []
+  secundarias:
+  - Faculty of Astrological Studies. History of the Faculty. https://astrology.org.uk/history/
+    (acesso em 2026-08-10).
+  - Faculty of Astrological Studies. Astrology Library. https://astrology.org.uk/astrology-library/
+    (acesso em 2026-08-10).
+  - Faculty of Astrological Studies. Foundation Course. https://astrology.org.uk/astrology-learning-options/foundation-course/
+    (acesso em 2026-08-10).
+  - Faculty of Astrological Studies. Studying with the Faculty. https://astrology.org.uk/article-studying-with-the-faculty/
+    (acesso em 2026-08-10).
+  tecnicas: []
+relacoes:
+  depende_de: []
+  ver_tambem:
+  - astrologia_sistemica
+  - mapeamento_sistemico_familiar
+  - roteiro_estudos_engenharia_astrologica
+  - autores_e_bibliografia
+anotacoes_pessoais: []
+origens_e_divergencias:
+  tradicional: Conceito/técnica presente na tradição astrológica ocidental.
+  moderna: Possível ressignificação contemporânea.
+  nota: Rotular a escola quando divergir.
+camada_energetica:
+  impressao_mental: Campo conceitual do tema/técnica.
+  permeacao_emocional: Como o tema toca a experiência subjetiva.
+  manifestacao_externa: Como aparece em comportamentos e eventos.
+  como_guiar_o_astral: Como usar este conhecimento na leitura prática.

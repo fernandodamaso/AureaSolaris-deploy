@@ -1,0 +1,53 @@
+status: review
+
+id: "sistema_urinario"
+tradicoes: ["melotesia greco-romana e medieval, quando explicitada", "leitura simbólica moderna, quando explicitada"]
+limites_de_uso: ["Correspondência simbólica/histórica; não é diagnóstico, prognóstico, triagem ou prescrição.", "Nenhum fator natal ou trânsito permite inferir doença, sintoma, risco clínico ou causa psicológica."]
+nome: "Sistema Urinário — Escorpião / Plutão (rótulo duplicado com Rins, ver Rins.yaml)"
+parte_do_corpo: "Rins, bexiga, ureteres, sistema reprodutor (excretório)"
+
+referencias:
+  - autor: "Manilius"
+    obra: "Astronomica"
+    natureza: "fonte primária greco-romana"
+    localizador: "Livro II, correspondências zodiacais do corpo; consultar edição/tradução"
+  - autor: "Paulus Alexandrinus"
+    obra: "Introductory Matters"
+    edicao_ou_traducao: "Dorian Gieseler Greenbaum, tradução inglesa"
+    natureza: "fonte primária tardia"
+    localizador: "Passagens sobre signos, planetas e partes corporais; conferir edição"
+  - autor: "Nicholas Culpeper"
+    obra: "Semeiotica Uranica"
+    ano: 1651
+    natureza: "fonte histórica de astrologia médica"
+    localizador: "Documento de período; não equivale a evidência médica contemporânea"
+
+origens_e_divergencias:
+  tradicional: "Hipócrates, Dioscórides, Culpeper, Agrippa (Doutrina das Assinaturas), Paulus Alexandrinus."
+  moderna: "Astrologia psicológica (Liz Greene) — corpo como linguagem simbólica."
+  nota: "Revisar ao citar — marca a escola usada."
+atlas_simbolico:
+  pessoas_arquetipos: "O eliminador, o que filtra, o que purifica"
+  lugares_fisicos: "Lugares de eliminação: rios, lagos, filtros"
+  objetos_materia: "Filtros, instrumentos de purificação"
+  eventos_tipicos: "Eliminações, purificações, filtros"
+  animais: "Cervo, cisne, pomba"
+  plantas_ervas: "Rosa, violeta, madressilva"
+  metais_pedras: "Cobre, ouro rosa, esmeralda"
+  cores_sons: "Rosa, verde-claro; notas Lá e Ré"
+  numeros: "6 (equilíbrio), 7 (justiça), 8 (purificação)"
+  dias_semana: "Sexta-feira (Vênus)"
+  doencas_corpo: "Rins, bexiga, sistema urinário"
+  arquetipos_mitologicos: "Themis, Hera/Juno, Afrodite/Vênus"
+  mitos_historias: "Themis e a justiça; Afrodite e a purificação"
+  sonhos_simbolos_inconsciente: "Filtros, purificações, eliminações"
+  expressao_elevada_sombra: "Elevada: purificação consciente | Sombra: rigidez, extremismo"
+
+camada_energetica:
+  impressao_mental: "Ver Rins.yaml — mesma correspondência Escorpião/Plutão = filtro e eliminação."
+  permeacao_emocional: "Retenção/expulsão."
+  manifestacao_externa: "Entrada de referência cruzada para a imagem simbólica de filtragem e eliminação; não corresponde a sintomas ou eventos clínicos."
+  como_guiar_o_astral: "Consultar Rins.yaml apenas para estudo simbólico; qualquer queixa de saúde requer avaliação profissional."
+
+porque_simbolico: "Ver Rins.yaml — rins e sistema urinário são o mesmo sistema simbólico."
+nota: "Consolidar com Rins.yaml em revisão futura (duplicação proposital para cross-ref)."

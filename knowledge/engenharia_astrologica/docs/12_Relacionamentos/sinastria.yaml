@@ -1,0 +1,74 @@
+status: review
+id: "sinastria"
+nome: "Sinastria"
+tradicoes:
+  - "moderna ocidental"
+  - "psicológica"
+  - "evolutiva (quando explicitada)"
+tipo: "comparação de mapas"
+escopo_documental:
+  tecnica_historica:
+    - "comparação de dois mapas natais por interaspectos, superposição de casas, eixos e significadores"
+  origem_do_metodo: "A comparação de horóscopos tem antecedentes em práticas mais antigas, mas a sinastria como disciplina de relacionamento consolidada é majoritariamente moderna."
+  camada_simbolica: "Leituras cármicas, sistêmicas e de alma devem ser declaradas como camadas interpretativas adicionais."
+subtema: "Relacionamentos e mapas em diálogo"
+
+referencias:
+  - autor: "Ronald C. Davison"
+    obra: "Synastry: Understanding Human Relations Through Astrology"
+    natureza: "moderna de referência"
+    localizador: "Aurora Press, 1983; princípios de comparação, cross-aspects, house interchanges e relationship horoscope"
+  - autor: "Stephen Arroyo"
+    obra: "Relationships and Life Cycles"
+    natureza: "moderna"
+    localizador: "comparação relacional e desenvolvimento da parceria; conferir edição"
+  - autor: "Liz Greene"
+    obra: "Relating"
+    natureza: "moderna psicológica"
+    localizador: "camada psicológica do encontro; conferir edição"
+
+validacao_de_fontes:
+  base: "As refer?ncias estruturadas identificam autores e m?todos modernos de compara??o, composto e mapa Davison."
+  escopo: "Sinastria, composite e Davison permanecem m?todos distintos; a falta de precedente id?ntico na Antiguidade n?o autoriza retroproje??o hist?rica."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+origens_e_divergencias:
+  tradicional: "Há antecedentes de comparação de horóscopos, significadores e interações planetárias; isso não equivale automaticamente à sinastria moderna como método fechado."
+  moderna: "A sinastria moderna organiza interaspectos, sobreposição de casas, eixos e leituras psicológicas do vínculo."
+  nota: "Separar sempre análise técnica de compatibilidade, leitura psicológica, linguagem sistêmica e leitura cármica."
+
+atlas_simbolico:
+  pessoas_arquetipos: "O parceiro, o espelho, o complemento"
+  lugares_fisicos: "Locais de encontro, tribunais"
+  objetos_materia: "Alianças, contratos, mapas sobrepostos"
+  eventos_tipicos: "Casamentos, divórcios, sociedades"
+  animais: "Pomba, cisne, golfinho"
+  plantas_ervas: "Rosa, violeta, maçã (flor)"
+  metais_pedras: "Cobre, bronze, esmeralda, jade"
+  cores_sons:
+    cores: ["Verde-esmeralda", "rosa", "dourado claro"]
+    sons: ["Harpa", "canto coral"]
+  numeros: [7]
+  dias_semana: ["Sexta-feira"]
+  doencas_corpo:
+    doencas: ["Problemas renais", "dor lombar"]
+    partes_corpo: ["Rins", "região lombar", "pele"]
+  arquetipos_mitologicos:
+    - "Afrodite (amor)"
+    - "Hera (casamento)"
+    - "Hermes (aliança)"
+  mitos_historias: "Hera e Zeus; Afrodite e Eros"
+  sonhos_simbolos_inconsciente: "Parceiros, espelhos, uniões"
+  expressao_elevada_sombra: "Elevada: relação autêntica | Sombra: dependência, manipulação"
+
+camada_energetica:
+  impressao_mental: "Sinastria é o DIÁLOGO entre dois mapas. 'O que eu ativo em você?'."
+  permeacao_emocional: "Amor como espelho. Quando saudável: crescimento mútuo. Quando ferido: apego."
+  manifestacao_externa: "Eventos prováveis de encontros, uniões, separações. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a VER O RELACIONAMENTO COMO ESPELHO. Sinastria não é 'compatibilidade' — é 'como eu cresço contigo'."
+
+como_usar: |
+  1. Confirmar dados natais e convenções compartilhadas de zodíaco, casas, nós e orbes.
+  2. Comparar interaspectos entre planetas, luminares, ângulos e pontos escolhidos.
+  3. Ler a sobreposição de casas separadamente da leitura por aspecto.
+  4. Declarar a camada adotada: técnica descritiva, psicológica, sistêmica ou cármica.
+  5. Não substituir a leitura natal individual pelo mapa relacional.

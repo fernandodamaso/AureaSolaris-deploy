@@ -1,0 +1,54 @@
+﻿status: draft
+id: "platonismo_neoplatonismo"
+nome: "Platonismo e Neoplatonismo"
+tradicoes:
+  - "historica"
+  - "filosofica"
+tipo: "Tradições Antigas"
+subtema: "Filosofia platônica na astrologia"
+
+origens_e_divergencias:
+  tradicional: "Platão, Plotino, Jâmblico — alma do mundo, ascensão, formas."
+  moderna: "Rudhyar, Greene — releitura platônica da astrologia."
+  nota: "Filosofia, não técnica astrológica direta."
+
+atlas_simbolico:
+  pessoas_arquetipos: "O filósofo, o buscador, o iniciado"
+  lugares_fisicos: "Academia, templos, bibliotecas"
+  objetos_materia: "Livros, diálogos, matemática"
+  eventos_tipicos: "Descobertas, ascensões, iluminações"
+  animais: "Águia (visão), coruja (sabedoria)"
+  plantas_ervas: "Sálvia, hera, carvalho"
+  metais_pedras: "Ouro, prata, diamante"
+  cores_sons:
+    cores: ["Ouro", "azul-royal", "branco"]
+    sons: ["Órgão", "canto gregoriano"]
+  numeros: [1, 3, 7, 12]
+  dias_semana: ["Quinta-feira"]
+  doencas_corpo:
+    doencas: ["Problemas de visão", "ansiedade"]
+    partes_corpo: ["Olhos", "cérebro"]
+  arquetipos_mitologicos:
+    - "Platão (formas)"
+    - "Plotino (alma do mundo)"
+    - "Jâmblico (iniciação)"
+  mitos_historias: "A caverna de Platão; a ascensão da alma"
+  expressao_elevada_sombra: "Elevada: busca da verdade | Sombra: intelectualismo vazio"
+
+camada_energetica:
+  impressao_mental: "Platonismo = 'o cosmos é alma'. Astrologia é a linguagem dessa alma."
+  permeacao_emocional: "Busca de verdade. Quando saudável: filosofia viva. Quando ferido: dogmatismo."
+  manifestacao_externa: "Eventos prováveis de estudos filosóficos, insights. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a BUSCAR A VERDADE SEM FECHAR O MISTÉRIO. Platão é o começo, não o fim."
+
+conceitos:
+  - nome: "Alma do Mundo"
+    definicao: "O cosmos é um ser vivo. Astros são seus 'órgãos'."
+    relevancia_astrologica: "Planetas não são 'coisas' — são expressões da Alma do Mundo."
+  - nome: "Formas"
+    definicao: "Ideias eternas que se manifestam no mundo físico."
+    relevancia_astrologica: "Signos são Formas astrológicas. Arquétipos universais."
+  - nome: "Ascensão"
+    definicao: "A alma sobe do mundo físico ao mundo das Formas."
+    relevancia_astrologica: "Mapa natal é o PONTO DE PARTIDA da ascensão. Planetas transpessoais = portais."
+

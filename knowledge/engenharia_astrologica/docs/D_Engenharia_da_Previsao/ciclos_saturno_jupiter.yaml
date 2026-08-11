@@ -1,0 +1,54 @@
+﻿status: draft
+id: "ciclos_saturno_jupiter"
+nome: "Ciclos de Saturno e Júpiter"
+tradicoes:
+  - "editorial"
+  - "multiescola"
+tipo: "Engenharia da Previsão"
+subtema: "Ciclos planetários longos"
+
+origens_e_divergencias:
+  tradicional: "Hellenística e medieval — ciclos de Saturno (~29,5 anos) e Júpiter (~12 anos) como marcos de vida."
+  moderna: "Astrologia evolutiva e psicológica — ciclos como 'maturidade' e 'expansão'."
+  nota: "Revisar ao citar — marca a escola usada."
+
+atlas_simbolico:
+  pessoas_arquetipos: "O mestre do tempo, o professor, o estruturante"
+  lugares_fisicos: "Montanhas, templos, universidades"
+  objetos_materia: "Relógios, mapas de ciclo, calendários"
+  eventos_tipicos: "Maturidade, crises de idade, expansões, contratos"
+  animais: "Cabra (Saturno), cavalo (Jupiter), corvo (Saturno), águia (Jupiter)"
+  plantas_ervas: "Hera (Saturno), carvalho (Jupiter), raízes (Saturno)"
+  metais_pedras: "Chumbo (Saturno), estanho (Jupiter), ônix, lápis-lazúli"
+  cores_sons:
+    cores: ["Preto (Saturno)", "azul-royal (Jupiter)", "dourado (Jupiter)"]
+    sons: ["Gongo (Saturno)", "órgão (Jupiter)", "tambor distante"]
+  numeros: [12, 29, 30]
+  dias_semana: ["Sábado (Saturno)", "Quinta-feira (Jupiter)"]
+  doencas_corpo:
+    doencas: ["Problemas ósseos", "artrite", "excesso"]
+    partes_corpo: ["Ossos", "quadril", "fígado"]
+  arquetipos_mitologicos:
+    - "Cronos/Saturno (tempo)"
+    - "Zeus/Jupiter (expansão)"
+  mitos_historias: "Cronos e a Idade do Ouro; Zeus e o Olimpo"
+  expressao_elevada_sombra: "Elevada: maturidade consciente | Sombra: rigidez, excesso, fanatismo"
+
+camada_energetica:
+  impressao_mental: "Cada ciclo é um MARCO. Saturno = 'o que aguenta o tempo'. Júpiter = 'o que expande a fé'."
+  permeacao_emocional: "Maturidade e esperança. Quando saudável: crescimento. Quando ferido: medo, excesso."
+  manifestacao_externa: "Eventos prováveis de maturidade, expansão, contratos, limitações. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a ENTENDER SEU CICLO. Saturno não é castigo — é prova. Júpiter não é sorte — é fé."
+
+ciclos_saturno:
+  duracao: "~29,5 anos"
+  marcos: ["21-22 (primeiro retorno)", "29-30 (segundo retorno)", "44-45 (meio-ciclo)", "58-59 (terceiro retorno)"]
+  tema: "Estrutura, maturidade, limites, concretização"
+  como_usar: "Cada retorno de Saturno é uma PROVA. O que aguenta, fica. O que não aguenta, cai."
+
+ciclos_jupiter:
+  duracao: "~12 anos"
+  marcos: ["12 (primeiro retorno)", "24 (segundo retorno)", "36 (terceiro retorno)", "48 (quarto retorno)"]
+  tema: "Expansão, fé, sorte, crescimento"
+  como_usar: "Cada retorno de Júpiter é uma JANELA de expansão. O que você plantou nos últimos 12 anos colhe agora."
+

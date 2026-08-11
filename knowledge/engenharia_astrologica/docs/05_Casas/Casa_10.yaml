@@ -1,0 +1,67 @@
+status: review
+id: "casa_10"
+tradicoes:
+  - "helenística"
+  - "medieval"
+  - "renascentista"
+  - "moderna (camadas psicológica e sistêmica explicitamente separadas)"
+tipo: "conceito técnico de casa astrológica"
+escopo_documental:
+  tecnica_historica:
+    - "significação tradicional da casa, sua relação com ângulos, casas sucedentes/cadentes e tópicos derivados"
+  camadas_modernas: "Atlas simbólico, Tarot, medicina, arquétipos e leitura sistêmica permanecem separados da regra histórica."
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "primária"
+    localizador: "Livro IV e passagens sobre configuração e significação dos lugares"
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    natureza: "primária"
+    localizador: "Livros II–IV, tópicos das casas e julgamento natal"
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    natureza: "primária"
+    localizador: "Livro I, significações das casas e regras de julgamento"
+validacao_de_fontes:
+  base: "A significa??o hist?rica dos lugares ? sustentada por Ptolomeu, Valens e Lilly, nas refer?ncias estruturadas da ficha."
+  escopo: "Tarot, Atlas simb?lico, medicina, psicologia e leitura sist?mica s?o camadas de estudo rotuladas; n?o substituem a t?cnica hist?rica de casas."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+numero: 10
+nome: "Casa 10 — A Realização / O Norte"
+tema: "O que construo e sou visto por fazer"
+
+origens_e_divergencias:
+  tradicional: "Ptolomeu (Tetrabiblos) — significados tradicionais das 12 casas."
+  moderna: "Astrologia psicológica/sistêmica (Liz Greene, escola de relações familiares)."
+  nota: "Revisar ao citar — marca a escola usada."
+atlas_simbolico:
+  pessoas_arquetipos: "O rei, a rainha, o chefe, a autoridade"
+  lugares_fisicos: "Palácios, tronos, edifícios públicos, montanhas"
+  objetos_materia: "Coroas, cetros, títulos, insígnias"
+  eventos_tipicos: "Ascensão profissional, promoções, coroações, reputação"
+  animais: "Leão, águia, cavalo nobre"
+  plantas_ervas: "Girassol, carvalho, olmo"
+  metais_pedras: "Ouro, âmbar, rubi, diamante"
+  cores_sons: "Amarelo-dourado, laranja; notas Dó e Sol"
+  numeros: "1 (liderança), 10 (autoridade), 19 (sol tarot)"
+  dias_semana: "Domingo (Sol)"
+  doencas_corpo: "Coração, coluna dorsal, olhos"
+  arquetipos_mitologicos: "Zeus/Júpiter, Hera/Juno, Apolo"
+  mitos_historias: "Zeus e o trono; Apolo e Delfos; Midas e o ouro"
+  sonhos_simbolos_inconsciente: "Sóis, coroas, tronos, teatros, aplausos"
+  expressao_elevada_sombra: "Elevada: autoridade responsável, reputação justa | Sombra: arrogância, autoritarismo"
+
+camada_energetica:
+  campo_mental: "Foco na meta, na posição social e no 'o que deixo'."
+  permeacao_emocional: "Ambição, orgulho, 'quero ser reconhecido'."
+  manifestacao_externa: "Eventos prováveis de carreira, promoção, queda. Arquétipos: o Trono, a Coroa. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a construir SEM escravidão — Casa 10 pede MISSÃO, não só status."
+
+significados_derivados:
+  dinheiro_parceiro: false
+  carreira: "Casa 10 = carreira, profissão, 'o que faço no mundo'."
+  reputacao: "Como o mundo te vê (diferente de Casa 1 que é 'como você se vê')."
+  autoridade: "Autoridade social, chefia, 'o que mando'."
+  pai: "Casa 10 = figura paterna/autoridade (tradicional)."
+  objetivo_de_vida: "O 'Norte' da pessoa — o que veio para construir."

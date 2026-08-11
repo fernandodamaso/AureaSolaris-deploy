@@ -1,0 +1,62 @@
+status: review
+
+id: "quiron_qualidades"
+nome: "Quíron — Qualidades Fídicas"
+cor: "Roxo-místico, verde-terapia, branco-cura"
+metal: "Prata (curadora), bronze"
+planta: "Erva-de-são-joão, camomila, calêndula, hortelã, raiz de valeriana"
+elemento_fisico: "Misto: água + terra (o centauro = corpo humano + cavalo = corpo animal)"
+parte_do_corpo: "Coxas (o centauro), feridas, sistema imunológico (cura)"
+qualidade_termica: "Variável (morna, curativa)"
+chakra_overlay: "Sacro (2º) e Garganta (5º) — ferida que vira voz"
+
+origens_e_divergencias:
+  tradicional: "Doutrina das Assinaturas moderna: Quíron = ervas de cura, feridas, imortalidade."
+  moderna: "Astrologia psicológica (Liz Greene) — corpo como linguagem simbólica."
+  nota: "Chakra overlay = sincretismo Nova Era, não canônico."
+atlas_simbolico:
+  pessoas_arquetipos: "Professor ferido, curador, mentor"
+  lugares_fisicos: "Lugares de cura: hospitais, templos, locais de aprendizado"
+  objetos_materia: "Instrumentos de cura, livros de sabedoria"
+  eventos_tipicos: "Cura, aprendizado, mentorias, feridas que curam"
+  animais: "Centauro, cavalo, falcão"
+  plantas_ervas: "Ervas de cura: arnica, camomila, calêndula"
+  metais_pedras: "Prata, cristal de rocha, água-marinha"
+  cores_sons: "Azul-claro, prata; notas Dó e Lá"
+  numeros: "6 (cura), 7 (sabedoria), 9 (transcendência)"
+  dias_semana: "Quinta-feira (Júpiter), segunda-feira (Lua)"
+  doencas_corpo: "Sistema nervoso, ossos, articulações"
+  arquetipos_mitologicos: "Quirón, Asclépio, Prometeu"
+  mitos_historias: "Quirón e a educação de Hércules; A ferida que cura"
+  sonhos_simbolos_inconsciente: "Cura, feridas, mentorias, aprendizado"
+  expressao_elevada_sombra: "Elevada: cura pelo exemplo, mentoria | Sombra: vitimização, ferida como identidade"
+
+camada_energetica:
+  impressao_mental: "Quíron é FERIDA-CURADORA — a mente 'sabe curar porque já feriu'."
+  permeacao_emocional: "Dor que vira compaixão; talento de escuta."
+  manifestacao_externa: "Estilo roxo/verde; tende a ter 'cara de curador(a)'. Arquétipos: o Ferido que sara, o Mentor. Inclinação, não destino."
+  como_guiar_o_astral: "Quíron pede MISSÃO — a pessoa 'dói para ensinar'."
+
+porque_simbolico: |
+  QUÍRON = centauro FERIDO que não podia morrer = imortalidade com dor. A FERIDA É O DOM.
+  ERVA-DE-SÃO-JOÃO = planta da CURA (hipericum = 'sobre o fantasma'). CAMOMILA = acalma a ferida.
+  COXAS = força do centauro (corpo animal) — Quíron tem 'força de cavalo' para carregar a cura.
+
+linha_tradicao: "Doutrina das Assinaturas moderna: Quíron = ervas de cura, feridas, imortalidade."
+chakra_nota: "Overlay sincretico."
+tradicoes:
+  - "astrologia moderna de Quíron"
+  - "mitologia greco-romana"
+  - "astrologia psicológica"
+revisao_editorial:
+  atribuicao: "Quíron é figura mítica grega; o corpo menor 2060 Chiron foi descoberto em 1977 e não possui correspondência no septenário clássico."
+  limite: "Ferida, imunidade, coxas e cura são imagens de estudo, não diagnóstico, trauma presumido ou promessa terapêutica. Ervas e metais são associações modernas/editoriais."
+  chakra: "Overlay sincrético contemporâneo, não regra de cálculo astrológico."
+referencias:
+  primarias:
+    - "Apolodoro. Biblioteca, e outras fontes clássicas sobre o mito de Quíron; consultar tradução/edição declarada."
+  secundarias:
+    - "Reinhart, Melanie. Chiron and the Healing Journey. Arkana, 1989."
+    - "Zane, Stein. Essays on Chiron. 1991; consultar edição utilizada."
+  tecnicas:
+    - "Usar efemérides para o corpo menor 2060 Chiron e declarar o objeto selecionado pelo motor."

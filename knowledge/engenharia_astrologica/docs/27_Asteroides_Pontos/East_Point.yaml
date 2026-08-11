@@ -1,0 +1,98 @@
+﻿status: draft
+id: "east_point"
+nome: "East Point (EP — Ponto Leste)"
+tradicoes:
+  - "moderna ocidental"
+  - "pontos calculados"
+tema: "Ponto de 'identidade que se mostra' (calculado no ponto leste do horizonte no nascimento)"
+
+atlas_simbolico:
+  pessoas_arquetipos:
+    - "Pessoa pública"
+    - "Figura de autoridade visível"
+    - "Celebridade local"
+    - "Líder comunitário"
+    - "Pessoa que 'aparece'"
+  lugares:
+    - "Palco"
+    - "Praça pública"
+    - "Tv, rádio"
+    - "Tribuna"
+    - "Local de discurso"
+  objetos_materia:
+    - "Microfone"
+    - "Paletó de autoridade"
+    - "Cartaz de campanha"
+    - "Bandeira"
+    - "Selo oficial"
+  eventos_tipicos:
+    - "Discurso público"
+    - "Eleição"
+    - "Apresentação artística"
+    - "Momento de 'aparecer'"
+    - "Inauguração"
+  animais:
+    - "Galo (anuncia o dia)"
+    - "Águia (altivez)"
+    - " Pavão (aparência)"
+  plantas_ervas:
+    - "Girassol (que segue o sol = leste)"
+    - "Loureiro (glória)"
+    - "Rosa amarela"
+  metais_pedras:
+    - "Ouro"
+    - "Prata"
+    - "Topázio"
+  cores_sons:
+    cores: ["Amarelo-dourado", "Laranja", "Branco"]
+    sons: ["Aplauso", "Discurso", "Hino nacional"]
+  numeros: [1, 6, 10, 15]
+  dias_semana: ["Nenhum (ponto matemático)"]
+  doencas_corpo:
+    doencas: []
+    partes_corpo: ["Rosto (o que se mostra)", "Olhos (visibilidade)"]
+  arquetipos_mitologicos:
+    - "Apolo (sol nascente)"
+    - "Hélio (sol que gira)"
+  mitos_historias:
+    - "Mito do sol nascendo = identidade que aparece"
+  sonhos_inconsciente:
+    - "Subir no palco = East Point em ação"
+    - "Roupa de gala = identidade que se mostra"
+  expressao_elevada_vs_sombra:
+    elevada: "Líder autêntico, que aparece para servir, não para ser adorado."
+    sombra: "Celebridade vazia, figura pública sem conteúdo, 'aparecer por aparecer'."
+
+camada_energetica:
+  impressao_mental: "A mente de 'como eu apareço?'. Identidade pública, imagem. Quando atrito: vaidade excessiva, medo de não ser visto, 'se não apareço, não existo'."
+  permeacao_emocional: "Desejo de reconhecimento. Quando bloqueado: invisibilidade, 'ninguém me vê'. Quando solto: carisma natural."
+  manifestacao_externa: "Eventos prováveis de aparição pública, reconhecimento, liderança visível. Trânsitos marcam momentos de 'aparecer'."
+  como_guiar_o_astral: "Ajudar a mente a ser visível sem se perder na imagem: East Point pede autenticidade, não performance."
+
+representa:
+  pessoas: ["Figura pública", "Líder comunitário", "Celebridade local"]
+  eventos: ["Discurso público", "Eleição", "Apresentação", "Inauguração"]
+  corpo: ["Rosto", "Olhos", "Cabeça"]
+
+dignidades_essenciais:
+  domicilio: ["Signo no Ascendente (calculado)"]
+  exaltacao: [""]
+  detrimento: [""]
+  queda: [""]
+
+combinacoes_exemplo:
+  casa_10:
+    temas: ["carreira pública", "imagem"]
+    possiveis_efeitos: ["reconhecimento público", "carreira visível", "liderança"]
+    reforcado_por: ["sol_conjunto", "jupiter_conjunto"]
+    amenizado_por: ["saturno_conjunto", "marte_aflito"]
+
+origens_e_divergencias:
+  escola_tradicional:
+    autores: []
+    conceito: "Não tradicional — ponto matemático calculado."
+  escola_moderna:
+    autores: []
+    conceito: "Ponto de identidade pública, calculado no horizonte leste no nascimento."
+  por_que_da_divergencia: "East Point é ponto matemático moderno, usado em astrologia de carreira e imagem pública."
+

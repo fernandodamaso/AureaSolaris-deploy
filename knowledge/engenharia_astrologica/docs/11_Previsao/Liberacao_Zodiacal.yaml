@@ -1,0 +1,99 @@
+id: liberacao_zodiacal
+nome: Liberação zodiacal (aphesis)
+tipo: tecnica_de_senhores_do_tempo
+tradicoes:
+- helenística
+- reconstrução tradicional contemporânea
+status: review
+definicao: Técnica de senhores do tempo transmitida sobretudo na Antologia de Vettius
+  Valens. Períodos hierárquicos 'são liberados' por signos a partir de um lote escolhido;
+  o regente, a posição zodiacal e as relações com o Lote da Fortuna são avaliados
+  pela reconstrução adotada. A técnica requer lotes calculados com regra de seita
+  declarada.
+fundamentos:
+  pontos_de_partida: Fortuna e Espírito são os pontos de partida mais documentados
+    na prática contemporânea; outros lotes exigem atribuição textual específica.
+  periodos: Os signos recebem durações tradicionais e se organizam em níveis (L1,
+    L2 e inferiores), cada qual com escala de tempo própria.
+  liberacao_do_vinculo: Regra distintiva da técnica em que a sequência faz um salto
+    prescrito após uma volta de subperíodos; sua aplicação exata deve seguir a edição/reconstrução
+    escolhida.
+  angularidade: A leitura contemporânea costuma observar angularidade relativa à Fortuna;
+    essa formulação e seus termos devem ser citados, não naturalizados.
+protocolo_de_calculo:
+- Calcular Fortuna e Espírito com fórmula diurna/noturna, registrando a convenção
+  de seita.
+- Escolher o lote de partida e justificar o assunto com fonte e tradição.
+- Usar a tabela de durações e calendário (por exemplo, ano ideal de 360 dias ou convenção
+  alternativa) declarados.
+- Gerar os níveis de período, assinalando mudanças de signo, regentes, voltas e liberações
+  do vínculo.
+- Ler cada período a partir da condição natal de seu regente e da topologia de casas
+  por signo inteiro usada no método.
+- Separar o que Valens atesta da terminologia e das ênfases de reconstruções modernas.
+dados_reproduziveis:
+  obrigatorios:
+  - Lote de partida, fórmula diurna/noturna usada, convenção de seita, zodíaco tropical
+    e topologia de casas por signo inteiro se essa for a reconstrução adotada.
+  - Tabela de períodos, regra de liberação do vínculo, calendário de conversão, edição/tradução
+    usada e algoritmo de mudança de nível.
+  - Linha do tempo produzida com inícios/fins, signo liberado, regente, nível hierárquico
+    e marcadores especiais.
+  saida_minima: Exibir lote inicial, convenção de cálculo, tabela de durações, períodos
+    L1/L2 ativos e pontos de mudança.
+regras_para_motor:
+  guardrails:
+  - Não produzir liberação zodiacal sem declarar edição/reconstrução adotada.
+  - Não misturar automaticamente fórmulas divergentes de Fortuna/Espírito nem calendários
+    sem nota de escola.
+  leitura:
+  - "Relacionar o período ao regente natal, ao lote de partida e à angularidade relativa à Fortuna somente quando a reconstrução escolhida realmente usar esse passo."
+nao_confundir_com:
+- 'Profecção: avança o Ascendente um signo por ano, enquanto a liberação parte de
+  um lote e usa durações próprias.'
+- 'Firdária: períodos planetários de origem persa-árabe, não sequência de signos por
+  lotes.'
+- 'Dasha: técnica de Jyotisha, excluída do escopo deste projeto.'
+camada_simbolica:
+  imagem: O lote inicial libera uma cadeia de capítulos zodiacais; dentro de cada
+    capítulo, períodos menores encadeiam ritmos.
+  linguistica: Aphesis significa soltura/liberação em grego; 'liberação zodiacal'
+    é a designação contemporânea usual.
+divergencias_e_limites:
+- 'A reconstrução moderna contém decisões discutidas: fórmula de Fortuna/Espírito,
+  calendário de conversão, duração de Capricórnio e regra de liberação do vínculo.'
+- Aplicar o método a lotes além de Fortuna e Espírito requer discriminar transmissão
+  textual de extensão contemporânea.
+- A técnica não deve ser resumida como uma tabela de 'períodos de fama' sem explicar
+  a referência à Fortuna e a escola.
+referencias:
+- autor: Vettius Valens
+  obra: The Anthology, Livro IV
+  tradutor: Mark Riley
+  natureza: fonte primária principal; capítulos e numeração variam por edição
+- autor: Chris Brennan
+  obra: 'Hellenistic Astrology: The Study of Fate and Fortune'
+  ano: 2017
+  natureza: reconstrução e apresentação moderna
+- autor: Robert Schmidt
+  obra: Project Hindsight translations of Vettius Valens
+  natureza: etapa importante da reconstrução contemporânea; especificar edição no
+    uso
+- autor: Astrodienst
+  obra: Annual Profections, Lots, and Zodiacal Releasing
+  natureza: artigo de contextualização moderna
+  url: https://www.astro.com/astrology/tma_article190314_e.htm
+validacao_de_fontes:
+  base: "As refer?ncias estruturadas identificam a linhagem hist?rica, moderna ou astron?mica pertinente a esta t?cnica preditiva."
+  escopo: "Uma implementa??o deve declarar edi??o, algoritmo, efem?ride, escala de tempo e variante de escola; esta exig?ncia ? uma regra de reprodu??o, n?o uma lacuna de fonte."
+  limite: "A ficha permanece em review e n?o converte hip?tese, aproxima??o pedag?gica ou releitura moderna em previs?o determinista."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+origens_e_divergencias:
+  tradicional: Conceito/técnica presente na tradição astrológica ocidental.
+  moderna: Possível ressignificação contemporânea.
+  nota: Rotular a escola quando divergir.
+camada_energetica:
+  impressao_mental: Campo conceitual do tema/técnica.
+  permeacao_emocional: Como o tema toca a experiência subjetiva.
+  manifestacao_externa: Como aparece em comportamentos e eventos.
+  como_guiar_o_astral: Como usar este conhecimento na leitura prática.

@@ -1,0 +1,56 @@
+﻿status: draft
+id: "decanato_aries_1"
+nome: "Decanato 1 de Áries (0°–10°) — Áries puro"
+tradicoes:
+  - "convenção por signos da mesma triplicidade"
+  - "camada simbólica moderna atribuída"
+regente: "Marte (Áries/Marte na convenção por triplicidade; também Marte na face caldaica correspondente)"
+
+origens_e_divergencias:
+  sistema_adotado: "Convenção posterior/moderna por signos da mesma triplicidade: 0°–<10° de Áries recebe a cor de Áries/Marte."
+  faces_caldaicas: "A face caldaica de 0°–<10° de Áries também é regida por Marte, embora a justificativa histórica seja diferente."
+  decanos_egipcios: "Sistema distinto; não inferir equivalência sem tabela específica."
+  nota: "A coincidência de Marte entre duas tabelas não autoriza chamá-las de uma só tradição."
+
+calculo_e_escopo:
+  intervalo: "Áries tropical 0°–<10°; 10° exatos iniciam o segundo decanato."
+  uso: "Refinamento opcional após signo, planeta, casa e técnica principal."
+  camada_simbolica: "Atlas, mitos e Ponto Gama são notas atribuídas de estudo, não efeitos automáticos do grau."
+referencias:
+  - autor: "Engenharia Astrológica"
+    obra: "Decanatos"
+    natureza: "fonte editorial"
+    localizador: "Tabela de sistemas e limites em 03_Signos/Decanatos.yaml."
+  - autor: "Cláudio Ptolomeu"
+    obra: "Tetrabiblos"
+    natureza: "primária histórica"
+    localizador: "Faces e divisões zodiacais; consultar edição para a tabela caldaica, que não prova a convenção por triplicidade."
+limite_documental: "Permanece draft: falta fonte primária ou obra moderna específica que fundamente esta convenção por triplicidade como tabela independente."
+atlas_simbolico:
+  pessoas_arquetipos: "O Faísca inicial, o que expressa Fogo Cardinal"
+  lugares_fisicos: "Lugares de Fogo Cardinal"
+  objetos_materia: "Objetos de Fogo Cardinal"
+  eventos_tipicos: "Eventos de Fogo Cardinal"
+  animais: "Animais de Fogo Cardinal"
+  plantas_ervas: "Plantas de Fogo Cardinal"
+  metais_pedras: "Metais de Fogo Cardinal"
+  cores_sons: "Cores de Fogo Cardinal"
+  numeros: "Números de Fogo Cardinal"
+  dias_semana: "Dias de Fogo Cardinal"
+  doencas_corpo: "Partes do corpo de Fogo Cardinal"
+  arquetipos_mitologicos: "Arquétipos de Fogo Cardinal"
+  mitos_historias: "Mitologias de Fogo Cardinal"
+  sonhos_simbolos_inconsciente: "Símbolos de Fogo Cardinal"
+  expressao_elevada_sombra: "Elevada: Fogo Cardinal consciente | Sombra: Fogo Cardinal descontrolado"
+
+camada_energetica:
+  impressao_mental: "Áries sem filtro — iniciativa pura, impulso, 'eu sou o começo'."
+  permeacao_emocional: "Entusiasmo cru, às vezes impulsividade sem camada."
+  manifestacao_externa: "Eventos PROVÁVEIS de início, ação direta, pioneirismo. Arquétipos: o Batedor, o Gênese. Inclinação, não destino."
+  como_guiar_o_astral: "Mostrar que é a 'energia de partida' — canalizar para começar, não para atropelar."
+
+porque_simbolico: "0° de Áries (Ponto Gama) é o equinócio de primavera (hemisfério norte) — a luz supera a escuridão, a natureza 'acorda'. O decanato 1 captura esse despertar primordial."
+foco_especial:
+  infantil: "Criança com Sol/Marte/ASC em 1º decanato de Áries: impulso de 'fazer primeiro', precisa de canalização física."
+
+

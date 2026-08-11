@@ -1,0 +1,49 @@
+status: review
+id: leao_qualidades
+nome: Leão — Qualidades Físicas
+cor: Dourado, laranja-fogo, amarelo-real
+tradicoes: [tradicional, médica histórica, moderna, editorial]
+parte_do_corpo: Coração, peito e dorso; sistema circulatório central é ampliação solar
+elemento_fisico: Fogo (quente, seco)
+qualidade_termica: Quente e seca
+origens_e_divergencias:
+  tradicional: "A melothesia associa Leão ao coração, peito e dorso. Ouro e dourado derivam das correspondências do Sol."
+  moderna: "Centralidade, criatividade e necessidade de expressão são desenvolvimentos psicológicos do simbolismo solar."
+  nota: "A correspondência não implica cardiopatia, aparência régia ou personalidade obrigatória."
+atlas_simbolico:
+  pessoas_arquetipos: Rei, rainha, artista, líder carismático, criança, performer, comandante
+  lugares_fisicos: Palácios, teatros, estádios, lugares de poder, tronos, circos
+  objetos_materia: Coroas, cetros, joias, arte, música, teatros, espelhos
+  eventos_tipicos: Coroações, casamentos reais, estreias, festas, nascimentos de filhos
+  animais: Leão, tigre, leopardo, falcão, pavão, cavalo nobre
+  plantas_ervas: Girassol, heliotropo, rosa, laranjeira, olmo, carvalho
+  metais_pedras: Ouro, âmbar, topázio, citrino, diamante, rubi
+  cores_sons: Amarelo-dourado, laranja, roxo; notas Dó e Sol; trombeta, órgão, tambor
+  numeros: 1 (liderança), 5 (expressão criativa), 9 (completude solar)
+  dias_semana: Domingo (dia do Sol)
+  doencas_corpo: "Na medicina astrológica histórica: coração, peito e dorso; olhos, artérias e circulação são extensões solares variáveis. Não usar para diagnóstico."
+  arquetipos_mitologicos: Hércules, Apolo, Dioniso, Zeus/Júpiter, Hera/Juno
+  mitos_historias: Hércules e os 12 trabalhos; Apolo e a Pítia; Midas e o toque de ouro
+  sonhos_simbolos_inconsciente: Sóis, coroas, teatros, leões, ouro, festas, aplausos
+  expressao_elevada_sombra: 'Elevada: generosidade radiante, liderança inspiradora, criatividade magnânima | Sombra: arrogância, vaidade, ego inflado, dominação'
+camada_energetica:
+  impressao_mental: A cor dourada no mapa = 'centro que brilha'.
+  permeacao_emocional: Amor, orgulho, generosidade — risco de ego inflado.
+  manifestacao_externa: "O tipo leonino é descrito como solar, ereto, expressivo, de olhos brilhantes ou cabelo destacado; é uma crença fisionômica, não regra universal."
+  como_guiar_o_astral: "Usar ouro, coração e centro para compreender a cadeia solar, sem atribuir eficácia física à cor."
+porque_simbolico: 'Leão = CORAÇÃO/DORSO — o coração é o CENTRO do corpo (como Leão é o ''centro'' do zodíaco). O dorso é a ''coluna real'' (postura majestosa).
+
+  DOURADO = cor do SOL (regente de Leão). O leão é o ''rei dos animais'' = coroa de ouro.
+
+  '
+leitura_corporal: {regra: "Leão corresponde ao coração, peito e dorso na melothesia.", uso: "Estudo histórico e simbólico condicionado pelo mapa inteiro."}
+aparencia_nas_tradicoes:
+  descricao: "Fisionomias astrológicas falam em porte ereto, expressão franca, cabelo ou juba marcante e presença régia."
+  porque: "A imagem combina Sol, fogo fixo, coração e o leão como emblema de soberania."
+  variantes: "O tipo solar pode decorrer do Sol dominante, Ascendente em Leão ou regente angular; autores divergem sobre o peso."
+  limite: "Preservar a doutrina sem converter porte ou cabelo em prova de signo."
+referencias:
+  - {autor: "Claudius Ptolemy", obra: "Tetrabiblos", natureza: "primária histórica", localizador: "Livro I; Sol, Leão e membros do corpo."}
+  - {autor: "William Lilly", obra: "Christian Astrology", natureza: "primária histórica", localizador: "Descrições fisionômicas dos planetas e signos."}
+  - {autor: "Heinrich Cornelius Agrippa", obra: "De occulta philosophia", natureza: "primária histórica", localizador: "Livro I; ouro, cores e correspondências solares."}
+validacao_de_fontes: {base: "Coração/dorso e ouro são cadeias históricas; criatividade é desenvolvimento moderno.", limite: "Não usar para diagnóstico ou fenotipagem automática."}

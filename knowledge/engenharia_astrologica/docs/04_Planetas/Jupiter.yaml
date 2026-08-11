@@ -1,0 +1,156 @@
+status: review
+id: "jupiter"
+tradicoes:
+  - "helenística"
+  - "medieval"
+  - "renascentista"
+  - "moderna (camada psicológica explicitamente separada)"
+escopo_documental:
+  tecnica_historica:
+    - "natureza, significações, regência, dignidades, sect e condições planetárias conforme a linhagem selecionada"
+  camadas_modernas: "Psicologia, evolução, sistêmica, mitologia e correspondências contemporâneas permanecem identificadas como camadas próprias."
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "primária"
+    localizador: "Livros I–II, natureza, significações e condições dos planetas"
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    natureza: "primária"
+    localizador: "Livros I–II, significadores e julgamento natal"
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    natureza: "primária"
+    localizador: "Livro I, significações, dignidades e condições planetárias"
+validacao_de_fontes:
+  base: "As refer?ncias estruturadas sustentam a camada hist?rica ou moderna explicitamente declarada para este corpo."
+  escopo: "Mitologia, psicologia, evolu??o, medicina, sist?mica e Atlas permanecem camadas de estudo rotuladas, sem substituir dado astron?mico ou regra de escola."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+nome: "Júpiter"
+tipo: "Planeta"
+tradicao_primaria: ["tradicional", "psicológica", "evolutiva"]
+
+essencia:
+  - "Expansão"
+  - "Fé"
+  - "Sabedoria"
+  - "Abundância"
+
+atlas_simbolico:
+  pessoas_arquetipos:
+    - "Sábio"
+    - "Professor"
+    - "Viajante"
+    - "Padre/religioso"
+    - "Rei generoso"
+    - "Filósofo"
+    - "Gourmet (modo sombra)"
+  lugares:
+    - "Igreja, templo"
+    - "Universidade"
+    - "País estrangeiro"
+    - "Biblioteca antiga"
+    - "Mercado grande"
+    - "Hotel de luxo"
+  objetos_materia:
+    - "Bíblia/livro sagrado"
+    - "Cetro dourado"
+    - "Estatueta de deus"
+    - "Mapa do mundo"
+    - "Vinho caro"
+    - "Pérola grande"
+    - "Estatueta de elefante"
+  eventos_tipicos:
+    - "Formatura"
+    - "Viagem longa"
+    - "Publicação de livro"
+    - "Promoção por mérito"
+    - "Ganho de dinheiro"
+    - "Excesso (gula, farra)"
+  animais:
+    - "Cavalo grande"
+    - "Elefante"
+    - "Falcão"
+    - "Baleia"
+    - "Cão de caça"
+    - "Touro"
+  plantas_ervas:
+    - "Rosa mosqueta"
+    - "Nogueira"
+    - "Aveia"
+    - "Canela"
+    - "Uva"
+    - "Figo"
+    - "Aloé"
+  metais_pedras:
+    - "Estanho"
+    - "Lápis-lazúli"
+    - "Safira azul"
+    - "Topázio"
+    - "Turquesa"
+    - "Pérola grande"
+  cores_sons:
+    cores: ["Azul-royal", "Roxo", "Dourado"]
+    sons: ["Órgão de igreja", "Canto gregoriano", "Trombeta"]
+  numeros: [3, 9, 12, 21, 36, 45]
+  dias_semana: ["Quinta-feira"]
+  doencas_corpo:
+    doencas: ["Problemas hepáticos", "Obesidade", "Diabetes"]
+    partes_corpo: ["Fígado", "Coxas", "Quadris"]
+  arquetipos_mitologicos:
+    - "Zeus/Júpiter (rei dos deuses)"
+    - "Thor (trovão, força expansiva)"
+  mitos_historias:
+    - "Zeus e os deuses do Olimpo"
+    - "Thor e o martelo"
+  sonhos_inconsciente:
+    - "Montanha dourada = objetivo espiritual"
+    - "Banquete = abundância emocional"
+    - "Perder a fé = crise de valores"
+  expressao_elevada_vs_sombra:
+    elevada: "Mestre compassivo, filósofo que amplia a mente, generoso."
+    sombra: "Fanático religioso, exagero, gula, arrogância espiritual."
+
+camada_energetica:
+  impressao_mental: "A mente de 'para onde eu vou?'. Expansão, fé, filosofia. Quando atrito: exagero, fanatismo, o mundo é pequeno para mim."
+  permeacao_emocional: "Entusiasmo e confiança. Quando bloqueado: medo de errar, não tenho direito. Quando solto: generosidade, alegria."
+  manifestacao_externa: "Eventos prováveis de viagem longa, estudo superior, publicação, ganho. Trânsitos trazem expansão ou excesso."
+  como_guiar_o_astral: "Ajudar a mente a expandir sem perder o chão: Júpiter pede fé, não fanatismo; generosidade, não exagero."
+
+representa:
+  pessoas: ["Sábio", "Professor", "Religioso", "Viajante", "Advogado"]
+  eventos: ["Formatura", "Viagem longa", "Publicação", "Promoção", "Ganho"]
+  corpo: ["Fígado", "Coxas", "Quadris"]
+
+dignidades_essenciais:
+  domicilio: ["Sagitário", "Peixes"]
+  exaltacao: ["Câncer"]
+  detrimento: ["Gêmeos", "Virgem"]
+  queda: ["Capricórnio"]
+
+astronomia_e_regras_de_julgamento:
+  astronomia_observacional:
+    - "Planeta superior de movimento relativamente lento, com retrogradações anuais longas e visíveis."
+    - "Sua condição por casa, dignidade, visibilidade e aplicação pesa mais do que um rótulo genérico de abundância."
+  criterios_tradicionais:
+    - "Júpiter é o grande benéfico, porém o benefício concreto depende de assunto, regências, aspecto, recepção e sect."
+    - "Em leituras tradicionais, lei, conselho, fé, magistratura, proteção e ampliação devem ser separados de promessas modernas de otimismo ilimitado."
+  notas_de_motor:
+    - "Não traduzir Júpiter automaticamente como sorte irrestrita; qualificar por condição, assunto e método."
+    - "Registrar retrogradação, estações e repetição de aspectos em técnicas preditivas."
+
+combinacoes_exemplo:
+  casa_9:
+    temas: ["filosofia", "viagem longa", "estudo superior"]
+    possiveis_efeitos: ["mente filosófica", "gosto por culturas estrangeiras", "fé profunda"]
+    reforcado_por: ["sol_dignificado", "mercurio_conjunto"]
+    amenizado_por: ["saturno_conjunto", "marte_aflito"]
+
+origens_e_divergencias:
+  escola_tradicional:
+    autores: [Ptolomeu, Bonatti]
+    conceito: "O Grande Benéfico, significador da sabedoria, da viagem, da fé e da abundância."
+  escola_moderna:
+    autores: [Liz Greene, Jung]
+    conceito: "Função da transcendência: como buscamos sentido, expandimos a mente e confiamos na vida."
+  por_que_da_divergencia: "Tradicional vê Júpiter como benéfico material/espiritual; moderna vê como função de busca de sentido."

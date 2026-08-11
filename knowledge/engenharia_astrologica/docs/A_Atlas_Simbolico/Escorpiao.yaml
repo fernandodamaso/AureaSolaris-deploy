@@ -1,0 +1,105 @@
+﻿status: review
+id: "escorpiao_atlas"
+nome: "Escorpião — Atlas Simbólico"
+tradicoes:
+  - "atlas simbolico editorial"
+  - "sintese multiescola"
+tipo: "Atlas Simbólico"
+subtema: "Correspondências de Escorpião"
+
+origens_e_divergencias:
+  tradicional: "Marte (antiga) / Plutão (moderna) — água, morte, renascimento, poder."
+  moderna: "Plutão (mesmo). Sem divergência significativa."
+  nota: "Marte como regência tradicional antiga, Plutão na moderna."
+
+atlas_simbolico:
+  pessoas_arquetipos:
+    - "O cirurgião"
+    - "O detetive"
+    - "O mago"
+    - "O renascido"
+    - "O manipulador"
+    - "O guerreiro sombrio"
+  lugares_fisicos:
+    - "Subterrâneos"
+    - "Mina de ouro"
+    - "Hospitais psiquiátricos"
+    - "Delegacias"
+    - "Lugares de transformação"
+  objetos_materia:
+    - "Ferramentas cirúrgicas"
+    - "Relíquias"
+    - "Moedas antigas"
+    - "Espadas"
+    - "Chaves"
+  eventos_tipicos:
+    - "Mortes e renascimentos"
+    - "Crises profundas"
+    - "Transformações"
+    - "Descobertas de segredos"
+    - "Poder"
+  animais:
+    - "Escorpião"
+    - "Aguia"
+    - "Lobo negro"
+    - "Cobra"
+    - "Fênix"
+    - "Hiena"
+  plantas_ervas:
+    - "Erva-moura"
+    - "Raízes profundas"
+    - "Papoula"
+    - "Narciso"
+    - "Hortelã-pimenta"
+  metais_pedras:
+    - "Obsidiana"
+    - "Granada"
+    - "Rubi"
+    - "Esmeralda escura"
+    - "Ágata negra"
+  cores_sons:
+    cores: ["Preto", "Roxo-escuro", "Vermelho-sangue", "Verde-escuro"]
+    sons: ["Trovão", "Tambor profundo", "Grito"]
+  numeros: [8, 4, 9]
+  dias_semana: ["Terça-feira"]
+  doencas_corpo:
+    doencas: ["Problemas reprodutivos", "Câncer", "Infecções profundas"]
+    partes_corpo: ["Órgãos reprodutivos", "Intestinos", "Sangue"]
+  arquetipos_mitologicos:
+    - "Hades/Plutão"
+    - "Perséfone (renascimento)"
+    - "Hécate"
+  mitos_historias:
+    - "Rapto de Perséfone"
+    - "Morte e renascimento de Dioniso"
+  expressao_elevada_sombra: "Elevada: transformação, regeneração, poder | Sombra: manipulação, controle, violência, fanatismo"
+
+revisao_editorial:
+  origem_e_linguagem: "Escorpião deriva do latim scorpio; o animal, a constelação e o signo tropical são camadas relacionadas, mas não idênticas."
+  mito_arquetipo_e_porque: "Ferrão, defesa, ocultação e metamorfose são imagens simbólicas; a associação com poder/sexualidade é amplamente moderna e não deve virar essência de uma pessoa."
+  limite_tecnico: "Marte é regente tradicional; Plutão é regente moderno. A variante escolhida deve ser visível e o signo não substitui condição planetária."
+referencias:
+  primarias:
+    - "Ptolomeu. Tetrabiblos, livro I: signos e qualidades, conforme edição declarada."
+  secundarias:
+    - "Greene, Liz. The Astrology of Fate. Samuel Weiser, 1984."
+  tecnicas:
+    - "Ver 04_Planetas/Marte.yaml, 04_Planetas/Plutao.yaml e regras de regência."
+camada_energetica:
+  impressao_mental: "A mente que TRANSFORMA e RENASCE. Profundidade, morte do antigo."
+  permeacao_emocional: "Intensidade emocional extrema. Quando saudável: regeneração. Quando ferido: obsessão."
+  manifestacao_externa: "Eventos PROVÁVEIS de crise, morte, renascimento, poder. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a SOLTAR o que já morreu. Escorpião é a metamorfose."
+
+tarot_relacionado:
+  carta: "A Morte (XIII)"
+  conexao: "A Morte é Escorpião: fim do que já não serve, renascimento."
+
+foco_especial:
+  infantil: "A criança Escorpião é intensa, silenciosa, percebe o invisível. Precisa de respeito pela sua profundidade."
+  familiar: "O membro que carrega segredos. O que transforma a família."
+  carmico_espiritual: "Escorpião indica a LIÇÃO DE PODER. Casa Escorpião = onde a pessoa aprende a morrer para renascer."
+
+ver_mais:
+  - "../03_Signos/Escorpiao.yaml"
+

@@ -1,0 +1,87 @@
+status: review
+id: "escorpiao"
+nome: "Escorpião"
+tradicoes:
+  - "helenística"
+  - "medieval"
+  - "renascentista"
+  - "moderna (somente camadas explicitamente modernas)"
+escopo_documental:
+  tecnica_historica:
+    - "elemento, modalidade, regência, dignidade e estrutura zodiacal"
+    - "divergências modernas de regência ou leitura entram como nota explícita, sem substituir silenciosamente a camada histórica"
+  camadas_modernas: "Atlas simbólico, Tarot, correspondências médicas e releituras contemporâneas permanecem separados da regra histórica e devem ser apresentados como camada interpretativa rotulada."
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "primária"
+    localizador: "Livro I, capítulos sobre signos, qualidades e regências"
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    natureza: "primária"
+    localizador: "Livros I–II, passagens sobre signos e regentes"
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    natureza: "primária"
+    localizador: "Livro I, descrição dos signos e significadores"
+validacao_de_fontes:
+  base: "A regra zodiacal hist?rica ? sustentada por Ptolomeu, Valens e Lilly, nas refer?ncias estruturadas da ficha."
+  escopo: "Tarot, Atlas simb?lico, mitologia, correspond?ncias m?dicas e psicologia s?o camadas de estudo rotuladas; n?o s?o consenso nem substituem a regra hist?rica."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+elemento: "Água"
+modalidade: "Fixo"
+regente: "Marte (moderno: Plutão)"
+
+origens_e_divergencias:
+  tradicional: "Marte (morte, guerra, sexualidade, intensidade)."
+  moderna: "Plutão (morte/renascimento, poder, transformação, psique profunda)."
+  divergencia: "Tradicional associa Escorpião a Marte (o 'ferro' que fere); moderna troca para Plutão (o 'fundo' que transforma). Ambas leituras coexistem — registrar ao citar."
+  nota: "Divergência importante: Marte = ação/fogo; Plutão = transformação/água profunda. A leitura muda o tom."
+
+essencia:
+  - "Profundidade"
+  - "Intensidade"
+  - "Transformação"
+
+simbologia_elemento:
+  elemento: "Água"
+  modalidade: "Fixo"
+  simbolo: "Água congelada / Gelo profundo / Pântano"
+  analogia: "Água Fixa — como água congelada no fundo de um lago."
+  porque: "Água Fixa é o ESTÁGIO final da água: densa, intensa, não se move superficialmente. Escorpião é o oitavo signo, onde a energia penetra profundamente. O gelo representa o que parece sólido por fora, mas esconde profundidade e pressão interna."
+atlas_simbolico:
+  pessoas_arquetipos: "Mago, xamã, cirurgião, detetive, psiquiatra, herdeiro, estrategista"
+  lugares_fisicos: "Lugares profundos, subterrâneos, penínsulas, fontes termais, cemitérios"
+  objetos_materia: "Faca de cirurgia, espada, veneno, elixir, ouro, pedras preciosas escuras"
+  eventos_tipicos: "Morte/renascimento, heranças, cirurgias, investigações, transformações"
+  animais: "Escorpião, serpente, lobo, abutre, phoenix, crocodilo"
+  plantas_ervas: "Papoula, cannabis, açafrão, ruibarbo, mandrágora, heléboro"
+  metais_pedras: "Ferro, plutônio, plutônio; obsidiana, granada, topázio escuro, rubi"
+  cores_sons: "Vermelho-escuro, preto, marrom; notas Dó e Sol; tambor, órgão"
+  numeros: "4 (morte/renascimento), 8 (transformação), 13 (morte/renascimento tarot)"
+  dias_semana: "Terça-feira (dia de Marte/Plutão)"
+  doencas_corpo: "Órgãos sexuais, bexiga, intestino grosso, próstata, nariz, sangue"
+  arquetipos_mitologicos: "Hades/Plutão, Perséfone, Hécate, Esculápio, Anúbis"
+  mitos_historias: "Rapto de Perséfone; Esculápio e a ressurreição; Hércules e a Hidra"
+  sonhos_simbolos_inconsciente: "Águas profundas, escorpiões, morte, renascimento, tesouros ocultos"
+  expressao_elevada_sombra: "Elevada: regeneração profunda, cura pelo confronto, sexualidade sagrada | Sombra: vingança, manipulação, ciúme destrutivo, controle"
+
+tarot:
+  carta: "A Morte"
+  explicacao: "Carta 13 — transformação, fim, renascimento. Escorpião é a Morte porque ambos representam o que morre para renascer: não é destruição, é transmutação. O esqueleto com coroa = o que morre é o ego, o que renasce é o poder."
+
+camada_energetica:
+  impressao_mental: "A mente que investiga e não solta. Desconfiança como escudo. Quando atrito: obsessão, controle, ciúme."
+  permeacao_emocional: "Sentimento total ou nada. O subsolo emocional, onde poucos entram."
+  manifestacao_externa: "Eventos prováveis de crises, renascimentos, sexo profundo, heranças. Trânsitos tendem a destruir o que não tem base."
+  como_guiar_o_astral: "Ajudar a pessoa a transformar em vez de usar. Escorpião cura quando entrega o que segurava."
+
+decanatos:
+  - "0-10: Escorpião (Marte) — intensidade e sombra"
+  - "10-20: Peixes (Júpiter) — fusão e intuição"
+  - "20-30: Câncer (Lua) — acolhimento e raiz"
+
+foco_especial:
+  infantil: "A criança Escorpião sente tudo por baixo. Precisa de verdade, não de apaziguamento superficial."
+  familiar: "O membro que guarda os segredos da família. Lealdade profunda, mas reserva emocional."
+

@@ -1,0 +1,48 @@
+﻿status: review
+id: "taca"
+nome: "Taça / Bowl (Tigela)"
+formato: "Planetas num arco de ~180° (meio zodíaco), 'tigela' virada para cima ou baixo"
+
+origens_e_divergencias:
+  tradicional: "Não é configuração ptolomaica. É padrão de distribuição associado à tipologia moderna de Marc Edmund Jones."
+  moderna: "A imagem de contenção, mundo próprio ou contraste com o vazio é interpretação de escola; não é conclusão necessária."
+  nota: "A orientação gráfica 'para cima/baixo' não tem significado inerente sem convenção de desenho e contexto de casas."
+atlas_simbolico:
+  pessoas_arquetipos: "O comunicador, o mensageiro, o conector"
+  lugares_fisicos: "Estradas, cruzamentos, estações, mercados"
+  objetos_materia: "Mapas, instrumentos de comunicação, cartas"
+  eventos_tipicos: "Visitas, negociações, comunicação, viagens curtas"
+  animais: "Borboleta, macaco, raposa"
+  plantas_ervas: "Lavanda, menta, verbena"
+  metais_pedras: "Mercúrio, ágata, citrino"
+  cores_sons: "Amarelo, verde-claro; notas Mi e Lá"
+  numeros: "3 (comunicação), 5 (oportunidade), 6 (fluxo)"
+  dias_semana: "Quarta-feira (Mercúrio)"
+  doencas_corpo: "Pulmões, braços, sistema nervoso"
+  arquetipos_mitologicos: "Hermes/Mercúrio, Castor e Pólux"
+  mitos_historias: "Hermes mensageiro; Os gêmeos celestiais"
+  sonhos_simbolos_inconsciente: "Cartas, mapas, estradas, mensagens"
+  expressao_elevada_sombra: "Elevada: comunicação clara, oportunidade | Sombra: dispersão, fofoca"
+
+camada_energetica:
+  impressao_mental: "A mente opera num 'semi-círculo' — recebe ou projeta conforme a taça abre pra cima (receptiva) ou pra baixo (ativa)."
+  permeacao_emocional: "Senso de 'metade cheia/metade vazia'; o vazio do arco oposto é sentido."
+  manifestacao_externa: "Eventos PROVÁVEIS no setor da taça. Arquétipos: a Tigela, o Berço. Inclinação, não destino."
+  como_guiar_o_astral: "Mostrar que o arco vazio é o 'pólo de desenvolvimento' da pessoa."
+
+consenso_tradicional: "Não existe consenso tradicional para este padrão. A orientação gráfica e suas leituras são convenções modernas, não regras de destino."
+arquetipos_simbolicos: ["A Tigela", "O Berço", "O Semi-círculo"]
+definicao_tecnica: "Medir o menor semicírculo que contém os planetas considerados e registrar a política para corpos fora do conjunto. Não confundir com Feixe/Bundle, que exige concentração mais estreita."
+referencias:
+  - autor: "Marc Edmund Jones"
+    obra: "The Guide to Horoscope Interpretation"
+    natureza: "primária moderna"
+    localizador: "Bowl e demais distribuições planetárias; conferir edição."
+  - autor: "Dane Rudhyar"
+    obra: "The Astrology of Personality"
+    natureza: "secundária moderna"
+    localizador: "Leitura moderna da forma total do mapa; conferir edição."
+validacao_de_fontes:
+  base: "A ficha preserva a metáfora da tigela como curiosidade interpretativa, separada da geometria."
+  limite: "Não afirmar que o lado vazio representa automaticamente carência, bloqueio ou destino."
+

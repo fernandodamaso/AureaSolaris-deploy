@@ -1,0 +1,109 @@
+status: review
+id: "marte_atlas"
+nome: "Marte — Atlas Simbólico"
+tradicoes:
+  - "atlas simbolico editorial"
+  - "sintese multiescola"
+tipo: "Atlas Simbólico"
+subtema: "Correspondências de Marte"
+
+origens_e_divergencias:
+  tradicional: "Marte rege Áries e Escorpião e exalta-se em Capricórnio. Quente e seco, significa corte, guerra, fogo, coragem e conflito; secto, dignidade, casa e aspectos definem como atua. Agrippa registra ferro e repertórios marciais."
+  moderna: "Linhas psicológicas enfatizam desejo, assertividade, separação e defesa de limites; linhas evolutivas podem falar em lição de coragem."
+  nota: "Correção: Escorpião é domicílio tradicional, não exaltação. Ares grego e Mars romano não são equivalentes culturais exatos."
+
+origem_linguistica_mito_glifo:
+  etimologia: "Marte vem de Mars, divindade romana de etimologia remota incerta."
+  mito: "Ares encena o furor da batalha; Mars também protege a ordem cívica e agrícola. Perseu e Hércules são heróis comparáveis, não personificações de Marte."
+  glifo: "♂ é o sinal planetário de Marte, posteriormente usado para o masculino; círculo e seta alimentam leituras modernas."
+  porque: "A aparência avermelhada e o deus guerreiro sustentam analogias com sangue, calor, ferro, corte e impulso."
+
+atlas_simbolico:
+  pessoas_arquetipos:
+    - "O guerreiro"
+    - "O soldado"
+    - "O cirurgião"
+    - "O competidor"
+    - "O defensor"
+  lugares_fisicos:
+    - "Campos de batalha"
+    - "Forjas"
+    - "Arenas"
+    - "Lugares altos"
+    - "Regiões quentes e secas"
+  objetos_materia:
+    - "Espadas"
+    - "Machados"
+    - "Capacetes"
+    - "Fogo"
+    - "Aço"
+    - "Ferramentas cortantes"
+  eventos_tipicos:
+    - "Guerras"
+    - "Competições"
+    - "Inaugurações"
+    - "Acidentes por pressa"
+    - "Cirurgias"
+  animais:
+    - "Carneiro"
+    - "Touro de luta"
+    - "Cavalo de guerra"
+    - "Lobo"
+    - "Leão"
+    - "Águia"
+  plantas_ervas:
+    - "Alecrim"
+    - "Pimenta"
+    - "Urtiga"
+    - "Plantas espinhosas"
+    - "Hera"
+  metais_pedras:
+    - "Ferro"
+    - "Aço"
+    - "Rubi"
+    - "Jaspe"
+    - "Diamante"
+    - "Granada"
+  cores_sons:
+    cores: ["Vermelho", "Laranja", "Dourado"]
+    sons: ["Tambor", "Trombeta", "Fogo crepitante"]
+  numeros: [1, 7, 11]
+  dias_semana: ["Terça-feira"]
+  doencas_corpo:
+    doencas: ["Cefaleias", "Febres", "Inflamações", "Cortes", "Queimaduras"]
+    partes_corpo: ["Olhos", "Cabeça", "Sistema motor"]
+  arquetipos_mitologicos:
+    - "Ares/Marte"
+    - "Perseu"
+    - "Hércules"
+  mitos_historias:
+    - "Ares na Guerra de Troia"
+    - "Perseu e Medusa"
+    - "Hércules e os doze trabalhos"
+  expressao_elevada_sombra: "Elevada: coragem autêntica, defesa, iniciativa | Sombra: agressividade destrutiva, violência, egoísmo guerreiro"
+
+camada_energetica:
+  impressao_mental: "A mente que AGE primeiro. Impulso, 'vamos lá', urgência de começar."
+  permeacao_emocional: "Entusiasmo quente e rápido. Paixão de estouro, não de sustentação."
+  manifestacao_externa: "Eventos PROVÁVEIS de ação, disputas, acidentes por pressa. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a MIRAR antes de disparar. Marte precisa de causa, não de violência vazia."
+
+tarot_relacionado:
+  carta: "O Carro (VII)"
+  conexao: "O Carro é Marte: vontade pura, direção, impulso controlado. Dois cavalos = dualidade do impulso."
+
+foco_especial:
+  infantil: "A criança Marte é quem chega primeiro, a pioneira. Precisa de desafio e movimento, não de contenção excessiva."
+  familiar: "O membro que puxa a família para a ação. Conflitos diretos, mas que passam rápido."
+  carmico_espiritual: "Marte indica a LIÇÃO DE CORAGEM da alma. Casa Marte = onde a pessoa precisa agir e defender."
+
+camada_tecnica_e_limites:
+  regra: "Julgar Marte por secto, dignidade, casa, velocidade, relação solar, recepção e aspectos; não inferir acidente ou cirurgia isoladamente."
+  limites: "Febre, inflamação, corte e queimadura são correspondências históricas, não diagnóstico. Tarot, pedras e leitura cármica são camadas atribuídas."
+referencias:
+  primarias: ["Ptolemeu, Tetrabiblos, I.4 e I.17-19.", "William Lilly, Christian Astrology (1647), pp. 65-68.", "Agrippa, De occulta philosophia, I.23-24 e II.10."]
+  secundarias: ["Demetra George, Ancient Astrology in Theory and Practice, vol. I (2019), capítulos planetários."]
+anotacoes_pessoais: []
+ver_mais:
+  - "../04_Planetas/Marte.yaml"
+

@@ -1,0 +1,97 @@
+﻿status: draft
+id: "venus_atlas"
+nome: "Vênus — Atlas Simbólico"
+tradicoes:
+  - "atlas simbolico editorial"
+  - "sintese multiescola"
+tipo: "Atlas Simbólico"
+subtema: "Correspondências de Vênus"
+
+origens_e_divergencias:
+  tradicional: "Hipócrates, Agrippa — Vênus = cobre, beleza, amor, harmonia, Vênus/Afrodite."
+  moderna: "Psicológica — Vênus como função sentimentos/valores. Evolutiva — Vênus como capacidade de amar e ser amado."
+  nota: "Regência unânime de Touro e Libra. Nenhuma divergência."
+
+atlas_simbolico:
+  pessoas_arquetipos:
+    - "O amante"
+    - "O artista"
+    - "O diplomata"
+    - "O belo"
+    - "O amigo"
+    - "O conciliador"
+  lugares_fisicos:
+    - "Jardins"
+    - "Praias"
+    - "Galeria de arte"
+    - "Sala de estar"
+    - "Teatros"
+    - "Lugares de encontro"
+  objetos_materia:
+    - "Joias"
+    - "Perfume"
+    - "Flores"
+    - "Espelhos"
+    - "Instrumentos musicais"
+    - "Obras de arte"
+  eventos_tipicos:
+    - "Casamentos"
+    - "Concordias"
+    - "Assinaturas artísticas"
+    - "Festas"
+    - "Uniões"
+  animais:
+    - "Cisne"
+    - " Pomba"
+    - "Veado"
+    - "Golfinho"
+    - "Coelho"
+  plantas_ervas:
+    - "Rosa"
+    - "Violeta"
+    - "Macieira (flor)"
+    - "Aveia"
+    - "Alpiste"
+  metais_pedras:
+    - "Cobre"
+    - "Bronze"
+    - "Esmeralda"
+    - "Jade"
+    - "Turquesa"
+    - "Diamante"
+  cores_sons:
+    cores: ["Verde", "Rosa", "Azul celeste", "Dourado claro"]
+    sons: ["Harpa", "Flauta doce", "Canto de pássaro"]
+  numeros: [2, 6, 15]
+  dias_semana: ["Sexta-feira"]
+  doencas_corpo:
+    doencas: ["Problemas renais", "Problemas de pele"]
+    partes_corpo: ["Rins", "Glândulas supra-renais", "Pele", "Região lombar"]
+  arquetipos_mitologicos:
+    - "Afrodite/Vênus"
+    - "Anfitrite"
+    - "Pandora"
+  mitos_historias:
+    - "Afrodite nascendo da espuma"
+    - "Pandora e a caixa"
+    - "Eros e Psique"
+  expressao_elevada_sombra: "Elevada: amor incondicional, beleza, harmonia, arte | Sombra: sedução manipuladora, possessividade, superficialidade"
+
+camada_energetica:
+  impressao_mental: "A mente que VALORA e HARMONIZA. Busca do belo, da justiça, do equilíbrio."
+  permeacao_emocional: "Capacidade de amar, apreciar, sentir prazer. Vênus é o afeto, o gosto, o que 'vale a pena'."
+  manifestacao_externa: "Eventos PROVÁVEIS de encontros, arte, dinheiro, casamentos. Arquétipos: o Amante, o Artista. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a AMAR SEM POSSUIR. Vênus é a entrega, não a posse."
+
+tarot_relacionado:
+  carta: "Os Enamorados (VI) / A Imperatriz (III)"
+  conexao: "Os Enamorados = Vênus como escolha amorosa. A Imperatriz = Vênus como beleza e fertilidade."
+
+foco_especial:
+  infantil: "A criança Vênus adora beleza, carinho, harmonia. Precisa de ambiente estético, música, abraços."
+  familiar: "A pessoa que MEDIA conflitos. A que traz harmonia. Quando ferida: manipulação por ciúme."
+  carmico_espiritual: "Vênus indica a LIÇÃO DE AMOR da alma. Casa Vênus = onde a pessoa aprende a amar."
+
+ver_mais:
+  - "../04_Planetas/Venus.yaml"
+

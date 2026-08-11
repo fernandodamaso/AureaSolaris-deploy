@@ -1,0 +1,60 @@
+status: review
+id: "teoria_oitavas_planetarias"
+nome: "Teoria das Oitavas Planetárias"
+tipo: "associação interpretativa moderna"
+tradicao_primaria: ["moderna", "psicológica", "humanista"]
+
+escopo:
+  definicao_operacional: "Modelo moderno que aproxima Urano de Mercúrio, Netuno de Vênus e Plutão de Marte por analogia entre temas pessoais e transpessoais."
+  inclui:
+    - "Urano como oitava superior de Mercúrio."
+    - "Netuno como oitava superior de Vênus."
+    - "Plutão como oitava superior de Marte."
+  nao_inclui:
+    - "Dignidades essenciais, regências tradicionais ou substituição automática dos regentes clássicos."
+    - "Escola Uraniana/Hamburgo, planetas hipotéticos, cosmobiologia ou dial de 90°."
+    - "Uma hierarquia moral em que o planeta exterior seja 'melhor' que o pessoal."
+  exclusoes_do_projeto: ["Astrologia Uraniana/Hamburgo e cosmobiologia."]
+
+fundamento:
+  descricao: "A expressão 'oitava' é uma metáfora moderna inspirada na música. Ela propõe que certos temas de planetas pessoais se manifestariam em escala coletiva, transindividual ou menos pessoal nos planetas exteriores."
+  contexto_historico: "Não é uma categoria da astrologia helenística, medieval ou das dignidades clássicas. Deve ser apresentada como modelo moderno de correspondência, com dissenso explícito entre praticantes."
+
+procedimento:
+  pre_requisitos:
+    - "Declaração de que a leitura usa uma lente moderna."
+    - "Leitura independente de cada planeta antes de aproximá-los por analogia."
+  passos:
+    - "Examinar Mercúrio e Urano separadamente e só então testar a analogia mente/conhecimento/inovação."
+    - "Examinar Vênus e Netuno separadamente e só então testar a analogia valor, vínculo, imaginação e idealização."
+    - "Examinar Marte e Plutão separadamente e só então testar a analogia ação, poder, crise e transformação."
+    - "Conferir se casa, aspectos e técnica escolhida sustentam a comparação."
+  parametros_de_calculo: []
+
+uso_interpretativo:
+  pergunta_que_ajuda_a_responder:
+    - "Uma lente moderna acrescenta uma relação útil entre a função pessoal e uma dinâmica coletiva/transpessoal?"
+  como_ponderar: "Usar como hipótese interpretativa adicional. A leitura deve continuar distinguindo as funções próprias de cada planeta e informando que a associação não é consenso tradicional."
+  limites:
+    - "Não usar a oitava para trocar automaticamente regências, dignidades ou significadores tradicionais."
+    - "Não transformar a metáfora em causalidade astronômica ou em fato histórico antigo."
+
+divergencias_de_tradicao:
+  consenso: "A associação aparece em linhas modernas, mas não integra o consenso técnico tradicional."
+  divergencias:
+    - "Parte da astrologia moderna utiliza as três correspondências; parte mantém os planetas exteriores como símbolos independentes ou rejeita novas regências."
+    - "A Escola de Hamburgo emprega 'planetas de oitava' em outro sentido; esse uso está fora do escopo."
+  decisao_editorial: "Rotular sempre como associação moderna e apresentar as três relações como analogias, não equivalências."
+
+referencias:
+  primarias: []
+  secundarias:
+    - "Fernandez, Maurice. Octaves in Astrology: The Relationship between Personal and Transpersonal Planets. Astrodienst. https://www.astro.com/astrology/in_octaves_e.htm (acesso em 2026-08-10)."
+    - "Astrodienst Astrowiki. Octave. https://www.astro.com/astrowiki/en/Octave (acesso em 2026-08-10)."
+  tecnicas: []
+
+relacoes:
+  depende_de: ["urano", "netuno", "plutao", "mercurio", "venus", "marte"]
+  ver_tambem: ["regencias_modernas", "astrologia_psicologica", "astrologia_humanista"]
+
+anotacoes_pessoais: []

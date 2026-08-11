@@ -1,0 +1,50 @@
+status: complete
+id: "cazimi"
+nome: "Cazimi"
+tradicoes:
+  - "medieval"
+  - "renascentista"
+  - "tradicional"
+  - "moderna ocidental (reapresentação)"
+tipo: "condição solar especial (fundamento tradicional; alojamento editorial de legado)"
+classificacao_editorial:
+  nucleo_conceitual: "Condições planetárias tradicionais / condições solares"
+  localizacao_atual: "09_Tecnicas_Modernas por legado de organização; não classificar como técnica moderna de origem"
+  regra_de_apresentacao: "Mostrar primeiro a regra histórica parametrizada; a linguagem psicológica moderna é camada opcional e rotulada."
+escopo_documental:
+  tecnica_historica:
+    - "proximidade extrema ao Sol"
+    - "distinção entre cazimi, combustão e sob os raios"
+    - "cálculo por longitude, com política explícita para latitude se a escola a considerar"
+  calculo_e_regra: "A definição clássica mais repetida usa orbe muito estreito, frequentemente cerca de 17 minutos de arco em longitude. O motor deve permitir parametrização e registrar a convenção adotada."
+  divergencias_de_escola: "Alguns autores e programas variam levemente o limite; leituras modernas às vezes ampliam o valor simbólico sem preservar o rigor do orbe."
+referencias:
+  - autor: "William Lilly"
+    obra: "Christian Astrology, 1647, Livro I, pp. 112–113 (definições de sob os raios, combustão e cazimi)."
+    natureza: "fonte primária histórica"
+    localizador: "Livro I, definições de estado planetário"
+  - autor: "Guido Bonatti; trad. Benjamin N. Dykes"
+    obra: "Book of Astronomy, 2 vols., Cazimi Press, 2007–2009."
+    natureza: "fonte primária medieval em tradução moderna"
+    localizador: "passagens sobre aflições e condições planetárias"
+  - autor: "Deborah Houlding"
+    obra: "The Houses: Temples of the Sky, The Wessex Astrologer, 2006."
+    natureza: "estudo secundário tradicional"
+    localizador: "contextualização contemporânea; não substitui a convenção histórica"
+definicao_tecnica: "Cazimi ocorre quando um planeta está extremamente próximo do centro solar, em condição tratada por muitos autores tradicionais como exceção favorável à aflição solar comum."
+regra_geral: "Não fundir cazimi com combustão. Cazimi é categoria própria."
+limites_e_notas:
+  convencao_lilly_1647: "Lilly registra cazimi como dentro de 17 minutos de arco do Sol (Christian Astrology, Livro I, pp. 112–113)."
+  politica_do_corpus: "Usar 17' em longitude geocêntrica eclíptica como perfil Lilly; qualquer outro limite exige perfil de escola nomeado."
+  observacao: "A interpretação depende do planeta envolvido, da técnica e da escola; não basta dizer 'força máxima' sem contexto."
+camada_moderna:
+  nota: "Autores modernos podem falar em concentração excepcional, claridade ou centralização da função planetária, mas essa linguagem deve ser apresentada como releitura."
+nao_confundir_com:
+  - "combustão"
+  - "sob os raios"
+  - "conjunção solar simples"
+camada_energetica:
+  impressao_mental: "O planeta está no coração do Sol, em condição de foco extremo."
+  permeacao_emocional: "A função planetária pode ser vivida como intensamente centralizada."
+  manifestacao_externa: "Na tradição, costuma ser lido como exceção de força dentro do campo solar."
+  como_guiar_o_astral: "Confirmar primeiro o orbe real e a convenção técnica antes de atribuir qualquer excepcionalidade."

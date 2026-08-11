@@ -1,0 +1,58 @@
+status: review
+id: "graus_geral"
+nome: "Graus Astrológicos: Cálculo, Subdivisões e Simbolismo"
+tipo: "Aprofundamento"
+tradicoes: ["helenística", "medieval", "renascentista", "moderna simbólica"]
+
+fundamento:
+  definicao: "O zodíaco contém 360°, doze signos de 30°. O grau localiza um fator com precisão dentro do signo; sentidos adicionais dependem de uma técnica ou linhagem declarada."
+  notacao: "12°34'56'' de Touro corresponde a longitude 42°34'56'' no zodíaco iniciado em 0° de Áries."
+  ordinal: "0°00'–0°59' é o primeiro grau do signo; 29°00'–29°59' é o trigésimo. Fontes antigas podem usar contagem ordinal."
+
+familias_de_tecnicas:
+  tradicionais:
+    - "termos/limites: divisões desiguais de cinco regentes por signo; tabelas egípcia e ptolomaica divergem"
+    - "faces/decanatos: três divisões de 10° por signo, com variantes históricas de regência"
+    - "monomoiria: atribuição de regência a cada grau em certas fontes helenísticas"
+    - "graus brilhantes, escuros, vazios, masculinos/femininos e graus de elevação/depressão: listas atribuídas que precisam de fonte e tabela"
+  modernas:
+    - "graus críticos e grau anarético: listas não uniformes"
+    - "Símbolos Sabianos: 360 imagens recebidas por Elsie Wheeler e organizadas por Marc Edmund Jones; Rudhyar reelaborou a série"
+    - "outros símbolos grau a grau: Charubel, Sepharial e tradições posteriores, que não devem ser fundidas"
+
+origens_e_divergencias:
+  decisao_editorial: "Não existe consenso de que 0°, 15° e 29° formem uma tríade crítica universal. Cada alegação será ligada à sua escola e tabela."
+  simbolismo: "Início, centro e limiar são imagens geométricas férteis; podem integrar camadas cármica, psicológica ou esotérica, desde que nomeadas."
+  sabianos: "Usam normalmente contagem ordinal: uma posição em 0°xx de um signo consulta o símbolo do primeiro grau; o método de arredondamento deve ser explícito."
+
+procedimento:
+  passos:
+    - "Preservar longitude com minutos/segundos e sistema zodiacal."
+    - "Converter entre longitude total, grau no signo e número ordinal sem arredondamento prematuro."
+    - "Escolher tabela/técnica com autor, edição e variante."
+    - "Interpretar o fator no mapa antes do símbolo do grau."
+    - "Registrar convergências e contradições entre sistemas em vez de combiná-los como se fossem um só."
+  regra_de_motor: "Nenhum significado de grau é default universal. A saída deve identificar tabela, versão, índice ordinal e precisão da posição."
+
+limites:
+  - "Não extrair diagnóstico, evento inevitável ou caráter total de um único grau."
+  - "Não chamar uma lista moderna de consenso tradicional."
+  - "Não aplicar símbolo de grau errado por confundir número exibido e ordinal."
+
+curiosidades_e_linguagem:
+  grau: "Do latim gradus, passo ou degrau; conserva a imagem de medida e progressão."
+  arquetipos: ["degrau", "limiar", "roda de 360 faces", "semente e culminação"]
+
+referencias:
+  primarias:
+    - "Ptolemy. Tetrabiblos, livro I; dignidades e termos, tradução consultada."
+    - "Vettius Valens. Anthology; passagens sobre termos, decanos e monomoiria, tradução consultada."
+  secundarias:
+    - "Jones, Marc Edmund. The Sabian Symbols in Astrology. Aurora Press, edição consultada."
+    - "Rudhyar, Dane. An Astrological Mandala. Vintage, 1974."
+    - "Holden, James H. A History of Horoscopic Astrology. AFA, 1996."
+  tecnicas: []
+
+relacoes:
+  depende_de: ["zodiaco_tropical", "longitude_ecliptica"]
+  ver_tambem: ["decanatos", "termos", "grau_15_coracao", "grau_29_anaretic"]

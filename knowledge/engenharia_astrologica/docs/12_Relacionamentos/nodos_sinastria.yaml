@@ -1,0 +1,60 @@
+status: review
+id: "nodos_sinastria"
+nome: "Nodos em Sinastria"
+tradicoes:
+  - "moderna ocidental"
+  - "relacional"
+tipo: "Relacionamentos"
+subtema: "Eixo nodoso como ponte cármica"
+
+origens_e_divergencias:
+  tradicional: "Nodos possuem usos antigos ligados a eclipses e condições do mapa, mas a linguagem de reencarnação e 'missão da alma' não é consenso da tradição ocidental histórica."
+  moderna: "Leituras nodais cármicas/evolutivas são linhas modernas, com pressupostos espirituais próprios e autores declarados."
+  nota: "Em sinastria, tratar a ligação nodal como hipótese simbólica da escola escolhida; não concluir passado compartilhado, obrigação ou destino relacional."
+
+referencias:
+  - autor: "Martin Schulman"
+    obra: "Karmic Astrology: The Moon's Nodes and Reincarnation"
+    ano: 1975
+    natureza: "fonte moderna cármica"
+    localizador: "Linguagem nodal e pressuposto reencarnacionista"
+  - autor: "Steven Forrest"
+    obra: "Yesterday's Sky: Astrology and Reincarnation"
+    ano: 2008
+    natureza: "fonte moderna evolutiva"
+    localizador: "Leitura moderna de Nodos; não usar como fonte da doutrina helenística"
+
+atlas_simbolico:
+  pessoas_arquetipos: "O guia, o buscador, o complemento cármico"
+  lugares_fisicos: "Eclusas, caminhos, rotas"
+  objetos_materia: "Bússolas, mapas, chaves"
+  eventos_tipicos: "Encontros com missão, mudanças de direção"
+  animais: "Dragão, serpente, águia"
+  plantas_ervas: "Hera, raízes profundas"
+  metais_pedras: "Ouro, cristal, obsidiana"
+  cores_sons:
+    cores: ["Verde-escuro", "roxo", "dourado"]
+    sons: ["Gongo", "vento", "serpente"]
+  numeros: [12]
+  dias_semana: ["Quinta-feira"]
+  doencas_corpo:
+    doencas: ["Problemas de coluna", "equilíbrio"]
+    partes_corpo: ["Coluna dorsal", "equilíbrio"]
+  arquetipos_mitologicos:
+    - "Dragão"
+    - "Jörmungandr (serpente do mundo)"
+  mitos_historias: "O dragão que guarda o tesouro; Jason e o Velocino de Ouro"
+  expressao_elevada_sombra: "Elevada: missão cumprida | Sombra: desvio, medo do caminho"
+
+camada_energetica:
+  impressao_mental: "Nodos em sinastria = 'qual é a missão deste relacionamento?'."
+  permeacao_emocional: "Busca de sentido no relacionamento. Quando saudável: direção clara. Quando ferido: desvio."
+  manifestacao_externa: "Eventos prováveis de encontros com missão, mudanças de direção. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a SEGUIR O NODO NORTE JUNTOS. O relacionamento é um CAMINHO, não uma prisão."
+
+como_usar: |
+  1. Nodo Norte de A na casa/planeta de B = missão de A através de B.
+  2. Nodo Norte de B na casa/planeta de A = missão de B através de A.
+  3. Nodos Sul em sinastria = passado compartilhado.
+  4. SEMPRE como tendência, não como sentença.
+

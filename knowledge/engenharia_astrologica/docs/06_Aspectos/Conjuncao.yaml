@@ -1,0 +1,63 @@
+status: review
+id: "conjuncao"
+nome: "Conjunção"
+tradicoes:
+  - "helenística"
+  - "medieval"
+  - "renascentista"
+  - "tradicional"
+  - "moderna ocidental"
+tipo: "aspecto por longitude eclíptica"
+angulo: "0°"
+natureza: "união, concentração e mistura de significados"
+escopo_documental:
+  tecnica_historica:
+    - "configuração por signo e por grau"
+    - "aplicação e separação"
+    - "força relativa conforme natureza dos planetas, condição cósmica e contexto"
+  calculo_e_orbes: "O motor deve distinguir conjunção por signo, conjunção partil e conjunção por orbe declarado. Não existe um único orbe universal válido para todos os autores, corpos e técnicas."
+  divergencias_de_escola: "Em tradições antigas, a conjunção não é automaticamente benéfica nem maléfica: ela mistura e intensifica os significadores. Em leituras modernas, pode receber linguagem de fusão psíquica; isso deve permanecer como camada interpretativa atribuída."
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "primária"
+    localizador: "Livro I, capítulos sobre aspectos, configurações e orbes"
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    natureza: "primária"
+    localizador: "Livros I-II, relações entre planetas, aplicação e separação"
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    natureza: "primária/secundária histórica"
+    localizador: "Livro I, aspectos e orbes; conferir edição"
+validacao_de_fontes:
+  base: "As refer?ncias estruturadas sustentam as distin??es hist?ricas e t?cnicas; signo, grau, partil, paralelo e contraparalelo n?o s?o tratados como sin?nimos."
+  escopo: "Orbes permanecem par?metros de escola e corpo, declarados pela t?cnica escolhida; a ficha n?o imp?e um valor universal."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+definicao_tecnica: "Dois fatores ocupam o mesmo signo ou a mesma região zodiacal e, conforme a política de orbe adotada, aproximam-se de 0° de distância em longitude eclíptica."
+por_signo_vs_por_grau:
+  por_signo: "Na tradição, pode haver consideração configuracional quando os planetas compartilham o mesmo signo, ainda que não estejam partilmente juntos."
+  por_grau: "No cálculo fino, a força aumenta com a diminuição da distância longitudinal; conjunção partil merece destaque."
+aplicativo_separativo:
+  aplicativo: "Quando o planeta mais rápido caminha para o encontro exato com o mais lento, a união está se formando."
+  separativo: "Quando o encontro exato já ocorreu e a distância começa a aumentar, a conjunção está se desfazendo, embora seu efeito ainda seja levado em conta."
+julgamento_tradicional:
+  regra_geral: "A conjunção une os significados e pode transmitir força, impedimento, combustão, auxílio ou corrupção conforme a natureza dos planetas, dignidades, casas, secta e demais condições."
+  nota: "Não tratar conjunção como sinônimo automático de harmonia. Sol conjunto Saturno, Vênus conjunto Júpiter e Marte conjunto Lua não devem ser nivelados."
+camada_moderna:
+  uso_psicologico: "Muitos autores modernos a descrevem como fusão de funções psíquicas, concentração de energia ou dificuldade de diferenciar dois princípios."
+  regra_documental: "O motor pode expor essa leitura como nota moderna, nunca como substituta da análise técnica tradicional."
+nao_confundir_com:
+  - "Paralelo de declinação: relação por coordenada equatorial, não por longitude zodiacal."
+  - "Cazimi, combustão e sob os raios: condições solares específicas que exigem cálculo próprio."
+atlas_simbolico:
+  pessoas_arquetipos: "dupla inseparável, aliado íntimo, princípio unido"
+  objetos_materia: "anel, elo, solda, nó"
+  eventos_tipicos: "união, concentração, acúmulo, fusão"
+  arquetipos_mitologicos: "casamento alquímico, gêmeos, dois poderes num só foco"
+camada_energetica:
+  impressao_mental: "Os dois princípios tendem a operar como um mesmo feixe."
+  permeacao_emocional: "Pode haver apoio mútuo, saturação ou cegueira, conforme os significadores."
+  manifestacao_externa: "Tende a concentrar temas, pessoas ou eventos num mesmo ponto de experiência."
+  como_guiar_o_astral: "Ler primeiro a condição real dos planetas antes de chamar a conjunção de dom, problema ou fusão criativa."
+exemplo_pratico: "Sol conjunto Mercúrio pode indicar forte ligação entre identidade, fala e raciocínio; mas a leitura completa depende de dignidade, combustão, casa, secta e contexto."

@@ -1,0 +1,68 @@
+status: review
+
+id: "composite"
+nome: "Composite (Mapa Composto)"
+tradicoes:
+  - "moderna ocidental"
+  - "relacional"
+tipo: "mapa derivado relacional"
+escopo_documental:
+  tecnica_historica:
+    - "midpoints planetários entre dois mapas para produzir uma carta composta"
+  origem_do_metodo: "Método moderno associado a John Townley e desenvolvido por autores relacionais posteriores."
+  camada_simbolica: "A linguagem da 'terceira entidade' é interpretação moderna do método, não parte obrigatória do cálculo."
+referencias:
+  - autor: "John Townley"
+    obra: "Composite Charts: The Astrology of Relationships"
+    natureza: "moderna de referência"
+    localizador: "Llewellyn, 2000; história, cálculo e interpretação do composite"
+  - autor: "Robert Hand"
+    obra: "Planets in Composite"
+    natureza: "moderna"
+    localizador: "interpretação do mapa composto; edição originalmente de 1975/1976"
+validacao_de_fontes:
+  base: "As refer?ncias estruturadas delimitam c?lculo, uso e genealogia dos tipos de mapa tratados nesta ficha."
+  escopo: "A taxonomia separa qualidades, derivados, relacionais e especialidades; ela n?o funde composite, Davison e compara??o entre mapas."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+tema: "Mapa relacional derivado por midpoints planetários entre dois mapas."
+
+essencia:
+  - "Mapa da 'terceira entidade' (o relacionamento em si)"
+  - "Diferente de sinastria (que sobrepõe)"
+  - "Mostra a qualidade da UNIÃO, não de cada um"
+
+origens_e_divergencias:
+  tradicional: "Não é um método clássico."
+  moderna: "Método moderno de astrologia relacional, geralmente lido como carta da relação em si."
+  nota: "Não confundir composite com sinastria nem com Davison."
+atlas_simbolico:
+  pessoas_arquetipos: "O unificado, o meio-termo, o relacionamento"
+  lugares_fisicos: "Lugares de união: templos, locais de parceria"
+  objetos_materia: "Alianças, espelhos, contratos"
+  eventos_tipicos: "Uniões, parcerias, relacionamentos, sínteses"
+  animais: "Cervo, cisne, pomba"
+  plantas_ervas: "Rosa, violeta, oliveira"
+  metais_pedras: "Cobre, ouro rosa, esmeralda"
+  cores_sons: "Rosa, verde-claro; notas Lá e Ré"
+  numeros: "6 (união), 7 (equilíbrio), 8 (síntese)"
+  dias_semana: "Sexta-feira (Vênus)"
+  doencas_corpo: "Rins, pele, sistema circulatório"
+  arquetipos_mitologicos: "Hera/Juno, Afrodite/Vênus, Hermes/Mercúrio"
+  mitos_historias: "O casamento alquímico; A união dos opostos"
+  sonhos_simbolos_inconsciente: "Espelhos, uniões, parcerias, sínteses"
+  expressao_elevada_sombra: "Elevada: união consciente, síntese | Sombra: fusão destrutiva, perda de identidade"
+
+camada_energetica:
+  campo_mental: "É a mente da relação como um todo. O composite revela o que o casal 'é' junto, além dos dois."
+  permeacao_emocional: "O tom emocional da dupla — onde flui e onde trava como sistema."
+  manifestacao_externa: "Eventos PROVÁVEIS da relação seguem o composite. Inclinação, não destino."
+  como_guiar: "Mostrar à dupla a 'personalidade do casal' — onde se apoiam e onde precisam de cuidado. Não rotular como destino."
+
+relacoes:
+  ver_tambem:
+    - "../12_Relacionamentos/composite_davison.yaml"
+    - "../12_Relacionamentos/Davison.yaml"
+    - "../12_Relacionamentos/sinastria.yaml"
+foco_especial:
+  familiar: "Composite de pais mostra a 'alma do casamento'; composite pais-filho, a dinâmica do núcleo."
+  carmico: "Se houver Nodos fortes no composite, indica laço de jornada (oferecer a quem ressoa)."

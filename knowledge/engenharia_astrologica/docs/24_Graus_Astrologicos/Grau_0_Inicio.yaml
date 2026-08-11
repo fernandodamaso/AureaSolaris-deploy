@@ -1,0 +1,61 @@
+﻿status: review
+id: "grau_0_inicio"
+nome: "Grau 0° (do Imã / Início Puro)"
+tradicoes:
+  - "simbolica moderna"
+  - "tradicional quando explicitada"
+tema: "O primeiro grau de cada signo — partida virgem"
+
+origens_e_divergencias:
+  tradicional: "0° é início técnico de cada signo no zodíaco escolhido. Em zodíaco tropical, 0° de Áries é definido pelo equinócio vernal; não há uma regra antiga universal que faça todo 0° um grau crítico."
+  moderna: "Leituras de energia crua, começo e 'grau do ímã' são convenções simbólicas modernas/esotéricas, não propriedades mensuráveis da longitude."
+  nota: "Ponto Gama/Primeiro Ponto de Áries é termo astronômico-tropical específico; não confundir com 0° dos demais signos."
+atlas_simbolico:
+  pessoas_arquetipos: "O iniciante, o pioneiro, o que começa"
+  lugares_fisicos: "Lugares de início: portas, fronteiras, começos"
+  objetos_materia: "Chaves, sementes, instrumentos de início"
+  eventos_tipicos: "Inícios, nascimentos, novos começos"
+  animais: "Carneiro, falcão, águia"
+  plantas_ervas: "Alecrim, urtiga, girassol"
+  metais_pedras: "Ferro, aço, jaspe, rubi"
+  cores_sons: "Vermelho, dourado; notas Dó e Si"
+  numeros: "0 (início), 1 (unidade), 2 (duplicidade)"
+  dias_semana: "Domingo (Sol), terça-feira (Marte)"
+  doencas_corpo: "Cabeça, olhos, sistema nervoso"
+  arquetipos_mitologicos: "Janus, Hermes/Mercúrio, Apolo"
+  mitos_historias: "Janus e as duas faces; O início do zodíaco"
+  sonhos_simbolos_inconsciente: "Portas, nascimentos, começos, sementes"
+  expressao_elevada_sombra: "Elevada: início consciente, pioneirismo | Sombra: pressa, impulsividade"
+
+camada_energetica:
+  impressao_mental: "A coordenada marca começo de signo; leituras de tabula rasa são camada simbólica atribuída."
+  permeacao_emocional: "Início e limiar podem ser usados como imagens de estudo quando a escola os adotar."
+  manifestacao_externa: "O grau pode participar de aspectos/transitos exatos conforme técnica declarada; não prediz início por si só."
+  como_guiar_o_astral: "Mostrar coordenada, zodíaco e técnica antes de oferecer a metáfora de começo."
+
+consenso_tradicional: "Não há consenso tradicional universal para 'grau do ímã' ou abertura mágica. Essas expressões permanecem como notas de correntes modernas/esotéricas quando identificadas."
+arquetipos_simbolicos: ["O Embrião", "A Semente", "O Limiar"]
+
+procedimento_de_calculo:
+  - "Confirmar o zodíaco: nesta base, tropical quando não houver escolha contrária documentada."
+  - "Classificar como primeiro grau quando a longitude interna do signo satisfizer 0° ≤ grau < 1°."
+  - "Para 0° de Áries tropical, registrar também relação com equinócio e versão de efeméride."
+
+referencias:
+  - autor: "U.S. Naval Observatory e HM Nautical Almanac Office"
+    obra: "The Astronomical Almanac"
+    natureza: "referência astronômica"
+    localizador: "Equinócio vernal e coordenadas de referência; consultar edição vigente."
+  - autor: "Cláudio Ptolomeu"
+    obra: "Tetrabiblos"
+    natureza: "primária histórica"
+    localizador: "Zodíaco e divisões; conferir edição."
+  - autor: "Swiss Ephemeris"
+    obra: "Programmer's Documentation"
+    natureza: "referência técnica"
+    localizador: "Longitude eclíptica tropical e efemérides; registrar versão."
+
+validacao_de_fontes:
+  base: "A ficha separa início técnico, 0° de Áries/equinócio e simbolismo contemporâneo."
+  limite: "O motor não deve afirmar ingenuidade, abertura mágica ou novo começo como efeito inevitável de 0° natal."
+

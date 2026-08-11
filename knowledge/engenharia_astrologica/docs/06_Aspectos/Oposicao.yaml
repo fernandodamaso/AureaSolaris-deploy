@@ -1,0 +1,63 @@
+status: review
+id: "oposicao"
+nome: "Oposição"
+tradicoes:
+  - "helenística"
+  - "medieval"
+  - "renascentista"
+  - "tradicional"
+  - "moderna ocidental"
+tipo: "aspecto por longitude eclíptica"
+angulo: "180°"
+natureza: "polaridade, confronto e relação direta entre extremos"
+escopo_documental:
+  tecnica_historica:
+    - "configuração por signo e por grau"
+    - "aplicação e separação"
+    - "tensão entre significadores em signos opostos"
+  calculo_e_orbes: "O motor deve calcular a distância até 180° segundo orbe declarado, distinguindo oposição por signo de oposição partil."
+  divergencias_de_escola: "Na tradição, a oposição costuma ser aspecto de enfrentamento e contrariedade. Em leituras modernas, também pode ser descrita como complementaridade psíquica ou projeção."
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "primária"
+    localizador: "Livro I, capítulos sobre aspectos, configurações e orbes"
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    natureza: "primária"
+    localizador: "Livros I-II, relações planetárias e julgamentos por configuração"
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    natureza: "primária/secundária histórica"
+    localizador: "Livro I, aspectos e orbes; conferir edição"
+validacao_de_fontes:
+  base: "As refer?ncias estruturadas sustentam as distin??es hist?ricas e t?cnicas; signo, grau, partil, paralelo e contraparalelo n?o s?o tratados como sin?nimos."
+  escopo: "Orbes permanecem par?metros de escola e corpo, declarados pela t?cnica escolhida; a ficha n?o imp?e um valor universal."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+definicao_tecnica: "Dois fatores se encontram em signos opostos ou a aproximadamente 180° de distância em longitude eclíptica."
+por_signo_vs_por_grau:
+  por_signo: "A oposição zodiacal liga signos diametralmente opostos, com testemunho mútuo por eixo."
+  por_grau: "A exatidão aumenta a força configuracional e deve ser lida com a política de orbe declarada."
+aplicativo_separativo:
+  aplicativo: "A tensão cresce à medida que o planeta mais rápido se aproxima do ponto exato."
+  separativo: "Após a perfeição do aspecto, a distância aumenta e o encontro já foi consumado."
+julgamento_tradicional:
+  regra_geral: "A oposição é aspecto de contrariedade, divisão, disputa aberta, afastamento ou relação dura entre significadores."
+  nota: "Ela não significa apenas 'o outro' em sentido psicológico; em horária, natal e mundana pode indicar confronto real, impedimento, oposição de interesses ou separação."
+camada_moderna:
+  uso_psicologico: "Frequentemente interpretada como espelho, projeção, tensão complementar e eixo de individuação."
+  regra_documental: "Essa linguagem pode coexistir com a leitura histórica, mas não deve apagar o peso tradicional de conflito ou antagonismo."
+nao_confundir_com:
+  - "Contraparalelo de declinação: analogia moderna possível, mas cálculo diferente."
+  - "Antíscia/contra-antíscia: relações de simetria solsticial, não 180° zodiacais."
+atlas_simbolico:
+  pessoas_arquetipos: "adversário, parceiro-espelho, rival, contraparte"
+  objetos_materia: "balança, corda esticada, fronteira"
+  eventos_tipicos: "conflito, confronto, ruptura, negociação"
+  arquetipos_mitologicos: "duelo, espelho, disputa entre pares"
+camada_energetica:
+  impressao_mental: "Dois polos chamam a atenção um do outro sem se fundirem."
+  permeacao_emocional: "Pode produzir consciência dolorosa da diferença ou necessidade de mediação."
+  manifestacao_externa: "Tende a dramatizar eixos de oposição, parceiros, adversários e disputas de direção."
+  como_guiar_o_astral: "Ler quem se opõe a quem, em quais casas e com qual força antes de traduzir o aspecto apenas como complementaridade."
+exemplo_pratico: "Lua em oposição a Mercúrio pode mostrar tensão entre juízo e afeto, mas o significado concreto depende de casas, recepção, dignidade e se o aspecto é aplicativo ou separativo."

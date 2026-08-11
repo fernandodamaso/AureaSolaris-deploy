@@ -1,0 +1,53 @@
+status: review
+id: "midpoints_relacionais"
+nome: "Pontos Médios em Astrologia Relacional"
+tipo: "Relacionamentos"
+subtema: "Pontos médios em sinastria e mapas de relação"
+tradicoes: ["moderna ocidental", "pontos médios", "relacional"]
+
+escopo:
+  definicao: "Ponto zodiacal equidistante de duas longitudes. Em relações, pode-se testar a ativação de um ponto médio natal por fatores do outro mapa ou examinar pontos médios em mapas composto e Davison."
+  nao_confundir:
+    - "Ponto médio de dois fatores do mapa A ativado pelo mapa B."
+    - "Ponto médio entre um fator de A e outro de B, procedimento cuja interpretação varia."
+    - "Mapa composto, que calcula pontos médios de pares homólogos para todos os fatores."
+
+calculo:
+  entradas: ["longitude eclíptica tropical de A", "longitude eclíptica tropical de B", "método de eixo", "orbe"]
+  formula_circular: "m = normalizar(a + delta/2), onde delta = ((b - a + 540) mod 360) - 180."
+  eixo: "Todo ponto médio possui o ponto oposto a 180°. Métodos de 90°/45° podem dobrar o círculo; a dial e a escola devem ser registradas."
+  caso_180_graus: "Se os fatores estiverem exatamente opostos, há dois meios possíveis; o software deve aplicar e declarar uma convenção, não escolher silenciosamente."
+  orbes: "Orbes estreitos são comuns, mas não há único valor universal. O padrão do projeto deve ser configurável e versionado; 1°–2° é prática encontrada, não regra canônica."
+
+metodo:
+  passos:
+    - "Calcular o ponto médio com aritmética circular, nunca pela média linear ingênua perto de 0° de Áries."
+    - "Declarar se conjunção e oposição ao eixo contam e se são usadas dials de 90° ou 45°."
+    - "Identificar o par formador antes de interpretar o planeta ativador."
+    - "Exigir repetição ou apoio do conjunto relacional para aumentar o peso."
+  exemplo_calculado: "350° e 10° têm ponto médio curto em 0°, não em 180°; o eixo completo é 0°/180°."
+  regra_de_motor: "O recibo deve registrar longitudes, normalização, eixo/dial, orbe e política de aspectos."
+
+origens_e_divergencias:
+  moderna: "O uso sistemático de pontos médios foi desenvolvido principalmente na astrologia alemã do século XX e difundido por Reinhold Ebertin."
+  relacional: "Autores de sinastria e composto incorporam pontos médios de modos diferentes; não há consenso de que todo ponto médio entre mapas seja um 'nó do relacionamento'."
+  exclusao: "A escola Uraniana/Hamburgo está fora do escopo de estudo do projeto; sua relevância histórica pode ser mencionada sem importar seu sistema completo."
+
+uso_interpretativo:
+  principio: "O par formador define uma combinação simbólica; o fator ativador descreve como essa combinação pode ser mobilizada."
+  limites:
+    - "Ponto matemático não causa evento e não é destino."
+    - "Evitar selecionar apenas combinações que confirmem uma narrativa desejada."
+    - "Separar pontos médios natais ativados em sinastria de pontos médios usados para construir o composto."
+
+referencias:
+  primarias: []
+  secundarias:
+    - "Ebertin, Reinhold. The Combination of Stellar Influences. AFA, edição consultada."
+    - "Hand, Robert. Planets in Composite. Whitford Press, 1975."
+    - "Greene, Liz. Relating. Samuel Weiser, 1977."
+  tecnicas: []
+
+relacoes:
+  depende_de: ["pontos_medios", "sinastria", "aspectos"]
+  ver_tambem: ["composite", "davison"]

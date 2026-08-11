@@ -1,0 +1,31 @@
+id: "aspecto_X"
+nome: "Nome do Aspecto"
+angulo: "0/180/90/120/60 graus"
+natureza: "conjunto|tensão|facilidade|ajuste"
+
+# === CAMADA ENERGÉTICA (o coração operante do projeto) ===
+atlas_simbolico:
+  pessoas_arquetipos: "Estrutura organizadora, catálogo, guia de consulta"
+  lugares_fisicos: "Arquivos, bibliotecas, bases de conhecimento"
+  objetos_materia: "Documentos estruturados, tabelas, índices"
+  eventos_tipicos: "Organização, catalogação, revisão, atualização"
+  animais: "Coruja (sabedoria), formiga (organização)"
+  plantas_ervas: "Sálvia (memória), hera (permanência)"
+  metais_pedras: "Prata (lua/arquivo), cristal de rocha (clareza)"
+  cores_sons: "Prata, azul-claro; notas Dó e Lá"
+  numeros: "3 (estrutura), 6 (organização), 9 (completude)"
+  dias_semana: "Quarta-feira (Mercúrio)"
+  doencas_corpo: "Sistema nervoso, olhos (leitura)"
+  arquetipos_mitologicos: "Hermes/Mercúrio (comunicação), Atena (sabedoria)"
+  mitos_historias: "Hermes e a escrita; Atena e a organização"
+  sonhos_simbolos_inconsciente: "Arquivos, bibliotecas, estruturas, ordem"
+  expressao_elevada_sombra: "Elevada: estrutura viva que serve | Sombra: rigidez, burocracia excessiva"
+
+camada_energetica:
+  campo_mental: "Como esse aspecto tende a operar na mente (fusão, atrito, fluxo, ajuste)."
+  permeacao_emocional: "O tom emocional que o aspecto ativa."
+  manifestacao_externa: "Eventos PROVÁVEIS ligados à dinâmica do aspecto (inclinação, não destino)."
+  como_guiar: "Como orientar o consulente diante desse aspecto no mapa."
+
+orbe_padrao: "graus de tolerância"
+aplicativo_separativo: "O aspecto está se formando (aplicativo) ou dissolvendo (separativo)."

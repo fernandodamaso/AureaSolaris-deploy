@@ -1,0 +1,58 @@
+﻿status: review
+id: "semissextil"
+nome: "Semissextil"
+angulo: "30°"
+natureza: "tensão menor (transição, ajuste sutil)"
+
+origens_e_divergencias:
+  tradicional: "O semissextil de 30° não é um dos cinco aspectos maiores de Ptolomeu. Em leitura helenística por signo, signos adjacentes estão em aversão, o que não é sinônimo do aspecto moderno por grau."
+  moderna: "A leitura de ajuste leve, passagem ou fricção discreta é moderna e varia conforme autor e orbe."
+  nota: "Distinguir relação por signo de aspecto por longitude. O motor deve informar qual das duas lógicas está exibindo."
+escopo_documental:
+  significado: "Aspecto menor por longitude de 30° (1/12 do círculo)."
+  porque: "O uso moderno explora uma separação pequena entre fatores; a tradição de aversão usa outra regra, baseada em signos inteiros."
+  origem: "A nomenclatura é posterior à classificação ptolomaica de aspectos maiores."
+  uso: "Usar apenas em perfil que inclua aspectos menores, com orbe declarado e sem substituir relações por signo."
+  divergencia: "Escolas tradicionais podem não considerá-lo; escolas modernas divergem sobre força e interpretação."
+referencias:
+  - autor: "Cláudio Ptolomeu"
+    obra: "Tetrabiblos"
+    natureza: "primária histórica"
+    localizador: "Livro I; aspectos maiores e configurações, conferir edição."
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    natureza: "primária histórica"
+    localizador: "Relações por signo e aversão; conferir edição."
+validacao_de_fontes:
+  base: "A ficha não apresenta o semissextil moderno como aspecto canônico helenístico."
+  limite: "Não converter um semissextil em diagnóstico, questão médica ou necessidade cármica."
+atlas_simbolico:
+  pessoas_arquetipos: "O aprendiz, o iniciado, o pequeno mensageiro"
+  lugares_fisicos: "Escolas, templos iniciáticos, fronteiras"
+  objetos_materia: "Símbolos, chaves, pequenos objetos de poder"
+  eventos_tipicos: "Iniciações, pequenos aprendizados, ajustes"
+  animais: "Borboleta, besouro, formiga"
+  plantas_ervas: "Verónica, hortelã, verbena"
+  metais_pedras: "Mercúrio, cristal de rocha"
+  cores_sons: "Verde-claro, amarelo; notas Mi e Lá"
+  numeros: "1 (início), 2 (duplicidade), 6 (ajuste)"
+  dias_semana: "Quarta-feira (Mercúrio)"
+  doencas_corpo: "Mãos, braços, sistema nervoso"
+  arquetipos_mitologicos: "Hermes/Mercúrio, Atena"
+  mitos_historias: "Hermes e a descoberta da lira; Atena e a sabedoria"
+  sonhos_simbolos_inconsciente: "Chaves, símbolos, pequenos objetos"
+  expressao_elevada_sombra: "Elevada: iniciação consciente, pequenos ajustes | Sombra: superstições, rituais vazios"
+
+camada_energetica:
+  impressao_mental: "Dois princípios vizinhos no zodíaco — há atrito sutil de 'passagem' de um para o outro, sem fusão nem oposição."
+  permeacao_emocional: "Inquietação leve, a sensação de 'quase lá' ou de mudança iminente de tom."
+  manifestacao_externa: "Eventos PROVÁVEIS de pequenas transições. Arquétipos: a Porta de Vaivém, o Limiar. Inclinação, não destino."
+  como_guiar_o_astral: "Indicar que há um ajuste de passagem — não force, deixe a transição acontecer."
+
+consenso_tradicional: "Pouco usado na tradição; moderna o vê como 'tensão de limiar'."
+arquetipos_simbolicos: ["O Limiar", "A Porta de vaivém"]
+
+aplicativo_separativo: "Aplicativa: a transição SE INICIA (o limiar é cruzado). Separativa: a passagem SE COMPLETA (o tom muda sutilmente)."
+
+exemplo_pratico: "Sol semissextil Mercúrio: a identidade e a fala se tocam de leve — a pessoa ajusta quem é a cada vez que comunica, sem grande conflito."
+

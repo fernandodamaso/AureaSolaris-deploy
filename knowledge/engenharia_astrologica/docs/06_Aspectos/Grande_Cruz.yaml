@@ -1,0 +1,53 @@
+﻿status: review
+id: "grande_cruz"
+nome: "Grande Cruz"
+formato: "Quatro fatores formando duas oposições e quatro quadraturas; a figura deve ser confirmada por graus e orbes, não apenas pela aparência gráfica."
+
+origens_e_divergencias:
+  tradicional: "Quadraturas e oposições são aspectos tradicionais; a Grande Cruz como figura unitária de quatro fatores é uma síntese interpretativa moderna."
+  moderna: "Escolas modernas a leem como forte tensão estrutural ou dinamismo. Essa leitura não substitui o julgamento dos quatro planetas, casas, secta e dignidades."
+  nota: "Cruz cardinal, fixa ou mutável depende das modalidades/signos envolvidos; não supor que toda cruz é perfeita ou tem o mesmo efeito."
+escopo_documental:
+  significado: "Configuração de dois eixos de oposição ligados por quadraturas."
+  porque: "A figura combina relações angulares de oposição e quadratura, cujo encadeamento pode ser interpretado como circuito de tensão em linhas modernas."
+  origem: "Os aspectos componentes são antigos; o nome/configuração total pertence sobretudo à taxonomia moderna de padrões."
+  uso: "Calcular cada um dos seis aspectos com a política de orbe escolhida; depois julgar os fatores individualmente."
+  divergencia: "Escolas divergem sobre orbes, inclusão de luminares/pontos e sobre a utilidade de ler a figura como unidade."
+referencias:
+  - autor: "Cláudio Ptolomeu"
+    obra: "Tetrabiblos"
+    natureza: "primária histórica"
+    localizador: "Livro I; quadratura, oposição e configurações, conferir edição."
+  - autor: "Dane Rudhyar"
+    obra: "The Astrology of Personality"
+    natureza: "secundária moderna"
+    localizador: "Padrões e integração moderna do mapa; conferir edição."
+validacao_de_fontes:
+  base: "A ficha distingue os aspectos tradicionais da figura moderna."
+  limite: "Não usar a Grande Cruz isoladamente para decretar crise, sofrimento ou alta realização."
+atlas_simbolico:
+  pessoas_arquetipos: "O guerreiro supremo, o construtor de impérios"
+  lugares_fisicos: "Campos de batalha, estruturas monumentais"
+  objetos_materia: "Espadas, ferramentas de construção, coroas"
+  eventos_tipicos: "Guerras, construções monumentais, desafios supremos"
+  animais: "Leão, touro, escorpião, águia"
+  plantas_ervas: "Alecrim, urtiga, rosa-espinhosa"
+  metais_pedras: "Ferro, aço, rubi, diamante"
+  cores_sons: "Vermelho, preto; notas Si e Dó"
+  numeros: "4 (tensão), 7 (crise), 9 (superação suprema)"
+  dias_semana: "Terça-feira (Marte), sábado (Saturno)"
+  doencas_corpo: "Coração, sistema circulatório, ossos"
+  arquetipos_mitologicos: "Hércules, Teseu, Perseu"
+  mitos_historias: "Os 12 trabalhos; Teseu e o Minotauro"
+  sonhos_simbolos_inconsciente: "Guerras, tensões, construções, desafios supremos"
+  expressao_elevada_sombra: "Elevada: tensão como alavanca suprema | Sombra: conflito destrutivo, sobrecarga"
+
+camada_energetica:
+  impressao_mental: "Tensão em todos os eixos — a mente é 'puxada' em quatro direções ao mesmo tempo. Sensação de conflito constante."
+  permeacao_emocional: "Agitação crônica, mas também muita energia disponível se canalizada."
+  manifestacao_externa: "Eventos PROVÁVEIS de crises encadeadas. Arquétipos: a Roda, o Moinho, a Forja. Inclinação, não destino."
+  como_guiar_o_astral: "Mostrar que a tensão é COMBUSTÍVEL — escolher um eixo para liderar transforma o moinho em motor."
+
+consenso_tradicional: "O maior padrão de tensão; na moderna, 'o nativo que mais realiza POR causa do atrito'."
+arquetipos_simbolicos: ["A Roda", "O Moinho", "A Forja"]
+

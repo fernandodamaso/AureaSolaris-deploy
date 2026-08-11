@@ -1,0 +1,101 @@
+﻿status: draft
+id: "ferramentas_bibliografia"
+nome: "Ferramentas e Bibliografia"
+tradicoes:
+  - "editorial"
+  - "bibliografica"
+tipo: "Referência"
+subtema: "Ferramentas e fontes"
+
+origens_e_divergencias:
+  tradicional: "Fontes tradicionais da astrologia ocidental."
+  moderna: "Fontes modernas de astrologia psicológica e evolutiva."
+  nota: "Sempre cite a fonte ao usar informação."
+
+atlas_simbolico:
+  pessoas_arquetipos: "O pesquisador, o estudioso, o historiador"
+  lugares_fisicos: "Bibliotecas, arquivos, livrarias"
+  objetos_materia: "Livros, efemérides, softwares"
+  eventos_tipicos: "Estudos, pesquisas, publicações"
+  animais: "Coruja (sabedoria)"
+  plantas_ervas: "Sálvia (memória)"
+  metais_pedras: "Prata, cristal de rocha"
+  cores_sons:
+    cores: ["Prata", "azul-claro"]
+    sons: ["Dó", "lá"]
+  numeros: [3, 6, 9]
+  dias_semana: ["Quarta-feira"]
+  doencas_corpo:
+    doencas: ["Problemas nervosos", "olhos"]
+    partes_corpo: ["Olhos", "cérebro"]
+  arquetipos_mitologicos:
+    - "Hermes (comunicação)"
+    - "Atena (sabedoria)"
+  mitos_historias: "Hermes e a escrita"
+  expressao_elevada_sombra: "Elevada: pesquisa ética | Sombra: plágio, desonestidade"
+
+camada_energetica:
+  impressao_mental: "Ferramentas e bibliografia são a BASE de qualquer estudo sério."
+  permeacao_emocional: "Respeito pelo conhecimento. Quando saudável: pesquisa honesta. Quando ferido: plágio, desonestidade."
+  manifestacao_externa: "Eventos prováveis de estudos, publicações, descobertas. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a CITAR SEMPRE. Conhecimento sem fonte é opinião."
+
+fontes_principais:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    tradicao: "Tradicional"
+    link: "N/A"
+  - autor: "Vettius Valens"
+    obra: "Anthologiae"
+    tradicao: "Tradicional"
+    link: "N/A"
+  - autor: "Paulus Alexandrinus"
+    obra: "Introductorius"
+    tradicao: "Tradicional"
+    link: "N/A"
+  - autor: "Abu Ma'shar"
+    obra: "De Magnis Coniunctionibus"
+    tradicao: "Tradicional árabe"
+    link: "N/A"
+  - autor: "Guido Bonatti"
+    obra: "Liber Astronomiae"
+    tradicao: "Tradicional medieval"
+    link: "N/A"
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    tradicao: "Tradicional moderna"
+    link: "N/A"
+  - autor: "Dane Rudhyar"
+    obra: "The Astrology of Personality"
+    tradicao: "Psicológica"
+    link: "N/A"
+  - autor: "Liz Greene"
+    obra: "Astrology: A Cosmic Science"
+    tradicao: "Psicológica/sistêmica"
+    link: "N/A"
+  - autor: "Jeffrey Green"
+    obra: "Pluto: The Evolutionary Journey of the Soul"
+    tradicao: "Evolutiva"
+    link: "N/A"
+  - autor: "Steven Forrest"
+    obra: "The Inner Sky"
+    tradicao: "Evolutiva"
+    link: "N/A"
+
+ferramentas:
+  - nome: "Ephemeris software"
+    tipo: "Cálculo de posições planetárias"
+    uso: "Calcular mapas natais e trânsitos"
+  - nome: "Astro.com"
+    tipo: "Site de cálculo"
+    uso: "Mapas natais gratuitos"
+    link: "https://astro.com"
+  - nome: "Astro-Seek"
+    tipo: "Site de cálculo"
+    uso: "Mapas natais e ferramentas"
+    link: "https://astro-seek.com"
+  - nome: "Solar Fire"
+    tipo: "Software profissional"
+    uso: "Cálculos avançados"
+    link: "N/A"
+

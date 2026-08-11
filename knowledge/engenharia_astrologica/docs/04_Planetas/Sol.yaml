@@ -1,0 +1,156 @@
+status: review
+id: "sol"
+tradicoes:
+  - "helenística"
+  - "medieval"
+  - "renascentista"
+  - "moderna (camada psicológica explicitamente separada)"
+escopo_documental:
+  tecnica_historica:
+    - "natureza, significações, regência, dignidades, sect e condições planetárias conforme a linhagem selecionada"
+  camadas_modernas: "Psicologia, evolução, sistêmica, mitologia e correspondências contemporâneas permanecem identificadas como camadas próprias."
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "primária"
+    localizador: "Livros I–II, natureza, significações e condições dos planetas"
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    natureza: "primária"
+    localizador: "Livros I–II, significadores e julgamento natal"
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    natureza: "primária"
+    localizador: "Livro I, significações, dignidades e condições planetárias"
+validacao_de_fontes:
+  base: "As refer?ncias estruturadas sustentam a camada hist?rica ou moderna explicitamente declarada para este corpo."
+  escopo: "Mitologia, psicologia, evolu??o, medicina, sist?mica e Atlas permanecem camadas de estudo rotuladas, sem substituir dado astron?mico ou regra de escola."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+nome: "Sol"
+tipo: "Planeta (Luminar)"
+tradicao_primaria: ["tradicional", "psicológica", "evolutiva"]
+
+essencia:
+  - "Vontade"
+  - "Identidade"
+  - "Centro"
+  - "Expressão"
+
+atlas_simbolico:
+  pessoas_arquetipos:
+    - "Líder nato"
+    - "Pai (arquétipo)"
+    - "Autoridade"
+    - "Criança (vitalidade)"
+    - "Rei/Rainha"
+    - "Herói solar"
+  lugares:
+    - "Trono"
+    - "Áreas abertas e ensolaradas"
+    - "Palácios, prédios governamentais"
+    - "Campos de farol/luz"
+  objetos_materia:
+    - "Coroa"
+    - "Cetro"
+    - "Ouro puro"
+    - "Joias de brilho central"
+    - "Relógio de sol"
+    - "Espelho dourado"
+  eventos_tipicos:
+    - "Reconhecimento público"
+    - "Promoção"
+    - "Nascimento de filhos"
+    - "Marcos de vida (formatura, casamento)"
+    - "Crise de identidade"
+    - "Ascensão e queda de poder"
+  animais:
+    - "Leão"
+    - "Falcão"
+    - "Galo"
+    - "Águia"
+    - "Cavalo branco"
+  plantas_ervas:
+    - "Rosa amarela"
+    - "Girassol"
+    - "Canela"
+    - "Louro"
+    - "Mel (pólen)"
+    - "Camomila romana"
+  metais_pedras:
+    - "Ouro"
+    - "Topázio imperial"
+    - "Citrino"
+    - "Ámbar"
+    - "Pedra do sol (sunstone)"
+  cores_sons:
+    cores: ["Ouro", "Amarelo-dourado", "Laranja", "Branco-radiante"]
+    sons: ["Trombeta", "Canto coral", "Ressoar de sino solar"]
+  numeros: [1, 6, 10]
+  dias_semana: ["Domingo"]
+  doencas_corpo:
+    doencas: ["Problemas cardíacos", "Pressão alta", "Coluna dorsal", "Olhos"]
+    partes_corpo: ["Coração", "Coluna dorsal", "Olhos", "Sistema circulatório central"]
+  arquetipos_mitologicos:
+    - "Apolo (luz, arte, profecia)"
+    - "Hélio (Sol que gira o céu)"
+    - "Rá (Sol egípcio, criador)"
+    - "Inti (Sol inca)"
+    - "Amaterasu (Sol japonesa, luz que se oculta)"
+  mitos_historias:
+    - "Ícaro (orgulho solar)"
+    - "Phaethon (filho do Sol que cai)"
+    - "Apolo e a Pítia (luz que ilumina)"
+    - "Rá e Apófis (batalha diária da luz)"
+    - "Amaterasu na caverna (retirada da luz)"
+  sonhos_inconsciente:
+    - "Sol radioso = integração do Self"
+    - "Sol eclipsado = crise de identidade"
+    - "Sol caindo = medo de perda de poder"
+    - "Sol nascendo = renascimento pessoal"
+    - "Queimadura solar = excesso de exposição do eu"
+  expressao_elevada_vs_sombra:
+    elevada: "Líder iluminado, generoso, centralizador do grupo, que brilha para servir."
+    sombra: "Ego inflado, vaidade, arrogância, 'solista' que ofusca os outros, necessidade de aplauso."
+
+camada_energetica:
+  impressao_mental: "Senso de 'eu sou'. Foco, propósito, a direção que a mente quer assumir. Quando atrito: crise de identidade, necessidade de reconhecimento."
+  permeacao_emocional: "Vitalidade e alegria quando alinhado; melancolia/perda de brilho quando bloqueado. É a fonte do ânimo."
+  manifestacao_externa: "Eventos prováveis ligados a reconhecimento, liderança, saúde vital, pai (arquétipo solar). Trânsitos tendem a marcar picos de visibilidade ou crise de ego."
+  como_guiar_o_astral: "Ajudar o consulente a reconhecer o que é expressão autêntica vs. vaidade defensiva. O Sol pede que a mente se autorize a brilhar — não para dominar, mas para centralizar a própria vida."
+
+representa:
+  pessoas: ["Líder", "Pai (arquétipo)", "Autoridade", "Criança (vitalidade)"]
+  eventos: ["Reconhecimento", "Promoção", "Crise de identidade", "Marcos de vida"]
+  corpo: ["Coração", "Coluna", "Olhos"]
+
+dignidades_essenciais:
+  domicilio: ["Leão"]
+  exaltacao: ["Áries"]
+  detrimento: ["Aquário"]
+  queda: ["Libra"]
+
+astronomia_e_regras_de_julgamento:
+  astronomia_observacional:
+    - "Luminar diurno; não retrograda."
+    - "O Sol não recebe combustão por estar no centro do critério; sua conjunção descreve a condição solar dos outros corpos."
+  criterios_tradicionais:
+    - "Julgar por signo, casa, dignidade, seita, aspectos, regência e relação com o Ascendente."
+    - "Em cartas diurnas, sua participação na economia de seita e nos temas de visibilidade costuma ganhar peso."
+  notas_de_motor:
+    - "Não marcar o Sol como retrógrado, combusto ou sob os raios."
+    - "Separar significações tradicionais de vida, autoridade e centralidade das leituras psicológicas modernas sobre ego e individuação."
+
+combinacoes_exemplo:
+  casa_10:
+    temas: ["carreira", "reconhecimento público", "propósito social"]
+    possiveis_efeitos: ["liderança natural", "visibilidade", "necessidade de autoridade própria"]
+    reforcado_por: ["jupiter_dignificado", "ascendente_em_fogo"]
+    amenizado_por: ["saturno_conjunto", "lua_aflita"]
+
+origens_e_divergencias:
+  escola_tradicional:
+    autores: [Ptolomeu, Valens]
+    conceito: "Luminar diurno e fonte de vida, calor, autoridade, visibilidade e vitalidade; não pertence à categoria técnica de benéfico ou maléfico."
+  escola_moderna:
+    conceito: "O Self, o centro da personalidade, a individuação (Jung/Rudhyar)."
+  por_que_da_divergencia: "A visão moderna psicologizou o Sol: de 'o corpo e a vida' para 'o centro do eu e o propósito da alma'."

@@ -1,0 +1,66 @@
+﻿status: review
+id: "casas_como_substantivos"
+nome: "Casas como Substantivos"
+tradicoes:
+  - "editorial"
+  - "pedagogica"
+  - "multiescola"
+tipo: "Linguagem Astrológica"
+subtema: "Casas como territórios"
+
+origens_e_divergencias:
+  tradicional: "As casas organizam lugares, temas e significadores; o vocabulário e o sistema de casas variam entre autores helenísticos, medievais e modernos."
+  moderna: "Casas como áreas de desenvolvimento (psicológica/sistêmica)."
+  nota: "'Casas como substantivos' é metáfora pedagógica do caderno. Não deve ser atribuída literalmente a Ptolomeu nem apagar divergências entre sistemas de casas."
+
+limites_de_uso:
+  - "A casa mostra um campo de manifestação apenas dentro de um sistema de casas declarado e de um mapa com dados de nascimento suficientes."
+  - "Uma leitura psicológica, sistêmica ou cármica é uma camada de escola, não o sentido universal de toda casa."
+
+atlas_simbolico:
+  pessoas_arquetipos: "Cada casa tem seus arquétipos (ver atlas da casa)"
+  lugares_fisicos: "Cada casa tem seus lugares (ver atlas da casa)"
+  objetos_materia: "Cada casa tem seus objetos (ver atlas da casa)"
+  eventos_tipicos: "Cada casa tem seus eventos (ver atlas da casa)"
+  animais: "Cada casa tem seus animais (ver atlas da casa)"
+  plantas_ervas: "Cada casa tem suas plantas (ver atlas da casa)"
+  metais_pedras: "Cada casa tem seus metais (ver atlas da casa)"
+  cores_sons:
+    cores: ["Cada casa tem suas cores (ver atlas da casa)"]
+    sons: ["Cada casa tem seus sons (ver atlas da casa)"]
+  numeros: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+  dias_semana: ["Cada casa tem seus dias (ver atlas da casa)"]
+  doencas_corpo:
+    doencas: ["Cada casa tem suas doenças (ver atlas da casa)"]
+    partes_corpo: ["Cada casa tem suas partes (ver atlas da casa)"]
+  arquetipos_mitologicos:
+    - "Cada casa tem seus mitos (ver atlas da casa)"
+  mitos_historias: "Cada casa tem suas histórias (ver atlas da casa)"
+  sonhos_simbolos_inconsciente: "Cada casa tem seus sonhos (ver atlas da casa)"
+  expressao_elevada_sombra: "Elevada: expressão positiva da casa | Sombra: expressão negativa da casa"
+
+camada_energetica:
+  impressao_mental: "As casas são os SUBSTANTIVOS do mapa. Áreas de vida, territórios: 'EU SOU' (Sol em Casa 1) = 'minha identidade é pública'."
+  permeacao_emocional: "Cada casa carrega uma área emocional específica."
+  manifestacao_externa: "Eventos PROVÁVEIS na área de vida da casa. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a MAPEAR SEU TERRITÓRIO. Casa é onde a vida acontece."
+
+tarot_relacionado:
+  carta: "Cada casa corresponde a uma carta (ver atlas da casa)"
+  conexao: "As casas são substantivos; os arcanos são ações nesses substantivos."
+
+foco_especial:
+  infantil: "A criança aprende as casas como 'onde': 'eu estudo na Casa 3'."
+  familiar: "Cada membro da família ocupa casas diferentes."
+  carmico_espiritual: "Casas indicam ONDE a alma aprende."
+
+referencias:
+  primarias:
+    - "Ptolomeu. Tetrabiblos, especialmente o tratamento de lugares e aspectos; consultar tradução/edição declarada."
+    - "Lilly, William. Christian Astrology. 1647, livros I–II."
+  secundarias:
+    - "Houlding, Deborah. The Houses: Temples of the Sky. The Wessex Astrologer, 1996."
+    - "Rudhyar, Dane. The Astrology of Personality. Lucis Publishing, 1936; reedições posteriores."
+  tecnicas:
+    - "Ver 05_Casas/ e 09_Tecnicas_Modernas/Sistemas_de_Casas.yaml antes de aplicar a metáfora em um cálculo."
+

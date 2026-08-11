@@ -1,0 +1,56 @@
+status: review
+id: "retorno_solar"
+nome: "Retorno Solar / Revolução Solar"
+tipo: "Mapa de retorno"
+tradicoes: ["helenística", "medieval", "tradicional", "moderna ocidental", "preditiva"]
+
+escopo:
+  definicao: "Mapa calculado para o instante em que o Sol em trânsito retorna à longitude eclíptica tropical natal adotada. Estuda um ciclo aproximadamente anual."
+  nota_historica: "Revoluções anuais possuem antecedentes antigos e medievais; métodos tradicionais frequentemente as combinam com profecções e o senhor do ano."
+
+calculo_reproduzivel:
+  alvo: "Resolver longitude_solar_transito(t) = longitude_solar_natal, em aritmética circular e com a mesma configuração zodiacal."
+  entradas:
+    - "instante natal UTC e qualidade da hora"
+    - "longitude solar natal sem arredondamento prematuro"
+    - "ano/data-alvo"
+    - "efeméride/motor e versão"
+    - "local escolhido para casas e ângulos"
+    - "sistema de casas"
+  metodo: "Encontrar numericamente a raiz próxima do aniversário; registrar instante UTC, tolerância angular e número de iterações/algoritmo."
+  localidade: "Há divergência entre usar local de nascimento, residência ou presença no retorno. O instante do retorno não muda; casas e ângulos mudam com o local."
+  regra_de_motor: "Nunca usar simplesmente a hora civil do aniversário nem longitude solar arredondada. O recibo deve conter longitude-alvo, delta final, local e sistema de casas."
+
+origens_e_divergencias:
+  tradicional: "Pode priorizar regente do ano, profecção, sect, regentes do Ascendente da revolução e sobreposição com o natal."
+  moderna: "Pode tratar o mapa como clima, temas e processos do ano, com maior peso aos ângulos e à repetição natal."
+  divergencias:
+    - "Local de cálculo."
+    - "Casas próprias da revolução versus sobreposição com o natal."
+    - "Orbes e peso de aspectos internos ou com o natal."
+    - "Início estrito no retorno versus uso prático por todo o ciclo."
+
+metodo_interpretativo:
+  hierarquia:
+    - "Definir a escola e, na tradicional, identificar profecção e senhor do ano quando usados."
+    - "Examinar Ascendente, regente, luminares, MC e planetas angulares."
+    - "Comparar com o natal; temas repetidos recebem maior peso."
+    - "Articular com trânsitos e outras técnicas de tempo sem prometer data exata."
+  simbolismo: "A imagem do retorno conserva a ideia de renovação solar e aniversário como limiar; Fênix, círculo e renascimento são camadas simbólicas, não regras de cálculo."
+  limites:
+    - "A casa do Ascendente da revolução não possui um único significado universal nem determina sozinha o foco do ano."
+    - "Não usar o mapa isoladamente para previsão fatalista, médica, jurídica ou financeira."
+    - "Hora natal incerta afeta instante-alvo em menor grau, mas pode alterar significativamente casas e ângulos."
+
+referencias:
+  primarias:
+    - "Vettius Valens. Anthology, livros sobre revoluções e técnicas anuais; tradução consultada deve ser registrada."
+    - "Abu Ma'shar. On the Revolutions of the Years of Nativities. tradução de Benjamin Dykes, Cazimi Press, 2019."
+  secundarias:
+    - "Morin de Villefranche. Astrologia Gallica, livro 23: Revolutions; tradução/edição consultada."
+    - "Merriman, Raymond. The Solar Return Book of Prediction. edição consultada."
+  tecnicas: []
+
+relacoes:
+  depende_de: ["efemerides", "mapa_natal", "sistemas_de_casas"]
+  ver_tambem: ["profeccoes", "senhor_do_ano", "transitos", "revolucao_lunar"]

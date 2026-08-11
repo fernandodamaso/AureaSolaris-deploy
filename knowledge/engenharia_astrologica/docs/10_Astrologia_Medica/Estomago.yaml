@@ -1,0 +1,59 @@
+status: review
+id: "estomago"
+nome: "Estômago — Câncer / Lua"
+tradicoes: ["melotesia greco-romana e medieval, quando explicitada", "leitura simbólica moderna, quando explicitada"]
+limites_de_uso: ["Correspondência simbólica/histórica; não é diagnóstico, prognóstico, triagem ou prescrição.", "Nenhum fator natal ou trânsito permite inferir doença, sintoma, risco clínico ou causa psicológica."]
+parte_do_corpo: "Estômago, mama, sistema digestivo superior, mucosas"
+
+referencias:
+  - autor: "Manilius"
+    obra: "Astronomica"
+    natureza: "fonte primária greco-romana"
+    localizador: "Livro II, correspondências zodiacais do corpo; consultar edição/tradução"
+  - autor: "Paulus Alexandrinus"
+    obra: "Introductory Matters"
+    edicao_ou_traducao: "Dorian Gieseler Greenbaum, tradução inglesa"
+    natureza: "fonte primária tardia"
+    localizador: "Passagens sobre signos, planetas e partes corporais; conferir edição"
+  - autor: "Nicholas Culpeper"
+    obra: "Semeiotica Uranica"
+    ano: 1651
+    natureza: "fonte histórica de astrologia médica"
+    localizador: "Documento de período; não equivale a evidência médica contemporânea"
+
+origens_e_divergencias:
+  tradicional: "Melotesia greco-romana e medieval usa correspondências entre signos, planetas e partes do corpo; listas e justificativas variam."
+  moderna: "Leituras psicológicas do corpo são metáforas contemporâneas, não continuidade automática da medicina histórica."
+  nota: "Distinguir lista histórica, interpretação simbólica e medicina clínica; a última não é objeto de inferência astrológica."
+atlas_simbolico:
+  pessoas_arquetipos: "O nutricionista, o que digere, o que sente"
+  lugares_fisicos: "Lugares de nutrição: cozinhas, jardins"
+  objetos_materia: "Panelas, utensílios de cozinha"
+  eventos_tipicos: "Nutrições, digestões, emoções"
+  animais: "Caranguejo, cão, gato"
+  plantas_ervas: "Camomila, hortelã, erva-doce"
+  metais_pedras: "Prata, madrepérola, cristal"
+  cores_sons: "Branco, prata; notas Dó e Lá"
+  numeros: "2 (nutrição), 4 (digestão), 6 (emoção)"
+  dias_semana: "Segunda-feira (Lua)"
+  doencas_corpo: "Estômago, esôfago, sistema digestivo"
+  arquetipos_mitologicos: "Deméter/Ceres, Héstia/Vesta"
+  mitos_historias: "Deméter e a colheita; Héstia e o lar"
+  sonhos_simbolos_inconsciente: "Comidas, digestões, emoções, nutrição"
+  expressao_elevada_sombra: "Elevada: nutrição consciente, digestão saudável | Sombra: ansiedade, digestão pesada"
+
+camada_energetica:
+  impressao_mental: "Câncer/Lua é RECEBER e NUTRIR — o estômago RECEBE o alimento e o PROCESSA emocionalmente (sistema nervoso entérico = 'segundo cérebro')."
+  permeacao_emocional: "Ansiedade de 'ser nutrido' ou de 'nutrir demais'. O estômago é o PRIMEIRO ÓRGÃO que processa a 'emoção do alimento'."
+  manifestacao_externa: "Campo simbólico de nutrição, recepção e transformação; não corresponde a sintomas ou eventos clínicos."
+  como_guiar_o_astral: "Usar apenas para estudo de imagens e linguagem simbólica; qualquer queixa de saúde requer avaliação profissional."
+
+porque_simbolico: |
+  O ESTÔMAGO RECEBE e TRANSFORMA — assim como a Lua/Câncer RECEBE emoções e as transforma em 'nutrição interna'.
+  É o 'útero' do消化 — o alimento entra, é 'gestado' e 'parido' como energia. A boca é o 'nascimento'; o estômago é o 'útero' da digestão.
+  A metáfora de digestão emocional é linguagem contemporânea; não explica gastrite, úlcera ou qualquer sintoma.
+
+linha_tradicao: "Tabelas de melotesia apresentam Lua/Câncer para regiões e funções de nutrição; consultar a fonte para cada correspondência."
+foco_especial:
+  infantil: "Não atribuir sintomas, alimentação ou ambiente familiar de crianças a fatores astrológicos."
+

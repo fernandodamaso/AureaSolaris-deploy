@@ -1,0 +1,152 @@
+status: review
+id: "plutao"
+tradicoes:
+  - "moderna"
+  - "psicológica"
+  - "humanista"
+  - "cármica/evolutiva (quando explicitamente indicada)"
+escopo_documental:
+  tecnica_historica:
+    - "história da descoberta e incorporação astrológica do corpo"
+  camadas_modernas: "Significados psicológicos, humanistas, evolutivos, mitológicos e sistêmicos são mantidos como linhagens modernas, não como dignidade helenística retroativa."
+referencias:
+  - autor: "Liz Greene"
+    obra: "Astrology: A Cosmic Science"
+    natureza: "secundária/moderna"
+    localizador: "Capítulos sobre planetas exteriores e interpretação psicológica; conferir edição"
+  - autor: "Jeffrey Green"
+    obra: "Pluto: The Evolutionary Journey of the Soul"
+    natureza: "secundária/moderna"
+    localizador: "Obra de referência para a linhagem evolutiva; conferir capítulos conforme o corpo"
+validacao_de_fontes:
+  base: "As refer?ncias estruturadas sustentam a camada hist?rica ou moderna explicitamente declarada para este corpo."
+  escopo: "Mitologia, psicologia, evolu??o, medicina, sist?mica e Atlas permanecem camadas de estudo rotuladas, sem substituir dado astron?mico ou regra de escola."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+nome: "Plutão"
+tipo: "Planeta (Transpessoal)"
+tradicao_primaria: ["moderna", "psicológica", "evolutiva"]
+
+essencia:
+  - "Transformação"
+  - "Morte e renascimento"
+  - "Poder"
+  - "Inconsciente profundo"
+
+simbolo_grafico:
+  glyph: "♇"
+  composicao: "Sol (círculo) + Cruz (matéria, morte) + Lua (crescente, emocional, inconsciente)"
+  leitura: "O círculo (eu) encontra a cruz (morte/mudança radical) dentro do crescente (inconsciente emocional). O símbolo representa o processo de morte do ego antigo e renascimento transformado."
+  origem: "Glifo proposto por Marinus em 1903, aprovado pela IAU como símbolo astronômico de Plutão."
+
+atlas_simbolico:
+  pessoas_arquetipos:
+    - "Mago/alquimista"
+    - "Terapeuta de profundidade"
+    - "Detetive"
+    - "Vingador (modo sombra)"
+    - "Cirurgião"
+    - "Xamã"
+    - "Pessoa que passou por morte simbólica"
+  lugares:
+    - "Subterrâneo, caverna"
+    - "Cripta"
+    - "Hospital psiquiátrico"
+    - "Lixão, esgoto (transformação)"
+    - "Vulcão"
+    - "Centro da Terra"
+  objetos_materia:
+    - "Escaravelho (renascimento)"
+    - "Caveira"
+    - "Fênix (cinza que renasce)"
+    - "Pedra de fogo"
+    - "Chave de cofre"
+    - "Tesouro enterrado"
+  eventos_tipicos:
+    - "Morte de ente querido"
+    - "Relação de poder"
+    - "Crise financeira profunda"
+    - "Ressurreição de projeto"
+    - "Abuso sexual/trauma"
+    - "Renascimento após derrota"
+    - "Crise de 30/40/50 anos"
+  animais:
+    - "Escorpião"
+    - "Fênix"
+    - "Lobo solitário"
+    - "Cobra (muda de pele)"
+    - "Abutre (transforma morte em vida)"
+    - "Aranha (tece destino)"
+  plantas_ervas:
+    - "Cogumelo (cogumelo psicoativo)"
+    - "Hortelã-pimenta"
+    - "Raiz de ginseng"
+    - "Papoula (óbito/renascimento)"
+    - "Samambaia (se reproduz por esporos)"
+  metais_pedras:
+    - "Plutônio (artificial)"
+    - "Obsidiana"
+    - "Granada"
+    - "Rubi negro"
+    - "Turmalina negra"
+    - "Magnetita"
+  cores_sons:
+    cores: ["Preto", "Vermelho-sangue", "Violeta-escuro", "Cinza-fumaça"]
+    sons: ["Tremor de terra", "Erupção", "Grito abafado", "Tambor xamânico"]
+  numeros: [0, 8, 13, 26, 29 (anaretic)]
+  dias_semana: ["Terça-feira (compartilhado com Marte)"]
+  doencas_corpo:
+    doencas: ["Câncer", "Disfunções sexuais", "Problemas de eliminação", "Transtornos obsessivos"]
+    partes_corpo: ["Órgãos genitais", "Ânus", "Intestino grosso", "Tecido necrosado"]
+  arquetipos_mitologicos:
+    - "Hades/Plutão (rei do submundo)"
+    - "Perséfone (descida e retorno)"
+    - "Osíris (morte e ressurreição)"
+    - "Xerxes (poder absoluto)"
+    - "Deméter/Ceres (perda e reencontro)"
+  mitos_historias:
+    - "Rapto de Perséfone (morte que gera vida)"
+    - "Osíris desmembrado e reconstruído (transformação total)"
+    - "Teseu e o Minotauro (descida ao inferno)"
+    - "Mito de Psiquê (iniciação por sofrimento)"
+  sonhos_inconsciente:
+    - "Morte de pessoa querida = morte de parte de si"
+    - "Subir escada no escuro = processo de transformação"
+    - "Fênix = renascimento espiritual"
+    - "Caveira = confronto com a finitude"
+    - "Água suja = emoção que precisa ser transformada"
+  expressao_elevada_vs_sombra:
+    elevada: "Terapeuta, cirurgião da alma, que guia o outro por morte e renascimento sem medo."
+    sombra: "Vingador, controlador por medo, obsessivo, que 'mata' para não ser morto, abuso de poder."
+
+camada_energetica:
+  impressao_mental: "A mente de 'o que eu não vejo me controla?'. Profundidade, oculto, poder. Quando atrito: obsessão, controle, 'tudo ou nada'."
+  permeacao_emocional: "Intensidade extrema. Quando bloqueado: medo de perder controle, crises emocionais. Quando solto: transmutação, paixão transformada."
+  manifestacao_externa: "Eventos prováveis de morte simbólica, crise, poder, sexo profundo, cura. Trânsitos marcam mortes e renascimentos."
+  como_guiar_o_astral: "Ajudar a mente a encarar o que é oculto sem medo: Plutão pede coragem para morrer antes de renascer. O que foi negado retorna mais forte."
+
+representa:
+  pessoas: ["Mago", "Detetive", "Terapeuta", "Cirurgião", "Vingador (sombra)"]
+  eventos: ["Morte simbólica", "Crise profunda", "Ressurreição", "Crise financeira", "Poder"]
+  corpo: ["Órgãos genitais", "Ânus", "Intestino grosso"]
+
+dignidades_essenciais:
+  domicilio: ["Escorpião"]
+  exaltacao: ["Leão"]
+  detrimento: ["Touro"]
+  queda: ["Áries"]
+
+combinacoes_exemplo:
+  casa_8:
+    temas: ["morte", "sexo", "dinheiro do outro", "cura profunda"]
+    possiveis_efeitos: ["intensidade emocional", "dons de cura", "obsessão por poder"]
+    reforcado_por: ["marte_conjunto", "escorpiao_signo"]
+    amenizado_por: ["venus_conjunto", "jupiter_conjunto"]
+
+origens_e_divergencias:
+  escola_tradicional:
+    autores: []
+    conceito: "Não tradicional — descoberto em 1930."
+  escola_moderna:
+    autores: [Liz Greene, Green, Forrest]
+    conceito: "Planeta da transformação radical, do poder, da morte/renascimento e do inconsciente profundo."
+  por_que_da_divergencia: "Plutão é moderno por definição: entrou no mapa na era Freud/Jung, quando o ocidente descobriu o inconsciente profundo."

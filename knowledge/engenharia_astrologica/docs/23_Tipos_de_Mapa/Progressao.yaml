@@ -1,0 +1,53 @@
+status: review
+id: "progressao"
+nome: "Progressões e Direções"
+tipo: "Mapa derivado no tempo"
+tradicoes: ["tradicional", "moderna ocidental", "preditiva"]
+
+escopo:
+  definicao: "Técnicas simbólicas que relacionam o intervalo após o nascimento a um deslocamento menor ou a um arco dirigido."
+  distincao_essencial:
+    progressoes_secundarias: "Equivalência simbólica de um dia após o nascimento para um ano de vida; usam posições efetivas das efemérides."
+    progressoes_terciarias: "Usam uma relação baseada no mês lunar sinódico; existem variantes e a fórmula precisa ser declarada."
+    direcoes_primarias: "Projetam o movimento diurno da esfera celeste por arcos de direção e chaves de tempo; não são posições do dia seguinte."
+    arco_solar: "Move todos os fatores por um arco derivado do avanço do Sol dirigido/progredido, segundo a variante."
+
+origens_e_divergencias:
+  historico: "Direções primárias têm longa história na astrologia helenística, árabe, medieval e renascentista. Progressões secundárias consolidaram-se posteriormente e são muito usadas na astrologia moderna."
+  divergencias:
+    - "Direções primárias variam por método, latitude, promissor/significador e chave de conversão."
+    - "Progressões secundárias variam no tratamento de casas, ângulos, localização e aspectos."
+    - "Dia-por-ano é uma chave simbólica; não deve ser apresentada como movimento astronômico anual real."
+
+calculo_secundario:
+  regra_basica: "Para idade tropical aproximada t, consultar as efemérides em nascimento + t dias; implementações precisas devem declarar a conversão temporal usada."
+  entradas: ["instante natal UTC", "local natal", "idade/data-alvo", "efeméride e versão", "método de progressão", "casas/ângulos se usados"]
+  cuidados:
+    - "Interpolar posições e velocidades com precisão suficiente."
+    - "Uma estação progressada decorre da velocidade da efeméride na data simbólica; registrar limiar usado para a etiqueta."
+    - "Lua progressada exige hora e interpolação adequadas por seu movimento rápido."
+
+metodo_interpretativo:
+  hierarquia:
+    - "Verificar mudanças de direção, ingressos e aspectos aplicativos exatos."
+    - "Relacionar o fator progredido ao natal e à sua condição natal."
+    - "Usar orbes estreitos e política declarada."
+    - "Combinar com trânsitos, retornos ou outras técnicas sem somar pesos automaticamente."
+  simbolismo: "Na leitura humanista/psicológica, progressões descrevem maturação e mudança de ênfase interna; correntes preditivas também as correlacionam a períodos de manifestação."
+  limites:
+    - "Não fundir progressão, direção primária e arco solar sob uma mesma fórmula."
+    - "Não anunciar evento inevitável a partir de um aspecto isolado."
+    - "Se a hora natal for incerta, explicitar impacto sobre Lua, ângulos e casas."
+
+referencias:
+  primarias:
+    - "Ptolemy, Tetrabiblos, livro III, seções sobre prorogação/direções; tradução consultada deve ser registrada."
+  secundarias:
+    - "Naibod, Valentine. Enarratio elementorum astrologiae; para a chave associada às direções, edição consultada."
+    - "Leo, Alan. The Progressed Horoscope. edição consultada."
+    - "Hand, Robert. Planets in Transit. Whitford Press, edição consultada; para articulação entre técnicas de tempo."
+  tecnicas: []
+
+relacoes:
+  depende_de: ["efemerides", "mapa_natal", "aspectos"]
+  ver_tambem: ["direcoes_primarias", "direcoes_terciarias", "arcos_solares", "transitos", "retorno_solar"]

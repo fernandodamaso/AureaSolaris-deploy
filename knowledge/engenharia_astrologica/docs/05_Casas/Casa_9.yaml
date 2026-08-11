@@ -1,0 +1,67 @@
+status: review
+id: "casa_9"
+tradicoes:
+  - "helenística"
+  - "medieval"
+  - "renascentista"
+  - "moderna (camadas psicológica e sistêmica explicitamente separadas)"
+tipo: "conceito técnico de casa astrológica"
+escopo_documental:
+  tecnica_historica:
+    - "significação tradicional da casa, sua relação com ângulos, casas sucedentes/cadentes e tópicos derivados"
+  camadas_modernas: "Atlas simbólico, Tarot, medicina, arquétipos e leitura sistêmica permanecem separados da regra histórica."
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "primária"
+    localizador: "Livro IV e passagens sobre configuração e significação dos lugares"
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    natureza: "primária"
+    localizador: "Livros II–IV, tópicos das casas e julgamento natal"
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    natureza: "primária"
+    localizador: "Livro I, significações das casas e regras de julgamento"
+validacao_de_fontes:
+  base: "A significa??o hist?rica dos lugares ? sustentada por Ptolomeu, Valens e Lilly, nas refer?ncias estruturadas da ficha."
+  escopo: "Tarot, Atlas simb?lico, medicina, psicologia e leitura sist?mica s?o camadas de estudo rotuladas; n?o substituem a t?cnica hist?rica de casas."
+  protocolo: "Consultar docs/16_Ferramentas_e_Bibliografia/PROTOCOLO_DE_FECHAMENTO_DE_FONTES.md."
+numero: 9
+nome: "Casa 9 — A Expansão / O Sentido"
+tema: "O que me dá sentido e amplia"
+
+origens_e_divergencias:
+  tradicional: "Ptolomeu (Tetrabiblos) — significados tradicionais das 12 casas."
+  moderna: "Astrologia psicológica/sistêmica (Liz Greene, escola de relações familiares)."
+  nota: "Revisar ao citar — marca a escola usada."
+atlas_simbolico:
+  pessoas_arquetipos: "O filósofo, o professor, o viajante, o missionário"
+  lugares_fisicos: "Montanhas, templos, universidades, países distantes"
+  objetos_materia: "Livros de filosofia, mapas, títulos, malas de viagem"
+  eventos_tipicos: "Viagens longas, formaturas, publicações, descobertas"
+  animais: "Cavalo, centauro, águia, falcão"
+  plantas_ervas: "Nogueira, oliveira, cedro, sálvia"
+  metais_pedras: "Estanho, turquesa, topázio azul, lápis-lazúli"
+  cores_sons: "Azul-royal, roxo; notas Dó e Lá"
+  numeros: "3 (trindade), 7 (espiritualidade), 9 (completude)"
+  dias_semana: "Quinta-feira (Júpiter)"
+  doencas_corpo: "Quadris, coxas, fígado, sistema nervoso central"
+  arquetipos_mitologicos: "Zeus/Júpiter, Héracles/Hércules, Quirón"
+  mitos_historias: "Os Argonautas; Quirón e Hércules; Busca do Cálice"
+  sonhos_simbolos_inconsciente: "Montanhas, viagens, livros, templos"
+  expressao_elevada_sombra: "Elevada: sabedoria generosa, fé que liberta | Sombra: fanatismo, arrogância"
+
+camada_energetica:
+  campo_mental: "Foco em crenças, estudo superior, viagens longas e o 'porquê'."
+  permeacao_emocional: "Fé, 'preciso de sentido', 'o que me move para frente'."
+  manifestacao_externa: "Eventos prováveis de estudo, viagem longa, encontro com o sentido. Arquétipos: o Peregrino, o Mestre. Inclinação, não destino."
+  como_guiar_o_astral: "Casa 9 pede SENTIDO — a pessoa 'busca o porquê' e precisa de horizonte."
+
+significados_derivados:
+  dinheiro_parceiro: false
+  estudos_superiores: "Faculdade, mestrado, doutorado, 'aprendizado formal longo'."
+  viagens_longas: "Viagens de mais de 1 dia (intercâmbio, peregrinação)."
+  filosofia: "Crenças, religião, filosofia, 'o que eu acredito'."
+  estrangeiro: "Países estrangeiros, 'o outro lado do mundo'."
+  mestres: "Professores, guias espirituais, 'quem me ensina o sentido'."

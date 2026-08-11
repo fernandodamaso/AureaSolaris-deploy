@@ -1,0 +1,57 @@
+﻿status: draft
+id: "asteroides_pontos"
+nome: "Asteroides e Pontos"
+tradicoes:
+  - "moderna ocidental"
+  - "pontos calculados"
+tipo: "Aprofundamento"
+subtema: "Lilith, Vesta, Juno, Pallas, Vertex, EP"
+
+origens_e_divergencias:
+  tradicional: "Sem tradição antiga — introduzidos na astrologia moderna."
+  moderna: "Astrologia evolutiva e psicológica — pontos como 'partes sensíveis da jornada'."
+  nota: "Interpretação 100% moderna."
+
+atlas_simbolico:
+  pessoas_arquetipos:
+    - "Lilith: a livre, a rejeitada, a selvagem"
+    - "Vesta: a sacerdotisa, a pura"
+    - "Juno: a parceira, a esposa"
+    - "Pallas: a guerreira estratégica"
+    - "Vertex: o destino, o encontro"
+    - "EP: o propósito, a direção"
+  lugares_fisicos: "Cada um tem seus lugares (ver atlas específico)"
+  objetos_materia: "Cada um tem seus objetos (ver atlas específico)"
+  eventos_tipicos: "Cada um tem seus eventos (ver atlas específico)"
+  animais: "Cada um tem seus animais (ver atlas específico)"
+  plantas_ervas: "Cada um tem suas plantas (ver atlas específico)"
+  metais_pedras: "Cada um tem seus metais (ver atlas específico)"
+  cores_sons:
+    cores: ["Cada um tem suas cores (ver atlas específico)"]
+    sons: ["Cada um tem seus sons (ver atlas específico)"]
+  numeros: [1, 3, 4, 6, 8, 12]
+  dias_semana: ["Cada um tem seus dias (ver atlas específico)"]
+  doencas_corpo:
+    doencas: ["Cada um tem suas doenças (ver atlas específico)"]
+    partes_corpo: ["Cada um tem suas partes (ver atlas específico)"]
+  arquetipos_mitologicos:
+    - "Lilith: Eva rejeitada"
+    - "Vesta: Héstia"
+    - "Juno: Hera"
+    - "Pallas: Atena"
+    - "Vertex: destino"
+    - "EP: propósito"
+  mitos_historias: "Cada um tem suas histórias (ver atlas específico)"
+  expressao_elevada_sombra: "Elevada: expressão autêntica | Sombra: expressão destrutiva"
+
+camada_energetica:
+  impressao_mental: "Cada ponto é uma PONTE entre o natal e a jornada."
+  permeacao_emocional: "Cada ponto carrega uma qualidade emocional específica."
+  manifestacao_externa: "Eventos prováveis de ativação dos pontos. Inclinação, não destino."
+  como_guiar_o_astral: "Ajudar a pessoa a ENTENDER CADA PONTE. Asteroides não são planetas — são PONTOS DE REFERÊNCIA."
+
+foco_especial:
+  infantil: "A criança com Lilith forte é a 'selvagem'. A criança com Vesta forte é a 'pura'."
+  familiar: "Cada membro tem seus asteroides."
+  carmico_espiritual: "Asteroides indicam PONTOS DE CURA da alma."
+
