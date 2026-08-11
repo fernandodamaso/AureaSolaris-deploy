@@ -1,2 +1,0 @@
-Este é um arquivo falso para testes do Agente Stark.
-Ele está autorizado a mover e analisar este arquivo dentro do Laboratorio_Stark.

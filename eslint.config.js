@@ -98,7 +98,7 @@ export default [
       "import/no-anonymous-default-export": "off",
       "react/no-namespace": "off",
       "react/no-invalid-html-attribute": "off",
-      "react/no危险的样式属性": "off",
+      "react/no-unknown-property": "off",
       "react/no-set-state-in-componentDidMount": "off",
       "react/no-set-state-in-componentWillUpdate": "off",
       "react/no-set-state-in-componentDidUpdate": "off",

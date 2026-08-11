@@ -35,7 +35,20 @@ export const PdfViewer = ({ url, name, onClose }: PdfViewerProps) => {
                 <div className="w-[1px] h-4 bg-gray-100 mx-1" />
                 <button onClick={() => setRotation(prev => (prev + 90) % 360)} className="p-2 text-gray-400 hover:text-gold hover:bg-gold/5 rounded-full transition-all" title="Rotacionar"><RotateCw size={16}/></button>
              </div>
-            <button className="p-3 text-gray-400 hover:text-gold hover:bg-gold/5 rounded-full transition-all" title="Baixar">
+            <button
+              type="button"
+              onClick={() => {
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = name;
+                link.target = '_blank';
+                link.rel = 'noopener';
+                link.click();
+              }}
+              className="p-3 text-gray-700 hover:text-gold hover:bg-gold/5 rounded-full transition-all"
+              title="Baixar documento"
+              aria-label="Baixar documento"
+            >
               <Download size={18} />
             </button>
             <button 

@@ -22,8 +22,7 @@ interface GlobalContextType {
     documents: AureaDocument[];
     insights: any[];
     setActiveProfileId: (id: string) => void;
-    addProfile: (name: string, password: string) => Promise<AureaProfile>;
-    authenticateProfile: (id: string, password: string) => Promise<{ ok: boolean; error?: string }>;
+    addProfile: (name: string, password: string, id?: string) => Promise<AureaProfile>;
     updateProfile: (id: string, updates: Partial<AureaProfile>) => void;
   };
   system: {
@@ -108,7 +107,6 @@ Estabilidade: Alta | Agentes: Sintonizados | Conectividade: OK
         insights: agenda.getHermesInsights(transits),
         setActiveProfileId: agenda.setActiveProfileId,
         addProfile: agenda.addProfile,
-        authenticateProfile: agenda.authenticateProfile,
         updateProfile: agenda.updateProfile
       },
       system: { status: error ? 'Astronomical engine unavailable' : loading ? 'Calculating' : 'Stable', lastSync: new Date() },

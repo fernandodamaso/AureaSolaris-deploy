@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { 
-  ChevronLeft, ChevronRight, 
-  Clock, 
+import {
+  ChevronLeft, ChevronRight,
+  Clock,
   Trash2, ListTodo
 } from 'lucide-react';
 import { useAgendaContext } from '../../context/AgendaContext';
@@ -10,13 +10,15 @@ import { Card } from '../common/UIComponents';
 export const AgendaView = () => {
   const {
     profiles,
+    mapSubjects,
     activeProfileId,
-    setActiveProfileId,
-    tasks, 
+    activeSubjectId,
+    setActiveSubjectId,
+    tasks,
     events,
-    selectedDay, setSelectedDay, weekDays, 
-    nextWeek, prevWeek, addTask, deleteTask, toggleTask, 
-    addEvent, deleteEvent, 
+    selectedDay, setSelectedDay, weekDays,
+    nextWeek, prevWeek, addTask, deleteTask, toggleTask,
+    addEvent, deleteEvent,
     getPlanetRegency
   } = useAgendaContext();
 
@@ -26,6 +28,10 @@ export const AgendaView = () => {
   const [eventTime, setEventTime] = useState('');
   const [eventAction, setEventAction] = useState<{ status: 'idle' | 'loading' | 'success' | 'error'; message?: string }>({ status: 'idle' });
   const [taskAction, setTaskAction] = useState<{ status: 'idle' | 'loading' | 'success' | 'error'; message?: string }>({ status: 'idle' });
+  const availableMaps = (mapSubjects?.filter(map => map.ownerProfileId === activeProfileId) || []).length
+    ? mapSubjects!.filter(map => map.ownerProfileId === activeProfileId)
+    : profiles.filter(profile => profile.id === activeProfileId).map(profile => ({ id: profile.id, name: profile.name, kind: 'profile' as const, ownerProfileId: profile.id, source: profile }));
+  const focusedMap = availableMaps.find(map => map.id === activeSubjectId) || availableMaps[0];
 
   const handleAddEvent = async () => {
     if (!modalText.trim()) {
@@ -71,41 +77,38 @@ export const AgendaView = () => {
       {/* 1. HEADER COM PERFIL */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-[11px] font-black uppercase tracking-[0.3em] color: var(--aurea-text)">
-            Agenda {masterProfile ? `- ${masterProfile.name}` : ''}
+          <h2 className="text-[11px] font-black uppercase tracking-[0.3em] text-[var(--aurea-text)]">
+            Agenda {focusedMap ? `— ${focusedMap.name}` : masterProfile ? `— ${masterProfile.name}` : ''}
           </h2>
-          <p className="text-[10px] color: var(--aurea-gold) font-bold mt-1">
+          <p className="text-[10px] text-[var(--aurea-gold)] font-bold mt-1">
             {tasks.filter(t => t.completed || t.is_completed).length} tarefas concluídas · {tasks.filter(t => !t.completed && !t.is_completed).length} pendentes
           </p>
         </div>
-        <div className="flex gap-2">
-          {profiles.map(p => (
-            <button
-              key={p.id}
-              onClick={() => setActiveProfileId(p.id)}
-              className={`px-3 py-1 rounded-md text-[10px] font-black uppercase tracking-widest transition-all ${
-                activeProfileId === p.id 
-                  ? 'background: var(--aurea-bg-deep); color: var(--aurea-text)' 
-                  : 'color: var(--aurea-text-muted) hover:text-[var(--aurea-gold)]'
-              }`}
-            >
-              {p.name}
-            </button>
-          ))}
-        </div>
+        <label className="flex items-center gap-2 rounded-xl border px-3 py-2" style={{ borderColor: 'var(--aurea-line)', background: 'var(--aurea-surface)' }}>
+          <span className="text-[9px] font-black uppercase tracking-widest" style={{ color: 'var(--aurea-text-muted)' }}>Mapa em foco</span>
+          <select
+            aria-label="Mapa em foco na agenda"
+            value={focusedMap?.id || ''}
+            onChange={event => setActiveSubjectId(event.target.value)}
+            className="max-w-[180px] bg-transparent text-[11px] font-bold outline-none"
+            style={{ color: 'var(--aurea-text)' }}
+          >
+            {availableMaps.map(map => <option key={map.id} value={map.id}>{map.name}</option>)}
+          </select>
+        </label>
       </div>
 
       {/* 2. CALENDAR SEMANAL */}
-      <div className="background: var(--aurea-surface) rounded-2xl border border-color: rgba(217,166,83,0.2) p-6 shadow-sm">
+      <div className="rounded-2xl border p-6" style={{ background: 'var(--aurea-surface)', borderColor: 'var(--aurea-line)', boxShadow: 'var(--aurea-shadow)' }}>
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-[10px] font-black uppercase tracking-[0.3em] color: var(--aurea-text-muted)">
+          <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-[#596a76]">
             {selectedDay.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })}
           </h3>
           <div className="flex gap-1.5">
-            <button type="button" aria-label="Semana anterior" onClick={prevWeek} className="p-2 hover:background: var(--aurea-surface) focus-visible:outline-2 focus-visible:outline-gold rounded-lg text-gold border border-color: rgba(217,166,83,0.15) transition-all shadow-sm">
+            <button type="button" aria-label="Semana anterior" onClick={prevWeek} className="p-2 hover:bg-[var(--aurea-surface)] focus-visible:outline-2 focus-visible:outline-gold rounded-lg text-gold transition-all shadow-sm" style={{ border: '1px solid rgba(217,166,83,0.15)' }}>
               <ChevronLeft size={16}/>
             </button>
-            <button type="button" aria-label="Próxima semana" onClick={nextWeek} className="p-2 hover:background: var(--aurea-surface) focus-visible:outline-2 focus-visible:outline-gold rounded-lg text-gold border border-color: rgba(217,166,83,0.15) transition-all shadow-sm">
+            <button type="button" aria-label="Próxima semana" onClick={nextWeek} className="p-2 hover:bg-[var(--aurea-surface)] focus-visible:outline-2 focus-visible:outline-gold rounded-lg text-gold transition-all shadow-sm" style={{ border: '1px solid rgba(217,166,83,0.15)' }}>
               <ChevronRight size={16}/>
             </button>
           </div>
@@ -116,22 +119,22 @@ export const AgendaView = () => {
             const isToday = d.toDateString() === new Date().toDateString();
             const isSelected = d.toDateString() === selectedDay.toDateString();
             const regency = getPlanetRegency(d);
-            
+
             return (
               <button
                 type="button"
-                key={d.getTime()} 
-                onClick={() => setSelectedDay(d)} 
+                key={d.getTime()}
+                onClick={() => setSelectedDay(d)}
                 aria-pressed={isSelected}
                 aria-label={`Selecionar ${d.toLocaleDateString('pt-BR')}`}
                 className={`relative flex flex-col items-center p-3 rounded-xl transition-all border focus-visible:outline-2 focus-visible:outline-gold ${
-                  isSelected 
-                    ? 'background: var(--aurea-bg-deep); color: var(--aurea-text) border-color: var(--aurea-bg-deep) shadow-lg scale-[1.02]' 
-                    : 'background: var(--aurea-surface) color: var(--aurea-text) border-color: rgba(38,54,66,0.6) hover:border-color: rgba(217,166,83,0.3)'
+                  isSelected
+                    ? 'bg-[#0E1A25] text-white border-[#0E1A25] shadow-lg scale-[1.02]'
+                    : 'bg-white text-[#1E2A33] border-[#E6DED2] hover:border-[#D9A653]'
                 }`}
               >
                 <span className={`text-[10px] font-black uppercase mb-1 tracking-widest ${
-                  isSelected ? 'text-gold' : 'color: var(--aurea-text-muted)'
+                  isSelected ? 'text-gold' : 'text-[#596a76]'
                 }`}>
                   {d.toLocaleDateString('pt-BR', { weekday: 'short' })}
                 </span>
@@ -152,39 +155,39 @@ export const AgendaView = () => {
 
       {/* 3. GRID: COMPROMISSOS + TAREFAS */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-        
+
         {/* COLUNA ESQUERDA: EVENTOS */}
         <Card title={`Compromissos - ${selectedDay.toLocaleDateString('pt-BR')}`} icon={<Clock size={14}/>}>
           <div className="space-y-3 mt-4">
             {events
               .filter(e => new Date(e.start).toDateString() === selectedDay.toDateString())
               .map(e => (
-                <div key={e.id} className="p-4 border rounded-xl flex justify-between items-center group transition-all hover:background: rgba(11,23,34,0.6) shadow-xs background: rgba(11,23,34,0.55) border-color: rgba(217,166,83,0.15)">
+                <div key={e.id} className="p-4 rounded-xl flex justify-between items-center group transition-all" style={{ background: 'var(--aurea-gold-soft)', border: '1px solid rgba(169,109,45,0.18)' }}>
                   <div className="flex gap-4 items-center">
-                    <div className="p-2 rounded-lg shadow-xs border background: var(--aurea-surface) text-gold border-color: rgba(217,166,83,0.15)">
+                    <div className="p-2 rounded-lg shadow-xs border bg-[var(--aurea-surface)] text-gold" style={{ borderColor: 'rgba(217,166,83,0.15)' }}>
                       <Clock size={12}/>
                     </div>
                     <div>
-                      <p className="text-[12px] font-black color: var(--aurea-text) tracking-tight">{e.title}</p>
-                      <p className="text-[10px] color: var(--aurea-gold) font-bold">
+                      <p className="text-[12px] font-black text-[var(--aurea-text)] tracking-tight">{e.title}</p>
+                      <p className="text-[10px] text-[var(--aurea-gold)] font-bold">
                         {new Date(e.start).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
                       </p>
                     </div>
                   </div>
-                  <button type="button" aria-label={`Excluir compromisso ${e.title}`} onClick={() => void deleteEvent(e.id)} className="p-2 color: var(--aurea-text-muted) hover:text-red-500 focus-visible:text-red-500 focus-visible:outline-2 focus-visible:outline-red-400 transition-all">
+                  <button type="button" aria-label={`Excluir compromisso ${e.title}`} onClick={() => void deleteEvent(e.id)} className="p-2 text-[#596a76] hover:text-red-500 focus-visible:text-red-500 focus-visible:outline-2 focus-visible:outline-red-400 transition-all">
                     <Trash2 size={14} />
                   </button>
                 </div>
               ))
             }
             {events.filter(e => new Date(e.start).toDateString() === selectedDay.toDateString()).length === 0 && (
-              <p className="text-[10px] color: var(--aurea-text-muted) font-bold uppercase tracking-[0.3em] text-center py-8">
+              <p className="text-[10px] text-[#596a76] font-bold uppercase tracking-[0.3em] text-center py-8">
                 Nenhum compromisso
               </p>
             )}
-            <button 
+            <button
               onClick={() => { setModalText(''); setEventTime(''); setEventAction({ status: 'idle' }); setShowEventModal(true); }}
-              className="w-full p-3 border border-dashed border-color: rgba(217,166,83,0.3) rounded-xl text-[10px] font-black uppercase tracking-widest text-gold/40 hover:text-[var(--aurea-gold)] hover:border-color: rgba(217,166,83,0.45) focus-visible:outline-2 focus-visible:outline-gold transition-all"
+              className="w-full p-3 border border-dashed rounded-xl text-[10px] font-black uppercase tracking-widest text-[#A96D2D] hover:text-[#8B572A] focus-visible:outline-2 focus-visible:outline-gold transition-all" style={{ borderColor: 'rgba(169,109,45,0.3)' }}
             >
               + Novo Compromisso
             </button>
@@ -201,29 +204,29 @@ export const AgendaView = () => {
                   aria-label={`${(task.completed || task.is_completed) ? 'Reabrir' : 'Concluir'} tarefa ${task.content}`}
                   aria-pressed={Boolean(task.completed || task.is_completed)}
                   onClick={() => void toggleTask(task.id, !(task.completed || task.is_completed))}
-                  className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-colors shrink-0 focus-visible:outline-2 focus-visible:outline-gold ${(task.completed || task.is_completed) ? 'bg-gold border-gold text-white' : 'border-gray-200 text-transparent group-hover:border-color: rgba(217,166,83,0.15)0'}`}
+                  className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-colors shrink-0 focus-visible:outline-2 focus-visible:outline-gold ${(task.completed || task.is_completed) ? 'bg-gold border-gold text-white' : 'border-gray-200 text-transparent group-hover:border-[rgba(217,166,83,0.15)]'}`}
                 >
                   ✓
                 </button>
-                <span className={`flex-1 text-[13px] font-medium ${(task.completed || task.is_completed) ? 'line-through color: var(--aurea-text-muted)' : 'color: var(--aurea-text)'}`}>
+                <span className={`flex-1 text-[13px] font-medium ${(task.completed || task.is_completed) ? 'line-through text-[#596a76]' : 'text-[var(--aurea-text)]'}`}>
                   {task.content}
                 </span>
-                <button 
+                <button
                   onClick={() => deleteTask(task.id)}
-                  className="opacity-0 group-hover:opacity-100 color: var(--aurea-text-muted) hover:text-red-400 transition-all"
+                  className="opacity-0 group-hover:opacity-100 text-[#596a76] hover:text-red-400 transition-all"
                 >
                   <Trash2 size={12}/>
                 </button>
               </div>
             ))}
             {tasks.length === 0 && (
-              <p className="text-[10px] color: var(--aurea-text-muted) font-bold uppercase tracking-[0.3em] text-center py-8">
+              <p className="text-[10px] text-[#596a76] font-bold uppercase tracking-[0.3em] text-center py-8">
                 Nenhuma tarefa
               </p>
             )}
-            <button 
+            <button
               onClick={() => { setModalText(''); setTaskAction({ status: 'idle' }); setShowTaskModal(true); }}
-              className="w-full p-3 border border-dashed border-color: rgba(217,166,83,0.3) rounded-xl text-[10px] font-black uppercase tracking-widest text-gold/40 hover:text-[var(--aurea-gold)] hover:border-color: rgba(217,166,83,0.45) focus-visible:outline-2 focus-visible:outline-gold transition-all"
+              className="w-full p-3 border border-dashed rounded-xl text-[10px] font-black uppercase tracking-widest text-[#A96D2D] hover:text-[#8B572A] focus-visible:outline-2 focus-visible:outline-gold transition-all" style={{ borderColor: 'rgba(169,109,45,0.3)' }}
             >
               + Nova Tarefa
             </button>
@@ -234,12 +237,13 @@ export const AgendaView = () => {
       {/* MODAL: NOVO COMPROMISSO */}
       {showEventModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => setShowEventModal(false)}>
-          <div className="background: var(--aurea-surface) rounded-2xl p-6 w-96 shadow-2xl" onClick={e => e.stopPropagation()}>
-            <h3 className="text-[11px] font-black uppercase tracking-[0.3em] color: var(--aurea-text) mb-4">Novo Compromisso</h3>
-            <label htmlFor="agenda-event-title" className="text-[10px] font-bold color: var(--aurea-text-muted)">Título</label>
+          <div className="bg-[var(--aurea-surface)] rounded-2xl p-6 w-96 shadow-2xl" onClick={e => e.stopPropagation()}>
+            <h3 className="text-[11px] font-black uppercase tracking-[0.3em] text-[var(--aurea-text)] mb-4">Novo Compromisso</h3>
+            <label htmlFor="agenda-event-title" className="text-[10px] font-bold text-[#596a76]">Título</label>
             <input
               id="agenda-event-title"
-              className="w-full p-3 border border-color: rgba(217,166,83,0.3) rounded-xl text-[12px] font-bold outline-none focus:border-gold transition-all"
+              className="w-full p-3 border rounded-xl text-[12px] font-bold outline-none focus:border-gold transition-all"
+              style={{ borderColor: 'rgba(217,166,83,0.3)' }}
               placeholder="Ex: Reunião com cliente"
               value={modalText}
               disabled={eventAction.status === 'loading' || eventAction.status === 'success'}
@@ -248,28 +252,29 @@ export const AgendaView = () => {
               onKeyDown={e => e.key === 'Enter' && handleAddEvent()}
               autoFocus
             />
-            <label htmlFor="agenda-event-time" className="mt-3 block text-[10px] font-bold color: var(--aurea-text-muted)">Horário local</label>
+            <label htmlFor="agenda-event-time" className="mt-3 block text-[10px] font-bold text-[#596a76]">Horário local</label>
             <input
               id="agenda-event-time"
               type="time"
-              className="w-full p-3 border border-color: rgba(217,166,83,0.3) rounded-xl text-[12px] font-bold outline-none focus:border-gold transition-all"
+              className="w-full p-3 border rounded-xl text-[12px] font-bold outline-none focus:border-gold transition-all"
+              style={{ borderColor: 'rgba(217,166,83,0.3)' }}
               value={eventTime}
               disabled={eventAction.status === 'loading' || eventAction.status === 'success'}
               onChange={event => { setEventTime(event.target.value); setEventAction({ status: 'idle' }); }}
             />
             {eventAction.message && <p role="status" className={`mt-3 text-[11px] font-bold ${eventAction.status === 'error' ? 'text-red-600' : eventAction.status === 'success' ? 'text-green-700' : 'text-gold'}`}>{eventAction.message}</p>}
             <div className="flex gap-3 mt-4">
-              <button 
+              <button
                 onClick={() => setShowEventModal(false)}
                 disabled={eventAction.status === 'loading'}
-                className="flex-1 py-3 color: var(--aurea-text-muted) font-black uppercase text-[10px] tracking-[0.3em] hover:text-gray-600 transition-all"
+                className="flex-1 py-3 text-[#596a76] font-black uppercase text-[10px] tracking-[0.3em] hover:text-gray-600 transition-all"
               >
                 Cancelar
               </button>
-              <button 
+              <button
                 onClick={eventAction.status === 'success' ? () => setShowEventModal(false) : handleAddEvent}
                 disabled={eventAction.status === 'loading'}
-                className="flex-1 py-3 background: var(--aurea-bg-deep); color: var(--aurea-text) rounded-xl font-black uppercase text-[10px] tracking-[0.3em] hover:bg-gold transition-all shadow-lg"
+                className="flex-1 py-3 bg-[#0E1A25] text-white rounded-xl font-black uppercase text-[10px] tracking-[0.2em] hover:bg-gold transition-all shadow-lg flex items-center justify-center gap-3 px-6"
               >
                 {eventAction.status === 'loading' ? 'Salvando…' : eventAction.status === 'success' ? 'Concluído' : 'Confirmar'}
               </button>
@@ -281,12 +286,13 @@ export const AgendaView = () => {
       {/* MODAL: NOVA TAREFA */}
       {showTaskModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={() => setShowTaskModal(false)}>
-          <div className="background: var(--aurea-surface) rounded-2xl p-6 w-96 shadow-2xl" onClick={e => e.stopPropagation()}>
-            <h3 className="text-[11px] font-black uppercase tracking-[0.3em] color: var(--aurea-text) mb-4">Nova Tarefa</h3>
-            <label htmlFor="agenda-task-title" className="text-[10px] font-bold color: var(--aurea-text-muted)">Tarefa</label>
+          <div className="bg-[var(--aurea-surface)] rounded-2xl p-6 w-96 shadow-2xl" onClick={e => e.stopPropagation()}>
+            <h3 className="text-[11px] font-black uppercase tracking-[0.3em] text-[var(--aurea-text)] mb-4">Nova Tarefa</h3>
+            <label htmlFor="agenda-task-title" className="text-[10px] font-bold text-[#596a76]">Tarefa</label>
             <input
               id="agenda-task-title"
-              className="w-full p-3 border border-color: rgba(217,166,83,0.3) rounded-xl text-[12px] font-bold outline-none focus:border-gold transition-all"
+              className="w-full p-3 border rounded-xl text-[12px] font-bold outline-none focus:border-gold transition-all"
+              style={{ borderColor: 'rgba(217,166,83,0.3)' }}
               placeholder="Ex: Estudar mapas astrais"
               value={modalText}
               disabled={taskAction.status === 'loading' || taskAction.status === 'success'}
@@ -297,17 +303,17 @@ export const AgendaView = () => {
             />
             {taskAction.message && <p role="status" className={`mt-3 text-[11px] font-bold ${taskAction.status === 'error' ? 'text-red-600' : taskAction.status === 'success' ? 'text-green-700' : 'text-gold'}`}>{taskAction.message}</p>}
             <div className="flex gap-3 mt-4">
-              <button 
+              <button
                 onClick={() => setShowTaskModal(false)}
                 disabled={taskAction.status === 'loading'}
-                className="flex-1 py-3 color: var(--aurea-text-muted) font-black uppercase text-[10px] tracking-[0.3em] hover:text-gray-600 transition-all"
+                className="flex-1 py-3 text-[#596a76] font-black uppercase text-[10px] tracking-[0.3em] hover:text-gray-600 transition-all"
               >
                 Cancelar
               </button>
-              <button 
+              <button
                 onClick={taskAction.status === 'success' ? () => setShowTaskModal(false) : handleAddTask}
                 disabled={taskAction.status === 'loading'}
-                className="flex-1 py-3 background: var(--aurea-bg-deep); color: var(--aurea-text) rounded-xl font-black uppercase text-[10px] tracking-[0.3em] hover:bg-gold transition-all shadow-lg"
+                className="flex-1 py-3 bg-[#0E1A25] text-white rounded-xl font-black uppercase text-[10px] tracking-[0.2em] hover:bg-gold transition-all shadow-lg flex items-center justify-center gap-3 px-6"
               >
                 {taskAction.status === 'loading' ? 'Salvando…' : taskAction.status === 'success' ? 'Concluído' : 'Confirmar'}
               </button>
