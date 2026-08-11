@@ -95,3 +95,17 @@ O executável commitado em `src-tauri/binaries/astro-engine-x86_64-pc-windows-ms
 - motor declarado no recibo: `aurea-solaris-astro-engine 2026.08.audit-1`.
 
 A verificação foi concluída com sucesso contra o binário commitado. O hash `6d4a...` registrado na evidência histórica corresponde a uma requisição anterior com parâmetros diferentes (Placidus e offset omitido), portanto não é o hash da requisição acima.
+
+## Build limpo do instalador — 11/08/2026
+
+`build.bat` foi executado a partir do commit limpo `4fc14f7` e terminou com código `0`.
+
+- TypeScript/Vite: aprovado, 2348 módulos transformados;
+- PyInstaller: aprovado;
+- Rust/Tauri release: aprovado;
+- NSIS: aprovado, instalador gerado em `src-tauri/target/release/bundle/nsis/Aurea Solaris_0.1.1_x64-setup.exe`;
+- sidecar gerado e copiado pelo script: SHA-256 `880FF72239511B7FA10E3D1C4C0DD2BD588C854298F407599D26B1518964AB76`, 24.475.831 bytes;
+- instalador gerado: SHA-256 `9E51F8DEF0619BA05B1A1A17B9C6B656298143443B4B131ABD49D425D1E4FFC7`, 27.937.675 bytes;
+- smoke do sidecar gerado: health `ok`, `swisseph`, 13 corpos, 12 casas, 9 aspectos, recibo natal válido e UTC `2000-01-01T14:00:00Z`.
+
+O ambiente local de build estava sem `argon2-cffi`, embora a dependência já estivesse declarada em `requirements-api.txt`; ela foi instalada no `.aurea-build-venv` antes da execução final. O primeiro executável gerado sem essa dependência não iniciava. Após a instalação declarada, o build e o smoke passaram. Os bytes do PyInstaller variam entre execuções (hashes diferentes e comportamento funcional equivalente), portanto a comparação de release foi feita pelo contrato de execução e pelo smoke certificado.
