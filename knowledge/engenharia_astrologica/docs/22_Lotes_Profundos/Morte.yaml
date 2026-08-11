@@ -15,7 +15,25 @@ sentido_do_calculo: |
 origens_e_divergencias:
   tradicional: "Helenística (Ptolomeu, Vettius Valens) — lotes como pontos matemáticos."
   moderna: "Evolutiva/moderna (Steven Forrest, Jeffrey Green) — lotes como 'pontos sensíveis da jornada'."
-  nota: "Revisar ao citar — marca a escola usada."
+nota: "Revisar ao citar — marca a escola usada."
+revisao_editorial:
+  estado: "draft_enriquecido"
+  atribuicao: "A Parte da Morte é uma categoria tradicional, mas não há base segura para universalizar a fórmula 'Asc + Casa 8 − Lua': casa não é longitude planetária e essa expressão deve ser tratada como variante moderna ou erro de transmissão até conferência manuscrita."
+  divergencias: "Autores usam fórmulas distintas e podem empregar o lote para morte, heranças ou mudanças de condição. A camada psicológica/transformativa é moderna; não substitui o sentido histórico."
+  uso_no_motor: "Bloquear cálculo automático da fórmula atual até uma fonte primária reproduzível ser selecionada; jamais emitir data ou causa de morte."
+referencias:
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    data: "século II"
+    funcao: "contexto helenístico de lotes e tópicos de morte"
+  - autor: "Paulus Alexandrinus"
+    obra: "Introductory Matters"
+    data: "século IV"
+    funcao: "lotes, sect e tópicos de vida/morte"
+  - autor: "Benjamin Dykes (trad.)"
+    obra: "Persian Nativities"
+    data: "2010"
+    funcao: "variantes medievais e transmissão árabe"
 atlas_simbolico:
   pessoas_arquetipos: "O transformado, o renascido, o herdeiro"
   lugares_fisicos: "Lugares profundos, subterrâneos, cemitérios"

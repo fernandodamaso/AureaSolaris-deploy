@@ -1,4 +1,4 @@
-﻿status: draft
+status: review
 id: transitos_eng
 nome: Trânsitos
 tradicoes:
@@ -7,9 +7,29 @@ tradicoes:
 tipo: Engenharia da Previsão
 subtema: Timing planetário
 origens_e_divergencias:
-  tradicional: Ptolomeu, Lilly — trânsitos como 'movimento atual dos planetas'.
-  moderna: Forrest, Greene — trânsitos como 'ativação de promessas'.
-  nota: Há consenso sobre o método, divergência sobre a leitura.
+  tradicional: "Ptolomeu descreve movimentos atuais em relação ao nascimento; William Lilly sistematiza trânsitos em Christian Astrology (1647)."
+  moderna: "Robert Hand, Bill Forrest e Liz Greene articulam trânsitos como ativações de configurações natais e processos psicológicos."
+  divergencias: "Orbes, aspectos menores, pontos, zodíaco e casas variam. Trânsitos não substituem promessas natais em métodos tradicionais; 'ativação de promessa' é formulação tradicionalista contemporânea."
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos, III.10–11"
+    periodo: "século II, helenística"
+    uso: "movimentos temporais"
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    periodo: "1647, inglesa tradicional"
+    uso: "trânsitos e juízos"
+  - autor: "Robert Hand"
+    obra: "Planets in Transit"
+    periodo: "1976, moderna"
+    uso: "método moderno de trânsitos"
+  - autor: "Liz Greene"
+    obra: "The Inner Sky"
+    periodo: "1976, psicológica"
+    uso: "interpretação psicológica"
+protocolo_calculo:
+  - "Calcular longitude, latitude e velocidade do planeta em trânsito; comparar com pontos natais usando orbe configurável por escola."
+  - "Registrar primeiro contato, exatidão, retrogradação e último contato; não colapsar múltiplas passagens."
 atlas_simbolico:
   pessoas_arquetipos: O viajante, o mensageiro, o catalisador
   lugares_fisicos: Estradas, mapas celestes

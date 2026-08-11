@@ -1,4 +1,4 @@
-﻿status: draft
+status: review
 id: "regulus_atlas"
 nome: "Regulus — Atlas Simbólico"
 tradicoes:
@@ -11,6 +11,13 @@ origens_e_divergencias:
   tradicional: "Ptolomeu, Al-Battani — Regulus = coração do Leão; rei, vitória, honra."
   moderna: "Astrologia moderna mantém associações tradicionais; acrescenta liderança espiritual."
   nota: "Revisar citações ao citar esta estrela."
+referencias:
+  - {autor: "Claudius Ptolemy", obra: "Tetrabiblos", natureza: "primária astrológica", localizador: "I.9"}
+  - {autor: "Claudius Ptolemy", obra: "Almagest", natureza: "primária astronômica", localizador: "VII–VIII, Leo"}
+  - {autor: "Abū Maʿshar", obra: "Great Introduction", natureza: "medieval árabe", localizador: "estrelas reais"}
+  - {autor: "Vivian E. Robson", obra: "The Fixed Stars and Their Interpretation", natureza: "compilação moderna", localizador: "Regulus"}
+uso_tecnico: "Registrar longitude tropical pela época, conjunção, orbe e se a escola usa o esquema das quatro estrelas reais."
+divergencias_documentadas: "A advertência de queda por vingança é explícita em autores medievais/modernos, não em toda passagem de Ptolomeu."
 
 atlas_simbolico:
   pessoas_arquetipos: "Rei, soberano, campeão, protetor"

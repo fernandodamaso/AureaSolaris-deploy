@@ -16,7 +16,25 @@ sentido_do_calculo: |
 origens_e_divergencias:
   tradicional: "Helenística (Ptolomeu, Vettius Valens) — lotes como pontos matemáticos."
   moderna: "Evolutiva/moderna (Steven Forrest, Jeffrey Green) — lotes como 'pontos sensíveis da jornada'."
-  nota: "Revisar ao citar — marca a escola usada."
+nota: "Revisar ao citar — marca a escola usada."
+revisao_editorial:
+  estado: "draft_enriquecido"
+  atribuicao: "Lotes relativos a filhos/progênie aparecem na astrologia helenística e árabe, mas a fórmula exata e o tratamento de sect variam por autor."
+  divergencias: "Júpiter/Saturno não constituem, por si, uma prova de fertilidade ou de número de filhos. A leitura de 'obras' é uma extensão moderna; conservar como camada identificada."
+  uso_no_motor: "Apresentar fórmula e fonte escolhidas; nunca converter o lote em diagnóstico médico ou previsão literal de nascimento."
+referencias:
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    data: "século II"
+    funcao: "exemplos de lotes, sect e avaliação por casas/regentes"
+  - autor: "Paulus Alexandrinus"
+    obra: "Introductory Matters"
+    data: "século IV"
+    funcao: "estrutura de lotes e condição diurna/noturna"
+  - autor: "Benjamin Dykes (trad.)"
+    obra: "Persian Nativities"
+    data: "2010"
+    funcao: "transmissão medieval e variantes de partes relativas à família"
 atlas_simbolico:
   pessoas_arquetipos: "A criança, o criador, o filho"
   lugares_fisicos: "Jardins de infância, teatros, lugares de diversão"

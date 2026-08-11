@@ -1,4 +1,4 @@
-﻿status: draft
+﻿status: review
 id: "juno"
 nome: "Juno (Asteroide 3 Juno)"
 tradicoes:
@@ -118,4 +118,23 @@ origens_e_divergencias:
     autores: [Demetra George, Liz Greene]
     conceito: "Planeta da parceria igualitária, do contrato, do casamento como espelho."
   por_que_da_divergencia: "Juno é moderna por definição: entrou no mapa no século XIX, junto com os movimentos feministas."
+
+referencias:
+  - autor: "Demetra George e Douglas Bloch"
+    obra: "Asteroid Goddesses"
+    ano: 1986
+    natureza: "fonte moderna mitológica/psicológica"
+    localizador: "Capítulo de Juno e os quatro asteroides; conferir a edição consultada."
+  - autor: "NASA/JPL"
+    obra: "Small-Body Database: 3 Juno"
+    natureza: "fonte astronômica"
+    localizador: "Identificação, órbita e designação do asteroide."
+
+limites_e_divergencias:
+  - "Juno não possui domicílio, exaltação, detrimento ou queda reconhecidos pela tradição; Libra/Peixes/Áries/Virgem são propostas modernas e devem ser rotuladas como tais."
+  - "O mito greco-romano de Hera/Juno é fonte simbólica; não autoriza afirmar que todo casamento, ciúme ou doença ocorrerá."
+  - "O motor deve manter a escolha de asteroide, orbe e escola interpretativa visível."
+
+## ✏️ Minhas Anotações
+notas_pessoais: []
 

@@ -8,9 +8,10 @@ tipo: "Atlas Simbólico"
 subtema: "Correspondências da Casa 11"
 
 origens_e_divergencias:
-  tradicional: "Ptolomeu (Tetrabiblos) — significados tradicionais das 12 casas."
-  moderna: "Astrologia moderna — casa 11 como grupos e futuro."
-  nota: "Revisar ao citar — marca a escola usada."
+  tradicional: "Na tradição helenística, a Casa 11 é o Bom Daimon, ligada a aliados, amigos, esperança e benefícios; Ptolomeu é uma testemunha posterior, não a única fonte."
+  moderna: "A astrologia moderna amplia a Casa 11 para grupos, redes, causas e futuro coletivo; a associação com Urano é uma releitura do século XX, não uma dignidade tradicional."
+  divergencias: "‘Amigos e benfeitores’ (helenística/medieval), ganhos derivados da carreira (derivação moderna) e revolução/tecnologia (moderna) são camadas diferentes; declarar a escola."
+  nota: "Urano, doenças nervosas e tecnologias não são significados antigos da Casa 11."
 
 atlas_simbolico:
   pessoas_arquetipos: "O amigo, o grupo, o visionário, o inovador coletivo"
@@ -44,4 +45,18 @@ camada_energetica:
 
 ver_mais:
   - "../05_Casas/Casa_11.yaml"
+
+referencias:
+  - autor: "Vettius Valens"
+    obra: "Anthology"
+    natureza: "fonte primária helenística"
+    localizador: "Livros II–IV, tópicos de casas, amigos, esperança e testemunhos."
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "fonte primária greco-romana"
+    localizador: "Livro III, significações derivadas das casas; consultar a edição utilizada."
+  - autor: "Robert Hand"
+    obra: "The Houses: Temples of the Sky"
+    natureza: "síntese moderna ocidental"
+    localizador: "Discussão moderna das casas e sua evolução de significados."
 

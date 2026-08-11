@@ -5,7 +5,7 @@ tradicoes:
   - "persa e ?rabe medieval"
   - "historiografia contempor?nea"
 tema: "As Revoluções dos Anos nas Natividades — tratado clássico de previsão por revoluções solares e profecção"
-status: draft
+status: review
 origem: "Árabe, século IX d.C. — traduzido para o latim como Albumasar"
 obra: "De Magnis Coniunctionibus / Revolutions of the Years in Nativities"
 conceitos:
@@ -36,7 +36,7 @@ exemplo_pratico: "Uma pessoa com 30 anos está no ano de Saturno/Sol — usar re
 arquetipos_simbolicos:
   expressao_elevada: "sábio do tempo"
   expressao_sombra: "fatalismo temporal"
-consenso_tradicional: "Amplamente citado por Bonatti, Regiomontanus e Morin como fonte autoritativa."
+consenso_tradicional: "Foi uma autoridade decisiva na astrologia árabe-latina medieval, mas não existe consenso de que todas as técnicas modernas chamadas 'revolução solar' reproduzam Abu Ma'shar. Bonatti, Regiomontanus e Morin pertencem a recepções posteriores e devem ser citados separadamente."
 notas: "Inclui também teoria das conjunções máximas (Júpiter-Saturno) para história mundana."
 camada_energetica:
   campo_mental: "O tempo como linguagem simbólica; cada ano reativo um arquétipo planetário."
@@ -47,6 +47,23 @@ origens_e_divergencias:
   tradicional: "Astrologia árabe ptolomaica com influências hindus e persas."
   moderna: "Integrado com psicologia temporal e ritmos biológicos."
   nota: "Comparar com direções primárias e progressões para triangulação."
+revisao_editorial:
+  atribuicao: "Abu Ma'shar (Abū Maʿšar al-Balkhī, 787–886) escreveu tratados sobre revoluções anuais, profecias e grandes conjunções. A transmissão latina medieval traduziu e reorganizou partes de sua obra; não se deve atribuir automaticamente a ele cada regra moderna de retorno solar."
+  divergencias: "A técnica medieval usa senhores dos anos, profecções, revoluções e ingressos em combinações que variam por manuscrito e autor. A expressão moderna 'revolução solar' é uma aproximação editorial, não uma fórmula única de Abu Ma'shar."
+  uso_no_motor: "Oferecer como perfil de escola: registrar idade, método de contagem, local do retorno, profecção e regras de prioridade. Nunca substituir a posição astronômica do retorno por uma narrativa cármica."
+referencias:
+  - autor: "Abu Ma'shar"
+    obra: "On the Revolutions of the Years of Nativities"
+    data: "século IX; tradução inglesa de Benjamin N. Dykes, 2010"
+    funcao: "fonte primária/tradução moderna para revoluções anuais e senhores do tempo"
+  - autor: "Abu Ma'shar"
+    obra: "The Great Introduction to Astrology"
+    data: "século IX; transmissão árabe-latina"
+    funcao: "fundamento de doutrinas planetárias e históricas"
+  - autor: "Charles Burnett (org.)"
+    obra: "Abū Maʿšar: The Abbreviation of the Introduction to Astrology"
+    data: "1994"
+    funcao: "edição/tradução acadêmica da recepção latina"
 atlas_simbolico:
   pessoas_arquetipos: "sábio, astrônomo, intérprete de ciclos"
   lugares_fisicos: "bibliotecas antigas, observatórios, Bagdá"

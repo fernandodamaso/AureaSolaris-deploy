@@ -1,4 +1,4 @@
-﻿status: draft
+status: review
 id: progressoes_eng
 nome: Progressões
 tradicoes:
@@ -7,9 +7,25 @@ tradicoes:
 tipo: Engenharia da Previsão
 subtema: Progressões secundárias e terciárias
 origens_e_divergencias:
-  tradicional: Hellenística — progressões como avanço simbólico.
-  moderna: Forrest, Rudhyar — progressões como 'interiorização do tempo'.
-  nota: Revisar ao citar — marca a escola usada.
+  tradicional: "A astrologia antiga conhecia direções e revoluções; a progressão secundária (um dia após o nascimento = um ano) é técnica moderna, não deve ser retroprojetada como helenística."
+  moderna: "A regra foi popularizada por Sepharial e Alan Leo e desenvolvida psicologicamente por Dane Rudhyar; progressões terciárias são extensão moderna do século XX."
+  divergencias: "Secundária usa dia/ano; terciária pode usar dia/mês ou mês lunar/ano conforme autor. Declarar a chave antes do cálculo."
+referencias:
+  - autor: "Sepharial"
+    obra: "New Manual of Astrology"
+    periodo: "1898, moderna"
+    uso: "progressão secundária"
+  - autor: "Alan Leo"
+    obra: "The Progressed Horoscope"
+    periodo: "1906, moderna"
+    uso: "método um dia/um ano"
+  - autor: "Dane Rudhyar"
+    obra: "The Lunation Cycle"
+    periodo: "1967, psicológica"
+    uso: "desenvolvimento simbólico"
+protocolo_calculo:
+  - "Secundária: calcular posições no número correspondente de dias após o nascimento; interpolar data/hora e registrar efeméride."
+  - "Terciária: declarar a convenção adotada; escolas não são uniformes."
 atlas_simbolico:
   pessoas_arquetipos: O evolutivo, o crescente, o interno
   lugares_fisicos: Espaço interno, mapas internos

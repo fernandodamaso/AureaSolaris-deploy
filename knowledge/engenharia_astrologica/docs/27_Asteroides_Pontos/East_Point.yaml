@@ -1,4 +1,4 @@
-﻿status: draft
+﻿status: review
 id: "east_point"
 nome: "East Point (EP — Ponto Leste)"
 tradicoes:
@@ -95,4 +95,22 @@ origens_e_divergencias:
     autores: []
     conceito: "Ponto de identidade pública, calculado no horizonte leste no nascimento."
   por_que_da_divergencia: "East Point é ponto matemático moderno, usado em astrologia de carreira e imagem pública."
+
+referencias:
+  - autor: "Michael Erlewine"
+    obra: "Astrology of Local Space"
+    natureza: "referência moderna para pontos de orientação espacial"
+    localizador: "Comparar a definição usada para East Point; escolas variam entre equador/eclíptica e Ascendente equatorial."
+  - autor: "Astro.com"
+    obra: "Astro-Dienst Astrowiki: East Point"
+    natureza: "referência técnica contemporânea"
+    localizador: "Definição geométrica e uso moderno; acesso online."
+
+limites_e_divergencias:
+  - "East Point não tem dignidades, regências ou doenças canônicas; as correspondências de ouro, Apolo e carreira são associações do Atlas moderno."
+  - "Autores divergem sobre chamá-lo ponto de identidade, Ascendente equatorial ou ponto leste; registrar a fórmula adotada."
+  - "O motor deve calcular longitude eclíptica do ponto conforme a definição escolhida e permitir a escola/fórmula, sem tratar ‘visibilidade’ como previsão certa."
+
+## ✏️ Minhas Anotações
+notas_pessoais: []
 

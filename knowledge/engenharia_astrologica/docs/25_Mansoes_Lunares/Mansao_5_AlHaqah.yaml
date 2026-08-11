@@ -1,12 +1,26 @@
 ﻿status: draft
 
 id: "mansao_5_alhaquah"
+revisao_editorial:
+  estado: "draft_enriquecido"
+  atribuicao: "Al-Haqʿah é a quinta manzil em listas árabes medievais; a identificação estelar e as correspondências rituais variam em manuscritos."
+  divergencias: "Registrar transliteração, estrela e sistema de limites; o uso eletivo pertence à magia astral medieval, não a uma regra natal universal."
+  uso_no_motor: "Exigir catálogo estelar e fonte da interpretação antes do cálculo."
+referencias:
+  - autor: "Abū Maʿshar"
+    obra: "The Abbreviation of the Introduction to Astrology"
+    data: "século IX"
+    funcao: "transmissão árabe das mansões"
+  - autor: "Christopher Warnock"
+    obra: "The Mansions of the Moon"
+    data: "2010"
+    funcao: "reconstrução moderna ocidental explicitamente rotulada"
 nome: "Mansão 5 — Al-Haq'ah (A Marca / 10°40'–13°20' Touro)"
 tradicoes:
   - "arabes ocidentais"
   - "medievais"
-regente: "Vênus (Dorotheus)"
-qualidade: "Benéfica (beleza, contrato, marca sagrada)"
+regente: "Varia por catálogo e autor; não atribuir Vênus a Doroteu sem localizar a passagem."
+qualidade: "Varia entre favorável, marcial, ambígua ou ligada a marca/ação conforme a tradição e o uso eletivo."
 atlas_simbolico:
   pessoas_arquetipos: "O sombrio, o que se esconde, o mistério"
   lugares_fisicos: "Subterrâneos, cavernas, lugares de sombra"
@@ -34,9 +48,10 @@ porque_simbolico: |
   Al-Haq'ah = 'A MARCA' (árabe) = a marca que DEIXA RASTRO (como o olho de Touro que deixa rastro).
   Vênus = beleza, contrato, apego. A mansão 5 = 'o que eu AMO e DEIXO MARCADO'.
 
-linha_tradicao: "Dorotheus: mansão 5 = Vênus = 'beleza, contrato, sorte no amor'."
+linha_tradicao: "Al-Haqʿah é a quinta manzil em listas árabes e corresponde ao asterismo da Cabeça de Gêmeos; usos de marca, ação ou proteção variam nos textos."
 origens_e_divergencias:
-  tradicional: "Simbólica astronômica/tradicional dos textos clássicos de astrologia."
-  moderna: "Uso contemporâneo como recurso gráfico de memorização e estudo visual."
-  nota: "Manter fidelidade ao glyph canônico; variações estilísticas são permitidas para caderno."
+  tradicional: "Manāzil árabes e magia astral medieval tratam Al-Haqʿah como posição estelar e janela eletiva; não como regra natal única."
+  moderna: "Reconstruções ocidentais modernas acrescentam linguagem de marca, sombra e compromisso; preservar como camada identificada."
+  divergencias: "Transliterações, estrelas associadas e limites mudam entre catálogos; a faixa tropical exige declarar época/precessão."
+  nota: "Não atribuir a Doroteu uma regência ou promessa amorosa sem fonte e localizador."
 

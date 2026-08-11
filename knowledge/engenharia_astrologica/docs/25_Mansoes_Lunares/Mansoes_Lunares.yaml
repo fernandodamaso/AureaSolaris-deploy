@@ -1,5 +1,19 @@
 ﻿status: draft
 id: "mansoes_lunares"
+revisao_editorial:
+  estado: "draft_enriquecido"
+  atribuicao: "O conjunto de 28 manāzil pertence principalmente à astrologia árabe medieval e à transmissão latina; nomes, estrelas e limites variam."
+  divergencias: "Esta pasta estuda a linhagem árabe-ocidental; Jyotisha, mansões chinesas e zodíaco sideral não devem ser mesclados."
+  uso_no_motor: "Declarar lista, catálogo de estrelas, época e método de longitude em toda saída."
+referencias:
+  - autor: "Abū Rayḥān al-Bīrūnī"
+    obra: "The Book of Instruction in the Elements of the Art of Astrology"
+    data: "século XI"
+    funcao: "lista e descrição das manāzil"
+  - autor: "Picatrix"
+    obra: "Ghāyat al-Ḥakīm / Picatrix"
+    data: "século XI–XIII"
+    funcao: "usos eletivos e talismânicos"
 nome: "Mansões Lunares"
 tradicoes:
   - "arabes ocidentais"

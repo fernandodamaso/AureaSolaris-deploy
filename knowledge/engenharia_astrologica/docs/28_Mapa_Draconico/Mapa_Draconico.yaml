@@ -1,4 +1,4 @@
-﻿status: draft
+status: review
 id: "mapa_draconico"
 nome: "Mapa Dracônico"
 tradicoes:
@@ -8,9 +8,28 @@ tipo: "Aprofundamento"
 subtema: "Eixo do dragão, leitura cármica"
 
 origens_e_divergencias:
-  tradicional: "Hellenística — eixo nodoso como 'cabeça e cauda do dragão'."
+  tradicional: "A linguagem Caput/Cauda Draconis e os nodos como cabeça/cauda do dragão é antiga; o mapa dracônico com Nodo Norte em 0° Áries não é técnica helenística preservada."
   moderna: "Evolutiva/cármica — eixo nodoso como 'missão da alma'."
-  nota: "Revisar ao citar — marca a escola usada."
+nota: "Revisar ao citar — marca a escola usada."
+revisao_editorial:
+  estado: "draft_enriquecido"
+  atribuicao: "O mapa dracônico é uma técnica moderna: desloca o zodíaco para que o Nodo Norte fique em 0° Áries. A associação do nodo à cabeça/cauda do dragão é antiga; 'missão da alma' e 'vidas passadas' são leituras cármicas contemporâneas."
+  divergencias: "Não é uma técnica helenística preservada nem uma prova histórica de karma. Escolas modernas divergem sobre usar nodo médio/verdadeiro e sobre casas, aspectos e orbes."
+  calculo: "Longitude dracônica = longitude tropical − longitude do Nodo Norte, normalizada em 0–360°. Declarar nodo médio ou verdadeiro e sistema de casas."
+  uso_no_motor: "Exigir modo dracônico explícito; exibir simultaneamente zodíaco tropical de referência e a convenção nodal escolhida."
+referencias:
+  - autor: "Pam Crane"
+    obra: "The Draconic Chart"
+    data: "século XX"
+    funcao: "popularização moderna da técnica dracônica"
+  - autor: "Steven Forrest"
+    obra: "The Book of the Moon"
+    data: "1994"
+    funcao: "linhagem cármica moderna dos nodos"
+  - autor: "Demetra George"
+    obra: "Asteroid Goddesses"
+    data: "1986"
+    funcao: "contexto moderno de técnicas nodais e simbólicas"
 
 atlas_simbolico:
   pessoas_arquetipos: "O dragão, o navegador, o buscador do caminho"
@@ -46,4 +65,6 @@ como_usar: |
   2. Leia por signo (QUALIDADE) e por casa (ONDE).
   3. Regente do Nodo Norte = COMO se acessa a missão.
   4. Planetas aspectando o eixo = FACILITADORES ou OBSTÁCULOS.
+
+limite_documental: "A leitura de missão, vidas passadas e alma pertence à astrologia cármica moderna. Deve aparecer como visão da escola escolhida, não como fato histórico ou resultado inevitável."
 

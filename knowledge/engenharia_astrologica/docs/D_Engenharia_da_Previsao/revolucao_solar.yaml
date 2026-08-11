@@ -1,4 +1,4 @@
-﻿status: draft
+status: review
 id: revolucao_solar_eng
 nome: Revolução Solar
 tradicoes:
@@ -7,9 +7,25 @@ tradicoes:
 tipo: Engenharia da Previsão
 subtema: Timing anual
 origens_e_divergencias:
-  tradicional: Hellenística — revolução solar como 'retorno ao Sol natal'.
-  moderna: Forrest, Greene — revolução solar como 'ano de vida'.
-  nota: Revisar ao citar — marca a escola usada.
+  tradicional: "Revoluções anuais e retornos do Sol aparecem na astrologia helenística tardia, persa e medieval; Abu Ma'shar sistematizou revoluções dos anos."
+  moderna: "A revolução solar moderna foi popularizada por Alan Leo, Charles Carter e Alexander Volguine; leituras psicológicas posteriores enfatizam o tema subjetivo do ano."
+  divergencias: "Há disputa entre calcular para local do aniversário, local natal ou residência; casas e orbes variam. O retorno exato pode ocorrer antes/depois do horário civil do aniversário."
+referencias:
+  - autor: "Abu Ma'shar"
+    obra: "On the Revolutions of the Years of Nativities"
+    periodo: "século IX, persa/árabe"
+    uso: "revoluções anuais"
+  - autor: "Alan Leo"
+    obra: "The Art of Synthesis"
+    periodo: "1910, moderna"
+    uso: "prática moderna de retornos"
+  - autor: "Alexander Volguine"
+    obra: "The Technique of Solar Returns"
+    periodo: "1943, moderna"
+    uso: "técnica de revolução solar"
+protocolo_calculo:
+  - "Localizar por interpolação o instante em que o Sol retorna à longitude natal, mantendo UTC e efeméride."
+  - "Gerar casas no local escolhido e comparar ângulos, regente do Ascendente e casas ativadas ao natal."
 atlas_simbolico:
   pessoas_arquetipos: O renascido, o novo ciclo, o Sol que retorna
   lugares_fisicos: Locais de renascimento, aniversários, celebrações

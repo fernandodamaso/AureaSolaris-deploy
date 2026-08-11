@@ -1,4 +1,4 @@
-﻿status: draft
+status: review
 id: "trigono_atlas"
 nome: "Trígono — Atlas Simbólico"
 tradicoes:
@@ -10,7 +10,23 @@ subtema: "Correspondências do Trígono"
 origens_e_divergencias:
   tradicional: "Ptolomeu (Tetrabiblos) — aspectos ptolomaicos e orbes."
   moderna: "Astrologia psicológica — trígono como fluxo natural."
-  nota: "Revisar ao citar — marca a escola usada."
+  nota: "O trígono é aspecto de 120° entre signos do mesmo elemento; ‘talento natural’ é formulação moderna sobre harmonia tradicional."
+
+referencias:
+  - autor: "Cláudio Ptolomeu"
+    obra: "Tetrabiblos"
+    natureza: "primária/tradicional"
+    localizador: "Livro I, caps. 12–14"
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    natureza: "tradicional/horária"
+    localizador: "Livro I, aspectos e fortitudes"
+  - autor: "Liz Greene"
+    obra: "The Development of the Personality"
+    natureza: "moderna/psicológica"
+    localizador: "aspectos fluidos e complacência"
+
+limite_documental: "Correspondências de música, animais, ervas e doenças são atlas arquetípico; harmonia não equivale a resultado garantido."
 
 atlas_simbolico:
   pessoas_arquetipos: "Par harmonioso, dupla fluida, parceiros alinhados"

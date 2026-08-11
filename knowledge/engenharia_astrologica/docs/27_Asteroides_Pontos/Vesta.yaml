@@ -1,4 +1,4 @@
-﻿status: draft
+﻿status: review
 id: "vesta"
 nome: "Vesta (Asteroide 4 Vesta)"
 tradicoes:
@@ -121,4 +121,28 @@ origens_e_divergencias:
     autores: [Demetra George, Liz Greene]
     conceito: "Planeta da devoção, da missão, do fogo sagrado e da pureza interior."
   por_que_da_divergencia: "Vesta é moderna por definição: entrou no mapa como primeiro asteroide descoberto."
+
+referencias:
+  - autor: "Demetra George e Douglas Bloch"
+    obra: "Asteroid Goddesses"
+    ano: 1986
+    natureza: "fonte moderna mitológica/psicológica"
+    localizador: "Vesta como foco, devoção e fogo interior; conferir edição."
+  - autor: "Mary Beard"
+    obra: "SPQR: A History of Ancient Rome"
+    ano: 2015
+    natureza: "contexto histórico sobre as Vestais romanas"
+    localizador: "Distinguir história religiosa romana da interpretação astrológica moderna."
+  - autor: "NASA/JPL"
+    obra: "Small-Body Database: 4 Vesta"
+    natureza: "fonte astronômica"
+    localizador: "Designação e órbita do asteroide."
+
+limites_e_divergencias:
+  - "Virgem como domicílio e Peixes como detrimento são atribuições modernas; a tradição romana não as formulou como dignidades."
+  - "A história das Vestais inclui voto, poder e coerção; não reduzir ‘pureza’ a virtude universal nem apagar sua sombra histórica."
+  - "Correspondências de saúde, karma e missão pertencem a leituras modernas; o motor deve mostrá-las como overlay e não como diagnóstico."
+
+## ✏️ Minhas Anotações
+notas_pessoais: []
 

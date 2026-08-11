@@ -25,24 +25,24 @@ Isso impede o erro central: IA inventar cálculo e interpretar uma invenção.
 
 Esta sequência prevalece sobre a numeração histórica das fases abaixo. As fases seguintes descrevem a arquitetura-alvo; o trabalho só avança quando os critérios de aceite da etapa ativa forem atendidos.
 
-### Etapa 1 — Estabilizar a versão instalada
+### Etapa 1 — Estabilizar a experiência Chrome
 
-**Objetivo:** a versão Windows só mostra o que foi informado, calculado ou explicitamente indisponível.
+**Objetivo:** a experiência no Chrome só mostra o que foi informado, calculado ou explicitamente indisponível.
 
 1. Padronizar os campos de data em `DD/MM/AAAA`, sem autoformatação destrutiva e com validação ao sair do campo/salvar.
 2. Remover valores natais, coordenadas, fuso e dados de perfil fictícios dos caminhos de criação, carregamento, conexão e contexto do Hermes.
 3. Impedir qualquer cálculo de mapa quando faltarem data, hora, local, coordenadas e fuso IANA confirmados; mostrar o motivo e a ação de correção.
 4. Definir a hierarquia de superfícies: modal acima do conteúdo, Hermes abre por ação explícita e Caderno Vivo é uma superfície própria, aberta a partir de mapa, tema ou pergunta — nunca um painel que apareça sem causa.
 5. Padronizar estados de interação: repouso, hover, foco, ativo, carregando, sucesso, indisponível e erro.
-6. Rodar verificação TypeScript, testes e build Tauri; gerar e abrir o instalador somente após os três passarem.
+6. Rodar verificação TypeScript, testes e build da aplicação web local; validar manualmente no Chrome.
 
-**Critérios de aceite:** digitar uma data incompleta não muda seu conteúdo; perfil sem nascimento não produz mapa; conexão sem local, coordenadas ou fuso confirmados não ganha valores-padrão; o mapa renderizado apresenta a origem técnica; Caderno e Hermes têm abertura/fechamento previsíveis; o instalador usa o mesmo comportamento.
+**Critérios de aceite:** digitar uma data incompleta não muda seu conteúdo; perfil sem nascimento não produz mapa; conexão sem local, coordenadas ou fuso confirmados não ganha valores-padrão; o mapa renderizado apresenta a origem técnica; Caderno e Hermes têm abertura/fechamento previsíveis; o Chrome usa o mesmo comportamento.
 
-**Andamento em 10/08:** concluídos os fluxos sem dados natais fictícios, recibo auditável do motor, estados básicos de interação e passagem da tela falsa de estudo para o Caderno Vivo. A estrutura de certificação comparativa em `tests/engine_reference/` bloqueia corretamente qualquer selo enquanto não houver referências externas aprovadas. A falha reportada na instalação foi identificada: o sidecar do Motor encerrava sem abrir a porta local. A inicialização, a conversão para UTC na virada de dia e a passagem de velocidade foram corrigidas e passaram em testes. “Feral” agora só pode aparecer como regra interpretativa Tradicional, com critério e orbe visíveis, aplicada apenas a planetas elegíveis e nunca ao Sol. A Etapa 1 permanece aberta até o novo pacote Windows ser gerado e validado visualmente com Mandala e Hermes.
+**Concluída em 11/08:** os fluxos sem dados natais fictícios, recibo auditável do motor, estados básicos de interação e passagem da tela falsa de estudo para o Caderno Vivo foram verificados. Hermes agora usa um provedor selecionado e consentido, sem depender nem sondar Ollama. O produto canônico é o site local no Chrome; instaladores não são critério de aceite desta etapa.
 
 ### Etapa 2 — Fundação de segurança e dados
 
-**Estado:** iniciada em 10/08/2026, sem importação automática do legado.
+**Estado:** em fechamento. A base privada já usa Argon2id no servidor local, sessões locais protegidas e isolamento por `owner_id`; a migração do conteúdo legado permanece explícita e reversível.
 
 1. Criar `knowledge.sqlite` e `private.sqlite` a partir das migrações aprovadas, sem migrar ou apagar dados legados automaticamente.
 2. Criar backup verificável e relatório de contagens antes de importar perfis, mapas, Mesa, Diário, agenda e arquivos privados.
@@ -52,7 +52,7 @@ Esta sequência prevalece sobre a numeração histórica das fases abaixo. As fa
 
 **Critérios de aceite:** migração pode ser desfeita a partir do backup; nenhum segredo entra nos dois bancos em texto; consultas privadas não atravessam o proprietário; memórias podem ser inspecionadas, corrigidas e retiradas da recuperação; contradições sempre indicam afirmação, fonte e escola.
 
-**Incremento entregue:** `local_storage.py` cria as duas bases, aplica migrações imutáveis, verifica integridade, recusa checksums alterados/versões futuras e faz backup antes de atualizar o esquema. A migração privada `0005_hermes_mind.sql` acrescenta conversas, proveniência de mensagens, evidências de memória, contexto e revisão de contradições com isolamento por `owner_id`. A API local cria uma conta explicitamente autorizada usando verificador derivado, abre/lista/registra/reabre mensagens por pessoa/tema e permite propor, aprovar, revogar ou esquecer memórias com evidência. O HermesChat e a tela Memórias já usam esse contrato; ainda faltam autenticação Argon2id/cofre, migração das telas legadas e o avaliador de contradições citado contra a Engenharia. Contrato operacional em `docs/data-persistence.md`, `docs/HERMES_MIND_ARCHITECTURE.md` e `docs/HERMES_MIND_API.md`.
+**Incremento entregue:** `local_storage.py` cria as duas bases, aplica migrações imutáveis, verifica integridade, recusa checksums alterados/versões futuras e faz backup antes de atualizar o esquema. Novas contas do banco privado são protegidas por Argon2id; login e rotas privadas exigem sessão local. A migração privada `0005_hermes_mind.sql` acrescenta conversas, proveniência de mensagens, evidências de memória, contexto e revisão de contradições com isolamento por `owner_id`. A API local abre/lista/registra/reabre mensagens por pessoa/tema e permite propor, aprovar, revogar ou esquecer memórias com evidência. O HermesChat e a tela Memórias já usam esse contrato. Antes de encerrar a etapa faltam o cofre de tokens por `secret_ref`, a migração explícita de Mesa/Diário/Agenda e o avaliador de contradições citado contra a Engenharia. Contrato operacional em `docs/data-persistence.md`, `docs/HERMES_MIND_ARCHITECTURE.md` e `docs/HERMES_MIND_API.md`.
 
 ### Etapa 3 — Motor astrológico certificado
 
@@ -63,6 +63,8 @@ Esta sequência prevalece sobre a numeração histórica das fases abaixo. As fa
 3. Criar casos de referência e relatório de diferenças; bloquear a apresentação de resultado se o motor não responder com proveniência completa.
 
 **Critérios de aceite:** os casos de referência passam, a interface mostra a trilha do cálculo e não há cálculo aproximado silencioso.
+
+**Andamento em 11/08:** C0 está implementado: recibo, UTC, fuso IANA, coordenadas, casas e parâmetros são obrigatórios e rastreáveis. C1 foi iniciado com schema e runner que recusam certificar resultados sem referência aprovada. A próxima ação depende de exportações autorizadas e configuradas de Astro.com, Astro-Seek ou Solar Fire; o sistema não inventará esses valores nem fará scraping autenticado.
 
 ### Etapa 4 — Alpha 1: estudar um planeta
 

@@ -1,12 +1,26 @@
 ﻿status: draft
 
 id: "mansao_4_aldabaran"
+revisao_editorial:
+  estado: "draft_enriquecido"
+  atribuicao: "Aldebaran é associado à quarta manzil em compilações árabes; regente, natureza e uso talismânico variam entre Picatrix, al-Biruni e autores posteriores."
+  divergencias: "Não confundir manzil árabe com nakshatra indiana; nomes, limites e estrela variam por catálogo e época."
+  uso_no_motor: "Declarar catálogo, época de precessão e fonte da tabela antes de calcular."
+referencias:
+  - autor: "Picatrix"
+    obra: "Ghāyat al-Ḥakīm / Picatrix"
+    data: "século XI–XIII"
+    funcao: "manāzil na magia astral árabe-latina"
+  - autor: "Abū Rayḥān al-Bīrūnī"
+    obra: "The Book of Instruction in the Elements of the Art of Astrology"
+    data: "século XI"
+    funcao: "descrição técnica das mansões"
 nome: "Mansão 4 — Aldebaran (O Olho do Touro / 8°0'–10°40' Touro)"
 tradicoes:
   - "arabes ocidentais"
   - "medievais"
-regente: "Sol (Dorotheus)"
-qualidade: "Benéfica (luz, proteção, sucesso)"
+regente: "Varia por catálogo e autor; não atribuir Sol a Doroteu sem localizar a passagem."
+qualidade: "Varia: Aldebaran pode ser favorável, marcial ou perigosa conforme a tradição e o uso eletivo."
 atlas_simbolico:
   pessoas_arquetipos: "O guerreiro, o que avança, o vitorioso"
   lugares_fisicos: "Campos de batalha, montanhas, lugares de tensão"
@@ -34,9 +48,10 @@ porque_simbolico: |
   Aldebaran = 'O SEGUIDOR' (árabe) = a estrela que SEGUE as Plêiades. É o OLHO do touro — o que VÊ e NÃO DESVIA.
   Sol = luz, identidade. A mansão 4 = 'o olho solar' — ver com a própria luz.
 
-linha_tradicao: "Dorotheus: mansão 4 = Sol = 'sucesso, proteção, honra'."
+linha_tradicao: "Aldebaran é a estrela principal da quarta manzil em listas árabes; correspondências de honra, vigilância, guerra ou proteção pertencem a camadas e autores diferentes."
 origens_e_divergencias:
-  tradicional: "Simbólica astronômica/tradicional dos textos clássicos de astrologia."
-  moderna: "Uso contemporâneo como recurso gráfico de memorização e estudo visual."
-  nota: "Manter fidelidade ao glyph canônico; variações estilísticas são permitidas para caderno."
+  tradicional: "Manāzil árabes, astronomia estelar greco-árabe e magia astral medieval tratam Aldebaran como estrela/posição, não como um signo tropical fixo universal."
+  moderna: "Autores ocidentais modernos projetam a manzil em graus tropicais e acrescentam linguagem psicológica ou arquetípica."
+  divergencias: "Aldebaran é hoje afetada pela precessão; catálogo, época e faixa uniforme de 2°20' mudam a longitude."
+  nota: "Não atribuir a Doroteu uma regência ou promessa talismânica sem fonte e localizador."
 

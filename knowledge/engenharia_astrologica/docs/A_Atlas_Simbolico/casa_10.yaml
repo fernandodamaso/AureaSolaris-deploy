@@ -1,4 +1,4 @@
-﻿status: draft
+﻿status: review
 id: "casa_10_atlas"
 nome: "Casa 10 — O Trono / A Missão Pública"
 tradicoes:
@@ -10,7 +10,7 @@ subtema: "Correspondências da Casa 10"
 origens_e_divergencias:
   tradicional: "Ptolomeu (Tetrabiblos) — significados tradicionais das 12 casas."
   moderna: "Astrologia profissional — casa 10 como carreira e reputação."
-  nota: "Revisar ao citar — marca a escola usada."
+  nota: "A casa 10 é angular e ligada à ação pública na tradição; carreira, reputação e ‘missão’ são desenvolvimentos modernos, não equivalentes automáticos."
 
 atlas_simbolico:
   pessoas_arquetipos: "O rei, a rainha, o executivo, a autoridade pública"
@@ -44,4 +44,28 @@ camada_energetica:
 
 ver_mais:
   - "../05_Casas/Casa_10.yaml"
+
+referencias:
+  - autor: "Claudius Ptolemy"
+    obra: "Tetrabiblos"
+    natureza: "fonte antiga greco-romana"
+    localizador: "Livro III, tópicos de honra e ação pública; consultar a edição escolhida."
+  - autor: "William Lilly"
+    obra: "Christian Astrology"
+    ano: 1647
+    natureza: "fonte tradicional inglesa"
+    localizador: "Seções de casas, dignidades e julgamento de honra/ofício."
+  - autor: "Dane Rudhyar"
+    obra: "The Astrology of Personality"
+    ano: 1936
+    natureza: "fonte moderna psicológica"
+    localizador: "Carreira e individuação como leitura moderna; não apagar a distinção angular tradicional."
+
+limites_e_divergencias:
+  - "O MC e a cúspide da casa 10 não são idênticos em todos os sistemas de casas; o motor deve mostrar ambos e registrar a escolha."
+  - "‘Rei’, ‘autoridade’ e ‘carreira’ são imagens de épocas e escolas diferentes; não converter em promessa de promoção ou diagnóstico corporal."
+  - "Correspondências solares, domingo, coração e ouro pertencem a cadeias simbólicas com fontes distintas e devem ser exibidas como overlays."
+
+## ✏️ Minhas Anotações
+notas_pessoais: []
 

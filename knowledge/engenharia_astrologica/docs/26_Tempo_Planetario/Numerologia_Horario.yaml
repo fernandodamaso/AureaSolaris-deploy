@@ -1,4 +1,4 @@
-﻿status: draft
+status: draft
 id: "numerologia_horario"
 nome: "Numerologia do Horário de Nascimento"
 tradicoes:
@@ -12,9 +12,9 @@ essencia:
   - "Cruzar com o número do dia/ano para o 'mapa numerológico'"
 
 origens_e_divergencias:
-  tradicional: "Astrologia caldeu/babilônica → helenística (Dorotheus, Masha'allah) — dias/horas planetárias."
-  moderna: "Moderno (numerologia pitagórica aplicada ao horário)."
-  nota: "Revisar ao citar — marca a escola usada."
+  tradicional: "A astrologia antiga usa horas planetárias, dias e números; isso não documenta a soma decimal da hora civil descrita nesta ficha."
+  moderna: "A redução da hora/minuto a 1–9 pertence a numerologias modernas atribuídas a Pitágoras; a genealogia direta até o Pitágoras histórico é controversa."
+  nota: "Permanece uma técnica numerológica complementar, não uma regra canônica da astrologia ocidental."
 atlas_simbolico:
   pessoas_arquetipos: "O numerólogo, o místico, o que vê padrões no tempo"
   lugares_fisicos: "Lugares de padrão: templos, bibliotecas"
@@ -41,4 +41,23 @@ camada_energetica:
 relacao_pitagorica: "Redução 1–9 = base da numerologia pitagórica; cada número tem arquétipo (1 unidade, 2 duplo, 3 expressão, 4 base, 5 mudança, 6 harmonia, 7 mistério, 8 poder, 9 conclusão)."
 foco_especial:
   carmico: "O número de chegada às vezes 'repete' um tema de vida (oferecer a quem ressoa)."
+
+revisao_editorial:
+  estado: "draft_enriquecido"
+  atribuicao: "A ficha separa hora planetária (tradição astrológica) de redução pitagórica moderna. Não há fonte antiga verificável para o procedimento 14:27 → 5 como técnica natal astrológica."
+  divergencias: "Algumas escolas preservam números mestres 11/22; outras reduzem tudo a 1–9. Também variam hora local, hora solar e hora civil. O método escolhido deve ser registrado."
+  uso_no_motor: "Não calcular por padrão. Se habilitado pelo usuário, tratar como módulo numerológico independente, preservar a entrada textual e informar algoritmo, fuso e convenção; não alterar julgamento astrológico."
+referencias:
+  - autor: "Iamblichus"
+    obra: "The Life of Pythagoras"
+    data: "século IV d.C."
+    funcao: "testemunho tardio sobre o pitagorismo; não prova a técnica da hora"
+  - autor: "Porphyry"
+    obra: "Life of Pythagoras"
+    data: "século III d.C."
+    funcao: "fonte biográfica tardia sobre Pitágoras"
+  - autor: "Hans Decoz"
+    obra: "The Power of Birthdays, Stars & Numbers"
+    data: "1994"
+    funcao: "exemplo moderno de numerologia de nascimento; não tradição astrológica antiga"
 

@@ -1,4 +1,4 @@
-﻿status: draft
+status: review
 id: "quadratura_atlas"
 nome: "Quadratura — Atlas Simbólico"
 tradicoes:
@@ -10,7 +10,23 @@ subtema: "Correspondências da Quadratura"
 origens_e_divergencias:
   tradicional: "Ptolomeu (Tetrabiblos) — aspectos ptolomaicos e orbes."
   moderna: "Astrologia psicológica — quadratura como tensão de crescimento."
-  nota: "Revisar ao citar — marca a escola usada."
+  nota: "A quadratura ptolomaica é relação de signo por quadratura; ‘crescimento’ e ‘forja’ são leituras modernas/psicológicas."
+
+referencias:
+  - autor: "Cláudio Ptolomeu"
+    obra: "Tetrabiblos"
+    natureza: "primária/tradicional"
+    localizador: "Livro I, caps. 12–14"
+  - autor: "Robert Hand"
+    obra: "Horoscope Symbols"
+    natureza: "moderna/histórico-comparativa"
+    localizador: "capítulos sobre aspectos"
+  - autor: "Howard Sasportas"
+    obra: "The Twelve Houses"
+    natureza: "moderna/psicológica"
+    localizador: "seções sobre quadraturas"
+
+limite_documental: "Atribuições de doenças, metais e mitos pertencem ao atlas editorial; não são doutrina ptolomaica uniforme."
 
 atlas_simbolico:
   pessoas_arquetipos: "Par em tensão, desafio, obstáculo, catalisador"

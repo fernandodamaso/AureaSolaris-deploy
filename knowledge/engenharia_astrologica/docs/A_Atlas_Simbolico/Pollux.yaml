@@ -1,4 +1,4 @@
-﻿status: draft
+status: review
 id: "pollux_atlas"
 nome: "Pollux — Atlas Simbólico"
 tradicoes:
@@ -11,6 +11,13 @@ origens_e_divergencias:
   tradicional: "Ptolomeu — Pollux = gêmeo imortal; coragem, proteção, fama, luta honrosa."
   moderna: "Astrologia moderna mantém; acrescenta liderança, defesa do grupo."
   nota: "Pollux é o gêmeo imortal; mais ativo e combativo que Castor."
+referencias:
+  - {autor: "Claudius Ptolemy", obra: "Tetrabiblos", natureza: "primária astrológica", localizador: "I.9"}
+  - {autor: "Eratosthenes", obra: "Catasterismi", natureza: "mitográfica antiga", localizador: "Dioscuri"}
+  - {autor: "Apollodorus", obra: "Bibliotheca", natureza: "mitográfica grega", localizador: "III.10"}
+  - {autor: "Vivian E. Robson", obra: "The Fixed Stars and Their Interpretation", natureza: "compilação moderna", localizador: "Pollux"}
+uso_tecnico: "Conjunção estreita e angularidade com orbes declarados; comparar Pollux e Castor só quando ambos estiverem ativos."
+divergencias_documentadas: "A natureza marcial antiga contrasta com leituras modernas de proteção heroica; registrar a tradição aplicada."
 
 atlas_simbolico:
   pessoas_arquetipos: "Guerreiro nobre, protetor, líder de grupo, irmão"

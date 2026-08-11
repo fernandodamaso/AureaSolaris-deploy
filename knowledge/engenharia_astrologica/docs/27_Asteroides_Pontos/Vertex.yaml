@@ -1,4 +1,4 @@
-﻿status: draft
+﻿status: review
 id: "vertex"
 nome: "Vertex (Vértice — Ponto de Encontro)"
 tradicoes:
@@ -95,4 +95,22 @@ origens_e_divergencias:
     autores: [Liz Greene, autores de astrologia relacionamentos]
     conceito: "Ponto de encontro com o outro, significado em relacionamentos e encontros fatais."
   por_que_da_divergencia: "Vertex é ponto matemático moderno, usado em astrologia de relacionamentos."
+
+referencias:
+  - autor: "Charles A. Jayne"
+    obra: "The Horoscope and the Vertex (literatura do Vertex, séc. XX)"
+    natureza: "origem moderna do conceito"
+    localizador: "Conferir a edição/artigo adotado; atribuições do Vertex variam."
+  - autor: "Astro.com"
+    obra: "Astro-Dienst Astrowiki: Vertex"
+    natureza: "referência técnica contemporânea"
+    localizador: "Definição geométrica e uso em sinastria/trânsitos."
+
+limites_e_divergencias:
+  - "Vertex não tem dignidades; ‘alma gêmea’, carma e destino são vocabulário moderno de relacionamento, não significados helenísticos."
+  - "A definição geométrica depende da interseção do primeiro vertical com a eclíptica; softwares podem divergir por convenções e arredondamento."
+  - "O motor deve expor fórmula, zodíaco, casas e orbe antes de aplicar linguagem de encontro."
+
+## ✏️ Minhas Anotações
+notas_pessoais: []
 

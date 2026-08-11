@@ -1,5 +1,23 @@
-﻿status: draft
+status: review
 id: "platonismo_neoplatonismo"
+revisao_editorial:
+  estado: "draft_enriquecido"
+  atribuicao: "Platonismo e neoplatonismo influenciaram cosmologias astrológicas tardo-antigas e renascentistas, mas não constituem um método único de cálculo natal."
+  divergencias: "Separar Platão, Plotino, Porfírio, Proclo e platonismo cristão; 'astrologia da alma' é síntese posterior e deve ser rotulada."
+  uso_no_motor: "Camada filosófica selecionável, nunca substituto de efemérides, dignidades ou regras técnicas."
+referencias:
+  - autor: "Plato"
+    obra: "Timaeus"
+    data: "século IV a.C."
+    funcao: "cosmologia e proporção"
+  - autor: "Plotinus"
+    obra: "Enneads"
+    data: "século III"
+    funcao: "neoplatonismo e causalidade simbólica"
+  - autor: "Dorian Gieseler Greenbaum"
+    obra: "The Daimon in Hellenistic Astrology"
+    data: "2016"
+    funcao: "alma, daimon e contexto helenístico"
 nome: "Platonismo e Neoplatonismo"
 tradicoes:
   - "historica"
@@ -8,9 +26,9 @@ tipo: "Tradições Antigas"
 subtema: "Filosofia platônica na astrologia"
 
 origens_e_divergencias:
-  tradicional: "Platão, Plotino, Jâmblico — alma do mundo, ascensão, formas."
-  moderna: "Rudhyar, Greene — releitura platônica da astrologia."
-  nota: "Filosofia, não técnica astrológica direta."
+  tradicional: "Platão oferece cosmologia no Timeu; Plotino desenvolve o Uno e a alma; Jâmblico e Proclo articulam teurgia e hierarquia cósmica. Nenhum deles deixou um método natal único."
+  moderna: "Rudhyar, Greene e correntes psicológicas fazem releituras modernas; estas não devem ser projetadas retroativamente nos autores antigos."
+  nota: "Filosofia que informou linguagens de correspondência, não uma tabela técnica obrigatória."
 
 atlas_simbolico:
   pessoas_arquetipos: "O filósofo, o buscador, o iniciado"
@@ -51,4 +69,7 @@ conceitos:
   - nome: "Ascensão"
     definicao: "A alma sobe do mundo físico ao mundo das Formas."
     relevancia_astrologica: "Mapa natal é o PONTO DE PARTIDA da ascensão. Planetas transpessoais = portais."
+
+uso_no_motor: "Disponibilizar como camada filosófica selecionável para explicar cosmologia e finalidade; não alterar posições, dignidades, aspectos ou previsões. Exibir autor e período junto da interpretação."
+limite_documental: "'Signos são Formas' e 'planetas transpessoais são portais' são sínteses modernas, não frases atribuíveis literalmente a Platão ou Plotino."
 

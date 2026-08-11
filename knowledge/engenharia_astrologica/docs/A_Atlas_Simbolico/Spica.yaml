@@ -1,4 +1,4 @@
-﻿status: draft
+status: review
 id: "spica_atlas"
 nome: "Spica — Atlas Simbólico"
 tradicoes:
@@ -11,6 +11,13 @@ origens_e_divergencias:
   tradicional: "Ptolomeu — Spica = estrela da Virgem; ligada a colheita, prosperidade, medicina."
   moderna: "Astrologia moderna mantém; acrescenta saúde, trabalho significativo."
   nota: "Classificada como estrela benéfica por tradição."
+referencias:
+  - {autor: "Claudius Ptolemy", obra: "Tetrabiblos", natureza: "primária astrológica", localizador: "I.9"}
+  - {autor: "Claudius Ptolemy", obra: "Almagest", natureza: "primária astronômica", localizador: "VII–VIII, Virgo"}
+  - {autor: "Aratus", obra: "Phaenomena", natureza: "poética grega", localizador: "Virgem e espiga"}
+  - {autor: "Vivian E. Robson", obra: "The Fixed Stars and Their Interpretation", natureza: "compilação moderna", localizador: "Spica"}
+uso_tecnico: "Conjunção longitudinal estreita ou angularidade; recalcular longitude tropical pela época e registrar orbe e zodíaco."
+divergencias_documentadas: "Vênus/Mercúrio, iconografia agrícola e extensões modernas de cura/prosperidade pertencem a camadas históricas diferentes."
 
 atlas_simbolico:
   pessoas_arquetipos: "Curandeiro, agricultor sábio, artesão, pessoa de serviço"

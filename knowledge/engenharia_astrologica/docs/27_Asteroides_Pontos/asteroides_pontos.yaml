@@ -1,4 +1,4 @@
-﻿status: draft
+﻿status: review
 id: "asteroides_pontos"
 nome: "Asteroides e Pontos"
 tradicoes:
@@ -54,4 +54,24 @@ foco_especial:
   infantil: "A criança com Lilith forte é a 'selvagem'. A criança com Vesta forte é a 'pura'."
   familiar: "Cada membro tem seus asteroides."
   carmico_espiritual: "Asteroides indicam PONTOS DE CURA da alma."
+
+referencias:
+  - autor: "Demetra George e Douglas Bloch"
+    obra: "Asteroid Goddesses"
+    ano: 1986
+    natureza: "fonte moderna psicológica/mitológica"
+    localizador: "Capítulos sobre Ceres, Pallas, Juno e Vesta; não trata todos os pontos do arquivo."
+  - autor: "NASA/JPL"
+    obra: "Small-Body Database Browser"
+    natureza: "fonte astronômica para identidades e órbitas"
+    localizador: "Dados orbitais de asteroides; não fornece significados astrológicos."
+
+limites_e_divergencias:
+  - "Asteroides e pontos não formam um sistema único: cada autora escolhe corpos, orbes e mitologia diferentes."
+  - "Lilith, Vertex e East Point são pontos calculados; não são asteroides físicos."
+  - "As camadas cármica, arquetípica, aparência e ‘cura’ são linguagens modernas atribuídas a escolas específicas; não devem ser apresentadas como consenso tradicional."
+  - "O motor deve expor corpo/ponto, efeméride, método, orbe e fonte da regra antes de interpretar."
+
+## ✏️ Minhas Anotações
+notas_pessoais: []
 

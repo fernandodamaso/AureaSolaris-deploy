@@ -1,12 +1,12 @@
-﻿status: draft
+status: review
 
 id: "mansao_2_albutain"
-nome: "Mansão 2 — Al-Butain (O Peito / 2°40'–5°20' Áries)"
+nome: "Mansão 2 — Al-Butain (O Pequeno Ventre / aprox. 12°51'–25°42' Áries)"
 tradicoes:
   - "arabes ocidentais"
   - "medievais"
-regente: "Júpiter (Dorotheus)"
-qualidade: "Benéfica (generosidade, proteção)"
+regente: "Varia por autor; a atribuição a Júpiter não é universal"
+qualidade: "Varia conforme catálogo e finalidade eletiva"
 atlas_simbolico:
   pessoas_arquetipos: "O crescente, o que expande, o comunicador"
   lugares_fisicos: "Mercados, escolas, ruas, estações"
@@ -34,9 +34,19 @@ porque_simbolico: |
   Al-Butain = 'O PEITO' (árabe) = o peito de Áries (o carneiro que avança). O peito RECEBE o ar, ACOLHE.
   Júpiter = expansão, generosidade. A mansão 2 é a PRIMEIRA PAUSA após a partida arriscada — 'respirar antes de avançar'.
 
-linha_tradicao: "Dorotheus: mansão 2 = Júpiter = 'proteção, generosidade, sorte'."
+linha_tradicao: "Manāzil árabes: al-Butayn é a segunda estação, ligada às estrelas da região do ventre de Áries; usos eletivos e talismânicos variam entre manuscritos."
 origens_e_divergencias:
-  tradicional: "Simbólica astronômica/tradicional dos textos clássicos de astrologia."
-  moderna: "Uso contemporâneo como recurso gráfico de memorização e estudo visual."
-  nota: "Manter fidelidade ao glyph canônico; variações estilísticas são permitidas para caderno."
+  tradicional: "Descrita em catálogos árabes de manāzil e compêndios medievais de astrologia e magia astral."
+  moderna: "A literatura ocidental traduz al-Butayn como peito, ventre ou barriga pequena e redistribui correspondências planetárias."
+  divergencias: "A divisão uniforme é 12°51'26''; a faixa de 2°40' foi corrigida. Traduções e regências não são consenso."
+  nota: "A leitura de generosidade é uma variante, não significado universal."
+referencias:
+  - autor: "al-Biruni"
+    obra: "The Book of Instruction in the Elements of the Art of Astrology"
+    periodo: "século XI"
+    uso: "nomes e posições das manāzil"
+  - autor: "Picatrix"
+    obra: "Livro I"
+    periodo: "século XI–XIII, árabe/latino"
+    uso: "correspondências e eleições"
 

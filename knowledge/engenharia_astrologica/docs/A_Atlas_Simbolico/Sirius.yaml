@@ -1,4 +1,4 @@
-﻿status: draft
+status: review
 id: "sirius_atlas"
 nome: "Sirius — Atlas Simbólico"
 tradicoes:
@@ -11,6 +11,13 @@ origens_e_divergencias:
   tradicional: "Egito, Ptolomeu — Sirius/Estrela do Cão = inundação do Nilo, abundância, renascimento."
   moderna: "Astrologia moderna mantém; acrescenta associação a iluminação espiritual."
   nota: "Uma das estrelas mais importantes na astrologia tradicional."
+referencias:
+  - {autor: "Claudius Ptolemy", obra: "Almagest", natureza: "primária astronômica", localizador: "VII–VIII, Canis Major"}
+  - {autor: "Claudius Ptolemy", obra: "Tetrabiblos", natureza: "primária astrológica", localizador: "I.9"}
+  - {autor: "Censorinus", obra: "De die natali", natureza: "antiga romana", localizador: "ciclo sótico"}
+  - {autor: "Vivian E. Robson", obra: "The Fixed Stars and Their Interpretation", natureza: "compilação moderna", localizador: "Sirius"}
+uso_tecnico: "Distinguir nascer heliacal histórico de longitude tropical; registrar conjunção, paran ou culminação e orbe."
+divergencias_documentadas: "O papel calendárico egípcio e as naturezas astrológicas Vênus/Júpiter são camadas distintas; a ligação à estrela de Belém é posterior."
 
 atlas_simbolico:
   pessoas_arquetipos: "Sacerdote, guia espiritual, salvador, mensageiro"

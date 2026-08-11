@@ -1,4 +1,4 @@
-﻿status: draft
+status: review
 id: "vega_atlas"
 nome: "Vega — Atlas Simbólico"
 tradicoes:
@@ -10,7 +10,23 @@ subtema: "Correspondências de Vega"
 origens_e_divergencias:
   tradicional: "Ptolomeu — Vega = estrela da Lira; música, poesia, harmonia, viagem rápida."
   moderna: "Astrologia moderna mantém; acrescenta arte, vocação criativa."
-  nota: "Classificada como estrela de natureza Saturno/Vênus por tradição."
+  nota: "A natureza Saturno/Vênus é atribuída por autores tradicionais; Vega é α Lyrae e sua longitude muda por precessão."
+
+referencias:
+  - autor: "Cláudio Ptolomeu"
+    obra: "Tetrabiblos"
+    natureza: "primária/tradicional"
+    localizador: "Livro I, cap. 9"
+  - autor: "Abū Maʿshar"
+    obra: "Abbreviation of the Introduction to Astrology"
+    natureza: "árabe-medieval"
+    localizador: "seções sobre estrelas fixas"
+  - autor: "Vivian E. Robson"
+    obra: "The Fixed Stars and Their Interpretation"
+    natureza: "moderna/compilatória"
+    localizador: "entrada Vega"
+
+limite_documental: "Doenças, ervas, sons e viagens são atlas editorial; natureza planetária e efeitos variam por autor e orbe."
 
 atlas_simbolico:
   pessoas_arquetipos: "Músico, poeta, artista, viajante rápido, mensageiro"
