@@ -1,24 +1,35 @@
 :root {
-  /* Aurea Solaris — Brand */
-  --aurea-bg-deep: #030A11;
-  --aurea-bg: #06101A;
-  --aurea-surface: #0B1722;
-  --aurea-surface-light: #122331;
+  /* Aurea Solaris — UI Brand Bible v2
+     The product canvas is warm and light; the shell/sidebar is navy. */
+  --aurea-bg-deep: #0E1A25;
+  --aurea-bg: #FFFDF9;
+  --aurea-surface: #FFFFFF;
+  --aurea-surface-light: #FAF6EE;
+  --aurea-surface-warm: #FBF7EF;
+  --aurea-surface-soft: #FAF6EE;
+  --aurea-navy: #0E1A25;
+  --aurea-navy-2: #182A3A;
 
   --aurea-gold-light: #F2D18A;
   --aurea-gold: #D9A653;
   --aurea-gold-deep: #A96D2D;
   --aurea-bronze: #8B572A;
 
-  --aurea-text: #F1E9DC;
-  --aurea-text-muted: #AFA89D;
-  --aurea-line: #263642;
+  --aurea-text: #1E2A33;
+  /* #88939D is suitable for decoration, but not for labels or controls on
+     paper. Keep the readable neutral as the default muted text. */
+  --aurea-text-muted: #52606B;
+  --aurea-text-subtle: #6B7780;
+  --aurea-line: #E6DED2;
+  --aurea-text-on-dark: #EEF3F5;
+  --aurea-gold-soft: #FBF1DD;
+  --aurea-shadow: 0 8px 24px rgba(24,42,58,.07);
 
   /* Legacy aliases — do not reuse in new code */
   --color-mystic-bg: var(--aurea-surface);
   --color-mystic-accent: var(--aurea-gold);
   --color-gold: var(--aurea-gold);
-  --color-paper: #FCF9F1;
+  --color-paper: #FFFDF9;
 
   /* Typography */
   --font-display: "Cinzel", "Times New Roman", serif;
@@ -35,4 +46,6 @@
   --radius-sm: 6px;
   --radius-md: 10px;
   --radius-lg: 16px;
+  --radius-card: 14px;
+  --radius-xl: 20px;
 }

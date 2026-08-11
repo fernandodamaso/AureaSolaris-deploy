@@ -2,7 +2,7 @@ import React from 'react';
 import { Sparkles, Star, FileText, CheckCircle } from 'lucide-react';
 
 export const NavItem = ({ icon, label, active, onClick, collapsed }: { icon: React.ReactNode, label: string, active: boolean, onClick: () => void, collapsed: boolean }) => (
-  <button onClick={onClick} title={label} className={`w-full flex items-center gap-4 px-5 py-3 rounded-md transition-all duration-300 text-[12px] font-bold uppercase tracking-widest ${active ? 'bg-mystic-bg text-gold border border-gold/10' : 'text-gray-500 hover:text-[#333333] hover:bg-gray-50'}`}>
+  <button onClick={onClick} title={label} className="w-full flex items-center gap-4 px-5 py-3 rounded-md transition-all duration-300 text-[12px] font-bold uppercase tracking-widest" style={{ color: active ? 'var(--aurea-gold-light)' : 'rgba(238,243,245,0.68)', background: active ? 'rgba(217,166,83,0.12)' : 'transparent', border: active ? '1px solid rgba(217,166,83,0.18)' : '1px solid transparent' }}>
     <span className={active ? 'text-gold' : 'opacity-40'}>{icon}</span>
     {!collapsed && <span className="truncate">{label}</span>}
   </button>

@@ -27,9 +27,9 @@
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: dark;
+  color-scheme: light;
   color: var(--aurea-text);
-  background-color: var(--aurea-bg-deep);
+  background-color: var(--aurea-bg);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -60,6 +60,289 @@ body {
   scroll-behavior: smooth;
 }
 
+/* Shared visual language from the approved brand bibles. These primitives
+   keep every view on the same warm paper / navy shell system. */
+.panel-light {
+  background: var(--aurea-surface);
+  border: 1px solid var(--aurea-line);
+  border-radius: var(--radius-card);
+  box-shadow: var(--aurea-shadow);
+}
+
+.glass-panel {
+  background: color-mix(in srgb, var(--aurea-surface) 88%, transparent);
+  border-color: var(--aurea-line);
+  backdrop-filter: blur(12px);
+}
+
+.cosmic-border { border-color: var(--aurea-line); }
+
+.aurea-shell-dark {
+  background: var(--aurea-navy);
+  color: var(--aurea-text-on-dark);
+}
+
+.aurea-card-soft { background: var(--aurea-surface-warm); border: 1px solid var(--aurea-line); }
+.aurea-card-gold { background: var(--aurea-gold-soft); border: 1px solid rgba(169,109,45,.24); }
+.aurea-card-lavender { background: #F1ECF8; border: 1px solid #D9CBEA; }
+.aurea-card-rose { background: #F7ECEE; border: 1px solid #EBCFD3; }
+.aurea-card-green { background: #EDF5EE; border: 1px solid #CFE3D1; }
+
+.aurea-modal {
+  background: var(--aurea-surface);
+  border: 1px solid rgba(169,109,45,.28);
+  color: var(--aurea-text);
+}
+
+.aurea-modal input,
+.aurea-modal select,
+.aurea-modal textarea {
+  background: var(--aurea-surface-warm);
+  border-color: var(--aurea-line);
+  color: var(--aurea-text);
+}
+
+.aurea-page-header {
+  background: var(--aurea-surface);
+  color: var(--aurea-text);
+  border-bottom: 1px solid var(--aurea-line);
+}
+
+.aurea-page-title {
+  font-family: var(--font-display);
+  color: var(--aurea-text);
+  font-weight: 700;
+  letter-spacing: .12em;
+}
+
+.aurea-eyebrow {
+  color: var(--aurea-gold-deep);
+  font-size: .6875rem;
+  font-weight: 800;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+
+.aurea-field-label {
+  color: var(--aurea-text-muted);
+  font-size: .6875rem;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.aurea-button-primary {
+  background: var(--aurea-navy);
+  color: #fff;
+  border: 1px solid var(--aurea-navy);
+}
+
+.aurea-button-secondary {
+  background: var(--aurea-surface);
+  color: var(--aurea-text);
+  border: 1px solid var(--aurea-line);
+}
+
+.aurea-button-icon {
+  color: var(--aurea-text);
+  background: var(--aurea-surface);
+  border: 1px solid var(--aurea-line);
+}
+
+.aurea-input {
+  background: var(--aurea-surface);
+  color: var(--aurea-text);
+  border: 1px solid var(--aurea-line);
+}
+
+.aurea-input::placeholder { color: #657481; opacity: 1; }
+
+/* Native form controls are shared across private-profile, diary and board
+   dialogs. These rules provide one predictable, high-contrast baseline;
+   components may only vary surface tint, not legibility or focus feedback. */
+.main-area :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea),
+.aurea-modal :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea) {
+  color: var(--aurea-text);
+  background: var(--aurea-surface-warm);
+  border: 1px solid var(--aurea-line);
+  border-radius: var(--radius-md);
+}
+
+.main-area :is(input, select, textarea)::placeholder,
+.aurea-modal :is(input, select, textarea)::placeholder {
+  color: var(--aurea-text-subtle);
+  opacity: 1;
+}
+
+.main-area :is(input, select, textarea):focus,
+.aurea-modal :is(input, select, textarea):focus {
+  border-color: var(--aurea-gold-deep);
+  box-shadow: 0 0 0 3px rgba(169, 109, 45, .16);
+}
+
+.aurea-modal button,
+.main-area button {
+  min-height: 36px;
+}
+
+/* Mandala controls stay readable when the map has several actions.  The
+   controls use the same surfaces as the rest of the product and reserve a
+   40px hit area for mouse, touch and keyboard users. */
+.mandala-actionbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.mandala-action {
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+  border-radius: var(--radius-md);
+  padding: 0.625rem 0.8rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--aurea-text);
+  background: var(--aurea-surface);
+  border: 1px solid var(--aurea-line);
+  transition: border-color 160ms ease, background 160ms ease, color 160ms ease, box-shadow 160ms ease;
+}
+
+.mandala-action:hover:not(:disabled) {
+  color: var(--aurea-bronze);
+  border-color: var(--aurea-gold);
+  background: var(--aurea-surface-warm);
+  box-shadow: var(--aurea-shadow);
+}
+
+.mandala-action:disabled { opacity: 0.5; }
+
+.mandala-map-select {
+  min-height: 42px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.1rem;
+  min-width: 11rem;
+  border-radius: var(--radius-md);
+  padding: 0.35rem 0.75rem;
+  background: var(--aurea-surface);
+  border: 1px solid var(--aurea-line);
+}
+
+.mandala-map-select > span {
+  color: #596a76;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.mandala-map-select select {
+  min-width: 0;
+  max-width: 15rem;
+  color: var(--aurea-text);
+  background: transparent;
+  font-size: 0.75rem;
+  font-weight: 700;
+  outline: none;
+}
+
+.mandala-chart-shell {
+  width: 100%;
+  max-width: 580px;
+  border: 1px solid var(--aurea-line);
+  border-radius: var(--radius-xl);
+  padding: 0.5rem;
+  background: var(--aurea-surface);
+  box-shadow: var(--aurea-shadow);
+}
+
+@media (min-width: 900px) {
+  .mandala-actionbar { width: auto; }
+}
+
+@media (max-width: 640px) {
+  .mandala-actionbar > * { flex: 1 1 calc(50% - 0.5rem); }
+  .mandala-map-select { flex-basis: 100%; }
+  .mandala-map-select select { max-width: none; width: 100%; }
+}
+
+.hermes-panel {
+  width: min(520px, calc(100vw - 24px));
+  max-height: calc(100dvh - 48px);
+  border: 1px solid rgba(169,109,45,.40);
+  box-shadow: 0 28px 80px rgba(14,26,37,.33);
+  background: linear-gradient(180deg, rgba(8, 14, 26, 0.96), rgba(10, 16, 32, 0.96));
+  backdrop-filter: blur(18px);
+  color: #f4f2ec;
+}
+
+.hermes-panel input.aurea-input {
+  min-height: 48px;
+  font-size: 0.95rem;
+  color: #f4f2ec;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.14);
+}
+
+.hermes-panel input.aurea-input::placeholder {
+  color: rgba(244,242,236,0.72);
+}
+
+.hermes-panel .messages-area {
+  background: rgba(12, 18, 33, 0.95);
+}
+
+.hermes-panel .message-bubble {
+  max-width: 92%;
+  padding: 1rem;
+  border-radius: 24px;
+  line-height: 1.72;
+  white-space: pre-line;
+  font-size: 0.95rem;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06);
+}
+
+.hermes-panel .assistant-bubble {
+  background: rgba(255,255,255,0.12);
+  color: #0f172a;
+  border: 1px solid rgba(255,255,255,0.16);
+}
+
+.hermes-panel .user-bubble {
+  background: rgba(250, 241, 199, 0.95);
+  color: #0f172a;
+  border: 1px solid rgba(252, 211, 77, 0.35);
+}
+
+.hermes-panel .message-action {
+  margin-top: 0.75rem;
+}
+
+.hermes-panel .message-action button {
+  border-radius: 9999px;
+}
+
+/* The tutor is a utility, not a permanent overlay on the work surface. Keep
+   a real reading gutter whenever it is open so the mandala/card never sits
+   underneath the conversation. */
+@media (min-width: 768px) {
+  .layout-grid:has(.hermes-panel) .main-area { margin-right: 436px; }
+}
+
+@media (max-width: 767px) {
+  .layout-grid:has(.hermes-panel) .main-area { margin-bottom: 0; }
+  .hermes-panel { max-width: calc(100vw - 24px); }
+}
+
 :where(button, a, select, input, textarea, summary):focus-visible {
   outline: 2px solid var(--color-gold);
   outline-offset: 2px;
@@ -74,7 +357,7 @@ textarea:disabled {
 
 @layer base {
   body {
-    background-color: var(--aurea-bg-deep);
+    background-color: var(--aurea-bg);
     color: var(--aurea-text);
     font-family: var(--font-sans);
   }
