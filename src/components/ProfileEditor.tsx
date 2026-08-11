@@ -162,6 +162,10 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEdi
       };
     }
 
+    const birthData = birthDate && birthTime && city
+      ? { birthDate, birthTime, lat: city.lat, lng: city.lon, timezone: city.timezone }
+      : undefined;
+
     onSave({
       avatar,
       name,
@@ -172,6 +176,7 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEdi
       context,
       dialogStyle,
       natal,
+      birthData,
     });
   };
 
@@ -180,18 +185,18 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEdi
       className="fixed inset-0 z-[600] flex items-center justify-center bg-black/50 backdrop-blur-md px-4 animate-in fade-in font-sans"
       onClick={(e) => { if(e.target === e.currentTarget) onClose(); }}
     >
-      <div className="bg-[#FCF9F1] rounded-2xl p-8 w-full max-w-5xl shadow-2xl border border-gold/30 max-h-[90vh] overflow-y-auto no-scrollbar" onClick={e => e.stopPropagation()}>
+      <div className="background: var(--aurea-surface) rounded-2xl p-8 w-full max-w-5xl shadow-2xl border border-color: rgba(217,166,83,0.35) max-h-[90vh] overflow-y-auto no-scrollbar" onClick={e => e.stopPropagation()}>
         
         {/* Header */}
-        <div className="flex justify-between items-center mb-8 pb-6 border-b border-gold/10">
+        <div className="flex justify-between items-center mb-8 pb-6 border-b border-color: rgba(217,166,83,0.18)">
           <div className="flex items-center gap-4">
-            <div className="p-3 bg-gold/10 rounded-lg text-gold"><User size={24}/></div>
+            <div className="p-3 background: rgba(217,166,83,0.12) rounded-lg color: var(--aurea-gold)"><User size={24}/></div>
             <div>
-              <h2 className="text-lg font-black uppercase tracking-[0.2em] text-gray-800">Sua Identidade</h2>
-              <p className="text-[9px] font-bold text-gold uppercase tracking-widest">Configurações do Perfil</p>
+              <h2 className="text-lg font-black uppercase tracking-[0.2em] color: var(--aurea-text)">Sua Identidade</h2>
+              <p className="text-[9px] font-bold color: var(--aurea-gold) uppercase tracking-widest">Configurações do Perfil</p>
             </div>
           </div>
-          <button onClick={onClose} className="p-3 hover:bg-red-50 text-gray-400 hover:text-red-500 rounded-lg transition-all">
+          <button onClick={onClose} className="p-3 hover:bg-red-50 color: var(--aurea-text-muted) hover:text-red-500 rounded-lg transition-all">
             <X size={20}/>
           </button>
         </div>
@@ -205,7 +210,7 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEdi
             <div className="flex flex-col items-center gap-4">
               <div className="relative group">
                 <div 
-                  className="w-28 h-28 rounded-full bg-white shadow-xl border-4 border-white overflow-hidden flex items-center justify-center text-gold/20 cursor-pointer hover:opacity-80 transition-opacity"
+                  className="w-28 h-28 rounded-full background: var(--aurea-surface-light) shadow-xl border-4 border-white overflow-hidden flex items-center justify-center color: var(--aurea-gold)/20 cursor-pointer hover:opacity-80 transition-opacity"
                   onClick={() => fileInputRef.current?.click()}
                 >
                   {avatar ? (
@@ -216,7 +221,7 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEdi
                 </div>
                 <button 
                   onClick={() => fileInputRef.current?.click()}
-                  className="absolute bottom-1 right-1 p-2 bg-gold text-white rounded-full shadow-lg hover:scale-110 transition-all"
+                  className="absolute bottom-1 right-1 p-2 background: var(--aurea-gold) text-white rounded-full box-shadow: 0 10px 30px rgba(0,0,0,0.4) hover:scale-110 transition-all"
                 >
                   <Camera size={12} />
                 </button>
@@ -229,9 +234,9 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEdi
                 />
               </div>
               <div className="w-full">
-                <label className="text-[9px] font-black uppercase text-gray-400 pl-2 tracking-widest block mb-2">Nome</label>
+                <label className="text-[9px] font-black uppercase color: var(--aurea-text-muted) pl-2 tracking-widest block mb-2">Nome</label>
                 <input 
-                  className="w-full bg-white p-4 rounded-lg border border-gold/10 font-bold text-gray-800 outline-none focus:border-gold/30 transition-all" 
+                  className="w-full background: var(--aurea-surface-light) p-4 rounded-lg border border-color: rgba(217,166,83,0.18) font-bold color: var(--aurea-text) outline-none focus:border-color: rgba(217,166,83,0.35) transition-all" 
                   value={name} 
                   onChange={e => setName(e.target.value)}
                 />
@@ -239,20 +244,20 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEdi
             </div>
 
             {/* Birth Data - Structured */}
-            <div className="bg-white/60 p-6 rounded-[1.5rem] border border-gold/10 space-y-4">
-              <h4 className="text-[9px] font-black uppercase tracking-[0.3em] text-gold flex items-center gap-2">
+            <div className="background: var(--aurea-surface-light)/60 p-6 rounded-[1.5rem] border border-color: rgba(217,166,83,0.18) space-y-4">
+              <h4 className="text-[9px] font-black uppercase tracking-[0.3em] color: var(--aurea-gold) flex items-center gap-2">
                 <CalendarDays size={12}/> Dados de Nascimento
               </h4>
               
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-[8px] font-black uppercase text-gray-400 tracking-widest block mb-1">Data</label>
+                  <label className="text-[8px] font-black uppercase color: var(--aurea-text-muted) tracking-widest block mb-1">Data</label>
                   <input 
                     type="text"
                     inputMode="numeric"
                     autoComplete="bday"
                     maxLength={10}
-                    className="w-full bg-gray-50 p-3 rounded-lg border border-gray-100 text-[12px] font-bold text-gray-800 outline-none focus:border-gold/30"
+                    className="w-full background: rgba(3,10,17,0.35) p-3 rounded-lg border border-color: rgba(38,54,66,0.7) text-[12px] font-bold color: var(--aurea-text) outline-none focus:border-color: rgba(217,166,83,0.35)"
                     value={birthDateInput}
                     aria-invalid={Boolean(birthDateError)}
                     aria-describedby={birthDateError ? 'profile-birth-date-error' : undefined}
@@ -267,10 +272,10 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEdi
                   {birthDateError && <p id="profile-birth-date-error" role="alert" className="mt-1 text-[10px] font-bold text-red-600">{birthDateError}</p>}
                 </div>
                 <div>
-                  <label className="text-[8px] font-black uppercase text-gray-400 tracking-widest block mb-1">Hora</label>
+                  <label className="text-[8px] font-black uppercase color: var(--aurea-text-muted) tracking-widest block mb-1">Hora</label>
                   <input 
                     type="time"
-                    className="w-full bg-gray-50 p-3 rounded-lg border border-gray-100 text-[12px] font-bold text-gray-800 outline-none focus:border-gold/30"
+                    className="w-full background: rgba(3,10,17,0.35) p-3 rounded-lg border border-color: rgba(38,54,66,0.7) text-[12px] font-bold color: var(--aurea-text) outline-none focus:border-color: rgba(217,166,83,0.35)"
                     value={birthTime}
                     onChange={e => setBirthTime(e.target.value)}
                   />
@@ -278,9 +283,9 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEdi
               </div>
               
               <div>
-                <label className="text-[8px] font-black uppercase text-gray-400 tracking-widest block mb-1">Cidade</label>
+                <label className="text-[8px] font-black uppercase color: var(--aurea-text-muted) tracking-widest block mb-1">Cidade</label>
                 <select 
-                  className="w-full bg-gray-50 p-3 rounded-lg border border-gray-100 text-[12px] font-bold text-gray-800 outline-none focus:border-gold/30 cursor-pointer"
+                  className="w-full background: rgba(3,10,17,0.35) p-3 rounded-lg border border-color: rgba(38,54,66,0.7) text-[12px] font-bold color: var(--aurea-text) outline-none focus:border-color: rgba(217,166,83,0.35) cursor-pointer"
                   value={birthCity}
                   onChange={e => setBirthCity(e.target.value)}
                 >
@@ -295,14 +300,14 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEdi
               </div>
 
               {/* Natal Preview */}
-              <div className="bg-[#FCF9F1] p-4 rounded-lg border border-gold/10">
-                <p className="text-[8px] font-black uppercase text-gray-400 tracking-widest mb-2">Preview do Mapa Natal</p>
+              <div className="background: var(--aurea-surface) p-4 rounded-lg border border-color: rgba(217,166,83,0.18)">
+                <p className="text-[8px] font-black uppercase color: var(--aurea-text-muted) tracking-widest mb-2">Preview do Mapa Natal</p>
                 {loadingNatal ? (
-                  <p className="text-[10px] text-gold animate-pulse italic">Calculando posições...</p>
+                  <p className="text-[10px] color: var(--aurea-gold) animate-pulse italic">Calculando posições...</p>
                 ) : natalPreview ? (
                   <p className="text-[11px] font-bold text-gray-700 leading-relaxed">{natalPreview}</p>
                 ) : (
-                  <p className="text-[10px] text-gray-400 italic">Preencha data, hora e cidade para calcular o mapa</p>
+                  <p className="text-[10px] color: var(--aurea-text-muted) italic">Preencha data, hora e cidade para calcular o mapa</p>
                 )}
               </div>
             </div>
@@ -313,9 +318,9 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEdi
             
             {/* Context */}
             <div>
-              <label className="text-[9px] font-black uppercase text-gray-400 pl-2 tracking-widest block mb-2">Contexto Pessoal</label>
+              <label className="text-[9px] font-black uppercase color: var(--aurea-text-muted) pl-2 tracking-widest block mb-2">Contexto Pessoal</label>
               <textarea 
-                className="w-full h-28 bg-white p-4 rounded-lg outline-none border border-gold/10 resize-none text-[13px] text-gray-600 font-medium leading-relaxed focus:border-gold/30 transition-all" 
+                className="w-full h-28 background: var(--aurea-surface-light) p-4 rounded-lg outline-none border border-color: rgba(217,166,83,0.18) resize-none text-[13px] text-gray-600 font-medium leading-relaxed focus:border-color: rgba(217,166,83,0.35) transition-all" 
                 value={context}
                 onChange={e => setContext(e.target.value)}
                 placeholder="Conte sobre você: rotina, filhos, estudos, foco atual..."
@@ -325,11 +330,11 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEdi
             {/* Agent Preferences */}
             <div>
               <div>
-                <label className="text-[9px] font-black uppercase text-gray-400 pl-2 tracking-widest block mb-1 flex items-center gap-2">
+                <label className="text-[9px] font-black uppercase color: var(--aurea-text-muted) pl-2 tracking-widest block mb-1 flex items-center gap-2">
                   <Palette size={10}/> Tom de Voz
                 </label>
                 <select 
-                  className="w-full bg-white p-3 rounded-lg border border-gold/10 text-[12px] font-bold outline-none cursor-pointer focus:border-gold/30 transition-all"
+                  className="w-full background: var(--aurea-surface-light) p-3 rounded-lg border border-color: rgba(217,166,83,0.18) text-[12px] font-bold outline-none cursor-pointer focus:border-color: rgba(217,166,83,0.35) transition-all"
                   value={dialogStyle}
                   onChange={e => setDialogStyle(e.target.value)}
                 >
@@ -342,8 +347,8 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEdi
             </div>
 
             {/* Security */}
-            <div className="bg-white/40 p-6 rounded-[1.5rem] border border-gold/5 shadow-inner space-y-4">
-              <h4 className="text-[9px] font-black uppercase tracking-[0.3em] text-gray-400 flex items-center gap-2 pb-3 border-b border-gray-100">
+            <div className="background: var(--aurea-surface-light)/40 p-6 rounded-[1.5rem] border border-gold/5 shadow-inner space-y-4">
+              <h4 className="text-[9px] font-black uppercase tracking-[0.3em] color: var(--aurea-text-muted) flex items-center gap-2 pb-3 border-b border-color: rgba(38,54,66,0.7)">
                 <Key size={12}/> Segurança & Acesso
               </h4>
               <p className="text-[11px] leading-relaxed text-gray-500">A senha é definida somente no acesso inicial. Alteração de senha e recuperação serão liberadas junto ao cofre local criptografado.</p>
@@ -353,7 +358,7 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEdi
         </div>
 
         {/* Footer */}
-        <div className="mt-8 flex justify-between items-center border-t border-gold/10 pt-6">
+        <div className="mt-8 flex justify-between items-center border-t border-color: rgba(217,166,83,0.18) pt-6">
           <button 
             onClick={onLogout} 
             className="px-6 py-3 bg-red-500/10 text-red-500 rounded-lg font-black uppercase text-[10px] tracking-[0.2em] hover:bg-red-500 hover:text-white transition-all flex items-center gap-2"
@@ -361,8 +366,8 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEdi
             <X size={12} /> Sair
           </button>
           <div className="flex gap-4">
-            <button onClick={onClose} className="px-8 py-3 text-gray-400 font-black uppercase text-[10px] tracking-[0.2em] hover:text-gray-600 transition-all">Cancelar</button>
-            <button onClick={handleSave} className="px-10 py-3 bg-[#333333] text-white rounded-lg font-black uppercase text-[10px] tracking-[0.2em] hover:bg-gold transition-all shadow-lg flex items-center gap-2">
+            <button onClick={onClose} className="px-8 py-3 color: var(--aurea-text-muted) font-black uppercase text-[10px] tracking-[0.2em] hover:text-gray-600 transition-all">Cancelar</button>
+            <button onClick={handleSave} className="px-10 py-3 bg-[#333333] text-white rounded-lg font-black uppercase text-[10px] tracking-[0.2em] hover:background: var(--aurea-gold) transition-all box-shadow: 0 10px 30px rgba(0,0,0,0.4) flex items-center gap-2">
               <Save size={12} /> Salvar
             </button>
           </div>

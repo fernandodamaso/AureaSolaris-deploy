@@ -133,22 +133,22 @@ export const SaudeView = () => {
     <div className="space-y-8 pb-32 animate-in fade-in max-w-5xl mx-auto">
       
       {/* Header: Seletor de Perfil */}
-      <div className="flex justify-between items-center bg-[#171c31] p-6 rounded-2xl border border-gold/20 shadow-lg">
+      <div className="flex justify-between items-center background: var(--aurea-bg-deep) p-6 rounded-2xl border border-color: rgba(217,166,83,0.3) shadow-lg">
         <div>
-          <h2 className="text-xl font-black text-white uppercase tracking-widest flex items-center gap-3">
-            <Activity className="text-gold" size={24} />
+          <h2 className="text-xl font-black color: var(--aurea-text) uppercase tracking-widest flex items-center gap-3">
+            <Activity className="color: var(--aurea-gold)" size={24} />
             Saúde & Alquimia
           </h2>
-          <p className="text-xs text-gold/70 mt-1 tracking-wide">
+          <p className="text-xs color: var(--aurea-gold)/70 mt-1 tracking-wide">
             Astromedicina, Frequências e Curas Vibracionais
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <span className="text-xs text-gray-400 font-bold uppercase tracking-widest">Mapa Base:</span>
+          <span className="text-xs color: var(--aurea-text-muted) font-bold uppercase tracking-widest">Mapa Base:</span>
           <select 
             value={viewingProfileId}
             onChange={(e) => setViewingProfileId(e.target.value)}
-            className="bg-[#21283d] text-white border border-gray-600 rounded-lg px-4 py-2 text-sm outline-none focus:border-gold/50 cursor-pointer"
+            className="background: var(--aurea-surface) color: var(--aurea-text) border border-color: rgba(38,54,66,0.9) rounded-lg px-4 py-2 text-sm outline-none focus:border-color: rgba(217,166,83,0.5) cursor-pointer"
           >
             {profiles.map(p => (
               <option key={p.id} value={p.id}>{p.name}</option>
@@ -158,12 +158,12 @@ export const SaudeView = () => {
       </div>
 
       {!birthData && (
-        <div role="status" className="rounded-xl border border-amber-200 bg-amber-50 px-5 py-4 text-sm text-amber-900">
+        <div role="status" className="rounded-xl border border-color: rgba(217,166,83,0.25) background: rgba(217,166,83,0.08) px-5 py-4 text-sm color: var(--aurea-gold-deep)">
           A constituição natal astromédica está indisponível. Informe data, hora, local, coordenadas e fuso IANA no perfil antes de calcular.
         </div>
       )}
       {birthData && natalError && (
-        <div role="alert" className="rounded-xl border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-900">
+        <div role="alert" className="rounded-xl border border-color: rgba(239,68,68,0.3) background: rgba(239,68,68,0.08) px-5 py-4 text-sm color: #EF4444">
           O cálculo natal está indisponível. {natalError}
         </div>
       )}
@@ -173,18 +173,18 @@ export const SaudeView = () => {
         <div className="lg:col-span-1 space-y-6">
           <SectionTitle>I. Vitalidade do Momento</SectionTitle>
           
-          <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm space-y-6">
+          <div className="background: var(--aurea-surface) rounded-2xl p-6 border border-color: rgba(38,54,66,0.7) shadow-sm space-y-6">
             {/* Influência Lunar */}
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-1.5">
+                <h4 className="text-[10px] font-bold color: var(--aurea-text-muted) uppercase tracking-widest flex items-center gap-1.5">
                   <Moon size={12} /> Lua no Mapa Natal
                 </h4>
                 {natalMoonSign && (
-                  <span className="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-sm">Lua em {natalMoonSign}</span>
+                  <span className="text-[10px] font-bold color: var(--aurea-gold) background: rgba(217,166,83,0.08) px-2 py-0.5 rounded-sm">Lua em {natalMoonSign}</span>
                 )}
               </div>
-              <p className="text-[12px] text-gray-700 leading-relaxed font-medium bg-gray-50 p-4 rounded-xl border border-gray-100">
+              <p className="text-[12px] color: var(--aurea-text) leading-relaxed font-medium background: rgba(3,10,17,0.4) p-4 rounded-xl border border-color: rgba(38,54,66,0.6)">
                 {lunarAdvice || (
                   !birthData
                     ? 'Indisponível até informar dados completos de nascimento no perfil.'
@@ -197,63 +197,63 @@ export const SaudeView = () => {
               </p>
             </div>
 
-            <hr className="border-gray-100" />
+            <hr className="border-color: rgba(38,54,66,0.6)" />
 
             {/* Apotecário Alquímico - Hora Atual */}
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-1.5">
+                <h4 className="text-[10px] font-bold color: var(--aurea-text-muted) uppercase tracking-widest flex items-center gap-1.5">
                   <Sun size={12} /> Apotecário Alquímico
                 </h4>
-                <span className="text-[10px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-sm border border-amber-100">
+                <span className="text-[10px] font-bold color: var(--aurea-gold-deep) background: rgba(217,166,83,0.08) px-2 py-0.5 rounded-sm border border-color: rgba(217,166,83,0.2)">
                   Hora de {planetaryHour.name} ({planetaryHour.icon})
                 </span>
               </div>
               
               {hourPlanetInfo ? (
                 <div className="space-y-4">
-                  <div className="bg-amber-50/50 p-4 rounded-xl border border-amber-100/50">
-                    <p className="text-[10px] font-bold text-amber-800 uppercase tracking-wider mb-2">Ervas & Banhos Recomendados Agora</p>
+                  <div className="background: rgba(217,166,83,0.08)/50 p-4 rounded-xl border border-color: rgba(217,166,83,0.25)">
+                    <p className="text-[10px] font-bold color: var(--aurea-gold) uppercase tracking-wider mb-2">Ervas & Banhos Recomendados Agora</p>
                     <div className="flex flex-wrap gap-2">
                       {hourPlanetInfo.herbs.map((h, i) => (
-                        <span key={i} className="text-[11px] text-amber-700 bg-amber-100/50 px-2.5 py-1 rounded-md font-medium flex items-center gap-1.5 border border-amber-200/50">
+                        <span key={i} className="text-[11px] color: var(--aurea-gold-deep) background: rgba(217,166,83,0.15) px-2.5 py-1 rounded-md font-medium flex items-center gap-1.5 border border-color: rgba(217,166,83,0.3)">
                           <Leaf size={10} /> {h}
                         </span>
                       ))}
                     </div>
                   </div>
-                  <p className="text-[11px] text-gray-600 leading-relaxed font-medium">
-                    <strong className="text-gray-800">Uso Hermético:</strong> {hourPlanetInfo.remedy}
+                  <p className="text-[11px] color: var(--aurea-text-muted) leading-relaxed font-medium">
+                    <strong className="color: var(--aurea-text)">Uso Hermético:</strong> {hourPlanetInfo.remedy}
                   </p>
                 </div>
               ) : (
-                <p className="text-xs text-gray-400">Sintonizando alquimia...</p>
+                <p className="text-xs color: var(--aurea-text-muted)">Sintonizando alquimia...</p>
               )}
             </div>
           </div>
 
           <SectionTitle>II. Cura Vibracional</SectionTitle>
-          <div className="bg-[#FCF9F1] rounded-2xl p-6 border border-gold/20 shadow-sm space-y-5">
-            <h4 className="text-[10px] font-bold text-gold uppercase tracking-widest flex items-center gap-1.5">
+          <div className="background: var(--aurea-surface-light) rounded-2xl p-6 border border-color: rgba(217,166,83,0.3) shadow-sm space-y-5">
+            <h4 className="text-[10px] font-bold color: var(--aurea-gold) uppercase tracking-widest flex items-center gap-1.5">
               <Ear size={12} /> Frequências de Harmonização
             </h4>
-            <p className="text-[11px] text-gray-600 font-medium">
+            <p className="text-[11px] color: var(--aurea-text-muted) font-medium">
               Baseado na tensão energética do dia regido por {dayRegent.name} e hora de {planetaryHour.name}, utilize estas frequências durante a meditação ou sono:
             </p>
             <div className="space-y-3">
                {dayPlanetInfo && (
-                 <div className="p-3 bg-white rounded-lg border border-gold/10 flex items-center justify-between shadow-sm">
+                 <div className="p-3 background: var(--aurea-surface) rounded-lg border border-color: rgba(217,166,83,0.18) flex items-center justify-between shadow-sm">
                    <div>
-                     <p className="text-[9px] text-gray-400 font-bold uppercase tracking-wider mb-0.5">Frequência Regente (Dia)</p>
-                     <p className="text-[11px] text-gray-800 font-bold flex items-center gap-2"><Radio size={12} className="text-gold"/> {dayPlanetInfo.frequency}</p>
+                     <p className="text-[9px] color: var(--aurea-text-muted) font-bold uppercase tracking-wider mb-0.5">Frequência Regente (Dia)</p>
+                     <p className="text-[11px] color: var(--aurea-text) font-bold flex items-center gap-2"><Radio size={12} className="color: var(--aurea-gold)"/> {dayPlanetInfo.frequency}</p>
                    </div>
                  </div>
                )}
                {hourPlanetInfo && (
-                 <div className="p-3 bg-white rounded-lg border border-gold/10 flex items-center justify-between shadow-sm">
+                 <div className="p-3 background: var(--aurea-surface) rounded-lg border border-color: rgba(217,166,83,0.18) flex items-center justify-between shadow-sm">
                    <div>
-                     <p className="text-[9px] text-gray-400 font-bold uppercase tracking-wider mb-0.5">Foco de Radiestesia (Hora)</p>
-                     <p className="text-[11px] text-gray-800 font-bold flex items-center gap-2"><Activity size={12} className="text-blue-400"/> Limpeza: {hourPlanetInfo.chakra}</p>
+                     <p className="text-[9px] color: var(--aurea-text-muted) font-bold uppercase tracking-wider mb-0.5">Foco de Radiestesia (Hora)</p>
+                     <p className="text-[11px] color: var(--aurea-text) font-bold flex items-center gap-2"><Activity size={12} className="color: var(--aurea-gold-light)"/> Limpeza: {hourPlanetInfo.chakra}</p>
                    </div>
                  </div>
                )}
@@ -261,15 +261,15 @@ export const SaudeView = () => {
           </div>
           
           <SectionTitle>III. Arquivo Clínico & Laudos</SectionTitle>
-          <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm space-y-5">
+          <div className="background: var(--aurea-surface) rounded-2xl p-6 border border-color: rgba(38,54,66,0.7) shadow-sm space-y-5">
             <div className="flex items-center justify-between">
-              <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-1.5">
+              <h4 className="text-[10px] font-bold color: var(--aurea-text-muted) uppercase tracking-widest flex items-center gap-1.5">
                 <FileText size={12} /> Histórico de Exames (Hermes)
               </h4>
               <button 
                 onClick={handleUploadExam}
                 disabled={isUploading}
-                className="flex items-center gap-2 px-3 py-1.5 bg-indigo-50 text-indigo-600 rounded-lg text-[10px] font-bold uppercase hover:bg-indigo-100 transition-colors disabled:opacity-50"
+                className="flex items-center gap-2 px-3 py-1.5 background: rgba(217,166,83,0.08) color: var(--aurea-gold) rounded-lg text-[10px] font-bold uppercase hover:bg-indigo-100 transition-colors disabled:opacity-50"
               >
                 {isUploading ? <Loader2 size={12} className="animate-spin" /> : <UploadCloud size={12} />}
                 {isUploading ? 'Analisando...' : 'Enviar Laudo (PDF)'}
@@ -278,18 +278,18 @@ export const SaudeView = () => {
             
             <div className="space-y-4 max-h-64 overflow-y-auto pr-2 custom-scrollbar">
               {healthHistory.length === 0 ? (
-                <p className="text-[11px] text-gray-400 italic text-center py-4">
+                <p className="text-[11px] color: var(--aurea-text-muted) italic text-center py-4">
                   Nenhum exame analisado ainda. Faça o upload do seu primeiro laudo para Hermes criar seu histórico.
                 </p>
               ) : (
                 healthHistory.map((record) => (
-                  <div key={record.id} className="p-4 bg-gray-50 rounded-xl border border-gray-100 space-y-2">
+                  <div key={record.id} className="p-4 background: rgba(3,10,17,0.4) rounded-xl border border-color: rgba(38,54,66,0.6) space-y-2">
                     <div className="flex justify-between items-center">
-                      <span className="text-[11px] font-bold text-gray-700">{record.fileName}</span>
-                      <span className="text-[9px] font-bold text-gray-400">{new Date(record.date).toLocaleDateString('pt-BR')}</span>
+                      <span className="text-[11px] font-bold color: var(--aurea-text)">{record.fileName}</span>
+                      <span className="text-[9px] font-bold color: var(--aurea-text-muted)">{new Date(record.date).toLocaleDateString('pt-BR')}</span>
                     </div>
-                    <div className="text-[11px] text-gray-600 leading-relaxed max-h-32 overflow-y-auto">
-                      <strong className="text-indigo-600 block mb-1">Análise de Hermes:</strong>
+                    <div className="text-[11px] color: var(--aurea-text-muted) leading-relaxed max-h-32 overflow-y-auto">
+                      <strong className="color: var(--aurea-gold) block mb-1">Análise de Hermes:</strong>
                       {record.analysis}
                     </div>
                   </div>
@@ -322,8 +322,8 @@ export const SaudeView = () => {
               )}
             </div>
 
-            <div className="bg-amber-50/50 p-5 rounded-2xl border border-amber-100 shadow-sm flex flex-col justify-center">
-              <h5 className="text-[10px] font-black uppercase text-amber-700 tracking-[0.2em] mb-1 flex items-center gap-2">
+            <div className="background: rgba(217,166,83,0.08)/50 p-5 rounded-2xl border border-color: rgba(217,166,83,0.2) shadow-sm flex flex-col justify-center">
+              <h5 className="text-[10px] font-black uppercase color: var(--aurea-gold-deep) tracking-[0.2em] mb-1 flex items-center gap-2">
                 Humor Dominante 
                 <span className="text-[14px]">
                   {temperament?.dominante === 'Colerico' || temperament?.dominante === 'Colérico' ? '🔥' : 
@@ -333,25 +333,25 @@ export const SaudeView = () => {
               </h5>
               {temperament ? (
                 <>
-                  <p className="text-xl font-bold text-amber-900 mb-2">{temperament.dominante}</p>
+                  <p className="text-xl font-bold color: var(--aurea-gold-deep) mb-2">{temperament.dominante}</p>
                   <div className="grid grid-cols-4 gap-2 text-center mt-2">
                     <div className="bg-red-100/50 rounded-lg p-2"><p className="text-[9px] text-red-600 font-bold uppercase">Fogo</p><p className="text-sm font-bold text-red-800">{temperament.colerico}%</p></div>
                     <div className="bg-sky-100/50 rounded-lg p-2"><p className="text-[9px] text-sky-600 font-bold uppercase">Ar</p><p className="text-sm font-bold text-sky-800">{temperament.sanguineo}%</p></div>
-                    <div className="bg-amber-100/50 rounded-lg p-2"><p className="text-[9px] text-amber-600 font-bold uppercase">Terra</p><p className="text-sm font-bold text-amber-800">{temperament.melancolico}%</p></div>
+                    <div className="background: rgba(217,166,83,0.15) rounded-lg p-2"><p className="text-[9px] color: var(--aurea-gold-deep) font-bold uppercase">Terra</p><p className="text-sm font-bold color: var(--aurea-gold)">{temperament.melancolico}%</p></div>
                     <div className="bg-blue-100/50 rounded-lg p-2"><p className="text-[9px] text-blue-600 font-bold uppercase">Água</p><p className="text-sm font-bold text-blue-800">{temperament.fleumatico}%</p></div>
                   </div>
                 </>
               ) : (
-                <p className="text-xs text-amber-600">{natalUnavailableMessage}</p>
+                <p className="text-xs color: var(--aurea-gold-deep)">{natalUnavailableMessage}</p>
               )}
             </div>
           </div>
 
           {/* Mapeamento Planetário dos Órgãos */}
-          <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
-            <div className="p-5 border-b border-gray-100 bg-gray-50/50 flex justify-between items-center">
-              <h4 className="text-[11px] font-bold text-gray-800 uppercase tracking-widest flex items-center gap-2">
-                <Star size={14} className="text-gold" />
+          <div className="background: var(--aurea-surface) rounded-2xl border border-color: rgba(38,54,66,0.7) shadow-sm overflow-hidden">
+            <div className="p-5 border-b border-color: rgba(38,54,66,0.6) background: rgba(3,10,17,0.4)/50 flex justify-between items-center">
+              <h4 className="text-[11px] font-bold color: var(--aurea-text) uppercase tracking-widest flex items-center gap-2">
+                <Star size={14} className="color: var(--aurea-gold)" />
                 Mapeamento Somático e Chakras
               </h4>
             </div>
@@ -363,24 +363,24 @@ export const SaudeView = () => {
                 const natPos = data?.planets?.[planet === 'Sol' ? 'Sun' : planet === 'Lua' ? 'Moon' : planet === 'Mercúrio' ? 'Mercury' : planet === 'Vênus' ? 'Venus' : planet === 'Marte' ? 'Mars' : planet === 'Júpiter' ? 'Jupiter' : 'Saturn'];
                 
                 return (
-                  <div key={planet} className="p-5 hover:bg-gray-50/50 transition-colors flex gap-6">
-                    <div className="w-24 shrink-0 flex flex-col items-center justify-center bg-[#FCF9F1] rounded-xl p-3 border border-gold/10">
-                      <span className="text-2xl mb-1 text-gold">
+                  <div key={planet} className="p-5 hover:background: rgba(3,10,17,0.4)/50 transition-colors flex gap-6">
+                    <div className="w-24 shrink-0 flex flex-col items-center justify-center background: var(--aurea-surface-light) rounded-xl p-3 border border-color: rgba(217,166,83,0.18)">
+                      <span className="text-2xl mb-1 color: var(--aurea-gold)">
                         {planet === 'Sol' ? '☉' : planet === 'Lua' ? '☽' : planet === 'Mercúrio' ? '☿' : planet === 'Vênus' ? '♀' : planet === 'Marte' ? '♂' : planet === 'Júpiter' ? '♃' : '♄'}
                       </span>
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-gray-600">{planet}</span>
-                      {natPos && <span className="text-[9px] font-bold text-gray-400 mt-1">{natPos.signPt}</span>}
+                      <span className="text-[10px] font-bold uppercase tracking-wider color: var(--aurea-text-muted)">{planet}</span>
+                      {natPos && <span className="text-[9px] font-bold color: var(--aurea-text-muted) mt-1">{natPos.signPt}</span>}
                     </div>
 
                     <div className="flex-1 space-y-3">
                       <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <p className="text-[9px] text-gray-400 font-bold uppercase tracking-widest mb-1">Órgãos Regidos</p>
-                          <p className="text-[11px] text-gray-800 font-medium">{info.organ}</p>
+                          <p className="text-[9px] color: var(--aurea-text-muted) font-bold uppercase tracking-widest mb-1">Órgãos Regidos</p>
+                          <p className="text-[11px] color: var(--aurea-text) font-medium">{info.organ}</p>
                         </div>
                         <div>
-                          <p className="text-[9px] text-gray-400 font-bold uppercase tracking-widest mb-1">Chakra (Centro de Força)</p>
-                          <p className="text-[11px] text-indigo-700 font-bold bg-indigo-50 inline-block px-2 py-0.5 rounded-sm">{info.chakra}</p>
+                          <p className="text-[9px] color: var(--aurea-text-muted) font-bold uppercase tracking-widest mb-1">Chakra (Centro de Força)</p>
+                          <p className="text-[11px] text-indigo-700 font-bold background: rgba(217,166,83,0.08) inline-block px-2 py-0.5 rounded-sm">{info.chakra}</p>
                         </div>
                       </div>
                       <div className="pt-2 border-t border-gray-50">
