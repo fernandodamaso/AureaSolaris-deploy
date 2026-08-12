@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useGlobalContext } from '../context/GlobalContext';
 import {
   listHermesMemories,
@@ -13,7 +13,7 @@ export const MemoriasView: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const loadMemories = async () => {
+  const loadMemories = useCallback(async () => {
     if (!agenda.activeProfile) {
       setMemories([]);
       setLoading(false);
@@ -30,11 +30,11 @@ export const MemoriasView: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [agenda.activeProfile]);
 
   useEffect(() => {
     void loadMemories();
-  }, [agenda.activeProfile?.id]);
+  }, [loadMemories]);
 
   const handleReview = async (memoryId: string, decision: 'approve' | 'revoke' | 'forget') => {
     if (!agenda.activeProfile) return;

@@ -115,7 +115,7 @@ export const useAstrologyData = (natalData?: NatalPositions) => {
 
   useEffect(() => {
     natalRef.current = natalData;
-  }, [sunVal, moonVal, ascVal]);
+  }, [natalData]);
 
   const fetchAstro = async () => {
     const stopTimer = astroLogger.startTimer();

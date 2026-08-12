@@ -205,6 +205,15 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
     return planets.filter(p => !['SouthNode', 'Lilith', 'Vertex'].includes(p.name) || alwaysVisible.includes(p.name));
   }, [planets, showAsteroids]);
 
+  const planetsMap = useMemo(() => {
+    const map: Record<string, { degree: number; house?: number }> = {};
+    for (const p of planets) {
+      const key = p.name === 'Asc' ? 'ASC' : p.name;
+      map[key] = { degree: p.degree, house: p.house };
+    }
+    return map;
+  }, [planets]);
+
   /* ─── D3 Render ──────────────────────────────────────────────── */
   useEffect(() => {
     console.log('--- RENDERING D3 WIDGET ---');
@@ -691,7 +700,33 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
       });
     }
 
-  }, [size, filteredPlanets, houses, aspects, showDecanates, showTerms, orientation, rotOffset, transitPlanets, transitAspects]);
+  }, [
+    size,
+    filteredPlanets,
+    houses,
+    aspects,
+    showDecanates,
+    showTerms,
+    orientation,
+    rotOffset,
+    transitPlanets,
+    transitAspects,
+    R,
+    ascDeg,
+    aspectR,
+    calculationCertified,
+    cx,
+    cy,
+    decR,
+    degreeR,
+    houseR,
+    planetR,
+    planets,
+    planetsMap,
+    signR,
+    termR,
+    transitR,
+  ]);
 
   /* ─── Tabelas abaixo ─────────────────────────────────────────── */
 
@@ -719,16 +754,6 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
         };
       });
   }, [filteredPlanets]);
-
-  /* ─── Planet map for astro-dignity functions ─────────────────── */
-  const planetsMap = useMemo(() => {
-    const map: Record<string, { degree: number; house?: number }> = {};
-    for (const p of planets) {
-      const key = p.name === 'Asc' ? 'ASC' : p.name;
-      map[key] = { degree: p.degree, house: p.house };
-    }
-    return map;
-  }, [planets]);
 
   /* ─── Astro Stats computations ───────────────────────────────── */
   const elResult  = useMemo(() => calcElements(planetsMap),      [planetsMap]);

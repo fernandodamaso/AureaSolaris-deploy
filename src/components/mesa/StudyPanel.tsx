@@ -32,7 +32,7 @@ export function StudyPanel({ node, boardName, saveState, onUpdate, onExpandBoard
 
   useEffect(() => {
     if (node) contentRef.current?.focus();
-  }, [node?.id]);
+  }, [node]);
 
   const updateStudy = (studyContent: string) => {
     const now = Date.now();
