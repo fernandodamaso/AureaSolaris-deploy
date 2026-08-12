@@ -248,8 +248,7 @@ class PdfExtractRequest(BaseModel):
 
 
 # ─── Chat provider config ───
-# Hermes usa um provedor escolhido explicitamente. Ollama não participa do
-# caminho normal: ele permanece somente como código legado opcional, sem probe.
+# Hermes usa um provedor escolhido explicitamente.
 HERMES_GATEWAY_URL = os.environ.get(
     "HERMES_GATEWAY_URL",
     "http://localhost:20128/v1/chat/completions",
@@ -262,67 +261,12 @@ OPENAI_CHAT_URL = os.environ.get(
     "OPENAI_CHAT_URL",
     "https://api.openai.com/v1/chat/completions",
 )
-GEMINI_API_KEY = os.environ.get("GOOGLE_GENERATIVE_AI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
-OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY")
-
-# Novas flags de provider
-OLLAMA_URL = os.environ.get("OLLAMA_URL", "http://localhost:11434")
-OLLAMA_MODEL = os.environ.get("OLLAMA_MODEL", "qwen2.5")
-OLLAMA_FALLBACK_MODEL = os.environ.get("OLLAMA_FALLBACK_MODEL", "llama3")
-LOCAL_ONLY = os.environ.get("LOCAL_ONLY", "true").lower() in ("1", "true", "yes", "y")
-EXTERNAL_PROVIDERS_ENABLED = os.environ.get("EXTERNAL_PROVIDERS_ENABLED", "false").lower() in ("1", "true", "yes", "y")
 
 
 SYSTEM_PROMPT = """Você é Hermes, assistente astrológico e de produtividade do Aurea Solaris.
 Você é sábio, direto e empático. Fale em Português.
 Use o contexto do usuário para dar conselhos personalizados.
 Seja conciso mas completo. Use emojis com moderação para tornar a conversa agradável."""
-
-
-# ─── Helpers de provider ────────────────────────────────────────────────
-
-async def _ollama_available(session: httpx.AsyncClient) -> bool:
-    try:
-        resp = await session.get(f"{OLLAMA_URL}/api/tags", timeout=5.0)
-        return resp.status_code == 200
-    except Exception:
-        return False
-
-
-async def _ollama_list_models(session: httpx.AsyncClient) -> list[str]:
-    try:
-        resp = await session.get(f"{OLLAMA_URL}/api/tags", timeout=5.0)
-        if resp.status_code != 200:
-            return []
-        data = resp.json()
-        return [m.get("name", "") for m in data.get("models", []) if m.get("name")]
-    except Exception:
-        return []
-
-
-async def _ollama_chat(session: httpx.AsyncClient, messages: list[dict], model: str) -> dict:
-    payload = {
-        "model": model,
-        "messages": messages,
-        "stream": False,
-        "options": {
-            "num_ctx": 8192,
-        },
-    }
-    resp = await session.post(
-        f"{OLLAMA_URL}/api/chat",
-        json=payload,
-        timeout=120.0,
-    )
-    resp.raise_for_status()
-    data = resp.json()
-    content = data.get("message", {}).get("content", "")
-    if not content:
-        raise HTTPException(
-            status_code=502,
-            detail={"error": "Ollama retornou resposta vazia."},
-        )
-    return {"reply": content}
 
 
 async def _openai_chat(session: httpx.AsyncClient, messages: list[dict]) -> dict:
@@ -386,65 +330,6 @@ async def _chat_with_selected_provider(
     if provider == "openai":
         return await _openai_chat(session, messages)
     return await _hermes_gateway_chat(session, messages)
-
-
-async def _gemini_chat(session: httpx.AsyncClient, messages: list[dict], system_content: str) -> dict:
-    if not GEMINI_API_KEY:
-        raise HTTPException(
-            status_code=503,
-            detail={"error": "GOOGLE_GENERATIVE_AI_API_KEY não configurada."},
-        )
-    contents = []
-    system_instruction = None
-    for msg in messages:
-        if msg["role"] == "system":
-            system_instruction = msg["content"]
-        else:
-            role = "user" if msg["role"] == "user" else "model"
-            contents.append({"role": role, "parts": [{"text": msg["content"]}]})
-    gemini_payload: dict = {"contents": contents}
-    if system_instruction:
-        gemini_payload["systemInstruction"] = {"parts": [{"text": system_instruction}]}
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}"
-    resp = await session.post(url, json=gemini_payload, headers={"Content-Type": "application/json"}, timeout=30.0)
-    resp.raise_for_status()
-    data = resp.json()
-    candidates = data.get("candidates", [])
-    if candidates and candidates[0].get("content", {}).get("parts", []):
-        text = candidates[0]["content"]["parts"][0].get("text", "")
-        if text:
-            return {"reply": text}
-    raise HTTPException(
-        status_code=502,
-        detail={"error": "Gemini retornou resposta inválida."},
-    )
-
-
-async def _openrouter_chat(session: httpx.AsyncClient, messages: list[dict]) -> dict:
-    if not OPENROUTER_API_KEY:
-        raise HTTPException(
-            status_code=503,
-            detail={"error": "OPENROUTER_API_KEY não configurada."},
-        )
-    payload = {"model": "google/gemini-3.5-flash", "messages": messages}
-    resp = await session.post(
-        "https://openrouter.ai/api/v1/chat/completions",
-        json=payload,
-        headers={
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {OPENROUTER_API_KEY}",
-        },
-        timeout=30.0,
-    )
-    resp.raise_for_status()
-    data = resp.json()
-    choices = data.get("choices", [])
-    if choices and choices[0].get("message", {}).get("content"):
-        return {"reply": choices[0]["message"]["content"]}
-    raise HTTPException(
-        status_code=502,
-        detail={"error": "OpenRouter retornou resposta inválida."},
-    )
 
 
 # ─── Request resolution ───
