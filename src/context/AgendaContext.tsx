@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode, useMemo } from 'react';
+import { createContext, useContext, useState, ReactNode, useMemo, useEffect } from 'react';
 import { validatePassword } from '../utils/auth';
 
 export interface AureaProfile {
@@ -91,6 +91,14 @@ interface AgendaContextType {
 
 const AgendaContext = createContext<AgendaContextType | undefined>(undefined);
 
+const resolveSubjectId = (profiles: AureaProfile[], profileId: string, requestedId: string) => {
+  const profile = profiles.find(candidate => candidate.id === profileId);
+  if (!profile) return '';
+  const connections = Array.isArray(profile.connections) ? profile.connections : [];
+  const subjectIds = [profile.id, ...connections.map(connection => connection.id)];
+  return subjectIds.includes(requestedId) ? requestedId : subjectIds[0] || '';
+};
+
 export const AgendaProvider = ({ children }: { children: ReactNode }) => {
   const [profiles, setProfiles] = useState<AureaProfile[]>(() => {
     const saved = localStorage.getItem('aurea_profiles');
@@ -119,13 +127,25 @@ export const AgendaProvider = ({ children }: { children: ReactNode }) => {
     return [];
   });
   
-  const [activeProfileId, setActiveProfileId] = useState(() => {
+  const [activeProfileId, setActiveProfileIdState] = useState(() => {
     return localStorage.getItem('aurea_active_id') || '';
   });
 
   const [activeSubjectId, setActiveSubjectIdState] = useState(() => (
-    localStorage.getItem(`aurea_active_subject:${localStorage.getItem('aurea_active_id') || ''}`) || localStorage.getItem('aurea_active_id') || ''
+    resolveSubjectId(
+      profiles,
+      localStorage.getItem('aurea_active_id') || '',
+      localStorage.getItem(`aurea_active_subject:${localStorage.getItem('aurea_active_id') || ''}`)
+        || localStorage.getItem('aurea_active_id')
+        || '',
+    )
   ));
+
+  useEffect(() => {
+    if (activeProfileId && activeSubjectId) {
+      localStorage.setItem(`aurea_active_subject:${activeProfileId}`, activeSubjectId);
+    }
+  }, [activeProfileId, activeSubjectId]);
 
   const activeProfile = useMemo(() => 
     profiles.find(p => p.id === activeProfileId) || null
@@ -144,22 +164,26 @@ export const AgendaProvider = ({ children }: { children: ReactNode }) => {
     })),
   ]), [profiles]);
 
-  useEffect(() => {
-    const ownerSubjects = mapSubjects.filter(subject => subject.ownerProfileId === activeProfileId);
-    if (!ownerSubjects.length) {
-      setActiveSubjectIdState('');
-      return;
+  const persistActiveSubject = (profileId: string, subjectId: string) => {
+    setActiveSubjectIdState(subjectId);
+    const storageKey = `aurea_active_subject:${profileId}`;
+    if (subjectId) {
+      localStorage.setItem(storageKey, subjectId);
+    } else {
+      localStorage.removeItem(storageKey);
     }
-    if (!ownerSubjects.some(subject => subject.id === activeSubjectId)) {
-      setActiveSubjectIdState(ownerSubjects[0].id);
-    }
-  }, [activeProfileId, activeSubjectId, mapSubjects]);
+  };
+
+  const setActiveProfileId = (id: string) => {
+    setActiveProfileIdState(id);
+    localStorage.setItem('aurea_active_id', id);
+    persistActiveSubject(id, resolveSubjectId(profiles, id, ''));
+  };
 
   const setActiveSubjectId = (id: string) => {
     const subject = mapSubjects.find(candidate => candidate.id === id && candidate.ownerProfileId === activeProfileId);
     if (!subject) return;
-    setActiveSubjectIdState(id);
-    localStorage.setItem(`aurea_active_subject:${activeProfileId}`, id);
+    persistActiveSubject(activeProfileId, id);
   };
   
   const [documents, setDocuments] = useState<AureaDocument[]>(() => {
@@ -214,8 +238,9 @@ export const AgendaProvider = ({ children }: { children: ReactNode }) => {
     const updated = [...profiles, newProfile];
     setProfiles(updated);
     localStorage.setItem('aurea_profiles', JSON.stringify(updated));
-    setActiveProfileId(newProfile.id);
+    setActiveProfileIdState(newProfile.id);
     localStorage.setItem('aurea_active_id', newProfile.id);
+    persistActiveSubject(newProfile.id, resolveSubjectId(updated, newProfile.id, ''));
     return newProfile;
   };
 
@@ -251,6 +276,9 @@ export const AgendaProvider = ({ children }: { children: ReactNode }) => {
     const updated = profiles.map(p => p.id === id ? { ...p, ...updates } : p);
     setProfiles(updated);
     localStorage.setItem('aurea_profiles', JSON.stringify(updated));
+    if (id === activeProfileId) {
+      persistActiveSubject(activeProfileId, resolveSubjectId(updated, activeProfileId, activeSubjectId));
+    }
   };
 
   const addDocument = (doc: Omit<AureaDocument, 'id' | 'date'>) => {

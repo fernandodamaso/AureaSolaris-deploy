@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import { BookOpen, CalendarDays, FileText, LayoutGrid, Search } from 'lucide-react';
-import { safeInvoke } from '../../utils/tauri';
-import type { CadernoBoardMeta, CadernoNode } from '../../types/caderno';
+import { listBoards, loadBoard } from '../../utils/board';
+import type { CadernoNode } from '../../types/caderno';
+import { listDiaryEntries } from '../../utils/diary';
+import type { DiaryEntryResponse } from '../../types/diario';
 
 type ArchiveSource = 'study' | 'diary';
 
@@ -62,6 +64,21 @@ const formatDate = (timestamp: number) => {
   }).format(new Date(timestamp));
 };
 
+const filterArchiveItems = (
+  items: ArchiveItem[],
+  filter: 'all' | ArchiveSource,
+  search: string,
+) => {
+  const query = search.trim().toLocaleLowerCase('pt-BR');
+  return items.filter(item => {
+    if (filter !== 'all' && item.source !== filter) return false;
+    if (!query) return true;
+    return `${item.title} ${item.groupName} ${item.summary} ${item.content}`
+      .toLocaleLowerCase('pt-BR')
+      .includes(query);
+  });
+};
+
 export function StudyArchive({ onOpenStudy }: StudyArchiveProps) {
   const [items, setItems] = useState<ArchiveItem[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -76,8 +93,8 @@ export function StudyArchive({ onOpenStudy }: StudyArchiveProps) {
     const load = async () => {
       setLoading(true);
       const [boardList, diaryList] = await Promise.all([
-        safeInvoke<CadernoBoardMeta[]>('list_boards'),
-        safeInvoke<any[]>('diary_list_entries'),
+        listBoards(),
+        listDiaryEntries(),
       ]);
 
       if (cancelled) return;
@@ -88,7 +105,7 @@ export function StudyArchive({ onOpenStudy }: StudyArchiveProps) {
       }
 
       const studies = await Promise.all((boardList || []).map(async board => {
-        const data = await safeInvoke<{ nodes?: CadernoNode[] }>('load_board', { boardId: board.id });
+        const data = await loadBoard({ boardId: board.id });
         return (data?.nodes || []).flatMap(node => {
           const studyContent = node.studyContent?.trim() || '';
           const quickContent = nodeQuickContent(node);
@@ -109,13 +126,13 @@ export function StudyArchive({ onOpenStudy }: StudyArchiveProps) {
         });
       }));
 
-      const diaryItems: ArchiveItem[] = (diaryList || []).map(entry => ({
+      const diaryItems: ArchiveItem[] = (diaryList || []).map((entry: DiaryEntryResponse) => ({
         id: `diary:${entry.id}`,
         source: 'diary',
         title: entry.title?.trim() || 'Nota sem título',
         summary: '',
         content: entry.content || '',
-        updatedAt: normalizeTimestamp(entry.updated_at || entry.updatedAt || entry.created_at || entry.createdAt),
+        updatedAt: normalizeTimestamp(entry.updated_at || entry.created_at),
         groupName: entry.folder_name || 'Diário pessoal',
       }));
 
@@ -132,22 +149,23 @@ export function StudyArchive({ onOpenStudy }: StudyArchiveProps) {
     return () => { cancelled = true; };
   }, []);
 
-  const filtered = useMemo(() => {
-    const query = search.trim().toLocaleLowerCase('pt-BR');
-    return items.filter(item => {
-      if (filter !== 'all' && item.source !== filter) return false;
-      if (!query) return true;
-      return `${item.title} ${item.groupName} ${item.summary} ${item.content}`
-        .toLocaleLowerCase('pt-BR')
-        .includes(query);
-    });
-  }, [filter, items, search]);
+  const filtered = useMemo(() => filterArchiveItems(items, filter, search), [filter, items, search]);
 
-  useEffect(() => {
-    if (!filtered.some(item => item.id === selectedId)) {
-      setSelectedId(filtered[0]?.id || null);
-    }
-  }, [filtered, selectedId]);
+  const updateSelectionFor = (nextItems: ArchiveItem[]) => {
+    setSelectedId(current => nextItems.some(item => item.id === current)
+      ? current
+      : nextItems[0]?.id || null);
+  };
+
+  const handleSearchChange = (nextSearch: string) => {
+    setSearch(nextSearch);
+    updateSelectionFor(filterArchiveItems(items, filter, nextSearch));
+  };
+
+  const handleFilterChange = (nextFilter: 'all' | ArchiveSource) => {
+    setFilter(nextFilter);
+    updateSelectionFor(filterArchiveItems(items, nextFilter, search));
+  };
 
   const selected = filtered.find(item => item.id === selectedId) || null;
 
@@ -170,7 +188,7 @@ export function StudyArchive({ onOpenStudy }: StudyArchiveProps) {
           <input
             id="archive-search"
             value={search}
-            onChange={event => setSearch(event.target.value)}
+            onChange={event => handleSearchChange(event.target.value)}
             className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-800 outline-none transition focus:border-gray-400"
           />
           <div className="mt-3 grid grid-cols-3 gap-1 rounded-lg bg-gray-200/60 p-1" aria-label="Filtrar histórico">
@@ -182,7 +200,7 @@ export function StudyArchive({ onOpenStudy }: StudyArchiveProps) {
               <button
                 key={value}
                 type="button"
-                onClick={() => setFilter(value)}
+                onClick={() => handleFilterChange(value)}
                 aria-pressed={filter === value}
                 className={`rounded-md px-2 py-1.5 text-[11px] font-semibold transition ${filter === value ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-800'}`}
               >

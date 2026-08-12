@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { X, FileText, Star, Calendar, ListTodo, BookOpen, ChevronRight, MessageSquare, Loader2 } from 'lucide-react';
 import { safeInvoke } from '../../utils/tauri';
+import { listDiaryEntries } from '../../utils/diary';
+import type { DiaryEntryResponse } from '../../types/diario';
 
 interface AssetItem {
   id: string;
@@ -37,10 +39,10 @@ export const AssetPicker = ({ onClose, onImport }: AssetPickerProps) => {
       try {
         if (activeTab === 'notes') {
           // 1. List notes from diary (without folder filter to return all)
-          const res = await safeInvoke<any[]>('diary_list_entries');
+          const res = await listDiaryEntries();
           let mapped: AssetItem[] = [];
           if (res && res.length > 0) {
-            mapped = res.map(e => ({
+            mapped = res.map((e: DiaryEntryResponse) => ({
               id: e.id,
               type: 'note',
               title: e.title || 'Sem Título',

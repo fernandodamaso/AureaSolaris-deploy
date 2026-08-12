@@ -2,13 +2,14 @@ import { useState, useRef, useCallback, useEffect } from 'react';
 import {
   MousePointer2, Square, StickyNote, Type, CheckSquare, Image as ImageIcon,
   ZoomIn, ZoomOut, Undo2, Redo2, Download, FolderOpen,
-  Trash2, Plus, Check, AlertCircle, Sparkles, Move, Link2,
-  ChevronLeft, LayoutGrid, Pencil, X, MoreHorizontal, Clock, BookOpen
+  Plus, Check, AlertCircle, Sparkles, Move, Link2,
+  ChevronLeft, Pencil, X, MoreHorizontal, BookOpen
 } from 'lucide-react';
-import { safeInvoke } from '../utils/tauri';
-import type { CadernoBoard, CadernoEdge, CadernoNode } from '../types/caderno';
+import { listBoards, loadBoard, saveBoard } from '../utils/board';
+import type { CadernoBoard, CadernoBoardMeta, CadernoEdge, CadernoNode } from '../types/caderno';
 import { AssetPicker } from './mesa/AssetPicker';
 import { StudyPanel } from './mesa/StudyPanel';
+import { BoardManager } from './BoardManager';
 
 // ─────────────────────────────────────────────────────────────
 // Types
@@ -41,6 +42,7 @@ const activeBoardKey = () => `${LS_ACTIVE}:${localStorage.getItem('aurea_active_
 
 const snap = (v: number) => Math.round(v / GRID_SIZE) * GRID_SIZE;
 const uid = () => `board_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+const timestampId = () => Date.now();
 
 // ─────────────────────────────────────────────────────────────
 // Toast hook
@@ -68,13 +70,13 @@ export const MesaCriacao = ({ intent = null, onIntentHandled }: MesaCriacaoProps
   const shouldRestoreLastBoard = useRef(intent === null);
   const hasHandledIntent = useRef(false);
 
-  const openBoard = useCallback(async (meta: any, studyNodeId: number | null = null) => {
+  const openBoard = useCallback(async (meta: CadernoBoardMeta, studyNodeId: number | null = null) => {
     try {
-      const data: any = await safeInvoke('load_board', { boardId: meta.id });
+      const data = await loadBoard({ boardId: meta.id });
       const board: CadernoBoard = {
         id: meta.id,
         name: meta.name,
-        updatedAt: meta.updated_at || Date.now(),
+        updatedAt: meta.updated_at || meta.updatedAt || Date.now(),
         nodes: data?.nodes || [],
         edges: data?.edges || []
       };
@@ -102,7 +104,7 @@ export const MesaCriacao = ({ intent = null, onIntentHandled }: MesaCriacaoProps
     };
 
     try {
-      await safeInvoke('save_board', { boardId: newId, name, nodes: [starterNote], edges: [] });
+      await saveBoard({ boardId: newId, name, nodes: [starterNote], edges: [] });
       await openBoard({ id: newId, name, updated_at: Date.now() });
     } catch (error) {
       console.error('Failed to create contextual study', error);
@@ -115,13 +117,13 @@ export const MesaCriacao = ({ intent = null, onIntentHandled }: MesaCriacaoProps
     if (!shouldRestoreLastBoard.current) return;
     const lastId = localStorage.getItem(activeBoardKey());
     if (lastId) {
-      safeInvoke('load_board', { boardId: lastId }).then((data: any) => {
+      loadBoard({ boardId: lastId }).then(data => {
         if (data && data.nodes) {
           // Find the name from the list
-          safeInvoke('list_boards').then((list: any) => {
-             const meta = (list as any[]).find(b => b.id === lastId);
+          listBoards().then(list => {
+             const meta = list?.find(b => b.id === lastId);
              if (meta) {
-               setActiveBoard({ id: lastId, name: meta.name, updatedAt: meta.updated_at, nodes: data.nodes, edges: data.edges });
+               setActiveBoard({ id: lastId, name: meta.name, updatedAt: meta.updated_at || meta.updatedAt || Date.now(), nodes: data.nodes, edges: data.edges });
              } else {
                localStorage.removeItem(activeBoardKey());
              }
@@ -141,7 +143,7 @@ export const MesaCriacao = ({ intent = null, onIntentHandled }: MesaCriacaoProps
       if (intent.type === 'create-study') {
         await createContextualStudy(intent.topic, intent.seedNote);
       } else if (intent.type === 'open-study') {
-        const list = await safeInvoke<any[]>('list_boards');
+        const list = await listBoards();
         const meta = list?.find(item => item.id === intent.boardId);
         if (meta) {
           await openBoard(meta, intent.nodeId);
@@ -156,11 +158,11 @@ export const MesaCriacao = ({ intent = null, onIntentHandled }: MesaCriacaoProps
   }, [createContextualStudy, intent, onIntentHandled]);
 
   const closeBoard = async (updatedBoard: CadernoBoard) => {
-    await safeInvoke('save_board', { 
-      boardId: updatedBoard.id, 
-      name: updatedBoard.name, 
-      nodes: updatedBoard.nodes, 
-      edges: updatedBoard.edges 
+    await saveBoard({
+      boardId: updatedBoard.id,
+      name: updatedBoard.name,
+      nodes: updatedBoard.nodes,
+      edges: updatedBoard.edges
     });
     setRequestedStudyNodeId(null);
     setActiveBoard(null);
@@ -178,197 +180,6 @@ export const MesaCriacao = ({ intent = null, onIntentHandled }: MesaCriacaoProps
   }
 
   return <BoardManager onOpen={openBoard} intentError={intentError} />;
-};
-
-// ─────────────────────────────────────────────────────────────
-// BOARD MANAGER — list / create / delete boards
-// ─────────────────────────────────────────────────────────────
-const BoardManager = ({ onOpen, intentError }: { onOpen: (meta: any) => void; intentError: string | null }) => {
-  const [boards, setBoards] = useState<any[]>([]);
-  const [creating, setCreating] = useState(false);
-  const [newName, setNewName] = useState('');
-  const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  const loadBoards = async () => {
-    try {
-      const list: any = await safeInvoke('list_boards');
-      // sort by updated_at descending
-      const sorted = (list || []).sort((a: any, b: any) => (b.updated_at || 0) - (a.updated_at || 0));
-      setBoards(sorted);
-    } catch (e) {
-      console.error('Failed to list boards', e);
-    }
-  };
-
-  useEffect(() => { loadBoards(); }, []);
-  useEffect(() => { if (creating) setTimeout(() => inputRef.current?.focus(), 50); }, [creating]);
-
-  const create = async () => {
-    const name = newName.trim() || `Caderno ${boards.length + 1}`;
-    const newId = uid();
-    await safeInvoke('save_board', { boardId: newId, name, nodes: [], edges: [] });
-    setCreating(false);
-    setNewName('');
-    onOpen({ id: newId, name, updated_at: Date.now() });
-  };
-
-  const remove = async (id: string) => {
-    await safeInvoke('delete_board', { boardId: id });
-    setConfirmDelete(null);
-    loadBoards();
-  };
-
-  const fmt = (ts: number) => {
-    const normalizedTs = ts > 0 && ts < 1_000_000_000_000 ? ts * 1000 : ts;
-    const d = new Date(normalizedTs);
-    const now = Date.now();
-    const diff = now - normalizedTs;
-    if (diff < 60000) return 'agora mesmo';
-    if (diff < 3600000) return `${Math.floor(diff / 60000)}min atrás`;
-    if (diff < 86400000) return `${Math.floor(diff / 3600000)}h atrás`;
-    return d.toLocaleDateString('pt-BR');
-  };
-
-  return (
-    <div className="absolute inset-0 overflow-y-auto" style={{ background: 'var(--aurea-bg)', fontFamily: 'var(--font-body)' }}>
-      <div className="max-w-5xl mx-auto px-5 py-8 sm:px-8 sm:py-12">
-        {/* Header */}
-        <div className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <div className="flex items-center gap-2 mb-1">
-              <LayoutGrid size={18} style={{ color: 'var(--color-gold)' }} />
-              <span className="text-xs font-bold uppercase tracking-[0.2em]" style={{ color: 'var(--color-gold)' }}>Caderno Vivo</span>
-            </div>
-            <h1 className="aurea-page-title text-2xl">Seus cadernos</h1>
-            <p className="text-sm color: var(--aurea-text-muted) mt-1">Cada caderno é um espaço vivo de estudo e criação</p>
-          </div>
-          <button
-            onClick={() => setCreating(true)}
-            className="aurea-button-primary flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all hover:opacity-90 active:scale-95"
-          >
-            <Plus size={16} /> Novo caderno
-          </button>
-        </div>
-
-        {intentError && (
-          <div role="alert" className="mb-6 flex items-start gap-3 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-800">
-            <AlertCircle size={18} className="mt-0.5 shrink-0" aria-hidden="true" />
-            <p>{intentError}</p>
-          </div>
-        )}
-
-        {/* Create modal inline */}
-        {creating && (
-          <div className="mb-6 p-5 rounded-2xl border-2 border-dashed" style={{ borderColor: 'var(--aurea-line)', background: 'var(--aurea-surface)' }}>
-            <p className="text-xs font-semibold color: var(--aurea-text-muted) mb-3 uppercase tracking-wider">Nome do novo caderno</p>
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <input
-                ref={inputRef}
-                value={newName}
-                onChange={e => setNewName(e.target.value)}
-                onKeyDown={e => { if (e.key === 'Enter') create(); if (e.key === 'Escape') setCreating(false); }}
-                placeholder="Ex: Estudo de Mercúrio, Planejamento semanal..."
-            className="flex-1 px-4 py-2.5 text-sm outline-none transition-all"
-              />
-              <button onClick={create} className="aurea-button-primary px-5 py-2.5 rounded-xl text-sm font-semibold">Criar</button>
-              <button onClick={() => { setCreating(false); setNewName(''); }} className="px-4 py-2.5 rounded-xl text-sm color: var(--aurea-text-muted) hover:color: var(--aurea-text) transition-all">Cancelar</button>
-            </div>
-          </div>
-        )}
-
-        {/* Board grid */}
-        {boards.length === 0 && !creating ? (
-          <div className="flex flex-col items-center justify-center py-32 text-center">
-            <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4" style={{ background: '#F3F3F1' }}>
-              <LayoutGrid size={24} style={{ color: '#BDBDBD' }} />
-            </div>
-            <p className="text-sm font-semibold color: var(--aurea-text-muted)">Nenhum caderno ainda</p>
-            <p className="text-xs text-gray-300 mt-1 mb-6">Crie seu primeiro espaço de estudo e criação</p>
-            <button onClick={() => setCreating(true)} className="aurea-button-primary flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold">
-              <Plus size={15} /> Criar primeiro caderno
-            </button>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-            {boards.map(board => (
-              <div
-                key={board.id}
-                role="button"
-                tabIndex={0}
-                aria-label={`Abrir caderno ${board.name}`}
-                className="group relative rounded-2xl overflow-hidden cursor-pointer transition-all hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2"
-                style={{ background: 'var(--aurea-surface)', border: '1px solid var(--aurea-line)', boxShadow: '0 8px 24px rgba(24,42,58,0.07)' }}
-                onClick={() => onOpen(board)}
-                onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); onOpen(board); } }}
-              >
-                {/* Preview area */}
-                <div className="h-36 relative overflow-hidden" style={{ background: 'var(--aurea-surface-warm)' }}>
-                  {/* Mini node previews */}
-                  <div className="absolute inset-3 overflow-hidden">
-                    {(board.nodes || []).slice(0, 6).map((node: any, i: number) => (
-                      <div
-                        key={node.id}
-                        className="absolute rounded text-[7px] font-medium truncate px-2 py-1 box-shadow: 0 1px 2px rgba(0,0,0,0.25)"
-                        style={{
-                          left: `${(i % 3) * 32 + 5}%`,
-                          top: `${Math.floor(i / 3) * 45 + 5}%`,
-                          width: '28%',
-                          background: node.color || '#FFFDE7',
-                          color: '#555',
-                          border: '1px solid rgba(0,0,0,0.06)',
-                        }}
-                      >
-                        {node.text?.slice(0, 20) || (node.type === 'checklist' ? '☑ Lista' : node.type === 'image' ? '🖼 Img' : '...')}
-                      </div>
-                    ))}
-                    {!(board.nodes?.length > 0) && (
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <Sparkles size={20} style={{ color: '#DCDCDC' }} />
-                      </div>
-                    )}
-                  </div>
-                  {/* Delete button */}
-                  <button
-                    type="button"
-                    aria-label={`Apagar caderno ${board.name}`}
-                    title="Apagar caderno"
-                    className="absolute top-2 right-2 w-7 h-7 rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:background: rgba(239,68,68,0.08)"
-                    style={{ background: 'rgba(255,255,255,0.9)', border: '1px solid #EBEBEB' }}
-                    onClick={e => { e.stopPropagation(); setConfirmDelete(board.id); }}
-                  >
-                    <Trash2 size={12} style={{ color: '#E57373' }} />
-                  </button>
-                </div>
-                {/* Info */}
-                <div className="px-4 py-3">
-                  <p className="text-sm font-semibold text-[var(--aurea-text)] truncate">{board.name}</p>
-                  <div className="flex items-center gap-1 mt-1">
-                    <Clock size={10} style={{ color: '#BDBDBD' }} />
-                    <span className="text-xs color: var(--aurea-text-muted)">{fmt(board.updated_at || board.updatedAt)}</span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Confirm delete dialog */}
-      {confirmDelete && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm" onClick={() => setConfirmDelete(null)}>
-           <div role="dialog" aria-modal="true" aria-labelledby="delete-caderno-title" className="aurea-modal rounded-2xl p-6 w-80 shadow-2xl" onClick={e => e.stopPropagation()}>
-             <h3 id="delete-caderno-title" className="text-sm font-bold color: var(--aurea-text) mb-2">Apagar caderno?</h3>
-            <p className="text-xs color: var(--aurea-text-muted) mb-5">Esta ação não pode ser desfeita. Todos os cards serão removidos.</p>
-            <div className="flex justify-end gap-2">
-              <button onClick={() => setConfirmDelete(null)} className="px-4 py-2 text-sm color: var(--aurea-text-muted) hover:color: var(--aurea-text) transition-all">Cancelar</button>
-              <button onClick={() => remove(confirmDelete)} className="px-5 py-2 rounded-xl text-sm font-semibold text-white" style={{ background: '#EF4444' }}>Apagar</button>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
 };
 
 // ─────────────────────────────────────────────────────────────
@@ -421,24 +232,30 @@ const MesaCanvas = ({
   useEffect(() => { edgesRef.current = edges; }, [edges]);
   useEffect(() => { if (editingName) setTimeout(() => nameInputRef.current?.focus(), 30); }, [editingName]);
   useEffect(() => {
-    if (initialStudyNodeId !== null && nodes.some(node => node.id === initialStudyNodeId)) {
-      setSelected(initialStudyNodeId);
-      setStudyPanelOpen(true);
-    }
+    const timer = setTimeout(() => {
+      if (initialStudyNodeId !== null && nodes.some(node => node.id === initialStudyNodeId)) {
+        setSelected(initialStudyNodeId);
+        setStudyPanelOpen(true);
+      }
+    }, 0);
+    return () => clearTimeout(timer);
   }, [initialStudyNodeId, nodes]);
 
   // Auto-save with debounce
   useEffect(() => {
     if (saveTimer.current) clearTimeout(saveTimer.current);
     const version = ++saveVersion.current;
-    setSaveState('saving');
+    const stateTimer = setTimeout(() => setSaveState('saving'), 0);
     saveTimer.current = setTimeout(() => {
-      void safeInvoke<number>('save_board', { boardId: board.id, name: boardName, nodes, edges }).then(savedAt => {
+      void saveBoard({ boardId: board.id, name: boardName, nodes, edges }).then(savedAt => {
         if (version !== saveVersion.current) return;
         setSaveState(typeof savedAt === 'number' ? 'saved' : 'error');
       });
-    }, 800);
-    return () => { if (saveTimer.current) clearTimeout(saveTimer.current); };
+      }, 800);
+    return () => {
+      clearTimeout(stateTimer);
+      if (saveTimer.current) clearTimeout(saveTimer.current);
+    };
   }, [nodes, edges, boardName, board.id]);
 
   // ── History ────────────────────────────────────────────────
@@ -450,10 +267,25 @@ const MesaCanvas = ({
     setRedoStack([]);
   }, []);
 
+  const deleteNode = useCallback((id: number) => {
+    const node = nodesRef.current.find(n => n.id === id);
+    if (!node) return;
+    const affectedEdges = edgesRef.current.filter(e => e.from === id || e.to === id);
+    pushHistory({ type: 'deleteNode', payload: { node, edges: affectedEdges } });
+    setNodes(p => p.filter(n => n.id !== id));
+    setEdges(p => p.filter(e => e.from !== id && e.to !== id));
+  }, [pushHistory]);
+
   const applyAction = useCallback((action: HistoryAction, direction: 'undo' | 'redo') => {
     const isUndo = direction === 'undo';
     switch (action.type) {
-      case 'addNode':    isUndo ? setNodes(n => n.filter(x => x.id !== action.payload.node.id)) : setNodes(n => [...n, action.payload.node]); break;
+      case 'addNode':
+        if (isUndo) {
+          setNodes(n => n.filter(x => x.id !== action.payload.node.id));
+        } else {
+          setNodes(n => [...n, action.payload.node]);
+        }
+        break;
       case 'deleteNode':
         if (isUndo) {
           setNodes(n => [...n, action.payload.node]);
@@ -464,10 +296,18 @@ const MesaCanvas = ({
         }
         break;
       case 'addEdge':
-        isUndo ? setEdges(e => e.filter(x => x.id !== action.payload.edge.id)) : setEdges(e => [...e, action.payload.edge]);
+        if (isUndo) {
+          setEdges(e => e.filter(x => x.id !== action.payload.edge.id));
+        } else {
+          setEdges(e => [...e, action.payload.edge]);
+        }
         break;
       case 'deleteEdge':
-        isUndo ? setEdges(e => [...e, action.payload.edge]) : setEdges(e => e.filter(x => x.id !== action.payload.edge.id));
+        if (isUndo) {
+          setEdges(e => [...e, action.payload.edge]);
+        } else {
+          setEdges(e => e.filter(x => x.id !== action.payload.edge.id));
+        }
         break;
       case 'moveNode':
       case 'resizeNode':
@@ -572,15 +412,6 @@ const MesaCanvas = ({
     setFocusNodeId(node.id);
     setTool('select');
   };
-
-  const deleteNode = useCallback((id: number) => {
-    const node = nodesRef.current.find(n => n.id === id);
-    if (!node) return;
-    const affectedEdges = edgesRef.current.filter(e => e.from === id || e.to === id);
-    pushHistory({ type: 'deleteNode', payload: { node, edges: affectedEdges } });
-    setNodes(p => p.filter(n => n.id !== id));
-    setEdges(p => p.filter(e => e.from !== id && e.to !== id));
-  }, [pushHistory]);
 
   const updateNode = (id: number, patch: Partial<CadernoNode>) => {
     const prev = nodesRef.current.find(n => n.id === id);
@@ -723,7 +554,7 @@ const MesaCanvas = ({
       return;
     }
 
-    const edge: CadernoEdge = { id: Date.now(), from: connectSourceId, to: id };
+    const edge: CadernoEdge = { id: timestampId(), from: connectSourceId, to: id };
     setEdges(items => [...items, edge]);
     pushHistory({ type: 'addEdge', payload: { edge } });
     setConnectSourceId(null);
