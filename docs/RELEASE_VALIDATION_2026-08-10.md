@@ -159,20 +159,24 @@ npm run test
 git diff --check
 ```
 
-Procedimento Chrome reproduzível usado na porta `9878`: iniciar somente o executável
-recém-gerado com uma pasta nova em `AUREA_DATA_DIR` e executar a invocação isolada:
+Procedimento Chrome reproduzível, sem janela e independente de stderr: depois de
+gerar o frontend e o executável empacotado, execute o verificador CDP portátil:
 
 ```powershell
-$chromeProfile = Join-Path ([IO.Path]::GetTempPath()) ('aurea-chrome-' + [guid]::NewGuid().ToString('N'))
-Start-Process -FilePath "$env:ProgramFiles\Google\Chrome\Application\chrome.exe" -ArgumentList @(
-    '--new-window',
-    ('--user-data-dir=' + $chromeProfile),
-    'http://127.0.0.1:9878/'
-)
+$repoRoot = (git rev-parse --show-toplevel).Trim()
+& (Join-Path $repoRoot 'tests\browser_runtime_smoke.ps1') `
+  -RuntimePath (Join-Path $repoRoot 'dist\astro-engine-x86_64-pc-windows-msvc.exe')
 ```
 
-Aguardar o carregamento; no Console do DevTools registrar as mensagens de nível
-`error`; e, na página, verificar o texto visível `AUREA SOLARIS`, `ENTRAR` e
-`INSCREVER-SE`. O resultado registrado foi os três landmarks visíveis e zero erros
-de console. Nenhum servidor existente ou dado privado foi usado. A aceitação manual
-completa da pessoa usuária continua pendente conforme a seção acima.
+O script escolhe duas portas livres de loopback, define `ASTRO_API_PORT` e uma
+`AUREA_DATA_DIR` nova, inicia o sidecar e um perfil temporário do Chrome headless,
+conecta ao CDP por WebSocket, lê o DOM com `Runtime.evaluate` e captura erros por
+`Runtime.consoleAPICalled` e `Runtime.exceptionThrown`. Ele
+afirma HTTP `200` em `/health`, `/`, `/openapi.json`, os landmarks `AUREA SOLARIS`,
+`ENTRAR` e `INSCREVER-SE`, e zero erros de console; encerra somente as árvores de
+processos criadas e remove os diretórios temporários no `finally`.
+
+Resultado executado: `LANDMARK AUREA SOLARIS=present`, `LANDMARK ENTRAR=present`,
+`LANDMARK INSCREVER-SE=present`, `health=200`, `root=200`, `openapi=200`,
+`cdp_console_errors=0`. A aceitação manual completa da pessoa usuária continua
+pendente conforme a seção acima.
