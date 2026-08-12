@@ -125,10 +125,11 @@ describe('diary operations', () => {
     expect(mockedSafeInvoke).toHaveBeenCalledTimes(1);
     const [command, payload] = mockedSafeInvoke.mock.calls[0];
     expect(command).toBe('diary_update_entry');
-    expect(payload).toEqual({
+    expect(payload).toStrictEqual({
       id: 'entry-1',
       title: 'Título parcial',
     });
+    expect(payload).not.toHaveProperty('content');
     expect(payload).not.toHaveProperty('folder_id');
     expect(payload).not.toHaveProperty('status');
   });
