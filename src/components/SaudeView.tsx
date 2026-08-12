@@ -5,6 +5,7 @@ import { useAstroData } from '../hooks/useAstroData';
 import { useAgendaContext } from '../context/AgendaContext';
 import { readConfirmedBirthInput } from '../utils/confirmedBirthInput';
 import { readCertifiedCalculation } from '../utils/certifiedCalculation';
+import type { PlanetaryPosition } from '../types/astrology';
 import { LOCAL_API_URL } from '../utils/api';
 
 type HealthRecord = {
@@ -39,9 +40,12 @@ export const SaudeView = () => {
   const focusedMap = availableMaps.find((map) => map.id === activeSubjectId) || availableMaps[0];
   const focusedSubjectId = focusedMap?.id || '';
   const birthData = useMemo(() => readConfirmedBirthInput(focusedMap?.source), [focusedMap]);
-  const { data, loading, error } = useAstroData(birthData, Boolean(birthData));
+  const { data, loading, error } = useAstroData(birthData ?? undefined, Boolean(birthData));
   const certifiedNatal = readCertifiedCalculation(data, 'natal');
-  const natalMoon = data?.planets?.Moon;
+  const rawMoon = data?.planets?.Moon;
+  const natalMoon = rawMoon && typeof rawMoon === 'object' && 'sign' in rawMoon
+    ? rawMoon as PlanetaryPosition
+    : undefined;
 
   useEffect(() => {
     if (!focusedSubjectId) {

@@ -16,14 +16,19 @@ export interface BiometricLog {
   energyLevel: number; // 1-10
 }
 
+export interface SaudeDocument {
+  name: string;
+  date?: string;
+}
+
 interface SaudeContextType {
   habits: Habit[];
   biometrics: BiometricLog[];
-  documents: any[]; // we can share this structure with Agenda documents later
+  documents: SaudeDocument[];
   toggleHabit: (id: string) => void;
   addHabit: (name: string, time: string, dateStr: string) => void;
   logBiometrics: (bio: Omit<BiometricLog, 'id'>) => void;
-  uploadDocument: (fileData: any) => void;
+  uploadDocument: (fileData: { name: string }) => void;
   getHabitsByDate: (dateStr: string) => Habit[];
   getBiometricsByDate: (dateStr: string) => BiometricLog | null;
 }
@@ -48,7 +53,7 @@ export const SaudeProvider: React.FC<{children: React.ReactNode}> = ({ children 
     const storedBio = localStorage.getItem('saude_biometrics');
     return storedBio ? JSON.parse(storedBio) : [];
   });
-  const [documents, setDocuments] = useState<any[]>(() => {
+  const [documents, setDocuments] = useState<SaudeDocument[]>(() => {
     const storedDocs = localStorage.getItem('saude_documents');
     if (!storedDocs) return [];
     const generatedNames = new Set(['Hemograma_Vivi_Mar.pdf', 'Dieta_Nutri_Puerperio.pdf']);
@@ -99,7 +104,7 @@ export const SaudeProvider: React.FC<{children: React.ReactNode}> = ({ children 
     });
   };
 
-  const uploadDocument = (fileData: any) => {
+  const uploadDocument = (fileData: { name: string }) => {
     setDocuments(prev => [{ name: fileData.name, date: new Date().toLocaleDateString('pt-BR').substring(0, 5) }, ...prev]);
   };
 

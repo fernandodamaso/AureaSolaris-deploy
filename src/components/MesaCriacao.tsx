@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { listBoards, loadBoard, saveBoard } from '../utils/board';
 import type { CadernoBoard, CadernoBoardMeta, CadernoEdge, CadernoNode } from '../types/caderno';
+import type { AureaTask } from '../context/AgendaContext';
 import { AssetPicker } from './mesa/AssetPicker';
 import { StudyPanel } from './mesa/StudyPanel';
 import { BoardManager } from './BoardManager';
@@ -26,10 +27,17 @@ type MesaCriacaoProps = {
   onIntentHandled?: () => void;
 };
 
-type HistoryAction = {
-  type: 'addNode' | 'deleteNode' | 'moveNode' | 'resizeNode' | 'updateNode' | 'addEdge' | 'deleteEdge';
-  payload: any;
-};
+type NodeGeometry = Pick<CadernoNode, 'x' | 'y'>;
+type NodeSize = Pick<CadernoNode, 'w' | 'h'>;
+
+type HistoryAction =
+  | { type: 'addNode'; payload: { node: CadernoNode } }
+  | { type: 'deleteNode'; payload: { node: CadernoNode; edges?: CadernoEdge[] } }
+  | { type: 'moveNode'; payload: { id: number; prev: NodeGeometry; next: NodeGeometry } }
+  | { type: 'resizeNode'; payload: { id: number; prev: NodeSize; next: NodeSize } }
+  | { type: 'updateNode'; payload: { id: number; prev: Partial<CadernoNode>; next: Partial<CadernoNode> } }
+  | { type: 'addEdge'; payload: { edge: CadernoEdge } }
+  | { type: 'deleteEdge'; payload: { edge: CadernoEdge } };
 
 // ─────────────────────────────────────────────────────────────
 // Constants
@@ -512,7 +520,7 @@ const MesaCanvas = ({
     isPanning.current = false;
   };
 
-  const onCanvasPointerDown = (_e: React.PointerEvent) => {
+  const onCanvasPointerDown = () => {
     if (tool === 'select' || spaceHeld) {
       isPanning.current = true;
       setSelected(null);
@@ -520,7 +528,7 @@ const MesaCanvas = ({
     }
   };
 
-  const onCanvasClick = (_e: React.MouseEvent) => {
+  const onCanvasClick = () => {
     if (tool === 'sticky')    { addNode({ type: 'sticky', color: stickyColor }); return; }
     if (tool === 'text')      { addNode({ type: 'text', w: 200, h: 50, color: 'transparent', text: '' }); return; }
     if (tool === 'checklist') { addNode({ type: 'checklist', w: 240, h: 180, items: [{ text: '', done: false }], color: '#ffffff' }); return; }
@@ -937,7 +945,7 @@ const MesaCanvas = ({
               type: item.type === 'task' ? 'checklist' : 'sticky',
               w: 240, h: 160,
               text: item.type !== 'task' ? `${item.title}\n\n${item.preview}` : undefined,
-              items: item.type === 'task' ? [{ text: item.title, done: !!item.data?.completed }] : undefined,
+              items: item.type === 'task' ? [{ text: item.title, done: Boolean((item.data as AureaTask).completed || (item.data as AureaTask).is_completed) }] : undefined,
               color: item.type === 'astro' ? '#FFFDE7' : item.type === 'calendar' ? '#E3F2FD' : STICKY_COLORS[0],
             });
             setShowAssetPicker(false);

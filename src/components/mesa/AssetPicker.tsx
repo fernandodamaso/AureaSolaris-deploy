@@ -3,13 +3,44 @@ import { X, FileText, Star, Calendar, ListTodo, BookOpen, ChevronRight, MessageS
 import { safeInvoke } from '../../utils/tauri';
 import { listDiaryEntries } from '../../utils/diary';
 import type { DiaryEntryResponse } from '../../types/diario';
+import type { PrivateProfile, ProfileConnection } from '../../types/private-profile';
+import type { AureaEvent, AureaTask } from '../../context/AgendaContext';
+
+interface ObsidianDiaryEntry {
+  id?: string;
+  title?: string;
+  content?: string;
+}
+
+interface HermesLesson {
+  id?: string;
+  title?: string;
+  category?: string;
+  content?: string;
+}
+
+interface ChatSession {
+  chatId?: string;
+  preview?: string;
+  date?: string;
+}
 
 interface AssetItem {
   id: string;
   type: 'note' | 'astro' | 'calendar' | 'task' | 'lesson' | 'chat';
   title: string;
   preview: string;
-  data: any;
+  data: DiaryEntryResponse | PrivateProfile | ProfileConnection | AureaEvent | AureaTask | HermesLesson | ChatSession | ObsidianDiaryEntry;
+}
+
+function parseJsonArray<T>(raw: string | null): T[] {
+  if (!raw) return [];
+  try {
+    const parsed: unknown = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed as T[] : [];
+  } catch {
+    return [];
+  }
 }
 
 interface AssetPickerProps {
@@ -42,23 +73,23 @@ export const AssetPicker = ({ onClose, onImport }: AssetPickerProps) => {
           const res = await listDiaryEntries();
           let mapped: AssetItem[] = [];
           if (res && res.length > 0) {
-            mapped = res.map((e: DiaryEntryResponse) => ({
-              id: e.id,
+            mapped = res.map((entry) => ({
+              id: entry.id,
               type: 'note',
-              title: e.title || 'Sem Título',
-              preview: e.content ? e.content.substring(0, 100) + '...' : 'Sem conteúdo',
-              data: e
+              title: entry.title || 'Sem Título',
+              preview: entry.content ? entry.content.substring(0, 100) + '...' : 'Sem conteúdo',
+              data: entry
             }));
           } else {
             // Fallback to Obsidian
-            const obsRes = await safeInvoke<any[]>('obsidian_diary_list_entries');
+            const obsRes = await safeInvoke<ObsidianDiaryEntry[]>('obsidian_diary_list_entries');
             if (obsRes) {
-              mapped = obsRes.map(e => ({
-                id: e.id || e.title,
+              mapped = obsRes.map(entry => ({
+                id: entry.id || entry.title || `note-${Date.now()}`,
                 type: 'note',
-                title: e.title || 'Sem Título',
-                preview: e.content ? e.content.substring(0, 100) + '...' : 'Sem conteúdo',
-                data: e
+                title: entry.title || 'Sem Título',
+                preview: entry.content ? entry.content.substring(0, 100) + '...' : 'Sem conteúdo',
+                data: entry
               }));
             }
           }
@@ -66,27 +97,26 @@ export const AssetPicker = ({ onClose, onImport }: AssetPickerProps) => {
 
         } else if (activeTab === 'astro') {
           // 2. List Profiles and family connections for Astrological Maps
-          const profilesRaw = localStorage.getItem('aurea_profiles');
-          const profiles = profilesRaw ? JSON.parse(profilesRaw) : [];
+          const profiles = parseJsonArray<PrivateProfile>(localStorage.getItem('aurea_profiles'));
           const mapped: AssetItem[] = [];
 
-          profiles.forEach((p: any) => {
+          profiles.forEach((profile) => {
             mapped.push({
-              id: `astro-profile-${p.id}`,
+              id: `astro-profile-${profile.id}`,
               type: 'astro',
-              title: `Mapa Natal de ${p.name}`,
-              preview: `Nascimento: ${p.natal?.birthDate || p.birthDate || 'Não informado'} às ${p.natal?.birthTime || p.birthTime || '?'}. Lat: ${p.natal?.lat || '-'}, Lon: ${p.natal?.lon || '-'}`,
-              data: p
+              title: `Mapa Natal de ${profile.name}`,
+              preview: `Nascimento: ${(profile.natal as { birthDate?: string } | undefined)?.birthDate || profile.birthDate || 'Não informado'} às ${(profile.natal as { birthTime?: string } | undefined)?.birthTime || profile.birthTime || '?'}. Lat: ${(profile.natal as { lat?: number } | undefined)?.lat || '-'}, Lon: ${(profile.natal as { lon?: number } | undefined)?.lon || '-'}`,
+              data: profile
             });
 
-            if (p.connections && Array.isArray(p.connections)) {
-              p.connections.forEach((conn: any, idx: number) => {
+            if (profile.connections && Array.isArray(profile.connections)) {
+              profile.connections.forEach((connection, idx) => {
                 mapped.push({
-                  id: `astro-conn-${p.id}-${idx}`,
+                  id: `astro-conn-${profile.id}-${idx}`,
                   type: 'astro',
-                  title: `Mapa de ${conn.name} (${p.name})`,
-                  preview: `Nascimento: ${conn.birthData?.date || conn.birthDate || 'Não informado'} às ${conn.birthData?.time || conn.birthTime || '?'}.`,
-                  data: conn
+                  title: `Mapa de ${connection.name} (${profile.name})`,
+                  preview: `Nascimento: ${connection.birthData?.date || connection.birthDate || 'Não informado'} às ${connection.birthData?.time || connection.birthTime || '?'}.`,
+                  data: connection
                 });
               });
             }
@@ -96,9 +126,8 @@ export const AssetPicker = ({ onClose, onImport }: AssetPickerProps) => {
 
         } else if (activeTab === 'calendar') {
           // 3. List browser-local agenda events. External calendar sync is not enabled.
-          const eventsRaw = localStorage.getItem('aurea_events');
-          const events = eventsRaw ? JSON.parse(eventsRaw) : [];
-          const mapped: AssetItem[] = (Array.isArray(events) ? events : []).map((event: any) => ({
+          const events = parseJsonArray<AureaEvent>(localStorage.getItem('aurea_events'));
+          const mapped: AssetItem[] = events.map((event) => ({
             id: event.id || `cal-${Date.now()}-${Math.random()}`,
             type: 'calendar',
             title: event.title || 'Compromisso',
@@ -109,39 +138,37 @@ export const AssetPicker = ({ onClose, onImport }: AssetPickerProps) => {
 
         } else if (activeTab === 'tasks') {
           // 4. List local tasks
-          const tasksRaw = localStorage.getItem('aurea_tasks');
-          const tasks = tasksRaw ? JSON.parse(tasksRaw) : [];
-          const mapped: AssetItem[] = (Array.isArray(tasks) ? tasks : []).map((t: any) => ({
-            id: t.id || `task-${Date.now()}`,
+          const tasks = parseJsonArray<AureaTask>(localStorage.getItem('aurea_tasks'));
+          const mapped: AssetItem[] = tasks.map((task) => ({
+            id: task.id || `task-${Date.now()}`,
             type: 'task',
-            title: t.content || 'Tarefa sem título',
-            preview: t.is_completed || t.completed ? '✓ Concluída' : '⏳ Pendente',
-            data: t
+            title: task.content || 'Tarefa sem título',
+            preview: task.is_completed || task.completed ? '✓ Concluída' : '⏳ Pendente',
+            data: task
           }));
           setItems(mapped);
         } else if (activeTab === 'lessons') {
           // 5. List Hermetic lessons
-          const lessonsRaw = localStorage.getItem('aurea_Hermes_lessons');
-          const lessons = lessonsRaw ? JSON.parse(lessonsRaw) : [];
-          const mapped: AssetItem[] = lessons.map((l: any) => ({
-            id: l.id || `lesson-${Date.now()}`,
+          const lessons = parseJsonArray<HermesLesson>(localStorage.getItem('aurea_Hermes_lessons'));
+          const mapped: AssetItem[] = lessons.map((lesson) => ({
+            id: lesson.id || `lesson-${Date.now()}`,
             type: 'lesson',
-            title: l.title || 'Lição sem título',
-            preview: `Categoria: ${l.category || 'Geral'}. ${l.content ? l.content.substring(0, 100) + '...' : ''}`,
-            data: l
+            title: lesson.title || 'Lição sem título',
+            preview: `Categoria: ${lesson.category || 'Geral'}. ${lesson.content ? lesson.content.substring(0, 100) + '...' : ''}`,
+            data: lesson
           }));
           setItems(mapped);
 
         } else if (activeTab === 'chats') {
           // 6. List Hermes Chat sessions
-          const res = await safeInvoke<any[]>('list_chat_sessions', { agent: 'Hermes' });
+          const res = await safeInvoke<ChatSession[]>('list_chat_sessions', { agent: 'Hermes' });
           if (res && Array.isArray(res)) {
-            const mapped: AssetItem[] = res.map((s: any) => ({
-              id: s.chatId || `chat-${Date.now()}`,
+            const mapped: AssetItem[] = res.map((session) => ({
+              id: session.chatId || `chat-${Date.now()}`,
               type: 'chat',
-              title: `Chat Session: ${s.chatId}`,
-              preview: `${s.preview || 'Sessão aberta'} (${s.date || 'Hoje'})`,
-              data: s
+              title: `Chat Session: ${session.chatId}`,
+              preview: `${session.preview || 'Sessão aberta'} (${session.date || 'Hoje'})`,
+              data: session
             }));
             setItems(mapped);
           }
