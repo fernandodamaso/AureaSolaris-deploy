@@ -1,7 +1,8 @@
 param(
     [string]$RuntimePath = '',
     [int]$ApiPort = 0,
-    [int]$CdpPort = 0
+    [int]$CdpPort = 0,
+    [switch]$PortSelectionOnly
 )
 
 $ErrorActionPreference = 'Stop'
@@ -30,20 +31,40 @@ function Get-ListeningPorts {
     @(Get-NetTCPConnection -State Listen -ErrorAction SilentlyContinue |
         ForEach-Object { [int]$_.LocalPort })
 }
+function Select-FreePort([int[]]$Candidates, [int[]]$OccupiedPorts) {
+    foreach ($candidate in $Candidates) {
+        if ($OccupiedPorts -notcontains $candidate) { return $candidate }
+    }
+    return $null
+}
 function Assert-PortFree([int]$Port) {
     if ((Get-ListeningPorts) -contains $Port) { throw "A porta $Port já está em uso." }
 }
 
-function Stop-Tree([int]$RootPid) {
+function Stop-Tree([System.Diagnostics.Process]$RootProcess) {
+    $rootPid = $RootProcess.Id
+    $expectedStart = $null
+    try { $expectedStart = $RootProcess.StartTime } catch { return }
+    $currentRoot = Get-Process -Id $rootPid -ErrorAction SilentlyContinue
+    if ($null -eq $currentRoot) { return }
+    if ($currentRoot.StartTime -ne $expectedStart) {
+        throw "PID reutilizado; não vou encerrar o processo $rootPid."
+    }
     $processes = @(Get-CimInstance Win32_Process)
-    $ids = [Collections.Generic.HashSet[int]]::new(); [void]$ids.Add($RootPid)
+    $ids = [Collections.Generic.HashSet[int]]::new(); [void]$ids.Add($rootPid)
     do {
         $changed = $false
         foreach ($process in $processes) {
             if ($ids.Contains([int]$process.ParentProcessId) -and $ids.Add([int]$process.ProcessId)) { $changed = $true }
         }
     } while ($changed)
-    foreach ($id in @($ids | Sort-Object -Descending)) { Stop-Process -Id $id -Force -ErrorAction SilentlyContinue }
+    foreach ($id in @($ids | Sort-Object -Descending)) {
+        if ($null -ne (Get-Process -Id $id -ErrorAction SilentlyContinue)) {
+            Stop-Process -Id $id -Force -ErrorAction Stop
+        }
+    }
+    $remaining = @($ids | Where-Object { $null -ne (Get-Process -Id $_ -ErrorAction SilentlyContinue) })
+    if ($remaining.Count) { throw "Processos ainda ativos: $($remaining -join ', ')" }
 }
 function Send-Cdp([string]$Method, [hashtable]$Params = @{}) {
     $script:commandId++
@@ -63,23 +84,58 @@ function Receive-Cdp([int]$TimeoutMs) {
     } while (-not $result.EndOfMessage)
     return $message.ToString() | ConvertFrom-Json
 }
+function Test-AllowlistedLogError($Event) {
+    # LoginView currently requests this source-tree URL, while Vite emits the SVG under a hashed /assets path.
+    # Task 1 is limited to the smoke gate, so allow only this exact known 404; every other log error fails.
+    $entry = $Event.params.entry
+    return $Event.Method -eq 'Log.entryAdded' -and
+        [string]$entry.level -eq 'error' -and
+        [string]$entry.source -eq 'network' -and
+        [string]$entry.url -eq "http://127.0.0.1:$script:ApiPort/src/assets/brand/logo/aurea-symbol.svg" -and
+        [string]$entry.text -eq 'Failed to load resource: the server responded with a status of 404 (Not Found)'
+}
 function Record-CdpError($Event) {
     if ($Event.Method -eq 'Log.entryAdded' -and [string]$Event.params.entry.level -eq 'error') {
-        $detail = "Log.entryAdded: $([string]$Event.params.entry.text)"
+        $entry = $Event.params.entry
+        $detail = "Log.entryAdded: level=$([string]$entry.level) source=$([string]$entry.source) text=$([string]$entry.text) url=$([string]$entry.url)"
+        if (Test-AllowlistedLogError $Event) {
+            [void]$script:allowlistedLogErrors.Add($detail)
+            Write-Output "CDP_ALLOWLIST $detail"
+            return
+        }
         [void]$script:logErrors.Add($detail)
     } elseif ($Event.Method -eq 'Runtime.exceptionThrown' -or
         ($Event.Method -eq 'Runtime.consoleAPICalled' -and @('error', 'assert') -contains [string]$Event.params.type)) {
-        $detail = [string]$Event.Method
+        $detail = "$([string]$Event.Method): $($Event | ConvertTo-Json -Compress -Depth 8)"
         [void]$script:consoleErrors.Add($detail)
+    }
+}
+function Invoke-CleanupStep([string]$Name, [scriptblock]$Action) {
+    try {
+        & $Action
+        Write-Output "CLEANUP $Name=ok"
+    } catch {
+        $detail = "CLEANUP $Name=failed error=$($_.Exception.Message)"
+        Write-Output $detail
+        [void]$script:cleanupFailures.Add($detail)
     }
 }
 
 $runtime = $null; $chrome = $null; $socket = $null
 $oldPort = $env:ASTRO_API_PORT; $oldData = $env:AUREA_DATA_DIR
+$script:cleanupFailures = [Collections.Generic.List[string]]::new()
+$script:allowlistedLogErrors = [Collections.Generic.List[string]]::new()
+if ($PortSelectionOnly) {
+    $occupied = Get-ListeningPorts
+    $selected = Select-FreePort $apiPortRange $occupied
+    if ($null -eq $selected) { throw 'Não há porta livre no intervalo da API.' }
+    Write-Output "PORT_SELECTION api_port=$selected"
+    exit 0
+}
 try {
     $occupied = Get-ListeningPorts
-    if ($ApiPort -eq 0) { $ApiPort = $apiPortRange | Where-Object { $_ -notin $occupied } | Select-Object -First 1 }
-    if ($CdpPort -eq 0) { $CdpPort = $cdpPortRange | Where-Object { $_ -notin $occupied -and $_ -ne $ApiPort } | Select-Object -First 1 }
+    if ($ApiPort -eq 0) { $ApiPort = Select-FreePort $apiPortRange $occupied }
+    if ($CdpPort -eq 0) { $CdpPort = Select-FreePort ($cdpPortRange | Where-Object { $_ -ne $ApiPort }) $occupied }
     if ($ApiPort -notin $apiPortRange -or $CdpPort -notin $cdpPortRange -or $ApiPort -eq $CdpPort) {
         throw 'As portas devem ser API 9877-9899 e CDP 9900-9922, e devem ser distintas.'
     }
@@ -151,6 +207,7 @@ try {
     $socket = [Net.WebSockets.ClientWebSocket]::new()
     $socket.Options.SetRequestHeader('Origin', "http://127.0.0.1:$CdpPort")
     [void]$socket.ConnectAsync([Uri][string]$target.webSocketDebuggerUrl, [Threading.CancellationToken]::None).GetAwaiter().GetResult()
+    $script:ApiPort = $ApiPort
     $script:commandId = 0; $script:consoleErrors = [Collections.Generic.List[string]]::new(); $script:logErrors = [Collections.Generic.List[string]]::new()
     [void](Send-Cdp 'Runtime.enable'); [void](Send-Cdp 'Log.enable'); [void](Send-Cdp 'Page.enable')
     [void](Send-Cdp 'Page.navigate' @{ url = "$baseUrl/" })
@@ -164,14 +221,36 @@ try {
         if (-not $html.ToUpperInvariant().Contains($landmark)) { throw "Landmark ausente no DOM: $landmark" }
         Write-Output "LANDMARK $landmark=present"
     }
-    if ($script:consoleErrors.Count) { throw "Erros de console CDP: $($script:consoleErrors -join ', ')" }
+    if ($script:consoleErrors.Count -or $script:logErrors.Count) {
+        $details = @($script:consoleErrors + $script:logErrors) -join "`n"
+        throw "Erros CDP não permitidos:`n$details"
+    }
     Write-Output "RESULT api_port=$ApiPort cdp_port=$CdpPort health=$($health.StatusCode) root=$($root.StatusCode) openapi=$($openapi.StatusCode) cdp_console_errors=0 cdp_log_errors=$($script:logErrors.Count)"
 } finally {
-    try { if ($null -ne $socket -and $socket.State -eq [Net.WebSockets.WebSocketState]::Open) { [void]$socket.CloseAsync([Net.WebSockets.WebSocketCloseStatus]::NormalClosure, 'done', [Threading.CancellationToken]::None).GetAwaiter().GetResult() } } catch { }
-    try { if ($null -ne $socket) { $socket.Dispose() } } catch { }
-    try { if ($null -ne $chrome) { Stop-Tree $chrome.Id } } catch { }
-    try { if ($null -ne $runtime) { Stop-Tree $runtime.Id } } catch { }
-    try { if ($null -eq $oldPort) { Remove-Item Env:ASTRO_API_PORT -ErrorAction SilentlyContinue } else { $env:ASTRO_API_PORT = $oldPort } } catch { }
-    try { if ($null -eq $oldData) { Remove-Item Env:AUREA_DATA_DIR -ErrorAction SilentlyContinue } else { $env:AUREA_DATA_DIR = $oldData } } catch { }
-    try { if ([IO.Directory]::Exists($tempRoot)) { [IO.Directory]::Delete($tempRoot, $true) } } catch { }
+    Invoke-CleanupStep 'socket-close' {
+        if ($null -ne $socket -and $socket.State -eq [Net.WebSockets.WebSocketState]::Open) {
+            [void]$socket.CloseAsync([Net.WebSockets.WebSocketCloseStatus]::NormalClosure, 'done', [Threading.CancellationToken]::None).GetAwaiter().GetResult()
+        }
+    }
+    Invoke-CleanupStep 'socket-dispose' { if ($null -ne $socket) { $socket.Dispose() } }
+    Invoke-CleanupStep 'chrome-tree' { if ($null -ne $chrome) { Stop-Tree $chrome } }
+    Invoke-CleanupStep 'runtime-tree' { if ($null -ne $runtime) { Stop-Tree $runtime } }
+    Invoke-CleanupStep 'ASTRO_API_PORT-restore' {
+        if ($null -eq $oldPort) {
+            if (Test-Path Env:ASTRO_API_PORT) { Remove-Item Env:ASTRO_API_PORT -ErrorAction Stop }
+        } else { $env:ASTRO_API_PORT = $oldPort }
+    }
+    Invoke-CleanupStep 'AUREA_DATA_DIR-restore' {
+        if ($null -eq $oldData) {
+            if (Test-Path Env:AUREA_DATA_DIR) { Remove-Item Env:AUREA_DATA_DIR -ErrorAction Stop }
+        } else { $env:AUREA_DATA_DIR = $oldData }
+    }
+    Invoke-CleanupStep 'temp-root-remove' { if ([IO.Directory]::Exists($tempRoot)) { [IO.Directory]::Delete($tempRoot, $true) } }
+    Invoke-CleanupStep 'temp-root-residue' { if ([IO.Directory]::Exists($tempRoot)) { throw "Pasta temporária ainda existe: $tempRoot" } }
+    Invoke-CleanupStep 'owned-ports-free' {
+        $residualPorts = @(Get-NetTCPConnection -State Listen -ErrorAction Stop |
+            Where-Object { $_.LocalPort -in @($ApiPort, $CdpPort) })
+        if ($residualPorts.Count) { throw "Portas ainda em uso: $($residualPorts.LocalPort -join ', ')" }
+    }
+    if ($script:cleanupFailures.Count) { throw "Falhas de limpeza:`n$($script:cleanupFailures -join "`n")" }
 }

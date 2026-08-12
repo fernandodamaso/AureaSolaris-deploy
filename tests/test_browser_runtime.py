@@ -1,4 +1,8 @@
 import os
+import re
+import shutil
+import socket
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
@@ -14,10 +18,39 @@ MIGRATIONS = Path(__file__).resolve().parents[1] / "src-tauri" / "migrations"
 
 
 class TestBrowserRuntime(unittest.TestCase):
-    def test_browser_smoke_detects_wildcard_listeners(self):
-        smoke_source = (Path(__file__).with_name("browser_runtime_smoke.ps1")).read_text(encoding="utf-8")
-        self.assertIn("Get-NetTCPConnection -State Listen", smoke_source)
-        self.assertNotIn("Get-NetTCPConnection -LocalAddress 127.0.0.1", smoke_source)
+    def test_browser_smoke_skips_port_bound_to_all_interfaces(self):
+        powershell = shutil.which("powershell")
+        if powershell is None:
+            self.skipTest("PowerShell is required for the Windows browser smoke helper")
+
+        smoke_script = Path(__file__).with_name("browser_runtime_smoke.ps1")
+        runtime_path = smoke_script.parents[1] / "src-tauri" / "binaries" / "astro-engine-x86_64-pc-windows-msvc.exe"
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as listener:
+            listener.bind(("0.0.0.0", 9877))
+            listener.listen(1)
+            result = subprocess.run(
+                [
+                    powershell,
+                    "-NoProfile",
+                    "-ExecutionPolicy",
+                    "Bypass",
+                    "-File",
+                    str(smoke_script),
+                    "-RuntimePath",
+                    str(runtime_path),
+                    "-PortSelectionOnly",
+                ],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+
+        output = f"{result.stdout}\n{result.stderr}"
+        self.assertEqual(result.returncode, 0, output)
+        selected = re.search(r"PORT_SELECTION api_port=(\d+)", result.stdout)
+        self.assertIsNotNone(selected, output)
+        self.assertNotEqual(int(selected.group(1)), 9877, output)
+        self.assertIn(int(selected.group(1)), range(9878, 9900), output)
 
     def test_packaged_frontend_is_declared_and_mounted_after_health(self):
         repository_root = Path(__file__).resolve().parents[1]

@@ -168,17 +168,26 @@ $repoRoot = (git rev-parse --show-toplevel).Trim()
   -RuntimePath (Join-Path $repoRoot 'dist\astro-engine-x86_64-pc-windows-msvc.exe')
 ```
 
-O script escolhe duas portas livres de loopback, define `ASTRO_API_PORT` e uma
+O script escolhe duas portas livres no sistema (incluindo listeners wildcard), define `ASTRO_API_PORT` e uma
 `AUREA_DATA_DIR` nova, inicia o sidecar e um perfil temporário do Chrome headless,
 conecta ao CDP por WebSocket, confirma que o endpoint pertence à árvore do Chrome,
 lê o DOM com `Runtime.evaluate` e captura erros por `Runtime.consoleAPICalled`,
 `Runtime.exceptionThrown` e `Log.entryAdded` (nível `error`). Ele
 afirma HTTP `200` em `/health`, `/`, `/openapi.json`, os landmarks `AUREA SOLARIS`,
-`ENTRAR` e `INSCREVER-SE`, e zero exceções/erros de console de runtime; os erros de
-log também são contados na saída. Encerra somente as árvores de processos criadas
-e remove os diretórios temporários no `finally`.
+`ENTRAR` e `INSCREVER-SE`, e zero exceções/erros de console de runtime. O único
+evento de log conhecido no artefato atual é allowlisted somente quando é o erro
+de rede `404` exato para `/src/assets/brand/logo/aurea-symbol.svg`; qualquer outro
+evento `Log.entryAdded` de nível `error`, exceção ou erro/assert de console falha
+com o texto detalhado do evento. O `finally` tenta cada recurso isoladamente,
+registra cada falha, restaura as variáveis de ambiente e falha ao encontrar
+resíduo de processo ou pasta temporária.
+
+O diagnóstico do evento allowlisted é a referência absoluta à árvore de fontes em
+`LoginView` (`/src/assets/...`), enquanto o build Vite publica o SVG com nome
+hashado em `/assets`; a correção do componente fica fora deste gate de Task 1.
 
 Resultado executado: `LANDMARK AUREA SOLARIS=present`, `LANDMARK ENTRAR=present`,
 `LANDMARK INSCREVER-SE=present`, `health=200`, `root=200`, `openapi=200`,
-`cdp_console_errors=0`. A aceitação manual completa da pessoa usuária continua
-pendente conforme a seção acima.
+`cdp_console_errors=0`, `cdp_log_errors=0`. O resultado também registrou o evento
+allowlisted acima e `CLEANUP ...=ok` para cada recurso; a aceitação manual completa
+da pessoa usuária continua pendente conforme a seção acima.
