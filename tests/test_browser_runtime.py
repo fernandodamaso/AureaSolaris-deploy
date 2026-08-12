@@ -62,6 +62,23 @@ class TestBrowserRuntime(unittest.TestCase):
         frontend_mount = api_source.index('app.mount("/", StaticFiles')
         self.assertLess(health_route, frontend_mount)
 
+    def test_login_logo_uses_vite_asset_import_and_smoke_checks_real_landmarks(self):
+        repository_root = Path(__file__).resolve().parents[1]
+        login_source = (repository_root / "src" / "components" / "LoginView.tsx").read_text(encoding="utf-8")
+        smoke_source = (repository_root / "tests" / "browser_runtime_smoke.ps1").read_text(encoding="utf-8")
+
+        self.assertIn("import aureaSymbol from '../assets/brand/logo/aurea-symbol.svg';", login_source)
+        self.assertIn("<img src={aureaSymbol}", login_source)
+        self.assertNotIn('src="/src/assets/brand/logo/aurea-symbol.svg"', login_source)
+        self.assertNotRegex(smoke_source, r"(?i)allowlist")
+        self.assertIn("getComputedStyle", smoke_source)
+        self.assertIn("getBoundingClientRect", smoke_source)
+        self.assertIn("window.innerWidth", smoke_source)
+        self.assertIn("opacity > 0", smoke_source)
+        self.assertIn("'error', 'assert'", smoke_source)
+        self.assertIn("Network.responseReceived", smoke_source)
+        self.assertIn("logo_404=", smoke_source)
+
     def test_browser_session_gates_private_workspace_and_keeps_owner_scope(self):
         with tempfile.TemporaryDirectory() as directory:
             data_dir = Path(directory) / "browser-data"
