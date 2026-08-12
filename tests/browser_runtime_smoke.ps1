@@ -84,25 +84,14 @@ function Receive-Cdp([int]$TimeoutMs) {
     } while (-not $result.EndOfMessage)
     return $message.ToString() | ConvertFrom-Json
 }
-function Test-AllowlistedLogError($Event) {
-    # LoginView currently requests this source-tree URL, while Vite emits the SVG under a hashed /assets path.
-    # Task 1 is limited to the smoke gate, so allow only this exact known 404; every other log error fails.
-    $entry = $Event.params.entry
-    return $Event.Method -eq 'Log.entryAdded' -and
-        [string]$entry.level -eq 'error' -and
-        [string]$entry.source -eq 'network' -and
-        [string]$entry.url -eq "http://127.0.0.1:$script:ApiPort/src/assets/brand/logo/aurea-symbol.svg" -and
-        [string]$entry.text -eq 'Failed to load resource: the server responded with a status of 404 (Not Found)'
-}
 function Record-CdpError($Event) {
-    if ($Event.Method -eq 'Log.entryAdded' -and [string]$Event.params.entry.level -eq 'error') {
+    if ($Event.Method -eq 'Network.responseReceived' -and
+        [int]$Event.params.response.status -eq 404 -and
+        [string]$Event.params.response.url -match '/src/assets/brand/logo/aurea-symbol\.svg(?:$|\?)') {
+        $script:logo404Count++
+    } elseif ($Event.Method -eq 'Log.entryAdded' -and [string]$Event.params.entry.level -eq 'error') {
         $entry = $Event.params.entry
         $detail = "Log.entryAdded: level=$([string]$entry.level) source=$([string]$entry.source) text=$([string]$entry.text) url=$([string]$entry.url)"
-        if (Test-AllowlistedLogError $Event) {
-            [void]$script:allowlistedLogErrors.Add($detail)
-            Write-Output "CDP_ALLOWLIST $detail"
-            return
-        }
         [void]$script:logErrors.Add($detail)
     } elseif ($Event.Method -eq 'Runtime.exceptionThrown' -or
         ($Event.Method -eq 'Runtime.consoleAPICalled' -and @('error', 'assert') -contains [string]$Event.params.type)) {
@@ -124,7 +113,6 @@ function Invoke-CleanupStep([string]$Name, [scriptblock]$Action) {
 $runtime = $null; $chrome = $null; $socket = $null
 $oldPort = $env:ASTRO_API_PORT; $oldData = $env:AUREA_DATA_DIR
 $script:cleanupFailures = [Collections.Generic.List[string]]::new()
-$script:allowlistedLogErrors = [Collections.Generic.List[string]]::new()
 if ($PortSelectionOnly) {
     $occupied = Get-ListeningPorts
     $selected = Select-FreePort $apiPortRange $occupied
@@ -208,24 +196,67 @@ try {
     $socket.Options.SetRequestHeader('Origin', "http://127.0.0.1:$CdpPort")
     [void]$socket.ConnectAsync([Uri][string]$target.webSocketDebuggerUrl, [Threading.CancellationToken]::None).GetAwaiter().GetResult()
     $script:ApiPort = $ApiPort
-    $script:commandId = 0; $script:consoleErrors = [Collections.Generic.List[string]]::new(); $script:logErrors = [Collections.Generic.List[string]]::new()
-    [void](Send-Cdp 'Runtime.enable'); [void](Send-Cdp 'Log.enable'); [void](Send-Cdp 'Page.enable')
+    $script:commandId = 0; $script:consoleErrors = [Collections.Generic.List[string]]::new(); $script:logErrors = [Collections.Generic.List[string]]::new(); $script:logo404Count = 0
+    [void](Send-Cdp 'Runtime.enable'); [void](Send-Cdp 'Log.enable'); [void](Send-Cdp 'Network.enable'); [void](Send-Cdp 'Page.enable')
     [void](Send-Cdp 'Page.navigate' @{ url = "$baseUrl/" })
     $loaded = $false
     while (-not $loaded) { $event = Receive-Cdp 30000; Record-CdpError $event; $loaded = $event.Method -in @('Page.loadEventFired', 'Page.frameStoppedLoading') }
     Start-Sleep -Milliseconds 3000
-    $domId = Send-Cdp 'Runtime.evaluate' @{ expression = 'document.documentElement.outerHTML'; returnByValue = $true }
-    $html = $null
-    while ($null -eq $html) { $event = Receive-Cdp 10000; Record-CdpError $event; if ($event.id -eq $domId) { $html = [string]$event.result.result.value } }
-    foreach ($landmark in @('AUREA SOLARIS', 'ENTRAR', 'INSCREVER-SE')) {
-        if (-not $html.ToUpperInvariant().Contains($landmark)) { throw "Landmark ausente no DOM: $landmark" }
-        Write-Output "LANDMARK $landmark=present"
+    $landmarkJson = @('Aurea Solaris', 'Entrar', 'Inscrever-se') | ConvertTo-Json -Compress
+    $landmarkExpression = @'
+(() => {
+  const requested = __LANDMARKS__;
+  const normalize = (value) => value.replace(/\s+/g, ' ').trim();
+  const describe = (element) => {
+    const style = getComputedStyle(element);
+    const rect = element.getBoundingClientRect();
+    const opacity = Number.parseFloat(style.opacity);
+    const intersectsViewport = rect.right > 0 && rect.bottom > 0 &&
+      rect.left < window.innerWidth && rect.top < window.innerHeight;
+    return {
+      tag: element.tagName,
+      text: normalize(element.textContent || ''),
+      display: style.display,
+      visibility: style.visibility,
+      opacity,
+      rect: { left: rect.left, top: rect.top, right: rect.right, bottom: rect.bottom, width: rect.width, height: rect.height },
+      intersectsViewport,
+      qualifies: style.display !== 'none' &&
+        style.visibility !== 'hidden' && style.visibility !== 'collapse' &&
+        opacity > 0 && rect.width > 0 && rect.height > 0 && intersectsViewport,
+    };
+  };
+  return requested.map((label) => {
+    const elements = Array.from(document.querySelectorAll('*'))
+      .filter((element) => normalize(element.textContent || '') === label)
+      .map(describe);
+    return { label, elements, visible: elements.some((element) => element.qualifies) };
+  });
+})()
+'@.Replace('__LANDMARKS__', $landmarkJson)
+    $landmarkId = Send-Cdp 'Runtime.evaluate' @{ expression = $landmarkExpression; returnByValue = $true }
+    $landmarkResults = $null
+    while ($null -eq $landmarkResults) {
+        $event = Receive-Cdp 10000
+        Record-CdpError $event
+        if ($event.id -eq $landmarkId) {
+            if ($null -ne $event.result.exceptionDetails) { throw "Falha ao avaliar landmarks: $($event.result.exceptionDetails | ConvertTo-Json -Compress -Depth 8)" }
+            $landmarkResults = @($event.result.result.value)
+        }
     }
+    foreach ($landmark in $landmarkResults) {
+        if (-not $landmark.visible) {
+            $details = $landmark.elements | ConvertTo-Json -Compress -Depth 8
+            throw "Landmark não está visível: $($landmark.label); elementos=$details"
+        }
+        Write-Output "LANDMARK $($landmark.label)=visible"
+    }
+    if ($script:logo404Count -gt 0) { throw "A logo retornou HTTP 404 ($($script:logo404Count) ocorrência(s))." }
     if ($script:consoleErrors.Count -or $script:logErrors.Count) {
         $details = @($script:consoleErrors + $script:logErrors) -join "`n"
         throw "Erros CDP não permitidos:`n$details"
     }
-    Write-Output "RESULT api_port=$ApiPort cdp_port=$CdpPort health=$($health.StatusCode) root=$($root.StatusCode) openapi=$($openapi.StatusCode) cdp_console_errors=0 cdp_log_errors=$($script:logErrors.Count)"
+    Write-Output "RESULT api_port=$ApiPort cdp_port=$CdpPort health=$($health.StatusCode) root=$($root.StatusCode) openapi=$($openapi.StatusCode) logo_404=$($script:logo404Count) cdp_console_errors=$($script:consoleErrors.Count) cdp_log_errors=$($script:logErrors.Count)"
 } finally {
     Invoke-CleanupStep 'socket-close' {
         if ($null -ne $socket -and $socket.State -eq [Net.WebSockets.WebSocketState]::Open) {

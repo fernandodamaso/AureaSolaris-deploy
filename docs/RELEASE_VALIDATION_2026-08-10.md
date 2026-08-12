@@ -165,29 +165,44 @@ gerar o frontend e o executável empacotado, execute o verificador CDP portátil
 ```powershell
 $repoRoot = (git rev-parse --show-toplevel).Trim()
 & (Join-Path $repoRoot 'tests\browser_runtime_smoke.ps1') `
-  -RuntimePath (Join-Path $repoRoot 'dist\astro-engine-x86_64-pc-windows-msvc.exe')
+  -RuntimePath (Join-Path $repoRoot 'src-tauri\binaries\astro-engine-x86_64-pc-windows-msvc.exe')
 ```
 
 O script escolhe duas portas livres no sistema (incluindo listeners wildcard), define `ASTRO_API_PORT` e uma
 `AUREA_DATA_DIR` nova, inicia o sidecar e um perfil temporário do Chrome headless,
 conecta ao CDP por WebSocket, confirma que o endpoint pertence à árvore do Chrome,
-lê o DOM com `Runtime.evaluate` e captura erros por `Runtime.consoleAPICalled`,
-`Runtime.exceptionThrown` e `Log.entryAdded` (nível `error`). Ele
-afirma HTTP `200` em `/health`, `/`, `/openapi.json`, os landmarks `AUREA SOLARIS`,
-`ENTRAR` e `INSCREVER-SE`, e zero exceções/erros de console de runtime. O único
-evento de log conhecido no artefato atual é allowlisted somente quando é o erro
-de rede `404` exato para `/src/assets/brand/logo/aurea-symbol.svg`; qualquer outro
-evento `Log.entryAdded` de nível `error`, exceção ou erro/assert de console falha
-com o texto detalhado do evento. O `finally` tenta cada recurso isoladamente,
+lê o DOM com `Runtime.evaluate`, encontra cada landmark como um elemento de texto
+real e verifica estilo computado (`display`, `visibility`, `opacity`), retângulo
+renderizado positivo e interseção com a viewport. Também captura erros por
+`Runtime.consoleAPICalled`, `Runtime.exceptionThrown` e `Log.entryAdded` (nível
+`error`). Todo erro desses eventos falha o smoke com detalhes. O script também
+observa `Network.responseReceived` e falha se a URL antiga da logo retornar 404;
+não há allowlist para esse erro. O `finally` tenta cada recurso isoladamente,
 registra cada falha, restaura as variáveis de ambiente e falha ao encontrar
 resíduo de processo ou pasta temporária.
 
-O diagnóstico do evento allowlisted é a referência absoluta à árvore de fontes em
-`LoginView` (`/src/assets/...`), enquanto o build Vite publica o SVG com nome
-hashado em `/assets`; a correção do componente fica fora deste gate de Task 1.
+O erro antigo vinha da referência absoluta à árvore de fontes em `LoginView`
+(`/src/assets/...`), enquanto o build Vite publica o SVG com nome hashado em
+`/assets`. `LoginView` agora importa o SVG pelo grafo do Vite, e o smoke confirma
+que a requisição da logo não retorna 404.
 
-Resultado executado: `LANDMARK AUREA SOLARIS=present`, `LANDMARK ENTRAR=present`,
-`LANDMARK INSCREVER-SE=present`, `health=200`, `root=200`, `openapi=200`,
-`cdp_console_errors=0`, `cdp_log_errors=0`. O resultado também registrou o evento
-allowlisted acima e `CLEANUP ...=ok` para cada recurso; a aceitação manual completa
-da pessoa usuária continua pendente conforme a seção acima.
+O resultado abaixo é a evidência técnica da correção da Task 1; a aceitação
+manual completa da pessoa usuária continua pendente conforme a seção acima.
+
+### Correção da Task 1 — evidência executada em 2026-08-12
+
+- `build.bat`: concluído com código `0` (frontend, PyInstaller, smoke HTTP e bundle NSIS);
+- sidecar regenerado: `src-tauri/binaries/astro-engine-x86_64-pc-windows-msvc.exe`;
+- SHA-256 do sidecar: `BC2BCC583C5F54DF1198EE2F8CD9D57D29841541A649D4A0992B09CD9A77C246`;
+- tamanho do sidecar: `25.379.505` bytes; build concluído às `15:01:24` (America/Sao_Paulo);
+- comando CDP isolado: `tests\browser_runtime_smoke.ps1 -RuntimePath src-tauri\binaries\astro-engine-x86_64-pc-windows-msvc.exe`;
+- portas isoladas: API `9877`, CDP `9900`;
+- `/health`: HTTP `200`; `/`: HTTP `200`; `/openapi.json`: HTTP `200`;
+- logo: `logo_404=0` (a importação Vite foi incorporada ao bundle; não há URL `/src/...`);
+- landmarks: `Aurea Solaris`, `Entrar` e `Inscrever-se` visíveis, com estilo computado, retângulo e interseção de viewport válidos;
+- CDP: `cdp_console_errors=0`, `cdp_log_errors=0`;
+- limpeza: `socket-close`, `socket-dispose`, `chrome-tree`, `runtime-tree`, restauração de ambiente, remoção/resíduo de temporários e portas livres — todos `ok`.
+
+Gates finais: `npm run typecheck`, `npm run test` (`14` arquivos, `60` testes),
+`python -m pytest tests/test_browser_runtime.py -q` (`6` testes) e `git diff --check`
+concluídos com código `0`.

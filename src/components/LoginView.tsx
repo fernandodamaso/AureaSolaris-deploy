@@ -3,6 +3,7 @@ import {
   ChevronRight, Sparkles, Star,
   Lock, ArrowRight, Eye, EyeOff
 } from 'lucide-react';
+import aureaSymbol from '../assets/brand/logo/aurea-symbol.svg';
 
 interface Profile {
   id: string;
@@ -60,7 +61,7 @@ export const LoginView = ({ profiles, onLogin, onSignUp }: LoginViewProps) => {
            <div className="relative mb-6">
               <div className="absolute inset-0 rounded-full blur-xl" style={{ background: 'var(--aurea-gold)', opacity: 0.12 }} />
               <div className="relative p-6 rounded-full shadow-lg" style={{ background: 'var(--aurea-surface)', border: '1px solid rgba(217,166,83,0.25)' }}>
-                 <img src="/src/assets/brand/logo/aurea-symbol.svg" alt="Aurea Solaris" className="w-16 h-16" />
+                 <img src={aureaSymbol} alt="Aurea Solaris" className="w-16 h-16" />
               </div>
            </div>
            <h1 className="text-3xl font-black uppercase tracking-[0.5em] mb-2" style={{ color: 'var(--aurea-text)' }}>Aurea Solaris</h1>
