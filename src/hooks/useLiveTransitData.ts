@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import { safeInvoke } from '../utils/tauri';
-import { LOCAL_API_URL } from '../utils/api';
 import { getAspectOrbs, AspectOrb } from '../utils/astro-settings';
 import { astroLogger } from '../utils/logger';
 import { readCertifiedCalculation } from '../utils/certifiedCalculation';
+import { buildTransitPayload, decodeAstrologyResponse, postTransitPositions } from '../services/astrologyApi';
 import type { LiveAstroData, AstroAspect, PlanetaryPosition } from '../types/astrology';
 
 export type { PlanetaryPosition, AstroAspect, LiveAstroData };
@@ -68,7 +68,7 @@ type NatalPositions = {
   Mars?: number;
 };
 
-export const useAstrologyData = (natalData?: NatalPositions) => {
+export const useLiveTransitData = (natalData?: NatalPositions) => {
   const [liveData, setLiveData] = useState<LiveAstroData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -88,26 +88,17 @@ export const useAstrologyData = (natalData?: NatalPositions) => {
     setError(null);
 
     try {
-      let response: string | null = null;
-
-      try {
-        const result = await fetch(`${LOCAL_API_URL}/transit`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({}),
-        });
-        if (result.ok) response = await result.text();
-      } catch {
-        // O modo desktop usa o comando Tauri abaixo.
-      }
+      const payload = buildTransitPayload();
+      let response: string | null = await postTransitPositions(payload);
 
       if (!response) {
-        response = await safeInvoke<string>('get_transit_positions', { payload: JSON.stringify({ transit: true }) });
+        response = await safeInvoke<string>('get_transit_positions', { payload });
       }
       if (!response) throw new Error('O motor não retornou dados verificáveis.');
 
-      const parsed = JSON.parse(response);
-      if (parsed?.error || !parsed?.planets) throw new Error(parsed?.error || 'Resposta do motor incompleta.');
+      const parsed = decodeAstrologyResponse(response);
+      const record = parsed as { error?: string; planets?: unknown };
+      if (record?.error || !record?.planets) throw new Error(record?.error || 'Resposta do motor incompleta.');
       if (!readCertifiedCalculation(parsed, 'transit')) {
         throw new Error('O motor respondeu sem recibo auditável. Nenhum trânsito será exibido.');
       }

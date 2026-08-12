@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
-import { useAstroData } from '../hooks/useAstroData';
+import { useCertifiedNatalCalculation } from '../hooks/useCertifiedNatalCalculation';
 import { MandalaChart } from './MandalaChart';
 import { RefreshCw, User, Users, Plus, Edit3, MessageSquare, FileText } from 'lucide-react';
 import { useAgendaContext, type AureaProfile } from '../context/AgendaContext';
@@ -115,7 +115,7 @@ export const MandalaPage = () => {
       timezone_name: birthData.timezone,
     }
     : undefined;
-  const { data, loading, error, recalculate } = useAstroData(calculationRequest, calculationEnabled);
+  const { data, loading, error, recalculate } = useCertifiedNatalCalculation(calculationRequest, calculationEnabled);
 
   // Parse data for MandalaChart - includes planets, secondary bodies, and angles
   const chartPlanets = useMemo(() => {
