@@ -1,12 +1,12 @@
 import { createContext, useContext, ReactNode, useMemo } from 'react';
-import { useAstrologyData } from '../hooks/useAstrologyData';
+import { useLiveTransitData } from '../hooks/useLiveTransitData';
 import { useAgendaContext, AureaProfile, AureaTask, AureaEvent, AureaDocument, AstroMapSubject } from './AgendaContext';
 import type { LiveAstroData, AstroAspect, PlanetaryPosition } from '../types/astrology';
 import type { HermesInsight } from '../types/private-profile';
 
 interface AstroState {
   liveData: LiveAstroData | null;
-  transits: ReturnType<typeof useAstrologyData>['transits'];
+  transits: ReturnType<typeof useLiveTransitData>['transits'];
   loading: boolean;
   error: string | null;
   planetaryHour: { icon: string; name: string; time: string };
@@ -42,7 +42,7 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
   const agenda = useAgendaContext();
   // Personal transits stay unavailable until this context consumes a natal
   // calculation with a verifiable receipt, never the legacy `profile.natal`.
-  const { liveData, transits, loading, error, getPlanetaryHour } = useAstrologyData(undefined);
+  const { liveData, transits, loading, error, getPlanetaryHour } = useLiveTransitData(undefined);
 
   const value = useMemo(() => {
     const activeProfile = agenda.activeProfile;

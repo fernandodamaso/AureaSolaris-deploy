@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Activity, FileText, Loader2, Moon, UploadCloud } from 'lucide-react';
 import { getBrowserSessionHeaders, isTauriRuntime, safeInvoke } from '../utils/tauri';
-import { useAstroData } from '../hooks/useAstroData';
+import { useCertifiedNatalCalculation } from '../hooks/useCertifiedNatalCalculation';
 import { useAgendaContext } from '../context/AgendaContext';
 import { readConfirmedBirthInput } from '../utils/confirmedBirthInput';
 import { readCertifiedCalculation } from '../utils/certifiedCalculation';
@@ -40,7 +40,7 @@ export const SaudeView = () => {
   const focusedMap = availableMaps.find((map) => map.id === activeSubjectId) || availableMaps[0];
   const focusedSubjectId = focusedMap?.id || '';
   const birthData = useMemo(() => readConfirmedBirthInput(focusedMap?.source), [focusedMap]);
-  const { data, loading, error } = useAstroData(birthData ?? undefined, Boolean(birthData));
+  const { data, loading, error } = useCertifiedNatalCalculation(birthData ?? undefined, Boolean(birthData));
   const certifiedNatal = readCertifiedCalculation(data, 'natal');
   const rawMoon = data?.planets?.Moon;
   const natalMoon = rawMoon && typeof rawMoon === 'object' && 'sign' in rawMoon

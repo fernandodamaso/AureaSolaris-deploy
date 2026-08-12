@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { safeInvoke } from '../utils/tauri';
 import { readCertifiedCalculation } from '../utils/certifiedCalculation';
-import { LOCAL_API_URL } from '../utils/api';
+import { buildNatalPayload, decodeAstrologyResponse, postNatalCalculation } from '../services/astrologyApi';
 import type { AstrologyCalculationRequest, CertifiedAstrologyResult } from '../types/astrology';
 
 const ASPECT_MAP: Record<string, string> = {
@@ -18,30 +18,6 @@ const ASPECT_MAP: Record<string, string> = {
   SesquiQuadrature: 'Sesqui-Quadratura',
 };
 
-const STARTUP_RETRY_DELAYS_MS = [0, 250, 750, 1500, 2500];
-
-const wait = (milliseconds: number) => new Promise<void>((resolve) => window.setTimeout(resolve, milliseconds));
-
-async function requestNatalFromSidecar(payload: string): Promise<string | null> {
-  // The packaged FastAPI sidecar starts alongside the desktop application and
-  // can take a few seconds to unpack on first launch.  Retrying the service
-  // never manufactures a chart: it only waits for the certified local engine.
-  for (const delay of STARTUP_RETRY_DELAYS_MS) {
-    if (delay) await wait(delay);
-    try {
-      const response = await fetch(`${LOCAL_API_URL}/natal`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: payload,
-      });
-      if (response.ok) return await response.text();
-    } catch {
-      // Tauri IPC is attempted below for desktop-origin restrictions.
-    }
-  }
-  return null;
-}
-
 function hasDisplayableNatalShape(value: CertifiedAstrologyResult): boolean {
   const requiredPoints = ['Sun', 'Moon', 'ASC', 'MC'];
   const hasDegree = (point: unknown) => {
@@ -54,7 +30,7 @@ function hasDisplayableNatalShape(value: CertifiedAstrologyResult): boolean {
     value.houses.every((house: unknown) => hasDegree(house));
 }
 
-export const useAstroData = (birthData?: AstrologyCalculationRequest, enabled = true) => {
+export const useCertifiedNatalCalculation = (birthData?: AstrologyCalculationRequest, enabled = true) => {
   const [data, setData] = useState<CertifiedAstrologyResult | null>(null);
   const [loading, setLoading] = useState(enabled);
   const [error, setError] = useState<string | null>(null);
@@ -66,20 +42,10 @@ export const useAstroData = (birthData?: AstrologyCalculationRequest, enabled = 
     setError(null);
     setData(null);
     try {
-      const payloadStr = birthData ? JSON.stringify(birthData) : JSON.stringify({
-        year: new Date().getFullYear(),
-        month: new Date().getMonth() + 1,
-        day: new Date().getDate(),
-        hour: new Date().getHours() + (new Date().getMinutes() / 60),
-        house_system: localStorage.getItem('aurea_house_system') || 'Regiomontanus'
-      });
+      const payloadStr = buildNatalPayload(birthData as Record<string, unknown> | undefined);
 
-      let result: string | null = null;
-      
-      // Try direct HTTP first (works in both Tauri and browser dev mode).
-      result = await requestNatalFromSidecar(payloadStr);
-      
-      // Fallback to Tauri invoke
+      let result: string | null = await postNatalCalculation(payloadStr);
+
       if (!result) {
         result = await safeInvoke<string | null>('run_astro_engine', { payload: payloadStr });
       }
@@ -88,7 +54,7 @@ export const useAstroData = (birthData?: AstrologyCalculationRequest, enabled = 
         setError('Motor astrológico indisponível. O mapa não será estimado. Verifique o serviço local e tente novamente.');
         return;
       }
-      const parsed = JSON.parse(result) as CertifiedAstrologyResult;
+      const parsed = decodeAstrologyResponse(result) as CertifiedAstrologyResult;
       if (parsed.aspects) {
         parsed.aspects = parsed.aspects.map((asp) => ({
           ...asp,
