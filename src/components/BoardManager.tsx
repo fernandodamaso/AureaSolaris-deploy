@@ -15,7 +15,7 @@ export const BoardManager = ({ onOpen, intentError }: BoardManagerProps) => {
   const [creating, setCreating] = useState(false);
   const [newName, setNewName] = useState('');
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
-  const [currentTime] = useState(() => Date.now());
+  const [currentTime, setCurrentTime] = useState(() => Date.now());
   const inputRef = useRef<HTMLInputElement>(null);
 
   const loadBoards = async () => {
@@ -32,6 +32,10 @@ export const BoardManager = ({ onOpen, intentError }: BoardManagerProps) => {
   useEffect(() => {
     const timer = setTimeout(() => { void loadBoards(); }, 0);
     return () => clearTimeout(timer);
+  }, []);
+  useEffect(() => {
+    const timer = setInterval(() => setCurrentTime(Date.now()), 60000);
+    return () => clearInterval(timer);
   }, []);
   useEffect(() => { if (creating) setTimeout(() => inputRef.current?.focus(), 50); }, [creating]);
 

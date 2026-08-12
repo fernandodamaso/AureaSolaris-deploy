@@ -64,6 +64,21 @@ const formatDate = (timestamp: number) => {
   }).format(new Date(timestamp));
 };
 
+const filterArchiveItems = (
+  items: ArchiveItem[],
+  filter: 'all' | ArchiveSource,
+  search: string,
+) => {
+  const query = search.trim().toLocaleLowerCase('pt-BR');
+  return items.filter(item => {
+    if (filter !== 'all' && item.source !== filter) return false;
+    if (!query) return true;
+    return `${item.title} ${item.groupName} ${item.summary} ${item.content}`
+      .toLocaleLowerCase('pt-BR')
+      .includes(query);
+  });
+};
+
 export function StudyArchive({ onOpenStudy }: StudyArchiveProps) {
   const [items, setItems] = useState<ArchiveItem[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -134,21 +149,25 @@ export function StudyArchive({ onOpenStudy }: StudyArchiveProps) {
     return () => { cancelled = true; };
   }, []);
 
-  const filtered = useMemo(() => {
-    const query = search.trim().toLocaleLowerCase('pt-BR');
-    return items.filter(item => {
-      if (filter !== 'all' && item.source !== filter) return false;
-      if (!query) return true;
-      return `${item.title} ${item.groupName} ${item.summary} ${item.content}`
-        .toLocaleLowerCase('pt-BR')
-        .includes(query);
-    });
-  }, [filter, items, search]);
+  const filtered = useMemo(() => filterArchiveItems(items, filter, search), [filter, items, search]);
 
-  const effectiveSelectedId = filtered.some(item => item.id === selectedId)
-    ? selectedId
-    : filtered[0]?.id || null;
-  const selected = filtered.find(item => item.id === effectiveSelectedId) || null;
+  const updateSelectionFor = (nextItems: ArchiveItem[]) => {
+    setSelectedId(current => nextItems.some(item => item.id === current)
+      ? current
+      : nextItems[0]?.id || null);
+  };
+
+  const handleSearchChange = (nextSearch: string) => {
+    setSearch(nextSearch);
+    updateSelectionFor(filterArchiveItems(items, filter, nextSearch));
+  };
+
+  const handleFilterChange = (nextFilter: 'all' | ArchiveSource) => {
+    setFilter(nextFilter);
+    updateSelectionFor(filterArchiveItems(items, nextFilter, search));
+  };
+
+  const selected = filtered.find(item => item.id === selectedId) || null;
 
   if (loading) {
     return (
@@ -169,7 +188,7 @@ export function StudyArchive({ onOpenStudy }: StudyArchiveProps) {
           <input
             id="archive-search"
             value={search}
-            onChange={event => setSearch(event.target.value)}
+            onChange={event => handleSearchChange(event.target.value)}
             className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-800 outline-none transition focus:border-gray-400"
           />
           <div className="mt-3 grid grid-cols-3 gap-1 rounded-lg bg-gray-200/60 p-1" aria-label="Filtrar histórico">
@@ -181,7 +200,7 @@ export function StudyArchive({ onOpenStudy }: StudyArchiveProps) {
               <button
                 key={value}
                 type="button"
-                onClick={() => setFilter(value)}
+                onClick={() => handleFilterChange(value)}
                 aria-pressed={filter === value}
                 className={`rounded-md px-2 py-1.5 text-[11px] font-semibold transition ${filter === value ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-800'}`}
               >
@@ -207,7 +226,7 @@ export function StudyArchive({ onOpenStudy }: StudyArchiveProps) {
                   key={item.id}
                   type="button"
                   onClick={() => setSelectedId(item.id)}
-                  className={`w-full rounded-xl border p-3 text-left transition ${effectiveSelectedId === item.id ? 'border-gray-200 bg-white shadow-sm' : 'border-transparent hover:bg-white/70'}`}
+                  className={`w-full rounded-xl border p-3 text-left transition ${selectedId === item.id ? 'border-gray-200 bg-white shadow-sm' : 'border-transparent hover:bg-white/70'}`}
                 >
                   <div className="flex items-start gap-3">
                     <div className={`mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg ${item.source === 'study' ? 'bg-amber-50 text-amber-700' : 'bg-blue-50 text-blue-700'}`}>
