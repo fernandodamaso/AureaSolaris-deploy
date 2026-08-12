@@ -113,4 +113,54 @@ describe('MesaCriacao', () => {
       expect(vi.mocked(safeInvoke)).toHaveBeenCalledWith('delete_board', { boardId: 'board-test' });
     });
   });
+
+  it('autosaves edited card text with the expected board payload', async () => {
+    render(<MesaCriacao />);
+
+    fireEvent.click(await screen.findByRole('button', { name: 'Abrir caderno Mapa de teste' }));
+    const textarea = await screen.findByDisplayValue('Primeiro');
+    fireEvent.change(textarea, { target: { value: 'Texto atualizado' } });
+
+    await waitFor(() => {
+      expect(vi.mocked(safeInvoke)).toHaveBeenCalledWith('save_board', expect.objectContaining({
+        boardId: 'board-test',
+        nodes: expect.arrayContaining([
+          expect.objectContaining({ id: 1, text: 'Texto atualizado' }),
+        ]),
+      }));
+    }, { timeout: 2000 });
+  });
+
+  it('deletes a selected card and persists the remaining nodes', async () => {
+    render(<MesaCriacao />);
+
+    fireEvent.click(await screen.findByRole('button', { name: 'Abrir caderno Mapa de teste' }));
+    const firstCard = (await screen.findByDisplayValue('Primeiro')).closest('.group');
+    expect(firstCard).not.toBeNull();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Conectar' }));
+    fireEvent.pointerDown(firstCard!);
+    fireEvent.click(screen.getAllByRole('button', { name: 'Excluir card' })[0]);
+
+    await waitFor(() => {
+      expect(vi.mocked(safeInvoke)).toHaveBeenCalledWith('save_board', expect.objectContaining({
+        nodes: [expect.objectContaining({ id: 2, text: 'Segundo' })],
+      }));
+    }, { timeout: 2000 });
+
+    expect(screen.queryAllByPlaceholderText('Escreva aqui...')).toHaveLength(1);
+    expect(screen.getByDisplayValue('Segundo')).toBeTruthy();
+  });
+
+  it('does not delete a card while a textarea is focused', async () => {
+    render(<MesaCriacao />);
+
+    fireEvent.click(await screen.findByRole('button', { name: 'Abrir caderno Mapa de teste' }));
+    const textarea = await screen.findByDisplayValue('Primeiro');
+    fireEvent.focus(textarea);
+    fireEvent.keyDown(window, { key: 'Delete' });
+
+    expect(screen.getByDisplayValue('Primeiro')).toBeTruthy();
+    expect(screen.getByDisplayValue('Segundo')).toBeTruthy();
+  });
 });
