@@ -122,10 +122,15 @@ describe('diary operations', () => {
     mockedSafeInvoke.mockResolvedValue(entry);
 
     await expect(updateDiaryEntry({ id: 'entry-1', title: 'Título parcial' })).resolves.toEqual(entry);
-    expect(mockedSafeInvoke).toHaveBeenCalledWith('diary_update_entry', {
+    expect(mockedSafeInvoke).toHaveBeenCalledTimes(1);
+    const [command, payload] = mockedSafeInvoke.mock.calls[0];
+    expect(command).toBe('diary_update_entry');
+    expect(payload).toEqual({
       id: 'entry-1',
       title: 'Título parcial',
     });
+    expect(payload).not.toHaveProperty('folder_id');
+    expect(payload).not.toHaveProperty('status');
   });
 
   it('deletes an entry with its id', async () => {
