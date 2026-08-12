@@ -5,8 +5,8 @@ import {
   Trash2, Plus, Check, AlertCircle, Sparkles, Move, Link2,
   ChevronLeft, LayoutGrid, Pencil, X, MoreHorizontal, Clock, BookOpen
 } from 'lucide-react';
-import { safeInvoke } from '../utils/tauri';
-import type { CadernoBoard, CadernoEdge, CadernoNode } from '../types/caderno';
+import { deleteBoard, listBoards, loadBoard, saveBoard } from '../utils/board';
+import type { CadernoBoard, CadernoBoardMeta, CadernoEdge, CadernoNode } from '../types/caderno';
 import { AssetPicker } from './mesa/AssetPicker';
 import { StudyPanel } from './mesa/StudyPanel';
 
@@ -68,13 +68,13 @@ export const MesaCriacao = ({ intent = null, onIntentHandled }: MesaCriacaoProps
   const shouldRestoreLastBoard = useRef(intent === null);
   const hasHandledIntent = useRef(false);
 
-  const openBoard = useCallback(async (meta: any, studyNodeId: number | null = null) => {
+  const openBoard = useCallback(async (meta: CadernoBoardMeta, studyNodeId: number | null = null) => {
     try {
-      const data: any = await safeInvoke('load_board', { boardId: meta.id });
+      const data = await loadBoard({ boardId: meta.id });
       const board: CadernoBoard = {
         id: meta.id,
         name: meta.name,
-        updatedAt: meta.updated_at || Date.now(),
+        updatedAt: meta.updated_at || meta.updatedAt || Date.now(),
         nodes: data?.nodes || [],
         edges: data?.edges || []
       };
@@ -102,7 +102,7 @@ export const MesaCriacao = ({ intent = null, onIntentHandled }: MesaCriacaoProps
     };
 
     try {
-      await safeInvoke('save_board', { boardId: newId, name, nodes: [starterNote], edges: [] });
+      await saveBoard({ boardId: newId, name, nodes: [starterNote], edges: [] });
       await openBoard({ id: newId, name, updated_at: Date.now() });
     } catch (error) {
       console.error('Failed to create contextual study', error);
@@ -115,13 +115,13 @@ export const MesaCriacao = ({ intent = null, onIntentHandled }: MesaCriacaoProps
     if (!shouldRestoreLastBoard.current) return;
     const lastId = localStorage.getItem(activeBoardKey());
     if (lastId) {
-      safeInvoke('load_board', { boardId: lastId }).then((data: any) => {
+      loadBoard({ boardId: lastId }).then(data => {
         if (data && data.nodes) {
           // Find the name from the list
-          safeInvoke('list_boards').then((list: any) => {
-             const meta = (list as any[]).find(b => b.id === lastId);
+          listBoards().then(list => {
+             const meta = list?.find(b => b.id === lastId);
              if (meta) {
-               setActiveBoard({ id: lastId, name: meta.name, updatedAt: meta.updated_at, nodes: data.nodes, edges: data.edges });
+               setActiveBoard({ id: lastId, name: meta.name, updatedAt: meta.updated_at || meta.updatedAt || Date.now(), nodes: data.nodes, edges: data.edges });
              } else {
                localStorage.removeItem(activeBoardKey());
              }
@@ -141,7 +141,7 @@ export const MesaCriacao = ({ intent = null, onIntentHandled }: MesaCriacaoProps
       if (intent.type === 'create-study') {
         await createContextualStudy(intent.topic, intent.seedNote);
       } else if (intent.type === 'open-study') {
-        const list = await safeInvoke<any[]>('list_boards');
+        const list = await listBoards();
         const meta = list?.find(item => item.id === intent.boardId);
         if (meta) {
           await openBoard(meta, intent.nodeId);
@@ -156,11 +156,11 @@ export const MesaCriacao = ({ intent = null, onIntentHandled }: MesaCriacaoProps
   }, [createContextualStudy, intent, onIntentHandled]);
 
   const closeBoard = async (updatedBoard: CadernoBoard) => {
-    await safeInvoke('save_board', { 
-      boardId: updatedBoard.id, 
-      name: updatedBoard.name, 
-      nodes: updatedBoard.nodes, 
-      edges: updatedBoard.edges 
+    await saveBoard({
+      boardId: updatedBoard.id,
+      name: updatedBoard.name,
+      nodes: updatedBoard.nodes,
+      edges: updatedBoard.edges
     });
     setRequestedStudyNodeId(null);
     setActiveBoard(null);
@@ -183,8 +183,8 @@ export const MesaCriacao = ({ intent = null, onIntentHandled }: MesaCriacaoProps
 // ─────────────────────────────────────────────────────────────
 // BOARD MANAGER — list / create / delete boards
 // ─────────────────────────────────────────────────────────────
-const BoardManager = ({ onOpen, intentError }: { onOpen: (meta: any) => void; intentError: string | null }) => {
-  const [boards, setBoards] = useState<any[]>([]);
+const BoardManager = ({ onOpen, intentError }: { onOpen: (meta: CadernoBoardMeta) => void; intentError: string | null }) => {
+  const [boards, setBoards] = useState<CadernoBoardMeta[]>([]);
   const [creating, setCreating] = useState(false);
   const [newName, setNewName] = useState('');
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
@@ -192,9 +192,9 @@ const BoardManager = ({ onOpen, intentError }: { onOpen: (meta: any) => void; in
 
   const loadBoards = async () => {
     try {
-      const list: any = await safeInvoke('list_boards');
+      const list = await listBoards();
       // sort by updated_at descending
-      const sorted = (list || []).sort((a: any, b: any) => (b.updated_at || 0) - (a.updated_at || 0));
+      const sorted = (list || []).sort((a, b) => (b.updated_at || b.updatedAt || 0) - (a.updated_at || a.updatedAt || 0));
       setBoards(sorted);
     } catch (e) {
       console.error('Failed to list boards', e);
@@ -207,14 +207,14 @@ const BoardManager = ({ onOpen, intentError }: { onOpen: (meta: any) => void; in
   const create = async () => {
     const name = newName.trim() || `Caderno ${boards.length + 1}`;
     const newId = uid();
-    await safeInvoke('save_board', { boardId: newId, name, nodes: [], edges: [] });
+    await saveBoard({ boardId: newId, name, nodes: [], edges: [] });
     setCreating(false);
     setNewName('');
     onOpen({ id: newId, name, updated_at: Date.now() });
   };
 
   const remove = async (id: string) => {
-    await safeInvoke('delete_board', { boardId: id });
+    await deleteBoard({ boardId: id });
     setConfirmDelete(null);
     loadBoards();
   };
@@ -433,7 +433,7 @@ const MesaCanvas = ({
     const version = ++saveVersion.current;
     setSaveState('saving');
     saveTimer.current = setTimeout(() => {
-      void safeInvoke<number>('save_board', { boardId: board.id, name: boardName, nodes, edges }).then(savedAt => {
+      void saveBoard({ boardId: board.id, name: boardName, nodes, edges }).then(savedAt => {
         if (version !== saveVersion.current) return;
         setSaveState(typeof savedAt === 'number' ? 'saved' : 'error');
       });

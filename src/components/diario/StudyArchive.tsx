@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { BookOpen, CalendarDays, FileText, LayoutGrid, Search } from 'lucide-react';
+import { listBoards, loadBoard } from '../../utils/board';
 import { safeInvoke } from '../../utils/tauri';
 import type { CadernoBoardMeta, CadernoNode } from '../../types/caderno';
 
@@ -76,7 +77,7 @@ export function StudyArchive({ onOpenStudy }: StudyArchiveProps) {
     const load = async () => {
       setLoading(true);
       const [boardList, diaryList] = await Promise.all([
-        safeInvoke<CadernoBoardMeta[]>('list_boards'),
+        listBoards(),
         safeInvoke<any[]>('diary_list_entries'),
       ]);
 
@@ -88,7 +89,7 @@ export function StudyArchive({ onOpenStudy }: StudyArchiveProps) {
       }
 
       const studies = await Promise.all((boardList || []).map(async board => {
-        const data = await safeInvoke<{ nodes?: CadernoNode[] }>('load_board', { boardId: board.id });
+        const data = await loadBoard({ boardId: board.id });
         return (data?.nodes || []).flatMap(node => {
           const studyContent = node.studyContent?.trim() || '';
           const quickContent = nodeQuickContent(node);
