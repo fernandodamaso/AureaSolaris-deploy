@@ -21,8 +21,7 @@ npm install
 
 The default local address is `http://127.0.0.1:9876`. If that port is already
 occupied, the launcher selects another loopback port and the compiled frontend
-follows the service's local origin. [`launch_aurea.bat`](launch_aurea.bat) is a
-compatibility alias for the same Chrome launcher.
+follows the service's local origin.
 
 ## Start here as an AI agent
 
