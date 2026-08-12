@@ -170,11 +170,13 @@ $repoRoot = (git rev-parse --show-toplevel).Trim()
 
 O script escolhe duas portas livres de loopback, define `ASTRO_API_PORT` e uma
 `AUREA_DATA_DIR` nova, inicia o sidecar e um perfil temporário do Chrome headless,
-conecta ao CDP por WebSocket, lê o DOM com `Runtime.evaluate` e captura erros por
-`Runtime.consoleAPICalled` e `Runtime.exceptionThrown`. Ele
+conecta ao CDP por WebSocket, confirma que o endpoint pertence à árvore do Chrome,
+lê o DOM com `Runtime.evaluate` e captura erros por `Runtime.consoleAPICalled`,
+`Runtime.exceptionThrown` e `Log.entryAdded` (nível `error`). Ele
 afirma HTTP `200` em `/health`, `/`, `/openapi.json`, os landmarks `AUREA SOLARIS`,
-`ENTRAR` e `INSCREVER-SE`, e zero erros de console; encerra somente as árvores de
-processos criadas e remove os diretórios temporários no `finally`.
+`ENTRAR` e `INSCREVER-SE`, e zero exceções/erros de console de runtime; os erros de
+log também são contados na saída. Encerra somente as árvores de processos criadas
+e remove os diretórios temporários no `finally`.
 
 Resultado executado: `LANDMARK AUREA SOLARIS=present`, `LANDMARK ENTRAR=present`,
 `LANDMARK INSCREVER-SE=present`, `health=200`, `root=200`, `openapi=200`,
