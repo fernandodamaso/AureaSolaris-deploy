@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode, useMemo } from 'react';
+import { createContext, useContext, useState, ReactNode, useMemo, useEffect } from 'react';
 import { validatePassword } from '../utils/auth';
 
 export interface AureaProfile {
@@ -94,7 +94,8 @@ const AgendaContext = createContext<AgendaContextType | undefined>(undefined);
 const resolveSubjectId = (profiles: AureaProfile[], profileId: string, requestedId: string) => {
   const profile = profiles.find(candidate => candidate.id === profileId);
   if (!profile) return '';
-  const subjectIds = [profile.id, ...(profile.connections || []).map(connection => connection.id)];
+  const connections = Array.isArray(profile.connections) ? profile.connections : [];
+  const subjectIds = [profile.id, ...connections.map(connection => connection.id)];
   return subjectIds.includes(requestedId) ? requestedId : subjectIds[0] || '';
 };
 
@@ -139,6 +140,12 @@ export const AgendaProvider = ({ children }: { children: ReactNode }) => {
         || '',
     )
   ));
+
+  useEffect(() => {
+    if (activeProfileId && activeSubjectId) {
+      localStorage.setItem(`aurea_active_subject:${activeProfileId}`, activeSubjectId);
+    }
+  }, [activeProfileId, activeSubjectId]);
 
   const activeProfile = useMemo(() => 
     profiles.find(p => p.id === activeProfileId) || null
