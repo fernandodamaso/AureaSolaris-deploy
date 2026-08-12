@@ -112,6 +112,16 @@ O ambiente local de build estava sem `argon2-cffi`, embora a dependência já es
 
 ## Certificação do runtime Chrome empacotado — 12/08/2026
 
+### Evidência pré-correção (binário de `c9ef760^`)
+
+Antes da correção do empacotamento, o executável anterior foi extraído diretamente
+de `c9ef760^` para uma pasta temporária, iniciado com `ASTRO_API_PORT=9881` e
+`AUREA_DATA_DIR` temporário, e consultado com `Invoke-WebRequest`.
+
+Resultado observado: `PREFIX_PORT=9881 STATUS=404 BODY={"detail":"Not Found"}`
+para `GET http://127.0.0.1:9881/`. O processo foi encerrado e a pasta temporária
+foi removida após a consulta.
+
 Build concluído em `2026-08-12T13:34:11-03:00` pelo fluxo `build.bat`, com frontend compilado antes do PyInstaller, smoke isolado e build Tauri/NSIS concluído.
 
 - sidecar recém-gerado: `src-tauri/binaries/astro-engine-x86_64-pc-windows-msvc.exe`;
@@ -126,7 +136,7 @@ Build concluído em `2026-08-12T13:34:11-03:00` pelo fluxo `build.bat`, com fron
 - `/openapi.json`: HTTP `200`, contendo `/browser/command`;
 - Chrome headless com perfil temporário e orçamento virtual de 5 segundos: landmark `Aurea Solaris`, `Entrar` e `Inscrever-se` visíveis; saída de console sem linhas `SEVERE`, `Uncaught`, `Unhandled` ou `console.error`.
 
-Comandos exatos executados:
+Comandos exatos executados para o build e os gates:
 
 ```powershell
 $vsDevCmd = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\2022\BuildTools\Common7\Tools\VsDevCmd.bat"
@@ -134,8 +144,14 @@ $installerDir = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer"
 $userPath = [Environment]::GetEnvironmentVariable('Path', 'User')
 $machinePath = [Environment]::GetEnvironmentVariable('Path', 'Machine')
 $env:Path = "$userPath;$machinePath"
-$cmdLine = 'set "PATH=' + $installerDir + ';%PATH%" && call "' + $vsDevCmd + '" -arch=x64 -host_arch=x64 && cd /d "C:\git\AureaSolaris" && call .\build.bat'
-cmd.exe /d /c $cmdLine
+$repoRoot = (git rev-parse --show-toplevel).Trim()
+Push-Location $repoRoot
+try {
+    $cmdLine = 'set "PATH=' + $installerDir + ';%PATH%" && call "' + $vsDevCmd + '" -arch=x64 -host_arch=x64 && call .\build.bat'
+    cmd.exe /d /c $cmdLine
+} finally {
+    Pop-Location
+}
 python -m pytest tests/test_browser_runtime.py -q
 python -m pytest tests/ -q
 npm run typecheck
@@ -143,4 +159,20 @@ npm run test
 git diff --check
 ```
 
-A validação Chrome usou somente o executável recém-gerado, uma pasta temporária nova em `AUREA_DATA_DIR` e a porta `9878`; nenhum servidor existente ou dado privado foi usado. A aceitação manual completa da pessoa usuária continua pendente conforme a seção acima.
+Procedimento Chrome reproduzível usado na porta `9878`: iniciar somente o executável
+recém-gerado com uma pasta nova em `AUREA_DATA_DIR` e executar a invocação isolada:
+
+```powershell
+$chromeProfile = Join-Path ([IO.Path]::GetTempPath()) ('aurea-chrome-' + [guid]::NewGuid().ToString('N'))
+Start-Process -FilePath "$env:ProgramFiles\Google\Chrome\Application\chrome.exe" -ArgumentList @(
+    '--new-window',
+    ('--user-data-dir=' + $chromeProfile),
+    'http://127.0.0.1:9878/'
+)
+```
+
+Aguardar o carregamento; no Console do DevTools registrar as mensagens de nível
+`error`; e, na página, verificar o texto visível `AUREA SOLARIS`, `ENTRAR` e
+`INSCREVER-SE`. O resultado registrado foi os três landmarks visíveis e zero erros
+de console. Nenhum servidor existente ou dado privado foi usado. A aceitação manual
+completa da pessoa usuária continua pendente conforme a seção acima.
