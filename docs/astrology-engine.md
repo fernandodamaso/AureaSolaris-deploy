@@ -43,6 +43,10 @@ Frontend (React)
 5. **LRU cache** — cacheia cálculos repetidos para performance
 6. **Pre-calculated house ranges** — busca binária em vez de linear
 
+### Cobertura de regressão de trânsitos
+
+`test_transit.py` é a cobertura de regressão obrigatória de `calculate_transit_positions`. Ela verifica a estrutura do resultado, o recibo determinístico, a exclusão de casas/ângulos e o tratamento do fuso horário. Não remova este teste, suas asserções ou seu equivalente sem revisão e aceite explícitos de uma cobertura equivalente que seja executada ativamente.
+
 ### Corpo Celeste
 
 O motor calcula posição para:
