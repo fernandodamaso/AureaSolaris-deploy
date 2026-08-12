@@ -79,6 +79,20 @@ class TestBrowserRuntime(unittest.TestCase):
         self.assertIn("Network.responseReceived", smoke_source)
         self.assertIn("logo_404=", smoke_source)
 
+    def test_browser_smoke_cleanup_retries_tree_and_continues_after_departed_process(self):
+        smoke_source = (Path(__file__).with_name("browser_runtime_smoke.ps1")).read_text(encoding="utf-8")
+        stop_tree = smoke_source[smoke_source.index("function Stop-Tree"):smoke_source.index("function Send-Cdp")]
+        cleanup = smoke_source[smoke_source.index("} finally {"):]
+
+        self.assertGreaterEqual(stop_tree.count("Get-CimInstance Win32_Process"), 2)
+        self.assertIn("catch", stop_tree)
+        self.assertIn("Get-Process -Id $id", stop_tree)
+        self.assertIn("$failures.Add", stop_tree)
+        self.assertIn("$attempt -lt 50", stop_tree)
+        self.assertLess(cleanup.index("owned-ports-free"), cleanup.index("temp-root-remove"))
+        self.assertIn("$i -lt 50", cleanup)
+        self.assertIn("$i -lt 20", cleanup)
+
     def test_browser_session_gates_private_workspace_and_keeps_owner_scope(self):
         with tempfile.TemporaryDirectory() as directory:
             data_dir = Path(directory) / "browser-data"

@@ -44,27 +44,61 @@ function Assert-PortFree([int]$Port) {
 function Stop-Tree([System.Diagnostics.Process]$RootProcess) {
     $rootPid = $RootProcess.Id
     $expectedStart = $null
-    try { $expectedStart = $RootProcess.StartTime } catch { return }
-    $currentRoot = Get-Process -Id $rootPid -ErrorAction SilentlyContinue
-    if ($null -eq $currentRoot) { return }
-    if ($currentRoot.StartTime -ne $expectedStart) {
-        throw "PID reutilizado; não vou encerrar o processo $rootPid."
-    }
-    $processes = @(Get-CimInstance Win32_Process)
-    $ids = [Collections.Generic.HashSet[int]]::new(); [void]$ids.Add($rootPid)
-    do {
-        $changed = $false
-        foreach ($process in $processes) {
-            if ($ids.Contains([int]$process.ParentProcessId) -and $ids.Add([int]$process.ProcessId)) { $changed = $true }
+    try { $expectedStart = $RootProcess.StartTime } catch { $expectedStart = $null }
+    $failures = [Collections.Generic.List[string]]::new()
+    $knownIds = [Collections.Generic.HashSet[int]]::new(); [void]$knownIds.Add($rootPid)
+    $emptyPasses = 0
+    for ($attempt = 0; $attempt -lt 50; $attempt++) {
+        $currentRoot = Get-Process -Id $rootPid -ErrorAction SilentlyContinue
+        if ($null -ne $currentRoot) {
+            try {
+                if ($null -ne $expectedStart -and $currentRoot.StartTime -ne $expectedStart) {
+                    [void]$failures.Add("PID reutilizado; não vou encerrar o processo $rootPid.")
+                    break
+                }
+            } catch { [void]$failures.Add("Não foi possível validar o processo raiz ${rootPid}: $($_.Exception.Message)"); break }
         }
-    } while ($changed)
-    foreach ($id in @($ids | Sort-Object -Descending)) {
-        if ($null -ne (Get-Process -Id $id -ErrorAction SilentlyContinue)) {
-            Stop-Process -Id $id -Force -ErrorAction Stop
+
+        $processes = @(Get-CimInstance Win32_Process -ErrorAction SilentlyContinue)
+        $ids = [Collections.Generic.HashSet[int]]::new(); [void]$ids.Add($rootPid)
+        $changed = $true
+        while ($changed) {
+            $changed = $false
+            foreach ($process in $processes) {
+                if ($ids.Contains([int]$process.ParentProcessId) -and $ids.Add([int]$process.ProcessId)) { $changed = $true }
+            }
         }
+        foreach ($id in $ids) { [void]$knownIds.Add($id) }
+
+        foreach ($id in @($ids | Sort-Object -Descending)) {
+            if ($id -eq $rootPid -and $null -eq $expectedStart) { continue }
+            $process = Get-Process -Id $id -ErrorAction SilentlyContinue
+            if ($null -eq $process) { continue }
+            try { Stop-Process -Id $id -Force -ErrorAction Stop }
+            catch {
+                if ($null -ne (Get-Process -Id $id -ErrorAction SilentlyContinue)) {
+                    [void]$failures.Add("Falha ao encerrar processo ${id}: $($_.Exception.Message)")
+                }
+            }
+        }
+
+        $remaining = @(Get-CimInstance Win32_Process -ErrorAction SilentlyContinue |
+            Where-Object { $ids.Contains([int]$_.ProcessId) } |
+            Select-Object -ExpandProperty ProcessId)
+        if (-not $remaining.Count) {
+            $emptyPasses++
+            if ($emptyPasses -ge 2) { break }
+        } else { $emptyPasses = 0 }
+        Start-Sleep -Milliseconds 100
     }
-    $remaining = @($ids | Where-Object { $null -ne (Get-Process -Id $_ -ErrorAction SilentlyContinue) })
-    if ($remaining.Count) { throw "Processos ainda ativos: $($remaining -join ', ')" }
+    $remaining = @(Get-CimInstance Win32_Process -ErrorAction SilentlyContinue |
+        Where-Object { $knownIds.Contains([int]$_.ProcessId) } |
+        Select-Object -ExpandProperty ProcessId)
+    if ($null -eq $expectedStart -and $null -ne (Get-Process -Id $rootPid -ErrorAction SilentlyContinue)) {
+        [void]$failures.Add("Não foi possível confirmar a identidade do processo raiz: $rootPid")
+    }
+    if ($remaining.Count) { [void]$failures.Add("Processos ainda ativos: $($remaining -join ', ')") }
+    if ($failures.Count) { throw ($failures -join "`n") }
 }
 function Send-Cdp([string]$Method, [hashtable]$Params = @{}) {
     $script:commandId++
@@ -260,7 +294,8 @@ try {
 } finally {
     Invoke-CleanupStep 'socket-close' {
         if ($null -ne $socket -and $socket.State -eq [Net.WebSockets.WebSocketState]::Open) {
-            [void]$socket.CloseAsync([Net.WebSockets.WebSocketCloseStatus]::NormalClosure, 'done', [Threading.CancellationToken]::None).GetAwaiter().GetResult()
+            try { [void]$socket.CloseAsync([Net.WebSockets.WebSocketCloseStatus]::NormalClosure, 'done', [Threading.CancellationToken]::None).GetAwaiter().GetResult() }
+            catch { $socket.Abort() }
         }
     }
     Invoke-CleanupStep 'socket-dispose' { if ($null -ne $socket) { $socket.Dispose() } }
@@ -276,12 +311,21 @@ try {
             if (Test-Path Env:AUREA_DATA_DIR) { Remove-Item Env:AUREA_DATA_DIR -ErrorAction Stop }
         } else { $env:AUREA_DATA_DIR = $oldData }
     }
-    Invoke-CleanupStep 'temp-root-remove' { if ([IO.Directory]::Exists($tempRoot)) { [IO.Directory]::Delete($tempRoot, $true) } }
-    Invoke-CleanupStep 'temp-root-residue' { if ([IO.Directory]::Exists($tempRoot)) { throw "Pasta temporária ainda existe: $tempRoot" } }
     Invoke-CleanupStep 'owned-ports-free' {
-        $residualPorts = @(Get-NetTCPConnection -State Listen -ErrorAction Stop |
-            Where-Object { $_.LocalPort -in @($ApiPort, $CdpPort) })
+        $residualPorts = @()
+        for ($i = 0; $i -lt 50; $i++) {
+            $residualPorts = @(Get-NetTCPConnection -State Listen -ErrorAction SilentlyContinue |
+                Where-Object { $_.LocalPort -in @($ApiPort, $CdpPort) })
+            if (-not $residualPorts.Count) { break }
+            Start-Sleep -Milliseconds 100
+        }
         if ($residualPorts.Count) { throw "Portas ainda em uso: $($residualPorts.LocalPort -join ', ')" }
     }
+    Invoke-CleanupStep 'temp-root-remove' {
+        for ($i = 0; $i -lt 20 -and [IO.Directory]::Exists($tempRoot); $i++) {
+            try { [IO.Directory]::Delete($tempRoot, $true) } catch { if ($i -eq 19) { throw }; Start-Sleep -Milliseconds 250 }
+        }
+    }
+    Invoke-CleanupStep 'temp-root-residue' { if ([IO.Directory]::Exists($tempRoot)) { throw "Pasta temporária ainda existe: $tempRoot" } }
     if ($script:cleanupFailures.Count) { throw "Falhas de limpeza:`n$($script:cleanupFailures -join "`n")" }
 }
