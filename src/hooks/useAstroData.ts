@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { safeInvoke } from '../utils/tauri';
 import { readCertifiedCalculation } from '../utils/certifiedCalculation';
 import { LOCAL_API_URL } from '../utils/api';
@@ -58,7 +58,9 @@ export const useAstroData = (birthData?: any, enabled = true) => {
   const [loading, setLoading] = useState(enabled);
   const [error, setError] = useState<string | null>(null);
 
-  const calculate = async () => {
+  const birthDataKey = useMemo(() => JSON.stringify(birthData ?? null), [birthData]);
+
+  const calculate = useCallback(async () => {
     setLoading(true);
     setError(null);
     setData(null);
@@ -108,7 +110,7 @@ export const useAstroData = (birthData?: any, enabled = true) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [birthData]);
 
   useEffect(() => {
     if (!enabled) {
@@ -118,7 +120,7 @@ export const useAstroData = (birthData?: any, enabled = true) => {
       return;
     }
     calculate();
-  }, [JSON.stringify(birthData), enabled]);
+  }, [birthDataKey, enabled, calculate]);
 
   return { data, loading, error, recalculate: calculate };
 };

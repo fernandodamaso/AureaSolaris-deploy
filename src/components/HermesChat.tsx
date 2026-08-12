@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Send, Sparkles, X } from 'lucide-react';
 import { useGlobalContext } from '../context/GlobalContext';
 import { readCertifiedCalculation } from '../utils/certifiedCalculation';
@@ -142,6 +142,7 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
   const assistantIndexRef = useRef<number | null>(null);
   const [useFullPrompt, setUseFullPrompt] = useState<boolean>(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const sendMessageRef = useRef<(overrideText?: string) => Promise<void>>(async () => {});
 
   // Refs for current state inside event listener
   const stateRef = useRef({ messages, loading });
@@ -154,12 +155,12 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
       const detail = (e as CustomEvent).detail;
       if (detail?.prompt) {
         setInitialized(true);
-        sendMessage(detail.prompt);
+        void sendMessageRef.current(detail.prompt);
       }
     };
     window.addEventListener('send-hermes-msg', handleExternal);
     return () => window.removeEventListener('send-hermes-msg', handleExternal);
-  }, [ctx]);
+  }, []);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -231,9 +232,10 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
     };
   }, [
     isOpen,
-    activeOwner?.id,
-    activeSubject?.id,
+    activeOwner,
+    activeTopicKey,
     activeSubjectName,
+    ctx,
   ]);
 
   // Mensagem de boas-vindas com contexto
@@ -264,7 +266,7 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const sendMessage = async (overrideText?: string) => {
+  const sendMessage = useCallback(async (overrideText?: string) => {
     const text = overrideText || input;
     const { messages: currMsgs, loading: currLoading } = stateRef.current;
     if (!text.trim() || currLoading) return;
@@ -397,7 +399,22 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
     } finally {
       setLoading(false);
     }
-  };
+  }, [
+    activeOwner?.id,
+    ctx,
+    externalConsent,
+    input,
+    provider,
+    streamingEnabled,
+    systemPrompt,
+    systemPromptSummary,
+    threadId,
+    useFullPrompt,
+  ]);
+
+  useEffect(() => {
+    sendMessageRef.current = sendMessage;
+  }, [sendMessage]);
 
   const proposeHermesMemoryFromMessage = async (message: ChatMessage) => {
     const ownerId = ctx.agenda.activeProfile?.id;

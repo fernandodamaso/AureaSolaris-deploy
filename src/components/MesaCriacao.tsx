@@ -155,7 +155,7 @@ export const MesaCriacao = ({ intent = null, onIntentHandled }: MesaCriacaoProps
     };
 
     void handleIntent();
-  }, [createContextualStudy, intent, onIntentHandled]);
+  }, [createContextualStudy, intent, onIntentHandled, openBoard]);
 
   const closeBoard = async (updatedBoard: CadernoBoard) => {
     await saveBoard({
@@ -385,7 +385,7 @@ const MesaCanvas = ({
       window.removeEventListener('keydown', handler);
       window.removeEventListener('keyup', up);
     };
-  }, [undo, redo, selected, selectedEdgeId, pushHistory]);
+  }, [undo, redo, selected, selectedEdgeId, pushHistory, deleteNode]);
 
   const canvasRef = useRef<HTMLDivElement | null>(null);
 
