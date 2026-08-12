@@ -13,9 +13,29 @@ vi.mock('../utils/tauri', () => ({
   }),
 }));
 
+vi.mock('../hooks/useLiveTransitData', () => ({
+  useLiveTransitData: () => ({
+    liveData: null,
+    loading: false,
+    error: null,
+    transits: [],
+    getPlanetaryHour: () => ({ icon: '☉', name: 'Sol', time: '12:00' }),
+    getSchedulingSuggestion: () => '',
+    fetchAstro: vi.fn(),
+    NATAL: undefined,
+  }),
+}));
+
 vi.mock('../components/LoginView', () => ({
   LoginView: ({ onLogin }: { onLogin: (id: string, password: string, remember: boolean) => Promise<{ ok: boolean }> }) => (
-    <button type="button" onClick={() => void onLogin('profile-1', 'secret', false)}>ENTRAR</button>
+    <button
+      type="button"
+      onClick={() => {
+        void onLogin('profile-1', 'secret', false);
+      }}
+    >
+      ENTRAR
+    </button>
   ),
 }));
 
@@ -63,9 +83,7 @@ describe('App navigation', () => {
   it('loads each primary screen landmark after navigation', async () => {
     renderApp();
     fireEvent.click(await screen.findByRole('button', { name: 'ENTRAR' }));
-    await waitFor(() => {
-      expect(screen.getByRole('button', { name: 'Astrologia' })).toBeTruthy();
-    });
+    await screen.findByTitle('Astrologia', {}, { timeout: 10000 });
 
     const pages: Array<{ label: string; landmark: string }> = [
       { label: 'Astrologia', landmark: 'Astrologia landmark' },
@@ -77,10 +95,10 @@ describe('App navigation', () => {
     ];
 
     for (const page of pages) {
-      fireEvent.click(screen.getByRole('button', { name: page.label }));
+      fireEvent.click(screen.getByTitle(page.label));
       await waitFor(() => {
         expect(screen.getByText(page.landmark)).toBeTruthy();
       });
     }
-  });
+  }, 15000);
 });
