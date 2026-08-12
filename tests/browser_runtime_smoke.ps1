@@ -112,7 +112,13 @@ try {
     Write-Output "PORT_DISCOVERY listening_addresses=all api_port=$ApiPort cdp_port=$CdpPort"
     New-Item -ItemType Directory -Path $dataDir, $chromeProfile | Out-Null
     $env:ASTRO_API_PORT = [string]$ApiPort; $env:AUREA_DATA_DIR = $dataDir
-    $runtime = Start-Process -FilePath $RuntimePath -WorkingDirectory $repoRoot -PassThru -WindowStyle Hidden
+    # PyInstaller one-file executables use a short-lived extraction parent.
+    # Keep an exact, owned PowerShell root alive around that child so the
+    # process-tree identity remains available through cleanup.
+    $escapedRuntime = $RuntimePath.Replace("'", "''")
+    $escapedRoot = $repoRoot.Replace("'", "''")
+    $launchCommand = "& { Start-Process -FilePath '$escapedRuntime' -WorkingDirectory '$escapedRoot' -WindowStyle Hidden | Out-Null; Start-Sleep -Seconds 120 }"
+    $runtime = Start-Process -FilePath (Join-Path $env:SystemRoot 'System32\WindowsPowerShell\v1.0\powershell.exe') -ArgumentList @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-Command', $launchCommand) -WorkingDirectory $repoRoot -PassThru -WindowStyle Hidden
     $baseUrl = "http://127.0.0.1:$ApiPort"
     $ready = $false
     for ($i = 0; $i -lt 40; $i++) {

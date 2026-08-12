@@ -241,3 +241,33 @@ CLEANUP temp-root-residue=ok
 Essa execução confirma as três respostas HTTP `200`, os três landmarks
 visíveis, nenhum erro CDP, nenhum 404 da logo, as duas árvores encerradas,
 portas livres, variáveis restauradas e diretório temporário removido.
+
+### Revalidação do ownership de processos — 12/08/2026
+
+Após a revisão de segurança, o cleanup do runtime não usa correspondência por
+caminho de executável nem encerra PID descoberto sem prova de ownership. Cada
+árvore é enraizada no filho exato retornado por `Start-Process`; o PID e o
+`StartTime` original do root são confirmados na descoberta e novamente antes
+de cada término. A enumeração CIM também confirma PID e criação para cada
+alvo, rejeita PID reutilizado ou mudança de identidade, falha quando a
+estabilização excede 50 passagens e valida descendentes/listeners restantes.
+O launcher empacotado mantém um processo PowerShell pertencente como root
+durante a execução, porque o executável PyInstaller one-file cria um processo
+de extração transitório.
+
+Build completo executado após essas correções:
+
+- `build.bat`: código `0`; frontend, PyInstaller, smoke HTTP empacotado e
+  instalador NSIS concluídos;
+- smoke CDP isolado: API `9878`, CDP `9901`; `/health`, `/` e `/openapi.json`
+  `200`; landmarks `Aurea Solaris`, `Entrar` e `Inscrever-se` visíveis;
+- cleanup: socket, Chrome tree, runtime tree, portas e diretório temporário —
+  todos `ok`;
+- comportamento: `python -m pytest tests/test_browser_runtime.py -q` — `8`
+  aprovados, incluindo root replacement, identity-to-stop race e graph-limit
+  exhaustion;
+- gates: `python -m pytest tests/ -q` (`36`), `npm run typecheck`, `npm run test`
+  (`14` arquivos, `60` testes) e `git diff --check` — aprovados.
+
+Esta evidência certifica apenas o ownership técnico e o smoke automatizado do
+runtime local; não substitui o aceite manual da interface e do instalador.
