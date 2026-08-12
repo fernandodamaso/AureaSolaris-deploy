@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { FERAL_RULE, isFeral } from '../../utils/astro-dignity';
+import { FERAL_RULE, getDecanateRuler, getTermRuler, isFeral } from '../../utils/astro-dignity';
+import { DECANATE_RULERS, EGYPTIAN_TERMS } from '../../utils/astro-reference-data';
 
 describe('traditional feral rule', () => {
   it('never marks the Sun as feral when Sun is not in eligibleBodies by default', () => {
@@ -73,5 +74,21 @@ describe('traditional feral rule', () => {
       },
       eligibleBodies: expect.arrayContaining(['Sun', 'Moon', 'Mercury', 'Venus', 'Mars', 'Jupiter', 'Saturn', 'ASC', 'MC']),
     });
+  });
+});
+
+describe('essential dignity reference lookups', () => {
+  it('resolves Egyptian term rulers from centralized reference data', () => {
+    expect(getTermRuler(0)).toBe(EGYPTIAN_TERMS[0][0].planet);
+    expect(getTermRuler(5.9)).toBe(EGYPTIAN_TERMS[0][0].planet);
+    expect(getTermRuler(6)).toBe(EGYPTIAN_TERMS[0][1].planet);
+    expect(getTermRuler(30)).toBe(EGYPTIAN_TERMS[1][0].planet);
+  });
+
+  it('resolves Chaldean decanate rulers from centralized reference data', () => {
+    expect(getDecanateRuler(0)).toBe(DECANATE_RULERS[0]);
+    expect(getDecanateRuler(9.9)).toBe(DECANATE_RULERS[0]);
+    expect(getDecanateRuler(10)).toBe(DECANATE_RULERS[1]);
+    expect(getDecanateRuler(30)).toBe(DECANATE_RULERS[3]);
   });
 });
