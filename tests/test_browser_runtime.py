@@ -79,6 +79,20 @@ class TestBrowserRuntime(unittest.TestCase):
         self.assertIn("Network.responseReceived", smoke_source)
         self.assertIn("logo_404=", smoke_source)
 
+    def test_packaged_smoke_uses_exact_root_tree_cleanup(self):
+        repository_root = Path(__file__).resolve().parents[1]
+        build_source = (repository_root / "build.bat").read_text(encoding="utf-8")
+        packaged_source = (repository_root / "tests" / "browser_runtime_packaged_smoke.ps1").read_text(encoding="utf-8")
+        helper_source = (repository_root / "tests" / "browser_runtime_process_tree.ps1").read_text(encoding="utf-8")
+
+        self.assertIn("browser_runtime_packaged_smoke.ps1", build_source)
+        self.assertNotIn("ExecutablePath", build_source)
+        self.assertNotIn("Stop-Process -Id", build_source)
+        self.assertIn("Stop-Tree $runtime", packaged_source)
+        self.assertIn("StartTimeTicks", helper_source)
+        self.assertIn("immediately before", helper_source)
+        self.assertIn("limite de 50", helper_source)
+
     def test_browser_smoke_cleanup_tracks_process_identity_and_new_children(self):
         powershell = shutil.which("powershell")
         if powershell is None:
@@ -97,16 +111,11 @@ function Fake-Identity([int]$ProcessId, [int]$ParentProcessId, [long]$Ticks) {{
 
 $root = Fake-Identity 101 1 1001
 $child = Fake-Identity 202 101 2001
-$state = @{{ calls = 0 }}
-$snapshot = {{
-    $state.calls++
-    if ($state.calls -eq 1) {{ return @($root) }}
-    if ($state.calls -le 4) {{ return @($root, $child) }}
-    return @()
-}}
+$active = @{{ $root.Key = $root; $child.Key = $child }}
+$snapshot = {{ return @($active.Values) }}
 $stopped = [Collections.Generic.List[string]]::new()
-$stop = {{ param($Identity) [void]$stopped.Add($Identity.Key) }}
-Stop-Tree ([pscustomobject]@{{ Id = 101 }}) $snapshot $stop
+$stop = {{ param($Identity) [void]$stopped.Add($Identity.Key); [void]$active.Remove($Identity.Key) }}
+Stop-Tree ([pscustomobject]@{{ Id = 101; StartTimeTicks = 1001 }}) $snapshot $stop
 if (-not ($stopped -contains '202/2001') -or -not ($stopped -contains '101/1001')) {{ throw \"new child was not cleaned: $($stopped -join ',')\" }}
 
 $oldRoot = Fake-Identity 301 1 3001
@@ -122,9 +131,40 @@ $reuseSnapshot = {{
 $reuseStopped = [Collections.Generic.List[string]]::new()
 $reuseStop = {{ param($Identity) [void]$reuseStopped.Add($Identity.Key) }}
 $reuseFailure = $null
-try {{ Stop-Tree ([pscustomobject]@{{ Id = 301 }}) $reuseSnapshot $reuseStop }} catch {{ $reuseFailure = $_.Exception.Message }}
+try {{ Stop-Tree ([pscustomobject]@{{ Id = 301; StartTimeTicks = 3001 }}) $reuseSnapshot $reuseStop }} catch {{ $reuseFailure = $_.Exception.Message }}
 if ($null -eq $reuseFailure -or $reuseFailure -notmatch 'PID reutilizado') {{ throw 'PID reuse was not reported as cleanup failure' }}
 if ($reuseStopped -contains '302/5001') {{ throw 'reused PID was stopped' }}
+
+$replacementRoot = Fake-Identity 321 1 3201
+$replacementState = @{{ calls = 0 }}
+$replacementSnapshot = {{ $replacementState.calls++; return @(Fake-Identity 321 1 3301) }}
+$replacementStopped = [Collections.Generic.List[string]]::new()
+$replacementFailure = $null
+try {{ Stop-Tree ([pscustomobject]@{{ Id = 321; StartTimeTicks = 3201 }}) $replacementSnapshot {{ param($Identity) [void]$replacementStopped.Add($Identity.Key) }} }} catch {{ $replacementFailure = $_.Exception.Message }}
+if ($null -eq $replacementFailure -or $replacementFailure -notmatch 'PID reutilizado') {{ throw 'root PID replacement was not reported' }}
+if ($replacementStopped.Count) {{ throw 'replacement root was stopped' }}
+
+$raceRoot = Fake-Identity 351 1 3501
+$raceChild = Fake-Identity 352 351 3601
+$raceReplacement = Fake-Identity 352 351 3701
+$raceState = @{{ calls = 0 }}
+$raceSnapshot = {{
+    $raceState.calls++
+    if ($raceState.calls -eq 1) {{ return @($raceRoot, $raceChild) }}
+    return @($raceRoot, $raceReplacement)
+}}
+$raceStopped = [Collections.Generic.List[string]]::new()
+$raceFailure = $null
+try {{ Stop-Tree ([pscustomobject]@{{ Id = 351; StartTimeTicks = 3501 }}) $raceSnapshot {{ param($Identity) [void]$raceStopped.Add($Identity.Key) }} }} catch {{ $raceFailure = $_.Exception.Message }}
+if ($null -eq $raceFailure -or $raceFailure -notmatch 'PID reutilizado') {{ throw 'identity-to-stop race was not reported' }}
+if ($raceStopped -contains '352/3701') {{ throw 'replacement child was stopped' }}
+
+$limitRoot = Fake-Identity 371 1 3701
+$limitChild = Fake-Identity 372 371 3801
+$limitSnapshot = {{ return @($limitRoot, $limitChild) }}
+$limitFailure = $null
+try {{ Stop-Tree ([pscustomobject]@{{ Id = 371; StartTimeTicks = 3701 }}) $limitSnapshot {{ param($Identity) }} }} catch {{ $limitFailure = $_.Exception.Message }}
+if ($null -eq $limitFailure -or $limitFailure -notmatch 'limite de 50') {{ throw 'graph limit exhaustion was not reported' }}
 
 $lateRoot = Fake-Identity 401 1 6001
 $departedParent = Fake-Identity 402 401 7001
@@ -138,7 +178,7 @@ $lateSnapshot = {{
 }}
 $lateStopped = [Collections.Generic.List[string]]::new()
 $lateFailure = $null
-try {{ Stop-Tree ([pscustomobject]@{{ Id = 401 }}) $lateSnapshot {{ param($Identity) [void]$lateStopped.Add($Identity.Key) }} }} catch {{ $lateFailure = $_.Exception.Message }}
+try {{ Stop-Tree ([pscustomobject]@{{ Id = 401; StartTimeTicks = 6001 }}) $lateSnapshot {{ param($Identity) [void]$lateStopped.Add($Identity.Key) }} }} catch {{ $lateFailure = $_.Exception.Message }}
 if ($null -eq $lateFailure) {{ throw 'departed parent ownership failure was not reported' }}
 if ($lateStopped -contains '403/8001') {{ throw 'child with unproven departed parent was stopped' }}
 Write-Output \"PROCESS_TREE_PASS stopped=$($stopped -join ',') reuse_failure=$reuseFailure late_failure=$lateFailure\"
