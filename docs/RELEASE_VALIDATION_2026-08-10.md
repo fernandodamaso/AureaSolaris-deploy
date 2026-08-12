@@ -206,3 +206,38 @@ manual completa da pessoa usuária continua pendente conforme a seção acima.
 Gates finais: `npm run typecheck`, `npm run test` (`14` arquivos, `60` testes),
 `python -m pytest tests/test_browser_runtime.py -q` (`6` testes) e `git diff --check`
 concluídos com código `0`.
+
+### Revalidação da limpeza segura do smoke — 12/08/2026
+
+A revisão foi executada no commit `d522df083e27a97c4d1405ff0bec87ddb9263509`
+(`fix(smoke): harden process identity cleanup`, revisão local em
+`2026-08-12T15:51:21-03:00`). A árvore de processos agora usa a combinação de
+PID e `CreationDate` do CIM; um filho só é aceito quando o pai com a mesma
+identidade está presente na mesma enumeração. PID reutilizado, pai que saiu
+antes da prova de propriedade e falha de inspeção geram falha de limpeza e não
+encerram um processo incerto. O teste comportamental cobre filho novo, PID
+reutilizado e filho cujo pai intermediário saiu.
+
+Teste focado atual: `python -m pytest tests/test_browser_runtime.py -q` — `7`
+testes aprovados. O smoke documentado foi executado novamente após o commit:
+
+```text
+PORT_DISCOVERY listening_addresses=all api_port=9877 cdp_port=9900
+LANDMARK Aurea Solaris=visible
+LANDMARK Entrar=visible
+LANDMARK Inscrever-se=visible
+RESULT api_port=9877 cdp_port=9900 health=200 root=200 openapi=200 logo_404=0 cdp_console_errors=0 cdp_log_errors=0
+CLEANUP socket-close=ok
+CLEANUP socket-dispose=ok
+CLEANUP chrome-tree=ok
+CLEANUP runtime-tree=ok
+CLEANUP ASTRO_API_PORT-restore=ok
+CLEANUP AUREA_DATA_DIR-restore=ok
+CLEANUP owned-ports-free=ok
+CLEANUP temp-root-remove=ok
+CLEANUP temp-root-residue=ok
+```
+
+Essa execução confirma as três respostas HTTP `200`, os três landmarks
+visíveis, nenhum erro CDP, nenhum 404 da logo, as duas árvores encerradas,
+portas livres, variáveis restauradas e diretório temporário removido.
