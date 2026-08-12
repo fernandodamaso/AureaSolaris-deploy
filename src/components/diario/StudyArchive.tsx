@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import { BookOpen, CalendarDays, FileText, LayoutGrid, Search } from 'lucide-react';
 import { listBoards, loadBoard } from '../../utils/board';
-import { safeInvoke } from '../../utils/tauri';
 import type { CadernoNode } from '../../types/caderno';
+import { listDiaryEntries } from '../../utils/diary';
+import type { DiaryEntryResponse } from '../../types/diario';
 
 type ArchiveSource = 'study' | 'diary';
 
@@ -78,7 +79,7 @@ export function StudyArchive({ onOpenStudy }: StudyArchiveProps) {
       setLoading(true);
       const [boardList, diaryList] = await Promise.all([
         listBoards(),
-        safeInvoke<any[]>('diary_list_entries'),
+        listDiaryEntries(),
       ]);
 
       if (cancelled) return;
@@ -110,13 +111,13 @@ export function StudyArchive({ onOpenStudy }: StudyArchiveProps) {
         });
       }));
 
-      const diaryItems: ArchiveItem[] = (diaryList || []).map(entry => ({
+      const diaryItems: ArchiveItem[] = (diaryList || []).map((entry: DiaryEntryResponse) => ({
         id: `diary:${entry.id}`,
         source: 'diary',
         title: entry.title?.trim() || 'Nota sem título',
         summary: '',
         content: entry.content || '',
-        updatedAt: normalizeTimestamp(entry.updated_at || entry.updatedAt || entry.created_at || entry.createdAt),
+        updatedAt: normalizeTimestamp(entry.updated_at || entry.created_at),
         groupName: entry.folder_name || 'Diário pessoal',
       }));
 

@@ -11,12 +11,36 @@ export interface DiaryEntry {
   status: DiaryStatus;   // Kanban status: idea | draft | done
 }
 
+/** Response shape shared by the Tauri command and browser adapter. */
+export interface DiaryEntryResponse {
+  id: string;
+  title: string;
+  content: string;
+  folder_id: string;
+  created_at: string;
+  updated_at: string;
+  word_count: number;
+  status: DiaryStatus;
+  owner_id?: string;
+  folder_name?: string;
+}
+
 export interface DiaryFolder {
   id: string;
   name: string;
   icon: string;          // emoji
   order: number;
   createdAt: string;
+}
+
+/** Response shape shared by the Tauri command and browser adapter. */
+export interface DiaryFolderResponse {
+  id: string;
+  name: string;
+  icon: string;
+  order: number;
+  created_at: string;
+  owner_id?: string;
 }
 
 export interface DiaryTabState {
