@@ -14,6 +14,13 @@ import {
   formatDeg as dignityFormatDeg,
 } from '../utils/astro-dignity';
 import { getPlanetSignKeyword, getAspectKeyword, ASPECT_MEANINGS } from '../utils/astro-dictionary';
+import {
+  createMandalaOrientation,
+  getHouseMidpointDegree,
+  getSignIndex,
+  normalizeDegree,
+  resolveAscDegree,
+} from '../utils/mandalaGeometry';
 
 
 
@@ -135,16 +142,12 @@ const DECANATE_RULERS = [
 
 /* ─── Helpers ──────────────────────────────────────────────────── */
 
-const normDeg = (d: number) => ((d % 360) + 360) % 360;
-
 const formatDeg = (absDeg: number) => {
   const sd = absDeg % 30;
   const d = Math.floor(sd);
   const m = Math.floor((sd - d) * 60);
   return `${d}°${String(m).padStart(2, '0')}'`;
 };
-
-const getSignIdx = (deg: number) => Math.floor(normDeg(deg) / 30);
 
 /* ─── Component ────────────────────────────────────────────────── */
 
@@ -190,17 +193,9 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
   const transitR  = R * 0.95; // Outer ring for transits
 
   /* rotação: ASC fixo em 180° SVG (esquerda/9h), MC fica onde o cálculo colocar */
-  const ascDeg = useMemo(() => {
-    const ascHouse = houses.find(h => h.house === 1);
-    if (ascHouse) return normDeg(ascHouse.degree);
-    const a = planets.find(p => p.name.toUpperCase().startsWith('ASC'));
-    return a ? normDeg(a.degree) : 0;
-  }, [planets, houses]);
-
-  const rotOffset = useMemo(() => (360 - ascDeg) % 360, [ascDeg]);
-
-  const rotDeg = (d: number) => normDeg(d + rotOffset);
-  const toRad = (svgDeg: number) => (svgDeg * Math.PI) / 180;
+  const ascDeg = useMemo(() => resolveAscDegree(houses, planets), [planets, houses]);
+  const orientation = useMemo(() => createMandalaOrientation(ascDeg), [ascDeg]);
+  const { rotationOffset: rotOffset } = orientation;
 
   /* planetas filtrados */
   const filteredPlanets = useMemo(() => {
@@ -222,13 +217,10 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
     const g = svg.append('g');
 
     /* helpers locais — corrected for counterclockwise progression */
-    // toRad: converts degrees to radians (used for text rotation)
-    // eclRad: converts ecliptic degree to SVG coordinate angle (counterclockwise)
-    const eclRad = (deg: number) => toRad(180 - rotDeg(deg));
-    const polarX = (r: number, deg: number) => cx + r * Math.cos(eclRad(deg));
-    const polarY = (r: number, deg: number) => cy + r * Math.sin(eclRad(deg));
+    const polarX = (r: number, deg: number) => orientation.pointAt(cx, cy, r, deg).x;
+    const polarY = (r: number, deg: number) => orientation.pointAt(cx, cy, r, deg).y;
     // D3 arc angle: SVG→D3 subtract 90°, plus counterclockwise negation
-    const arcRad = (deg: number) => toRad(180 - rotDeg(deg) - 90);
+    const arcRad = orientation.toArcRadians;
 
     /* ─── 1. Background ─────────────────────────────────────── */
     g.append('circle').attr('cx', cx).attr('cy', cy).attr('r', R + 12)
@@ -263,7 +255,7 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
         .attr('x', px).attr('y', py)
         .attr('text-anchor', 'middle').attr('dominant-baseline', 'central')
         .attr('font-size', 6).attr('fill', '#b09860').attr('opacity', 0.7)
-        .attr('transform', `rotate(${180 - rotDeg(i)}, ${px}, ${py})`)
+        .attr('transform', `rotate(${180 - orientation.rotateDegree(i)}, ${px}, ${py})`)
         .text(`${sd}`);
     }
 
@@ -396,9 +388,7 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
       /* número da casa */
       const nextH = houses[(h.house) % 12];
       const midAngle = (() => {
-        let diff = normDeg(nextH.degree - d);
-        if (diff > 180) diff -= 360;
-        return normDeg(d + diff / 2);
+        return getHouseMidpointDegree(d, nextH.degree);
       })();
       const labelR = (houseR + aspectR) / 2;
       g.append('text')
@@ -522,7 +512,7 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
 
     /* ─── 8. Planets ────────────────────────────────────────── */
     /* anti-overlap: sort by degree and nudge close planets */
-    const sorted = [...filteredPlanets].sort((a, b) => normDeg(a.degree) - normDeg(b.degree));
+    const sorted = [...filteredPlanets].sort((a, b) => normalizeDegree(a.degree) - normalizeDegree(b.degree));
     const placed: { x: number; y: number; r: number }[] = [];
     const MIN_DIST = 22;
 
@@ -590,7 +580,7 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
         .attr('x', px).attr('y', py + 11)
         .attr('text-anchor', 'middle')
         .attr('font-size', 6).attr('fill', '#666').attr('font-weight', '600')
-        .text(formatDeg(normDeg(d)));
+        .text(formatDeg(normalizeDegree(d)));
 
       /* retrograde ℞ */
       if (p.retrograde && RETROGRADE_ALLOWED.includes(p.name)) {
@@ -601,7 +591,7 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
       }
 
       pg.on('mouseenter mousemove', (event: MouseEvent) => {
-        const signIdx = getSignIdx(d);
+        const signIdx = getSignIndex(d);
         const sun = planets.find(p => p.name === 'Sun');
         const sunDeg = sun ? sun.degree : 0;
         
@@ -634,8 +624,8 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
 
         setTooltip({
           name: p.name,
-          sign: `${SIGN_NAMES[signIdx]} ${formatDeg(normDeg(d))}`,
-          degree: `${normDeg(d).toFixed(2)}°`,
+          sign: `${SIGN_NAMES[signIdx]} ${formatDeg(normalizeDegree(d))}`,
+          degree: `${normalizeDegree(d).toFixed(2)}°`,
           retrograde: !!p.retrograde,
           stationary: !!p.stationary,
           motion,
@@ -656,7 +646,7 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
 
     /* ─── 9. Transit planets (if provided) ─────────────────────── */
     if (transitPlanets && transitPlanets.length > 0) {
-      const sortedTransits = [...transitPlanets].sort((a, b) => normDeg(a.degree) - normDeg(b.degree));
+      const sortedTransits = [...transitPlanets].sort((a, b) => normalizeDegree(a.degree) - normalizeDegree(b.degree));
       const placedTransits: { x: number; y: number; r: number }[] = [];
       const MIN_DIST_TRANSIT = 22;
 
@@ -701,16 +691,16 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
       });
     }
 
-  }, [size, filteredPlanets, houses, aspects, showDecanates, showTerms, rotOffset, transitPlanets, transitAspects]);
+  }, [size, filteredPlanets, houses, aspects, showDecanates, showTerms, orientation, rotOffset, transitPlanets, transitAspects]);
 
   /* ─── Tabelas abaixo ─────────────────────────────────────────── */
 
   const planetTable = useMemo(() => {
     return filteredPlanets
       .filter(p => !['ASC','DSC','IC'].includes(p.name))
-      .sort((a, b) => normDeg(a.degree) - normDeg(b.degree))
+      .sort((a, b) => normalizeDegree(a.degree) - normalizeDegree(b.degree))
       .map(p => {
-        const si = getSignIdx(p.degree);
+        const si = getSignIndex(p.degree);
         const namePt = PLANET_NAMES_PT[p.name] || p.name;
         const isRetroAllowed = RETROGRADE_ALLOWED.includes(p.name);
         const motion = (p.stationary && isRetroAllowed) ? 'Est' : (p.retrograde && isRetroAllowed) ? 'Rx' : '';
@@ -719,8 +709,8 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
           ...p,
           signSymbol: SIGN_SYMBOLS[si],
           signName: SIGN_NAMES[si],
-          signDeg: formatDeg(normDeg(p.degree)),
-          absDeg: normDeg(p.degree).toFixed(2),
+          signDeg: formatDeg(normalizeDegree(p.degree)),
+          absDeg: normalizeDegree(p.degree).toFixed(2),
           color: p.color || PLANET_COLORS[p.name] || '#888',
           motion,
           dignity,
