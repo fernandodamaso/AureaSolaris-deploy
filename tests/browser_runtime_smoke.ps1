@@ -7,6 +7,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $repoRoot = (& git -C $PSScriptRoot rev-parse --show-toplevel).Trim()
+. (Join-Path $PSScriptRoot 'browser_runtime_process_tree.ps1')
 if ([string]::IsNullOrWhiteSpace($RuntimePath)) {
     $RuntimePath = Join-Path $repoRoot 'src-tauri\binaries\astro-engine-x86_64-pc-windows-msvc.exe'
 } elseif (-not [IO.Path]::IsPathRooted($RuntimePath)) {
@@ -28,8 +29,12 @@ $apiPortRange = 9877..9899
 $cdpPortRange = 9900..9922
 
 function Get-ListeningPorts {
-    @(Get-NetTCPConnection -State Listen -ErrorAction SilentlyContinue |
-        ForEach-Object { [int]$_.LocalPort })
+    try {
+        @(Get-NetTCPConnection -State Listen -ErrorAction Stop |
+            ForEach-Object { [int]$_.LocalPort })
+    } catch {
+        throw "Não foi possível inspecionar portas TCP em escuta: $($_.Exception.Message)"
+    }
 }
 function Select-FreePort([int[]]$Candidates, [int[]]$OccupiedPorts) {
     foreach ($candidate in $Candidates) {
@@ -41,65 +46,6 @@ function Assert-PortFree([int]$Port) {
     if ((Get-ListeningPorts) -contains $Port) { throw "A porta $Port já está em uso." }
 }
 
-function Stop-Tree([System.Diagnostics.Process]$RootProcess) {
-    $rootPid = $RootProcess.Id
-    $expectedStart = $null
-    try { $expectedStart = $RootProcess.StartTime } catch { $expectedStart = $null }
-    $failures = [Collections.Generic.List[string]]::new()
-    $knownIds = [Collections.Generic.HashSet[int]]::new(); [void]$knownIds.Add($rootPid)
-    $emptyPasses = 0
-    for ($attempt = 0; $attempt -lt 50; $attempt++) {
-        $currentRoot = Get-Process -Id $rootPid -ErrorAction SilentlyContinue
-        if ($null -ne $currentRoot) {
-            try {
-                if ($null -ne $expectedStart -and $currentRoot.StartTime -ne $expectedStart) {
-                    [void]$failures.Add("PID reutilizado; não vou encerrar o processo $rootPid.")
-                    break
-                }
-            } catch { [void]$failures.Add("Não foi possível validar o processo raiz ${rootPid}: $($_.Exception.Message)"); break }
-        }
-
-        $processes = @(Get-CimInstance Win32_Process -ErrorAction SilentlyContinue)
-        $ids = [Collections.Generic.HashSet[int]]::new(); [void]$ids.Add($rootPid)
-        $changed = $true
-        while ($changed) {
-            $changed = $false
-            foreach ($process in $processes) {
-                if ($ids.Contains([int]$process.ParentProcessId) -and $ids.Add([int]$process.ProcessId)) { $changed = $true }
-            }
-        }
-        foreach ($id in $ids) { [void]$knownIds.Add($id) }
-
-        foreach ($id in @($ids | Sort-Object -Descending)) {
-            if ($id -eq $rootPid -and $null -eq $expectedStart) { continue }
-            $process = Get-Process -Id $id -ErrorAction SilentlyContinue
-            if ($null -eq $process) { continue }
-            try { Stop-Process -Id $id -Force -ErrorAction Stop }
-            catch {
-                if ($null -ne (Get-Process -Id $id -ErrorAction SilentlyContinue)) {
-                    [void]$failures.Add("Falha ao encerrar processo ${id}: $($_.Exception.Message)")
-                }
-            }
-        }
-
-        $remaining = @(Get-CimInstance Win32_Process -ErrorAction SilentlyContinue |
-            Where-Object { $ids.Contains([int]$_.ProcessId) } |
-            Select-Object -ExpandProperty ProcessId)
-        if (-not $remaining.Count) {
-            $emptyPasses++
-            if ($emptyPasses -ge 2) { break }
-        } else { $emptyPasses = 0 }
-        Start-Sleep -Milliseconds 100
-    }
-    $remaining = @(Get-CimInstance Win32_Process -ErrorAction SilentlyContinue |
-        Where-Object { $knownIds.Contains([int]$_.ProcessId) } |
-        Select-Object -ExpandProperty ProcessId)
-    if ($null -eq $expectedStart -and $null -ne (Get-Process -Id $rootPid -ErrorAction SilentlyContinue)) {
-        [void]$failures.Add("Não foi possível confirmar a identidade do processo raiz: $rootPid")
-    }
-    if ($remaining.Count) { [void]$failures.Add("Processos ainda ativos: $($remaining -join ', ')") }
-    if ($failures.Count) { throw ($failures -join "`n") }
-}
 function Send-Cdp([string]$Method, [hashtable]$Params = @{}) {
     $script:commandId++
     $payload = @{ id = $script:commandId; method = $Method; params = $Params } | ConvertTo-Json -Compress -Depth 10
@@ -186,22 +132,31 @@ try {
         '--no-service-autorun', '--remote-allow-origins=*', "--remote-debugging-port=$CdpPort",
         "--user-data-dir=$chromeProfile", 'about:blank'
     ) -PassThru -WindowStyle Hidden
-    $chromeTree = @($chrome.Id); $cdpOwned = $false
+    $chromeRootPid = [int]$chrome.Id
+    $chromeInitial = @(Get-ProcessSnapshot)
+    $chromeRootIdentity = $chromeInitial | Where-Object { $_.Pid -eq $chromeRootPid } | Select-Object -First 1
+    if ($null -eq $chromeRootIdentity) { throw "Não foi possível confirmar a identidade do processo raiz do Chrome: $chromeRootPid" }
+    $chromeKnown = @{}
+    $chromeKnown[$chromeRootIdentity.Key] = $chromeRootIdentity
+    $cdpOwned = $false
     for ($i = 0; $i -lt 20; $i++) {
-        $processes = @(Get-CimInstance Win32_Process)
-        $changed = $true
-        while ($changed) {
-            $changed = $false
-            foreach ($process in $processes) {
-                if ($chromeTree -contains [int]$process.ParentProcessId -and $chromeTree -notcontains [int]$process.ProcessId) {
-                    $chromeTree += [int]$process.ProcessId; $changed = $true
-                }
+        $snapshot = @(Get-ProcessSnapshot)
+        $byPid = @{}
+        foreach ($identity in $snapshot) { $byPid[[string]$identity.Pid] = $identity }
+        foreach ($identity in $snapshot) {
+            if ($chromeKnown.ContainsKey($identity.Key)) { continue }
+            $parent = $byPid[[string]$identity.ParentPid]
+            if ($null -ne $parent -and $chromeKnown.ContainsKey($parent.Key)) {
+                $chromeKnown[$identity.Key] = $identity
             }
         }
-        $cdpListeners = @(Get-NetTCPConnection -LocalPort $CdpPort -State Listen -ErrorAction SilentlyContinue)
+        $cdpListeners = @(Get-NetTCPConnection -LocalPort $CdpPort -State Listen -ErrorAction Stop)
         if ($cdpListeners.Count -gt 0) {
-            if (@($cdpListeners | Where-Object { $chromeTree -notcontains [int]$_.OwningProcess }).Count -gt 0) {
-                throw "A porta CDP $CdpPort foi ocupada por um processo não criado pelo smoke."
+            foreach ($listener in $cdpListeners) {
+                $owner = $byPid[[string][int]$listener.OwningProcess]
+                if ($null -eq $owner -or -not $chromeKnown.ContainsKey($owner.Key)) {
+                    throw "A porta CDP $CdpPort foi ocupada por um processo cuja identidade não pertence à árvore do Chrome."
+                }
             }
             $cdpOwned = $true
             break
@@ -294,8 +249,23 @@ try {
 } finally {
     Invoke-CleanupStep 'socket-close' {
         if ($null -ne $socket -and $socket.State -eq [Net.WebSockets.WebSocketState]::Open) {
-            try { [void]$socket.CloseAsync([Net.WebSockets.WebSocketCloseStatus]::NormalClosure, 'done', [Threading.CancellationToken]::None).GetAwaiter().GetResult() }
-            catch { $socket.Abort() }
+            $closeCancellation = [Threading.CancellationTokenSource]::new()
+            try {
+                $closeTask = $socket.CloseAsync(
+                    [Net.WebSockets.WebSocketCloseStatus]::NormalClosure,
+                    'done',
+                    $closeCancellation.Token)
+                if (-not $closeTask.Wait(2000)) {
+                    throw [TimeoutException]::new('Tempo limite ao fechar a conexão CDP.')
+                }
+                [void]$closeTask.GetAwaiter().GetResult()
+            } finally {
+                $closeCancellation.Cancel()
+                $closeCancellation.Dispose()
+                if ($socket.State -notin @([Net.WebSockets.WebSocketState]::Closed, [Net.WebSockets.WebSocketState]::Aborted)) {
+                    $socket.Abort()
+                }
+            }
         }
     }
     Invoke-CleanupStep 'socket-dispose' { if ($null -ne $socket) { $socket.Dispose() } }
@@ -314,7 +284,7 @@ try {
     Invoke-CleanupStep 'owned-ports-free' {
         $residualPorts = @()
         for ($i = 0; $i -lt 50; $i++) {
-            $residualPorts = @(Get-NetTCPConnection -State Listen -ErrorAction SilentlyContinue |
+            $residualPorts = @(Get-NetTCPConnection -State Listen -ErrorAction Stop |
                 Where-Object { $_.LocalPort -in @($ApiPort, $CdpPort) })
             if (-not $residualPorts.Count) { break }
             Start-Sleep -Milliseconds 100

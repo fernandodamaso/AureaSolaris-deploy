@@ -79,19 +79,82 @@ class TestBrowserRuntime(unittest.TestCase):
         self.assertIn("Network.responseReceived", smoke_source)
         self.assertIn("logo_404=", smoke_source)
 
-    def test_browser_smoke_cleanup_retries_tree_and_continues_after_departed_process(self):
-        smoke_source = (Path(__file__).with_name("browser_runtime_smoke.ps1")).read_text(encoding="utf-8")
-        stop_tree = smoke_source[smoke_source.index("function Stop-Tree"):smoke_source.index("function Send-Cdp")]
-        cleanup = smoke_source[smoke_source.index("} finally {"):]
+    def test_browser_smoke_cleanup_tracks_process_identity_and_new_children(self):
+        powershell = shutil.which("powershell")
+        if powershell is None:
+            self.skipTest("PowerShell is required for the Windows browser smoke helper")
 
-        self.assertGreaterEqual(stop_tree.count("Get-CimInstance Win32_Process"), 2)
-        self.assertIn("catch", stop_tree)
-        self.assertIn("Get-Process -Id $id", stop_tree)
-        self.assertIn("$failures.Add", stop_tree)
-        self.assertIn("$attempt -lt 50", stop_tree)
-        self.assertLess(cleanup.index("owned-ports-free"), cleanup.index("temp-root-remove"))
-        self.assertIn("$i -lt 50", cleanup)
-        self.assertIn("$i -lt 20", cleanup)
+        helper_path = Path(__file__).with_name("browser_runtime_process_tree.ps1")
+        with tempfile.TemporaryDirectory() as directory:
+            harness = Path(directory) / "process-tree-behavior.ps1"
+            helper_literal = str(helper_path).replace("'", "''")
+            harness.write_text(
+                f"""
+. '{helper_literal}'
+function Fake-Identity([int]$ProcessId, [int]$ParentProcessId, [long]$Ticks) {{
+    [pscustomobject]@{{ Pid = $ProcessId; ParentPid = $ParentProcessId; StartTimeTicks = $Ticks; Key = \"$ProcessId/$Ticks\" }}
+}}
+
+$root = Fake-Identity 101 1 1001
+$child = Fake-Identity 202 101 2001
+$state = @{{ calls = 0 }}
+$snapshot = {{
+    $state.calls++
+    if ($state.calls -eq 1) {{ return @($root) }}
+    if ($state.calls -le 4) {{ return @($root, $child) }}
+    return @()
+}}
+$stopped = [Collections.Generic.List[string]]::new()
+$stop = {{ param($Identity) [void]$stopped.Add($Identity.Key) }}
+Stop-Tree ([pscustomobject]@{{ Id = 101 }}) $snapshot $stop
+if (-not ($stopped -contains '202/2001') -or -not ($stopped -contains '101/1001')) {{ throw \"new child was not cleaned: $($stopped -join ',')\" }}
+
+$oldRoot = Fake-Identity 301 1 3001
+$oldChild = Fake-Identity 302 301 4001
+$reusedChild = Fake-Identity 302 301 5001
+$reuseState = @{{ calls = 0 }}
+$reuseSnapshot = {{
+    $reuseState.calls++
+    if ($reuseState.calls -eq 1) {{ return @($oldRoot, $oldChild) }}
+    if ($reuseState.calls -eq 2) {{ return @($oldRoot, $reusedChild) }}
+    return @()
+}}
+$reuseStopped = [Collections.Generic.List[string]]::new()
+$reuseStop = {{ param($Identity) [void]$reuseStopped.Add($Identity.Key) }}
+$reuseFailure = $null
+try {{ Stop-Tree ([pscustomobject]@{{ Id = 301 }}) $reuseSnapshot $reuseStop }} catch {{ $reuseFailure = $_.Exception.Message }}
+if ($null -eq $reuseFailure -or $reuseFailure -notmatch 'PID reutilizado') {{ throw 'PID reuse was not reported as cleanup failure' }}
+if ($reuseStopped -contains '302/5001') {{ throw 'reused PID was stopped' }}
+
+$lateRoot = Fake-Identity 401 1 6001
+$departedParent = Fake-Identity 402 401 7001
+$lateChild = Fake-Identity 403 402 8001
+$lateState = @{{ calls = 0 }}
+$lateSnapshot = {{
+    $lateState.calls++
+    if ($lateState.calls -eq 1) {{ return @($lateRoot, $departedParent) }}
+    if ($lateState.calls -le 3) {{ return @($lateRoot, $lateChild) }}
+    return @()
+}}
+$lateStopped = [Collections.Generic.List[string]]::new()
+$lateFailure = $null
+try {{ Stop-Tree ([pscustomobject]@{{ Id = 401 }}) $lateSnapshot {{ param($Identity) [void]$lateStopped.Add($Identity.Key) }} }} catch {{ $lateFailure = $_.Exception.Message }}
+if ($null -eq $lateFailure) {{ throw 'departed parent ownership failure was not reported' }}
+if ($lateStopped -contains '403/8001') {{ throw 'child with unproven departed parent was stopped' }}
+Write-Output \"PROCESS_TREE_PASS stopped=$($stopped -join ',') reuse_failure=$reuseFailure late_failure=$lateFailure\"
+""",
+                encoding="utf-8",
+            )
+            result = subprocess.run(
+                [powershell, "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", str(harness)],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+
+        output = f"{result.stdout}\n{result.stderr}"
+        self.assertEqual(result.returncode, 0, output)
+        self.assertIn("PROCESS_TREE_PASS", output)
 
     def test_browser_session_gates_private_workspace_and_keeps_owner_scope(self):
         with tempfile.TemporaryDirectory() as directory:
