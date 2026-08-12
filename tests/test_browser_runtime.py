@@ -96,6 +96,138 @@ class BrowserRuntimeTests(unittest.TestCase):
                     )
                     self.assertEqual(denied.status_code, 401)
 
+    def test_browser_owner_cannot_read_update_or_delete_foreign_workspace_records(self):
+        with tempfile.TemporaryDirectory() as directory:
+            data_dir = Path(directory) / "browser-data"
+            storage = LocalStorage(Path(directory) / "app-data" / "data", MIGRATIONS)
+            storage.initialize()
+            with patch.dict(os.environ, {"AUREA_DATA_DIR": str(data_dir)}, clear=False):
+                with patch.object(main_api, "get_storage", return_value=storage):
+                    with TestClient(main_api.app) as client:
+                        owner_a = client.post(
+                            "/browser/command",
+                            json={
+                                "command": "private_account_register",
+                                "args": {
+                                    "ownerId": "browser-owner-a",
+                                    "displayName": "Pessoa A",
+                                    "loginName": "pessoa-a",
+                                    "password": "senha local A suficientemente forte",
+                                },
+                            },
+                        ).json()["browser_session_token"]
+                        owner_b = client.post(
+                            "/browser/command",
+                            json={
+                                "command": "private_account_register",
+                                "args": {
+                                    "ownerId": "browser-owner-b",
+                                    "displayName": "Pessoa B",
+                                    "loginName": "pessoa-b",
+                                    "password": "senha local B suficientemente forte",
+                                },
+                            },
+                        ).json()["browser_session_token"]
+
+                        board = client.post(
+                            "/browser/command",
+                            headers={"X-Aurea-Browser-Session": owner_b},
+                            json={
+                                "command": "save_board",
+                                "args": {
+                                    "boardId": "foreign-board",
+                                    "name": "Caderno de B",
+                                    "nodes": [{"text": "conteudo privado de B"}],
+                                    "edges": [],
+                                },
+                            },
+                        )
+                        self.assertEqual(board.status_code, 200)
+                        entry = client.post(
+                            "/browser/command",
+                            headers={"X-Aurea-Browser-Session": owner_b},
+                            json={
+                                "command": "diary_create_entry",
+                                "args": {"title": "Nota privada de B"},
+                            },
+                        ).json()["result"]
+
+                        headers_a = {"X-Aurea-Browser-Session": owner_a}
+                        foreign_board = client.post(
+                            "/browser/command",
+                            headers=headers_a,
+                            json={
+                                "command": "load_board",
+                                "args": {"boardId": "foreign-board"},
+                            },
+                        )
+                        self.assertEqual(foreign_board.status_code, 200)
+                        self.assertEqual(foreign_board.json()["result"]["nodes"], [])
+
+                        foreign_entry = client.post(
+                            "/browser/command",
+                            headers=headers_a,
+                            json={
+                                "command": "diary_get_entry",
+                                "args": {"id": entry["id"]},
+                            },
+                        )
+                        self.assertEqual(foreign_entry.status_code, 200)
+                        self.assertIsNone(foreign_entry.json()["result"])
+
+                        updated = client.post(
+                            "/browser/command",
+                            headers=headers_a,
+                            json={
+                                "command": "diary_update_entry",
+                                "args": {"id": entry["id"], "title": "Tentativa de A"},
+                            },
+                        )
+                        self.assertEqual(updated.status_code, 404)
+
+                        deleted_board = client.post(
+                            "/browser/command",
+                            headers=headers_a,
+                            json={
+                                "command": "delete_board",
+                                "args": {"boardId": "foreign-board"},
+                            },
+                        )
+                        self.assertEqual(deleted_board.status_code, 200)
+                        deleted_entry = client.post(
+                            "/browser/command",
+                            headers=headers_a,
+                            json={
+                                "command": "diary_delete_entry",
+                                "args": {"id": entry["id"]},
+                            },
+                        )
+                        self.assertEqual(deleted_entry.status_code, 200)
+
+                        headers_b = {"X-Aurea-Browser-Session": owner_b}
+                        board_after_attempt = client.post(
+                            "/browser/command",
+                            headers=headers_b,
+                            json={
+                                "command": "load_board",
+                                "args": {"boardId": "foreign-board"},
+                            },
+                        )
+                        self.assertEqual(
+                            board_after_attempt.json()["result"]["nodes"],
+                            [{"text": "conteudo privado de B"}],
+                        )
+                        entry_after_attempt = client.post(
+                            "/browser/command",
+                            headers=headers_b,
+                            json={
+                                "command": "diary_get_entry",
+                                "args": {"id": entry["id"]},
+                            },
+                        )
+                        self.assertEqual(entry_after_attempt.status_code, 200)
+                        self.assertEqual(entry_after_attempt.json()["result"]["title"], "Nota privada de B")
+
 
 if __name__ == "__main__":
     unittest.main()
