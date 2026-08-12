@@ -42,6 +42,7 @@ const activeBoardKey = () => `${LS_ACTIVE}:${localStorage.getItem('aurea_active_
 
 const snap = (v: number) => Math.round(v / GRID_SIZE) * GRID_SIZE;
 const uid = () => `board_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+const timestampId = () => Date.now();
 
 // ─────────────────────────────────────────────────────────────
 // Toast hook
@@ -231,24 +232,30 @@ const MesaCanvas = ({
   useEffect(() => { edgesRef.current = edges; }, [edges]);
   useEffect(() => { if (editingName) setTimeout(() => nameInputRef.current?.focus(), 30); }, [editingName]);
   useEffect(() => {
-    if (initialStudyNodeId !== null && nodes.some(node => node.id === initialStudyNodeId)) {
-      setSelected(initialStudyNodeId);
-      setStudyPanelOpen(true);
-    }
+    const timer = setTimeout(() => {
+      if (initialStudyNodeId !== null && nodes.some(node => node.id === initialStudyNodeId)) {
+        setSelected(initialStudyNodeId);
+        setStudyPanelOpen(true);
+      }
+    }, 0);
+    return () => clearTimeout(timer);
   }, [initialStudyNodeId, nodes]);
 
   // Auto-save with debounce
   useEffect(() => {
     if (saveTimer.current) clearTimeout(saveTimer.current);
     const version = ++saveVersion.current;
-    setSaveState('saving');
+    const stateTimer = setTimeout(() => setSaveState('saving'), 0);
     saveTimer.current = setTimeout(() => {
       void saveBoard({ boardId: board.id, name: boardName, nodes, edges }).then(savedAt => {
         if (version !== saveVersion.current) return;
         setSaveState(typeof savedAt === 'number' ? 'saved' : 'error');
       });
-    }, 800);
-    return () => { if (saveTimer.current) clearTimeout(saveTimer.current); };
+      }, 800);
+    return () => {
+      clearTimeout(stateTimer);
+      if (saveTimer.current) clearTimeout(saveTimer.current);
+    };
   }, [nodes, edges, boardName, board.id]);
 
   // ── History ────────────────────────────────────────────────
@@ -260,10 +267,25 @@ const MesaCanvas = ({
     setRedoStack([]);
   }, []);
 
+  const deleteNode = useCallback((id: number) => {
+    const node = nodesRef.current.find(n => n.id === id);
+    if (!node) return;
+    const affectedEdges = edgesRef.current.filter(e => e.from === id || e.to === id);
+    pushHistory({ type: 'deleteNode', payload: { node, edges: affectedEdges } });
+    setNodes(p => p.filter(n => n.id !== id));
+    setEdges(p => p.filter(e => e.from !== id && e.to !== id));
+  }, [pushHistory]);
+
   const applyAction = useCallback((action: HistoryAction, direction: 'undo' | 'redo') => {
     const isUndo = direction === 'undo';
     switch (action.type) {
-      case 'addNode':    isUndo ? setNodes(n => n.filter(x => x.id !== action.payload.node.id)) : setNodes(n => [...n, action.payload.node]); break;
+      case 'addNode':
+        if (isUndo) {
+          setNodes(n => n.filter(x => x.id !== action.payload.node.id));
+        } else {
+          setNodes(n => [...n, action.payload.node]);
+        }
+        break;
       case 'deleteNode':
         if (isUndo) {
           setNodes(n => [...n, action.payload.node]);
@@ -274,10 +296,18 @@ const MesaCanvas = ({
         }
         break;
       case 'addEdge':
-        isUndo ? setEdges(e => e.filter(x => x.id !== action.payload.edge.id)) : setEdges(e => [...e, action.payload.edge]);
+        if (isUndo) {
+          setEdges(e => e.filter(x => x.id !== action.payload.edge.id));
+        } else {
+          setEdges(e => [...e, action.payload.edge]);
+        }
         break;
       case 'deleteEdge':
-        isUndo ? setEdges(e => [...e, action.payload.edge]) : setEdges(e => e.filter(x => x.id !== action.payload.edge.id));
+        if (isUndo) {
+          setEdges(e => [...e, action.payload.edge]);
+        } else {
+          setEdges(e => e.filter(x => x.id !== action.payload.edge.id));
+        }
         break;
       case 'moveNode':
       case 'resizeNode':
@@ -382,15 +412,6 @@ const MesaCanvas = ({
     setFocusNodeId(node.id);
     setTool('select');
   };
-
-  const deleteNode = useCallback((id: number) => {
-    const node = nodesRef.current.find(n => n.id === id);
-    if (!node) return;
-    const affectedEdges = edgesRef.current.filter(e => e.from === id || e.to === id);
-    pushHistory({ type: 'deleteNode', payload: { node, edges: affectedEdges } });
-    setNodes(p => p.filter(n => n.id !== id));
-    setEdges(p => p.filter(e => e.from !== id && e.to !== id));
-  }, [pushHistory]);
 
   const updateNode = (id: number, patch: Partial<CadernoNode>) => {
     const prev = nodesRef.current.find(n => n.id === id);
@@ -533,7 +554,7 @@ const MesaCanvas = ({
       return;
     }
 
-    const edge: CadernoEdge = { id: Date.now(), from: connectSourceId, to: id };
+    const edge: CadernoEdge = { id: timestampId(), from: connectSourceId, to: id };
     setEdges(items => [...items, edge]);
     pushHistory({ type: 'addEdge', payload: { edge } });
     setConnectSourceId(null);

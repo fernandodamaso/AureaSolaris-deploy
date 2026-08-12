@@ -15,6 +15,7 @@ export const BoardManager = ({ onOpen, intentError }: BoardManagerProps) => {
   const [creating, setCreating] = useState(false);
   const [newName, setNewName] = useState('');
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
+  const [currentTime] = useState(() => Date.now());
   const inputRef = useRef<HTMLInputElement>(null);
 
   const loadBoards = async () => {
@@ -28,7 +29,10 @@ export const BoardManager = ({ onOpen, intentError }: BoardManagerProps) => {
     }
   };
 
-  useEffect(() => { loadBoards(); }, []);
+  useEffect(() => {
+    const timer = setTimeout(() => { void loadBoards(); }, 0);
+    return () => clearTimeout(timer);
+  }, []);
   useEffect(() => { if (creating) setTimeout(() => inputRef.current?.focus(), 50); }, [creating]);
 
   const create = async () => {
@@ -49,8 +53,7 @@ export const BoardManager = ({ onOpen, intentError }: BoardManagerProps) => {
   const fmt = (ts: number) => {
     const normalizedTs = ts > 0 && ts < 1_000_000_000_000 ? ts * 1000 : ts;
     const d = new Date(normalizedTs);
-    const now = Date.now();
-    const diff = now - normalizedTs;
+    const diff = currentTime - normalizedTs;
     if (diff < 60000) return 'agora mesmo';
     if (diff < 3600000) return `${Math.floor(diff / 60000)}min atrás`;
     if (diff < 86400000) return `${Math.floor(diff / 3600000)}h atrás`;

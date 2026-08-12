@@ -145,13 +145,10 @@ export function StudyArchive({ onOpenStudy }: StudyArchiveProps) {
     });
   }, [filter, items, search]);
 
-  useEffect(() => {
-    if (!filtered.some(item => item.id === selectedId)) {
-      setSelectedId(filtered[0]?.id || null);
-    }
-  }, [filtered, selectedId]);
-
-  const selected = filtered.find(item => item.id === selectedId) || null;
+  const effectiveSelectedId = filtered.some(item => item.id === selectedId)
+    ? selectedId
+    : filtered[0]?.id || null;
+  const selected = filtered.find(item => item.id === effectiveSelectedId) || null;
 
   if (loading) {
     return (
@@ -210,7 +207,7 @@ export function StudyArchive({ onOpenStudy }: StudyArchiveProps) {
                   key={item.id}
                   type="button"
                   onClick={() => setSelectedId(item.id)}
-                  className={`w-full rounded-xl border p-3 text-left transition ${selectedId === item.id ? 'border-gray-200 bg-white shadow-sm' : 'border-transparent hover:bg-white/70'}`}
+                  className={`w-full rounded-xl border p-3 text-left transition ${effectiveSelectedId === item.id ? 'border-gray-200 bg-white shadow-sm' : 'border-transparent hover:bg-white/70'}`}
                 >
                   <div className="flex items-start gap-3">
                     <div className={`mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg ${item.source === 'study' ? 'bg-amber-50 text-amber-700' : 'bg-blue-50 text-blue-700'}`}>

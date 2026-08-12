@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode, useMemo } from 'react';
+import { createContext, useContext, useState, ReactNode, useMemo } from 'react';
 import { validatePassword } from '../utils/auth';
 
 export interface AureaProfile {
@@ -123,7 +123,7 @@ export const AgendaProvider = ({ children }: { children: ReactNode }) => {
     return localStorage.getItem('aurea_active_id') || '';
   });
 
-  const [activeSubjectId, setActiveSubjectIdState] = useState(() => (
+  const [storedActiveSubjectId, setActiveSubjectIdState] = useState(() => (
     localStorage.getItem(`aurea_active_subject:${localStorage.getItem('aurea_active_id') || ''}`) || localStorage.getItem('aurea_active_id') || ''
   ));
 
@@ -144,16 +144,10 @@ export const AgendaProvider = ({ children }: { children: ReactNode }) => {
     })),
   ]), [profiles]);
 
-  useEffect(() => {
-    const ownerSubjects = mapSubjects.filter(subject => subject.ownerProfileId === activeProfileId);
-    if (!ownerSubjects.length) {
-      setActiveSubjectIdState('');
-      return;
-    }
-    if (!ownerSubjects.some(subject => subject.id === activeSubjectId)) {
-      setActiveSubjectIdState(ownerSubjects[0].id);
-    }
-  }, [activeProfileId, activeSubjectId, mapSubjects]);
+  const ownerSubjects = mapSubjects.filter(subject => subject.ownerProfileId === activeProfileId);
+  const activeSubjectId = ownerSubjects.some(subject => subject.id === storedActiveSubjectId)
+    ? storedActiveSubjectId
+    : ownerSubjects[0]?.id || '';
 
   const setActiveSubjectId = (id: string) => {
     const subject = mapSubjects.find(candidate => candidate.id === id && candidate.ownerProfileId === activeProfileId);
