@@ -1,5 +1,6 @@
 # build_sidecar.spec — PyInstaller spec para o sidecar
-# Executar: pyinstaller build_sidecar.spec
+# Antes de executar este arquivo, rode `npm run build` para gerar `dist/index.html`.
+# Depois: pyinstaller build_sidecar.spec
 #
 # Gera um executável standalone do FastAPI sidecar (main_api.py + astro_engine.py)
 # para distribuição junto com o app Tauri.
