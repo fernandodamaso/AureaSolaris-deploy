@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A simple visual explanation of the cleanup completed by Fernando Dâmaso in the Aurea Solaris audit-hardening branch.">
+  <title>Aurea Solaris — Cleanup Explained</title>
+  <style>
+    :root {
+      --bg: #0c1017; --panel: #141b25; --panel-2: #192332; --text: #dce7f3;
+      --muted: #94a5b8; --line: #263548; --gold: #f0bf65; --gold-soft: #3d3020;
+      --teal: #59d5bf; --blue: #6cb8ff; --violet: #b39bff; --amber: #f5b95d;
+      --rose: #f28a9a; --max: 920px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; color: var(--text); background:
+      radial-gradient(circle at 80% 0%, rgba(240,191,101,.10), transparent 28rem),
+      radial-gradient(circle at 5% 32%, rgba(89,213,191,.06), transparent 24rem), var(--bg);
+      font: 16px/1.7 system-ui, -apple-system, "Segoe UI", sans-serif; }
+    a { color: inherit; }
+    .progress { position: fixed; z-index: 20; inset: 0 auto auto 0; width: 0; height: 3px;
+      background: linear-gradient(90deg, var(--teal), var(--gold)); box-shadow: 0 0 14px var(--gold); }
+    .nav { position: sticky; z-index: 10; top: 0; border-bottom: 1px solid rgba(255,255,255,.08);
+      background: rgba(12,16,23,.88); backdrop-filter: blur(14px); }
+    .nav-inner { max-width: var(--max); margin: auto; padding: .8rem 1.4rem; display: flex;
+      gap: .55rem; overflow-x: auto; scrollbar-width: none; }
+    .nav a { flex: 0 0 auto; padding: .35rem .7rem; border-radius: 999px; color: var(--muted);
+      text-decoration: none; font-size: .82rem; border: 1px solid transparent; transition: .2s ease; }
+    .nav a:hover, .nav a.active { color: #fff; border-color: var(--line); background: var(--panel-2); }
+    main { max-width: var(--max); margin: auto; padding: 0 1.4rem 5rem; }
+    .hero { min-height: 70vh; display: grid; align-content: center; padding: 5rem 0 3rem; }
+    .eyebrow { margin: 0 0 .8rem; color: var(--gold); font: 700 .78rem/1.2 "Cascadia Code", monospace;
+      letter-spacing: .16em; text-transform: uppercase; }
+    h1 { margin: 0; max-width: 780px; color: #f7fbff; font-size: clamp(2.7rem, 8vw, 5.7rem);
+      line-height: .98; letter-spacing: -.055em; }
+    .lead { max-width: 720px; margin: 1.6rem 0; color: #b8c7d8; font-size: clamp(1.05rem, 2vw, 1.3rem); }
+    .meta { display: flex; flex-wrap: wrap; gap: .65rem; }
+    .pill { padding: .35rem .7rem; border: 1px solid var(--line); border-radius: 999px;
+      background: rgba(20,27,37,.72); color: var(--muted); font-size: .82rem; }
+    .pill strong { color: var(--text); }
+    section { padding: 4.4rem 0 1rem; scroll-margin-top: 4rem; opacity: 0; transform: translateY(14px);
+      transition: opacity .55s ease, transform .55s ease; }
+    section.visible { opacity: 1; transform: none; }
+    .section-number { color: var(--gold); font: 700 .75rem/1 "Cascadia Code", monospace; letter-spacing: .14em; }
+    h2 { margin: .55rem 0 1rem; color: #f4f8fc; font-size: clamp(1.9rem, 5vw, 3.1rem); line-height: 1.08; letter-spacing: -.035em; }
+    h3 { margin: 0 0 .45rem; color: #f4f8fc; font-size: 1.08rem; }
+    p { margin: .4rem 0 1rem; }
+    .tldr { margin: 1.5rem 0 2rem; padding: 1.1rem 1.25rem; border-left: 3px solid var(--teal);
+      border-radius: 0 12px 12px 0; background: linear-gradient(90deg, rgba(89,213,191,.1), transparent); }
+    .tldr b { color: var(--teal); font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; }
+    .metrics, .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .metric, .card { border: 1px solid var(--line); border-radius: 16px; background: linear-gradient(145deg, var(--panel), rgba(20,27,37,.55));
+      padding: 1.2rem; box-shadow: 0 16px 45px rgba(0,0,0,.18); }
+    .metric strong { display: block; color: #fff; font-size: 2rem; line-height: 1.15; }
+    .metric span, .card p { color: var(--muted); }
+    .cards { grid-template-columns: repeat(2, 1fr); }
+    .card { position: relative; overflow: hidden; }
+    .card::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 3px; background: var(--accent, var(--blue)); }
+    .card .tag { display: inline-block; margin-bottom: .8rem; color: var(--accent, var(--blue));
+      font: 700 .72rem/1 "Cascadia Code", monospace; text-transform: uppercase; letter-spacing: .08em; }
+    .card code, details code { color: #d5caff; font: .85em "Cascadia Code", monospace; }
+    .flow { display: grid; grid-template-columns: repeat(5, 1fr); align-items: center; gap: .55rem; margin: 2rem 0; }
+    .flow-node { min-height: 100px; display: grid; place-items: center; padding: .8rem; text-align: center;
+      border: 1px solid var(--line); border-radius: 13px; background: var(--panel); color: #edf5ff; font-weight: 650; }
+    .arrow { color: var(--gold); text-align: center; font-size: 1.4rem; }
+    .before-after { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .state { padding: 1.25rem; border-radius: 15px; border: 1px solid var(--line); background: var(--panel); }
+    .state.before { border-top: 3px solid var(--rose); }
+    .state.after { border-top: 3px solid var(--teal); }
+    .state ul { margin: .8rem 0 0; padding-left: 1.15rem; color: var(--muted); }
+    details { margin: 1rem 0; border: 1px solid var(--line); border-radius: 13px; background: var(--panel); }
+    summary { cursor: pointer; padding: 1rem 1.1rem; color: #edf5ff; font-weight: 650; }
+    details > div { padding: 0 1.1rem 1.1rem; color: var(--muted); }
+    .evidence { display: grid; gap: .7rem; }
+    .check { display: grid; grid-template-columns: auto 1fr; gap: .8rem; padding: 1rem; border: 1px solid var(--line);
+      border-radius: 12px; background: rgba(20,27,37,.65); }
+    .check .icon { color: var(--teal); font-weight: 800; }
+    .note { margin-top: 1.5rem; padding: 1rem 1.15rem; border: 1px solid rgba(245,185,93,.28);
+      border-radius: 12px; color: #d9c8a9; background: rgba(245,185,93,.07); }
+    .footer { margin-top: 5rem; padding-top: 2rem; border-top: 1px solid var(--line); color: var(--muted); font-size: .9rem; }
+    @media (max-width: 720px) {
+      .hero { min-height: auto; padding-top: 4rem; } .metrics, .cards, .before-after { grid-template-columns: 1fr; }
+      .flow { grid-template-columns: 1fr; } .arrow { transform: rotate(90deg); } section { padding-top: 3.5rem; }
+    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } section { opacity: 1; transform: none; transition: none; } }
+  </style>
+</head>
+<body>
+  <div class="progress" aria-hidden="true"></div>
+  <nav class="nav" aria-label="Page sections"><div class="nav-inner">
+    <a href="#overview">Overview</a><a href="#cleanup">What changed</a><a href="#structure">Structure</a>
+    <a href="#safety">Safety</a><a href="#evidence">Evidence</a><a href="#limits">Limits</a>
+  </div></nav>
+  <main>
+    <header class="hero">
+      <p class="eyebrow">Aurea Solaris · Maintenance explainer</p>
+      <h1>Less clutter.<br>Clearer foundations.</h1>
+      <p class="lead">Fernando Dâmaso cleaned the codebase so that the same product behavior is easier to understand, safer to change, and better protected by automated checks.</p>
+      <div class="meta">
+        <span class="pill"><strong id="reading-time">5 min</strong> read</span>
+        <span class="pill"><strong>19</strong> focused commits</span>
+        <span class="pill"><strong>32</strong> files in the final change set</span>
+        <span class="pill">Merged <strong>12 Aug 2026</strong></span>
+      </div>
+    </header>
+
+    <section id="overview">
+      <span class="section-number">01 · OVERVIEW</span><h2>This was a cleanup, not a redesign</h2>
+      <div class="tldr"><b>In simple terms</b><br>The work removed paths that the product no longer uses, grouped repeated rules into shared code, separated large components, and added tests around private data and user context.</div>
+      <div class="metrics">
+        <div class="metric"><strong>−117</strong><span>lines removed from the local API, mainly unused AI-provider paths</span></div>
+        <div class="metric"><strong>+7</strong><span>new focused test files for behavior that must not regress</span></div>
+        <div class="metric"><strong>0</strong><span>uncommitted files after the branch merge</span></div>
+      </div>
+      <div class="note"><strong>How to read these numbers:</strong> fewer lines are useful only when obsolete code is removed. Added lines are useful here because most of them are tests, small shared utilities, documentation, and extracted components.</div>
+    </section>
+
+    <section id="cleanup">
+      <span class="section-number">02 · WHAT CHANGED</span><h2>Six practical improvements</h2>
+      <div class="tldr"><b>TL;DR</b><br>Each change reduces a specific kind of risk: confusion, privacy mistakes, accidental deletion, duplicated rules, oversized files, or silent regressions.</div>
+      <div class="cards">
+        <article class="card" style="--accent:var(--rose)"><span class="tag">Remove</span><h3>Dead AI-provider code</h3><p>Unused Ollama, Gemini, and OpenRouter paths were removed from <code>main_api.py</code>. Hermes now has fewer misleading branches around the supported provider choices.</p></article>
+        <article class="card" style="--accent:var(--amber)"><span class="tag">Protect</span><h3>Private local files</h3><p>Legacy natal-chart and board files were added to <code>.gitignore</code>. This reduces the chance that personal data is added to Git again.</p></article>
+        <article class="card" style="--accent:var(--teal)"><span class="tag">Guard</span><h3>Safe cleanup preview</h3><p>A dry-run tool reports only approved generated folders. It has no delete mode and explicitly protects editorial knowledge and private data.</p></article>
+        <article class="card" style="--accent:var(--violet)"><span class="tag">Centralize</span><h3>Board and diary operations</h3><p>Repeated create, update, and field-handling rules moved into typed utilities. Screens now call one shared rule instead of rebuilding it in several places.</p></article>
+        <article class="card" style="--accent:var(--blue)"><span class="tag">Separate</span><h3>Large UI responsibilities</h3><p>Board management moved out of <code>MesaCriacao</code>, and Mandala orientation math moved out of its visual component. Each file now has a narrower job.</p></article>
+        <article class="card" style="--accent:var(--gold)"><span class="tag">Verify</span><h3>Tests, types, and lint fixes</h3><p>New tests cover owner isolation, diary fields, board operations, Mandala geometry, active subjects, and archive behavior. A direct frontend type-check command was also added.</p></article>
+      </div>
+    </section>
+
+    <section id="structure">
+      <span class="section-number">03 · STRUCTURE</span><h2>One rule, one clear home</h2>
+      <div class="tldr"><b>TL;DR</b><br>The main structural benefit is not visual. Business rules and calculations now live outside screen components, where they are easier to test and reuse.</div>
+      <div class="flow" aria-label="Simplified architecture flow">
+        <div class="flow-node">User action<br>in a screen</div><div class="arrow">→</div>
+        <div class="flow-node">Typed shared<br>operation</div><div class="arrow">→</div>
+        <div class="flow-node">Consistent<br>stored result</div>
+      </div>
+      <div class="before-after">
+        <div class="state before"><h3>Before</h3><ul><li>Large components mixed display and data rules.</li><li>Similar operations were repeated in different screens.</li><li>Geometry was coupled to rendering code.</li></ul></div>
+        <div class="state after"><h3>After</h3><ul><li><code>BoardManager</code> owns board management.</li><li><code>board.ts</code> and <code>diary.ts</code> hold shared typed operations.</li><li><code>mandalaGeometry.ts</code> holds testable orientation logic.</li></ul></div>
+      </div>
+      <details><summary>Why this helps future development</summary><div>A future change has fewer places to inspect. A correction to a shared operation can be tested without opening the full screen. Smaller components also reduce the chance that an unrelated visual change breaks data behavior.</div></details>
+    </section>
+
+    <section id="safety">
+      <span class="section-number">04 · SAFETY</span><h2>Cleanup with boundaries</h2>
+      <div class="tldr"><b>TL;DR</b><br>The branch treats cleanup as a controlled report-and-test process. It does not add a broad deletion command.</div>
+      <div class="cards">
+        <article class="card" style="--accent:var(--teal)"><span class="tag">Allowed to report</span><h3>Generated output only</h3><p><code>dist/</code>, <code>build/</code>, Rust build output, selected Python caches, and one known error file are on a fixed allowlist.</p></article>
+        <article class="card" style="--accent:var(--rose)"><span class="tag">Explicitly protected</span><h3>Knowledge and personal data</h3><p>The tool does not target <code>node_modules</code>, environments, worktrees, private data, or the editorial astrology database.</p></article>
+      </div>
+      <details><summary>What “dry run” means</summary><div>The command <code>python tools/dry_run_cleanup.py</code> only prints what a future cleanup could consider. It cannot remove, move, or overwrite a file. Any destructive cleanup still needs separate review and explicit approval.</div></details>
+    </section>
+
+    <section id="evidence">
+      <span class="section-number">05 · EVIDENCE</span><h2>The important behavior now has alarms</h2>
+      <div class="tldr"><b>TL;DR</b><br>Automated tests act like alarms. They do not prove that all future changes are safe, but they catch several known failure types earlier.</div>
+      <div class="evidence">
+        <div class="check"><span class="icon">✓</span><div><strong>Private owner isolation</strong><br><span>Tests check that one owner cannot read or change another owner’s private records.</span></div></div>
+        <div class="check"><span class="icon">✓</span><div><strong>Diary field preservation</strong><br><span>Tests check optional and omitted fields so an update does not silently erase information.</span></div></div>
+        <div class="check"><span class="icon">✓</span><div><strong>Active subject fallback</strong><br><span>Tests check that the application selects and persists a valid subject when the current selection is no longer valid.</span></div></div>
+        <div class="check"><span class="icon">✓</span><div><strong>Pure geometry and board rules</strong><br><span>Small utility tests check Mandala orientation and board operations without depending on a full page render.</span></div></div>
+        <div class="check"><span class="icon">✓</span><div><strong>Static checks</strong><br><span><code>npm run typecheck</code> gives contributors a direct way to find TypeScript errors; audited ESLint errors were also corrected.</span></div></div>
+      </div>
+      <details><summary>Change-set evidence</summary><div>The comparison from the documented Vivic baseline to Fernando’s final branch commit changes 32 files, with 1,581 inserted lines and 485 removed lines. The series contains 19 focused commits before the merge commit. These are Git measurements, not estimates.</div></details>
+    </section>
+
+    <section id="limits">
+      <span class="section-number">06 · LIMITS</span><h2>What this work does not claim</h2>
+      <div class="tldr"><b>TL;DR</b><br>This branch improves maintainability and safeguards. It does not by itself certify the complete product or replace manual user acceptance.</div>
+      <div class="before-after">
+        <div class="state after"><h3>Reasonable conclusions</h3><ul><li>The supported code path is clearer.</li><li>Several private-data boundaries have regression tests.</li><li>Repeated UI logic has clearer ownership.</li><li>Generated-file cleanup can be inspected safely.</li></ul></div>
+        <div class="state before"><h3>Not claimed here</h3><ul><li>No claim that every project defect is fixed.</li><li>No claim that all local environments have identical dependencies.</li><li>No claim that the full Chrome workflow was manually accepted.</li><li>No destructive cleanup was performed.</li></ul></div>
+      </div>
+      <div class="note"><strong>Bottom line:</strong> the project has a smaller maintenance surface and stronger guardrails. That makes later feature work less risky, but normal build, test, and human acceptance checks are still required.</div>
+    </section>
+
+    <footer class="footer">Prepared from Git history and the merged <code>work/viv-audit-hardening</code> change set by Fernando Dâmaso. Baseline: <code>0e503ca</code>. Final branch commit: <code>90329de</code>. Merge: <code>273918a</code>.</footer>
+  </main>
+  <script>
+    const sections = [...document.querySelectorAll('section')];
+    const links = [...document.querySelectorAll('.nav a')];
+    const progress = document.querySelector('.progress');
+    const words = document.querySelector('main').innerText.trim().split(/\s+/).length;
+    document.querySelector('#reading-time').textContent = `${Math.max(1, Math.ceil(words / 220))} min`;
+    const reveal = new IntersectionObserver(entries => entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    }), { threshold: .08 });
+    sections.forEach(section => reveal.observe(section));
+    const active = new IntersectionObserver(entries => entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      links.forEach(link => link.classList.toggle('active', link.hash === `#${entry.target.id}`));
+    }), { rootMargin: '-20% 0px -65% 0px' });
+    sections.forEach(section => active.observe(section));
+    addEventListener('scroll', () => {
+      const available = document.documentElement.scrollHeight - innerHeight;
+      progress.style.width = `${available > 0 ? (scrollY / available) * 100 : 0}%`;
+    }, { passive: true });
+  </script>
+</body>
+</html>
