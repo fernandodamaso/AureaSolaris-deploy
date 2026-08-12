@@ -2,22 +2,36 @@ import { useState, useMemo, useEffect, useRef } from 'react';
 import { useAstroData } from '../hooks/useAstroData';
 import { MandalaChart } from './MandalaChart';
 import { RefreshCw, User, Users, Plus, Edit3, MessageSquare, FileText } from 'lucide-react';
-import { useAgendaContext } from '../context/AgendaContext';
+import { useAgendaContext, type AureaProfile } from '../context/AgendaContext';
 import { BirthForm } from './common/BirthForm';
 import { CalculationEvidence } from './common/CalculationEvidence';
 import { readCertifiedCalculation } from '../utils/certifiedCalculation';
+import type { CertifiedAstrologyResult, PlanetaryPosition } from '../types/astrology';
+import type { ProfileConnection, BirthData } from '../types/private-profile';
 
 type BirthInput = { year: number; month: number; day: number; hour: number; lat: number; lon: number; timezone: string };
 
+type ConnectionFormData = {
+  name: string;
+  date: string;
+  time: string;
+  location: string;
+  lat: number;
+  lng: number;
+  timezone: string;
+};
+
+type ChartHouseCusp = { degree?: number; sign?: string };
+
 // Sem dados confirmados, não há mapa: nunca completar data, hora ou local fictícios.
-function readBirthInput(profile: any): BirthInput | null {
-  const natal = profile?.natal || {};
-  const source = profile?.birthData || natal;
-  const date = profile?.birthDate || source?.birthDate || source?.date;
-  const time = profile?.birthTime || source?.birthTime || source?.time;
-  const lat = Number(source?.lat ?? profile?.lat);
-  const lon = Number(source?.lon ?? source?.lng ?? profile?.lon ?? profile?.lng);
-  const timezone = source?.timezone ?? source?.birthTimezone ?? profile?.birthTimezone;
+function readBirthInput(profile: AureaProfile | ProfileConnection | null | undefined): BirthInput | null {
+  const natal = (profile?.natal ?? {}) as BirthData;
+  const source = profile?.birthData ?? natal;
+  const date = profile?.birthDate || source.birthDate || source.date;
+  const time = profile?.birthTime || source.birthTime || source.time;
+  const lat = Number(source.lat);
+  const lon = Number(source.lng ?? (source as BirthData & { lon?: number }).lon);
+  const timezone = source.timezone ?? source.birthTimezone ?? profile?.birthTimezone;
   if (typeof date !== 'string' || typeof time !== 'string') return null;
   const [year, month, day] = date.split('-').map(Number);
   const [hours, minutes] = time.split(':').map(Number);
@@ -50,10 +64,10 @@ export const MandalaPage = () => {
     }
   }, [activeProfileId, mapSubjects, selectedTarget, setActiveSubjectId]);
 
-  const handleSaveConnection = (data: any) => {
+  const handleSaveConnection = (data: ConnectionFormData) => {
     if (editingConnectionId) {
-      const updatedConnections = (activeProfile.connections || []).map((c: any) =>
-        c.id === editingConnectionId ? { ...c, ...data, birthData: data } : c
+      const updatedConnections = (activeProfile.connections || []).map((connection) =>
+        connection.id === editingConnectionId ? { ...connection, ...data, birthData: data } : connection
       );
       updateProfile(activeProfile.id, { connections: updatedConnections });
     } else {
@@ -90,7 +104,18 @@ export const MandalaPage = () => {
   }, [selectedTarget, activeProfileId, mapSubjects]);
 
   const calculationEnabled = Boolean(birthData);
-  const { data, loading, error, recalculate } = useAstroData(birthData, calculationEnabled);
+  const calculationRequest = birthData
+    ? {
+      year: birthData.year,
+      month: birthData.month,
+      day: birthData.day,
+      hour: birthData.hour,
+      lat: birthData.lat,
+      lon: birthData.lon,
+      timezone_name: birthData.timezone,
+    }
+    : undefined;
+  const { data, loading, error, recalculate } = useAstroData(calculationRequest, calculationEnabled);
 
   // Parse data for MandalaChart - includes planets, secondary bodies, and angles
   const chartPlanets = useMemo(() => {
@@ -107,37 +132,40 @@ export const MandalaPage = () => {
     }> = [];
 
     // Traditional planets + Chiron
-    Object.entries(data.planets).forEach(([name, info]: [string, any]) => {
+    Object.entries(data.planets).forEach(([name, info]) => {
+      const position = info as PlanetaryPosition & { stationary?: boolean; speed?: number };
       allPoints.push({
         name,
-        degree: info.degree,
-        sign: info.sign || '',
-        retrograde: info.retrograde === true,
+        degree: position.degree,
+        sign: position.sign || '',
+        retrograde: position.retrograde === true,
         isAngle: ['ASC', 'MC'].includes(name),
-        stationary: info.stationary === true,
-        speed: typeof info.speed === 'number' ? info.speed : undefined,
-        house: typeof info.house === 'number' ? info.house : undefined,
+        stationary: position.stationary === true,
+        speed: typeof position.speed === 'number' ? position.speed : undefined,
+        house: typeof position.house === 'number' ? position.house : undefined,
       });
     });
 
     // Secondary bodies (NorthNode, SouthNode, Lilith, PartOfFortune, Vertex)
     if (data.secondary) {
-      Object.entries(data.secondary).forEach(([name, info]: [string, any]) => {
+      Object.entries(data.secondary).forEach(([name, info]) => {
+        const position = info as PlanetaryPosition & { stationary?: boolean; speed?: number };
         allPoints.push({
           name,
-          degree: info.degree,
-          sign: info.sign || '',
-          retrograde: info.retrograde === true,
-          stationary: info.stationary === true,
-          speed: typeof info.speed === 'number' ? info.speed : undefined,
-          house: typeof info.house === 'number' ? info.house : undefined,
+          degree: position.degree,
+          sign: position.sign || '',
+          retrograde: position.retrograde === true,
+          stationary: position.stationary === true,
+          speed: typeof position.speed === 'number' ? position.speed : undefined,
+          house: typeof position.house === 'number' ? position.house : undefined,
         });
       });
     }
 
     // Angles (ASC, MC, DSC, IC) - DSC and IC calculated
-    if (data.angles) {
-      Object.entries(data.angles).forEach(([name, deg]: [string, any]) => {
+    const chartAngles = (data as CertifiedAstrologyResult & { angles?: Record<string, number> }).angles;
+    if (chartAngles) {
+      Object.entries(chartAngles).forEach(([name, deg]) => {
         if (!data.planets[name]) { // Don't duplicate ASC/MC if already in planets
           const signs = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo',
                          'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'];
@@ -159,10 +187,10 @@ export const MandalaPage = () => {
 
   const chartHouses = useMemo(() => {
     if (!data?.houses) return [];
-    return data.houses.map((h: any, i: number) => ({
+    return (data.houses as ChartHouseCusp[]).map((house, i) => ({
       house: i + 1,
-      degree: h.degree || 0,
-      sign: h.sign,
+      degree: house.degree || 0,
+      sign: house.sign,
     }));
   }, [data]);
 
@@ -185,8 +213,9 @@ export const MandalaPage = () => {
 
   const openCadernoForCurrentMap = () => {
     const auditReceipt = data?.meta?.receipt;
-    const receipt = data?.meta
-      ? `Cálculo astronômico recebido\n• UTC: ${auditReceipt?.resolved_time?.utc || data.meta.timestamp || 'não informado'}\n• Fuso IANA: ${auditReceipt?.resolved_time?.iana_timezone || 'não informado'}\n• Local: ${data.meta.location?.lat ?? '—'}, ${data.meta.location?.lon ?? '—'}\n• Motor: ${auditReceipt?.engine?.name || 'não informado'} ${auditReceipt?.engine?.version || ''}\n• Hash da entrada: ${auditReceipt?.input_hash || 'não informado'}`
+    const meta = data?.meta as (CertifiedAstrologyResult['meta'] & { timestamp?: string; location?: { lat?: number; lon?: number } }) | undefined;
+    const receipt = meta
+      ? `Cálculo astronômico recebido\n• UTC: ${auditReceipt?.resolved_time?.utc || meta.timestamp || 'não informado'}\n• Fuso IANA: ${auditReceipt?.resolved_time?.iana_timezone || 'não informado'}\n• Local: ${meta.location?.lat ?? '—'}, ${meta.location?.lon ?? '—'}\n• Motor: ${auditReceipt?.engine?.name || 'não informado'} ${auditReceipt?.engine?.version || ''}\n• Hash da entrada: ${auditReceipt?.input_hash || 'não informado'}`
       : 'Cálculo astronômico indisponível — não registrar interpretação como fato.';
     window.dispatchEvent(new CustomEvent('open-caderno-vivo', {
       detail: {
@@ -196,6 +225,10 @@ export const MandalaPage = () => {
       },
     }));
   };
+
+  const editingConnection = editingConnectionId
+    ? activeProfile.connections?.find((connection) => connection.id === editingConnectionId)
+    : undefined;
 
   return (
     <div className="flex h-full min-w-0 overflow-hidden w-full">
@@ -333,7 +366,15 @@ export const MandalaPage = () => {
         <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/40 backdrop-blur-md p-4 animate-in fade-in zoom-in-95">
            <BirthForm
              title={editingConnectionId ? "Editar Mapa" : "Adicionar Mapa"}
-             initialData={editingConnectionId ? activeProfile.connections?.find((c: any) => c.id === editingConnectionId)?.birthData : undefined}
+             initialData={editingConnection?.birthData ? {
+               name: editingConnection.name,
+               date: editingConnection.birthData.date ?? editingConnection.birthDate ?? '',
+               time: editingConnection.birthData.time ?? editingConnection.birthTime ?? '',
+               location: editingConnection.birthData.location ?? editingConnection.birthCity ?? '',
+               lat: editingConnection.birthData.lat,
+               lng: editingConnection.birthData.lng,
+               timezone: editingConnection.birthData.timezone ?? editingConnection.birthTimezone,
+             } : undefined}
              onSave={handleSaveConnection}
              onClose={() => {
                setShowForm(false);

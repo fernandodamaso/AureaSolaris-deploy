@@ -14,7 +14,7 @@
     "preview": "vite preview",
     "tauri": "tauri",
     "dev:full": "npm run dev",
-    "lint": "eslint src/",
+    "lint": "eslint src/ --max-warnings=0",
     "lint:fix": "eslint src/ --fix",
     "test": "vitest run --configLoader runner",
     "test:watch": "vitest --configLoader runner"

@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import { safeInvoke } from '../utils/tauri';
 import { readCertifiedCalculation } from '../utils/certifiedCalculation';
 import { LOCAL_API_URL } from '../utils/api';
+import type { AstrologyCalculationRequest, CertifiedAstrologyResult } from '../types/astrology';
 
 const ASPECT_MAP: Record<string, string> = {
   Conjunction: 'Conjunção',
@@ -41,7 +42,7 @@ async function requestNatalFromSidecar(payload: string): Promise<string | null> 
   return null;
 }
 
-function hasDisplayableNatalShape(value: any): boolean {
+function hasDisplayableNatalShape(value: CertifiedAstrologyResult): boolean {
   const requiredPoints = ['Sun', 'Moon', 'ASC', 'MC'];
   const hasDegree = (point: unknown) => {
     const degree = (point as { degree?: unknown } | null)?.degree;
@@ -53,8 +54,8 @@ function hasDisplayableNatalShape(value: any): boolean {
     value.houses.every((house: unknown) => hasDegree(house));
 }
 
-export const useAstroData = (birthData?: any, enabled = true) => {
-  const [data, setData] = useState<any>(null);
+export const useAstroData = (birthData?: AstrologyCalculationRequest, enabled = true) => {
+  const [data, setData] = useState<CertifiedAstrologyResult | null>(null);
   const [loading, setLoading] = useState(enabled);
   const [error, setError] = useState<string | null>(null);
 
@@ -87,9 +88,9 @@ export const useAstroData = (birthData?: any, enabled = true) => {
         setError('Motor astrológico indisponível. O mapa não será estimado. Verifique o serviço local e tente novamente.');
         return;
       }
-      const parsed = JSON.parse(result);
+      const parsed = JSON.parse(result) as CertifiedAstrologyResult;
       if (parsed.aspects) {
-        parsed.aspects = parsed.aspects.map((asp: any) => ({
+        parsed.aspects = parsed.aspects.map((asp) => ({
           ...asp,
           type: ASPECT_MAP[asp.type] || asp.type,
         }));
@@ -105,8 +106,8 @@ export const useAstroData = (birthData?: any, enabled = true) => {
       } else {
         setData(parsed);
       }
-    } catch (e: any) {
-      setError(e.toString());
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : String(e));
     } finally {
       setLoading(false);
     }

@@ -1,10 +1,12 @@
 import { createContext, useContext, ReactNode, useMemo } from 'react';
 import { useAstrologyData } from '../hooks/useAstrologyData';
 import { useAgendaContext, AureaProfile, AureaTask, AureaEvent, AureaDocument, AstroMapSubject } from './AgendaContext';
+import type { LiveAstroData, AstroAspect, PlanetaryPosition } from '../types/astrology';
+import type { HermesInsight } from '../types/private-profile';
 
 interface AstroState {
-  liveData: any;
-  transits: any[];
+  liveData: LiveAstroData | null;
+  transits: ReturnType<typeof useAstrologyData>['transits'];
   loading: boolean;
   error: string | null;
   planetaryHour: { icon: string; name: string; time: string };
@@ -22,7 +24,7 @@ interface GlobalContextType {
     events: AureaEvent[];
     metrics: { done: number; pending: number; notDone: number };
     documents: AureaDocument[];
-    insights: any[];
+    insights: HermesInsight[];
     setActiveProfileId: (id: string) => void;
     addProfile: (name: string, password: string, id?: string) => Promise<AureaProfile>;
     updateProfile: (id: string, updates: Partial<AureaProfile>) => void;
@@ -53,17 +55,17 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
       
       const planets = liveData?.planets || {};
       const retrogradePlanets = Object.entries(planets)
-        .filter(([_, v]: [string, any]) => v?.retrograde && !['ASC', 'MC', 'DSC', 'IC'].includes(_))
+        .filter(([name, value]: [string, PlanetaryPosition]) => value?.retrograde && !['ASC', 'MC', 'DSC', 'IC'].includes(name))
         .map(([k]) => k);
       
       const planetPositions = Object.entries(planets)
-        .map(([k, v]: [string, any]) => Number.isFinite(v?.pos_in_sign) && typeof v?.sign === 'string'
+        .map(([k, v]: [string, PlanetaryPosition]) => Number.isFinite(v?.pos_in_sign) && typeof v?.sign === 'string'
           ? `${k}: ${v.pos_in_sign.toFixed(1)}° ${v.sign}`
           : null)
         .filter((position): position is string => Boolean(position))
         .join(', ');
       
-      const skyAspects = (liveData?.aspects || []).slice(0, 5).map((a: any) => `${a.p1} ${a.symbol} ${a.p2}`).join(', ') || 'Nenhum';
+      const skyAspects = (liveData?.aspects || []).slice(0, 5).map((a: AstroAspect) => `${a.p1} ${a.symbol} ${a.p2}`).join(', ') || 'Nenhum';
       const transitSummary = 'Não calculados: mapa natal certificado não disponível';
 
       return `

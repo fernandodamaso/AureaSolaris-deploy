@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Send, Sparkles, X } from 'lucide-react';
 import { useGlobalContext } from '../context/GlobalContext';
 import { readCertifiedCalculation } from '../utils/certifiedCalculation';
+import type { BirthData } from '../types/private-profile';
 import {
   appendHermesMessage,
   getHermesThreadContext,
@@ -54,11 +55,11 @@ function resolveActiveSubject(ctx: ReturnType<typeof useGlobalContext>) {
 export function buildSystemPrompt(ctx: ReturnType<typeof useGlobalContext>): string {
   const { astro, system } = ctx;
   const { owner, subject, source, name } = resolveActiveSubject(ctx);
-  const birthSource = source?.birthData ?? source?.natal ?? source ?? {};
-  const birthDate = source?.birthDate ?? birthSource?.birthDate ?? birthSource?.date;
-  const birthTime = source?.birthTime ?? birthSource?.birthTime ?? birthSource?.time;
-  const birthPlace = source?.birthCity ?? birthSource?.birthCity ?? birthSource?.location;
-  const birthTimezone = source?.birthTimezone ?? birthSource?.birthTimezone ?? birthSource?.timezone;
+  const birthSource = (source?.birthData ?? source?.natal ?? {}) as BirthData;
+  const birthDate = source?.birthDate ?? birthSource.birthDate ?? birthSource.date;
+  const birthTime = source?.birthTime ?? birthSource.birthTime ?? birthSource.time;
+  const birthPlace = source?.birthCity ?? birthSource.birthCity ?? birthSource.location;
+  const birthTimezone = source?.birthTimezone ?? birthSource.birthTimezone ?? birthSource.timezone;
 
   const certifiedNatal = readCertifiedCalculation(source?.certifiedNatalCalculation, 'natal');
   const certifiedTransit = readCertifiedCalculation(astro.liveData, 'transit');
@@ -213,7 +214,7 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
         } catch {
           setSystemPromptSummary(null);
         }
-      } catch (err) {
+      } catch {
         // ignore; fallback to on-demand build during send
         setSystemPrompt(null);
         setSystemPromptSummary(null);

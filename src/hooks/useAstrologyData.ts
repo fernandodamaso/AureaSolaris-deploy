@@ -4,6 +4,9 @@ import { LOCAL_API_URL } from '../utils/api';
 import { getAspectOrbs, AspectOrb } from '../utils/astro-settings';
 import { astroLogger } from '../utils/logger';
 import { readCertifiedCalculation } from '../utils/certifiedCalculation';
+import type { LiveAstroData, AstroAspect, PlanetaryPosition } from '../types/astrology';
+
+export type { PlanetaryPosition, AstroAspect, LiveAstroData };
 
 const SIGN_MAP: Record<string, string> = {
   Ari: 'Áries', Tau: 'Touro', Gem: 'Gêmeos', Can: 'Câncer',
@@ -23,52 +26,14 @@ const REGENT_MAP: Record<string, string> = {
   Mars: 'Marte', Jupiter: 'Júpiter', Saturn: 'Saturno',
 };
 
-export interface PlanetaryPosition {
-  sign: string;
-  pos_in_sign: number;
-  degree: number;
-  element: string;
-  house: string | number;
-  retrograde: boolean;
-}
-
-export interface AstroAspect {
-  p1: string;
-  p2: string;
-  type: string;
-  symbol: string;
-  orb: number;
-  applying?: boolean;
-}
-
-export interface LiveAstroData {
-  planets: Record<string, PlanetaryPosition>;
-  aspects: AstroAspect[];
-  houses: number[];
-  regence: {
-    day_regent: string;
-    hour_regent: string;
-  };
-  moon_phase: {
-    phase: string;
-    icon: string;
-    illumination: number;
-  };
-  meta: {
-    timestamp: string;
-    location: { lat: number; lon: number };
-  };
-  secondary?: Record<string, PlanetaryPosition>;
-}
-
 function normalizeAstroData(data: unknown): LiveAstroData | null {
   if (!data || typeof data !== 'object') return null;
-  const normalized: any = { ...(data as Record<string, unknown>) };
+  const normalized = { ...(data as Record<string, unknown>) } as unknown as LiveAstroData;
 
   const normalizePositions = (positions: unknown) => {
     if (!positions || typeof positions !== 'object') return positions;
     return Object.fromEntries(
-      Object.entries(positions as Record<string, any>).map(([name, value]) => [
+      Object.entries(positions as Record<string, PlanetaryPosition>).map(([name, value]) => [
         name,
         {
           ...value,
@@ -79,10 +44,10 @@ function normalizeAstroData(data: unknown): LiveAstroData | null {
     );
   };
 
-  normalized.planets = normalizePositions(normalized.planets);
-  normalized.secondary = normalizePositions(normalized.secondary);
+  normalized.planets = normalizePositions(normalized.planets) as Record<string, PlanetaryPosition>;
+  normalized.secondary = normalizePositions(normalized.secondary) as Record<string, PlanetaryPosition> | undefined;
   if (Array.isArray(normalized.aspects)) {
-    normalized.aspects = normalized.aspects.map((aspect: any) => ({ ...aspect, type: ASPECT_MAP[aspect.type] || aspect.type }));
+    normalized.aspects = normalized.aspects.map((aspect: AstroAspect) => ({ ...aspect, type: ASPECT_MAP[aspect.type] || aspect.type }));
   }
   if (normalized.regence) {
     normalized.regence = {

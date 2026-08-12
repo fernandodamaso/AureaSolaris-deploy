@@ -7,10 +7,12 @@ import {
 import { safeInvoke } from '../utils/tauri';
 import { LOCAL_API_URL } from '../utils/api';
 import { readCertifiedCalculation } from '../utils/certifiedCalculation';
+import type { PrivateProfile } from '../types/private-profile';
+import type { PlanetaryPosition } from '../types/astrology';
 
 interface ProfileEditorProps {
-  profile: any;
-  onSave: (updates: any) => void;
+  profile: PrivateProfile;
+  onSave: (updates: Partial<PrivateProfile>) => void;
   onClose: () => void;
   onLogout: () => void;
 }
@@ -104,16 +106,17 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEdi
             const summary = Object.entries(data.planets)
               .filter(([name]) => !['ASC', 'MC', 'DSC', 'IC', 'Chiron'].includes(name))
               .slice(0, 6)
-              .map(([name, info]: [string, any]) => {
-                const deg = Math.floor(info.pos_in_sign ?? 0);
-                const min = Math.round(((info.pos_in_sign ?? 0) % 1) * 60);
-                return `${name}: ${deg}°${min > 0 ? `${String(min).padStart(2, '0')}'` : ''} ${info.sign_full || info.sign || '?'}`;
+              .map(([name, info]) => {
+                const position = info as PlanetaryPosition & { sign_full?: string };
+                const deg = Math.floor(position.pos_in_sign ?? 0);
+                const min = Math.round(((position.pos_in_sign ?? 0) % 1) * 60);
+                return `${name}: ${deg}°${min > 0 ? `${String(min).padStart(2, '0')}'` : ''} ${position.sign_full || position.sign || '?'}`;
               })
               .join(' | ');
             setNatalPreview(summary);
           }
         }
-      } catch (e) {
+      } catch {
         setNatalPreview('Cálculo indisponível. Nenhum valor foi estimado.');
       } finally {
         setLoadingNatal(false);
@@ -173,7 +176,7 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEdi
     onSave({
       avatar,
       name,
-      birthDate,
+      birthDate: birthDate ?? undefined,
       birthTime,
       birthCity,
       birthTimezone: city?.timezone,

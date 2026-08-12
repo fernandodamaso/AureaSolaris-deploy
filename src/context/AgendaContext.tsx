@@ -1,21 +1,8 @@
 import { createContext, useContext, useState, ReactNode, useMemo, useEffect } from 'react';
 import { validatePassword } from '../utils/auth';
+import type { PrivateProfile, ProfileConnection, HermesInsight } from '../types/private-profile';
 
-export interface AureaProfile {
-  id: string;
-  name: string;
-  active: boolean;
-  natal?: any;
-  birthData?: any;
-  connections?: any[];
-  birthDate?: string;
-  birthTime?: string;
-  birthCity?: string;
-  birthTimezone?: string;
-  avatar?: string;
-  context?: string;
-  dialogStyle?: string;
-  }
+export type AureaProfile = PrivateProfile;
 
 export interface AureaTask {
   id: string;
@@ -30,7 +17,7 @@ export interface AstroMapSubject {
   name: string;
   kind: 'profile' | 'connection';
   ownerProfileId: string;
-  source: AureaProfile | any;
+  source: AureaProfile | ProfileConnection;
 }
 
 export interface AureaEvent {
@@ -80,16 +67,33 @@ interface AgendaContextType {
   postponeTask: (id: string) => Promise<void>;
   addEvent: (title: string, start: string) => Promise<void>;
   deleteEvent: (id: string) => Promise<void>;
-  executeInsight: (insight: any) => Promise<void>;
+  executeInsight: (insight: HermesInsight) => Promise<void>;
   getMetrics: () => { done: number, pending: number, notDone: number };
   getPlanetaryHour: (date: Date) => { icon: string, name: string, hour: string };
   getPlanetaryDayRegent: (date: Date) => { icon: string, name: string };
   getPlanetRegency: (date: Date) => { icon: string, name: string };
-  getHermesInsights: (transits?: any[]) => any[];
+  getHermesInsights: (transits?: unknown[]) => HermesInsight[];
   refreshTasks: () => Promise<void>;
 }
 
 const AgendaContext = createContext<AgendaContextType | undefined>(undefined);
+
+const stripLegacySecrets = (profile: Record<string, unknown>): AureaProfile => {
+  const { password, passwordVerifier, composioKey, ...safeProfile } = profile;
+  void password;
+  void passwordVerifier;
+  void composioKey;
+  return {
+    ...safeProfile,
+    connections: Array.isArray(profile.connections) ? profile.connections as ProfileConnection[] : [],
+  } as AureaProfile;
+};
+
+const isLegacySeedProfile = (profile: AureaProfile) => (
+  profile.id === 'viviane' && profile.name === 'Viviane'
+  && !profile.birthDate && !profile.birthTime && !profile.birthCity && !profile.natal
+  && (!Array.isArray(profile.connections) || profile.connections.length === 0)
+);
 
 const resolveSubjectId = (profiles: AureaProfile[], profileId: string, requestedId: string) => {
   const profile = profiles.find(candidate => candidate.id === profileId);
@@ -103,23 +107,13 @@ export const AgendaProvider = ({ children }: { children: ReactNode }) => {
   const [profiles, setProfiles] = useState<AureaProfile[]>(() => {
     const saved = localStorage.getItem('aurea_profiles');
     if (saved) {
-      const parsed = JSON.parse(saved);
-      const filtered = parsed.filter((p: any) => {
+      const parsed = JSON.parse(saved) as AureaProfile[];
+      const filtered = parsed.filter((p) => {
         if (p.id === 'damiao' || p.name === 'Damiao') return false;
-        // Remove only the exact profile old builds created without user action.
-        const isGeneratedVivianeSeed = p.id === 'viviane' && p.name === 'Viviane'
-          && !p.birthDate && !p.birthTime && !p.birthCity && !p.natal
-          && (!Array.isArray(p.connections) || p.connections.length === 0);
-        return !isGeneratedVivianeSeed;
+        return !isLegacySeedProfile(p);
       });
       
-      const sanitized = filtered.map((p: any) => {
-        const { password: _legacyPassword, passwordVerifier: _legacyVerifier, composioKey: _legacyComposio, ...safeProfile } = p;
-        return {
-          ...safeProfile,
-          connections: p.connections || []
-        };
-      });
+      const sanitized = filtered.map((p) => stripLegacySecrets(p as unknown as Record<string, unknown>));
       // Contenção imediata: segredos e senhas legados saem de localStorage na primeira abertura.
       localStorage.setItem('aurea_profiles', JSON.stringify(sanitized));
       return sanitized;
@@ -155,7 +149,7 @@ export const AgendaProvider = ({ children }: { children: ReactNode }) => {
   // A connected natal map is a study subject, not a second login/profile.
   const mapSubjects = useMemo<AstroMapSubject[]>(() => profiles.flatMap(profile => [
     { id: profile.id, name: profile.name, kind: 'profile' as const, ownerProfileId: profile.id, source: profile },
-    ...(Array.isArray(profile.connections) ? profile.connections : []).map((connection: any) => ({
+    ...(Array.isArray(profile.connections) ? profile.connections : []).map((connection: ProfileConnection) => ({
       id: connection.id,
       name: connection.name,
       kind: 'connection' as const,
@@ -255,11 +249,10 @@ export const AgendaProvider = ({ children }: { children: ReactNode }) => {
       return;
     }
 
-    const newConn = { 
+    const newConn: ProfileConnection = { 
       id: name.toLowerCase().replace(/\s+/g, '_') + '_' + Date.now(), 
       name, 
       birthData,
-      natal: null
     };
     
     const updated = profiles.map(p => 
@@ -361,18 +354,18 @@ export const AgendaProvider = ({ children }: { children: ReactNode }) => {
     persistEvents(events.filter(event => event.id !== id));
   };
 
-  const executeInsight = async (insight: any) => {
+  const executeInsight = async (insight: HermesInsight) => {
     if (insight.type === 'move' || insight.type === 'opportunity') {
-      await addTask(insight.suggestion || insight.content);
+      await addTask(insight.suggestion ?? insight.content ?? '');
     } else {
-      await addEvent(insight.suggestion || insight.content, new Date().toISOString());
+      await addEvent(insight.suggestion ?? insight.content ?? '', new Date().toISOString());
     }
     await refreshTasks();
   };
 
   const getMetrics = () => {
     if (tasks.length === 0) return { done: 0, pending: 0, notDone: 0 };
-    const done = tasks.filter((t: any) => t.completed || t.is_completed).length;
+    const done = tasks.filter((t) => t.completed || t.is_completed).length;
     const total = tasks.length;
     return {
       done: Math.round((done / total) * 100),
@@ -402,7 +395,7 @@ export const AgendaProvider = ({ children }: { children: ReactNode }) => {
     return { icon: PLANET_ICONS[dayRegent] || '?', name: PLANET_NAMES_PT[dayRegent] || dayRegent };
   };
 
-  const getHermesInsights = (_transits?: any[]) => {
+  const getHermesInsights = () => {
     // Do not publish interpretations before they can carry rule, source and
     // a visible "Hermes inference" label in the certified vertical.
     return [];

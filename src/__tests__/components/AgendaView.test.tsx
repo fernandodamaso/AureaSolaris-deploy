@@ -3,7 +3,11 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { AgendaView } from '../../components/agenda/AgendaView';
 
 const selectedDay = new Date(2026, 7, 10, 0, 0, 0, 0);
-const addEvent = vi.fn(async (_title: string, _startsAt: string) => undefined);
+const addEvent = vi.fn(async (title: string, startsAt: string) => {
+  void title;
+  void startsAt;
+  return undefined;
+});
 
 vi.mock('../../context/AgendaContext', () => ({
   useAgendaContext: () => ({

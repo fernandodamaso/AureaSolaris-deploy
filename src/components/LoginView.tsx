@@ -4,15 +4,9 @@ import {
   Lock, ArrowRight, Eye, EyeOff
 } from 'lucide-react';
 import aureaSymbol from '../assets/brand/logo/aurea-symbol.svg';
+import type { PrivateProfile } from '../types/private-profile';
 
-interface Profile {
-  id: string;
-  name: string;
-  avatar?: string;
-  connections?: any[];
-  passwordVerifier?: unknown;
-  natal?: any;
-}
+type Profile = PrivateProfile & { passwordVerifier?: unknown };
 
 interface LoginViewProps {
   profiles: Profile[];

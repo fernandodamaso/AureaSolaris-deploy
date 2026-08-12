@@ -35,7 +35,7 @@ describe('Hermes por mapa em foco', () => {
       },
       astro: { liveData: null },
       system: { status: 'Stable' },
-    } as any;
+    } as Parameters<typeof buildSystemPrompt>[0];
 
     const prompt = buildSystemPrompt(context);
 
@@ -62,7 +62,7 @@ describe('Hermes por mapa em foco', () => {
       },
       astro: { liveData: null },
       system: { status: 'Stable' },
-    } as any;
+    } as Parameters<typeof buildSystemPrompt>[0];
 
     const prompt = buildSystemPrompt(context);
 

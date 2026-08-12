@@ -1,4 +1,5 @@
 import { invoke } from '@tauri-apps/api/core';
+import type { InvokeArgs } from '@tauri-apps/api/core';
 
 // Check if running in Tauri or browser
 export const isTauriRuntime = () => {
@@ -17,12 +18,12 @@ export function getBrowserSessionHeaders(): Record<string, string> {
     : {};
 }
 
-export async function safeInvoke<T>(cmd: string, args?: any): Promise<T | null> {
+export async function safeInvoke<T>(cmd: string, args?: object): Promise<T | null> {
   const stopTimer = ipcLogger.startTimer();
   try {
     let result: T;
     if (isTauriRuntime()) {
-      result = await invoke<T>(cmd, args);
+      result = await invoke<T>(cmd, args as InvokeArgs);
       ipcLogger.metricIPC(cmd, stopTimer(), true);
       return result;
     } else {
@@ -47,7 +48,7 @@ export async function safeInvoke<T>(cmd: string, args?: any): Promise<T | null> 
       ipcLogger.metricIPC(cmd, stopTimer(), true);
       return payload?.result ?? null;
     }
-  } catch (err: any) {
+  } catch (err: unknown) {
     ipcLogger.metricIPC(cmd, stopTimer(), false);
     ipcLogger.error(`Command ${cmd} failed:`, err);
     return null;

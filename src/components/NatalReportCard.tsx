@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { Copy, Check } from 'lucide-react';
+import type { CertifiedAstrologyResult, PlanetaryPosition } from '../types/astrology';
 
 type PlanetRow = {
   name: string;
@@ -40,8 +41,10 @@ function formatHouseRow(h: HouseRow): string {
   return `${h.house}${suffix} House in ${h.sign} ${formatDegree(h.degree)}`;
 }
 
+type HouseCusp = { degree?: number; sign?: string };
+
 export const NatalReportCard: React.FC<{
-  data: any;
+  data: CertifiedAstrologyResult | null;
   loading: boolean;
 }> = ({ data, loading }) => {
   const [copied, setCopied] = React.useState<string | null>(null);
@@ -50,26 +53,28 @@ export const NatalReportCard: React.FC<{
     if (!data?.planets) return [];
     const rows: PlanetRow[] = [];
     const skip = new Set(['ASC', 'MC', 'DSC', 'IC', 'Chiron']);
-    for (const [name, info] of Object.entries<any>(data.planets)) {
+    for (const [name, info] of Object.entries(data.planets)) {
       if (skip.has(name)) continue;
+      const position = info as PlanetaryPosition;
       rows.push({
         name,
-        sign: info.sign || '',
-        degree: info.degree || 0,
-        minutes: Math.round(((info.degree || 0) % 1) * 60),
-        retrograde: info.retrograde === true,
-        house: typeof info.house === 'number' ? info.house : undefined,
+        sign: position.sign || '',
+        degree: position.degree || 0,
+        minutes: Math.round(((position.degree || 0) % 1) * 60),
+        retrograde: position.retrograde === true,
+        house: typeof position.house === 'number' ? position.house : undefined,
       });
     }
     if (data.secondary) {
-      for (const [name, info] of Object.entries<any>(data.secondary)) {
+      for (const [name, info] of Object.entries(data.secondary)) {
+        const position = info as PlanetaryPosition;
         rows.push({
           name,
-          sign: info.sign || '',
-          degree: info.degree || 0,
-          minutes: Math.round(((info.degree || 0) % 1) * 60),
-          retrograde: info.retrograde === true,
-          house: typeof info.house === 'number' ? info.house : undefined,
+          sign: position.sign || '',
+          degree: position.degree || 0,
+          minutes: Math.round(((position.degree || 0) % 1) * 60),
+          retrograde: position.retrograde === true,
+          house: typeof position.house === 'number' ? position.house : undefined,
         });
       }
     }
@@ -78,10 +83,10 @@ export const NatalReportCard: React.FC<{
 
   const houses = useMemo<HouseRow[]>(() => {
     if (!data?.houses) return [];
-    return data.houses.map((h: any, i: number) => {
-      const deg = typeof h.degree === 'number' ? h.degree : 0;
+    return (data.houses as HouseCusp[]).map((house, i) => {
+      const deg = typeof house.degree === 'number' ? house.degree : 0;
       const { d, m } = toDms(deg);
-      return { house: i + 1, sign: h.sign || '', degree: d, minutes: m };
+      return { house: i + 1, sign: house.sign || '', degree: d, minutes: m };
     });
   }, [data]);
 
