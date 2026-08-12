@@ -51,6 +51,7 @@ desktop.ini
 *.vault
 data/private/
 backups/
+.worktrees/
 
 # Snapshot editorial impessoal exigido pelo build do sidecar.
 !knowledge/engenharia_astrologica/knowledge/build/editorial_current.sqlite
