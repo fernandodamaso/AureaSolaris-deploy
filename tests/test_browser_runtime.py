@@ -14,6 +14,11 @@ MIGRATIONS = Path(__file__).resolve().parents[1] / "src-tauri" / "migrations"
 
 
 class TestBrowserRuntime(unittest.TestCase):
+    def test_browser_smoke_detects_wildcard_listeners(self):
+        smoke_source = (Path(__file__).with_name("browser_runtime_smoke.ps1")).read_text(encoding="utf-8")
+        self.assertIn("Get-NetTCPConnection -State Listen", smoke_source)
+        self.assertNotIn("Get-NetTCPConnection -LocalAddress 127.0.0.1", smoke_source)
+
     def test_packaged_frontend_is_declared_and_mounted_after_health(self):
         repository_root = Path(__file__).resolve().parents[1]
         spec_source = (repository_root / "build_sidecar.spec").read_text(encoding="utf-8")
