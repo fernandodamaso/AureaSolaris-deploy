@@ -1,5 +1,5 @@
 import { safeInvoke } from './tauri';
-import type { DiaryEntryResponse, DiaryFolderResponse } from '../types/diario';
+import type { DiaryEntryResponse, DiaryFolderResponse, DiaryStatus } from '../types/diario';
 
 export interface DiaryCreateFolderRequest {
   name: string;
@@ -9,12 +9,15 @@ export interface DiaryCreateFolderRequest {
 export interface DiaryCreateEntryRequest {
   title: string;
   folder_id: string;
+  status?: DiaryStatus;
 }
 
 export interface DiaryUpdateEntryRequest {
   id: string;
   title?: string;
   content?: string;
+  folder_id?: string;
+  status?: DiaryStatus;
 }
 
 export type DiaryMutationResult = boolean | void;

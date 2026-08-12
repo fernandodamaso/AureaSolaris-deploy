@@ -87,18 +87,44 @@ describe('diary operations', () => {
   it('creates an entry with the IPC payload', async () => {
     mockedSafeInvoke.mockResolvedValue(entry);
 
-    await expect(createDiaryEntry({ title: 'Nota', folder_id: 'folder-1' })).resolves.toEqual(entry);
-    expect(mockedSafeInvoke).toHaveBeenCalledWith('diary_create_entry', { title: 'Nota', folder_id: 'folder-1' });
+    await expect(
+      createDiaryEntry({ title: 'Nota', folder_id: 'folder-1', status: 'draft' }),
+    ).resolves.toEqual(entry);
+    expect(mockedSafeInvoke).toHaveBeenCalledWith('diary_create_entry', {
+      title: 'Nota',
+      folder_id: 'folder-1',
+      status: 'draft',
+    });
   });
 
   it('updates only the supplied entry fields', async () => {
     mockedSafeInvoke.mockResolvedValue(entry);
 
-    await expect(updateDiaryEntry({ id: 'entry-1', title: 'Título novo', content: 'Texto novo' })).resolves.toEqual(entry);
+    await expect(
+      updateDiaryEntry({
+        id: 'entry-1',
+        title: 'Título novo',
+        content: 'Texto novo',
+        folder_id: 'folder-2',
+        status: 'done',
+      }),
+    ).resolves.toEqual(entry);
     expect(mockedSafeInvoke).toHaveBeenCalledWith('diary_update_entry', {
       id: 'entry-1',
       title: 'Título novo',
       content: 'Texto novo',
+      folder_id: 'folder-2',
+      status: 'done',
+    });
+  });
+
+  it('does not add omitted fields to a partial update payload', async () => {
+    mockedSafeInvoke.mockResolvedValue(entry);
+
+    await expect(updateDiaryEntry({ id: 'entry-1', title: 'Título parcial' })).resolves.toEqual(entry);
+    expect(mockedSafeInvoke).toHaveBeenCalledWith('diary_update_entry', {
+      id: 'entry-1',
+      title: 'Título parcial',
     });
   });
 
