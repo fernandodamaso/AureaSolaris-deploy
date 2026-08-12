@@ -33,7 +33,7 @@ describe('UIComponents', () => {
   });
 
   it('renders SectionTitle', () => {
-    render(<SectionTitle children="Section Title" />);
+    render(<SectionTitle>Section Title</SectionTitle>);
     const heading = screen.getByText('Section Title');
     expect(heading).toBeInstanceOf(HTMLElement);
   });

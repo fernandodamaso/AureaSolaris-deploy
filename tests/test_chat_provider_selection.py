@@ -17,18 +17,27 @@ class ChatProviderSelectionTests(unittest.TestCase):
         self.assertEqual(response.status_code, 403)
         openai.assert_not_awaited()
 
-    def test_openai_is_selected_without_probe_or_fallback_to_ollama(self):
+    def test_legacy_provider_implementations_are_removed(self):
+        for symbol in (
+            "_ollama_available",
+            "_ollama_list_models",
+            "_ollama_chat",
+            "_gemini_chat",
+            "_openrouter_chat",
+        ):
+            self.assertFalse(hasattr(main_api, symbol), symbol)
+
+    def test_openai_is_selected_without_legacy_probe_or_fallback(self):
         with TestClient(main_api.app) as client:
             with patch.object(main_api, "_openai_chat", new=AsyncMock(return_value={"reply": "Resposta", "provider": "openai"})) as openai:
-                with patch.object(main_api, "_ollama_available", new=AsyncMock(side_effect=AssertionError("Ollama must not be probed"))):
-                    response = client.post(
-                        "/chat",
-                        json={
-                            "messages": [{"role": "user", "content": "Olá"}],
-                            "provider": "openai",
-                            "allow_external": True,
-                        },
-                    )
+                response = client.post(
+                    "/chat",
+                    json={
+                        "messages": [{"role": "user", "content": "Olá"}],
+                        "provider": "openai",
+                        "allow_external": True,
+                    },
+                )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), {"reply": "Resposta", "provider": "openai"})
         openai.assert_awaited_once()

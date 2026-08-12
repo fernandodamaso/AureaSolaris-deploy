@@ -35,4 +35,27 @@ export interface CadernoBoardMeta {
   name: string;
   updated_at?: number;
   updatedAt?: number;
+  owner_id?: string;
+  nodes?: CadernoNode[];
 }
+
+export interface CadernoBoardData {
+  nodes: CadernoNode[];
+  edges: CadernoEdge[];
+  name?: string;
+  updated_at?: number;
+  owner_id?: string;
+}
+
+export interface CadernoBoardIdRequest {
+  boardId: string;
+}
+
+export interface CadernoBoardSaveRequest extends CadernoBoardIdRequest {
+  name: string;
+  nodes: CadernoNode[];
+  edges: CadernoEdge[];
+}
+
+export type CadernoBoardSaveResponse = number;
+export type CadernoBoardDeleteResponse = boolean | void;

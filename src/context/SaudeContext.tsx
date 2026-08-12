@@ -31,37 +31,36 @@ interface SaudeContextType {
 const SaudeContext = createContext<SaudeContextType | undefined>(undefined);
 
 export const SaudeProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
-  const [habits, setHabits] = useState<Habit[]>([]);
-  const [biometrics, setBiometrics] = useState<BiometricLog[]>([]);
-  const [documents, setDocuments] = useState<any[]>([]);
+  const [habits, setHabits] = useState<Habit[]>(() => {
+    const storedHabits = localStorage.getItem('saude_habits');
+    if (!storedHabits) return [];
+    const generatedNames = new Set([
+      'Vitamina D (Aurora)', 'Probiótico (Benício)',
+      'Meditação UDV (30min)', 'Ingestão de Água (3L)',
+    ]);
+    const sanitized = JSON.parse(storedHabits).filter((habit: Habit) => !(
+      ['1', '2', '3', '4'].includes(habit.id) && generatedNames.has(habit.name)
+    ));
+    localStorage.setItem('saude_habits', JSON.stringify(sanitized));
+    return sanitized;
+  });
+  const [biometrics, setBiometrics] = useState<BiometricLog[]>(() => {
+    const storedBio = localStorage.getItem('saude_biometrics');
+    return storedBio ? JSON.parse(storedBio) : [];
+  });
+  const [documents, setDocuments] = useState<any[]>(() => {
+    const storedDocs = localStorage.getItem('saude_documents');
+    if (!storedDocs) return [];
+    const generatedNames = new Set(['Hemograma_Vivi_Mar.pdf', 'Dieta_Nutri_Puerperio.pdf']);
+    const sanitized = JSON.parse(storedDocs).filter((document: { name?: string }) => !(
+      document.name && generatedNames.has(document.name)
+    ));
+    localStorage.setItem('saude_documents', JSON.stringify(sanitized));
+    return sanitized;
+  });
 
   // Load from local storage
   useEffect(() => {
-    const storedHabits = localStorage.getItem('saude_habits');
-    const storedBio = localStorage.getItem('saude_biometrics');
-    const storedDocs = localStorage.getItem('saude_documents');
-    
-    if (storedHabits) {
-      const generatedNames = new Set([
-        'Vitamina D (Aurora)', 'Probiótico (Benício)',
-        'Meditação UDV (30min)', 'Ingestão de Água (3L)',
-      ]);
-      const sanitized = JSON.parse(storedHabits).filter((habit: Habit) => !(
-        ['1', '2', '3', '4'].includes(habit.id) && generatedNames.has(habit.name)
-      ));
-      setHabits(sanitized);
-      localStorage.setItem('saude_habits', JSON.stringify(sanitized));
-    }
-
-    if (storedBio) setBiometrics(JSON.parse(storedBio));
-    if (storedDocs) {
-      const generatedNames = new Set(['Hemograma_Vivi_Mar.pdf', 'Dieta_Nutri_Puerperio.pdf']);
-      const sanitized = JSON.parse(storedDocs).filter((document: { name?: string }) => !(
-        document.name && generatedNames.has(document.name)
-      ));
-      setDocuments(sanitized);
-      localStorage.setItem('saude_documents', JSON.stringify(sanitized));
-    }
   }, []);
 
   // Save to local storage

@@ -297,6 +297,26 @@ class LocalStorageTests(unittest.TestCase):
                     "owner-2", "memoria", "study_note", source_message_id=message["id"]
                 )
 
+    def test_hermes_memory_cannot_be_read_updated_or_deleted_by_another_owner(self):
+        with tempfile.TemporaryDirectory() as directory:
+            storage = self.make_storage(Path(directory))
+            storage.initialize()
+            self.add_owner(storage, "owner-1")
+            self.add_owner(storage, "owner-2")
+            memory = storage.propose_hermes_memory(
+                "owner-1", "nota privada", "study_note", confidence="inferred"
+            )
+
+            self.assertEqual(storage.list_hermes_memories("owner-2"), [])
+            for decision in ("approve", "forget"):
+                with self.assertRaises(LookupError):
+                    storage.review_hermes_memory("owner-2", memory["id"], decision)
+
+            retained = storage.list_hermes_memories("owner-1")
+            self.assertEqual([item["id"] for item in retained], [memory["id"]])
+            self.assertEqual(retained[0]["status"], "proposed")
+            self.assertIsNone(retained[0]["deleted_at"])
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MesaCriacao } from '../../components/MesaCriacao';
+import { BoardManager } from '../../components/BoardManager';
 import { safeInvoke } from '../../utils/tauri';
 
 const board = {
@@ -76,5 +77,40 @@ describe('MesaCriacao', () => {
     expect(screen.queryByLabelText('Área de estudo do card selecionado')).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: 'Abrir estudo' }));
     expect(await screen.findByLabelText('Área de estudo do card selecionado')).toBeTruthy();
+  });
+
+  it('creates a named board and delegates opening it to the parent', async () => {
+    const onOpen = vi.fn();
+    render(<BoardManager onOpen={onOpen} intentError={null} />);
+
+    await screen.findByText('Mapa de teste');
+    fireEvent.click(screen.getByRole('button', { name: 'Novo caderno' }));
+    fireEvent.change(screen.getByPlaceholderText('Ex: Estudo de Mercúrio, Planejamento semanal...'), {
+      target: { value: 'Novo estudo' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Criar' }));
+
+    await waitFor(() => {
+      expect(vi.mocked(safeInvoke)).toHaveBeenCalledWith('save_board', expect.objectContaining({
+        name: 'Novo estudo',
+        nodes: [],
+        edges: [],
+      }));
+      expect(onOpen).toHaveBeenCalledWith(expect.objectContaining({
+        name: 'Novo estudo',
+      }));
+    });
+  });
+
+  it('deletes a board only after confirmation', async () => {
+    render(<BoardManager onOpen={vi.fn()} intentError={null} />);
+
+    await screen.findByText('Mapa de teste');
+    fireEvent.click(screen.getByRole('button', { name: 'Apagar caderno Mapa de teste' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Apagar' }));
+
+    await waitFor(() => {
+      expect(vi.mocked(safeInvoke)).toHaveBeenCalledWith('delete_board', { boardId: 'board-test' });
+    });
   });
 });

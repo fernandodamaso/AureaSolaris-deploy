@@ -10,6 +10,7 @@
     "dev": "vite --configLoader runner",
     "start": "vite --configLoader runner --host",
     "build": "tsc && vite build --configLoader runner",
+    "typecheck": "tsc --noEmit",
     "preview": "vite preview",
     "tauri": "tauri",
     "dev:full": "npm run dev",

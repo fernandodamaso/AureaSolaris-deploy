@@ -51,6 +51,7 @@ desktop.ini
 *.vault
 data/private/
 backups/
+.worktrees/
 
 # Snapshot editorial impessoal exigido pelo build do sidecar.
 !knowledge/engenharia_astrologica/knowledge/build/editorial_current.sqlite
@@ -62,6 +63,10 @@ backups/
 /astro_data.json
 /astro_history.json
 /public/astro_data.json
+
+# VIV-8: confirmed private legacy files retained locally after untracking.
+/natal_charts/viviane.json
+/src-tauri/memory/board.json
 
 
 # Editor directories and files
