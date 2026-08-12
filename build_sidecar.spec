@@ -21,7 +21,7 @@ if os.path.isdir('ephe'):
 elif os.path.isdir(ephe_path):
     ephe_datas = [(ephe_path, 'ephe')]
 
-frontend_datas = [('dist', 'dist')] if os.path.isdir('dist') else []
+frontend_datas = [('dist', 'dist')]
 
 a = Analysis(
     ['main_api.py'],

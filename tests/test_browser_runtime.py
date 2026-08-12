@@ -13,7 +13,17 @@ from local_storage import LocalStorage
 MIGRATIONS = Path(__file__).resolve().parents[1] / "src-tauri" / "migrations"
 
 
-class BrowserRuntimeTests(unittest.TestCase):
+class TestBrowserRuntime(unittest.TestCase):
+    def test_packaged_frontend_is_declared_and_mounted_after_health(self):
+        repository_root = Path(__file__).resolve().parents[1]
+        spec_source = (repository_root / "build_sidecar.spec").read_text(encoding="utf-8")
+        api_source = (repository_root / "main_api.py").read_text(encoding="utf-8")
+
+        self.assertRegex(spec_source, r"(?m)^frontend_datas = \[\('dist', 'dist'\)\]\s*$")
+        health_route = api_source.index('@app.get("/health")')
+        frontend_mount = api_source.index('app.mount("/", StaticFiles')
+        self.assertLess(health_route, frontend_mount)
+
     def test_browser_session_gates_private_workspace_and_keeps_owner_scope(self):
         with tempfile.TemporaryDirectory() as directory:
             data_dir = Path(directory) / "browser-data"
