@@ -21,7 +21,7 @@ Use this as a routing map, not as a reading list. The canonical agent path is:
 | Integrations | [`google-calendar-integration.md`](google-calendar-integration.md), [`ROADMAP.md`](ROADMAP.md) |
 | Setup/commands | [`setup-guide.md`](setup-guide.md), [`AI_WORKING_GUIDE.md`](AI_WORKING_GUIDE.md) |
 | Safe generated-path report | [`dry-run-cleanup.md`](dry-run-cleanup.md) |
-| Release/cleanup evidence | [`RELEASE_VALIDATION_2026-08-10.md`](RELEASE_VALIDATION_2026-08-10.md), [`CLEANUP_VALIDATION_2026-08-11.md`](CLEANUP_VALIDATION_2026-08-11.md) |
+| Release/cleanup evidence | [`RELEASE_VALIDATION_2026-08-10.md`](RELEASE_VALIDATION_2026-08-10.md), [`archive/CLEANUP_VALIDATION_2026-08-11.md`](archive/CLEANUP_VALIDATION_2026-08-11.md) |
 
 ## Current project state
 
