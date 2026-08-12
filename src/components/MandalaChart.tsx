@@ -15,6 +15,15 @@ import {
 } from '../utils/astro-dignity';
 import { getPlanetSignKeyword, getAspectKeyword, ASPECT_MEANINGS } from '../utils/astro-dictionary';
 import {
+  DECANATE_RULERS_PT,
+  EGYPTIAN_TERMS_PT,
+  ELEMENT_COLORS,
+  PLANET_SYMBOLS,
+  SIGN_NAMES_PT,
+  SIGN_SYMBOLS,
+  ELEMENTS as SIGN_ELEMENTS,
+} from '../utils/astro-reference-data';
+import {
   createMandalaOrientation,
   getHouseMidpointDegree,
   getSignIndex,
@@ -67,13 +76,7 @@ interface MandalaChartProps {
 
 /* ─── Constants ────────────────────────────────────────────────── */
 
-const SIGN_SYMBOLS = ['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'];
-const SIGN_NAMES = ['Áries','Touro','Gêmeos','Câncer','Leão','Virgem','Libra','Escorpião','Sagitário','Capricórnio','Aquário','Peixes'];
-const SIGN_ELEMENTS: ('fire'|'earth'|'air'|'water')[] = ['fire','earth','air','water','fire','earth','air','water','fire','earth','air','water'];
-
-const ELEMENT_COLORS: Record<string, string> = {
-  fire: '#D94F3D', earth: '#5B8C5A', air: '#C4A84D', water: '#3D6FA0'
-};
+const SIGN_NAMES = SIGN_NAMES_PT;
 
 const PLANET_COLORS: Record<string, string> = {
   Sun: '#FFD700', Moon: '#C0C0C0', Mercury: '#87CEEB', Venus: '#FF69B4',
@@ -82,14 +85,6 @@ const PLANET_COLORS: Record<string, string> = {
   NorthNode: '#F97316', SouthNode: '#F97316',
   Lilith: '#A855F7', PartOfFortune: '#FF8C00', Vertex: '#DB2777',
   ASC: '#B8860B', MC: '#B8860B', DSC: '#B8860B', IC: '#B8860B',
-};
-
-const PLANET_SYMBOLS: Record<string, string> = {
-  Sun: '☉', Moon: '☽', Mercury: '☿', Venus: '♀', Mars: '♂',
-  Jupiter: '♃', Saturn: '♄', Uranus: '♅', Neptune: '♆', Pluto: '♇',
-  Chiron: '⚷', NorthNode: '☊', SouthNode: '☋', Lilith: '⚸',
-  PartOfFortune: '⊗', Vertex: 'Vx',
-  ASC: 'Asc', MC: 'MC', DSC: 'Dsc', IC: 'IC',
 };
 
 const ASPECT_COLORS: Record<string, string> = {
@@ -103,42 +98,6 @@ const ASPECT_OPACITY: Record<string, number> = {
   'Conjunção': 0.7, 'Oposição': 0.55, 'Trígono': 0.45,
   'Quadratura': 0.55, 'Sextil': 0.4,
 };
-
-/* ─── Termos (Egyptian Terms) por signo ─────────────────────────── */
-
-interface TermDef { planet: string; start: number; end: number; }
-
-const TERMS: TermDef[][] = [
-  [ {planet:'Jupiter',start:0,end:6},{planet:'Venus',start:6,end:12},{planet:'Mercúrio',start:12,end:20},{planet:'Marte',start:20,end:25},{planet:'Saturno',start:25,end:30} ],
-  [ {planet:'Vênus',start:0,end:8},{planet:'Mercúrio',start:8,end:14},{planet:'Júpiter',start:14,end:22},{planet:'Saturno',start:22,end:27},{planet:'Marte',start:27,end:30} ],
-  [ {planet:'Mercúrio',start:0,end:6},{planet:'Júpiter',start:6,end:12},{planet:'Vênus',start:12,end:17},{planet:'Marte',start:17,end:24},{planet:'Saturno',start:24,end:30} ],
-  [ {planet:'Marte',start:0,end:7},{planet:'Vênus',start:7,end:13},{planet:'Mercúrio',start:13,end:19},{planet:'Júpiter',start:19,end:26},{planet:'Saturno',start:26,end:30} ],
-  [ {planet:'Júpiter',start:0,end:6},{planet:'Vênus',start:6,end:11},{planet:'Saturno',start:11,end:18},{planet:'Mercúrio',start:18,end:24},{planet:'Marte',start:24,end:30} ],
-  [ {planet:'Mercúrio',start:0,end:7},{planet:'Vênus',start:7,end:17},{planet:'Júpiter',start:17,end:21},{planet:'Marte',start:21,end:28},{planet:'Saturno',start:28,end:30} ],
-  [ {planet:'Saturno',start:0,end:6},{planet:'Mercúrio',start:6,end:14},{planet:'Júpiter',start:14,end:21},{planet:'Vênus',start:21,end:28},{planet:'Marte',start:28,end:30} ],
-  [ {planet:'Marte',start:0,end:7},{planet:'Vênus',start:7,end:11},{planet:'Júpiter',start:11,end:19},{planet:'Mercúrio',start:19,end:24},{planet:'Saturno',start:24,end:30} ],
-  [ {planet:'Júpiter',start:0,end:12},{planet:'Vênus',start:12,end:17},{planet:'Mercúrio',start:17,end:21},{planet:'Saturno',start:21,end:26},{planet:'Marte',start:26,end:30} ],
-  [ {planet:'Vênus',start:0,end:6},{planet:'Mercúrio',start:6,end:12},{planet:'Júpiter',start:12,end:19},{planet:'Saturno',start:19,end:25},{planet:'Marte',start:25,end:30} ],
-  [ {planet:'Mercúrio',start:0,end:7},{planet:'Vênus',start:7,end:13},{planet:'Júpiter',start:13,end:20},{planet:'Marte',start:20,end:25},{planet:'Saturno',start:25,end:30} ],
-  [ {planet:'Vênus',start:0,end:12},{planet:'Júpiter',start:12,end:16},{planet:'Mercúrio',start:16,end:19},{planet:'Marte',start:19,end:28},{planet:'Saturno',start:28,end:30} ],
-];
-
-/* ─── Decanatos ────────────────────────────────────────────────── */
-
-const DECANATE_RULERS = [
-  'Marte','Sol','Vênus',        // Áries
-  'Sol','Vênus','Mercúrio',     // Touro
-  'Vênus','Mercúrio','Lua',     // Gêmeos
-  'Mercúrio','Lua','Saturno',   // Câncer
-  'Lua','Saturno','Júpiter',    // Leão
-  'Saturno','Júpiter','Marte',  // Virgem
-  'Júpiter','Marte','Sol',      // Libra
-  'Marte','Sol','Vênus',        // Escorpião
-  'Sol','Vênus','Mercúrio',     // Sagitário
-  'Vênus','Mercúrio','Lua',     // Capricórnio
-  'Mercúrio','Lua','Saturno',   // Aquário
-  'Lua','Saturno','Júpiter',    // Peixes
-];
 
 /* ─── Helpers ──────────────────────────────────────────────────── */
 
@@ -326,7 +285,7 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
           .attr('stroke', '#c5a059').attr('stroke-width', 0.3).attr('opacity', 0.2);
 
         /* ruler label */
-        const ruler = DECANATE_RULERS[signI * 3 + decI];
+        const ruler = DECANATE_RULERS_PT[signI * 3 + decI];
         g.append('text')
           .attr('x', polarX((decR + termR) / 2, midD))
           .attr('y', polarY((decR + termR) / 2, midD))
@@ -339,7 +298,7 @@ export const MandalaChart = ({ size = 620, planets, houses, aspects, transitPlan
     /* ─── 5. Terms ring (toggle) ────────────────────────────── */
     if (showTerms) {
       for (let si = 0; si < 12; si++) {
-        const signTerms = TERMS[si];
+        const signTerms = EGYPTIAN_TERMS_PT[si];
         for (let ti = 0; ti < signTerms.length; ti++) {
           const t = signTerms[ti];
           const absStart = si * 30 + t.start;

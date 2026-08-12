@@ -6,20 +6,29 @@
  * No React, no side-effects — all functions are pure and deterministic.
  */
 
+import {
+  DECANATE_RULERS,
+  EGYPTIAN_TERMS,
+  ELEMENT_COLORS,
+  ELEMENT_EMOJIS,
+  ELEMENT_LABELS,
+  ELEMENTS,
+  PLANET_SYMBOLS,
+  SIGN_NAMES_PT,
+  SIGN_SYMBOLS,
+} from './astro-reference-data';
+
+export {
+  SIGN_NAMES_PT,
+  SIGN_SYMBOLS,
+  ELEMENTS,
+  ELEMENT_LABELS,
+  ELEMENT_COLORS,
+  ELEMENT_EMOJIS,
+  PLANET_SYMBOLS,
+};
+
 // ─── Sign Index Helpers ──────────────────────────────────────────────────────
-
-export const SIGN_NAMES_PT = [
-  'Áries', 'Touro', 'Gêmeos', 'Câncer', 'Leão', 'Virgem',
-  'Libra', 'Escorpião', 'Sagitário', 'Capricórnio', 'Aquário', 'Peixes',
-];
-
-export const SIGN_SYMBOLS = ['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'];
-
-export const ELEMENTS: ('fire' | 'earth' | 'air' | 'water')[] = [
-  'fire','earth','air','water',
-  'fire','earth','air','water',
-  'fire','earth','air','water',
-];
 
 export const QUALITIES: ('cardinal' | 'fixed' | 'mutable')[] = [
   'cardinal','fixed','mutable',
@@ -28,24 +37,12 @@ export const QUALITIES: ('cardinal' | 'fixed' | 'mutable')[] = [
   'cardinal','fixed','mutable',
 ];
 
-export const ELEMENT_LABELS: Record<string, string> = {
-  fire: 'Fogo', earth: 'Terra', air: 'Ar', water: 'Água',
-};
-
 export const QUALITY_LABELS: Record<string, string> = {
   cardinal: 'Cardinal', fixed: 'Fixo', mutable: 'Mutável',
 };
 
-export const ELEMENT_COLORS: Record<string, string> = {
-  fire: '#D94F3D', earth: '#5B8C5A', air: '#C4A84D', water: '#3D6FA0',
-};
-
 export const QUALITY_COLORS: Record<string, string> = {
   cardinal: '#8B5CF6', fixed: '#EC4899', mutable: '#14B8A6',
-};
-
-export const ELEMENT_EMOJIS: Record<string, string> = {
-  fire: '🔥', earth: '🌿', air: '🌬️', water: '💧',
 };
 
 export const normDeg = (d: number) => ((d % 360) + 360) % 360;
@@ -155,73 +152,16 @@ export const TRIPLICITY: Record<string, TriplicityRulers> = {
 
 // ─── Egyptian Terms ──────────────────────────────────────────────────────────
 
-interface TermBound {
-  planet: string;
-  start: number; // position within sign (0–30)
-  end: number;
-}
-
-interface RawTerm {
-  p: string;
-  s: number;
-  e: number;
-}
-
-const TERMS: TermBound[][] = [
-  // Aries
-  [{p:'Jupiter',s:0,e:6},{p:'Venus',s:6,e:12},{p:'Mercury',s:12,e:20},{p:'Mars',s:20,e:25},{p:'Saturn',s:25,e:30}],
-  // Taurus
-  [{p:'Venus',s:0,e:8},{p:'Mercury',s:8,e:14},{p:'Jupiter',s:14,e:22},{p:'Saturn',s:22,e:27},{p:'Mars',s:27,e:30}],
-  // Gemini
-  [{p:'Mercury',s:0,e:6},{p:'Jupiter',s:6,e:12},{p:'Venus',s:12,e:17},{p:'Mars',s:17,e:24},{p:'Saturn',s:24,e:30}],
-  // Cancer
-  [{p:'Mars',s:0,e:7},{p:'Venus',s:7,e:13},{p:'Mercury',s:13,e:19},{p:'Jupiter',s:19,e:26},{p:'Saturn',s:26,e:30}],
-  // Leo
-  [{p:'Jupiter',s:0,e:6},{p:'Venus',s:6,e:11},{p:'Saturn',s:11,e:18},{p:'Mercury',s:18,e:24},{p:'Mars',s:24,e:30}],
-  // Virgo
-  [{p:'Mercury',s:0,e:7},{p:'Venus',s:7,e:17},{p:'Jupiter',s:17,e:21},{p:'Mars',s:21,e:28},{p:'Saturn',s:28,e:30}],
-  // Libra
-  [{p:'Saturn',s:0,e:6},{p:'Mercury',s:6,e:14},{p:'Jupiter',s:14,e:21},{p:'Venus',s:21,e:28},{p:'Mars',s:28,e:30}],
-  // Scorpio
-  [{p:'Mars',s:0,e:7},{p:'Venus',s:7,e:11},{p:'Jupiter',s:11,e:19},{p:'Mercury',s:19,e:24},{p:'Saturn',s:24,e:30}],
-  // Sagittarius
-  [{p:'Jupiter',s:0,e:12},{p:'Venus',s:12,e:17},{p:'Mercury',s:17,e:21},{p:'Saturn',s:21,e:26},{p:'Mars',s:26,e:30}],
-  // Capricorn
-  [{p:'Venus',s:0,e:6},{p:'Mercury',s:6,e:12},{p:'Jupiter',s:12,e:19},{p:'Saturn',s:19,e:25},{p:'Mars',s:25,e:30}],
-  // Aquarius
-  [{p:'Mercury',s:0,e:7},{p:'Venus',s:7,e:13},{p:'Jupiter',s:13,e:20},{p:'Mars',s:20,e:25},{p:'Saturn',s:25,e:30}],
-  // Pisces
-  [{p:'Venus',s:0,e:12},{p:'Jupiter',s:12,e:16},{p:'Mercury',s:16,e:19},{p:'Mars',s:19,e:28},{p:'Saturn',s:28,e:30}],
-].map((terms: RawTerm[]) =>
-  terms.map(({p: planet, s: start, e: end}): TermBound => ({ planet, start, end }))
-);
-
 /** Get the Egyptian Term ruler for a planet at a given absolute degree */
 export function getTermRuler(deg: number): string {
   const si = getSignIdx(deg);
   const pos = normDeg(deg) % 30;
-  const terms = TERMS[si];
+  const terms = EGYPTIAN_TERMS[si];
   const term = terms.find(t => pos >= t.start && pos < t.end);
   return term?.planet ?? '';
 }
 
 // ─── Decanates ───────────────────────────────────────────────────────────────
-
-/** Chaldean decanate rulers (face rulers): each sign has 3 decanates of 10° each */
-const DECANATE_RULERS: string[] = [
-  'Mars','Sun','Venus',         // Aries
-  'Mercury','Moon','Saturn',    // Taurus
-  'Jupiter','Mars','Sun',       // Gemini
-  'Venus','Mercury','Moon',     // Cancer
-  'Saturn','Jupiter','Mars',    // Leo
-  'Sun','Venus','Mercury',      // Virgo
-  'Moon','Saturn','Jupiter',    // Libra
-  'Mars','Sun','Venus',         // Scorpio
-  'Mercury','Moon','Saturn',    // Sagittarius
-  'Jupiter','Mars','Sun',       // Capricorn
-  'Venus','Mercury','Moon',     // Aquarius
-  'Saturn','Jupiter','Mars',    // Pisces
-];
 
 export function getDecanateRuler(deg: number): string {
   const si = getSignIdx(deg);
@@ -425,12 +365,6 @@ export const PLANET_NAMES_PT: Record<string, string> = {
   Sun: 'Sol', Moon: 'Lua', Mercury: 'Mercúrio', Venus: 'Vênus',
   Mars: 'Marte', Jupiter: 'Júpiter', Saturn: 'Saturno',
   Uranus: 'Urano', Neptune: 'Netuno', Pluto: 'Plutão', Chiron: 'Quíron',
-};
-
-export const PLANET_SYMBOLS: Record<string, string> = {
-  Sun: '☉', Moon: '☽', Mercury: '☿', Venus: '♀', Mars: '♂',
-  Jupiter: '♃', Saturn: '♄', Uranus: '♅', Neptune: '♆', Pluto: '♇',
-  Chiron: '⚷', ASC: 'Asc', MC: 'MC',
 };
 
 // ─── Dignity State per Planet ───────────────────────────────────────────────

@@ -7,6 +7,7 @@ import {
   normalizeDegree,
   resolveAscDegree,
 } from '../../utils/mandalaGeometry';
+import { SIGN_NAMES_PT, SIGN_SYMBOLS } from '../../utils/astro-reference-data';
 
 describe('mandala geometry', () => {
   it('normalizes degrees and keeps sign boundaries stable', () => {
@@ -54,5 +55,13 @@ describe('mandala geometry', () => {
     expect(orientation.rotateDegree(0)).toBe(10);
     expect(getHouseMidpointDegree(350, 10)).toBe(0);
     expect(getHouseMidpointDegree(10, 350)).toBe(0);
+  });
+
+  it('aligns sign indices with centralized reference data', () => {
+    expect(SIGN_NAMES_PT).toHaveLength(12);
+    expect(SIGN_SYMBOLS).toHaveLength(12);
+    expect(getSignIndex(0)).toBe(0);
+    expect(getSignIndex(359.99)).toBe(11);
+    expect(SIGN_NAMES_PT[getSignIndex(45)]).toBe('Touro');
   });
 });
