@@ -30,8 +30,9 @@ from pydantic import BaseModel, Field
 
 # ─── UTF-8 on Windows ───
 if sys.platform == "win32":
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
-    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8")
+    for _stream in (sys.stdout, sys.stderr):
+        if isinstance(_stream, io.TextIOWrapper):
+            _stream.reconfigure(encoding="utf-8")
 
 # ─── Importa o engine (cold start ÚNICO, uma vez) ───
 from astro_engine import (

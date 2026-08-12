@@ -109,3 +109,38 @@ A verificação foi concluída com sucesso contra o binário commitado. O hash `
 - smoke do sidecar gerado: health `ok`, `swisseph`, 13 corpos, 12 casas, 9 aspectos, recibo natal válido e UTC `2000-01-01T14:00:00Z`.
 
 O ambiente local de build estava sem `argon2-cffi`, embora a dependência já estivesse declarada em `requirements-api.txt`; ela foi instalada no `.aurea-build-venv` antes da execução final. O primeiro executável gerado sem essa dependência não iniciava. Após a instalação declarada, o build e o smoke passaram. Os bytes do PyInstaller variam entre execuções (hashes diferentes e comportamento funcional equivalente), portanto a comparação de release foi feita pelo contrato de execução e pelo smoke certificado.
+
+## Certificação do runtime Chrome empacotado — 12/08/2026
+
+Build concluído em `2026-08-12T13:34:11-03:00` pelo fluxo `build.bat`, com frontend compilado antes do PyInstaller, smoke isolado e build Tauri/NSIS concluído.
+
+- sidecar recém-gerado: `src-tauri/binaries/astro-engine-x86_64-pc-windows-msvc.exe`;
+- SHA-256 do sidecar: `DA70A72E2685497ED18FFF5048742768ADD447EA13B34BDBE2E8EEDA0AEB29DB`;
+- tamanho do sidecar: `25.379.085` bytes;
+- instalador NSIS: `src-tauri/target/release/bundle/nsis/Aurea Solaris_0.1.1_x64-setup.exe`;
+- SHA-256 do instalador: `7AEFD1579C125EEE91A09ED9B1B597AE3FDCEDAF716DB71C41030C99FD071946`;
+- porta isolada do smoke do `build.bat`: `9877`;
+- porta isolada da validação Chrome: `9878`;
+- `/health`: HTTP `200`, `engine: swisseph`;
+- `/`: HTTP `200`, contendo `Aurea Solaris`;
+- `/openapi.json`: HTTP `200`, contendo `/browser/command`;
+- Chrome headless com perfil temporário e orçamento virtual de 5 segundos: landmark `Aurea Solaris`, `Entrar` e `Inscrever-se` visíveis; saída de console sem linhas `SEVERE`, `Uncaught`, `Unhandled` ou `console.error`.
+
+Comandos exatos executados:
+
+```powershell
+$vsDevCmd = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\2022\BuildTools\Common7\Tools\VsDevCmd.bat"
+$installerDir = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer"
+$userPath = [Environment]::GetEnvironmentVariable('Path', 'User')
+$machinePath = [Environment]::GetEnvironmentVariable('Path', 'Machine')
+$env:Path = "$userPath;$machinePath"
+$cmdLine = 'set "PATH=' + $installerDir + ';%PATH%" && call "' + $vsDevCmd + '" -arch=x64 -host_arch=x64 && cd /d "C:\git\AureaSolaris" && call .\build.bat'
+cmd.exe /d /c $cmdLine
+python -m pytest tests/test_browser_runtime.py -q
+python -m pytest tests/ -q
+npm run typecheck
+npm run test
+git diff --check
+```
+
+A validação Chrome usou somente o executável recém-gerado, uma pasta temporária nova em `AUREA_DATA_DIR` e a porta `9878`; nenhum servidor existente ou dado privado foi usado. A aceitação manual completa da pessoa usuária continua pendente conforme a seção acima.
