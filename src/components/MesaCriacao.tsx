@@ -306,7 +306,7 @@ const BoardManager = ({ onOpen, intentError }: { onOpen: (meta: CadernoBoardMeta
                 <div className="h-36 relative overflow-hidden" style={{ background: 'var(--aurea-surface-warm)' }}>
                   {/* Mini node previews */}
                   <div className="absolute inset-3 overflow-hidden">
-                    {(board.nodes || []).slice(0, 6).map((node: any, i: number) => (
+                    {(board.nodes || []).slice(0, 6).map((node: CadernoNode, i: number) => (
                       <div
                         key={node.id}
                         className="absolute rounded text-[7px] font-medium truncate px-2 py-1 box-shadow: 0 1px 2px rgba(0,0,0,0.25)"
@@ -322,7 +322,7 @@ const BoardManager = ({ onOpen, intentError }: { onOpen: (meta: CadernoBoardMeta
                         {node.text?.slice(0, 20) || (node.type === 'checklist' ? '☑ Lista' : node.type === 'image' ? '🖼 Img' : '...')}
                       </div>
                     ))}
-                    {!(board.nodes?.length > 0) && (
+                    {((board.nodes || []).length === 0) && (
                       <div className="absolute inset-0 flex items-center justify-center">
                         <Sparkles size={20} style={{ color: '#DCDCDC' }} />
                       </div>
@@ -345,7 +345,7 @@ const BoardManager = ({ onOpen, intentError }: { onOpen: (meta: CadernoBoardMeta
                   <p className="text-sm font-semibold text-[var(--aurea-text)] truncate">{board.name}</p>
                   <div className="flex items-center gap-1 mt-1">
                     <Clock size={10} style={{ color: '#BDBDBD' }} />
-                    <span className="text-xs color: var(--aurea-text-muted)">{fmt(board.updated_at || board.updatedAt)}</span>
+                    <span className="text-xs color: var(--aurea-text-muted)">{fmt(board.updated_at || board.updatedAt || 0)}</span>
                   </div>
                 </div>
               </div>

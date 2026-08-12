@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { BookOpen, CalendarDays, FileText, LayoutGrid, Search } from 'lucide-react';
 import { listBoards, loadBoard } from '../../utils/board';
 import { safeInvoke } from '../../utils/tauri';
-import type { CadernoBoardMeta, CadernoNode } from '../../types/caderno';
+import type { CadernoNode } from '../../types/caderno';
 
 type ArchiveSource = 'study' | 'diary';
 
