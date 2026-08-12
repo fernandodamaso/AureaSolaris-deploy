@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { Edit3, Star, Activity, Calendar, User, PanelLeftOpen, PanelLeftClose, MessageCircle, FileText } from 'lucide-react';
 import "./styles.css";
 
@@ -7,18 +7,19 @@ import { useGlobalContext } from './context/GlobalContext.tsx';
 
 // Components
 import { NavItem } from './components/common/UIComponents';
-import { AgendaView } from './components/agenda/AgendaView';
-import { AstrologiaPage } from './components/AstrologiaBoard';
-import { SaudeView } from './components/SaudeView';
-
-import { MesaCriacao } from './components/MesaCriacao';
-import type { CadernoIntent } from './components/MesaCriacao';
-import { MemoriasView } from './components/MemoriasView';
+import { PageLoadingFallback } from './components/common/PageLoadingFallback';
 import { LoginView } from './components/LoginView';
-import { DiarioView } from './components/DiarioView';
 import { ProfileEditor } from './components/ProfileEditor';
 import { HermesChat } from './components/HermesChat';
 import { safeInvoke } from './utils/tauri';
+import type { CadernoIntent } from './components/MesaCriacao';
+
+const AstrologiaPage = lazy(() => import('./components/AstrologiaBoard').then(m => ({ default: m.AstrologiaPage })));
+const SaudeView = lazy(() => import('./components/SaudeView').then(m => ({ default: m.SaudeView })));
+const AgendaView = lazy(() => import('./components/agenda/AgendaView').then(m => ({ default: m.AgendaView })));
+const MesaCriacao = lazy(() => import('./components/MesaCriacao').then(m => ({ default: m.MesaCriacao })));
+const MemoriasView = lazy(() => import('./components/MemoriasView').then(m => ({ default: m.MemoriasView })));
+const DiarioView = lazy(() => import('./components/DiarioView').then(m => ({ default: m.DiarioView })));
 
 // --- ESTILOS GLOBAIS ---
 const globalStyles = `
@@ -143,10 +144,8 @@ export default function App() {
       case 'astrologia': return <AstrologiaPage onOpenCaderno={openCaderno} />;
       case 'saude': return <SaudeView />;
       case 'agenda': return <AgendaView />;
-      
       case 'mesa-criacao': return <MesaCriacao intent={cadernoIntent} onIntentHandled={() => setCadernoIntent(null)} />;
       case 'memorias': return <MemoriasView />;
-      
       case 'diario': return (
         <DiarioView
           onOpenStudy={(boardId, nodeId) => openCaderno({ type: 'open-study', boardId, nodeId })}
@@ -155,6 +154,12 @@ export default function App() {
       default: return <AstrologiaPage onOpenCaderno={openCaderno} />;
     }
   };
+
+  const pageContent = (
+    <Suspense fallback={<PageLoadingFallback />}>
+      {renderPage()}
+    </Suspense>
+  );
 
   if (isRestoringAccess) {
     return <div className="fixed inset-0 bg-[#FCF9F1]" aria-label="Restaurando acesso" />;
@@ -256,10 +261,10 @@ export default function App() {
         <div className={`flex-1 relative overflow-hidden ${isMesa ? '' : currentPage === 'astrologia' ? 'flex flex-col px-6 pt-6' : 'px-6 pt-8 overflow-y-auto no-scrollbar pb-32'}`}>
           {currentPage === 'astrologia' ? (
             <div className="flex-1 h-full flex flex-col overflow-hidden">
-              {renderPage()}
+              {pageContent}
             </div>
           ) : (
-            renderPage()
+            pageContent
           )}
         </div>
       </main>
