@@ -1,5 +1,7 @@
 # Aurea Solaris Runtime and Cleanup Implementation Plan
 
+> **SUPERSEDED on 2026-08-12** by [`2026-08-12-unified-cleanup-plan.md`](2026-08-12-unified-cleanup-plan.md), which merges this plan with the post-cleanup audit findings (VIV-8 untracking, root test removal, launcher alias) and re-scopes Tasks 6–7 against the BoardManager/Mandala-geometry extractions that already landed. Kept for reference; execute the unified plan.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Repair the Chrome-first packaged runtime, remove confirmed dead code, enforce clean quality gates, and reduce the largest maintenance boundaries without changing approved product behavior.
