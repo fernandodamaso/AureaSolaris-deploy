@@ -1,3 +1,4 @@
+import { StrictMode } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import App from '../App';
@@ -5,12 +6,14 @@ import { GlobalProvider } from '../context/GlobalContext';
 import { AgendaProvider } from '../context/AgendaContext';
 import { SaudeProvider } from '../context/SaudeContext';
 
+const { openInitialAccess, safeInvoke } = vi.hoisted(() => ({
+  openInitialAccess: vi.fn(),
+  safeInvoke: vi.fn(),
+}));
+
 vi.mock('../utils/tauri', () => ({
-  safeInvoke: vi.fn(async (command: string) => {
-    if (command === 'remembered_owner_clear') return null;
-    if (command === 'private_session_open') return 'profile-1';
-    return null;
-  }),
+  openInitialAccess,
+  safeInvoke,
 }));
 
 vi.mock('../hooks/useLiveTransitData', () => ({
@@ -27,15 +30,31 @@ vi.mock('../hooks/useLiveTransitData', () => ({
 }));
 
 vi.mock('../components/LoginView', () => ({
-  LoginView: ({ onLogin }: { onLogin: (id: string, password: string, remember: boolean) => Promise<{ ok: boolean }> }) => (
-    <button
-      type="button"
-      onClick={() => {
-        void onLogin('profile-1', 'secret', false);
-      }}
-    >
-      ENTRAR
-    </button>
+  LoginView: ({
+    onLogin,
+    onSignUp,
+  }: {
+    onLogin: (id: string, password: string, remember: boolean) => Promise<{ ok: boolean }>;
+    onSignUp: (name: string, password: string, remember: boolean) => Promise<{ ok: boolean }>;
+  }) => (
+    <div>
+      <button
+        type="button"
+        onClick={() => {
+          void onLogin('profile-1', 'secret', false);
+        }}
+      >
+        ENTRAR
+      </button>
+      <button
+        type="button"
+        onClick={() => {
+          void onSignUp('Nova Pessoa', 'secret-password', false);
+        }}
+      >
+        INSCREVER-SE
+      </button>
+    </div>
   ),
 }));
 
@@ -61,15 +80,18 @@ vi.mock('../components/HermesChat', () => ({
   HermesChat: () => null,
 }));
 
-const renderApp = () => render(
-  <AgendaProvider>
-    <SaudeProvider>
-      <GlobalProvider>
-        <App />
-      </GlobalProvider>
-    </SaudeProvider>
-  </AgendaProvider>,
-);
+const renderApp = (strict = false) => {
+  const tree = (
+    <AgendaProvider>
+      <SaudeProvider>
+        <GlobalProvider>
+          <App />
+        </GlobalProvider>
+      </SaudeProvider>
+    </AgendaProvider>
+  );
+  return render(strict ? <StrictMode>{tree}</StrictMode> : tree);
+};
 
 describe('App navigation', () => {
   beforeEach(() => {
@@ -78,6 +100,14 @@ describe('App navigation', () => {
       { id: 'profile-1', name: 'Teste', active: true, connections: [] },
     ]));
     vi.clearAllMocks();
+    openInitialAccess.mockResolvedValue({ kind: 'login-required' });
+    safeInvoke.mockImplementation(async (command: string, args?: { ownerId?: string }) => {
+      if (command === 'remembered_owner_clear') return null;
+      if (command === 'private_session_open') return 'profile-1';
+      if (command === 'private_session_close') return null;
+      if (command === 'private_account_register') return args?.ownerId ?? null;
+      return null;
+    });
   });
 
   it('loads each primary screen landmark after navigation', async () => {
@@ -101,4 +131,126 @@ describe('App navigation', () => {
       });
     }
   }, 15000);
+});
+
+describe('App access states', () => {
+  beforeEach(() => {
+    localStorage.clear();
+    localStorage.setItem('aurea_profiles', JSON.stringify([
+      { id: 'profile-1', name: 'Teste', active: true, connections: [] },
+    ]));
+    vi.clearAllMocks();
+    safeInvoke.mockImplementation(async (command: string, args?: { ownerId?: string }) => {
+      if (command === 'remembered_owner_clear') return null;
+      if (command === 'private_session_open') return 'profile-1';
+      if (command === 'private_session_close') return null;
+      if (command === 'private_account_register') return args?.ownerId ?? null;
+      return null;
+    });
+  });
+
+  it('shows the Astrologia shell for local-owner without clicking Entrar', async () => {
+    openInitialAccess.mockResolvedValue({
+      kind: 'local-owner',
+      ownerId: 'owner-1',
+      displayName: 'Aurea Local',
+    });
+
+    renderApp();
+
+    await screen.findByTitle('Astrologia');
+    expect(screen.queryByRole('button', { name: 'ENTRAR' })).toBeNull();
+  });
+
+  it('does not duplicate the UI profile when StrictMode boots local-owner twice', async () => {
+    openInitialAccess.mockResolvedValue({
+      kind: 'local-owner',
+      ownerId: 'owner-1',
+      displayName: 'Aurea Local',
+    });
+
+    renderApp(true);
+
+    await screen.findByTitle('Astrologia');
+    const profiles = JSON.parse(localStorage.getItem('aurea_profiles') || '[]') as Array<{ id: string }>;
+    expect(profiles.filter((profile) => profile.id === 'owner-1')).toHaveLength(1);
+    expect(openInitialAccess.mock.calls.length).toBeGreaterThanOrEqual(1);
+  });
+
+  it('shows LoginView for login-required and still supports login', async () => {
+    openInitialAccess.mockResolvedValue({ kind: 'login-required' });
+
+    renderApp();
+
+    fireEvent.click(await screen.findByRole('button', { name: 'ENTRAR' }));
+    await screen.findByTitle('Astrologia');
+  });
+
+  it('shows LoginView for login-required and still supports register', async () => {
+    openInitialAccess.mockResolvedValue({ kind: 'login-required' });
+
+    renderApp();
+
+    fireEvent.click(await screen.findByRole('button', { name: 'INSCREVER-SE' }));
+    await screen.findByTitle('Astrologia');
+  });
+
+  it('shows a blocking setup message and hides LoginView and the main shell', async () => {
+    openInitialAccess.mockResolvedValue({
+      kind: 'setup-required',
+      reason: 'disabled-owner',
+      message: 'The only private account is disabled.',
+    });
+
+    renderApp();
+
+    expect(await screen.findByText('The only private account is disabled.')).toBeTruthy();
+    expect(screen.queryByRole('button', { name: 'ENTRAR' })).toBeNull();
+    expect(screen.queryByTitle('Astrologia')).toBeNull();
+  });
+
+  it('shows a retryable startup error and does not fall back to LoginView', async () => {
+    openInitialAccess.mockResolvedValue({
+      kind: 'runtime-failure',
+      message: 'Initial access failed.',
+    });
+
+    renderApp();
+
+    expect(await screen.findByText('Initial access failed.')).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Tentar novamente' })).toBeTruthy();
+    expect(screen.queryByRole('button', { name: 'ENTRAR' })).toBeNull();
+    expect(screen.queryByTitle('Astrologia')).toBeNull();
+  });
+
+  it('hides Sair in the local-owner profile editor', async () => {
+    openInitialAccess.mockResolvedValue({
+      kind: 'local-owner',
+      ownerId: 'owner-1',
+      displayName: 'Aurea Local',
+    });
+
+    renderApp();
+
+    await screen.findByTitle('Astrologia');
+    fireEvent.click(screen.getByRole('button', { name: /aurea local/i }));
+    expect(screen.queryByRole('button', { name: 'Sair' })).toBeNull();
+  });
+
+  it('keeps Sair in the require-login profile editor and calls the current logout handler', async () => {
+    openInitialAccess.mockResolvedValue({ kind: 'login-required' });
+
+    renderApp();
+
+    fireEvent.click(await screen.findByRole('button', { name: 'ENTRAR' }));
+    await screen.findByTitle('Astrologia');
+    fireEvent.click(screen.getByRole('button', { name: /teste/i }));
+    fireEvent.click(screen.getByRole('button', { name: 'Sair' }));
+
+    await waitFor(() => {
+      expect(safeInvoke).toHaveBeenCalledWith('private_session_close');
+      expect(safeInvoke).toHaveBeenCalledWith('remembered_owner_clear');
+    });
+    expect(await screen.findByRole('button', { name: 'ENTRAR' })).toBeTruthy();
+  });
 });

@@ -15,6 +15,7 @@ interface ProfileEditorProps {
   onSave: (updates: Partial<PrivateProfile>) => void;
   onClose: () => void;
   onLogout: () => void;
+  showLogout: boolean;
 }
 
 const BRAZILIAN_CITIES = [
@@ -48,7 +49,7 @@ function parseBirthDate(value: string): string | null {
   return `${yearText}-${monthText}-${dayText}`;
 }
 
-export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEditorProps) => {
+export const ProfileEditor = ({ profile, onSave, onClose, onLogout, showLogout }: ProfileEditorProps) => {
   const [name, setName] = useState(profile.name || '');
   const [birthDateInput, setBirthDateInput] = useState(() => formatBirthDate(profile.birthDate));
   const [birthDateError, setBirthDateError] = useState('');
@@ -369,12 +370,16 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout }: ProfileEdi
 
         {/* Footer */}
         <div className="mt-8 flex justify-between items-center border-t pt-6" style={{ borderColor: 'var(--aurea-line)' }}>
-          <button
-            onClick={onLogout}
-            className="px-6 py-3 bg-red-500/10 text-red-500 rounded-lg font-black uppercase text-[10px] tracking-[0.2em] hover:bg-red-500 hover:text-white transition-all flex items-center gap-2"
-          >
-            <X size={12} /> Sair
-          </button>
+          {showLogout ? (
+            <button
+              onClick={onLogout}
+              className="px-6 py-3 bg-red-500/10 text-red-500 rounded-lg font-black uppercase text-[10px] tracking-[0.2em] hover:bg-red-500 hover:text-white transition-all flex items-center gap-2"
+            >
+              <X size={12} /> Sair
+            </button>
+          ) : (
+            <span />
+          )}
           <div className="flex gap-4">
             <button onClick={onClose} className="aurea-button-secondary px-8 py-3 font-black uppercase text-[10px] tracking-[0.2em] transition-all">Cancelar</button>
             <button onClick={handleSave} className="aurea-button-primary px-10 py-3 rounded-lg font-black uppercase text-[10px] tracking-[0.2em] transition-all flex items-center gap-2">

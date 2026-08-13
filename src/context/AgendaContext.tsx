@@ -47,6 +47,7 @@ interface AgendaContextType {
   activeSubjectId: string;
   setActiveSubjectId: (id: string) => void;
   addProfile: (name: string, password: string, id?: string) => Promise<AureaProfile>;
+  ensureLocalUiProfile: (ownerId: string, displayName: string) => void;
   addConnection: (name: string, birthData: { date: string, time: string, location: string, lat: number, lng: number, timezone: string }) => void;
   updateProfile: (id: string, updates: Partial<AureaProfile>) => void;
   houseSystem: string;
@@ -238,6 +239,24 @@ export const AgendaProvider = ({ children }: { children: ReactNode }) => {
     return newProfile;
   };
 
+  const ensureLocalUiProfile = (ownerId: string, displayName: string) => {
+    const resolvedName = displayName || 'Aurea';
+    setProfiles((current) => {
+      const existing = current.find((profile) => profile.id === ownerId);
+      const nextProfile: AureaProfile = existing
+        ? { ...existing, name: resolvedName, active: true }
+        : { id: ownerId, name: resolvedName, active: true, connections: [] };
+      const updated = existing
+        ? current.map((profile) => (profile.id === ownerId ? nextProfile : profile))
+        : [...current, nextProfile];
+      localStorage.setItem('aurea_profiles', JSON.stringify(updated));
+      return updated;
+    });
+    setActiveProfileIdState(ownerId);
+    localStorage.setItem('aurea_active_id', ownerId);
+    persistActiveSubject(ownerId, ownerId);
+  };
+
   const addConnection = (name: string, birthData: { date: string, time: string, location: string, lat: number, lng: number, timezone: string }) => {
     if (!activeProfile) return;
     if (!Number.isFinite(birthData.lat) || !Number.isFinite(birthData.lng) || birthData.lat < -90 || birthData.lat > 90 || birthData.lng < -180 || birthData.lng > 180) {
@@ -403,7 +422,7 @@ export const AgendaProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <AgendaContext.Provider value={{
-      profiles, mapSubjects, activeProfile, activeProfileId, setActiveProfileId, activeSubjectId, setActiveSubjectId, addProfile, addConnection, updateProfile,
+      profiles, mapSubjects, activeProfile, activeProfileId, setActiveProfileId, activeSubjectId, setActiveSubjectId, addProfile, ensureLocalUiProfile, addConnection, updateProfile,
       tasks, events, selectedDay, setSelectedDay, weekStart, weekDays, nextWeek, prevWeek,
       addTask, deleteTask, toggleTask, postponeTask, addEvent, deleteEvent, executeInsight,
       documents, addDocument,
