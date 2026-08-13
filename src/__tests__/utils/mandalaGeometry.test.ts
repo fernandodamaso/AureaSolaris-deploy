@@ -64,4 +64,33 @@ describe('mandala geometry', () => {
     expect(getSignIndex(359.99)).toBe(11);
     expect(SIGN_NAMES_PT[getSignIndex(45)]).toBe('Touro');
   });
+
+  it('preserves angular separation under rotation', () => {
+    const orientation = createMandalaOrientation(287.5);
+
+    const pairs = [
+      [0, 90],
+      [350, 10],
+      [45.25, 215.75],
+    ];
+
+    for (const [start, end] of pairs) {
+      const before = normalizeDegree(end - start);
+      const after = normalizeDegree(
+        orientation.rotateDegree(end) -
+        orientation.rotateDegree(start),
+      );
+
+      expect(after).toBeCloseTo(before);
+    }
+  });
+
+  it('places non-cardinal degrees at deterministic polar coordinates', () => {
+    const orientation = createMandalaOrientation(0);
+    const point = orientation.pointAt(100, 200, 50, 45.25);
+    const radians = orientation.toSvgRadians(45.25);
+
+    expect(point.x).toBeCloseTo(100 + 50 * Math.cos(radians));
+    expect(point.y).toBeCloseTo(200 + 50 * Math.sin(radians));
+  });
 });
