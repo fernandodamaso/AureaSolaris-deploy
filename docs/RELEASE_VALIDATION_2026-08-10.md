@@ -271,3 +271,45 @@ Build completo executado após essas correções:
 
 Esta evidência certifica apenas o ownership técnico e o smoke automatizado do
 runtime local; não substitui o aceite manual da interface e do instalador.
+
+### FDM-672 — smoke do runtime compilado (Chrome) — 12/08/2026
+
+Repositório: `C:\git\AureaSolaris-history-rewrite\post-push-fresh`
+Branch: `fernandoyarrum/fdm-669-670-671-wave3`
+HEAD: `3585858` (`test(runtime): add compiled Chrome runtime smoke`)
+Base Wave 3: `e9b47a0`, `ddd213c`, `6c8a334`
+
+Novo teste: `tests/test_compiled_runtime_smoke.py` — subprocess real de
+`main_api.py` com `sys.executable`, porta livre via `127.0.0.1:0`, diretório
+temporário `AUREA_DATA_DIR`, frontend compilado em `dist/index.html`, bridge
+`/browser/command` com identidade anônima temporária (registro, save/load de
+caderno, fechamento de sessão e rejeição `401` após close). Sem `/chat` nem
+provedores externos. Helpers HTTP via `urllib.request`. Scripts PowerShell
+existentes preservados (`browser_runtime_smoke.ps1`,
+`browser_runtime_packaged_smoke.ps1`).
+
+Comandos automatizados (todos código `0`):
+
+```powershell
+npm run build
+python -m unittest tests.test_compiled_runtime_smoke
+python -m unittest discover -s tests -p "test_*.py"
+npm run check
+```
+
+Resultados:
+
+- `npm run build`: frontend compilado; `dist/index.html` presente.
+- `python -m unittest tests.test_compiled_runtime_smoke`: `1` teste, `1.680s`, OK.
+- `python -m unittest discover -s tests -p "test_*.py"`: `43` testes, `26.884s`, OK.
+- `npm run check`: lint (`0` warnings), Vitest (`22` arquivos, `101` testes), build — OK.
+
+Teardown verificado pelo teste:
+
+- subprocess `main_api.py` encerrado em `finally` (`terminate`/`kill`);
+- porta alocada reutilizável após término (`_assert_port_rebinds`);
+- diretório temporário `AUREA_DATA_DIR` removido com o context manager.
+
+**Aceite manual do launcher: pendente.** O smoke automatizado não substitui a
+confirmação humana de abertura no Chrome a partir de `127.0.0.1` sem servidor
+Vite.
