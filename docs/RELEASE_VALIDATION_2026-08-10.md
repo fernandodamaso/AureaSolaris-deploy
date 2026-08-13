@@ -347,3 +347,37 @@ Confirmado:
 2. registro de identidade anônima temporária e autenticação bem-sucedida;
 3. navegação principal pós-login (`Caderno Vivo`, `Astrologia`) visível;
 4. URL permanece em `127.0.0.1:9876` (sem redirecionamento para `localhost:5173`).
+
+### FDM-673 — Track A final cleanup, safety, and reproducibility gate — 12/08/2026
+
+Repositório: `C:\git\AureaSolaris-history-rewrite\post-push-fresh`
+Branch: `fernandoyarrum/fdm-669-670-671-wave3`
+HEAD (pré-commit): `05edcfd1a260380cb5b1700371a0de31792709a2`
+
+Predecessors FDM-664–FDM-672: assumidos resolvidos nesta branch (Wave 3 + FDM-672 + launcher doc).
+
+**Git / secrets / history**
+
+| Check | Result |
+| --- | --- |
+| `git status --short --branch` | `## fernandoyarrum/fdm-669-670-671-wave3` (clean) |
+| `git rev-parse HEAD` | `05edcfd1a260380cb5b1700371a0de31792709a2` |
+| `git diff --check` | exit `0`, no whitespace errors |
+| `git ls-files` (`.env`, `.env.local`, `natal_charts/viviane.json`, `src-tauri/memory/board.json`) | none tracked (empty) |
+| `git check-ignore -v` | all four paths ignored (`.gitignore` rules 39, 40, 68, 69) |
+| History scan `natal_charts/viviane.json` / `src-tauri/memory/board.json` | `0` hits |
+
+**Automated gates (pre-commit HEAD)**
+
+| Command | Exit | Counts / notes |
+| --- | ---: | --- |
+| `npm run check` | `0` | ESLint `0` warnings; Vitest `22` files / `101` tests; `tsc` + Vite build OK |
+| `python -m unittest discover -s tests -p "test_*.py"` | `0` | `43` tests in `23.210s`, OK (venv: `C:\git\AureaSolaris\.aurea-build-venv\Scripts\python.exe`) |
+| `cargo check --manifest-path .\src-tauri\Cargo.toml` | `0` | Finished `dev` profile |
+| `tools\clean-generated.ps1` (dry-run) | `0` | REPORT only: `__pycache__`, `dist`, `src-tauri\target`; `build` / `work\cargo-target-dev` absent; no protected roots proposed |
+| `python -m unittest tests.test_compiled_runtime_smoke` | `0` | `1` test in `1.701s`, OK |
+
+**Cleanup dry-run allowlist:** only generated paths (`dist`, `build`, `work\cargo-target-dev`, `src-tauri\target`, dynamic `__pycache__` / `.pytest_cache`); protected roots (`knowledge`, `natal_charts`, `src-tauri\memory`, `data`, `backups`, `tests`, `src-tauri\binaries`, `.aurea-build-venv`) not targeted.
+
+Esta seção fecha a trilha A de limpeza/reprodutibilidade; aceite manual amplo do produto permanece conforme seções anteriores.
+
