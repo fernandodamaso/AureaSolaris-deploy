@@ -64,6 +64,7 @@ from browser_workspace import (
     list_owner_workspace_ids,
     load_board,
     load_health_memory,
+    is_workspace_safe_owner_id,
     save_board,
     save_health_memory,
     update_diary_entry,
@@ -489,6 +490,8 @@ def _one_enabled_matching_owner(accounts: list[dict], workspaces: set[str]) -> O
     if account["disabled"]:
         return None
     if workspaces - {account["account_id"]}:
+        return None
+    if not is_workspace_safe_owner_id(str(account["account_id"])):
         return None
     return account
 

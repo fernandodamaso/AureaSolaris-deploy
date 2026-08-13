@@ -630,6 +630,26 @@ class TestLocalOwnerInitialAccess(unittest.TestCase):
             self.assertEqual(_snapshot_owner_state(storage), before)
             self.assertEqual(main_api._BROWSER_SESSIONS, {})
 
+    def test_initial_access_rejects_owner_id_unsafe_for_workspace(self):
+        with _isolated_browser_client() as (client, storage, _data_dir):
+            storage.create_private_account(
+                "owner:1",
+                "Pessoa Colon",
+                "pessoa-colon",
+                password="known-password",
+            )
+            before = _snapshot_owner_state(storage)
+            self.assertEqual(before, (["owner:1"], set()))
+
+            response = _post_initial_access(client)
+            self.assertEqual(response.status_code, 409)
+            detail = response.json()["detail"]
+            self.assertEqual(detail["code"], "setup-required")
+            self.assertEqual(detail["reason"], "owner-conflict")
+            self.assertTrue(detail["message"])
+            self.assertEqual(_snapshot_owner_state(storage), before)
+            self.assertEqual(main_api._BROWSER_SESSIONS, {})
+
     def test_initial_access_returns_login_required_in_require_login_mode(self):
         with _isolated_browser_client(auth_mode="require-login") as (client, storage, _data_dir):
             before = _snapshot_owner_state(storage)

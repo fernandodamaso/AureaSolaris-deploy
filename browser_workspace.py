@@ -21,12 +21,16 @@ from typing import Any
 _SAFE_ID = re.compile(r"^[A-Za-z0-9_.-]{1,128}$")
 
 
+def is_workspace_safe_owner_id(value: str) -> bool:
+    return isinstance(value, str) and bool(_SAFE_ID.fullmatch(value)) and not value.startswith(".")
+
+
 def _now() -> str:
     return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
 
 
 def _validate_id(value: str, label: str) -> str:
-    if not isinstance(value, str) or not _SAFE_ID.fullmatch(value) or value.startswith("."):
+    if not is_workspace_safe_owner_id(value):
         raise ValueError(f"{label} inválido.")
     return value
 
