@@ -264,4 +264,77 @@ describe('AgendaProvider ensureLocalUiProfile', () => {
       ]),
     );
   });
+
+  describe('when mock natal is enabled', () => {
+    beforeEach(() => {
+      localStorage.setItem('aurea_mock_natal', '1');
+    });
+
+    it('seeds the reference map and focuses it when the owner has no natal', () => {
+      render(
+        <AgendaProvider>
+          <LocalOwnerProbe ownerId="owner-1" displayName="Aurea Local" />
+        </AgendaProvider>,
+      );
+
+      fireEvent.click(screen.getByRole('button', { name: 'Ativar dono local' }));
+
+      expect(screen.getByTestId('active-subject').textContent).toBe('aurea-reference-natal');
+      expect(storedProfiles()).toEqual([
+        {
+          id: 'owner-1',
+          name: 'Aurea Local',
+          active: true,
+          connections: [{
+            id: 'aurea-reference-natal',
+            name: 'Mapa de referencia',
+            birthData: {
+              date: '1985-12-01',
+              time: '16:04',
+              location: 'Belo Horizonte, MG',
+              lat: -19.9167,
+              lng: -43.9345,
+              timezone: 'America/Sao_Paulo',
+            },
+          }],
+        },
+      ]);
+      expect(localStorage.getItem('aurea_active_subject:owner-1')).toBe('aurea-reference-natal');
+    });
+
+    it('does not duplicate the saved reference map or overwrite personal natal', () => {
+      localStorage.setItem('aurea_profiles', JSON.stringify([
+        {
+          id: 'owner-1',
+          name: 'Nome antigo',
+          active: true,
+          birthDate: '1990-01-15',
+          birthTime: '08:30',
+          connections: [{
+            id: 'mapa_de_referencia_1786644254167',
+            name: 'Mapa de referencia',
+            birthData: { date: '1985-12-01', time: '16:04' },
+          }],
+        },
+      ]));
+      localStorage.setItem('aurea_active_id', 'owner-1');
+      localStorage.setItem('aurea_active_subject:owner-1', 'mapa_de_referencia_1786644254167');
+
+      render(
+        <AgendaProvider>
+          <LocalOwnerProbe ownerId="owner-1" displayName="Nome novo" />
+        </AgendaProvider>,
+      );
+
+      fireEvent.click(screen.getByRole('button', { name: 'Ativar dono local' }));
+
+      const owner = storedProfiles()[0] as {
+        birthDate?: string;
+        connections: Array<{ id: string }>;
+      };
+      expect(owner.birthDate).toBe('1990-01-15');
+      expect(owner.connections.map((connection) => connection.id)).toEqual(['mapa_de_referencia_1786644254167']);
+      expect(screen.getByTestId('active-subject').textContent).toBe('mapa_de_referencia_1786644254167');
+    });
+  });
 });

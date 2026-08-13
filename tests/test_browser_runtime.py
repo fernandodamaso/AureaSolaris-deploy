@@ -6,6 +6,7 @@ import sqlite3
 import subprocess
 import tempfile
 import unittest
+import uuid
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import closing, contextmanager
 from pathlib import Path
@@ -68,6 +69,55 @@ def _post_initial_access(client: TestClient):
 
 
 class TestBrowserRuntime(unittest.TestCase):
+    @contextmanager
+    def _isolated_browser_client(self):
+        _reset_browser_sessions()
+        with tempfile.TemporaryDirectory() as directory:
+            data_dir = Path(directory) / "browser-data"
+            storage = LocalStorage(Path(directory) / "app-data" / "data", MIGRATIONS)
+            storage.initialize()
+            with patch.dict(os.environ, {"AUREA_DATA_DIR": str(data_dir)}, clear=False):
+                with patch.object(main_api, "get_storage", return_value=storage):
+                    with TestClient(main_api.app, base_url="http://127.0.0.1") as client:
+                        try:
+                            yield client
+                        finally:
+                            _reset_browser_sessions()
+
+    def _register_temp_owner(self, client, suffix: str | None = None) -> tuple[str, str]:
+        token = suffix or uuid.uuid4().hex[:12]
+        owner_id = f"temp-owner-{token}"
+        response = client.post(
+            "/browser/command",
+            json={
+                "command": "private_account_register",
+                "args": {
+                    "ownerId": owner_id,
+                    "displayName": f"Pessoa {token}",
+                    "loginName": f"login-{token}",
+                    "password": f"senha temporaria {token} suficientemente forte",
+                },
+            },
+        )
+        self.assertEqual(response.status_code, 200, response.text)
+        return owner_id, response.json()["browser_session_token"]
+
+    def _session_headers(self, session_token: str) -> dict[str, str]:
+        return {"X-Aurea-Browser-Session": session_token}
+
+    def _browser_command(
+        self,
+        client,
+        session_token: str,
+        command: str,
+        args: dict | None = None,
+    ):
+        return client.post(
+            "/browser/command",
+            headers=self._session_headers(session_token),
+            json={"command": command, "args": args or {}},
+        )
+
     def test_browser_smoke_skips_port_bound_to_all_interfaces(self):
         powershell = shutil.which("powershell")
         if powershell is None:
@@ -469,6 +519,176 @@ Write-Output \"PROCESS_TREE_PASS stopped=$($stopped -join ',') reuse_failure=$re
                         self.assertEqual(entry_after_attempt.status_code, 200)
                         self.assertEqual(entry_after_attempt.json()["result"]["title"], "Nota privada de B")
 
+    def test_same_board_id_isolation_across_owners(self):
+        with self._isolated_browser_client() as client:
+            _, session_a = self._register_temp_owner(client, "board-a")
+            _, session_b = self._register_temp_owner(client, "board-b")
+            board_id = "board-shared-id"
+
+            saved_a = self._browser_command(
+                client,
+                session_a,
+                "save_board",
+                {
+                    "boardId": board_id,
+                    "name": "Caderno A",
+                    "nodes": [{"text": "conteudo anonimo de A"}],
+                    "edges": [],
+                },
+            )
+            self.assertEqual(saved_a.status_code, 200)
+            saved_b = self._browser_command(
+                client,
+                session_b,
+                "save_board",
+                {
+                    "boardId": board_id,
+                    "name": "Caderno B",
+                    "nodes": [{"text": "conteudo anonimo de B"}],
+                    "edges": [],
+                },
+            )
+            self.assertEqual(saved_b.status_code, 200)
+
+            loaded_a = self._browser_command(client, session_a, "load_board", {"boardId": board_id})
+            loaded_b = self._browser_command(client, session_b, "load_board", {"boardId": board_id})
+            self.assertEqual(loaded_a.json()["result"]["nodes"], [{"text": "conteudo anonimo de A"}])
+            self.assertEqual(loaded_b.json()["result"]["nodes"], [{"text": "conteudo anonimo de B"}])
+
+            deleted_b = self._browser_command(client, session_b, "delete_board", {"boardId": board_id})
+            self.assertEqual(deleted_b.status_code, 200)
+
+            still_a = self._browser_command(client, session_a, "load_board", {"boardId": board_id})
+            self.assertEqual(still_a.json()["result"]["nodes"], [{"text": "conteudo anonimo de A"}])
+
+    def test_foreign_board_load_hides_other_owner_content_when_not_present(self):
+        with self._isolated_browser_client() as client:
+            _, session_a = self._register_temp_owner(client, "foreign-a")
+            _, session_b = self._register_temp_owner(client, "foreign-b")
+            board_id = "board-only-a"
+
+            saved_a = self._browser_command(
+                client,
+                session_a,
+                "save_board",
+                {
+                    "boardId": board_id,
+                    "name": "Caderno exclusivo de A",
+                    "nodes": [{"text": "segredo de A"}],
+                    "edges": [],
+                },
+            )
+            self.assertEqual(saved_a.status_code, 200)
+
+            foreign_load = self._browser_command(client, session_b, "load_board", {"boardId": board_id})
+            self.assertEqual(foreign_load.status_code, 200)
+            self.assertEqual(foreign_load.json()["result"]["nodes"], [])
+
+    def test_same_health_profile_id_isolation_across_owners(self):
+        with self._isolated_browser_client() as client:
+            _, session_a = self._register_temp_owner(client, "health-a")
+            _, session_b = self._register_temp_owner(client, "health-b")
+            profile_id = "profile-shared-id"
+
+            saved_a = self._browser_command(
+                client,
+                session_a,
+                "save_health_memory",
+                {"profileId": profile_id, "memory": [{"note": "valor anonimo de A"}]},
+            )
+            saved_b = self._browser_command(
+                client,
+                session_b,
+                "save_health_memory",
+                {"profileId": profile_id, "memory": [{"note": "valor anonimo de B"}]},
+            )
+            self.assertEqual(saved_a.status_code, 200)
+            self.assertEqual(saved_b.status_code, 200)
+
+            loaded_a = self._browser_command(
+                client,
+                session_a,
+                "load_health_memory",
+                {"profileId": profile_id},
+            )
+            loaded_b = self._browser_command(
+                client,
+                session_b,
+                "load_health_memory",
+                {"profileId": profile_id},
+            )
+            self.assertEqual(loaded_a.json()["result"], [{"note": "valor anonimo de A"}])
+            self.assertEqual(loaded_b.json()["result"], [{"note": "valor anonimo de B"}])
+
+    def test_owner_id_injection_via_sidecar_returns_403(self):
+        with self._isolated_browser_client() as client:
+            _, session_a = self._register_temp_owner(client, "inject-a")
+            self._register_temp_owner(client, "inject-b")
+
+            post_injection = self._browser_command(
+                client,
+                session_a,
+                "private_sidecar_request",
+                {
+                    "method": "POST",
+                    "path": "/hermes/threads/open",
+                    "body": {
+                        "owner_id": "foreign-owner-b",
+                        "topic_key": "isolamento",
+                        "title": "Tentativa de injeção",
+                    },
+                },
+            )
+            self.assertEqual(post_injection.status_code, 403)
+
+            get_injection = self._browser_command(
+                client,
+                session_a,
+                "private_sidecar_request",
+                {
+                    "method": "GET",
+                    "path": "/hermes/threads",
+                    "query": {"owner_id": "foreign-owner-b"},
+                },
+            )
+            self.assertEqual(get_injection.status_code, 403)
+
+    def test_closed_browser_session_returns_401_for_private_operations(self):
+        with self._isolated_browser_client() as client:
+            _, session = self._register_temp_owner(client, "closed-session")
+            headers = self._session_headers(session)
+
+            saved = client.post(
+                "/browser/command",
+                headers=headers,
+                json={
+                    "command": "save_board",
+                    "args": {"boardId": "board-closed", "name": "Caderno", "nodes": [], "edges": []},
+                },
+            )
+            self.assertEqual(saved.status_code, 200)
+
+            closed = client.post(
+                "/browser/command",
+                headers=headers,
+                json={"command": "private_session_close", "args": {}},
+            )
+            self.assertEqual(closed.status_code, 200)
+
+            for command, args in (
+                ("list_boards", {}),
+                ("load_board", {"boardId": "board-closed"}),
+                ("diary_list_entries", {}),
+                ("load_health_memory", {"profileId": "profile-closed"}),
+                ("private_sidecar_request", {"method": "GET", "path": "/hermes/threads", "query": {}}),
+            ):
+                response = client.post(
+                    "/browser/command",
+                    headers=headers,
+                    json={"command": command, "args": args},
+                )
+                self.assertEqual(response.status_code, 401, f"{command} should reject closed session")
+
 
 class TestLocalOwnerInitialAccess(unittest.TestCase):
     def test_initial_access_creates_local_owner_on_fresh_install(self):
@@ -809,6 +1029,19 @@ class TestBrowserHealthContract(unittest.TestCase):
             self.assertEqual(response.status_code, 200)
             self.assertEqual(response.json()["auth_mode"], "require-login")
             self.assertEqual(response.json()["browser_contract_version"], 2)
+
+    def test_health_test_user_false_when_env_unset(self):
+        with patch.dict(os.environ, {}, clear=False):
+            os.environ.pop("AUREA_TEST_USER", None)
+            response = self.client.get("/health")
+            self.assertEqual(response.status_code, 200)
+            self.assertFalse(response.json()["test_user"])
+
+    def test_health_test_user_true_when_env_set(self):
+        with patch.dict(os.environ, {"AUREA_TEST_USER": "1"}, clear=False):
+            response = self.client.get("/health")
+            self.assertEqual(response.status_code, 200)
+            self.assertTrue(response.json()["test_user"])
 
 
 if __name__ == "__main__":

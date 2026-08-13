@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
-import { DiaryEntry, DiaryEntryResponse, DiaryFolder, DiaryFolderResponse } from '../types/diario';
+import { DiaryEntry, DiaryFolder } from '../types/diario';
 import {
   createDiaryEntry,
   createDiaryFolder,
@@ -9,7 +9,7 @@ import {
   listDiaryEntries,
   listDiaryFolders,
   updateDiaryEntry,
-} from '../utils/diary';
+} from '../services/diary';
 
 interface DiarioContextType {
   folders: DiaryFolder[];
@@ -31,25 +31,6 @@ interface DiarioContextType {
 const DiarioContext = createContext<DiarioContextType | undefined>(undefined);
 const DEFAULT_FOLDER = 'general';
 
-const normalizeEntry = (raw: DiaryEntry | DiaryEntryResponse): DiaryEntry => ({
-  id: raw.id,
-  title: raw.title || 'Nota sem título',
-  content: raw.content || '',
-  folderId: 'folderId' in raw ? raw.folderId : raw.folder_id,
-  createdAt: 'createdAt' in raw ? raw.createdAt : raw.created_at,
-  updatedAt: 'updatedAt' in raw ? raw.updatedAt : raw.updated_at,
-  wordCount: 'wordCount' in raw ? raw.wordCount : raw.word_count,
-  status: raw.status || 'idea',
-});
-
-const normalizeFolder = (raw: DiaryFolder | DiaryFolderResponse): DiaryFolder => ({
-  id: raw.id,
-  name: raw.name,
-  icon: raw.icon || '📁',
-  order: raw.order ?? 0,
-  createdAt: 'createdAt' in raw ? raw.createdAt : raw.created_at,
-});
-
 export const DiarioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [folders, setFolders] = useState<DiaryFolder[]>([]);
   const [entries, setEntries] = useState<DiaryEntry[]>([]);
@@ -64,9 +45,9 @@ export const DiarioProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       setIsLoading(true);
       try {
         const folderList = await listDiaryFolders();
-        if (folderList) setFolders(folderList.map(normalizeFolder));
+        if (folderList) setFolders(folderList);
         const entryList = await listDiaryEntries(DEFAULT_FOLDER);
-        if (entryList) setEntries(entryList.map(normalizeEntry));
+        if (entryList) setEntries(entryList);
       } finally {
         setIsLoading(false);
       }
@@ -78,34 +59,32 @@ export const DiarioProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setActiveEntryId(null);
     setActiveEntry(null);
     const entryList = await listDiaryEntries(id);
-    if (entryList) setEntries(entryList.map(normalizeEntry));
+    if (entryList) setEntries(entryList);
   }, []);
 
   const selectEntry = useCallback(async (id: string) => {
     setActiveEntryId(id);
     const entry = await getDiaryEntry(id);
-    if (entry) setActiveEntry(normalizeEntry(entry));
+    if (entry) setActiveEntry(entry);
   }, []);
 
   const createEntry = useCallback(async () => {
     const entry = await createDiaryEntry({
       title: 'Nova Nota',
-      folder_id: selectedFolderId,
+      folderId: selectedFolderId,
     });
     if (entry) {
-      const normalized = normalizeEntry(entry);
-      setEntries(prev => [normalized, ...prev]);
+      setEntries(prev => [entry, ...prev]);
       setActiveEntryId(entry.id);
-      setActiveEntry(normalized);
+      setActiveEntry(entry);
     }
   }, [selectedFolderId]);
 
   const updateEntry = useCallback(async (id: string, changes: { title?: string; content?: string }) => {
     const updated = await updateDiaryEntry({ id, ...changes });
     if (updated) {
-      const normalized = normalizeEntry(updated);
-      setActiveEntry(normalized);
-      setEntries(prev => prev.map(e => (e.id === id ? normalized : e)));
+      setActiveEntry(updated);
+      setEntries(prev => prev.map(e => (e.id === id ? updated : e)));
       return true;
     }
     return false;
@@ -131,7 +110,7 @@ export const DiarioProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   const createFolder = useCallback(async (name: string) => {
     const folder = await createDiaryFolder({ name, icon: '📁' });
-    if (folder) setFolders(prev => [...prev, normalizeFolder(folder)]);
+    if (folder) setFolders(prev => [...prev, folder]);
   }, []);
 
   const deleteFolder = useCallback(async (id: string) => {
@@ -140,7 +119,7 @@ export const DiarioProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     if (selectedFolderId === id) {
       setSelectedFolderId(DEFAULT_FOLDER);
       const entryList = await listDiaryEntries(DEFAULT_FOLDER);
-      if (entryList) setEntries(entryList.map(normalizeEntry));
+      if (entryList) setEntries(entryList);
     }
   }, [selectedFolderId]);
 

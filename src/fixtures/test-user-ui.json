@@ -1,0 +1,51 @@
+{
+  "version": "1",
+  "maps": [
+    {
+      "id": "aurea-reference-natal",
+      "name": "Mapa de referencia",
+      "birthData": {
+        "date": "1985-12-01",
+        "time": "16:04",
+        "location": "Belo Horizonte, MG",
+        "lat": -19.9167,
+        "lng": -43.9345,
+        "timezone": "America/Sao_Paulo"
+      }
+    },
+    {
+      "id": "aurea-test-known-person",
+      "name": "Pessoa Conhecida",
+      "birthData": {
+        "date": "1990-06-15",
+        "time": "09:00",
+        "location": "São Paulo, SP",
+        "lat": -23.5505,
+        "lng": -46.6333,
+        "timezone": "America/Sao_Paulo"
+      }
+    }
+  ],
+  "tasks": [
+    {
+      "id": "task-teste-1",
+      "content": "Revisar mandala de teste",
+      "completed": false,
+      "is_completed": false
+    },
+    {
+      "id": "task-teste-2",
+      "content": "Abrir o caderno de teste",
+      "completed": false,
+      "is_completed": false
+    }
+  ],
+  "events": [
+    {
+      "id": "event-teste-1",
+      "title": "Janela de estudo ficticia",
+      "start": "2026-01-20T14:00:00.000Z",
+      "type": "local"
+    }
+  ]
+}

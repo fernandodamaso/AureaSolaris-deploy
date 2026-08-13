@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import { BookOpen, CalendarDays, FileText, LayoutGrid, Search } from 'lucide-react';
-import { listBoards, loadBoard } from '../../utils/board';
+import { listBoards, loadBoard } from '../../services/notebook';
 import type { CadernoNode } from '../../types/caderno';
-import { listDiaryEntries } from '../../utils/diary';
-import type { DiaryEntryResponse } from '../../types/diario';
+import { listDiaryEntries } from '../../services/diary';
+import type { DiaryEntry } from '../../types/diario';
 
 type ArchiveSource = 'study' | 'diary';
 
@@ -105,7 +105,7 @@ export function StudyArchive({ onOpenStudy }: StudyArchiveProps) {
       }
 
       const studies = await Promise.all((boardList || []).map(async board => {
-        const data = await loadBoard({ boardId: board.id });
+        const data = await loadBoard(board.id);
         return (data?.nodes || []).flatMap(node => {
           const studyContent = node.studyContent?.trim() || '';
           const quickContent = nodeQuickContent(node);
@@ -118,7 +118,7 @@ export function StudyArchive({ onOpenStudy }: StudyArchiveProps) {
             title: nodeTitle(node),
             summary: quickContent && quickContent !== content ? quickContent : '',
             content,
-            updatedAt: normalizeTimestamp(node.studyUpdatedAt || board.updated_at || board.updatedAt),
+            updatedAt: normalizeTimestamp(node.studyUpdatedAt || board.updatedAt),
             groupName: board.name,
             boardId: board.id,
             nodeId: node.id,
@@ -126,14 +126,14 @@ export function StudyArchive({ onOpenStudy }: StudyArchiveProps) {
         });
       }));
 
-      const diaryItems: ArchiveItem[] = (diaryList || []).map((entry: DiaryEntryResponse) => ({
+      const diaryItems: ArchiveItem[] = (diaryList || []).map((entry: DiaryEntry) => ({
         id: `diary:${entry.id}`,
         source: 'diary',
         title: entry.title?.trim() || 'Nota sem título',
         summary: '',
         content: entry.content || '',
-        updatedAt: normalizeTimestamp(entry.updated_at || entry.created_at),
-        groupName: entry.folder_name || 'Diário pessoal',
+        updatedAt: normalizeTimestamp(entry.updatedAt || entry.createdAt),
+        groupName: entry.folderName || 'Diário pessoal',
       }));
 
       const nextItems = [...studies.flat(), ...diaryItems]

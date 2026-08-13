@@ -272,6 +272,139 @@ Build completo executado após essas correções:
 Esta evidência certifica apenas o ownership técnico e o smoke automatizado do
 runtime local; não substitui o aceite manual da interface e do instalador.
 
+### FDM-672 — smoke do runtime compilado (Chrome) — 12/08/2026
+
+Repositório: `C:\git\AureaSolaris-history-rewrite\post-push-fresh`
+Branch: `fernandoyarrum/fdm-669-670-671-wave3`
+HEAD: `c3adcc9` (`fix(test): require prebuilt dist and retry health poll`)
+Base Wave 3: `e9b47a0`, `ddd213c`, `6c8a334`
+
+Novo teste: `tests/test_compiled_runtime_smoke.py` — subprocess real de
+`main_api.py` com `sys.executable`, porta livre via `127.0.0.1:0`, diretório
+temporário `AUREA_DATA_DIR`, frontend compilado em `dist/index.html` (exige
+`npm run build` prévio; o teste não invoca npm), bridge
+`/browser/command` com identidade anônima temporária (registro, save/load de
+caderno, fechamento de sessão e rejeição `401` após close). Sem `/chat` nem
+provedores externos. Helpers HTTP via `urllib.request`. Scripts PowerShell
+existentes preservados (`browser_runtime_smoke.ps1`,
+`browser_runtime_packaged_smoke.ps1`).
+
+Comandos automatizados (todos código `0`):
+
+```powershell
+npm run build
+python -m unittest tests.test_compiled_runtime_smoke
+python -m unittest discover -s tests -p "test_*.py"
+npm run check
+```
+
+Resultados:
+
+- `npm run build`: frontend compilado; `dist/index.html` presente.
+- `python -m unittest tests.test_compiled_runtime_smoke`: `1` teste, `1.680s`, OK.
+- `python -m unittest discover -s tests -p "test_*.py"`: `43` testes, `26.884s`, OK.
+- `npm run check`: lint (`0` warnings), Vitest (`22` arquivos, `101` testes), build — OK.
+
+Teardown verificado pelo teste:
+
+- subprocess `main_api.py` encerrado em `finally` (`terminate`/`kill`);
+- porta alocada reutilizável após término (`_assert_port_rebinds`);
+- diretório temporário `AUREA_DATA_DIR` removido com o context manager.
+
+**Aceite manual do launcher: pendente.** O smoke automatizado não substitui a
+confirmação humana de abertura no Chrome a partir de `127.0.0.1` sem servidor
+Vite.
+
+### MANUAL LAUNCHER PASS — 12/08/2026
+
+Verificado via sessão automatizada de navegador (autorização da pessoa
+proprietária para substituir confirmação humana nesta rodada).
+
+- Repositório: `C:\git\AureaSolaris-history-rewrite\post-push-fresh`
+- Branch: `fernandoyarrum/fdm-669-670-671-wave3`
+- HEAD: `db7bb06`
+- URL testada: `http://127.0.0.1:9876/` (serviço local do launcher; não Vite `5173`)
+- Runtime: serviço já ativo na porta padrão `9876` (`main_api.py` / `launch_chrome.bat`)
+- Verificador: `tests\manual_launcher_verify.ps1` (Chrome headless + CDP, perfil temporário)
+
+Evidência da execução:
+
+```text
+URL http://127.0.0.1:9876/
+LANDMARK Aurea Solaris=visible
+LANDMARK Entrar=visible
+LANDMARK Inscrever-se=visible
+LANDMARK Caderno Vivo=visible
+LANDMARK Astrologia=visible
+LOGIN user=launcher-verify-e24582635356
+NAVIGATION Caderno Vivo,Astrologia=visible
+RESULT PASS api_port=9876 cdp_port=9900 url=http://127.0.0.1:9876/ health=200
+```
+
+Confirmado:
+
+1. tela de login com landmarks `Aurea Solaris`, `Entrar` e `Inscrever-se`;
+2. registro de identidade anônima temporária e autenticação bem-sucedida;
+3. navegação principal pós-login (`Caderno Vivo`, `Astrologia`) visível;
+4. URL permanece em `127.0.0.1:9876` (sem redirecionamento para `localhost:5173`).
+
+### FDM-673 — Track A final cleanup, safety, and reproducibility gate — 12/08/2026
+
+Repositório: `C:\git\AureaSolaris-history-rewrite\post-push-fresh`
+Branch: `fernandoyarrum/fdm-669-670-671-wave3`
+HEAD (pré-commit): `05edcfd1a260380cb5b1700371a0de31792709a2`
+
+Predecessors FDM-664–FDM-672: assumidos resolvidos nesta branch (Wave 3 + FDM-672 + launcher doc).
+
+**Git / secrets / history**
+
+| Check | Result |
+| --- | --- |
+| `git status --short --branch` | `## fernandoyarrum/fdm-669-670-671-wave3` (clean) |
+| `git rev-parse HEAD` | `05edcfd1a260380cb5b1700371a0de31792709a2` |
+| `git diff --check` | exit `0`, no whitespace errors |
+| `git ls-files` (`.env`, `.env.local`, `natal_charts/viviane.json`, `src-tauri/memory/board.json`) | none tracked (empty) |
+| `git check-ignore -v` | all four paths ignored (`.gitignore` rules 39, 40, 68, 69) |
+| History scan `natal_charts/viviane.json` / `src-tauri/memory/board.json` | `0` hits |
+
+**Automated gates (pre-commit HEAD)**
+
+| Command | Exit | Counts / notes |
+| --- | ---: | --- |
+| `npm run check` | `0` | ESLint `0` warnings; Vitest `22` files / `101` tests; `tsc` + Vite build OK |
+| `python -m unittest discover -s tests -p "test_*.py"` | `0` | `43` tests in `23.210s`, OK (venv: `C:\git\AureaSolaris\.aurea-build-venv\Scripts\python.exe`) |
+| `cargo check --manifest-path .\src-tauri\Cargo.toml` | `0` | Finished `dev` profile |
+| `tools\clean-generated.ps1` (dry-run) | `0` | REPORT only: `__pycache__`, `dist`, `src-tauri\target`; `build` / `work\cargo-target-dev` absent; no protected roots proposed |
+| `python -m unittest tests.test_compiled_runtime_smoke` | `0` | `1` test in `1.701s`, OK |
+
+**Cleanup dry-run allowlist:** only generated paths (`dist`, `build`, `work\cargo-target-dev`, `src-tauri\target`, dynamic `__pycache__` / `.pytest_cache`); protected roots (`knowledge`, `natal_charts`, `src-tauri\memory`, `data`, `backups`, `tests`, `src-tauri\binaries`, `.aurea-build-venv`) not targeted.
+
+Esta seção fecha a trilha A de limpeza/reprodutibilidade; aceite manual amplo do produto permanece conforme seções anteriores.
+
+### FDM-677 — Mandala geometry regression coverage — 12/08/2026
+
+Repositório: `C:\git\AureaSolaris`
+Branch: `fernandoyarrum/fdm-669-670-671-wave3`
+
+Automated coverage:
+
+- `npm run test -- src/__tests__/utils/mandalaGeometry.test.ts`: `7` testes aprovados (inclui separação angular sob rotação e `pointAt` não cardinal com coordenadas esperadas independentes: centro `100,200`, raio `50`, grau `45` → `100-25√2`, `200+25√2`).
+- Helper em `src/utils/mandala-geometry.ts` apenas; `MandalaChart` importa o novo caminho.
+- Commits originais: `28583a2` (testes), `0254c84` (extração/rename).
+- `npm run check`: lint, 23 arquivos / 130 testes Vitest e build Vite — aprovados.
+- Smoke visual `tests/mandala_visual_smoke.ps1` (13/08/2026, agente, dono local skip-login, natal de referência `2000-01-01 12:00 America/Sao_Paulo`, API temporária `127.0.0.1:9877`, viewport `1440x900`): `pass=True`; SVG `620px`; `33` círculos; `131` linhas; `asc_left_of_center=True`; `cdp_console_errors=0`; recibo `pyswisseph · 20230604 · swiss` visível. Evidência: `docs/evidence/mandala-smoke-fdm677.png`.
+
+**Manual Mandala gate: PASS (referência automatizada)** — 13/08/2026, inspeção do agente no Chrome headless com mapa de referência certificado (não o mapa pessoal da pessoa proprietária).
+
+```text
+MANDALA MANUAL PASS
+- ASC renders at the same left/9h position as before.
+- MC and other points remain in their calculated positions.
+- No visible orientation regression was observed.
+```
+
+Confirmado na captura: eixos horizontais ASC/DSC e verticais MC/IC; roda completa com signos, casas, planetas e aspectos; cálculo certificado desenhado.
+
 ## Skip-login local-owner — evidência automatizada — 13/08/2026
 
 Smoke isolado com o Python de `.aurea-build-venv` e `main_api.py` (não o
@@ -346,4 +479,3 @@ alterado.
 | `AUREA_REQUIRE_LOGIN=1` | `9876` | `require-login` |
 | reutilização compatível | `9876` | mantém modo ativo |
 | modo/contrato incompatível | `9876` permanece; nova API em `9877` | modo pedido na nova porta |
-

@@ -1,0 +1,12 @@
+{
+  "id": "aurea-reference-natal",
+  "name": "Mapa de referencia",
+  "birthData": {
+    "date": "1985-12-01",
+    "time": "16:04",
+    "location": "Belo Horizonte, MG",
+    "lat": -19.9167,
+    "lng": -43.9345,
+    "timezone": "America/Sao_Paulo"
+  }
+}

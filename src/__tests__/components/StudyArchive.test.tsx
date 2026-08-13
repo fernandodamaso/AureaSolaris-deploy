@@ -1,25 +1,25 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { StudyArchive } from '../../components/diario/StudyArchive';
-import { listBoards, loadBoard } from '../../utils/board';
-import { listDiaryEntries } from '../../utils/diary';
+import { listBoards, loadBoard } from '../../services/notebook';
+import { listDiaryEntries } from '../../services/diary';
 
-vi.mock('../../utils/board', () => ({
+vi.mock('../../services/notebook', () => ({
   listBoards: vi.fn(),
   loadBoard: vi.fn(),
 }));
 
-vi.mock('../../utils/diary', () => ({
+vi.mock('../../services/diary', () => ({
   listDiaryEntries: vi.fn(),
 }));
 
 describe('StudyArchive', () => {
   beforeEach(() => {
     vi.mocked(listBoards).mockResolvedValue([
-      { id: 'board-a', name: 'Caderno A', updated_at: 1 },
-      { id: 'board-b', name: 'Caderno B', updated_at: 2 },
+      { id: 'board-a', name: 'Caderno A', updatedAt: 1 },
+      { id: 'board-b', name: 'Caderno B', updatedAt: 2 },
     ]);
-    vi.mocked(loadBoard).mockImplementation(async ({ boardId }) => ({
+    vi.mocked(loadBoard).mockImplementation(async (boardId) => ({
       nodes: [{
         id: 1,
         type: 'sticky',

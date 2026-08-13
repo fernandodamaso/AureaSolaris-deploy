@@ -16,7 +16,7 @@ function makeCtx(overrides: { loading?: boolean } = {}) {
         ownerProfileId: 'owner-1',
         kind: 'profile',
         name: 'Titular',
-        source: { id: 'owner-1', name: 'Titular' },
+        source: { id: 'owner-1', name: 'Titular', certifiedNatalCalculation: undefined as unknown },
       }],
     },
     astro: { liveData: null, loading: overrides.loading ?? false },
@@ -46,10 +46,11 @@ describe('HermesChat thread open', () => {
     ctxHolder.current = makeCtx();
     vi.mocked(openHermesThread).mockResolvedValue({
       thread: { id: 'thread-1' },
-    } as Awaited<ReturnType<typeof openHermesThread>>);
+    } as unknown as Awaited<ReturnType<typeof openHermesThread>>);
     vi.mocked(getHermesThreadContext).mockResolvedValue({
+      thread: { id: 'thread-1' },
       messages: [],
-    } as Awaited<ReturnType<typeof getHermesThreadContext>>);
+    } as unknown as Awaited<ReturnType<typeof getHermesThreadContext>>);
   });
 
   it('does not reopen the thread when global context refreshes', async () => {

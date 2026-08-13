@@ -436,6 +436,7 @@ async def health():
         },
         "auth_mode": AUTH_MODE,
         "browser_contract_version": 2,
+        "test_user": os.environ.get("AUREA_TEST_USER", "").strip() == "1",
     }
 
 

@@ -177,6 +177,63 @@ describe('App access states', () => {
     expect(openInitialAccess.mock.calls.length).toBeGreaterThanOrEqual(1);
   });
 
+  it('applies the test-user UI seed when health reports test_user', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ test_user: true }),
+    });
+    vi.stubGlobal('fetch', fetchMock);
+
+    openInitialAccess.mockResolvedValue({
+      kind: 'local-owner',
+      ownerId: 'aurea-test',
+      displayName: 'Pessoa Teste',
+    });
+
+    renderApp();
+
+    await screen.findByTitle('Astrologia');
+    const profiles = JSON.parse(localStorage.getItem('aurea_profiles') || '[]') as Array<{
+      id: string;
+      connections?: Array<{ id: string }>;
+    }>;
+    const profile = profiles.find((item) => item.id === 'aurea-test');
+    expect(profile?.connections?.some((connection) => connection.id === 'aurea-reference-natal')).toBe(true);
+    expect(localStorage.getItem('aurea_active_subject:aurea-test')).toBe('aurea-reference-natal');
+
+    vi.unstubAllGlobals();
+  });
+
+  it('does not apply the test-user UI seed when the owner is not aurea-test', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ test_user: true }),
+    });
+    vi.stubGlobal('fetch', fetchMock);
+
+    openInitialAccess.mockResolvedValue({
+      kind: 'local-owner',
+      ownerId: 'owner-1',
+      displayName: 'Aurea Local',
+    });
+
+    renderApp();
+
+    await screen.findByTitle('Astrologia');
+    expect(localStorage.getItem('aurea_test_user_seed_version')).toBeNull();
+    expect(localStorage.getItem('aurea_active_subject:owner-1')).not.toBe('aurea-reference-natal');
+    const profiles = JSON.parse(localStorage.getItem('aurea_profiles') || '[]') as Array<{
+      id: string;
+      connections?: Array<{ id: string }>;
+    }>;
+    const profile = profiles.find((item) => item.id === 'owner-1');
+    expect(profile?.connections?.some((connection) => connection.id === 'aurea-reference-natal')).toBeFalsy();
+    const tasks = JSON.parse(localStorage.getItem('aurea_tasks') || '[]') as Array<{ id: string }>;
+    expect(tasks.some((task) => task.id === 'task-teste-1')).toBe(false);
+
+    vi.unstubAllGlobals();
+  });
+
   it('shows LoginView for login-required and still supports login', async () => {
     openInitialAccess.mockResolvedValue({ kind: 'login-required' });
 
