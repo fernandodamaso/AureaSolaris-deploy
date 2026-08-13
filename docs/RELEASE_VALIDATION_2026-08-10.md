@@ -271,3 +271,72 @@ Build completo executado após essas correções:
 
 Esta evidência certifica apenas o ownership técnico e o smoke automatizado do
 runtime local; não substitui o aceite manual da interface e do instalador.
+
+## Skip-login local-owner — evidência automatizada — 13/08/2026
+
+Smoke isolado com o Python de `.aurea-build-venv` e `main_api.py` (não o
+sidecar PyInstaller antigo). Cada modo usou `AUREA_DATA_DIR` temporário, porta
+livre e processos próprios. Nenhum token de sessão, senha ou dado pessoal
+foi registrado.
+
+### Smoke de origem (Chrome)
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File tests/browser_runtime_smoke.ps1
+```
+
+Código de saída: `0`.
+
+- modo `local-owner`: API `9877`, CDP `9900`; `/health.auth_mode=local-owner`;
+  `/health.browser_contract_version=2`; landmark Astrologia visível; Entrar e
+  Inscrever-se ausentes; editor de perfil sem Sair; round trip de caderno
+  privado ok; `cdp_console_errors=0`
+- modo `require-login` (`AUREA_REQUIRE_LOGIN=1`): API `9877`, CDP `9900`;
+  `/health.auth_mode=require-login`; `/health.browser_contract_version=2`;
+  LoginView visível; `private_initial_access` HTTP `403` `login-required`.
+  Sem login na conta sem senha do smoke padrão.
+
+### Checagens de origem
+
+```powershell
+npm run check
+& .\.aurea-build-venv\Scripts\python.exe -m unittest discover -s tests -p "test_*.py"
+```
+
+- `npm run check`: código `0` (eslint, 22 arquivos / 121 testes Vitest, Vite)
+- unittest: código `0`, 60 testes
+
+### Build empacotado
+
+```powershell
+.\build.bat
+```
+
+Código de saída: `0`.
+
+- frontend Vite: passou
+- PyInstaller: passou
+- smoke empacotado isolado: porta `9877`; `auth_mode=local-owner`;
+  `browser_contract_version=2`; igualdade de token repetido; round trip de
+  caderno no dono resolvido
+- NSIS: passou
+
+Artefatos:
+
+- sidecar: `src-tauri/binaries/astro-engine-x86_64-pc-windows-msvc.exe`
+- SHA-256 do sidecar: `0CB336CFDA66538909B36A0E9173065B90F163FDA392BDCC72B7893DA9C2D7A1`
+- tamanho do sidecar: 25.413.717 bytes
+- instalador: `src-tauri/target/release/bundle/nsis/Aurea Solaris_0.1.1_x64-setup.exe`
+- SHA-256 do instalador: `85476CF88E567695718646BCF24ADA2CADD323DE93A8A34BE087BB737A812230`
+- tamanho do instalador: 28.835.473 bytes
+
+### Verificação do launcher
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File tests/manual_launcher_verify.ps1
+```
+
+Código de saída: `0`. O launcher selecionou contrato 2 no modo pedido; a
+página visível acompanhou o modo; o diretório normal de dados não foi
+alterado.
+
