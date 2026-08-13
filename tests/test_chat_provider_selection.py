@@ -8,7 +8,7 @@ import main_api
 
 class ChatProviderSelectionTests(unittest.TestCase):
     def test_external_consent_is_required_before_provider_call(self):
-        with TestClient(main_api.app) as client:
+        with TestClient(main_api.app, base_url="http://127.0.0.1") as client:
             with patch.object(main_api, "_openai_chat", new=AsyncMock()) as openai:
                 response = client.post(
                     "/chat",
@@ -28,7 +28,7 @@ class ChatProviderSelectionTests(unittest.TestCase):
             self.assertFalse(hasattr(main_api, symbol), symbol)
 
     def test_openai_is_selected_without_legacy_probe_or_fallback(self):
-        with TestClient(main_api.app) as client:
+        with TestClient(main_api.app, base_url="http://127.0.0.1") as client:
             with patch.object(main_api, "_openai_chat", new=AsyncMock(return_value={"reply": "Resposta", "provider": "openai"})) as openai:
                 response = client.post(
                     "/chat",
@@ -43,7 +43,7 @@ class ChatProviderSelectionTests(unittest.TestCase):
         openai.assert_awaited_once()
 
     def test_gateway_is_selected_explicitly(self):
-        with TestClient(main_api.app) as client:
+        with TestClient(main_api.app, base_url="http://127.0.0.1") as client:
             with patch.object(main_api, "_hermes_gateway_chat", new=AsyncMock(return_value={"reply": "Gateway", "provider": "hermes_gateway"})) as gateway:
                 response = client.post(
                     "/chat",
