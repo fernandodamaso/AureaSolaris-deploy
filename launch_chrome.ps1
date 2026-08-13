@@ -140,6 +140,7 @@ if ($contractMismatch) {
     throw "O runtime local iniciou com um contrato incompatível (esperado auth_mode=$expectedAuthMode e browser_contract_version=2). Recompile ou atualize o runtime e tente de novo: $apiUrl"
 }
 if (-not $ready) {
+    Stop-StartedRuntime $startedRuntime $apiPort
     throw "O serviço local não respondeu no tempo esperado: $apiUrl"
 }
 

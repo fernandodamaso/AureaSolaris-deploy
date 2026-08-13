@@ -195,11 +195,6 @@ function Stop-TestOwnedListeners {
     foreach ($ownedId in @($global:AureaVerifyOwnedPids)) {
         Stop-OwnedPid $ownedId
     }
-    foreach ($listener in @(Get-RangeListeners)) {
-        $key = Listener-Key $listener
-        if ($script:preexistingListenerKeys.Contains($key)) { continue }
-        Stop-OwnedPid $listener.Pid
-    }
 }
 
 function Reset-OwnedRuntimes {
@@ -453,6 +448,11 @@ try {
     }
     Write-Output 'RESULT PASS'
 } finally {
+    Invoke-CleanupStep 'Start-Process-restore' {
+        if (Test-Path -LiteralPath 'Function:\global:Start-Process') {
+            Remove-Item -LiteralPath 'Function:\global:Start-Process' -Force
+        }
+    }
     Invoke-CleanupStep 'owned-runtimes' { Stop-TestOwnedListeners }
     Invoke-CleanupStep 'ASTRO_API_PORT-restore' {
         if ($null -eq $oldPort) { Clear-OptionalEnv 'ASTRO_API_PORT' }
