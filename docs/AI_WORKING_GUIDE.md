@@ -32,12 +32,62 @@ Aurea Solaris is a local-first Windows application whose primary experience is c
 ## Chrome access and release path
 
 - Default Chrome launch has no login and no logout.
+- **Prefer the test-user sandbox** for manual checks, smoke tests, browser/runtime validation, and any agent-driven UI work (see next section).
+- Testing mock natal is opt-in on the default runtime only: `?mockNatal=1` or `.\launch_chrome.ps1 -MockNatal`; turn off with `?mockNatal=0`.
 - Local-owner tokens do not expire; an API restart invalidates them.
 - A mode environment change needs an API restart.
 - Require-login is for known-password accounts; password enrollment for an auto-created owner is not part of this change.
 - Multiple, disabled, orphaned, or mismatched owners stop at setup-required and are never migrated automatically.
 - `npm run build` updates `dist` only. It does not update the PyInstaller executable.
 - `build.bat` is the release path that rebuilds the frontend and embedded runtime.
+
+## Test-user sandbox (preferred for agents)
+
+Use the isolated **Pessoa Teste** sandbox whenever you need to open Aurea, click through screens, or validate runtime behavior. It keeps the person's real Aurea data untouched.
+
+**Start the sandbox** (from the repository root):
+
+```powershell
+.\launch_chrome.ps1 -TestUser
+```
+
+**Wipe and re-seed** a clean dummy life (safe; only affects the test sandbox):
+
+```powershell
+.\launch_chrome.ps1 -TestUser -Reset
+```
+
+On `-Reset`, the launcher stops any API listeners on ports **9878–9899**, deletes the test sandbox folder, re-runs the seed, and starts a fresh API process.
+
+| Item | Value |
+|---|---|
+| Owner id | `aurea-test` (display name **Pessoa Teste**) |
+| Test private data | `%LOCALAPPDATA%\Aurea Solaris\test-user\data` |
+| Test Chrome profile | `%LOCALAPPDATA%\Aurea Solaris\test-user\chrome-profile` |
+| API port | **9878** by default (falls back to **9879–9899** if busy) |
+| Health check | `GET http://127.0.0.1:<port>/health` → `"test_user": true` (use the port printed by the launcher) |
+| Seed prerequisite | `.aurea-build-venv` must exist; `-TestUser` runs `tools\seed_test_user.py` via that venv |
+
+**Never touch real data.** Agents must **not** seed, reset, delete, or modify `%LOCALAPPDATA%\Aurea Solaris\data`. That path is the person's real private Aurea. The seed script (`tools/seed_test_user.py`) refuses that directory. If you need a clean state, use `-TestUser -Reset` only.
+
+**What the dummy life includes** (high level):
+
+- **Mandala / maps** — reference natal (Belo Horizonte fixture) plus a second known-person map (UI seed via `src/fixtures/test-user-ui.json`).
+- **Caderno Vivo** — board with sticky notes and a link between them.
+- **Diário** — folder and sample entry.
+- **Agenda** — sample tasks, one event, and a habit.
+- **Saúde** — fictional document preview (not a real exam).
+- **Hermes** — sample thread, proposed memory, and one approved memory.
+
+**`-MockNatal` vs `-TestUser`:**
+
+| Mode | When to use |
+|---|---|
+| `-TestUser` | Full isolated sandbox with its own data dir, Chrome profile, port, and seeded dummy life. **Default choice for agents.** |
+| `-MockNatal` or `?mockNatal=1` | Quick natal inject on the **default** runtime (`local-owner` on port 9876) without switching data directories. Good for a single chart check when you do not need Caderno, Agenda, or Hermes fixtures. |
+| Both flags | `-TestUser` wins; the launcher never applies `-MockNatal` in test-user mode. |
+
+Full persistence details: `docs/data-persistence.md`.
 
 ## Required working loop
 

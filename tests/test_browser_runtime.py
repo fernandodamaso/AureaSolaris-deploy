@@ -1030,6 +1030,19 @@ class TestBrowserHealthContract(unittest.TestCase):
             self.assertEqual(response.json()["auth_mode"], "require-login")
             self.assertEqual(response.json()["browser_contract_version"], 2)
 
+    def test_health_test_user_false_when_env_unset(self):
+        with patch.dict(os.environ, {}, clear=False):
+            os.environ.pop("AUREA_TEST_USER", None)
+            response = self.client.get("/health")
+            self.assertEqual(response.status_code, 200)
+            self.assertFalse(response.json()["test_user"])
+
+    def test_health_test_user_true_when_env_set(self):
+        with patch.dict(os.environ, {"AUREA_TEST_USER": "1"}, clear=False):
+            response = self.client.get("/health")
+            self.assertEqual(response.status_code, 200)
+            self.assertTrue(response.json()["test_user"])
+
 
 if __name__ == "__main__":
     unittest.main()

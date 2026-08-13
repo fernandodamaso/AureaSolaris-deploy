@@ -1,4 +1,5 @@
 # Automated Mandala smoke for FDM-677 — attaches to an already-running Aurea API on 127.0.0.1
+# Uses skip-login local-owner access and the opt-in mock natal (?mockNatal=1).
 param(
     [int]$ApiPort = 9876,
     [int]$CdpPort = 0
@@ -38,35 +39,12 @@ $baseUrl = "http://127.0.0.1:$ApiPort"
 $health = Invoke-WebRequest "$baseUrl/health" -UseBasicParsing -TimeoutSec 5
 if ($health.StatusCode -ne 200) { throw "API não saudável em $baseUrl" }
 
-$accountId = [guid]::NewGuid().ToString()
-$displayName = 'MandalaSmoke_' + [guid]::NewGuid().ToString('N').Substring(0, 8)
-$password = 'mandala smoke senha forte 12'
-$registerBody = @{
-    command = 'private_account_register'
-    args = @{
-        ownerId = $accountId
-        displayName = $displayName
-        loginName = $displayName
-        password = $password
-    }
-} | ConvertTo-Json -Depth 5
-$registered = Invoke-RestMethod -Method Post -Uri "$baseUrl/browser/command" -Body $registerBody -ContentType 'application/json'
-if ([string]$registered.result -ne $accountId) { throw 'Registro de conta smoke falhou.' }
-
-$profileJson = @{
-    id = $accountId
-    name = $displayName
-    active = $true
-    connections = @()
-    birthDate = '2000-01-01'
-    birthTime = '12:00'
-    birthTimezone = 'America/Sao_Paulo'
-    natal = @{
-        lat = -23.5505
-        lng = -46.6333
-        timezone = 'America/Sao_Paulo'
-    }
-} | ConvertTo-Json -Compress -Depth 5
+$bootBody = @{ command = 'private_initial_access'; args = @{} } | ConvertTo-Json -Compress
+$boot = Invoke-RestMethod -Method Post -Uri "$baseUrl/browser/command" -Body $bootBody -ContentType 'application/json'
+$ownerId = [string]$boot.result.ownerId
+if ([string]$boot.result.kind -ne 'local-owner' -or [string]::IsNullOrWhiteSpace($ownerId)) {
+    throw 'private_initial_access não devolveu dono local autenticado.'
+}
 
 function Send-Cdp([string]$Method, [hashtable]$Params = @{}) {
     $script:commandId++
@@ -121,7 +99,8 @@ try {
     New-Item -ItemType Directory -Path $chromeProfile -Force | Out-Null
     $chrome = Start-Process -FilePath $chromePath -ArgumentList @(
         '--headless=new', '--disable-gpu', '--no-first-run', '--no-default-browser-check',
-        '--disable-extensions', '--remote-allow-origins=*', "--remote-debugging-port=$CdpPort",
+        '--disable-extensions', '--remote-allow-origins=*', '--window-size=1440,900',
+        "--remote-debugging-port=$CdpPort",
         "--user-data-dir=$chromeProfile", 'about:blank'
     ) -PassThru -WindowStyle Hidden
     $chromeRootPid = [int]$chrome.Id
@@ -160,109 +139,19 @@ try {
     $socket.Options.SetRequestHeader('Origin', "http://127.0.0.1:$CdpPort")
     [void]$socket.ConnectAsync([Uri][string]$target.webSocketDebuggerUrl, [Threading.CancellationToken]::None).GetAwaiter().GetResult()
     [void](Send-Cdp 'Runtime.enable'); [void](Send-Cdp 'Log.enable'); [void](Send-Cdp 'Page.enable')
-    [void](Send-Cdp 'Page.navigate' @{ url = "$baseUrl/" })
+    [void](Send-Cdp 'Emulation.setDeviceMetricsOverride' @{
+        width = 1440
+        height = 900
+        deviceScaleFactor = 1
+        mobile = $false
+    })
+    [void](Send-Cdp 'Page.navigate' @{ url = "$baseUrl/?mockNatal=1" })
     $loaded = $false
     while (-not $loaded) {
         $event = Receive-Cdp 30000
         Record-CdpError $event
         $loaded = $event.Method -in @('Page.loadEventFired', 'Page.frameStoppedLoading')
     }
-    Start-Sleep -Seconds 2
-
-    $seedExpr = @"
-(() => {
-  const profile = $profileJson;
-  localStorage.setItem('aurea_profiles', JSON.stringify([profile]));
-  localStorage.setItem('aurea_active_id', profile.id);
-  localStorage.setItem('aurea_active_subject:' + profile.id, profile.id);
-  return { seeded: true, profileId: profile.id };
-})()
-"@
-    $seedId = Send-Cdp 'Runtime.evaluate' @{ expression = $seedExpr; returnByValue = $true }
-    Wait-ForCdpResult $seedId | Out-Null
-    [void](Send-Cdp 'Page.reload' @{ ignoreCache = $true })
-    $reloaded = $false
-    while (-not $reloaded) {
-        $event = Receive-Cdp 30000
-        Record-CdpError $event
-        $reloaded = $event.Method -in @('Page.loadEventFired', 'Page.frameStoppedLoading')
-    }
-    Start-Sleep -Seconds 2
-
-    $patchFetchExpr = @'
-(() => {
-  if (window.__aureaMandalaSmokePatched) return { patched: true };
-  const originalFetch = window.fetch.bind(window);
-  window.fetch = async (input, init) => {
-    const url = typeof input === 'string' ? input : input?.url || '';
-    if (init?.body && typeof init.body === 'string') {
-      try {
-        if (url.includes('/natal')) {
-          const body = JSON.parse(init.body);
-          if (body.timezone_name && !body.timezone) body.timezone = body.timezone_name;
-          init = { ...init, body: JSON.stringify(body) };
-        } else if (url.includes('/browser/command')) {
-          const envelope = JSON.parse(init.body);
-          if (envelope.command === 'run_astro_engine' && envelope.args?.payload) {
-            const payload = JSON.parse(envelope.args.payload);
-            if (payload.timezone_name && !payload.timezone) payload.timezone = payload.timezone_name;
-            envelope.args.payload = JSON.stringify(payload);
-            init = { ...init, body: JSON.stringify(envelope) };
-          }
-        }
-      } catch {}
-    }
-    return originalFetch(input, init);
-  };
-  window.__aureaMandalaSmokePatched = true;
-  return { patched: true };
-})()
-'@
-    $patchId = Send-Cdp 'Runtime.evaluate' @{ expression = $patchFetchExpr; returnByValue = $true }
-    Wait-ForCdpResult $patchId 10000 | Out-Null
-
-    $selectProfileExpr = @"
-(() => {
-  const profileBtn = Array.from(document.querySelectorAll('button')).find((b) => (b.textContent || '').includes('MandalaSmoke_'));
-  if (!profileBtn) return { step: 'profile', ok: false, buttons: Array.from(document.querySelectorAll('button')).map((b) => (b.textContent || '').trim()).slice(0, 12) };
-  profileBtn.click();
-  return { step: 'profile', ok: true };
-})()
-"@
-    $selectId = Send-Cdp 'Runtime.evaluate' @{ expression = $selectProfileExpr; returnByValue = $true }
-    $selectResult = Wait-ForCdpResult $selectId 15000
-    if (-not $selectResult.value.ok) {
-        throw "Login smoke falhou no passo $($selectResult.value.step): buttons=$($selectResult.value.buttons -join '|')"
-    }
-    Start-Sleep -Milliseconds 800
-
-    $passwordExpr = @"
-(() => {
-  const pwd = document.querySelector('input[type=\"password\"]');
-  if (!pwd) return { step: 'password', ok: false };
-  const setter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
-  setter.call(pwd, '$password');
-  pwd.dispatchEvent(new Event('input', { bubbles: true }));
-  pwd.dispatchEvent(new Event('change', { bubbles: true }));
-  return { step: 'password', ok: true, valueLength: pwd.value.length };
-})()
-"@
-    $passwordId = Send-Cdp 'Runtime.evaluate' @{ expression = $passwordExpr; returnByValue = $true }
-    Wait-ForCdpResult $passwordId 10000 | Out-Null
-    Start-Sleep -Milliseconds 300
-
-    $dashboardExpr = @"
-(() => {
-  const normalize = (v) => v.replace(/\s+/g, ' ').trim();
-  const el = Array.from(document.querySelectorAll('button')).find((b) => normalize(b.textContent || '').includes('Acessar Dashboard'));
-  if (!el) return { step: 'dashboard', ok: false };
-  el.click();
-  return { step: 'dashboard', ok: true };
-})()
-"@
-    $dashboardId = Send-Cdp 'Runtime.evaluate' @{ expression = $dashboardExpr; returnByValue = $true }
-    $dashboardResult = Wait-ForCdpResult $dashboardId 10000
-    if (-not $dashboardResult.value.ok) { throw "Login smoke falhou no passo $($dashboardResult.value.step)" }
     Start-Sleep -Seconds 2
 
     $authCheckExpr = @'
@@ -282,11 +171,17 @@ try {
     for ($attempt = 0; $attempt -lt 60 -and -not $mandalaReady; $attempt++) {
         Start-Sleep -Seconds 1
         $readyExpr = @'
-(() => ({
-  shell: Boolean(document.querySelector('.mandala-chart-shell')),
-  svg: Boolean(document.querySelector('.mandala-chart-shell svg')),
-  header: Boolean(Array.from(document.querySelectorAll('h1')).some((h) => (h.textContent || '').includes('Mandala'))),
-}))()
+(() => {
+  const shell = document.querySelector('.mandala-chart-shell');
+  const svgs = shell ? Array.from(shell.querySelectorAll('svg')) : [];
+  const chart = svgs.sort((a, b) => b.getBoundingClientRect().width - a.getBoundingClientRect().width)[0];
+  const width = chart ? chart.getBoundingClientRect().width : 0;
+  return {
+    shell: Boolean(shell),
+    svg: Boolean(chart) && width > 100,
+    header: Boolean(Array.from(document.querySelectorAll('h1')).some((h) => (h.textContent || '').includes('Mandala'))),
+  };
+})()
 '@
         $readyId = Send-Cdp 'Runtime.evaluate' @{ expression = $readyExpr; returnByValue = $true }
         $ready = Wait-ForCdpResult $readyId 10000
@@ -297,7 +192,8 @@ try {
     $inspectExpr = @'
 (() => {
   const shell = document.querySelector('.mandala-chart-shell');
-  const svg = shell ? shell.querySelector('svg') : document.querySelector('.mandala-chart-shell svg');
+  const svgs = shell ? Array.from(shell.querySelectorAll('svg')) : [];
+  const svg = svgs.sort((a, b) => b.getBoundingClientRect().width - a.getBoundingClientRect().width)[0] || null;
   const header = Array.from(document.querySelectorAll('h1')).find((h) => (h.textContent || '').includes('Mandala'));
   const alerts = Array.from(document.querySelectorAll('[role="alert"], .text-red-500, .text-amber-900')).map((el) => (el.textContent || '').trim()).filter(Boolean);
   const errorBanner = Array.from(document.querySelectorAll('*')).find((el) => (el.textContent || '').startsWith('⚠️'));
@@ -344,10 +240,19 @@ try {
     $inspectId = Send-Cdp 'Runtime.evaluate' @{ expression = $inspectExpr; returnByValue = $true }
     $inspect = Wait-ForCdpResult $inspectId 20000
 
-    $shotId = Send-Cdp 'Page.captureScreenshot' @{ format = 'png' }
-    $shotResult = Wait-ForCdpResult $shotId 10000
-    if ($shotResult.value) {
-        [IO.File]::WriteAllBytes($screenshotPath, [Convert]::FromBase64String([string]$shotResult.value))
+    $shotId = Send-Cdp 'Page.captureScreenshot' @{ format = 'png'; captureBeyondViewport = $true }
+    $shotData = $null
+    $shotDeadline = [DateTime]::UtcNow.AddMilliseconds(10000)
+    while ([DateTime]::UtcNow -lt $shotDeadline -and -not $shotData) {
+        $event = Receive-Cdp 2000
+        Record-CdpError $event
+        if ($event.id -eq $shotId) {
+            $shotData = [string]$event.result.data
+            break
+        }
+    }
+    if ($shotData) {
+        [IO.File]::WriteAllBytes($screenshotPath, [Convert]::FromBase64String($shotData))
         $evidenceDir = Join-Path $repoRoot 'docs/evidence'
         New-Item -ItemType Directory -Path $evidenceDir -Force | Out-Null
         $evidencePath = Join-Path $evidenceDir 'mandala-smoke-fdm677.png'
@@ -359,8 +264,8 @@ try {
         ($inspect.value.svgInfo.width -gt 100) -and ($inspect.value.svgInfo.childCount -gt 0) -and
         -not $inspect.value.missingBirthBanner -and -not $inspect.value.noDataMessage
 
-    Write-Output "MANDALA_SMOKE api_port=$ApiPort cdp_port=$CdpPort account_id=$accountId"
-    Write-Output "MANDALA_SMOKE login_step=ok auth_alert=$($authCheck.value.alertText)"
+    Write-Output "MANDALA_SMOKE api_port=$ApiPort cdp_port=$CdpPort owner_id=$ownerId"
+    Write-Output "MANDALA_SMOKE local_owner=ok auth_alert=$($authCheck.value.alertText)"
     Write-Output "MANDALA_SMOKE shell_present=$($inspect.value.shellPresent)"
     Write-Output "MANDALA_SMOKE svg_present=$($inspect.value.svgPresent)"
     Write-Output "MANDALA_SMOKE svg_width=$($inspect.value.svgInfo.width)"

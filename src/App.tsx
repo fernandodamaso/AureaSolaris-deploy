@@ -12,6 +12,8 @@ import { LoginView } from './components/LoginView';
 import { ProfileEditor } from './components/ProfileEditor';
 import { HermesChat } from './components/HermesChat';
 import { openInitialAccess, safeInvoke, type InitialAccess } from './utils/tauri';
+import { LOCAL_API_URL } from './utils/api';
+import { applyTestUserUiSeed } from './utils/test-user-ui-seed';
 import type { CadernoIntent } from './components/MesaCriacao';
 
 const AstrologiaPage = lazy(() => import('./components/AstrologiaBoard').then(m => ({ default: m.AstrologiaPage })));
@@ -136,6 +138,18 @@ export default function App() {
       setAccess(result);
       if (result.kind === 'local-owner') {
         agenda.ensureLocalUiProfile(result.ownerId, result.displayName);
+        try {
+          const healthResponse = await fetch(`${LOCAL_API_URL}/health`);
+          if (healthResponse.ok) {
+            const health = await healthResponse.json() as { test_user?: boolean };
+            if (health.test_user === true) {
+              applyTestUserUiSeed(result.ownerId, result.displayName);
+              agenda.hydrateProfilesFromStorage();
+            }
+          }
+        } catch {
+          // Test-user UI seed is optional; normal local-owner boot continues.
+        }
         setIsAuthenticated(true);
       } else {
         setIsAuthenticated(false);

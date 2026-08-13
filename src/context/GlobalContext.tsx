@@ -28,6 +28,7 @@ interface GlobalContextType {
     setActiveProfileId: (id: string) => void;
     addProfile: (name: string, password: string, id?: string) => Promise<AureaProfile>;
     ensureLocalUiProfile: (ownerId: string, displayName: string) => void;
+    hydrateProfilesFromStorage: () => void;
     updateProfile: (id: string, updates: Partial<AureaProfile>) => void;
   };
   system: {
@@ -115,6 +116,7 @@ Estabilidade: Alta | Agentes: Sintonizados | Conectividade: OK
         setActiveProfileId: agenda.setActiveProfileId,
         addProfile: agenda.addProfile,
         ensureLocalUiProfile: agenda.ensureLocalUiProfile,
+        hydrateProfilesFromStorage: agenda.hydrateProfilesFromStorage,
         updateProfile: agenda.updateProfile
       },
       system: { status: error ? 'Astronomical engine unavailable' : loading ? 'Calculating' : 'Stable', lastSync: new Date() },

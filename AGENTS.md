@@ -80,6 +80,22 @@ cargo check --manifest-path .\src-tauri\Cargo.toml
 
 O build do instalador requer o sidecar astrológico empacotado em `src-tauri/binaries/astro-engine-x86_64-pc-windows-msvc.exe`. Nunca dependa de uma instalação global de Python no computador da pessoa usuária.
 
+### Sandbox de usuário de teste (agentes)
+
+Para validar interface, runtime no Chrome ou fluxos ponta a ponta, **use o sandbox isolado** em vez dos dados reais da pessoa:
+
+```powershell
+.\launch_chrome.ps1 -TestUser
+```
+
+Para zerar e recriar a vida fictícia de teste:
+
+```powershell
+.\launch_chrome.ps1 -TestUser -Reset
+```
+
+Os dados reais ficam em `%LOCALAPPDATA%\Aurea Solaris\data` — **agentes não devem semear, apagar nem alterar esse diretório**. O sandbox de teste usa `%LOCALAPPDATA%\Aurea Solaris\test-user\data`, conta `aurea-test` (Pessoa Teste), porta **9878** e perfil Chrome separado. Detalhes: [`docs/AI_WORKING_GUIDE.md`](docs/AI_WORKING_GUIDE.md) e [`docs/data-persistence.md`](docs/data-persistence.md).
+
 ## Comunicação de agentes
 
 Declara de forma breve: objetivo, arquivos afetados, risco para dados e como foi validado. A pessoa que organiza a criação deste projeto não tem conhecimento de desenvolvimento de software; portanto, explique decisões, riscos, erros e próximos passos em linguagem simples, defina termos técnicos quando forem necessários e forneça comandos prontos para copiar. Nunca presuma que ela consegue revisar código ou diagnosticar logs sozinha.

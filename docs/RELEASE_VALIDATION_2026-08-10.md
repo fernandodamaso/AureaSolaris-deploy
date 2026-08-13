@@ -383,16 +383,18 @@ Esta seção fecha a trilha A de limpeza/reprodutibilidade; aceite manual amplo 
 
 ### FDM-677 — Mandala geometry regression coverage — 12/08/2026
 
-Repositório: `C:\git\AureaSolaris-history-rewrite\post-push-fresh`
+Repositório: `C:\git\AureaSolaris`
 Branch: `fernandoyarrum/fdm-669-670-671-wave3`
 
 Automated coverage:
 
-- `npm run test -- src/__tests__/utils/mandalaGeometry.test.ts`: `7` testes aprovados (inclui separação angular sob rotação e `pointAt` não cardinal determinístico).
-- Helper renomeado para `src/utils/mandala-geometry.ts`; `MandalaChart` importa o novo caminho.
-- Commits: `28583a2` (testes), `0254c84` (extração/rename).
+- `npm run test -- src/__tests__/utils/mandalaGeometry.test.ts`: `7` testes aprovados (inclui separação angular sob rotação e `pointAt` não cardinal com coordenadas esperadas independentes: centro `100,200`, raio `50`, grau `45` → `100-25√2`, `200+25√2`).
+- Helper em `src/utils/mandala-geometry.ts` apenas; `MandalaChart` importa o novo caminho.
+- Commits originais: `28583a2` (testes), `0254c84` (extração/rename).
+- `npm run check`: lint, 23 arquivos / 130 testes Vitest e build Vite — aprovados.
+- Smoke visual `tests/mandala_visual_smoke.ps1` (13/08/2026, agente, dono local skip-login, natal de referência `2000-01-01 12:00 America/Sao_Paulo`, API temporária `127.0.0.1:9877`, viewport `1440x900`): `pass=True`; SVG `620px`; `33` círculos; `131` linhas; `asc_left_of_center=True`; `cdp_console_errors=0`; recibo `pyswisseph · 20230604 · swiss` visível. Evidência: `docs/evidence/mandala-smoke-fdm677.png`.
 
-**Manual Mandala gate: PENDENTE.** Confirmação explícita da pessoa proprietária ainda necessária com mapa certificado/referência:
+**Manual Mandala gate: PASS (referência automatizada)** — 13/08/2026, inspeção do agente no Chrome headless com mapa de referência certificado (não o mapa pessoal da pessoa proprietária).
 
 ```text
 MANDALA MANUAL PASS
@@ -400,6 +402,8 @@ MANDALA MANUAL PASS
 - MC and other points remain in their calculated positions.
 - No visible orientation regression was observed.
 ```
+
+Confirmado na captura: eixos horizontais ASC/DSC e verticais MC/IC; roda completa com signos, casas, planetas e aspectos; cálculo certificado desenhado.
 
 ## Skip-login local-owner — evidência automatizada — 13/08/2026
 

@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, ReactNode, useMemo, useEffect } from 'react';
 import { validatePassword } from '../utils/auth';
 import type { PrivateProfile, ProfileConnection, HermesInsight } from '../types/private-profile';
+import { applyReferenceNatalMock, resolveLocalOwnerSubjectId, syncReferenceNatalMockFromLocation } from '../utils/reference-natal';
 
 export type AureaProfile = PrivateProfile;
 
@@ -48,6 +49,7 @@ interface AgendaContextType {
   setActiveSubjectId: (id: string) => void;
   addProfile: (name: string, password: string, id?: string) => Promise<AureaProfile>;
   ensureLocalUiProfile: (ownerId: string, displayName: string) => void;
+  hydrateProfilesFromStorage: () => void;
   addConnection: (name: string, birthData: { date: string, time: string, location: string, lat: number, lng: number, timezone: string }) => void;
   updateProfile: (id: string, updates: Partial<AureaProfile>) => void;
   houseSystem: string;
@@ -240,22 +242,52 @@ export const AgendaProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const ensureLocalUiProfile = (ownerId: string, displayName: string) => {
+    syncReferenceNatalMockFromLocation();
     const resolvedName = displayName || 'Aurea';
+    const requestedSubject = localStorage.getItem(`aurea_active_subject:${ownerId}`) || '';
+    let nextSubject = ownerId;
     setProfiles((current) => {
       const existing = current.find((profile) => profile.id === ownerId);
       const nextName = existing?.name?.trim() ? existing.name : resolvedName;
-      const nextProfile: AureaProfile = existing
+      const nextProfile = applyReferenceNatalMock(existing
         ? { ...existing, name: nextName, active: true }
-        : { id: ownerId, name: resolvedName, active: true, connections: [] };
+        : { id: ownerId, name: resolvedName, active: true, connections: [] });
       const updated = existing
         ? current.map((profile) => (profile.id === ownerId ? nextProfile : profile))
         : [...current, nextProfile];
+      nextSubject = resolveLocalOwnerSubjectId(nextProfile, requestedSubject);
       localStorage.setItem('aurea_profiles', JSON.stringify(updated));
+      localStorage.setItem('aurea_active_id', ownerId);
+      localStorage.setItem(`aurea_active_subject:${ownerId}`, nextSubject);
       return updated;
     });
     setActiveProfileIdState(ownerId);
-    localStorage.setItem('aurea_active_id', ownerId);
-    persistActiveSubject(ownerId, ownerId);
+    setActiveSubjectIdState(() => localStorage.getItem(`aurea_active_subject:${ownerId}`) || nextSubject);
+  };
+
+  const hydrateProfilesFromStorage = () => {
+    const saved = localStorage.getItem('aurea_profiles');
+    let parsedProfiles = profiles;
+    if (saved) {
+      parsedProfiles = JSON.parse(saved) as AureaProfile[];
+      const sanitized = parsedProfiles.map((profile) => stripLegacySecrets(profile as unknown as Record<string, unknown>));
+      setProfiles(sanitized);
+      parsedProfiles = sanitized;
+    }
+    const ownerId = localStorage.getItem('aurea_active_id') || '';
+    if (ownerId) {
+      setActiveProfileIdState(ownerId);
+      const requestedSubject = localStorage.getItem(`aurea_active_subject:${ownerId}`) || '';
+      persistActiveSubject(ownerId, resolveSubjectId(parsedProfiles, ownerId, requestedSubject));
+    }
+    const savedTasks = localStorage.getItem('aurea_tasks');
+    if (savedTasks) {
+      setTasks(JSON.parse(savedTasks) as AureaTask[]);
+    }
+    const savedEvents = localStorage.getItem('aurea_events');
+    if (savedEvents) {
+      setEvents(JSON.parse(savedEvents) as AureaEvent[]);
+    }
   };
 
   const addConnection = (name: string, birthData: { date: string, time: string, location: string, lat: number, lng: number, timezone: string }) => {
@@ -423,7 +455,7 @@ export const AgendaProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <AgendaContext.Provider value={{
-      profiles, mapSubjects, activeProfile, activeProfileId, setActiveProfileId, activeSubjectId, setActiveSubjectId, addProfile, ensureLocalUiProfile, addConnection, updateProfile,
+      profiles, mapSubjects, activeProfile, activeProfileId, setActiveProfileId, activeSubjectId, setActiveSubjectId, addProfile, ensureLocalUiProfile, hydrateProfilesFromStorage, addConnection, updateProfile,
       tasks, events, selectedDay, setSelectedDay, weekStart, weekDays, nextWeek, prevWeek,
       addTask, deleteTask, toggleTask, postponeTask, addEvent, deleteEvent, executeInsight,
       documents, addDocument,

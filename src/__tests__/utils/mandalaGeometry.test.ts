@@ -87,10 +87,10 @@ describe('mandala geometry', () => {
 
   it('places non-cardinal degrees at deterministic polar coordinates', () => {
     const orientation = createMandalaOrientation(0);
-    const point = orientation.pointAt(100, 200, 50, 45.25);
-    const radians = orientation.toSvgRadians(45.25);
+    const point = orientation.pointAt(100, 200, 50, 45);
 
-    expect(point.x).toBeCloseTo(100 + 50 * Math.cos(radians));
-    expect(point.y).toBeCloseTo(200 + 50 * Math.sin(radians));
+    // ASC at 9h; 45° sits on the 135° SVG ray (bisector of left and down).
+    expect(point.x).toBeCloseTo(100 - 25 * Math.SQRT2);
+    expect(point.y).toBeCloseTo(200 + 25 * Math.SQRT2);
   });
 });
