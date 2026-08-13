@@ -340,3 +340,10 @@ Código de saída: `0`. O launcher selecionou contrato 2 no modo pedido; a
 página visível acompanhou o modo; o diretório normal de dados não foi
 alterado.
 
+| Cenário | Porta | auth_mode |
+|---|---|---|
+| default | `9876` | `local-owner` |
+| `AUREA_REQUIRE_LOGIN=1` | `9876` | `require-login` |
+| reutilização compatível | `9876` | mantém modo ativo |
+| modo/contrato incompatível | `9876` permanece; nova API em `9877` | modo pedido na nova porta |
+

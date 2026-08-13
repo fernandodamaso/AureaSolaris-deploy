@@ -67,7 +67,8 @@ $inspectExpression = @'
     entrar: visibleButton('Entrar'),
     inscrever: visibleButton('Inscrever-se'),
     loginProtocol: visibleText('Protocolo de Identidade Ativa'),
-    sair: visibleButton('Sair')
+    sair: visibleButton('Sair'),
+    editorOpen: visibleButton('Salvar') || visibleButton('Cancelar') || visibleText('Sua Identidade')
   };
 })()
 '@
@@ -418,18 +419,29 @@ function Invoke-IsolatedChromeSmoke {
             Write-Output 'LANDMARK Astrologia=visible'
             Write-Output 'LANDMARK Entrar=absent'
             Write-Output 'LANDMARK Inscrever-se=absent'
-            $null = Invoke-CdpEvaluate @'
+            $clickResult = Invoke-CdpEvaluate @'
 (() => {
-  const buttons = Array.from(document.querySelectorAll('aside button'));
-  const named = buttons.find((button) => /aurea/i.test(button.textContent || ''));
-  const target = named || buttons[buttons.length - 1];
-  if (target) target.click();
+  const aside = document.querySelector('aside');
+  if (!aside) return { clicked: false };
+  const footer = aside.querySelector(':scope > div:last-child');
+  const target = footer ? footer.querySelector('button') : null;
+  if (target) {
+    target.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+  }
   return { clicked: Boolean(target) };
 })()
 '@
-            Start-Sleep -Milliseconds 500
-            $editor = Invoke-CdpEvaluate $inspectExpression
+            if (-not [bool]$clickResult.clicked) { throw 'Não foi possível clicar no controle de perfil da barra lateral.' }
+            $editor = $null
+            $editorDeadline = (Get-Date).AddSeconds(10)
+            do {
+                $editor = Invoke-CdpEvaluate $inspectExpression
+                if ([bool]$editor.editorOpen) { break }
+                Start-Sleep -Milliseconds 400
+            } while ((Get-Date) -lt $editorDeadline)
+            if (-not [bool]$editor.editorOpen) { throw 'O editor de perfil não abriu após clicar no controle da barra lateral.' }
             if ([bool]$editor.sair) { throw 'O editor de perfil local-owner contém o botão Sair.' }
+            Write-Output 'PROFILE_EDITOR opened'
             Write-Output 'PROFILE_EDITOR Sair=absent'
         } else {
             if (-not [bool]$state.loginProtocol -or -not [bool]$state.entrar) {
@@ -523,15 +535,6 @@ function Invoke-IsolatedChromeSmoke {
                 Start-Sleep -Milliseconds 100
             }
             if ($residualPorts.Count) { throw "Portas ainda em uso: $($residualPorts.LocalPort -join ', ')" }
-        }
-        if ($null -ne $testError) {
-            foreach ($logName in @('api-stdout.log', 'api-stderr.log')) {
-                $logPath = Join-Path $tempRoot $logName
-                if (Test-Path -LiteralPath $logPath) {
-                    $tail = @(Get-Content -LiteralPath $logPath -Tail 30 -ErrorAction SilentlyContinue)
-                    if ($tail.Count) { Write-Output "API_LOG $logName $($tail -join ' | ')" }
-                }
-            }
         }
         Invoke-CleanupStep 'temp-root-remove' {
             for ($i = 0; $i -lt 20 -and [IO.Directory]::Exists($tempRoot); $i++) {
