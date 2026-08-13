@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { BookOpen, CalendarDays, FileText, LayoutGrid, Search } from 'lucide-react';
-import { listBoards, loadBoard } from '../../utils/board';
+import { listBoards, loadBoard } from '../../services/notebook';
 import type { CadernoNode } from '../../types/caderno';
 import { listDiaryEntries } from '../../utils/diary';
 import type { DiaryEntryResponse } from '../../types/diario';
@@ -105,7 +105,7 @@ export function StudyArchive({ onOpenStudy }: StudyArchiveProps) {
       }
 
       const studies = await Promise.all((boardList || []).map(async board => {
-        const data = await loadBoard({ boardId: board.id });
+        const data = await loadBoard(board.id);
         return (data?.nodes || []).flatMap(node => {
           const studyContent = node.studyContent?.trim() || '';
           const quickContent = nodeQuickContent(node);
@@ -118,7 +118,7 @@ export function StudyArchive({ onOpenStudy }: StudyArchiveProps) {
             title: nodeTitle(node),
             summary: quickContent && quickContent !== content ? quickContent : '',
             content,
-            updatedAt: normalizeTimestamp(node.studyUpdatedAt || board.updated_at || board.updatedAt),
+            updatedAt: normalizeTimestamp(node.studyUpdatedAt || board.updatedAt),
             groupName: board.name,
             boardId: board.id,
             nodeId: node.id,

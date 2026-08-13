@@ -1,17 +1,17 @@
 import { useEffect, useRef, useState } from 'react';
 import { AlertCircle, Clock, LayoutGrid, Plus, Sparkles, Trash2 } from 'lucide-react';
-import { deleteBoard, listBoards, saveBoard } from '../utils/board';
-import type { CadernoBoardMeta, CadernoNode } from '../types/caderno';
+import { deleteBoard, listBoards, saveBoard } from '../services/notebook';
+import type { BoardSummary } from '../services/notebook';
 
 type BoardManagerProps = {
-  onOpen: (meta: CadernoBoardMeta) => void;
+  onOpen: (meta: BoardSummary) => void;
   intentError: string | null;
 };
 
 const uid = () => `board_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
 
 export const BoardManager = ({ onOpen, intentError }: BoardManagerProps) => {
-  const [boards, setBoards] = useState<CadernoBoardMeta[]>([]);
+  const [boards, setBoards] = useState<BoardSummary[]>([]);
   const [creating, setCreating] = useState(false);
   const [newName, setNewName] = useState('');
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
@@ -22,7 +22,7 @@ export const BoardManager = ({ onOpen, intentError }: BoardManagerProps) => {
     try {
       const list = await listBoards();
       // sort by updated_at descending
-      const sorted = (list || []).sort((a, b) => (b.updated_at || b.updatedAt || 0) - (a.updated_at || a.updatedAt || 0));
+      const sorted = (list || []).sort((a, b) => b.updatedAt - a.updatedAt);
       setBoards(sorted);
     } catch (e) {
       console.error('Failed to list boards', e);
@@ -42,14 +42,14 @@ export const BoardManager = ({ onOpen, intentError }: BoardManagerProps) => {
   const create = async () => {
     const name = newName.trim() || `Caderno ${boards.length + 1}`;
     const newId = uid();
-    await saveBoard({ boardId: newId, name, nodes: [], edges: [] });
+    await saveBoard({ id: newId, name, nodes: [], edges: [] });
     setCreating(false);
     setNewName('');
-    onOpen({ id: newId, name, updated_at: Date.now() });
+    onOpen({ id: newId, name, updatedAt: Date.now() });
   };
 
   const remove = async (id: string) => {
-    await deleteBoard({ boardId: id });
+    await deleteBoard(id);
     setConfirmDelete(null);
     loadBoards();
   };
@@ -138,29 +138,8 @@ export const BoardManager = ({ onOpen, intentError }: BoardManagerProps) => {
               >
                 {/* Preview area */}
                 <div className="h-36 relative overflow-hidden" style={{ background: 'var(--aurea-surface-warm)' }}>
-                  {/* Mini node previews */}
-                  <div className="absolute inset-3 overflow-hidden">
-                    {(board.nodes || []).slice(0, 6).map((node: CadernoNode, i: number) => (
-                      <div
-                        key={node.id}
-                        className="absolute rounded text-[7px] font-medium truncate px-2 py-1 box-shadow: 0 1px 2px rgba(0,0,0,0.25)"
-                        style={{
-                          left: `${(i % 3) * 32 + 5}%`,
-                          top: `${Math.floor(i / 3) * 45 + 5}%`,
-                          width: '28%',
-                          background: node.color || '#FFFDE7',
-                          color: '#555',
-                          border: '1px solid rgba(0,0,0,0.06)',
-                        }}
-                      >
-                        {node.text?.slice(0, 20) || (node.type === 'checklist' ? '☑ Lista' : node.type === 'image' ? '🖼 Img' : '...')}
-                      </div>
-                    ))}
-                    {((board.nodes || []).length === 0) && (
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <Sparkles size={20} style={{ color: '#DCDCDC' }} />
-                      </div>
-                    )}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <Sparkles size={20} style={{ color: '#DCDCDC' }} />
                   </div>
                   {/* Delete button */}
                   <button
@@ -179,7 +158,7 @@ export const BoardManager = ({ onOpen, intentError }: BoardManagerProps) => {
                   <p className="text-sm font-semibold text-[var(--aurea-text)] truncate">{board.name}</p>
                   <div className="flex items-center gap-1 mt-1">
                     <Clock size={10} style={{ color: '#BDBDBD' }} />
-                    <span className="text-xs color: var(--aurea-text-muted)">{fmt(board.updated_at || board.updatedAt || 0)}</span>
+                    <span className="text-xs color: var(--aurea-text-muted)">{fmt(board.updatedAt || 0)}</span>
                   </div>
                 </div>
               </div>

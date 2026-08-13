@@ -5,7 +5,7 @@ import {
   Check, AlertCircle, Sparkles, Move, Link2,
   ChevronLeft, Pencil, X, BookOpen
 } from 'lucide-react';
-import { saveBoard } from '../../utils/board';
+import { saveBoard } from '../../services/notebook';
 import type { CadernoBoard, CadernoEdge, CadernoNode } from '../../types/caderno';
 import type { AureaTask } from '../../context/AgendaContext';
 import { AssetPicker } from './AssetPicker';
@@ -92,7 +92,7 @@ export const MesaCanvas = ({
     const version = ++saveVersion.current;
     const stateTimer = setTimeout(() => setSaveState('saving'), 0);
     saveTimer.current = setTimeout(() => {
-      void saveBoard({ boardId: board.id, name: boardName, nodes, edges }).then(savedAt => {
+      void saveBoard({ id: board.id, name: boardName, nodes, edges }).then(savedAt => {
         if (version !== saveVersion.current) return;
         setSaveState(typeof savedAt === 'number' ? 'saved' : 'error');
       });

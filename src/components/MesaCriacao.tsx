@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
-import { listBoards, loadBoard, saveBoard } from '../utils/board';
-import type { CadernoBoard, CadernoBoardMeta, CadernoNode } from '../types/caderno';
+import { deleteBoard, listBoards, loadBoard, saveBoard } from '../services/notebook';
+import type { BoardSummary } from '../services/notebook';
+import type { CadernoBoard, CadernoNode } from '../types/caderno';
 import { BoardManager } from './BoardManager';
 import { MesaCanvas } from './mesa/MesaCanvas';
 import { STICKY_COLORS } from './mesa/NodeCard';
@@ -38,13 +39,13 @@ export const MesaCriacao = ({ intent = null, onIntentHandled }: MesaCriacaoProps
   const shouldRestoreLastBoard = useRef(intent === null);
   const hasHandledIntent = useRef(false);
 
-  const openBoard = useCallback(async (meta: CadernoBoardMeta, studyNodeId: number | null = null) => {
+  const openBoard = useCallback(async (meta: BoardSummary, studyNodeId: number | null = null) => {
     try {
-      const data = await loadBoard({ boardId: meta.id });
+      const data = await loadBoard(meta.id);
       const board: CadernoBoard = {
         id: meta.id,
         name: meta.name,
-        updatedAt: meta.updated_at || meta.updatedAt || Date.now(),
+        updatedAt: meta.updatedAt || Date.now(),
         nodes: data?.nodes || [],
         edges: data?.edges || []
       };
@@ -72,8 +73,8 @@ export const MesaCriacao = ({ intent = null, onIntentHandled }: MesaCriacaoProps
     };
 
     try {
-      await saveBoard({ boardId: newId, name, nodes: [starterNote], edges: [] });
-      await openBoard({ id: newId, name, updated_at: Date.now() });
+      await saveBoard({ id: newId, name, nodes: [starterNote], edges: [] });
+      await openBoard({ id: newId, name, updatedAt: Date.now() });
     } catch (error) {
       console.error('Failed to create contextual study', error);
       setIntentError('Não foi possível criar o estudo agora. Nenhum caderno existente foi alterado.');
@@ -85,13 +86,13 @@ export const MesaCriacao = ({ intent = null, onIntentHandled }: MesaCriacaoProps
     if (!shouldRestoreLastBoard.current) return;
     const lastId = localStorage.getItem(activeBoardKey());
     if (lastId) {
-      loadBoard({ boardId: lastId }).then(data => {
+      loadBoard(lastId).then(data => {
         if (data && data.nodes) {
           // Find the name from the list
           listBoards().then(list => {
              const meta = list?.find(b => b.id === lastId);
              if (meta) {
-               setActiveBoard({ id: lastId, name: meta.name, updatedAt: meta.updated_at || meta.updatedAt || Date.now(), nodes: data.nodes, edges: data.edges });
+               setActiveBoard({ id: lastId, name: meta.name, updatedAt: meta.updatedAt || Date.now(), nodes: data.nodes, edges: data.edges });
              } else {
                localStorage.removeItem(activeBoardKey());
              }
@@ -127,7 +128,7 @@ export const MesaCriacao = ({ intent = null, onIntentHandled }: MesaCriacaoProps
 
   const closeBoard = async (updatedBoard: CadernoBoard) => {
     await saveBoard({
-      boardId: updatedBoard.id,
+      id: updatedBoard.id,
       name: updatedBoard.name,
       nodes: updatedBoard.nodes,
       edges: updatedBoard.edges
