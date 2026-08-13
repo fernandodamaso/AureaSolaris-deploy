@@ -41,6 +41,21 @@ def _data_root() -> Path:
     return (Path(local_app_data) / "Aurea Solaris" / "data").resolve()
 
 
+def list_owner_workspace_ids() -> set[str]:
+    owners_dir = _data_root() / "memory" / "owners"
+    if not owners_dir.is_dir():
+        return set()
+    result: set[str] = set()
+    for entry in owners_dir.iterdir():
+        if not entry.is_dir():
+            continue
+        try:
+            result.add(_validate_id(entry.name, "owner_id"))
+        except ValueError:
+            continue
+    return result
+
+
 def _owner_root(owner_id: str) -> Path:
     owner_id = _validate_id(owner_id, "owner_id")
     root = _data_root() / "memory" / "owners" / owner_id

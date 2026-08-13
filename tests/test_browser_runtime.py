@@ -11,6 +11,7 @@ from unittest.mock import patch
 from fastapi.testclient import TestClient
 
 import main_api
+from browser_workspace import list_owner_workspace_ids
 from local_storage import LocalStorage
 
 
@@ -264,6 +265,15 @@ Write-Output \"PROCESS_TREE_PASS stopped=$($stopped -join ',') reuse_failure=$re
                             json={"command": "list_boards", "args": {}},
                         )
                         self.assertEqual(after_close.status_code, 401)
+
+    def test_owner_workspace_listing_does_not_create_or_read_owner_data(self):
+        with tempfile.TemporaryDirectory() as directory:
+            data_dir = Path(directory) / "browser-data"
+            with patch.dict(os.environ, {"AUREA_DATA_DIR": str(data_dir)}, clear=False):
+                owners = Path(os.environ["AUREA_DATA_DIR"]) / "memory" / "owners"
+                (owners / "owner-a").mkdir(parents=True)
+                (owners / ".temporary").mkdir()
+                self.assertEqual(list_owner_workspace_ids(), {"owner-a"})
 
     def test_browser_pdf_endpoint_requires_session_for_uploaded_bytes(self):
         with tempfile.TemporaryDirectory() as directory:

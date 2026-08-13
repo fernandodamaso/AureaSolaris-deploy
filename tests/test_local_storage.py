@@ -5,7 +5,7 @@ import unittest
 from contextlib import closing
 from pathlib import Path
 
-from local_storage import LocalStorage
+from local_storage import LocalStorage, StorageValidationError
 
 
 MIGRATIONS = Path(__file__).resolve().parents[1] / "src-tauri" / "migrations"
@@ -316,6 +316,53 @@ class LocalStorageTests(unittest.TestCase):
             self.assertEqual([item["id"] for item in retained], [memory["id"]])
             self.assertEqual(retained[0]["status"], "proposed")
             self.assertIsNone(retained[0]["deleted_at"])
+
+    def test_list_private_accounts_for_bootstrap_returns_minimal_account_state(self):
+        with tempfile.TemporaryDirectory() as directory:
+            storage = self.make_storage(Path(directory))
+            storage.initialize()
+            storage.create_private_account("owner-a", "Owner A", "owner-a", password="known-password")
+            accounts = storage.list_private_accounts_for_bootstrap()
+            self.assertEqual(
+                accounts,
+                [{"account_id": "owner-a", "display_name": "Owner A", "login_name": "owner-a", "disabled": False}],
+            )
+
+    def test_list_private_accounts_for_bootstrap_projects_disabled_at(self):
+        with tempfile.TemporaryDirectory() as directory:
+            storage = self.make_storage(Path(directory))
+            storage.initialize()
+            storage.create_private_account("owner-a", "Owner A", "owner-a", password="known-password")
+            with closing(sqlite3.connect(storage.data_dir / "private.sqlite")) as connection:
+                connection.execute("UPDATE account SET disabled_at = CURRENT_TIMESTAMP WHERE id = 'owner-a'")
+                connection.commit()
+            accounts = storage.list_private_accounts_for_bootstrap()
+            self.assertEqual(
+                accounts,
+                [{"account_id": "owner-a", "display_name": "Owner A", "login_name": "owner-a", "disabled": True}],
+            )
+
+    def test_create_local_account_if_empty_creates_account_on_empty_database(self):
+        with tempfile.TemporaryDirectory() as directory:
+            storage = self.make_storage(Path(directory))
+            storage.initialize()
+            result = storage.create_local_account_if_empty(
+                "local-owner", "Aurea", "local", "unusable-random-secret"
+            )
+            self.assertEqual(result, {"created": True, "account_id": "local-owner"})
+            self.assertEqual(
+                storage.list_private_accounts_for_bootstrap(),
+                [{"account_id": "local-owner", "display_name": "Aurea", "login_name": "local", "disabled": False}],
+            )
+
+    def test_create_local_account_if_empty_does_not_replace_existing_account(self):
+        with tempfile.TemporaryDirectory() as directory:
+            storage = self.make_storage(Path(directory))
+            storage.initialize()
+            storage.create_private_account("owner-a", "Owner A", "owner-a", password="known-password")
+            with self.assertRaises(StorageValidationError):
+                storage.create_local_account_if_empty("local-owner", "Aurea", "local", "unusable-random-secret")
+            self.assertEqual([row["account_id"] for row in storage.list_private_accounts_for_bootstrap()], ["owner-a"])
 
 
 if __name__ == "__main__":
