@@ -18,8 +18,7 @@
     "lint:fix": "eslint src/ --fix",
     "check": "npm run lint && npm run test && npm run build",
     "test": "vitest run --configLoader runner",
-    "test:watch": "vitest --configLoader runner",
-    "check": "npm run lint && npm run test && npm run build"
+    "test:watch": "vitest --configLoader runner"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.2.1",
@@ -40,6 +39,7 @@
     "@typescript-eslint/parser": "^8.57.0",
     "@vitejs/plugin-react": "^4.6.0",
     "eslint": "^9.39.4",
+    "eslint-formatter-unix": "^9.0.1",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.0.1",
     "jsdom": "^29.0.1",
