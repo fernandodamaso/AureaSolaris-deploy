@@ -29,6 +29,16 @@ Aurea Solaris is a local-first Windows application whose primary experience is c
 | Hermes memory/API | `src/components/HermesChat.tsx`, `docs/HERMES_MIND_ARCHITECTURE.md`, `docs/HERMES_MIND_API.md` |
 | Release/installer | `build.bat`, `build_sidecar.spec`, `src-tauri/binaries/`, `docs/RELEASE_VALIDATION_2026-08-10.md` |
 
+## Chrome access and release path
+
+- Default Chrome launch has no login and no logout.
+- Local-owner tokens do not expire; an API restart invalidates them.
+- A mode environment change needs an API restart.
+- Require-login is for known-password accounts; password enrollment for an auto-created owner is not part of this change.
+- Multiple, disabled, orphaned, or mismatched owners stop at setup-required and are never migrated automatically.
+- `npm run build` updates `dist` only. It does not update the PyInstaller executable.
+- `build.bat` is the release path that rebuilds the frontend and embedded runtime.
+
 ## Required working loop
 
 1. Inspect `git status --short --branch` and preserve existing changes.
@@ -46,7 +56,7 @@ Every calculation must preserve UTC, IANA timezone, location, zodiac, ayanamsa w
 
 ## Release state
 
-Release `0.1.1` has a successful technical build and source-generated sidecar smoke test. The Chrome-first local runtime now serves the compiled frontend from the local API and has automated bridge coverage; native installer work remains paused. Do not claim the browser release fully accepted until launcher startup, login, navigation, calculation, Hermes, persistence, and shutdown are checked by a person.
+Release `0.1.1` has a successful technical build and source-generated sidecar smoke test. The Chrome-first local runtime now serves the compiled frontend from the local API and opens in default `local-owner` mode without a login screen. Native installer work remains paused. Do not claim the browser release fully accepted until launcher startup, navigation, calculation, Hermes, persistence, and shutdown are checked by a person.
 
 ## Documentation policy
 

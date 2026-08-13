@@ -104,17 +104,20 @@ export const MandalaPage = () => {
   }, [selectedTarget, activeProfileId, mapSubjects]);
 
   const calculationEnabled = Boolean(birthData);
-  const calculationRequest = birthData
-    ? {
-      year: birthData.year,
-      month: birthData.month,
-      day: birthData.day,
-      hour: birthData.hour,
-      lat: birthData.lat,
-      lon: birthData.lon,
-      timezone: birthData.timezone,
-    }
-    : undefined;
+  const calculationRequest = useMemo(
+    () => (birthData
+      ? {
+        year: birthData.year,
+        month: birthData.month,
+        day: birthData.day,
+        hour: birthData.hour,
+        lat: birthData.lat,
+        lon: birthData.lon,
+        timezone: birthData.timezone,
+      }
+      : undefined),
+    [birthData],
+  );
   const { data, loading, error, recalculate } = useCertifiedNatalCalculation(calculationRequest, calculationEnabled);
 
   // Parse data for MandalaChart - includes planets, secondary bodies, and angles

@@ -34,7 +34,7 @@ class HermesMindApiTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             storage = self.make_storage(Path(directory))
             with patch.object(main_api, "get_storage", return_value=storage):
-                with TestClient(main_api.app, headers={"X-Aurea-Sidecar-Token": "test-token"}) as client:
+                with TestClient(main_api.app, base_url="http://127.0.0.1", headers={"X-Aurea-Sidecar-Token": "test-token"}) as client:
                     opened = client.post(
                         "/hermes/threads/open",
                         json={"owner_id": "owner-1", "topic_key": "sinastria", "title": "Sinastria"},
@@ -76,7 +76,7 @@ class HermesMindApiTests(unittest.TestCase):
             storage = LocalStorage(Path(directory) / "app-data" / "data", MIGRATIONS)
             storage.initialize()
             with patch.object(main_api, "get_storage", return_value=storage):
-                with TestClient(main_api.app, headers={"X-Aurea-Sidecar-Token": "test-token"}) as client:
+                with TestClient(main_api.app, base_url="http://127.0.0.1", headers={"X-Aurea-Sidecar-Token": "test-token"}) as client:
                     created = client.post(
                         "/hermes/accounts",
                         json={
@@ -98,7 +98,7 @@ class HermesMindApiTests(unittest.TestCase):
             storage = LocalStorage(Path(directory) / "app-data" / "data", MIGRATIONS)
             storage.initialize()
             with patch.object(main_api, "get_storage", return_value=storage):
-                with TestClient(main_api.app, headers={"X-Aurea-Sidecar-Token": "test-token"}) as client:
+                with TestClient(main_api.app, base_url="http://127.0.0.1", headers={"X-Aurea-Sidecar-Token": "test-token"}) as client:
                     body = {
                         "account_id": "owner-argon",
                         "display_name": "Pessoa",
@@ -112,7 +112,7 @@ class HermesMindApiTests(unittest.TestCase):
                     )
                     self.assertEqual(login.status_code, 200)
                     self.assertEqual(login.json()["account_id"], "owner-argon")
-                    with TestClient(main_api.app) as unauthenticated:
+                    with TestClient(main_api.app, base_url="http://127.0.0.1") as unauthenticated:
                         self.assertEqual(
                             unauthenticated.post(
                             "/hermes/threads/open",
@@ -131,7 +131,7 @@ class HermesMindApiTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             storage = self.make_storage(Path(directory))
             with patch.object(main_api, "get_storage", return_value=storage):
-                with TestClient(main_api.app, headers={"X-Aurea-Sidecar-Token": "test-token"}) as client:
+                with TestClient(main_api.app, base_url="http://127.0.0.1", headers={"X-Aurea-Sidecar-Token": "test-token"}) as client:
                     diagnostic = client.get("/storage/diagnostic")
                     self.assertEqual(diagnostic.status_code, 200)
                     self.assertEqual(diagnostic.json()["editorial_import"]["status"], "installed")
@@ -147,7 +147,7 @@ class HermesMindApiTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             storage = self.make_storage(Path(directory))
             with patch.object(main_api, "get_storage", return_value=storage):
-                with TestClient(main_api.app, headers={"X-Aurea-Sidecar-Token": "test-token"}) as client:
+                with TestClient(main_api.app, base_url="http://127.0.0.1", headers={"X-Aurea-Sidecar-Token": "test-token"}) as client:
                     opened = client.post(
                         "/hermes/threads/open",
                         json={"owner_id": "owner-1", "topic_key": "sinastria", "title": "Sinastria"},

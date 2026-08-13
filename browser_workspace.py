@@ -21,12 +21,16 @@ from typing import Any
 _SAFE_ID = re.compile(r"^[A-Za-z0-9_.-]{1,128}$")
 
 
+def is_workspace_safe_owner_id(value: str) -> bool:
+    return isinstance(value, str) and bool(_SAFE_ID.fullmatch(value)) and not value.startswith(".")
+
+
 def _now() -> str:
     return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
 
 
 def _validate_id(value: str, label: str) -> str:
-    if not isinstance(value, str) or not _SAFE_ID.fullmatch(value) or value.startswith("."):
+    if not is_workspace_safe_owner_id(value):
         raise ValueError(f"{label} inválido.")
     return value
 
@@ -39,6 +43,21 @@ def _data_root() -> Path:
     if not local_app_data:
         raise RuntimeError("AUREA_DATA_DIR não foi informado.")
     return (Path(local_app_data) / "Aurea Solaris" / "data").resolve()
+
+
+def list_owner_workspace_ids() -> set[str]:
+    owners_dir = _data_root() / "memory" / "owners"
+    if not owners_dir.is_dir():
+        return set()
+    result: set[str] = set()
+    for entry in owners_dir.iterdir():
+        if not entry.is_dir():
+            continue
+        try:
+            result.add(_validate_id(entry.name, "owner_id"))
+        except ValueError:
+            continue
+    return result
 
 
 def _owner_root(owner_id: str) -> Path:

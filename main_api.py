@@ -24,6 +24,7 @@ import httpx
 import uvicorn
 from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.trustedhost import TrustedHostMiddleware
 from fastapi.responses import StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
@@ -60,8 +61,10 @@ from browser_workspace import (
     list_boards,
     list_diary_entries,
     list_diary_folders,
+    list_owner_workspace_ids,
     load_board,
     load_health_memory,
+    is_workspace_safe_owner_id,
     save_board,
     save_health_memory,
     update_diary_entry,
@@ -70,10 +73,34 @@ from browser_workspace import (
 # ─── Porta ───
 API_PORT = int(os.environ.get("ASTRO_API_PORT", 9876))
 API_HOST = "127.0.0.1"
+
+
+def _resolve_auth_mode() -> str:
+    value = os.environ.get("AUREA_REQUIRE_LOGIN", "").strip()
+    return "require-login" if value == "1" else "local-owner"
+
+
+AUTH_MODE = _resolve_auth_mode()
 SIDECAR_TOKEN_ENV = "AUREA_SIDECAR_TOKEN"
 SIDECAR_TOKEN: Optional[str] = os.environ.get(SIDECAR_TOKEN_ENV)
 _BROWSER_SESSIONS: Dict[str, str] = {}
 _BROWSER_SESSIONS_LOCK = RLock()
+_LOCAL_ACCESS_LOCK = RLock()
+_LOCAL_BROWSER_SESSION: Optional[tuple[str, str]] = None
+
+_SETUP_REQUIRED_MESSAGES = {
+    "disabled-owner": "A conta local está desativada. É necessária uma decisão humana para continuar.",
+    "multiple-owners": "Há mais de uma conta local. É necessária uma decisão humana para continuar.",
+    "orphan-workspace": "Há dados privados sem conta correspondente. É necessária uma decisão humana para continuar.",
+    "owner-conflict": "A conta local não corresponde aos dados privados encontrados. É necessária uma decisão humana para continuar.",
+}
+
+
+class LocalOwnerSetupRequired(RuntimeError):
+    def __init__(self, reason: str, message: str):
+        super().__init__(message)
+        self.reason = reason
+        self.message = message
 
 
 def _sidecar_token() -> str:
@@ -116,6 +143,13 @@ app = FastAPI(
     title="Aurea Solaris — Astro API",
     version="1.0.0",
     lifespan=lifespan,
+)
+
+# Trusted host: apenas loopback
+app.add_middleware(
+    TrustedHostMiddleware,
+    allowed_hosts=["127.0.0.1", "localhost"],
+    www_redirect=False,
 )
 
 # CORS: apenas localhost (Tauri webview)
@@ -400,6 +434,8 @@ async def health():
             "knowledge": storage["knowledge_database"]["integrity"],
             "legacy_import": storage["legacy_import_status"],
         },
+        "auth_mode": AUTH_MODE,
+        "browser_contract_version": 2,
     }
 
 
@@ -418,6 +454,98 @@ def _browser_issue_session(owner_id: str) -> str:
     with _BROWSER_SESSIONS_LOCK:
         _BROWSER_SESSIONS[token] = owner_id
     return token
+
+
+def _browser_get_or_issue_local_session(owner_id: str) -> str:
+    global _LOCAL_BROWSER_SESSION
+    with _BROWSER_SESSIONS_LOCK:
+        if _LOCAL_BROWSER_SESSION is not None:
+            token, session_owner = _LOCAL_BROWSER_SESSION
+            if session_owner == owner_id and _BROWSER_SESSIONS.get(token) == owner_id:
+                return token
+        token = secrets.token_urlsafe(32)
+        _BROWSER_SESSIONS[token] = owner_id
+        _LOCAL_BROWSER_SESSION = (token, owner_id)
+        return token
+
+
+def _browser_close_session(token: Optional[str]) -> None:
+    global _LOCAL_BROWSER_SESSION
+    if not token:
+        return
+    with _BROWSER_SESSIONS_LOCK:
+        _BROWSER_SESSIONS.pop(token, None)
+        if _LOCAL_BROWSER_SESSION is not None and _LOCAL_BROWSER_SESSION[0] == token:
+            _LOCAL_BROWSER_SESSION = None
+
+
+def _setup_required(reason: str) -> None:
+    raise LocalOwnerSetupRequired(reason, _SETUP_REQUIRED_MESSAGES[reason])
+
+
+def _one_enabled_matching_owner(accounts: list[dict], workspaces: set[str]) -> Optional[dict]:
+    if len(accounts) != 1:
+        return None
+    account = accounts[0]
+    if account["disabled"]:
+        return None
+    if workspaces - {account["account_id"]}:
+        return None
+    if not is_workspace_safe_owner_id(str(account["account_id"])):
+        return None
+    return account
+
+
+def _raise_from_owner_matrix(accounts: list[dict], workspaces: set[str]) -> None:
+    if len(accounts) > 1:
+        _setup_required("multiple-owners")
+    if len(accounts) == 1:
+        account = accounts[0]
+        if account["disabled"]:
+            _setup_required("disabled-owner")
+        _setup_required("owner-conflict")
+    if workspaces:
+        _setup_required("orphan-workspace")
+    _setup_required("owner-conflict")
+
+
+def _resolve_local_owner() -> dict:
+    storage = get_storage()
+    accounts = storage.list_private_accounts_for_bootstrap()
+    workspaces = list_owner_workspace_ids()
+
+    matching = _one_enabled_matching_owner(accounts, workspaces)
+    if matching is not None:
+        return {
+            "account_id": matching["account_id"],
+            "display_name": matching["display_name"],
+        }
+
+    if accounts or workspaces:
+        _raise_from_owner_matrix(accounts, workspaces)
+
+    try:
+        created = storage.create_local_account_if_empty(
+            account_id="local-owner",
+            display_name="Aurea",
+            login_name="local",
+            password=secrets.token_urlsafe(32),
+        )
+    except StorageValidationError:
+        accounts = storage.list_private_accounts_for_bootstrap()
+        workspaces = list_owner_workspace_ids()
+        matching = _one_enabled_matching_owner(accounts, workspaces)
+        if matching is not None:
+            return {
+                "account_id": matching["account_id"],
+                "display_name": matching["display_name"],
+            }
+        _raise_from_owner_matrix(accounts, workspaces)
+
+    return {
+        "account_id": str(created["account_id"]),
+        "display_name": "Aurea",
+    }
 
 
 def _browser_payload(args: Dict[str, Any]) -> dict:
@@ -440,9 +568,24 @@ def _browser_payload(args: Dict[str, Any]) -> dict:
 @app.post("/browser/command")
 async def browser_command(
     req: BrowserCommandRequest,
+    request: Request,
     x_aurea_browser_session: Optional[str] = Header(default=None),
 ):
     """Bridge the browser UI to a small, authenticated subset of desktop commands."""
+    fetch_site = request.headers.get("sec-fetch-site", "").lower()
+    if fetch_site == "cross-site":
+        raise HTTPException(status_code=403, detail="Origem de navegador não permitida.")
+
+    origin = request.headers.get("origin")
+    allowed_origins = {
+        f"http://127.0.0.1:{API_PORT}",
+        f"http://localhost:{API_PORT}",
+        "http://127.0.0.1:1420",
+        "http://localhost:1420",
+    }
+    if origin and origin not in allowed_origins:
+        raise HTTPException(status_code=403, detail="Origem de navegador não permitida.")
+
     args = req.args
 
     if req.command == "private_account_register":
@@ -468,13 +611,42 @@ async def browser_command(
         return {"result": owner_id, "browser_session_token": _browser_issue_session(owner_id)}
 
     if req.command == "private_session_close":
-        if x_aurea_browser_session:
-            with _BROWSER_SESSIONS_LOCK:
-                _BROWSER_SESSIONS.pop(x_aurea_browser_session, None)
+        _browser_close_session(x_aurea_browser_session)
         return {"result": True}
 
     if req.command == "remembered_owner_clear":
         return {"result": True}
+
+    if req.command == "private_initial_access":
+        if AUTH_MODE == "require-login":
+            raise HTTPException(
+                status_code=403,
+                detail={
+                    "code": "login-required",
+                    "message": "Login local obrigatório neste runtime.",
+                },
+            )
+        try:
+            with _LOCAL_ACCESS_LOCK:
+                owner = _resolve_local_owner()
+                token = _browser_get_or_issue_local_session(owner["account_id"])
+        except LocalOwnerSetupRequired as error:
+            raise HTTPException(
+                status_code=409,
+                detail={
+                    "code": "setup-required",
+                    "reason": error.reason,
+                    "message": error.message,
+                },
+            ) from error
+        return {
+            "result": {
+                "kind": "local-owner",
+                "ownerId": owner["account_id"],
+                "displayName": owner["display_name"],
+            },
+            "browser_session_token": token,
+        }
 
     if req.command in {"run_astro_engine", "get_transit_positions"}:
         payload = _browser_payload(args)

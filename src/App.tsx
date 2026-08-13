@@ -11,7 +11,7 @@ import { PageLoadingFallback } from './components/common/PageLoadingFallback';
 import { LoginView } from './components/LoginView';
 import { ProfileEditor } from './components/ProfileEditor';
 import { HermesChat } from './components/HermesChat';
-import { safeInvoke } from './utils/tauri';
+import { openInitialAccess, safeInvoke, type InitialAccess } from './utils/tauri';
 import type { CadernoIntent } from './components/MesaCriacao';
 
 const AstrologiaPage = lazy(() => import('./components/AstrologiaBoard').then(m => ({ default: m.AstrologiaPage })));
@@ -70,16 +70,45 @@ const PlanetaryInfo = () => {
   );
 };
 
+function AccessStatusPanel({
+  title,
+  message,
+  retry,
+}: {
+  title: string;
+  message: string;
+  retry?: () => void;
+}) {
+  return (
+    <div
+      className="fixed inset-0 z-[2000] flex items-center justify-center font-sans"
+      style={{ background: 'var(--aurea-bg)' }}
+      role={retry ? 'alert' : 'status'}
+    >
+      <div className="max-w-md p-10 text-center space-y-4">
+        <h1 className="text-lg font-black uppercase tracking-[0.2em]" style={{ color: 'var(--aurea-text)' }}>{title}</h1>
+        <p className="text-sm leading-relaxed" style={{ color: 'var(--aurea-text-muted)' }}>{message}</p>
+        {retry && (
+          <button type="button" onClick={retry} className="aurea-button-primary px-8 py-3 font-black uppercase text-[10px] tracking-[0.2em]">
+            Tentar novamente
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
-  // Identificador de perfil não é sessão autenticada. Sempre exigir a senha ao abrir.
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isRestoringAccess, setIsRestoringAccess] = useState(true);
+  const [access, setAccess] = useState<InitialAccess | null>(null);
+  const [bootAttempt, setBootAttempt] = useState(0);
   const [currentPage, setCurrentPage] = useState('astrologia');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [cadernoIntent, setCadernoIntent] = useState<CadernoIntent | null>(null);
-      
+
   const { agenda } = useGlobalContext();
   const masterProfile = agenda.activeProfile;
 
@@ -100,15 +129,24 @@ export default function App() {
 
   useEffect(() => {
     let active = true;
-    const restoreRememberedAccess = async () => {
-      // A remembered owner is not an authenticated session. Password verification
-      // happens in the private sidecar on every app launch.
-      await safeInvoke('remembered_owner_clear');
-      if (active) setIsRestoringAccess(false);
+    const restoreAccess = async () => {
+      setIsRestoringAccess(true);
+      const result = await openInitialAccess();
+      if (!active) return;
+      setAccess(result);
+      if (result.kind === 'local-owner') {
+        agenda.ensureLocalUiProfile(result.ownerId, result.displayName);
+        setIsAuthenticated(true);
+      } else {
+        setIsAuthenticated(false);
+      }
+      setIsRestoringAccess(false);
     };
-    void restoreRememberedAccess();
+    void restoreAccess();
     return () => { active = false; };
-  }, []);
+    // Retry is explicit via bootAttempt. Do not re-run when agenda identity changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [bootAttempt]);
 
   const handleLogout = async () => {
     await safeInvoke('private_session_close');
@@ -161,11 +199,25 @@ export default function App() {
     </Suspense>
   );
 
-  if (isRestoringAccess) {
+  if (isRestoringAccess || !access) {
     return <div className="fixed inset-0 bg-[#FCF9F1]" aria-label="Restaurando acesso" />;
   }
 
-  if (!isAuthenticated) {
+  if (access.kind === 'setup-required') {
+    return <AccessStatusPanel title="Configuração necessária" message={access.message} />;
+  }
+
+  if (access.kind === 'runtime-failure') {
+    return (
+      <AccessStatusPanel
+        title="Não foi possível iniciar"
+        message={access.message}
+        retry={() => setBootAttempt((attempt) => attempt + 1)}
+      />
+    );
+  }
+
+  if (access.kind === 'login-required' && !isAuthenticated) {
     return (
       <LoginView 
         profiles={agenda.profiles} 
@@ -287,6 +339,7 @@ export default function App() {
       {isProfileOpen && masterProfile && (
         <ProfileEditor
           profile={masterProfile}
+          showLogout={access.kind === 'login-required'}
           onSave={(updates) => {
             agenda.updateProfile(masterProfile.id, updates);
             setIsProfileOpen(false);

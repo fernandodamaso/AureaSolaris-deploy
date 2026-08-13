@@ -1,231 +1,483 @@
-param(
-    [int]$ApiPort = 9876,
-    [int]$CdpPort = 0
-)
-
 $ErrorActionPreference = 'Stop'
 $repoRoot = (& git -C $PSScriptRoot rev-parse --show-toplevel).Trim()
-. (Join-Path $PSScriptRoot 'browser_runtime_process_tree.ps1')
 
-$chromeCandidates = @(
-    (Join-Path $env:ProgramFiles 'Google\Chrome\Application\chrome.exe'),
-    (Join-Path ${env:ProgramFiles(x86)} 'Google\Chrome\Application\chrome.exe'),
-    (Join-Path $env:LOCALAPPDATA 'Google\Chrome\Application\chrome.exe')
-)
-$chromePath = $chromeCandidates | Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1
-if ($null -eq $chromePath) { throw 'Chrome não foi encontrado.' }
-
-$baseUrl = "http://127.0.0.1:$ApiPort"
-$health = Invoke-WebRequest "$baseUrl/health" -UseBasicParsing -TimeoutSec 3
-$root = Invoke-WebRequest "$baseUrl/" -UseBasicParsing -TimeoutSec 3
-if ($health.StatusCode -ne 200 -or $root.StatusCode -ne 200) {
-    throw "Serviço indisponível em $baseUrl"
+$launcherPath = Join-Path $repoRoot 'launch_chrome.ps1'
+$python = Join-Path $repoRoot '.aurea-build-venv\Scripts\python.exe'
+if (-not (Test-Path -LiteralPath $python)) {
+    throw "Python do runtime não encontrado: $python"
+}
+if (-not (Test-Path -LiteralPath $launcherPath)) {
+    throw "Launcher não encontrado: $launcherPath"
 }
 
 $tempRoot = Join-Path ([IO.Path]::GetTempPath()) ('aurea-launcher-verify-' + [guid]::NewGuid().ToString('N'))
-$chromeProfile = Join-Path $tempRoot 'chrome-profile'
-$cdpPortRange = 9900..9922
-
-function Get-ListeningPorts {
-    @(Get-NetTCPConnection -State Listen -ErrorAction Stop | ForEach-Object { [int]$_.LocalPort })
-}
-function Select-FreePort([int[]]$Candidates, [int[]]$OccupiedPorts) {
-    foreach ($candidate in $Candidates) {
-        if ($OccupiedPorts -notcontains $candidate) { return $candidate }
-    }
-    return $null
-}
-
-function Send-Cdp([string]$Method, [hashtable]$Params = @{}) {
-    $script:commandId++
-    $payload = @{ id = $script:commandId; method = $Method; params = $Params } | ConvertTo-Json -Compress -Depth 10
-    $bytes = [Text.Encoding]::UTF8.GetBytes($payload)
-    [void]$socket.SendAsync([ArraySegment[byte]]::new($bytes), [Net.WebSockets.WebSocketMessageType]::Text, $true,
-        [Threading.CancellationToken]::None).GetAwaiter().GetResult()
-    return $script:commandId
-}
-function Receive-Cdp([int]$TimeoutMs) {
-    $buffer = New-Object byte[] 65536; $message = [Text.StringBuilder]::new()
-    do {
-        $task = $socket.ReceiveAsync([ArraySegment[byte]]::new($buffer), [Threading.CancellationToken]::None)
-        if (-not $task.Wait($TimeoutMs)) { $socket.Abort(); throw [TimeoutException]::new('CDP timeout') }
-        $result = $task.Result
-        [void]$message.Append([Text.Encoding]::UTF8.GetString($buffer, 0, $result.Count))
-    } while (-not $result.EndOfMessage)
-    return $message.ToString() | ConvertFrom-Json
-}
-function Invoke-CdpEval([string]$Expression) {
-    $id = Send-Cdp 'Runtime.evaluate' @{ expression = $Expression; returnByValue = $true; awaitPromise = $true }
-    while ($true) {
-        $event = Receive-Cdp 15000
-        if ($event.id -eq $id) {
-            if ($null -ne $event.result.exceptionDetails) {
-                throw "CDP evaluate failed: $($event.result.exceptionDetails | ConvertTo-Json -Compress -Depth 8)"
-            }
-            return $event.result.result.value
-        }
-    }
-}
-function Wait-PageLoad {
-    $loaded = $false
-    while (-not $loaded) {
-        $event = Receive-Cdp 30000
-        $loaded = $event.Method -in @('Page.loadEventFired', 'Page.frameStoppedLoading')
-    }
-    Start-Sleep -Milliseconds 1500
-}
-function Assert-LandmarksVisible([string[]]$Labels) {
-    $landmarkJson = $Labels | ConvertTo-Json -Compress
-    $expr = @'
-(() => {
-  const requested = __LANDMARKS__;
-  const normalize = (value) => value.replace(/\s+/g, ' ').trim();
-  const qualifies = (element) => {
-    const style = getComputedStyle(element);
-    const rect = element.getBoundingClientRect();
-    const opacity = Number.parseFloat(style.opacity);
-    const intersectsViewport = rect.right > 0 && rect.bottom > 0 &&
-      rect.left < window.innerWidth && rect.top < window.innerHeight;
-    return style.display !== 'none' &&
-      style.visibility !== 'hidden' && style.visibility !== 'collapse' &&
-      opacity > 0 && rect.width > 0 && rect.height > 0 && intersectsViewport;
-  };
-  return requested.map((label) => {
-    const elements = Array.from(document.querySelectorAll('*'))
-      .filter((element) => normalize(element.textContent || '').includes(label))
-      .filter(qualifies);
-    return { label, visible: elements.length > 0 };
-  });
-})()
-'@.Replace('__LANDMARKS__', $landmarkJson)
-    $results = @(Invoke-CdpEval $expr)
-    foreach ($landmark in $results) {
-        if (-not $landmark.visible) { throw "Landmark não visível: $($landmark.label)" }
-        Write-Output "LANDMARK $($landmark.label)=visible"
-    }
-}
-
-$chrome = $null; $socket = $null
+$normalDataDir = Join-Path $env:LOCALAPPDATA 'Aurea Solaris\data'
+$oldPort = $env:ASTRO_API_PORT
+$oldData = $env:AUREA_DATA_DIR
+$oldLogin = $env:AUREA_REQUIRE_LOGIN
+$global:AureaVerifyOwnedPids = [Collections.Generic.HashSet[int]]::new()
+$global:AureaVerifySpawnedPids = [Collections.Generic.HashSet[int]]::new()
+$global:AureaVerifyOpenedUrl = $null
+$script:failures = [Collections.Generic.List[string]]::new()
 $script:cleanupFailures = [Collections.Generic.List[string]]::new()
-try {
-    $occupied = Get-ListeningPorts
-    if ($CdpPort -eq 0) { $CdpPort = Select-FreePort $cdpPortRange $occupied }
-    if ($null -eq $CdpPort) { throw 'Sem porta CDP livre.' }
-    New-Item -ItemType Directory -Path $chromeProfile | Out-Null
+$script:preexistingListenerKeys = [Collections.Generic.HashSet[string]]::new()
 
-    $chrome = Start-Process -FilePath $chromePath -ArgumentList @(
-        '--headless=new', '--disable-gpu', '--no-first-run', '--no-default-browser-check', '--disable-extensions',
-        '--remote-allow-origins=*', "--remote-debugging-port=$CdpPort",
-        "--user-data-dir=$chromeProfile", 'about:blank'
-    ) -PassThru -WindowStyle Hidden
+function Get-DataDirFingerprint([string]$Path) {
+    if (-not (Test-Path -LiteralPath $Path)) { return 'ABSENT' }
+    $items = @(Get-ChildItem -LiteralPath $Path -Recurse -File -Force -ErrorAction SilentlyContinue |
+        Sort-Object FullName |
+        ForEach-Object { '{0}|{1}|{2}' -f $_.FullName, $_.Length, $_.LastWriteTimeUtc.Ticks })
+    if ($items.Count -eq 0) { return 'EMPTY' }
+    return ($items -join "`n")
+}
 
-    $target = $null
-    for ($i = 0; $i -lt 40 -and $null -eq $target; $i++) {
+function Get-RangeListeners {
+    return @(Get-NetTCPConnection -State Listen -ErrorAction SilentlyContinue |
+        Where-Object { $_.LocalPort -ge 9876 -and $_.LocalPort -le 9899 } |
+        ForEach-Object { [pscustomobject]@{ Port = [int]$_.LocalPort; Pid = [int]$_.OwningProcess } })
+}
+
+function Get-ListeningPids([int]$Port) {
+    return @(Get-RangeListeners | Where-Object { $_.Port -eq $Port } | Select-Object -ExpandProperty Pid -Unique)
+}
+
+function Test-PortBusy([int]$Port) {
+    return ((Get-ListeningPids $Port).Count -gt 0)
+}
+
+function Listener-Key($Listener) {
+    return ('{0}:{1}' -f $Listener.Port, $Listener.Pid)
+}
+
+function Invoke-CleanupStep([string]$Name, [scriptblock]$Action) {
+    try {
+        & $Action
+        Write-Output "CLEANUP $Name=ok"
+    } catch {
+        $detail = "CLEANUP $Name=failed error=$($_.Exception.Message)"
+        Write-Output $detail
+        [void]$script:cleanupFailures.Add($detail)
+    }
+}
+
+function Register-OwnedPid([int]$ProcessId) {
+    if ($ProcessId -le 0) { return }
+    [void]$global:AureaVerifyOwnedPids.Add($ProcessId)
+}
+
+function Stop-OwnedPid([int]$ProcessId) {
+    if ($ProcessId -le 0) { return }
+    $proc = Get-Process -Id $ProcessId -ErrorAction SilentlyContinue
+    if ($null -eq $proc) { return }
+    Stop-Process -Id $ProcessId -Force -ErrorAction SilentlyContinue
+}
+
+function Wait-Health([string]$Url, [int]$TimeoutSec = 40) {
+    $deadline = (Get-Date).AddSeconds($TimeoutSec)
+    $lastError = $null
+    while ((Get-Date) -lt $deadline) {
         try {
-            $targets = (Invoke-WebRequest "http://127.0.0.1:$CdpPort/json/list" -UseBasicParsing).Content | ConvertFrom-Json
-            foreach ($candidate in $targets) {
-                if ([string]$candidate.type -eq 'page') { $target = $candidate; break }
+            $response = Invoke-WebRequest -UseBasicParsing -TimeoutSec 1 -Uri "$Url/health"
+            if ($response.StatusCode -eq 200) {
+                return ($response.Content | ConvertFrom-Json)
             }
-        } catch { Start-Sleep -Milliseconds 250 }
-    }
-    if ($null -eq $target) { throw 'Chrome CDP indisponível.' }
-
-    $socket = [Net.WebSockets.ClientWebSocket]::new()
-    [void]$socket.ConnectAsync([Uri][string]$target.webSocketDebuggerUrl, [Threading.CancellationToken]::None).GetAwaiter().GetResult()
-    $script:commandId = 0
-    [void](Send-Cdp 'Runtime.enable'); [void](Send-Cdp 'Page.enable')
-    [void](Send-Cdp 'Page.navigate' @{ url = "$baseUrl/" })
-    Wait-PageLoad
-
-    $pageUrl = [string](Invoke-CdpEval 'location.href')
-    if ($pageUrl -notmatch '^http://127\.0\.0\.1:' + $ApiPort) {
-        throw "URL inesperada: $pageUrl (esperado 127.0.0.1:$ApiPort)"
-    }
-    Write-Output "URL $pageUrl"
-
-    Assert-LandmarksVisible @('Aurea Solaris', 'Entrar', 'Inscrever-se')
-
-    $token = [guid]::NewGuid().ToString('N').Substring(0, 12)
-    $testName = "launcher-verify-$token"
-    $testPassword = "Aurea!Test-$token-12"
-
-    [void](Invoke-CdpEval @"
-(() => {
-  const clickByText = (text) => {
-    const btn = Array.from(document.querySelectorAll('button'))
-      .find((el) => el.textContent.replace(/\s+/g, ' ').trim() === text);
-    if (!btn) throw new Error('Botão não encontrado: ' + text);
-    btn.click();
-    return true;
-  };
-  return clickByText('Inscrever-se');
-})()
-"@)
-    Start-Sleep -Milliseconds 800
-
-    [void](Invoke-CdpEval @"
-(() => {
-  const setValue = (selector, value) => {
-    const input = document.querySelector(selector);
-    if (!input) throw new Error('Input não encontrado: ' + selector);
-    const native = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value');
-    native.set.call(input, value);
-    input.dispatchEvent(new Event('input', { bubbles: true }));
-    input.dispatchEvent(new Event('change', { bubbles: true }));
-    return input.value;
-  };
-  setValue('input[placeholder*=\"Viviane\"]', '$testName');
-  const passwordInputs = Array.from(document.querySelectorAll('input[type=\"password\"], input[placeholder*=\"•\"]'));
-  if (!passwordInputs.length) throw new Error('Campo de senha não encontrado');
-  const native = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value');
-  native.set.call(passwordInputs[0], '$testPassword');
-  passwordInputs[0].dispatchEvent(new Event('input', { bubbles: true }));
-  passwordInputs[0].dispatchEvent(new Event('change', { bubbles: true }));
-  return true;
-})()
-"@)
-    Start-Sleep -Milliseconds 500
-
-    [void](Invoke-CdpEval @"
-(() => {
-  const btn = Array.from(document.querySelectorAll('button'))
-    .find((el) => el.textContent.replace(/\s+/g, ' ').trim().includes('Selar Identidade'));
-  if (!btn) throw new Error('Botão Selar Identidade não encontrado');
-  btn.click();
-  return true;
-})()
-"@)
-
-    $authed = $false
-    for ($i = 0; $i -lt 20; $i++) {
-        Start-Sleep -Milliseconds 1000
-        try {
-            Assert-LandmarksVisible @('Caderno Vivo', 'Astrologia')
-            $authed = $true
-            break
         } catch {
-            if ($i -eq 19) { throw }
+            $lastError = $_.Exception.Message
+            Start-Sleep -Milliseconds 250
         }
     }
-    if (-not $authed) { throw 'Navegação principal não carregou após login.' }
+    throw "API não ficou pronta em $Url/health. Último erro: $lastError"
+}
 
-    $finalUrl = [string](Invoke-CdpEval 'location.href')
-    if ($finalUrl -notmatch '^http://127\.0\.0\.1:' + $ApiPort) {
-        throw "URL pós-login inesperada: $finalUrl"
+function Get-Health([string]$Url) {
+    $response = Invoke-WebRequest -UseBasicParsing -TimeoutSec 2 -Uri "$Url/health"
+    if ($response.StatusCode -ne 200) { throw "Health HTTP $($response.StatusCode) em $Url" }
+    return ($response.Content | ConvertFrom-Json)
+}
+
+function Clear-OptionalEnv([string]$Name) {
+    if (Test-Path -LiteralPath "Env:$Name") { Remove-Item -LiteralPath "Env:$Name" }
+}
+
+function Set-LauncherEnv {
+    param(
+        [string]$DataDir,
+        [string]$RequireLogin = ''
+    )
+    $env:AUREA_DATA_DIR = $DataDir
+    if ($RequireLogin -eq '1') {
+        $env:AUREA_REQUIRE_LOGIN = '1'
+    } else {
+        Clear-OptionalEnv 'AUREA_REQUIRE_LOGIN'
+    }
+}
+
+function Start-FixtureApi {
+    param(
+        [int]$Port,
+        [string]$DataDir,
+        [string]$RequireLogin = ''
+    )
+    New-Item -ItemType Directory -Path $DataDir -Force | Out-Null
+    $env:ASTRO_API_PORT = [string]$Port
+    $env:AUREA_DATA_DIR = $DataDir
+    if ($RequireLogin -eq '1') {
+        $env:AUREA_REQUIRE_LOGIN = '1'
+    } else {
+        Clear-OptionalEnv 'AUREA_REQUIRE_LOGIN'
+    }
+    $proc = Microsoft.PowerShell.Management\Start-Process -FilePath $python -ArgumentList @(
+        (Join-Path $repoRoot 'main_api.py')
+    ) -WorkingDirectory $repoRoot -PassThru -WindowStyle Hidden
+    Register-OwnedPid ([int]$proc.Id)
+    $null = Wait-Health "http://127.0.0.1:$Port"
+    foreach ($listenId in @(Get-ListeningPids $Port)) { Register-OwnedPid $listenId }
+    return $proc
+}
+
+function Start-OldContractStub([int]$Port) {
+    $stubPath = Join-Path $tempRoot 'old_contract_stub.py'
+    @'
+from http.server import BaseHTTPRequestHandler, HTTPServer
+import json
+import os
+
+class Handler(BaseHTTPRequestHandler):
+    def log_message(self, format, *args):
+        return
+
+    def do_GET(self):
+        path = self.path.split("?", 1)[0]
+        if path == "/health":
+            payload = json.dumps({
+                "status": "ok",
+                "auth_mode": "local-owner",
+                "browser_contract_version": 1,
+            }).encode("utf-8")
+            content_type = "application/json"
+        elif path == "/openapi.json":
+            payload = json.dumps({"paths": {"/browser/command": {"post": {}}}}).encode("utf-8")
+            content_type = "application/json"
+        elif path == "/":
+            payload = b"<!doctype html><html><body>Aurea Solaris</body></html>"
+            content_type = "text/html; charset=utf-8"
+        else:
+            self.send_error(404)
+            return
+        self.send_response(200)
+        self.send_header("Content-Type", content_type)
+        self.send_header("Content-Length", str(len(payload)))
+        self.end_headers()
+        self.wfile.write(payload)
+
+if __name__ == "__main__":
+    port = int(os.environ["ASTRO_API_PORT"])
+    HTTPServer(("127.0.0.1", port), Handler).serve_forever()
+'@ | Set-Content -LiteralPath $stubPath -Encoding UTF8
+    $env:ASTRO_API_PORT = [string]$Port
+    $proc = Microsoft.PowerShell.Management\Start-Process -FilePath $python -ArgumentList @($stubPath) -WorkingDirectory $repoRoot -PassThru -WindowStyle Hidden
+    Register-OwnedPid ([int]$proc.Id)
+    $null = Wait-Health "http://127.0.0.1:$Port"
+    foreach ($listenId in @(Get-ListeningPids $Port)) { Register-OwnedPid $listenId }
+    return $proc
+}
+
+function Wait-PortFree([int]$Port, [int]$TimeoutSec = 10) {
+    $deadline = (Get-Date).AddSeconds($TimeoutSec)
+    while ((Get-Date) -lt $deadline) {
+        if (-not (Test-PortBusy $Port)) { return }
+        Start-Sleep -Milliseconds 150
+    }
+    throw "A porta $Port continuou ocupada após encerrar os processos deste caso."
+}
+
+function Stop-TestOwnedListeners {
+    foreach ($ownedId in @($global:AureaVerifyOwnedPids)) {
+        Stop-OwnedPid $ownedId
+    }
+}
+
+function Reset-OwnedRuntimes {
+    Stop-TestOwnedListeners
+    $global:AureaVerifyOwnedPids.Clear()
+    $global:AureaVerifySpawnedPids.Clear()
+    $global:AureaVerifyOpenedUrl = $null
+    Wait-PortFree 9876
+}
+
+function global:Start-Process {
+    param(
+        [Parameter(Position = 0)]
+        [string]$FilePath,
+        [string[]]$ArgumentList,
+        [string]$WorkingDirectory,
+        [object]$WindowStyle,
+        [switch]$PassThru
+    )
+    $isUrl = $FilePath -match '^https?://'
+    $isChrome = $FilePath -match '(?i)(^|\\)chrome(\.exe)?$'
+    if ($isUrl -or $isChrome) {
+        if ($isUrl) {
+            $global:AureaVerifyOpenedUrl = $FilePath
+        } else {
+            $global:AureaVerifyOpenedUrl = (
+                @($ArgumentList | Where-Object { $_ -match '^https?://' }) | Select-Object -Last 1
+            )
+        }
+        return
+    }
+    $startParams = @{
+        FilePath = $FilePath
+        PassThru = $true
+    }
+    if ($PSBoundParameters.ContainsKey('ArgumentList') -and $null -ne $ArgumentList -and $ArgumentList.Count) {
+        $startParams.ArgumentList = $ArgumentList
+    }
+    if ($WorkingDirectory) { $startParams.WorkingDirectory = $WorkingDirectory }
+    if ($PSBoundParameters.ContainsKey('WindowStyle')) { $startParams.WindowStyle = $WindowStyle }
+    $proc = Microsoft.PowerShell.Management\Start-Process @startParams
+    if ($null -ne $proc) {
+        [void]$global:AureaVerifyOwnedPids.Add([int]$proc.Id)
+        [void]$global:AureaVerifySpawnedPids.Add([int]$proc.Id)
+    }
+    if ($PassThru) { return $proc }
+}
+
+function Invoke-AureaLauncher {
+    param(
+        [string]$DataDir,
+        [string]$RequireLogin = ''
+    )
+    $global:AureaVerifyOpenedUrl = $null
+    $global:AureaVerifySpawnedPids.Clear()
+    New-Item -ItemType Directory -Path $DataDir -Force | Out-Null
+    Set-LauncherEnv -DataDir $DataDir -RequireLogin $RequireLogin
+    & $launcherPath
+    if ([string]::IsNullOrWhiteSpace([string]$global:AureaVerifyOpenedUrl)) {
+        throw 'O launcher não tentou abrir uma URL.'
+    }
+    $openedPort = ([Uri]$global:AureaVerifyOpenedUrl).Port
+    foreach ($listenId in @(Get-ListeningPids $openedPort)) { Register-OwnedPid $listenId }
+    return [string]$global:AureaVerifyOpenedUrl
+}
+
+function Assert-Case([string]$Name, [scriptblock]$Body) {
+    try {
+        & $Body
+        Write-Output "PASS $Name"
+    } catch {
+        $detail = "FAIL ${Name}: $($_.Exception.Message)"
+        Write-Output $detail
+        [void]$script:failures.Add($detail)
+    }
+}
+
+function Stop-CasePids([int[]]$ProcessIds) {
+    foreach ($ownedId in @($ProcessIds)) { Stop-OwnedPid $ownedId }
+}
+
+$normalFingerprint = Get-DataDirFingerprint $normalDataDir
+New-Item -ItemType Directory -Path $tempRoot -Force | Out-Null
+
+try {
+    foreach ($listener in @(Get-RangeListeners)) {
+        [void]$script:preexistingListenerKeys.Add((Listener-Key $listener))
+    }
+    $occupied9876 = @(Get-ListeningPids 9876)
+    if ($occupied9876.Count) {
+        throw "A porta 9876 já está em uso (PID(s): $($occupied9876 -join ', ')). Este verificador não encerra um API preexistente. Liberar a porta e repetir."
     }
 
-    Write-Output "LOGIN user=$testName"
-    Write-Output "NAVIGATION Caderno Vivo,Astrologia=visible"
-    Write-Output "RESULT PASS api_port=$ApiPort cdp_port=$CdpPort url=$finalUrl health=$($health.StatusCode)"
+    Assert-Case 'default environment expects local-owner' {
+        Reset-OwnedRuntimes
+        $dataDir = Join-Path $tempRoot 'default-data'
+        $url = Invoke-AureaLauncher -DataDir $dataDir
+        $health = Get-Health $url.TrimEnd('/')
+        if ($health.auth_mode -ne 'local-owner') {
+            throw "auth_mode=$($health.auth_mode), esperado local-owner em $url"
+        }
+        if ([int]$health.browser_contract_version -ne 2) {
+            throw "browser_contract_version=$($health.browser_contract_version), esperado 2"
+        }
+        Stop-CasePids (@($global:AureaVerifySpawnedPids) + @(Get-ListeningPids (([Uri]$url).Port)))
+        Wait-PortFree (([Uri]$url).Port)
+        Wait-PortFree 9876
+    }
+
+    Assert-Case 'AUREA_REQUIRE_LOGIN=1 expects require-login' {
+        Reset-OwnedRuntimes
+        $dataDir = Join-Path $tempRoot 'require-login-data'
+        $url = Invoke-AureaLauncher -DataDir $dataDir -RequireLogin '1'
+        $health = Get-Health $url.TrimEnd('/')
+        if ($health.auth_mode -ne 'require-login') {
+            throw "auth_mode=$($health.auth_mode), esperado require-login em $url"
+        }
+        if ([int]$health.browser_contract_version -ne 2) {
+            throw "browser_contract_version=$($health.browser_contract_version), esperado 2"
+        }
+        Stop-CasePids (@($global:AureaVerifySpawnedPids) + @(Get-ListeningPids (([Uri]$url).Port)))
+        Wait-PortFree (([Uri]$url).Port)
+        Wait-PortFree 9876
+    }
+
+    Assert-Case 'compatible existing API is reused' {
+        Reset-OwnedRuntimes
+        $fixtureDir = Join-Path $tempRoot 'reuse-fixture'
+        $launcherDir = Join-Path $tempRoot 'reuse-launcher'
+        $fixture = Start-FixtureApi -Port 9876 -DataDir $fixtureDir
+        $listenBefore = @(Get-ListeningPids 9876)
+        $url = Invoke-AureaLauncher -DataDir $launcherDir
+        if ($global:AureaVerifySpawnedPids.Count -ne 0) {
+            throw "O launcher iniciou $($global:AureaVerifySpawnedPids.Count) runtime(s) novo(s) em vez de reutilizar 9876."
+        }
+        if (([Uri]$url).Port -ne 9876) {
+            throw "URL aberta $url não reutilizou http://127.0.0.1:9876/"
+        }
+        $health = Get-Health 'http://127.0.0.1:9876'
+        if ($health.auth_mode -ne 'local-owner' -or [int]$health.browser_contract_version -ne 2) {
+            throw "API reutilizada incompatível: auth_mode=$($health.auth_mode) contract=$($health.browser_contract_version)"
+        }
+        $still = @(Get-ListeningPids 9876)
+        foreach ($listenId in $listenBefore) {
+            if ($still -notcontains $listenId) {
+                throw "O processo original da porta 9876 (PID $listenId) não continuou em escuta."
+            }
+        }
+        Stop-CasePids $listenBefore
+        Wait-PortFree 9876
+    }
+
+    Assert-Case 'wrong-mode API is not reused' {
+        Reset-OwnedRuntimes
+        $fixtureDir = Join-Path $tempRoot 'wrong-mode-fixture'
+        $launcherDir = Join-Path $tempRoot 'wrong-mode-launcher'
+        $fixture = Start-FixtureApi -Port 9876 -DataDir $fixtureDir -RequireLogin '1'
+        $listenBefore = @(Get-ListeningPids 9876)
+        $fixtureHealth = Get-Health 'http://127.0.0.1:9876'
+        if ($fixtureHealth.auth_mode -ne 'require-login') {
+            throw "Fixture de modo errado não subiu em require-login: $($fixtureHealth.auth_mode)"
+        }
+        $url = Invoke-AureaLauncher -DataDir $launcherDir
+        $openedPort = ([Uri]$url).Port
+        if ($openedPort -eq 9876) {
+            throw "O launcher reutilizou a API require-login na porta 9876 em vez de iniciar o modo local-owner."
+        }
+        if ($openedPort -lt 9877 -or $openedPort -gt 9899) {
+            throw "Porta selecionada $openedPort está fora de 9877-9899."
+        }
+        $still = @(Get-ListeningPids 9876)
+        foreach ($listenId in $listenBefore) {
+            if ($still -notcontains $listenId) {
+                throw "O launcher encerrou o API preexistente da porta 9876 (PID $listenId)."
+            }
+        }
+        $leftBehind = Get-Health 'http://127.0.0.1:9876'
+        if ($leftBehind.auth_mode -ne 'require-login') {
+            throw "O API da porta 9876 mudou de modo: $($leftBehind.auth_mode)"
+        }
+        $selected = Get-Health $url.TrimEnd('/')
+        if ($selected.auth_mode -ne 'local-owner' -or [int]$selected.browser_contract_version -ne 2) {
+            throw "Processo selecionado incompatível em $url : auth_mode=$($selected.auth_mode) contract=$($selected.browser_contract_version)"
+        }
+        Stop-CasePids ($listenBefore + @($global:AureaVerifySpawnedPids) + @(Get-ListeningPids $openedPort))
+        Wait-PortFree 9876
+        Wait-PortFree $openedPort
+    }
+
+    Assert-Case 'old contract API is not accepted as compatible' {
+        Reset-OwnedRuntimes
+        $launcherDir = Join-Path $tempRoot 'old-contract-launcher'
+        $stub = Start-OldContractStub -Port 9876
+        $listenBefore = @(Get-ListeningPids 9876)
+        $stubHealth = Get-Health 'http://127.0.0.1:9876'
+        if ([int]$stubHealth.browser_contract_version -eq 2) {
+            throw 'O stub de contrato antigo reportou versão 2.'
+        }
+        $url = Invoke-AureaLauncher -DataDir $launcherDir
+        $openedPort = ([Uri]$url).Port
+        if ($openedPort -eq 9876) {
+            throw "O launcher aceitou o contrato antigo na porta 9876 como compatível."
+        }
+        if ($openedPort -lt 9877 -or $openedPort -gt 9899) {
+            throw "Porta selecionada $openedPort está fora de 9877-9899."
+        }
+        $still = @(Get-ListeningPids 9876)
+        foreach ($listenId in $listenBefore) {
+            if ($still -notcontains $listenId) {
+                throw "O launcher encerrou o stub preexistente da porta 9876 (PID $listenId)."
+            }
+        }
+        $selected = Get-Health $url.TrimEnd('/')
+        if ([int]$selected.browser_contract_version -ne 2 -or $selected.auth_mode -ne 'local-owner') {
+            throw "Processo selecionado incompatível em $url"
+        }
+        Stop-CasePids ($listenBefore + @($global:AureaVerifySpawnedPids) + @(Get-ListeningPids $openedPort))
+        Wait-PortFree 9876
+        Wait-PortFree $openedPort
+    }
+
+    Assert-Case 'launcher opens the URL of the compatible process it selected' {
+        Reset-OwnedRuntimes
+        $fixtureDir = Join-Path $tempRoot 'open-url-fixture'
+        $launcherDir = Join-Path $tempRoot 'open-url-launcher'
+        $fixture = Start-FixtureApi -Port 9876 -DataDir $fixtureDir
+        $url = Invoke-AureaLauncher -DataDir $launcherDir
+        $expected = 'http://127.0.0.1:9876/'
+        if ($url -ne $expected) {
+            throw "URL aberta '$url', esperado '$expected' para o processo compatível selecionado."
+        }
+        $health = Get-Health 'http://127.0.0.1:9876'
+        if ($health.auth_mode -ne 'local-owner' -or [int]$health.browser_contract_version -ne 2) {
+            throw "A URL aberta não aponta para o processo compatível."
+        }
+        if ($global:AureaVerifySpawnedPids.Count -ne 0) {
+            throw 'O launcher deveria ter aberto a URL do processo já compatível, sem iniciar outro.'
+        }
+        Stop-CasePids @(Get-ListeningPids 9876)
+        Wait-PortFree 9876
+    }
+
+    $afterFingerprint = Get-DataDirFingerprint $normalDataDir
+    if ($afterFingerprint -ne $normalFingerprint) {
+        throw "O diretório normal de dados foi alterado: $normalDataDir"
+    }
+    Write-Output "PASS normal data directory unchanged"
+
+    if ($script:failures.Count) {
+        throw "Falhas do verificador:`n$($script:failures -join "`n")"
+    }
+    Write-Output 'RESULT PASS'
 } finally {
-    if ($null -ne $socket -and $socket.State -eq [Net.WebSockets.WebSocketState]::Open) {
-        try { $socket.Abort() } catch {}
-        try { $socket.Dispose() } catch {}
+    Invoke-CleanupStep 'Start-Process-restore' {
+        if (Test-Path -LiteralPath 'Function:\global:Start-Process') {
+            Remove-Item -LiteralPath 'Function:\global:Start-Process' -Force
+        }
     }
-    if ($null -ne $chrome) {
-        try { Stop-Tree $chrome } catch {}
+    Invoke-CleanupStep 'owned-runtimes' { Stop-TestOwnedListeners }
+    Invoke-CleanupStep 'ASTRO_API_PORT-restore' {
+        if ($null -eq $oldPort) { Clear-OptionalEnv 'ASTRO_API_PORT' }
+        else { $env:ASTRO_API_PORT = $oldPort }
     }
-    if ([IO.Directory]::Exists($tempRoot)) {
-        try { [IO.Directory]::Delete($tempRoot, $true) } catch {}
+    Invoke-CleanupStep 'AUREA_DATA_DIR-restore' {
+        if ($null -eq $oldData) { Clear-OptionalEnv 'AUREA_DATA_DIR' }
+        else { $env:AUREA_DATA_DIR = $oldData }
+    }
+    Invoke-CleanupStep 'AUREA_REQUIRE_LOGIN-restore' {
+        if ($null -eq $oldLogin) { Clear-OptionalEnv 'AUREA_REQUIRE_LOGIN' }
+        else { $env:AUREA_REQUIRE_LOGIN = $oldLogin }
+    }
+    Invoke-CleanupStep 'temp-root-remove' {
+        for ($i = 0; $i -lt 20 -and [IO.Directory]::Exists($tempRoot); $i++) {
+            try { [IO.Directory]::Delete($tempRoot, $true) } catch {
+                if ($i -eq 19) { throw }
+                Start-Sleep -Milliseconds 250
+            }
+        }
+    }
+    Invoke-CleanupStep 'temp-root-residue' {
+        if ([IO.Directory]::Exists($tempRoot)) { throw "Pasta temporária ainda existe: $tempRoot" }
+    }
+    if ($script:cleanupFailures.Count) {
+        throw "Falhas de limpeza:`n$($script:cleanupFailures -join "`n")"
     }
 }
