@@ -25,6 +25,14 @@ Isso impede o erro central: IA inventar cálculo e interpretar uma invenção.
 
 Esta sequência prevalece sobre a numeração histórica das fases abaixo. As fases seguintes descrevem a arquitetura-alvo; o trabalho só avança quando os critérios de aceite da etapa ativa forem atendidos.
 
+### Escopo ativo — acesso `local-owner` no Chrome
+
+**Objetivo:** abrir o aplicativo local no Chrome sem tela de login, preservando o proprietário privado correto, dados isolados por `owner_id` e um modo explícito de compatibilidade com senha.
+
+**Em escopo (plano `docs/superpowers/plans/2026-08-12-skip-login-local-owner.md`):** modo padrão `local-owner`; resolução fail-closed de um único proprietário habilitado; token de sessão de vida do processo da API; `AUREA_REQUIRE_LOGIN=1` para `require-login`; fronteira de requisição loopback; boot tipado no frontend.
+
+**Fora deste escopo (trabalho futuro separado, não implementado):** cadastro de senha para proprietário criado automaticamente sem senha; recuperação ou redefinição de senha; seleção ou alternância entre múltiplos proprietários; migração, renomeação ou adoção automática de dados órfãos.
+
 ### Etapa 1 — Estabilizar a experiência Chrome
 
 **Objetivo:** a experiência no Chrome só mostra o que foi informado, calculado ou explicitamente indisponível.
