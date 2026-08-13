@@ -204,7 +204,7 @@ Write-Output \"PROCESS_TREE_PASS stopped=$($stopped -join ',') reuse_failure=$re
             storage.initialize()
             with patch.dict(os.environ, {"AUREA_DATA_DIR": str(data_dir)}, clear=False):
                 with patch.object(main_api, "get_storage", return_value=storage):
-                    with TestClient(main_api.app) as client:
+                    with TestClient(main_api.app, base_url="http://127.0.0.1") as client:
                         unauthenticated = client.post(
                             "/browser/command",
                             json={"command": "list_boards", "args": {}},
@@ -280,7 +280,7 @@ Write-Output \"PROCESS_TREE_PASS stopped=$($stopped -join ',') reuse_failure=$re
             storage = LocalStorage(Path(directory) / "app-data" / "data", MIGRATIONS)
             storage.initialize()
             with patch.object(main_api, "get_storage", return_value=storage):
-                with TestClient(main_api.app) as client:
+                with TestClient(main_api.app, base_url="http://127.0.0.1") as client:
                     denied = client.post(
                         "/extract_pdf",
                         content=b"%PDF-invalid",
@@ -295,7 +295,7 @@ Write-Output \"PROCESS_TREE_PASS stopped=$($stopped -join ',') reuse_failure=$re
             storage.initialize()
             with patch.dict(os.environ, {"AUREA_DATA_DIR": str(data_dir)}, clear=False):
                 with patch.object(main_api, "get_storage", return_value=storage):
-                    with TestClient(main_api.app) as client:
+                    with TestClient(main_api.app, base_url="http://127.0.0.1") as client:
                         owner_a = client.post(
                             "/browser/command",
                             json={
@@ -419,6 +419,108 @@ Write-Output \"PROCESS_TREE_PASS stopped=$($stopped -join ',') reuse_failure=$re
                         )
                         self.assertEqual(entry_after_attempt.status_code, 200)
                         self.assertEqual(entry_after_attempt.json()["result"]["title"], "Nota privada de B")
+
+
+class TestBrowserRequestBoundary(unittest.TestCase):
+    def setUp(self):
+        self.client = TestClient(main_api.app, base_url="http://127.0.0.1")
+
+    def tearDown(self):
+        self.client.close()
+
+    def test_non_loopback_host_is_rejected(self):
+        response = self.client.get("/health", headers={"Host": "evil.example"})
+        self.assertEqual(response.status_code, 400)
+
+    def test_cross_site_browser_command_is_rejected(self):
+        response = self.client.post(
+            "/browser/command",
+            json={"command": "private_initial_access", "args": {}},
+            headers={"Host": "127.0.0.1:9876", "Sec-Fetch-Site": "cross-site"},
+        )
+        self.assertEqual(response.status_code, 403)
+
+    def test_unapproved_origin_is_rejected(self):
+        response = self.client.post(
+            "/browser/command",
+            json={"command": "private_initial_access", "args": {}},
+            headers={"Host": "127.0.0.1:9876", "Origin": "https://evil.example"},
+        )
+        self.assertEqual(response.status_code, 403)
+
+    def test_served_loopback_origin_is_allowed(self):
+        response = self.client.post(
+            "/browser/command",
+            json={"command": "private_initial_access", "args": {}},
+            headers={
+                "Host": f"127.0.0.1:{main_api.API_PORT}",
+                "Origin": f"http://127.0.0.1:{main_api.API_PORT}",
+            },
+        )
+        self.assertNotEqual(response.status_code, 403)
+
+    def test_localhost_served_origin_is_allowed(self):
+        response = self.client.post(
+            "/browser/command",
+            json={"command": "private_initial_access", "args": {}},
+            headers={
+                "Host": f"localhost:{main_api.API_PORT}",
+                "Origin": f"http://localhost:{main_api.API_PORT}",
+            },
+        )
+        self.assertNotEqual(response.status_code, 403)
+
+    def test_vite_dev_origin_127_is_allowed(self):
+        response = self.client.post(
+            "/browser/command",
+            json={"command": "private_initial_access", "args": {}},
+            headers={
+                "Host": f"127.0.0.1:{main_api.API_PORT}",
+                "Origin": "http://127.0.0.1:1420",
+            },
+        )
+        self.assertNotEqual(response.status_code, 403)
+
+    def test_vite_dev_origin_localhost_is_allowed(self):
+        response = self.client.post(
+            "/browser/command",
+            json={"command": "private_initial_access", "args": {}},
+            headers={
+                "Host": f"localhost:{main_api.API_PORT}",
+                "Origin": "http://localhost:1420",
+            },
+        )
+        self.assertNotEqual(response.status_code, 403)
+
+    def test_automation_without_origin_or_fetch_site_is_allowed(self):
+        response = self.client.post(
+            "/browser/command",
+            json={"command": "private_initial_access", "args": {}},
+            headers={"Host": f"127.0.0.1:{main_api.API_PORT}"},
+        )
+        self.assertNotEqual(response.status_code, 403)
+
+
+class TestBrowserHealthContract(unittest.TestCase):
+    def setUp(self):
+        self.client = TestClient(main_api.app, base_url="http://127.0.0.1")
+
+    def tearDown(self):
+        self.client.close()
+
+    def test_health_exposes_auth_mode_and_browser_contract_version(self):
+        response = self.client.get("/health")
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertIn(payload["auth_mode"], {"local-owner", "require-login"})
+        self.assertEqual(payload["browser_contract_version"], 2)
+
+    def test_health_auth_mode_reflects_module_state(self):
+        with patch.object(main_api, "AUTH_MODE", "require-login"):
+            response = self.client.get("/health")
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(response.json()["auth_mode"], "require-login")
+            self.assertEqual(response.json()["browser_contract_version"], 2)
 
 
 if __name__ == "__main__":

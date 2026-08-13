@@ -24,6 +24,7 @@ import httpx
 import uvicorn
 from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.trustedhost import TrustedHostMiddleware
 from fastapi.responses import StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
@@ -70,6 +71,14 @@ from browser_workspace import (
 # ─── Porta ───
 API_PORT = int(os.environ.get("ASTRO_API_PORT", 9876))
 API_HOST = "127.0.0.1"
+
+
+def _resolve_auth_mode() -> str:
+    value = os.environ.get("AUREA_REQUIRE_LOGIN", "").strip()
+    return "require-login" if value == "1" else "local-owner"
+
+
+AUTH_MODE = _resolve_auth_mode()
 SIDECAR_TOKEN_ENV = "AUREA_SIDECAR_TOKEN"
 SIDECAR_TOKEN: Optional[str] = os.environ.get(SIDECAR_TOKEN_ENV)
 _BROWSER_SESSIONS: Dict[str, str] = {}
@@ -116,6 +125,13 @@ app = FastAPI(
     title="Aurea Solaris — Astro API",
     version="1.0.0",
     lifespan=lifespan,
+)
+
+# Trusted host: apenas loopback
+app.add_middleware(
+    TrustedHostMiddleware,
+    allowed_hosts=["127.0.0.1", "localhost"],
+    www_redirect=False,
 )
 
 # CORS: apenas localhost (Tauri webview)
@@ -400,6 +416,8 @@ async def health():
             "knowledge": storage["knowledge_database"]["integrity"],
             "legacy_import": storage["legacy_import_status"],
         },
+        "auth_mode": AUTH_MODE,
+        "browser_contract_version": 2,
     }
 
 
@@ -440,9 +458,24 @@ def _browser_payload(args: Dict[str, Any]) -> dict:
 @app.post("/browser/command")
 async def browser_command(
     req: BrowserCommandRequest,
+    request: Request,
     x_aurea_browser_session: Optional[str] = Header(default=None),
 ):
     """Bridge the browser UI to a small, authenticated subset of desktop commands."""
+    fetch_site = request.headers.get("sec-fetch-site", "").lower()
+    if fetch_site == "cross-site":
+        raise HTTPException(status_code=403, detail="Origem de navegador não permitida.")
+
+    origin = request.headers.get("origin")
+    allowed_origins = {
+        f"http://127.0.0.1:{API_PORT}",
+        f"http://localhost:{API_PORT}",
+        "http://127.0.0.1:1420",
+        "http://localhost:1420",
+    }
+    if origin and origin not in allowed_origins:
+        raise HTTPException(status_code=403, detail="Origem de navegador não permitida.")
+
     args = req.args
 
     if req.command == "private_account_register":
