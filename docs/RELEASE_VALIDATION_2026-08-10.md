@@ -390,7 +390,7 @@ Automated coverage:
 
 - `npm run test -- src/__tests__/utils/mandalaGeometry.test.ts`: `7` testes aprovados (inclui separação angular sob rotação e `pointAt` não cardinal determinístico).
 - Helper renomeado para `src/utils/mandala-geometry.ts`; `MandalaChart` importa o novo caminho.
-- Commits: `28583a2` (testes), ver SHA do commit `refactor(astrology): extract mandala geometry helpers` abaixo após push.
+- Commits: `28583a2` (testes), `0254c84` (extração/rename).
 
 **Manual Mandala gate: PENDENTE.** Confirmação explícita da pessoa proprietária ainda necessária com mapa certificado/referência:
 

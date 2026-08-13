@@ -9,6 +9,7 @@ export interface DiaryEntry {
   updatedAt: string;     // ISO 8601
   wordCount: number;
   status: DiaryStatus;   // Kanban status: idea | draft | done
+  folderName?: string;
 }
 
 /** Response shape shared by the Tauri command and browser adapter. */

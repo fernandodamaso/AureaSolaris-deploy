@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { X, FileText, Star, Calendar, ListTodo, BookOpen, ChevronRight, MessageSquare, Loader2 } from 'lucide-react';
 import { safeInvoke } from '../../utils/tauri';
-import { listDiaryEntries } from '../../utils/diary';
-import type { DiaryEntryResponse } from '../../types/diario';
+import { listDiaryEntries } from '../../services/diary';
+import type { DiaryEntry } from '../../types/diario';
 import type { PrivateProfile, ProfileConnection } from '../../types/private-profile';
 import type { AureaEvent, AureaTask } from '../../context/AgendaContext';
 
@@ -30,7 +30,7 @@ interface AssetItem {
   type: 'note' | 'astro' | 'calendar' | 'task' | 'lesson' | 'chat';
   title: string;
   preview: string;
-  data: DiaryEntryResponse | PrivateProfile | ProfileConnection | AureaEvent | AureaTask | HermesLesson | ChatSession | ObsidianDiaryEntry;
+  data: DiaryEntry | PrivateProfile | ProfileConnection | AureaEvent | AureaTask | HermesLesson | ChatSession | ObsidianDiaryEntry;
 }
 
 function parseJsonArray<T>(raw: string | null): T[] {
