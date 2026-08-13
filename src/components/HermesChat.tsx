@@ -169,7 +169,7 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
     if (!isOpen) return;
 
     let cancelled = false;
-    const profile = activeOwner;
+    const profile = ctxRef.current.agenda.activeProfile;
     setThreadId(null);
     setInitialized(false);
 
