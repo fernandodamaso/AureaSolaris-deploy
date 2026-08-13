@@ -20,6 +20,35 @@ describe('astrologyApi transport', () => {
     expect(JSON.parse(buildNatalPayload(birthData))).toEqual(birthData);
   });
 
+  it('sends the IANA zone as timezone, never timezone_name', () => {
+    const payload = JSON.parse(buildNatalPayload({
+      year: 2000,
+      month: 1,
+      day: 1,
+      hour: 12,
+      lat: -23.55,
+      lon: -46.63,
+      timezone_name: 'America/Sao_Paulo',
+    }));
+
+    expect(payload.timezone).toBe('America/Sao_Paulo');
+    expect(payload).not.toHaveProperty('timezone_name');
+  });
+
+  it('keeps an explicit timezone field when both keys are present', () => {
+    const payload = JSON.parse(buildNatalPayload({
+      year: 2000,
+      month: 1,
+      day: 1,
+      hour: 12,
+      timezone: 'America/Recife',
+      timezone_name: 'America/Sao_Paulo',
+    }));
+
+    expect(payload.timezone).toBe('America/Recife');
+    expect(payload).not.toHaveProperty('timezone_name');
+  });
+
   it('builds an empty transit payload', () => {
     expect(JSON.parse(buildTransitPayload())).toEqual({});
   });

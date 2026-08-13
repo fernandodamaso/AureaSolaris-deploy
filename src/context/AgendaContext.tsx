@@ -243,8 +243,9 @@ export const AgendaProvider = ({ children }: { children: ReactNode }) => {
     const resolvedName = displayName || 'Aurea';
     setProfiles((current) => {
       const existing = current.find((profile) => profile.id === ownerId);
+      const nextName = existing?.name?.trim() ? existing.name : resolvedName;
       const nextProfile: AureaProfile = existing
-        ? { ...existing, name: resolvedName, active: true }
+        ? { ...existing, name: nextName, active: true }
         : { id: ownerId, name: resolvedName, active: true, connections: [] };
       const updated = existing
         ? current.map((profile) => (profile.id === ownerId ? nextProfile : profile))

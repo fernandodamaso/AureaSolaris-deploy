@@ -144,6 +144,8 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
   const [useFullPrompt, setUseFullPrompt] = useState<boolean>(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const sendMessageRef = useRef<(overrideText?: string) => Promise<void>>(async () => {});
+  const ctxRef = useRef(ctx);
+  ctxRef.current = ctx;
 
   // Refs for current state inside event listener
   const stateRef = useRef({ messages, loading });
@@ -207,7 +209,7 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
       setMessages(restoredMessages);
       // build and cache the system prompt once after restoring context
       try {
-        const prompt = buildSystemPrompt(ctx);
+        const prompt = buildSystemPrompt(ctxRef.current);
         setSystemPrompt(prompt);
         try {
           setSystemPromptSummary(summarizeSystemPrompt(prompt));
@@ -233,10 +235,9 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
     };
   }, [
     isOpen,
-    activeOwner,
+    activeOwner?.id,
     activeTopicKey,
     activeSubjectName,
-    ctx,
   ]);
 
   // Mensagem de boas-vindas com contexto
@@ -247,7 +248,7 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
         activeSubjectSource?.certifiedNatalCalculation,
         'natal',
       ));
-      const hasCertifiedTransit = Boolean(readCertifiedCalculation(ctx.astro.liveData, 'transit'));
+      const hasCertifiedTransit = Boolean(readCertifiedCalculation(ctxRef.current.astro.liveData, 'transit'));
 
       const welcome = profile
         ? `Olá! O estudo em foco é **${activeSubjectName}**.\n\n` +
@@ -261,7 +262,7 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
       setMessages([{ role: 'assistant', content: welcome }]);
       setInitialized(true);
     }
-  }, [isOpen, initialized, ctx.astro.liveData, activeOwner, activeSubjectName, activeSubjectSource]);
+  }, [isOpen, initialized, activeOwner, activeSubjectName, activeSubjectSource]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -301,10 +302,10 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
       // summarized prompt for speed.
       let promptToUse: string;
       if (useFullPrompt) {
-        promptToUse = (systemPrompt as string) ?? buildSystemPrompt(ctx);
+        promptToUse = (systemPrompt as string) ?? buildSystemPrompt(ctxRef.current);
         setUseFullPrompt(false);
       } else {
-        promptToUse = (systemPromptSummary as string) ?? (systemPrompt as string) ?? buildSystemPrompt(ctx);
+        promptToUse = (systemPromptSummary as string) ?? (systemPrompt as string) ?? buildSystemPrompt(ctxRef.current);
       }
       const contextMessages = newMessages.slice(-6).map(message => ({ role: message.role, content: message.content }));
       if (streamingEnabled) {
@@ -402,7 +403,6 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
     }
   }, [
     activeOwner?.id,
-    ctx,
     externalConsent,
     input,
     provider,

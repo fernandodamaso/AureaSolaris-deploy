@@ -15,14 +15,22 @@ export class AstrologyApiError extends Error {
 }
 
 export function buildNatalPayload(birthData?: Record<string, unknown>): string {
-  if (birthData) return JSON.stringify(birthData);
-  return JSON.stringify({
-    year: new Date().getFullYear(),
-    month: new Date().getMonth() + 1,
-    day: new Date().getDate(),
-    hour: new Date().getHours() + (new Date().getMinutes() / 60),
-    house_system: localStorage.getItem('aurea_house_system') || 'Regiomontanus',
-  });
+  if (!birthData) {
+    return JSON.stringify({
+      year: new Date().getFullYear(),
+      month: new Date().getMonth() + 1,
+      day: new Date().getDate(),
+      hour: new Date().getHours() + (new Date().getMinutes() / 60),
+      house_system: localStorage.getItem('aurea_house_system') || 'Regiomontanus',
+    });
+  }
+
+  const timezone = [birthData.timezone, birthData.timezone_name]
+    .find((value): value is string => typeof value === 'string' && value.trim().length > 0);
+  const payload: Record<string, unknown> = { ...birthData };
+  delete payload.timezone_name;
+  if (timezone) payload.timezone = timezone;
+  return JSON.stringify(payload);
 }
 
 export function buildTransitPayload(): string {

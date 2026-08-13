@@ -156,7 +156,7 @@ describe('AgendaProvider ensureLocalUiProfile', () => {
     expect(localStorage.getItem('aurea_active_subject:owner-1')).toBe('owner-1');
   });
 
-  it('preserves existing birth data and connections while refreshing the display name', () => {
+  it('preserves an existing UI name instead of overwriting it from the account display name', () => {
     localStorage.setItem('aurea_profiles', JSON.stringify([
       {
         id: 'owner-1',
@@ -177,13 +177,13 @@ describe('AgendaProvider ensureLocalUiProfile', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Ativar dono local' }));
 
-    expect(screen.getByTestId('owner-name').textContent).toBe('Nome novo');
+    expect(screen.getByTestId('owner-name').textContent).toBe('Nome antigo');
     expect(screen.getByTestId('owner-birth').textContent).toBe('1990-01-15');
     expect(screen.getByTestId('owner-connections').textContent).toBe(JSON.stringify([{ id: 'conn-1', name: 'Conexão' }]));
     expect(screen.getByTestId('owner-active').textContent).toBe('true');
     expect(storedProfiles()[0]).toMatchObject({
       id: 'owner-1',
-      name: 'Nome novo',
+      name: 'Nome antigo',
       active: true,
       birthDate: '1990-01-15',
       birthTime: '08:30',
@@ -237,7 +237,7 @@ describe('AgendaProvider ensureLocalUiProfile', () => {
 
     expect(screen.getByTestId('active-profile').textContent).toBe('profile-b');
     expect(screen.getByTestId('active-subject').textContent).toBe('profile-b');
-    expect(screen.getByTestId('owner-name').textContent).toBe('Perfil B atualizado');
+    expect(screen.getByTestId('owner-name').textContent).toBe('Perfil B');
     expect(localStorage.getItem('aurea_active_id')).toBe('profile-b');
     expect(localStorage.getItem('aurea_active_subject:profile-b')).toBe('profile-b');
   });
