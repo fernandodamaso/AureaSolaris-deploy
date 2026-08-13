@@ -29,7 +29,7 @@ import {
   getSignIndex,
   normalizeDegree,
   resolveAscDegree,
-} from '../utils/mandalaGeometry';
+} from '../utils/mandala-geometry';
 
 
 

@@ -6,7 +6,7 @@ import {
   getSignIndex,
   normalizeDegree,
   resolveAscDegree,
-} from '../../utils/mandalaGeometry';
+} from '../../utils/mandala-geometry';
 import { SIGN_NAMES_PT, SIGN_SYMBOLS } from '../../utils/astro-reference-data';
 
 describe('mandala geometry', () => {

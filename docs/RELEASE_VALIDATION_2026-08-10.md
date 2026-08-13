@@ -381,3 +381,23 @@ Predecessors FDM-664–FDM-672: assumidos resolvidos nesta branch (Wave 3 + FDM-
 
 Esta seção fecha a trilha A de limpeza/reprodutibilidade; aceite manual amplo do produto permanece conforme seções anteriores.
 
+### FDM-677 — Mandala geometry regression coverage — 12/08/2026
+
+Repositório: `C:\git\AureaSolaris-history-rewrite\post-push-fresh`
+Branch: `fernandoyarrum/fdm-669-670-671-wave3`
+
+Automated coverage:
+
+- `npm run test -- src/__tests__/utils/mandalaGeometry.test.ts`: `7` testes aprovados (inclui separação angular sob rotação e `pointAt` não cardinal determinístico).
+- Helper renomeado para `src/utils/mandala-geometry.ts`; `MandalaChart` importa o novo caminho.
+- Commits: `28583a2` (testes), ver SHA do commit `refactor(astrology): extract mandala geometry helpers` abaixo após push.
+
+**Manual Mandala gate: PENDENTE.** Confirmação explícita da pessoa proprietária ainda necessária com mapa certificado/referência:
+
+```text
+MANDALA MANUAL PASS
+- ASC renders at the same left/9h position as before.
+- MC and other points remain in their calculated positions.
+- No visible orientation regression was observed.
+```
+
