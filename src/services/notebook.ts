@@ -80,5 +80,7 @@ export function saveBoard(board: SaveBoardInput): Promise<number | null> {
 }
 
 export function deleteBoard(boardId: string): Promise<void | null> {
-  return safeInvoke<void | boolean>('delete_board', { boardId });
+  return safeInvoke<void | boolean>('delete_board', { boardId }).then((result) =>
+    result === null ? null : undefined,
+  );
 }

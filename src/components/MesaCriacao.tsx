@@ -1,8 +1,8 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
-import { deleteBoard, listBoards, loadBoard, saveBoard } from '../services/notebook';
+import { listBoards, loadBoard, saveBoard } from '../services/notebook';
 import type { BoardSummary } from '../services/notebook';
 import type { CadernoBoard, CadernoNode } from '../types/caderno';
-import { BoardManager } from './BoardManager';
+import { BoardManager } from './mesa/BoardManager';
 import { MesaCanvas } from './mesa/MesaCanvas';
 import { STICKY_COLORS } from './mesa/NodeCard';
 

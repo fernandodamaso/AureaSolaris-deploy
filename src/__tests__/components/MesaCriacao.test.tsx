@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MesaCriacao } from '../../components/MesaCriacao';
-import { BoardManager } from '../../components/BoardManager';
+import { BoardManager } from '../../components/mesa/BoardManager';
 import { safeInvoke } from '../../utils/tauri';
 
 const board = {

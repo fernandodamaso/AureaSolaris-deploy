@@ -63,6 +63,6 @@ describe('notebook service', () => {
     expect(safeInvokeMock).toHaveBeenCalledWith('delete_board', { boardId: 'board-1' });
 
     safeInvokeMock.mockResolvedValueOnce(true);
-    await expect(deleteBoard('board-1')).resolves.toBe(true);
+    await expect(deleteBoard('board-1')).resolves.toBeUndefined();
   });
 });

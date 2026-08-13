@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { AlertCircle, Clock, LayoutGrid, Plus, Sparkles, Trash2 } from 'lucide-react';
-import { deleteBoard, listBoards, saveBoard } from '../services/notebook';
-import type { BoardSummary } from '../services/notebook';
+import { deleteBoard, listBoards, saveBoard } from '../../services/notebook';
+import type { BoardSummary } from '../../services/notebook';
 
 type BoardManagerProps = {
   onOpen: (meta: BoardSummary) => void;
