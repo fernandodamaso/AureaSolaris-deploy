@@ -112,7 +112,7 @@ export const MandalaPage = () => {
       hour: birthData.hour,
       lat: birthData.lat,
       lon: birthData.lon,
-      timezone_name: birthData.timezone,
+      timezone: birthData.timezone,
     }
     : undefined;
   const { data, loading, error, recalculate } = useCertifiedNatalCalculation(calculationRequest, calculationEnabled);
