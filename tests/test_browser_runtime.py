@@ -2,20 +2,69 @@ import os
 import re
 import shutil
 import socket
+import sqlite3
 import subprocess
 import tempfile
 import unittest
+from concurrent.futures import ThreadPoolExecutor
+from contextlib import closing, contextmanager
 from pathlib import Path
 from unittest.mock import patch
 
 from fastapi.testclient import TestClient
 
 import main_api
-from browser_workspace import list_owner_workspace_ids
+from browser_workspace import list_owner_workspace_ids, save_board
 from local_storage import LocalStorage
 
 
 MIGRATIONS = Path(__file__).resolve().parents[1] / "src-tauri" / "migrations"
+
+
+def _reset_browser_sessions() -> None:
+    with main_api._BROWSER_SESSIONS_LOCK:
+        main_api._BROWSER_SESSIONS.clear()
+        main_api._LOCAL_BROWSER_SESSION = None
+
+
+def _snapshot_owner_state(storage: LocalStorage) -> tuple[list[str], set[str]]:
+    return (
+        [row["account_id"] for row in storage.list_private_accounts_for_bootstrap()],
+        set(list_owner_workspace_ids()),
+    )
+
+
+@contextmanager
+def _isolated_browser_client(auth_mode: str = "local-owner"):
+    _reset_browser_sessions()
+    with tempfile.TemporaryDirectory() as directory:
+        data_dir = Path(directory) / "browser-data"
+        storage = LocalStorage(Path(directory) / "app-data" / "data", MIGRATIONS)
+        storage.initialize()
+        with patch.dict(os.environ, {"AUREA_DATA_DIR": str(data_dir)}, clear=False):
+            with patch.object(main_api, "get_storage", return_value=storage):
+                with patch.object(main_api, "AUTH_MODE", auth_mode):
+                    with TestClient(main_api.app, base_url="http://127.0.0.1") as client:
+                        try:
+                            yield client, storage, data_dir
+                        finally:
+                            _reset_browser_sessions()
+
+
+def _disable_account(storage: LocalStorage, account_id: str) -> None:
+    with closing(sqlite3.connect(storage.data_dir / "private.sqlite")) as connection:
+        connection.execute(
+            "UPDATE account SET disabled_at = CURRENT_TIMESTAMP WHERE id = ?",
+            (account_id,),
+        )
+        connection.commit()
+
+
+def _post_initial_access(client: TestClient):
+    return client.post(
+        "/browser/command",
+        json={"command": "private_initial_access", "args": {}},
+    )
 
 
 class TestBrowserRuntime(unittest.TestCase):
@@ -421,12 +470,231 @@ Write-Output \"PROCESS_TREE_PASS stopped=$($stopped -join ',') reuse_failure=$re
                         self.assertEqual(entry_after_attempt.json()["result"]["title"], "Nota privada de B")
 
 
+class TestLocalOwnerInitialAccess(unittest.TestCase):
+    def test_initial_access_creates_local_owner_on_fresh_install(self):
+        with _isolated_browser_client() as (client, storage, _data_dir):
+            response = _post_initial_access(client)
+            self.assertEqual(response.status_code, 200)
+            payload = response.json()
+            self.assertEqual(
+                payload["result"],
+                {"kind": "local-owner", "ownerId": "local-owner", "displayName": "Aurea"},
+            )
+            self.assertIsInstance(payload["browser_session_token"], str)
+            self.assertTrue(payload["browser_session_token"])
+            self.assertEqual(
+                [row["account_id"] for row in storage.list_private_accounts_for_bootstrap()],
+                ["local-owner"],
+            )
+
+    def test_initial_access_reuses_the_only_enabled_existing_owner(self):
+        with _isolated_browser_client() as (client, storage, data_dir):
+            storage.create_private_account(
+                "owner-a",
+                "Pessoa Existente",
+                "pessoa-a",
+                password="known-password",
+            )
+            save_board("owner-a", "board-1", "Estudo", [{"id": 1}], [])
+            self.assertEqual(list_owner_workspace_ids(), {"owner-a"})
+
+            response = _post_initial_access(client)
+            self.assertEqual(response.status_code, 200)
+            payload = response.json()
+            self.assertEqual(
+                payload["result"],
+                {"kind": "local-owner", "ownerId": "owner-a", "displayName": "Pessoa Existente"},
+            )
+            token = payload["browser_session_token"]
+            loaded = client.post(
+                "/browser/command",
+                headers={"X-Aurea-Browser-Session": token},
+                json={"command": "load_board", "args": {"boardId": "board-1"}},
+            )
+            self.assertEqual(loaded.status_code, 200)
+            self.assertEqual(loaded.json()["result"]["owner_id"], "owner-a")
+            self.assertEqual(loaded.json()["result"]["nodes"], [{"id": 1}])
+            self.assertEqual(
+                [row["account_id"] for row in storage.list_private_accounts_for_bootstrap()],
+                ["owner-a"],
+            )
+
+    def test_initial_access_reuses_the_same_process_token(self):
+        with _isolated_browser_client() as (client, _storage, _data_dir):
+            first = _post_initial_access(client)
+            second = _post_initial_access(client)
+            self.assertEqual(first.status_code, 200)
+            self.assertEqual(second.status_code, 200)
+            token = first.json()["browser_session_token"]
+            self.assertEqual(second.json()["browser_session_token"], token)
+            self.assertEqual(first.json()["result"]["ownerId"], "local-owner")
+            self.assertEqual(main_api._BROWSER_SESSIONS, {token: "local-owner"})
+            self.assertEqual(main_api._LOCAL_BROWSER_SESSION, (token, "local-owner"))
+
+    def test_concurrent_initial_access_keeps_one_local_token(self):
+        with _isolated_browser_client() as (client, _storage, _data_dir):
+            def boot(_index: int):
+                return _post_initial_access(client)
+
+            with ThreadPoolExecutor(max_workers=12) as pool:
+                responses = list(pool.map(boot, range(12)))
+
+            self.assertTrue(all(item.status_code == 200 for item in responses))
+            tokens = {item.json()["browser_session_token"] for item in responses}
+            self.assertEqual(len(tokens), 1)
+            token = tokens.pop()
+            self.assertEqual(main_api._BROWSER_SESSIONS, {token: "local-owner"})
+            self.assertEqual(main_api._LOCAL_BROWSER_SESSION, (token, "local-owner"))
+
+    def test_initial_access_rejects_disabled_owner_without_writes(self):
+        with _isolated_browser_client() as (client, storage, data_dir):
+            storage.create_private_account(
+                "owner-a",
+                "Pessoa Desativada",
+                "pessoa-a",
+                password="known-password",
+            )
+            _disable_account(storage, "owner-a")
+            (data_dir / "memory" / "owners" / "owner-a").mkdir(parents=True)
+            before = _snapshot_owner_state(storage)
+
+            response = _post_initial_access(client)
+            self.assertEqual(response.status_code, 409)
+            detail = response.json()["detail"]
+            self.assertEqual(detail["code"], "setup-required")
+            self.assertEqual(detail["reason"], "disabled-owner")
+            self.assertTrue(detail["message"])
+            self.assertEqual(_snapshot_owner_state(storage), before)
+            self.assertEqual(main_api._BROWSER_SESSIONS, {})
+
+    def test_initial_access_rejects_multiple_accounts_without_writes(self):
+        with _isolated_browser_client() as (client, storage, data_dir):
+            storage.create_private_account(
+                "owner-a",
+                "Pessoa A",
+                "pessoa-a",
+                password="known-password-a",
+            )
+            storage.create_private_account(
+                "owner-b",
+                "Pessoa B",
+                "pessoa-b",
+                password="known-password-b",
+            )
+            _disable_account(storage, "owner-b")
+            (data_dir / "memory" / "owners" / "owner-a").mkdir(parents=True)
+            before = _snapshot_owner_state(storage)
+
+            response = _post_initial_access(client)
+            self.assertEqual(response.status_code, 409)
+            detail = response.json()["detail"]
+            self.assertEqual(detail["code"], "setup-required")
+            self.assertEqual(detail["reason"], "multiple-owners")
+            self.assertTrue(detail["message"])
+            self.assertEqual(_snapshot_owner_state(storage), before)
+            self.assertEqual(main_api._BROWSER_SESSIONS, {})
+
+    def test_initial_access_rejects_orphan_workspace_without_writes(self):
+        with _isolated_browser_client() as (client, storage, data_dir):
+            (data_dir / "memory" / "owners" / "orphan-owner").mkdir(parents=True)
+            before = _snapshot_owner_state(storage)
+            self.assertEqual(before, ([], {"orphan-owner"}))
+
+            response = _post_initial_access(client)
+            self.assertEqual(response.status_code, 409)
+            detail = response.json()["detail"]
+            self.assertEqual(detail["code"], "setup-required")
+            self.assertEqual(detail["reason"], "orphan-workspace")
+            self.assertTrue(detail["message"])
+            self.assertEqual(_snapshot_owner_state(storage), before)
+            self.assertEqual(main_api._BROWSER_SESSIONS, {})
+
+    def test_initial_access_rejects_mismatched_workspace_without_writes(self):
+        with _isolated_browser_client() as (client, storage, data_dir):
+            storage.create_private_account(
+                "owner-a",
+                "Pessoa A",
+                "pessoa-a",
+                password="known-password",
+            )
+            (data_dir / "memory" / "owners" / "other-owner").mkdir(parents=True)
+            before = _snapshot_owner_state(storage)
+            self.assertEqual(before, (["owner-a"], {"other-owner"}))
+
+            response = _post_initial_access(client)
+            self.assertEqual(response.status_code, 409)
+            detail = response.json()["detail"]
+            self.assertEqual(detail["code"], "setup-required")
+            self.assertEqual(detail["reason"], "owner-conflict")
+            self.assertTrue(detail["message"])
+            self.assertEqual(_snapshot_owner_state(storage), before)
+            self.assertEqual(main_api._BROWSER_SESSIONS, {})
+
+    def test_initial_access_returns_login_required_in_require_login_mode(self):
+        with _isolated_browser_client(auth_mode="require-login") as (client, storage, _data_dir):
+            before = _snapshot_owner_state(storage)
+            response = _post_initial_access(client)
+            self.assertEqual(response.status_code, 403)
+            detail = response.json()["detail"]
+            self.assertEqual(detail["code"], "login-required")
+            self.assertEqual(detail["message"], "Login local obrigatório neste runtime.")
+            self.assertEqual(_snapshot_owner_state(storage), before)
+            self.assertEqual(main_api._BROWSER_SESSIONS, {})
+
+    def test_local_owner_token_can_save_and_load_private_data(self):
+        with _isolated_browser_client() as (client, _storage, _data_dir):
+            boot = _post_initial_access(client)
+            self.assertEqual(boot.status_code, 200)
+            token = boot.json()["browser_session_token"]
+            owner_id = boot.json()["result"]["ownerId"]
+            headers = {"X-Aurea-Browser-Session": token}
+            saved = client.post(
+                "/browser/command",
+                headers=headers,
+                json={
+                    "command": "save_board",
+                    "args": {
+                        "boardId": "board-local",
+                        "name": "Caderno local",
+                        "nodes": [{"id": "n1"}],
+                        "edges": [],
+                    },
+                },
+            )
+            self.assertEqual(saved.status_code, 200)
+            loaded = client.post(
+                "/browser/command",
+                headers=headers,
+                json={"command": "load_board", "args": {"boardId": "board-local"}},
+            )
+            self.assertEqual(loaded.status_code, 200)
+            self.assertEqual(loaded.json()["result"]["owner_id"], owner_id)
+            self.assertEqual(loaded.json()["result"]["nodes"], [{"id": "n1"}])
+
+
 class TestBrowserRequestBoundary(unittest.TestCase):
     def setUp(self):
+        _reset_browser_sessions()
+        self._temp = tempfile.TemporaryDirectory()
+        directory = Path(self._temp.name)
+        self._data_dir = directory / "browser-data"
+        self._storage = LocalStorage(directory / "app-data" / "data", MIGRATIONS)
+        self._storage.initialize()
+        self._patches = [
+            patch.dict(os.environ, {"AUREA_DATA_DIR": str(self._data_dir)}, clear=False),
+            patch.object(main_api, "get_storage", return_value=self._storage),
+            patch.object(main_api, "AUTH_MODE", "local-owner"),
+        ]
+        for item in self._patches:
+            item.start()
         self.client = TestClient(main_api.app, base_url="http://127.0.0.1")
 
     def tearDown(self):
         self.client.close()
+        for item in reversed(self._patches):
+            item.stop()
+        self._temp.cleanup()
+        _reset_browser_sessions()
 
     def test_non_loopback_host_is_rejected(self):
         response = self.client.get("/health", headers={"Host": "evil.example"})
