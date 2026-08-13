@@ -276,12 +276,13 @@ runtime local; não substitui o aceite manual da interface e do instalador.
 
 Repositório: `C:\git\AureaSolaris-history-rewrite\post-push-fresh`
 Branch: `fernandoyarrum/fdm-669-670-671-wave3`
-HEAD: `3585858` (`test(runtime): add compiled Chrome runtime smoke`)
+HEAD: `c3adcc9` (`fix(test): require prebuilt dist and retry health poll`)
 Base Wave 3: `e9b47a0`, `ddd213c`, `6c8a334`
 
 Novo teste: `tests/test_compiled_runtime_smoke.py` — subprocess real de
 `main_api.py` com `sys.executable`, porta livre via `127.0.0.1:0`, diretório
-temporário `AUREA_DATA_DIR`, frontend compilado em `dist/index.html`, bridge
+temporário `AUREA_DATA_DIR`, frontend compilado em `dist/index.html` (exige
+`npm run build` prévio; o teste não invoca npm), bridge
 `/browser/command` com identidade anônima temporária (registro, save/load de
 caderno, fechamento de sessão e rejeição `401` após close). Sem `/chat` nem
 provedores externos. Helpers HTTP via `urllib.request`. Scripts PowerShell
