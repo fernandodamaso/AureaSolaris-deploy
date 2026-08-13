@@ -24,7 +24,7 @@ Essa separação traduz a regra do produto: **a astrologia é conhecimento estud
 
 ## Modelo de acesso
 
-1. O modo padrão no Chrome é `local-owner`: a API resolve um único proprietário habilitado quando inequívoco, emite um token de sessão na memória do processo (sem expiração por tempo; invalidado ao reiniciar a API) e abre o shell principal sem tela de login. O modo `require-login` (`AUREA_REQUIRE_LOGIN=1`) exige autenticação por senha, com sessão autenticada e logout como hoje. A variável de ambiente não recupera senha desconhecida; cadastro de senha para um proprietário criado automaticamente sem senha é trabalho futuro separado.
+1. O modo padrão no Chrome é `local-owner`: a API resolve um único proprietário habilitado quando inequívoco, emite um token de sessão na memória do processo (sem expiração por tempo; invalidado ao reiniciar a API) e abre o shell principal sem tela de login. O modo `require-login` (`AUREA_REQUIRE_LOGIN=1`) exige autenticação por senha, com sessão autenticada e logout como hoje. A variável de ambiente não recupera senha desconhecida; cadastro de senha para um proprietário criado automaticamente sem senha é trabalho futuro separado. Na reutilização de conta existente: nunca presumir que o identificador é `local-owner`; nunca renomear proprietário nem mover diretório; nunca gravar verificador de senha descartável.
 2. Todo registro do banco privado pertence a um `owner_id`; consultas não podem atravessar essa fronteira.
 3. O Hermes recebe somente o contexto necessário à pergunta, dentro do perfil ativo e das permissões explicitamente concedidas.
 4. Uma memória ou alteração proposta pelo Hermes nasce como `proposed`; a pessoa revisa e aprova antes de ela influenciar interpretações futuras.

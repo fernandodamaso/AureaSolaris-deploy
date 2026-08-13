@@ -41,6 +41,7 @@ Hoje, a experiência primária do Aurea é uma aplicação web local aberta no C
 - O Aurea reutiliza uma única conta privada existente quando ela é inequívoca; nunca escolhe entre contas, migra diretórios ou adota dados órfãos sem decisão humana.
 - A sessão `local-owner` existe somente na memória do processo e do navegador, não expira por tempo e termina quando a API reinicia.
 - `AUREA_REQUIRE_LOGIN=1` preserva o fluxo de senha para contas que já possuem uma senha conhecida.
+- Na reutilização de conta existente: nunca presumir que o identificador é `local-owner`; nunca renomear proprietário nem mover diretório; nunca gravar verificador de senha descartável.
 
 ## IA e provedores
 

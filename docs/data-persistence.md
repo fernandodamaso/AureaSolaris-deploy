@@ -25,7 +25,9 @@ session close behavior apply.
 
 Owner resolution is fail-closed. The API inspects `private.sqlite` accounts and
 `memory/owners/*` workspaces and must not select among accounts, migrate
-directories, or adopt orphan data:
+directories, or adopt orphan data. When reusing an existing account, the
+resolver must never assume its id is `local-owner`, never rename an owner or
+move a directory, and must not hash a throwaway password:
 
 | Accounts in `private.sqlite` | Owner workspaces | Result |
 |---|---|---|

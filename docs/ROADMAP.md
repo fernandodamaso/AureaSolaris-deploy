@@ -31,6 +31,8 @@ Esta sequência prevalece sobre a numeração histórica das fases abaixo. As fa
 
 **Em escopo (plano `docs/superpowers/plans/2026-08-12-skip-login-local-owner.md`):** modo padrão `local-owner`; resolução fail-closed de um único proprietário habilitado; token de sessão de vida do processo da API; `AUREA_REQUIRE_LOGIN=1` para `require-login`; fronteira de requisição loopback; boot tipado no frontend.
 
+**Reutilização segura (anti-padrões proibidos):** nunca presumir que a conta existente se chama `local-owner`; nunca renomear proprietário nem mover diretório; nunca gravar verificador de senha descartável ao reutilizar conta.
+
 **Fora deste escopo (trabalho futuro separado, não implementado):** cadastro de senha para proprietário criado automaticamente sem senha; recuperação ou redefinição de senha; seleção ou alternância entre múltiplos proprietários; migração, renomeação ou adoção automática de dados órfãos.
 
 ### Etapa 1 — Estabilizar a experiência Chrome
