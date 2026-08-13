@@ -12,6 +12,107 @@ import { LOCAL_API_URL } from './api';
 
 let browserSessionToken: string | null = null;
 
+export type InitialAccess =
+  | { kind: 'local-owner'; ownerId: string; displayName: string }
+  | { kind: 'login-required' }
+  | {
+      kind: 'setup-required';
+      reason: 'disabled-owner' | 'multiple-owners' | 'orphan-workspace' | 'owner-conflict';
+      message: string;
+    }
+  | { kind: 'runtime-failure'; message: string };
+
+type SetupRequiredReason = 'disabled-owner' | 'multiple-owners' | 'orphan-workspace' | 'owner-conflict';
+
+const SETUP_REQUIRED_REASONS: ReadonlySet<SetupRequiredReason> = new Set([
+  'disabled-owner',
+  'multiple-owners',
+  'orphan-workspace',
+  'owner-conflict',
+]);
+
+const RUNTIME_FAILURE_MESSAGE = 'Initial access failed.';
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null;
+}
+
+function parseInitialAccessDetail(payload: unknown): Record<string, unknown> | null {
+  if (!isRecord(payload) || !isRecord(payload.detail)) {
+    return null;
+  }
+  return payload.detail;
+}
+
+export async function openInitialAccess(): Promise<InitialAccess> {
+  if (isTauriRuntime()) {
+    return { kind: 'login-required' };
+  }
+
+  try {
+    const response = await fetch(`${LOCAL_API_URL}/browser/command`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ command: 'private_initial_access', args: {} }),
+    });
+
+    const payload = await response.json().catch(() => null);
+
+    if (response.status === 403) {
+      const detail = parseInitialAccessDetail(payload);
+      if (detail?.code === 'login-required') {
+        return { kind: 'login-required' };
+      }
+      return { kind: 'runtime-failure', message: RUNTIME_FAILURE_MESSAGE };
+    }
+
+    if (response.status === 409) {
+      const detail = parseInitialAccessDetail(payload);
+      const reason = detail?.reason;
+      const message = detail?.message;
+      if (
+        detail?.code === 'setup-required' &&
+        typeof reason === 'string' &&
+        SETUP_REQUIRED_REASONS.has(reason as SetupRequiredReason) &&
+        typeof message === 'string'
+      ) {
+        return {
+          kind: 'setup-required',
+          reason: reason as SetupRequiredReason,
+          message,
+        };
+      }
+      return { kind: 'runtime-failure', message: RUNTIME_FAILURE_MESSAGE };
+    }
+
+    if (response.ok) {
+      const result = isRecord(payload) ? payload.result : null;
+      const token = isRecord(payload) ? payload.browser_session_token : null;
+      if (
+        isRecord(result) &&
+        result.kind === 'local-owner' &&
+        typeof result.ownerId === 'string' &&
+        result.ownerId.length > 0 &&
+        typeof result.displayName === 'string' &&
+        typeof token === 'string' &&
+        token.length > 0
+      ) {
+        browserSessionToken = token;
+        return {
+          kind: 'local-owner',
+          ownerId: result.ownerId,
+          displayName: result.displayName,
+        };
+      }
+      return { kind: 'runtime-failure', message: RUNTIME_FAILURE_MESSAGE };
+    }
+
+    return { kind: 'runtime-failure', message: RUNTIME_FAILURE_MESSAGE };
+  } catch {
+    return { kind: 'runtime-failure', message: RUNTIME_FAILURE_MESSAGE };
+  }
+}
+
 export function getBrowserSessionHeaders(): Record<string, string> {
   return browserSessionToken
     ? { 'X-Aurea-Browser-Session': browserSessionToken }
