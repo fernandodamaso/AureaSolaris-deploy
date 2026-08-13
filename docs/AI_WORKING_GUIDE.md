@@ -35,7 +35,7 @@ Aurea Solaris is a local-first Windows application whose primary experience is c
 2. Search with `rg`; read the smallest relevant code and domain document.
 3. Make a small change with `apply_patch`.
 4. Update the relevant documentation when behavior, data, or workflow changes.
-5. Validate proportionally: `npm run build`, `npm run test`, Python engine tests, `cargo check --manifest-path .\src-tauri\Cargo.toml`, or `build.bat` for release work.
+5. Validate proportionally: `npm run check` for the frontend gate; Python tests and `cargo check --manifest-path .\src-tauri\Cargo.toml` remain separate gates; use `build.bat` for release work.
 6. Report files changed, data/privacy risk, validation performed, and real remaining blockers.
 
 Never use destructive Git commands, invent astrological values or sources, commit secrets, mix private data with editorial data, or silently downgrade a certified calculation to a fallback.
