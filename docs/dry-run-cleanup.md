@@ -37,7 +37,9 @@ Nunca são candidatos nem podem ser atravessados para descoberta:
 
 - `.aurea-build-venv/`, `src-tauri/binaries/`, `knowledge/`, `natal_charts/`,
   `src-tauri/memory/`, `data/`, `backups/` e `tests/`;
-- arquivos com extensões `.sqlite`, `.db`, `.stronghold` e `.vault`.
+- arquivos com extensões `.sqlite`, `.db`, `.stronghold` e `.vault`, inclusive
+  quando estão aninhados dentro de um diretório da allowlist. Nesse caso o
+  candidato inteiro é recusado (`ACTION=REFUSE`) e nada nele é apagado.
 
 O script recusa a raiz do repositório, caminhos fora da raiz, symlinks/junctions
 como candidatos e reparse points aninhados antes de calcular tamanho ou deletar.

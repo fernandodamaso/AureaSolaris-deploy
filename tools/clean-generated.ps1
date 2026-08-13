@@ -78,6 +78,40 @@ function Test-HasProtectedExtension([string]$Path) {
     return $false
 }
 
+function Test-ContainsProtectedExtension([string]$Path) {
+    if (Test-HasProtectedExtension $Path) {
+        return $true
+    }
+    if (-not (Test-Path -LiteralPath $Path)) {
+        return $false
+    }
+    $item = Get-Item -LiteralPath $Path -Force
+    if (($item.Attributes -band [IO.FileAttributes]::ReparsePoint) -ne 0) {
+        return $false
+    }
+    if (-not $item.PSIsContainer) {
+        return $false
+    }
+    $queue = [System.Collections.Generic.Queue[string]]::new()
+    $queue.Enqueue($Path)
+    while ($queue.Count -gt 0) {
+        $current = $queue.Dequeue()
+        foreach ($child in Get-ChildItem -LiteralPath $current -Force -ErrorAction SilentlyContinue) {
+            if (($child.Attributes -band [IO.FileAttributes]::ReparsePoint) -ne 0) {
+                continue
+            }
+            if (-not $child.PSIsContainer) {
+                if (Test-HasProtectedExtension $child.FullName) {
+                    return $true
+                }
+            } else {
+                $queue.Enqueue($child.FullName)
+            }
+        }
+    }
+    return $false
+}
+
 function Test-ContainsNestedReparsePoint([string]$Path) {
     if (Test-IsReparsePoint $Path) {
         return $true
@@ -218,6 +252,10 @@ foreach ($candidate in $candidates) {
             $refused = $true
             $bytes = 0
         }
+    }
+    if ($exists -and (Test-ContainsProtectedExtension $canonicalPath)) {
+        Write-CandidateLine $canonicalPath $exists $bytes 'REFUSE'
+        continue
     }
 
     if ($Apply -and $exists -and -not $refused) {

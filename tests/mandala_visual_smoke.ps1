@@ -1,7 +1,8 @@
 # Automated Mandala smoke for FDM-677 — attaches to an already-running Aurea API on 127.0.0.1
+# Defaults to the isolated test-user sandbox (port 9878) and refuses a non-test runtime.
 # Uses skip-login local-owner access and the opt-in mock natal (?mockNatal=1).
 param(
-    [int]$ApiPort = 9876,
+    [int]$ApiPort = 9878,
     [int]$CdpPort = 0
 )
 
@@ -38,6 +39,10 @@ if ($occupied -contains $CdpPort) { throw "Porta CDP $CdpPort ocupada." }
 $baseUrl = "http://127.0.0.1:$ApiPort"
 $health = Invoke-WebRequest "$baseUrl/health" -UseBasicParsing -TimeoutSec 5
 if ($health.StatusCode -ne 200) { throw "API não saudável em $baseUrl" }
+$healthPayload = $health.Content | ConvertFrom-Json
+if ($healthPayload.test_user -ne $true) {
+    throw "Mandala smoke exige o runtime isolado (test_user=true) em $baseUrl. Use .\launch_chrome.ps1 -TestUser."
+}
 
 $bootBody = @{ command = 'private_initial_access'; args = @{} } | ConvertTo-Json -Compress
 $boot = Invoke-RestMethod -Method Post -Uri "$baseUrl/browser/command" -Body $bootBody -ContentType 'application/json'
@@ -260,9 +265,14 @@ try {
         Write-Output "MANDALA_SMOKE evidence_copy=$evidencePath"
     }
 
+    $ascLeftOfCenter = $false
+    if ($null -ne $inspect.value.ascPosition) {
+        $ascLeftOfCenter = [bool]$inspect.value.ascPosition.leftOfCenter
+    }
     $pass = $inspect.value.shellPresent -and $inspect.value.svgPresent -and
         ($inspect.value.svgInfo.width -gt 100) -and ($inspect.value.svgInfo.childCount -gt 0) -and
-        -not $inspect.value.missingBirthBanner -and -not $inspect.value.noDataMessage
+        -not $inspect.value.missingBirthBanner -and -not $inspect.value.noDataMessage -and
+        $ascLeftOfCenter
 
     Write-Output "MANDALA_SMOKE api_port=$ApiPort cdp_port=$CdpPort owner_id=$ownerId"
     Write-Output "MANDALA_SMOKE local_owner=ok auth_alert=$($authCheck.value.alertText)"

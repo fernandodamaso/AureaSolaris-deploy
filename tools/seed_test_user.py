@@ -24,7 +24,7 @@ from browser_workspace import (  # noqa: E402
 )
 from local_storage import LocalStorage  # noqa: E402
 
-SEED_VERSION = "1"
+SEED_VERSION = "2"
 OWNER_ID = "aurea-test"
 DISPLAY_NAME = "Pessoa Teste"
 LOGIN_NAME = "teste"
@@ -32,7 +32,8 @@ BOARD_ID = "caderno-teste"
 BOARD_NAME = "Caderno de teste"
 DIARY_FOLDER_NAME = "Estudo"
 DIARY_ENTRY_TITLE = "Primeira anotacao de teste"
-HERMES_TOPIC_KEY = "estudo-teste"
+REFERENCE_SUBJECT_ID = "aurea-reference-natal"
+HERMES_TOPIC_KEY = f"hermes:owner:{OWNER_ID}:subject:{REFERENCE_SUBJECT_ID}"
 HERMES_THREAD_TITLE = "Estudo de teste"
 
 
@@ -41,7 +42,10 @@ def is_forbidden_personal_data_dir(data_dir: Path) -> bool:
     if not local:
         return False
     personal = (Path(local) / "Aurea Solaris" / "data").resolve()
-    return data_dir.resolve() == personal
+    resolved = data_dir.expanduser().resolve()
+    personal_key = os.path.normcase(str(personal))
+    resolved_key = os.path.normcase(str(resolved))
+    return resolved_key == personal_key or resolved_key.startswith(personal_key + os.sep)
 
 
 def _marker_path(data_dir: Path) -> Path:
@@ -117,12 +121,12 @@ def _seed_diary() -> None:
 
 
 def _seed_health() -> None:
-    existing = load_health_memory(OWNER_ID, "aurea-reference-natal")
+    existing = load_health_memory(OWNER_ID, REFERENCE_SUBJECT_ID)
     if isinstance(existing, list) and existing:
         return
     save_health_memory(
         OWNER_ID,
-        "aurea-reference-natal",
+        REFERENCE_SUBJECT_ID,
         [
             {
                 "id": "health-teste-1",

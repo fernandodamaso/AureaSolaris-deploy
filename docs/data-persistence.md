@@ -49,24 +49,34 @@ Wipe the sandbox and re-seed a fresh dummy life:
 .\launch_chrome.ps1 -TestUser -Reset
 ```
 
-`-Reset` only works with `-TestUser`. It stops API listeners on ports **9878–9899**,
-removes the entire `test-user` folder, runs `tools\seed_test_user.py`, and starts
-a new API process (it does not reuse a stale test-user runtime).
+`-Reset` only works with `-TestUser`. It stops Aurea test-user runtimes on ports
+**9878–9899** (it does not kill unrelated listeners), closes the isolated Chrome
+profile if it is still open, removes the entire `test-user` folder, runs
+`tools\seed_test_user.py`, and starts a new API process (it does not reuse a
+stale test-user runtime).
 
 ### Isolation and runtime
 
 - Owner id: **`aurea-test`** (display name **Pessoa Teste**).
-- API: port **9878** by default; if busy, the launcher picks **9879–9899**.
-- Environment: `AUREA_DATA_DIR` points at the test data dir; `AUREA_TEST_USER=1`.
-- Chrome opens with a dedicated profile under `test-user\chrome-profile` (requires
-  Chrome installed).
+- API: port **9878** by default; if busy, the launcher picks **9879–9899**. A later
+  `-TestUser` launch reuses a compatible test-user runtime already listening in
+  that range instead of starting another process.
+- Environment: the child runtime receives `AUREA_DATA_DIR` and `AUREA_TEST_USER=1`.
+  The launcher restores the parent PowerShell environment before returning, so a
+  later default launch in the same session does not inherit the sandbox. Test-user
+  always uses `local-owner`, even if `AUREA_REQUIRE_LOGIN=1` is set for the normal
+  runtime.
+- Chrome opens with a dedicated profile under `test-user\chrome-profile`. The
+  launcher looks for Chrome on `PATH` and in the usual Program Files / LocalAppData
+  install folders.
 - `GET /health` includes `"test_user": true` when the test-user API is active.
 - The default Aurea runtime (no `-TestUser`) uses port **9876** and the real data dir.
 - `-TestUser` requires `.aurea-build-venv` for the initial seed step (the launcher
   always invokes `tools\seed_test_user.py` through that venv).
 
 `tools/seed_test_user.py` seeds the private SQLite account and file-backed workspace.
-It **refuses** to run against `%LOCALAPPDATA%\Aurea Solaris\data`.
+It **refuses** to run against `%LOCALAPPDATA%\Aurea Solaris\data` or any folder
+inside that tree.
 
 ### Dummy life contents
 
@@ -77,11 +87,12 @@ It **refuses** to run against `%LOCALAPPDATA%\Aurea Solaris\data`.
 - Fictional health document preview.
 - Hermes thread with a proposed memory and one approved memory.
 
-**UI seed** (applied in the browser when `/health` reports `test_user: true`,
-from `src/fixtures/test-user-ui.json` via `src/utils/test-user-ui-seed.ts`):
+**UI seed** (applied in the isolated Chrome profile only when `/health` reports
+`test_user: true` **and** the authenticated owner is `aurea-test`, from
+`src/fixtures/test-user-ui.json` via `src/utils/test-user-ui-seed.ts`):
 
 - Mandala maps (reference natal fixture plus a second known-person map).
-- Agenda tasks, one calendar event, and a sample habit in `localStorage`.
+- Agenda tasks and one calendar event in `localStorage`.
 
 ### `-MockNatal` vs `-TestUser`
 

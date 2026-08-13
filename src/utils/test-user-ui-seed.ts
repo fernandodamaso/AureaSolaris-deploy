@@ -2,6 +2,7 @@ import testUserUiFixture from '../fixtures/test-user-ui.json';
 import type { AureaEvent, AureaProfile, AureaTask } from '../context/AgendaContext';
 import type { ProfileConnection } from '../types/private-profile';
 
+export const TEST_USER_OWNER_ID = 'aurea-test';
 export const TEST_USER_UI_SEED_VERSION = testUserUiFixture.version;
 export const TEST_USER_UI_SEED_STORAGE_KEY = 'aurea_test_user_seed_version';
 
@@ -48,6 +49,9 @@ export function applyTestUserUiSeed(
   displayName: string,
   storage: StorageLike = localStorage,
 ): void {
+  if (ownerId !== TEST_USER_OWNER_ID) {
+    return;
+  }
   if (storage.getItem(TEST_USER_UI_SEED_STORAGE_KEY) === TEST_USER_UI_SEED_VERSION) {
     return;
   }
@@ -86,10 +90,6 @@ export function applyTestUserUiSeed(
       profileId: ownerId,
     }));
     storage.setItem('aurea_events', JSON.stringify(events));
-  }
-
-  if (readJsonArray(storage, 'saude_habits').length === 0) {
-    storage.setItem('saude_habits', JSON.stringify(testUserUiFixture.habits));
   }
 
   storage.setItem(TEST_USER_UI_SEED_STORAGE_KEY, TEST_USER_UI_SEED_VERSION);

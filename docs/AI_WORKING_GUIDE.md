@@ -57,7 +57,7 @@ Use the isolated **Pessoa Teste** sandbox whenever you need to open Aurea, click
 .\launch_chrome.ps1 -TestUser -Reset
 ```
 
-On `-Reset`, the launcher stops any API listeners on ports **9878–9899**, deletes the test sandbox folder, re-runs the seed, and starts a fresh API process.
+On `-Reset`, the launcher stops Aurea test-user runtimes on ports **9878–9899**, closes the isolated Chrome profile if needed, deletes the test sandbox folder, re-runs the seed, and starts a fresh API process.
 
 | Item | Value |
 |---|---|
@@ -68,14 +68,14 @@ On `-Reset`, the launcher stops any API listeners on ports **9878–9899**, dele
 | Health check | `GET http://127.0.0.1:<port>/health` → `"test_user": true` (use the port printed by the launcher) |
 | Seed prerequisite | `.aurea-build-venv` must exist; `-TestUser` runs `tools\seed_test_user.py` via that venv |
 
-**Never touch real data.** Agents must **not** seed, reset, delete, or modify `%LOCALAPPDATA%\Aurea Solaris\data`. That path is the person's real private Aurea. The seed script (`tools/seed_test_user.py`) refuses that directory. If you need a clean state, use `-TestUser -Reset` only.
+**Never touch real data.** Agents must **not** seed, reset, delete, or modify `%LOCALAPPDATA%\Aurea Solaris\data`. That path is the person's real private Aurea. The seed script (`tools/seed_test_user.py`) refuses that directory and any folder inside it. If you need a clean state, use `-TestUser -Reset` only.
 
 **What the dummy life includes** (high level):
 
 - **Mandala / maps** — reference natal (Belo Horizonte fixture) plus a second known-person map (UI seed via `src/fixtures/test-user-ui.json`).
 - **Caderno Vivo** — board with sticky notes and a link between them.
 - **Diário** — folder and sample entry.
-- **Agenda** — sample tasks, one event, and a habit.
+- **Agenda** — sample tasks and one event.
 - **Saúde** — fictional document preview (not a real exam).
 - **Hermes** — sample thread, proposed memory, and one approved memory.
 

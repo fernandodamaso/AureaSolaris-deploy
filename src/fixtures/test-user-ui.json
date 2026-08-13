@@ -47,14 +47,5 @@
       "start": "2026-01-20T14:00:00.000Z",
       "type": "local"
     }
-  ],
-  "habits": [
-    {
-      "id": "habit-teste-1",
-      "name": "Habito de teste",
-      "time": "08:00",
-      "checked": false,
-      "dateStr": "2026-01-20"
-    }
   ]
 }

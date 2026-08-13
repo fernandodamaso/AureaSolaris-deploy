@@ -118,6 +118,31 @@ class CleanGeneratedTests(unittest.TestCase):
       self.assertEqual(result.returncode, 0, f"{result.stdout}\n{result.stderr}")
       self.assertTrue((root / "protected-root.sqlite").exists())
 
+  def test_nested_protected_extension_refuses_allowlisted_directory(self):
+    with tempfile.TemporaryDirectory() as directory:
+      root = Path(directory)
+      self._seed_fake_repo(root)
+      nested_db = root / "dist" / "private.sqlite"
+      nested_db.write_text("private", encoding="utf-8")
+
+      dry_run = self._run(root, apply=False)
+      dry_output = f"{dry_run.stdout}\n{dry_run.stderr}"
+      self.assertEqual(dry_run.returncode, 0, dry_output)
+      self.assertIn("ACTION=REFUSE", dry_run.stdout)
+      self.assertTrue(nested_db.exists())
+
+      applied = self._run(root, apply=True)
+      applied_output = f"{applied.stdout}\n{applied.stderr}"
+      self.assertEqual(applied.returncode, 0, applied_output)
+      self.assertTrue((root / "dist").exists())
+      self.assertTrue(nested_db.exists())
+      dist_lines = [
+        line for line in applied.stdout.splitlines()
+        if line.startswith("PATH=") and (line.split(" ", 1)[0].endswith("dist") or "\\dist " in line)
+      ]
+      self.assertTrue(any("ACTION=REFUSE" in line for line in dist_lines), applied.stdout)
+      self.assertFalse(any("ACTION=DELETE" in line for line in dist_lines), applied.stdout)
+
   def test_reparse_point_inside_allowlisted_path_is_refused(self):
     powershell = self.powershell
     with tempfile.TemporaryDirectory() as directory:

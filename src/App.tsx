@@ -13,7 +13,7 @@ import { ProfileEditor } from './components/ProfileEditor';
 import { HermesChat } from './components/HermesChat';
 import { openInitialAccess, safeInvoke, type InitialAccess } from './utils/tauri';
 import { LOCAL_API_URL } from './utils/api';
-import { applyTestUserUiSeed } from './utils/test-user-ui-seed';
+import { applyTestUserUiSeed, TEST_USER_OWNER_ID } from './utils/test-user-ui-seed';
 import type { CadernoIntent } from './components/MesaCriacao';
 
 const AstrologiaPage = lazy(() => import('./components/AstrologiaBoard').then(m => ({ default: m.AstrologiaPage })));
@@ -142,7 +142,7 @@ export default function App() {
           const healthResponse = await fetch(`${LOCAL_API_URL}/health`);
           if (healthResponse.ok) {
             const health = await healthResponse.json() as { test_user?: boolean };
-            if (health.test_user === true) {
+            if (health.test_user === true && result.ownerId === TEST_USER_OWNER_ID) {
               applyTestUserUiSeed(result.ownerId, result.displayName);
               agenda.hydrateProfilesFromStorage();
             }

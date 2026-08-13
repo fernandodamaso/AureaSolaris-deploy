@@ -26,7 +26,8 @@ from browser_workspace import (  # noqa: E402
 from local_storage import LocalStorage  # noqa: E402
 
 OWNER_ID = "aurea-test"
-SEED_VERSION = "1"
+SEED_VERSION = "2"
+HERMES_TOPIC_KEY = "hermes:owner:aurea-test:subject:aurea-reference-natal"
 
 
 class TestSeedTestUser(unittest.TestCase):
@@ -70,7 +71,7 @@ class TestSeedTestUser(unittest.TestCase):
 
                 threads = storage.list_hermes_threads(OWNER_ID)
                 self.assertEqual(len(threads), 1)
-                self.assertEqual(threads[0]["topic_key"], "estudo-teste")
+                self.assertEqual(threads[0]["topic_key"], HERMES_TOPIC_KEY)
 
                 memories = storage.list_hermes_memories(OWNER_ID)
                 self.assertEqual(len(memories), 2)
@@ -111,6 +112,23 @@ class TestSeedTestUser(unittest.TestCase):
                 self.assertEqual(before_listing, after_listing)
             else:
                 self.assertFalse(personal.exists())
+
+    def test_refuses_descendant_of_real_personal_data_directory(self):
+        with tempfile.TemporaryDirectory() as fake_local_app_data:
+            personal = Path(fake_local_app_data) / "Aurea Solaris" / "data"
+            nested = personal / "test"
+            personal.mkdir(parents=True)
+            sentinel = personal / "keep-me.txt"
+            sentinel.write_text("real", encoding="utf-8")
+
+            with patch.dict(os.environ, {"LOCALAPPDATA": fake_local_app_data}, clear=False):
+                with self.assertRaises(ValueError) as context:
+                    seed_test_user(nested)
+
+            message = str(context.exception).lower()
+            self.assertIn("forbidden", message)
+            self.assertFalse(nested.exists())
+            self.assertEqual(sentinel.read_text(encoding="utf-8"), "real")
 
 
 if __name__ == "__main__":
