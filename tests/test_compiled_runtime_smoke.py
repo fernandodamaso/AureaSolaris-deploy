@@ -8,7 +8,6 @@ from __future__ import annotations
 
 import json
 import os
-import shutil
 import socket
 import subprocess
 import sys
@@ -75,33 +74,19 @@ def _assert_port_rebinds(port: int) -> None:
         listener.listen(1)
 
 
-def _ensure_compiled_frontend() -> None:
+def _require_compiled_frontend() -> None:
     if DIST_INDEX.is_file():
         return
-    npm = shutil.which("npm")
-    if npm is None:
-        raise unittest.SkipTest("npm is required to build dist/index.html for the compiled runtime smoke test.")
-    result = subprocess.run(
-        [npm, "run", "build"],
-        cwd=REPO_ROOT,
-        capture_output=True,
-        text=True,
-        check=False,
+    raise RuntimeError(
+        "dist/index.html is missing. Run `npm run build` from the repository root before "
+        "running tests.test_compiled_runtime_smoke."
     )
-    if result.returncode != 0:
-        output = f"{result.stdout}\n{result.stderr}".strip()
-        raise RuntimeError(f"npm run build failed while preparing dist/index.html:\n{output}")
-    if not DIST_INDEX.is_file():
-        raise RuntimeError(
-            "dist/index.html is missing. Run `npm run build` from the repository root before "
-            "running tests.test_compiled_runtime_smoke."
-        )
 
 
 class TestCompiledRuntimeSmoke(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
-        _ensure_compiled_frontend()
+        _require_compiled_frontend()
 
     def test_compiled_runtime_serves_frontend_and_browser_bridge(self) -> None:
         token = uuid.uuid4().hex[:12]
@@ -139,7 +124,11 @@ class TestCompiledRuntimeSmoke(unittest.TestCase):
                             "main_api.py exited before /health became ready:\n"
                             f"stdout:\n{stdout}\nstderr:\n{stderr}"
                         )
-                    status, _, payload = _http_request("GET", f"{base_url}/health", timeout=2.0)
+                    try:
+                        status, _, payload = _http_request("GET", f"{base_url}/health", timeout=2.0)
+                    except urllib.error.URLError:
+                        time.sleep(HEALTH_POLL_INTERVAL)
+                        continue
                     if status == 200 and isinstance(payload, dict) and payload.get("status") == "ok":
                         ready = True
                         break
