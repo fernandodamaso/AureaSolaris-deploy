@@ -314,3 +314,36 @@ Teardown verificado pelo teste:
 **Aceite manual do launcher: pendente.** O smoke automatizado não substitui a
 confirmação humana de abertura no Chrome a partir de `127.0.0.1` sem servidor
 Vite.
+
+### MANUAL LAUNCHER PASS — 12/08/2026
+
+Verificado via sessão automatizada de navegador (autorização da pessoa
+proprietária para substituir confirmação humana nesta rodada).
+
+- Repositório: `C:\git\AureaSolaris-history-rewrite\post-push-fresh`
+- Branch: `fernandoyarrum/fdm-669-670-671-wave3`
+- HEAD: `db7bb06`
+- URL testada: `http://127.0.0.1:9876/` (serviço local do launcher; não Vite `5173`)
+- Runtime: serviço já ativo na porta padrão `9876` (`main_api.py` / `launch_chrome.bat`)
+- Verificador: `tests\manual_launcher_verify.ps1` (Chrome headless + CDP, perfil temporário)
+
+Evidência da execução:
+
+```text
+URL http://127.0.0.1:9876/
+LANDMARK Aurea Solaris=visible
+LANDMARK Entrar=visible
+LANDMARK Inscrever-se=visible
+LANDMARK Caderno Vivo=visible
+LANDMARK Astrologia=visible
+LOGIN user=launcher-verify-e24582635356
+NAVIGATION Caderno Vivo,Astrologia=visible
+RESULT PASS api_port=9876 cdp_port=9900 url=http://127.0.0.1:9876/ health=200
+```
+
+Confirmado:
+
+1. tela de login com landmarks `Aurea Solaris`, `Entrar` e `Inscrever-se`;
+2. registro de identidade anônima temporária e autenticação bem-sucedida;
+3. navegação principal pós-login (`Caderno Vivo`, `Astrologia`) visível;
+4. URL permanece em `127.0.0.1:9876` (sem redirecionamento para `localhost:5173`).
