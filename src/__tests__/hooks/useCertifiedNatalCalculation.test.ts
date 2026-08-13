@@ -130,4 +130,30 @@ describe('useCertifiedNatalCalculation', () => {
     expect(result.current.data).toBeNull();
     expect(result.current.error).toBeNull();
   });
+
+  it('does not recalculate when birthData object identity changes but values stay the same', async () => {
+    const certified = makeCertifiedNatalResponse();
+    const payload = JSON.stringify(birthData);
+    vi.mocked(buildNatalPayload).mockReturnValue(payload);
+    vi.mocked(postNatalCalculation).mockResolvedValue(JSON.stringify(certified));
+
+    const { result, rerender } = renderHook(
+      ({ data }) => useCertifiedNatalCalculation(data),
+      { initialProps: { data: birthData } },
+    );
+
+    await waitFor(() => {
+      expect(result.current.loading).toBe(false);
+    });
+
+    expect(postNatalCalculation).toHaveBeenCalledTimes(1);
+
+    rerender({ data: { ...birthData } });
+
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    expect(postNatalCalculation).toHaveBeenCalledTimes(1);
+  });
 });

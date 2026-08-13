@@ -108,7 +108,7 @@ export default function App() {
     };
     void restoreRememberedAccess();
     return () => { active = false; };
-  }, [agenda]);
+  }, []);
 
   const handleLogout = async () => {
     await safeInvoke('private_session_close');

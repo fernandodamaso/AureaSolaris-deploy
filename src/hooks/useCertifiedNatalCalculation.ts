@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { safeInvoke } from '../utils/tauri';
 import { readCertifiedCalculation } from '../utils/certifiedCalculation';
 import { buildNatalPayload, decodeAstrologyResponse, postNatalCalculation } from '../services/astrologyApi';
@@ -35,14 +35,17 @@ export const useCertifiedNatalCalculation = (birthData?: AstrologyCalculationReq
   const [loading, setLoading] = useState(enabled);
   const [error, setError] = useState<string | null>(null);
 
-  const birthDataKey = useMemo(() => JSON.stringify(birthData ?? null), [birthData]);
+  const birthDataKey = JSON.stringify(birthData ?? null);
 
   const calculate = useCallback(async () => {
+    const request = birthDataKey === 'null'
+      ? undefined
+      : JSON.parse(birthDataKey) as AstrologyCalculationRequest;
     setLoading(true);
     setError(null);
     setData(null);
     try {
-      const payloadStr = buildNatalPayload(birthData as Record<string, unknown> | undefined);
+      const payloadStr = buildNatalPayload(request as Record<string, unknown> | undefined);
 
       let result: string | null = await postNatalCalculation(payloadStr);
 
@@ -77,7 +80,7 @@ export const useCertifiedNatalCalculation = (birthData?: AstrologyCalculationReq
     } finally {
       setLoading(false);
     }
-  }, [birthData]);
+  }, [birthDataKey]);
 
   useEffect(() => {
     if (!enabled) {
