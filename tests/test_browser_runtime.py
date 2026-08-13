@@ -71,14 +71,18 @@ def _post_initial_access(client: TestClient):
 class TestBrowserRuntime(unittest.TestCase):
     @contextmanager
     def _isolated_browser_client(self):
+        _reset_browser_sessions()
         with tempfile.TemporaryDirectory() as directory:
             data_dir = Path(directory) / "browser-data"
             storage = LocalStorage(Path(directory) / "app-data" / "data", MIGRATIONS)
             storage.initialize()
             with patch.dict(os.environ, {"AUREA_DATA_DIR": str(data_dir)}, clear=False):
                 with patch.object(main_api, "get_storage", return_value=storage):
-                    with TestClient(main_api.app) as client:
-                        yield client
+                    with TestClient(main_api.app, base_url="http://127.0.0.1") as client:
+                        try:
+                            yield client
+                        finally:
+                            _reset_browser_sessions()
 
     def _register_temp_owner(self, client, suffix: str | None = None) -> tuple[str, str]:
         token = suffix or uuid.uuid4().hex[:12]
