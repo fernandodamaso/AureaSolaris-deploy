@@ -110,12 +110,6 @@ BASE EDITORIAL — nenhuma fonte foi recuperada para esta conversa.
 ESTADO LOCAL — ${system.status}.`;
 }
 
-function summarizeSystemPrompt(full: string): string {
-  // O prompt já é um resumo estruturado. Cortá-lo removeria justamente o
-  // contrato de proveniência e poderia autorizar respostas sem lastro.
-  return full;
-}
-
 export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {
   const ctx = useGlobalContext();
   const activeOwner = ctx.agenda.activeProfile;
@@ -127,6 +121,11 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
   const activeTopicKey = activeOwner && activeSubject
     ? `hermes:owner:${activeOwner.id}:subject:${activeSubject.id}`
     : null;
+  const certifiedNatal = readCertifiedCalculation(
+    activeSubjectSource?.certifiedNatalCalculation,
+    'natal',
+  );
+  const certifiedTransit = readCertifiedCalculation(ctx.astro.liveData, 'transit');
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -134,8 +133,6 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
   const [showProvenance, setShowProvenance] = useState(false);
   const [threadId, setThreadId] = useState<string | null>(null);
   const [memoryStatus, setMemoryStatus] = useState('Memoria local: aguardando perfil.');
-  const [systemPrompt, setSystemPrompt] = useState<string | null>(null);
-  const [systemPromptSummary, setSystemPromptSummary] = useState<string | null>(null);
   const [lastLatencyMs, setLastLatencyMs] = useState<number | null>(null);
   const [streamingEnabled, setStreamingEnabled] = useState<boolean>(true);
   const [provider, setProvider] = useState<'openai' | 'hermes_gateway'>('openai');
@@ -144,6 +141,8 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
   const [useFullPrompt, setUseFullPrompt] = useState<boolean>(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const sendMessageRef = useRef<(overrideText?: string) => Promise<void>>(async () => {});
+  const ctxRef = useRef(ctx);
+  ctxRef.current = ctx;
 
   // Refs for current state inside event listener
   const stateRef = useRef({ messages, loading });
@@ -167,7 +166,7 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
     if (!isOpen) return;
 
     let cancelled = false;
-    const profile = activeOwner;
+    const profile = ctxRef.current.agenda.activeProfile;
     setThreadId(null);
     setInitialized(false);
 
@@ -205,20 +204,6 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
           : 'Memoria local ativa: novo fio de estudo.',
       );
       setMessages(restoredMessages);
-      // build and cache the system prompt once after restoring context
-      try {
-        const prompt = buildSystemPrompt(ctx);
-        setSystemPrompt(prompt);
-        try {
-          setSystemPromptSummary(summarizeSystemPrompt(prompt));
-        } catch {
-          setSystemPromptSummary(null);
-        }
-      } catch {
-        // ignore; fallback to on-demand build during send
-        setSystemPrompt(null);
-        setSystemPromptSummary(null);
-      }
       setInitialized(true);
     };
 
@@ -233,10 +218,9 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
     };
   }, [
     isOpen,
-    activeOwner,
+    activeOwner?.id,
     activeTopicKey,
     activeSubjectName,
-    ctx,
   ]);
 
   // Mensagem de boas-vindas com contexto
@@ -247,7 +231,7 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
         activeSubjectSource?.certifiedNatalCalculation,
         'natal',
       ));
-      const hasCertifiedTransit = Boolean(readCertifiedCalculation(ctx.astro.liveData, 'transit'));
+      const hasCertifiedTransit = Boolean(readCertifiedCalculation(ctxRef.current.astro.liveData, 'transit'));
 
       const welcome = profile
         ? `Olá! O estudo em foco é **${activeSubjectName}**.\n\n` +
@@ -261,7 +245,7 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
       setMessages([{ role: 'assistant', content: welcome }]);
       setInitialized(true);
     }
-  }, [isOpen, initialized, ctx.astro.liveData, activeOwner, activeSubjectName, activeSubjectSource]);
+  }, [isOpen, initialized, activeOwner, activeSubjectName, activeSubjectSource]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -299,12 +283,9 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
       // Choose which prompt to use. If the user requested full prompt for
       // the next message, use it and reset the flag; otherwise prefer the
       // summarized prompt for speed.
-      let promptToUse: string;
+      let promptToUse = buildSystemPrompt(ctxRef.current);
       if (useFullPrompt) {
-        promptToUse = (systemPrompt as string) ?? buildSystemPrompt(ctx);
         setUseFullPrompt(false);
-      } else {
-        promptToUse = (systemPromptSummary as string) ?? (systemPrompt as string) ?? buildSystemPrompt(ctx);
       }
       const contextMessages = newMessages.slice(-6).map(message => ({ role: message.role, content: message.content }));
       if (streamingEnabled) {
@@ -402,13 +383,10 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
     }
   }, [
     activeOwner?.id,
-    ctx,
     externalConsent,
     input,
     provider,
     streamingEnabled,
-    systemPrompt,
-    systemPromptSummary,
     threadId,
     useFullPrompt,
   ]);
@@ -442,11 +420,6 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
 
   if (!isOpen) return null;
 
-  const certifiedTransit = readCertifiedCalculation(ctx.astro.liveData, 'transit');
-  const certifiedNatal = readCertifiedCalculation(
-    activeSubjectSource?.certifiedNatalCalculation,
-    'natal',
-  );
   const calculationReady = Boolean(certifiedTransit);
 
   return (

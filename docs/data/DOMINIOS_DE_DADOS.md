@@ -17,14 +17,14 @@ Essa separação traduz a regra do produto: **a astrologia é conhecimento estud
 
 - Os dois arquivos ficam no diretório de dados do aplicativo, nunca dentro do repositório nem em `localStorage`.
 - `knowledge.sqlite` é versionado por *proveniência* (documentos, hashes, importações), não por sobrescrita silenciosa.
-- `private.sqlite` é protegido no dispositivo. O aplicativo deve abrir a sessão somente após autenticação local.
+- `private.sqlite` é protegido no dispositivo. No modo padrão `local-owner`, a API resolve um proprietário inequívoco e emite sessão de processo; no modo `require-login` (`AUREA_REQUIRE_LOGIN=1`), a abertura exige autenticação por senha.
 - Senha: somente verificador derivado com Argon2id e sal único. Nunca guardar senha, PIN ou resposta de recuperação em texto.
 - Segredos de integrações (Google, Todoist, chaves de IA) ficam em cofre do sistema/Stronghold; o banco privado guarda apenas `secret_ref` e escopos concedidos.
 - Backup privado é opt-in, cifrado e apresentado como conteúdo sensível. Logs não podem registrar conteúdo de notas, chats, tokens ou dados natais.
 
 ## Modelo de acesso
 
-1. A abertura do app exibe login local. A sessão tem `account_id`, expiração e bloqueio após inatividade.
+1. O modo padrão no Chrome é `local-owner`: a API resolve um único proprietário habilitado quando inequívoco, emite um token de sessão na memória do processo (sem expiração por tempo; invalidado ao reiniciar a API) e abre o shell principal sem tela de login. O modo `require-login` (`AUREA_REQUIRE_LOGIN=1`) exige autenticação por senha, com sessão autenticada e logout como hoje. A variável de ambiente não recupera senha desconhecida; cadastro de senha para um proprietário criado automaticamente sem senha é trabalho futuro separado. Na reutilização de conta existente: nunca presumir que o identificador é `local-owner`; nunca renomear proprietário nem mover diretório; nunca gravar verificador de senha descartável.
 2. Todo registro do banco privado pertence a um `owner_id`; consultas não podem atravessar essa fronteira.
 3. O Hermes recebe somente o contexto necessário à pergunta, dentro do perfil ativo e das permissões explicitamente concedidas.
 4. Uma memória ou alteração proposta pelo Hermes nasce como `proposed`; a pessoa revisa e aprova antes de ela influenciar interpretações futuras.

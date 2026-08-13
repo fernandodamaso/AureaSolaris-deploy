@@ -144,6 +144,51 @@ class LocalStorage:
                 self._backup_connection(source, destination)
             return asdict(self._backup_receipt("private.sqlite", destination))
 
+    def list_private_accounts_for_bootstrap(self) -> list[dict]:
+        with self._lock, closing(self._private_connection()) as connection:
+            rows = connection.execute(
+                "SELECT id, display_name, login_name, disabled_at FROM account ORDER BY id"
+            ).fetchall()
+        return [
+            {
+                "account_id": str(row[0]),
+                "display_name": str(row[1]),
+                "login_name": str(row[2]),
+                "disabled": row[3] is not None,
+            }
+            for row in rows
+        ]
+
+    def create_local_account_if_empty(
+        self,
+        account_id: str,
+        display_name: str,
+        login_name: str,
+        password: str,
+    ) -> dict:
+        account_id = _validate_private_id(account_id, "account_id")
+        display_name = _validate_text(display_name, "display_name", maximum=240)
+        login_name = _validate_text(login_name, "login_name", maximum=240)
+        password = _validate_text(password, "password", maximum=1024)
+        with self._lock, closing(self._private_connection()) as connection:
+            account_count = connection.execute("SELECT COUNT(*) FROM account").fetchone()[0]
+            if account_count != 0:
+                raise StorageValidationError("A configuração local mudou; nenhuma conta foi criada.")
+            password_verifier = _PASSWORD_HASHER.hash(password)
+            try:
+                connection.execute(
+                    """
+                    INSERT INTO account(id, display_name, login_name, password_verifier,
+                                        password_salt, password_algorithm)
+                    VALUES (?, ?, ?, ?, ?, ?)
+                    """,
+                    (account_id, display_name, login_name, password_verifier, "", "argon2id"),
+                )
+                connection.commit()
+            except sqlite3.IntegrityError as error:
+                raise StorageValidationError("A conta local já existe ou o login está em uso.") from error
+        return {"created": True, "account_id": account_id}
+
     def create_private_account(
         self,
         account_id: str,

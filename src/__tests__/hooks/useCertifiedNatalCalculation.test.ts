@@ -118,6 +118,28 @@ describe('useCertifiedNatalCalculation', () => {
     expect(result.current.error).toContain('recibo auditável');
   });
 
+  it('does not recalculate when birth data is a new object with the same contents', async () => {
+    const certified = makeCertifiedNatalResponse();
+    vi.mocked(postNatalCalculation).mockResolvedValue(JSON.stringify(certified));
+
+    const { rerender } = renderHook(
+      ({ request }) => useCertifiedNatalCalculation(request),
+      { initialProps: { request: { ...birthData } } },
+    );
+
+    await waitFor(() => {
+      expect(postNatalCalculation).toHaveBeenCalledTimes(1);
+    });
+
+    rerender({ request: { ...birthData } });
+
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    expect(postNatalCalculation).toHaveBeenCalledTimes(1);
+  });
+
   it('skips calculation when disabled and clears prior state', async () => {
     const { result } = renderHook(() => useCertifiedNatalCalculation(birthData, false));
 

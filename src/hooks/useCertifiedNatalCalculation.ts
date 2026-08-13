@@ -42,7 +42,8 @@ export const useCertifiedNatalCalculation = (birthData?: AstrologyCalculationReq
     setError(null);
     setData(null);
     try {
-      const payloadStr = buildNatalPayload(birthData as Record<string, unknown> | undefined);
+      const request = birthDataKey === 'null' ? undefined : JSON.parse(birthDataKey) as Record<string, unknown>;
+      const payloadStr = buildNatalPayload(request);
 
       let result: string | null = await postNatalCalculation(payloadStr);
 
@@ -77,7 +78,7 @@ export const useCertifiedNatalCalculation = (birthData?: AstrologyCalculationReq
     } finally {
       setLoading(false);
     }
-  }, [birthData]);
+  }, [birthDataKey]);
 
   useEffect(() => {
     if (!enabled) {

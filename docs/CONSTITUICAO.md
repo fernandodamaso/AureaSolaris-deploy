@@ -37,6 +37,12 @@ Cada conta também possui uma biblioteca pessoal: livros, PDFs, artigos, links e
 
 Hoje, a experiência primária do Aurea é uma aplicação web local aberta no Chrome por um atalho de clique único no Windows, projetada primeiro para a tela de um notebook como o Galaxy Book 4 Ultra. A interface deve permanecer responsiva e preparada para tablet/mobile no futuro. O Tauri e instaladores estão fora do foco atual. A experiência canônica é a aplicação web local aberta em `127.0.0.1` no Chrome, via servidor local do projeto. Código, docs e agentes devem assumir essa realidade como padrão. Cada conta possui dados, preferências, integrações, consentimentos e memória Hermes isolados.
 
+- O modo padrão no Chrome é `local-owner`: a sessão do Windows e a API restrita ao loopback formam a fronteira de confiança local.
+- O Aurea reutiliza uma única conta privada existente quando ela é inequívoca; nunca escolhe entre contas, migra diretórios ou adota dados órfãos sem decisão humana.
+- A sessão `local-owner` existe somente na memória do processo e do navegador, não expira por tempo e termina quando a API reinicia.
+- `AUREA_REQUIRE_LOGIN=1` preserva o fluxo de senha para contas que já possuem uma senha conhecida.
+- Na reutilização de conta existente: nunca presumir que o identificador é `local-owner`; nunca renomear proprietário nem mover diretório; nunca gravar verificador de senha descartável.
+
 ## IA e provedores
 
 Hermes usa desde o início um provedor escolhido pela pessoa: **ChatGPT / OpenAI** ou **Hermes Gateway**. Ollama e qualquer IA local não são requisito, nem são sondados automaticamente. A conversa escolhe um único provedor; se ele falhar, Hermes informa a falha em vez de encaminhar conteúdo silenciosamente a outro serviço.

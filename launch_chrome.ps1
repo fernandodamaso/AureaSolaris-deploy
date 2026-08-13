@@ -53,16 +53,60 @@ function Get-FreePort([int]$first, [int]$last) {
     throw "Não foi encontrada uma porta local livre entre $first e $last."
 }
 
+$expectedAuthMode = if ($env:AUREA_REQUIRE_LOGIN -eq '1') { 'require-login' } else { 'local-owner' }
+
+function Get-AureaHealthPayload([string]$url) {
+    try {
+        $healthResponse = Invoke-WebRequest -UseBasicParsing -TimeoutSec 1 -Uri "$url/health"
+        if ($healthResponse.StatusCode -ne 200) { return $null }
+        return $healthResponse.Content | ConvertFrom-Json
+    } catch {
+        return $null
+    }
+}
+
+function Test-AureaHealthContract($health, [string]$expectedAuthMode) {
+    if ($null -eq $health) { return $false }
+    if ([string]$health.auth_mode -ne $expectedAuthMode) { return $false }
+    $version = $health.browser_contract_version
+    if ($null -eq $version) { return $false }
+    try {
+        return ([int]$version -eq 2)
+    } catch {
+        return $false
+    }
+}
+
+function Test-AureaApiReusable([string]$url, [string]$expectedAuthMode) {
+    $health = Get-AureaHealthPayload $url
+    if (-not (Test-AureaHealthContract $health $expectedAuthMode)) { return $false }
+    try {
+        $openapi = Invoke-WebRequest -UseBasicParsing -TimeoutSec 1 -Uri "$url/openapi.json" | ConvertFrom-Json
+        if ($openapi.paths.PSObject.Properties.Name -notcontains '/browser/command') { return $false }
+        $ui = Invoke-WebRequest -UseBasicParsing -TimeoutSec 1 -Uri "$url/"
+        return ($ui.StatusCode -eq 200 -and $ui.Content -match 'Aurea Solaris')
+    } catch {
+        return $false
+    }
+}
+
+function Stop-StartedRuntime($process, [int]$port) {
+    if ($null -ne $process) {
+        try { Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue } catch { }
+    }
+    $listeners = @(Get-NetTCPConnection -LocalPort $port -State Listen -ErrorAction SilentlyContinue)
+    foreach ($listener in $listeners) {
+        try { Stop-Process -Id $listener.OwningProcess -Force -ErrorAction SilentlyContinue } catch { }
+    }
+}
+
 $apiPort = 9876
 $apiUrl = "http://127.0.0.1:$apiPort"
-$apiReady = $false
-try {
-    $openapi = Invoke-WebRequest -UseBasicParsing -TimeoutSec 1 -Uri "$apiUrl/openapi.json" | ConvertFrom-Json
-    $apiReady = $openapi.paths.PSObject.Properties.Name -contains '/browser/command'
-} catch {
-    $apiReady = $false
-}
-if (-not $apiReady) {
+$startedRuntime = $null
+$apiReady = Test-AureaApiReusable $apiUrl $expectedAuthMode
+if ($apiReady) {
+    Write-Host '[INFO] Serviço local compatível já estava ativo.'
+} else {
     if (Test-PortBusy $apiPort) {
         $apiPort = Get-FreePort 9877 9899
         $apiUrl = "http://127.0.0.1:$apiPort"
@@ -70,29 +114,33 @@ if (-not $apiReady) {
     }
     Write-Host "[INFO] Iniciando o serviço local na porta $apiPort..."
     $env:ASTRO_API_PORT = [string]$apiPort
-    Start-Process -FilePath $runtimeExecutable -ArgumentList $runtimeArguments -WorkingDirectory $projectRoot -WindowStyle Hidden | Out-Null
-} else {
-    Write-Host '[INFO] Serviço local compatível já estava ativo.'
+    $startedRuntime = Start-Process -FilePath $runtimeExecutable -ArgumentList $runtimeArguments -WorkingDirectory $projectRoot -WindowStyle Hidden -PassThru
 }
 
 $uiUrl = "$apiUrl/"
 Write-Host '[INFO] Aguardando o serviço local e a interface compilada...'
 $ready = $false
+$contractMismatch = $false
 for ($attempt = 0; $attempt -lt 30; $attempt++) {
-    try {
-        $health = Invoke-WebRequest -UseBasicParsing -TimeoutSec 1 -Uri "$apiUrl/health"
-        $openapi = Invoke-WebRequest -UseBasicParsing -TimeoutSec 1 -Uri "$apiUrl/openapi.json" | ConvertFrom-Json
-        $ui = Invoke-WebRequest -UseBasicParsing -TimeoutSec 1 -Uri $uiUrl
-        if ($health.StatusCode -eq 200 -and $openapi.paths.PSObject.Properties.Name -contains '/browser/command' -and $ui.StatusCode -eq 200 -and $ui.Content -match 'Aurea Solaris') {
-            $ready = $true
+    if ($null -ne $startedRuntime) {
+        $health = Get-AureaHealthPayload $apiUrl
+        if ($null -ne $health -and -not (Test-AureaHealthContract $health $expectedAuthMode)) {
+            $contractMismatch = $true
             break
         }
-    } catch {
-        # O serviço leva alguns segundos na primeira execução.
+    }
+    if (Test-AureaApiReusable $apiUrl $expectedAuthMode) {
+        $ready = $true
+        break
     }
     Start-Sleep -Seconds 1
 }
+if ($contractMismatch) {
+    Stop-StartedRuntime $startedRuntime $apiPort
+    throw "O runtime local iniciou com um contrato incompatível (esperado auth_mode=$expectedAuthMode e browser_contract_version=2). Recompile ou atualize o runtime e tente de novo: $apiUrl"
+}
 if (-not $ready) {
+    Stop-StartedRuntime $startedRuntime $apiPort
     throw "O serviço local não respondeu no tempo esperado: $apiUrl"
 }
 
