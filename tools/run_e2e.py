@@ -35,6 +35,7 @@ __all__ = [
     "wait_for_test_user_health",
     "pick_free_port",
     "resolve_node_command",
+    "has_unhandled_api_exception",
     "main",
 ]
 
@@ -82,6 +83,11 @@ def resolve_node_command(command: str, platform_name: str | None = None) -> str:
     return resolved
 
 
+def has_unhandled_api_exception(output: str) -> bool:
+    """Treat Uvicorn's uncaught ASGI exception banner as an E2E failure."""
+    return "ERROR:    Exception in ASGI application" in output
+
+
 def ensure_frontend_built() -> None:
     # Always rebuild so local/CI harness never serves a stale dist against newer src.
     subprocess.run([resolve_node_command("npm"), "run", "build"], cwd=REPO_ROOT, check=True)
@@ -121,6 +127,9 @@ def main(argv: list[str] | None = None) -> int:
         return 2
 
     api_process: subprocess.Popen | None = None
+    api_log_file = None
+    playwright_code: int | None = None
+    api_unhandled = False
     try:
         seed_test_user(data_dir)
         port = pick_free_port()
@@ -132,14 +141,17 @@ def main(argv: list[str] | None = None) -> int:
         # Force local-owner for E2E even if the parent shell has require-login.
         env.pop("AUREA_REQUIRE_LOGIN", None)
 
+        api_log_file = (temp_root / "api.log").open("w+", encoding="utf-8")
         python = sys.executable
         api_process = subprocess.Popen(
             [python, str(REPO_ROOT / "main_api.py")],
             cwd=REPO_ROOT,
             env=env,
+            stdout=api_log_file,
+            stderr=subprocess.STDOUT,
         )
         wait_for_test_user_health(base_url, timeout_s=45)
-        return run_playwright(base_url)
+        playwright_code = run_playwright(base_url)
     finally:
         if api_process is not None:
             api_process.terminate()
@@ -147,8 +159,24 @@ def main(argv: list[str] | None = None) -> int:
                 api_process.wait(timeout=10)
             except subprocess.TimeoutExpired:
                 api_process.kill()
+                api_process.wait(timeout=5)
+        if api_log_file is not None:
+            api_log_file.flush()
+            api_log_file.seek(0)
+            api_output = api_log_file.read()
+            api_log_file.close()
+            if api_output:
+                print(api_output, end="" if api_output.endswith("\n") else "\n")
+            api_unhandled = has_unhandled_api_exception(api_output)
         if not args.keep_temp:
             shutil.rmtree(temp_root, ignore_errors=True)
+
+    if playwright_code is None:
+        return 1
+    if api_unhandled:
+        print("E2E failed: API emitted an unhandled ASGI exception.", file=sys.stderr)
+        return 1
+    return playwright_code
 
 
 if __name__ == "__main__":

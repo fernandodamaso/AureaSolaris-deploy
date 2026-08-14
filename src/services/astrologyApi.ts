@@ -33,8 +33,20 @@ export function buildNatalPayload(birthData?: Record<string, unknown>): string {
   return JSON.stringify(payload);
 }
 
-export function buildTransitPayload(): string {
-  return JSON.stringify({});
+export function buildTransitPayload(now: Date = new Date()): string {
+  // Resolve one UTC instant in the client so the direct HTTP request and the
+  // browser/Tauri fallback always calculate the same valid transit request.
+  return JSON.stringify({
+    year: now.getUTCFullYear(),
+    month: now.getUTCMonth() + 1,
+    day: now.getUTCDate(),
+    hour: now.getUTCHours()
+      + (now.getUTCMinutes() / 60)
+      + (now.getUTCSeconds() / 3600)
+      + (now.getUTCMilliseconds() / 3_600_000),
+    timezone: 'UTC',
+    utc_offset_minutes: 0,
+  });
 }
 
 export function decodeAstrologyResponse(raw: string): unknown {

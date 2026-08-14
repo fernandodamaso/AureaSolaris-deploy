@@ -12,8 +12,8 @@
 ## agenda-task-event
 
 - feature: Agenda
-- steps: Open Agenda; create task and event.
-- assert: Seeded task visible; new task and event appear.
+- steps: Open Agenda; create and complete/delete a task; create and delete an event.
+- assert: Seeded task visible; new task and event complete their explicit lifecycle and disappear when deleted.
 - spec: `e2e/specs/agenda.spec.ts`
 - playbook: none
 - seed: `Revisar mandala de teste`

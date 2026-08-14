@@ -10,7 +10,7 @@ test('agenda-task-event: create, complete/delete task and delete event', async (
   await page.getByRole('textbox', { name: 'Tarefa' }).fill('Tarefa E2E');
   await page.getByRole('button', { name: 'Confirmar' }).click();
   await expect(page.getByText('Tarefa criada com sucesso.')).toBeVisible();
-  await page.getByRole('button', { name: 'Cancelar' }).click();
+  await page.getByRole('button', { name: 'Concluído' }).click();
 
   const taskText = page.getByText('Tarefa E2E', { exact: true });
   await expect(taskText).toBeVisible();
@@ -24,6 +24,8 @@ test('agenda-task-event: create, complete/delete task and delete event', async (
   await page.getByLabel('Título').fill('Evento E2E');
   await page.getByLabel('Horário local').fill('15:30');
   await page.getByRole('button', { name: 'Confirmar' }).click();
+  await expect(page.getByText('Compromisso criado com sucesso.')).toBeVisible();
+  await page.getByRole('button', { name: 'Concluído' }).click();
 
   const eventText = page.getByText('Evento E2E', { exact: true });
   await expect(eventText).toBeVisible();

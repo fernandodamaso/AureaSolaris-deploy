@@ -22,7 +22,7 @@
 
 - feature: Hermes
 - steps: Map → Tutor IA → mocked reply → Estudar no Caderno → reload Caderno.
-- assert: Study path completes; Caderno still opens.
+- assert: The specific study and its source note persist after reload and reopen.
 - spec: `e2e/specs/hermes.spec.ts`
 - playbook: `e2e/playbooks/hermes.md`
 - seed: seeded natal + Caderno

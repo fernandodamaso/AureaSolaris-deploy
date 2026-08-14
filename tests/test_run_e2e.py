@@ -54,6 +54,14 @@ class TestRunE2EHelpers(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError, "npm.cmd"):
                 run_e2e.resolve_node_command("npm", platform_name="nt")
 
+    def test_detects_unhandled_asgi_exception(self) -> None:
+        output = "INFO startup\nERROR:    Exception in ASGI application\nTraceback ...\n"
+        self.assertTrue(run_e2e.has_unhandled_api_exception(output))
+
+    def test_normal_api_log_is_not_an_unhandled_exception(self) -> None:
+        output = "[AureaSolaris] FastAPI sidecar rodando\n[AureaSolaris] Sidecar encerrando.\n"
+        self.assertFalse(run_e2e.has_unhandled_api_exception(output))
+
 
 if __name__ == "__main__":
     unittest.main()
