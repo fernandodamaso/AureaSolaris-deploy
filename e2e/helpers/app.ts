@@ -2,9 +2,14 @@ import { test, expect, type Page } from '@playwright/test';
 
 const unexpectedServerErrors = new WeakMap<Page, string[]>();
 
-test.beforeEach(async ({ page }) => {
+test.beforeEach(async ({ page, request }) => {
   const baseUrl = process.env.AUREA_E2E_URL;
   if (!baseUrl) throw new Error('AUREA_E2E_URL is required for E2E server-error checks.');
+
+  // Fail closed before any page navigation or mutation can occur. A test-user
+  // runtime with the expected browser contract is a prerequisite for every spec.
+  await assertHealthIsTestUser(request);
+
   const expectedOrigin = new URL(baseUrl).origin;
   const errors: string[] = [];
   unexpectedServerErrors.set(page, errors);
