@@ -1,4 +1,29 @@
-import { expect, type Page } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
+
+const unexpectedServerErrors = new WeakMap<Page, string[]>();
+
+test.beforeEach(async ({ page }) => {
+  const baseUrl = process.env.AUREA_E2E_URL;
+  if (!baseUrl) throw new Error('AUREA_E2E_URL is required for E2E server-error checks.');
+  const expectedOrigin = new URL(baseUrl).origin;
+  const errors: string[] = [];
+  unexpectedServerErrors.set(page, errors);
+
+  page.on('response', (response) => {
+    if (response.status() < 500) return;
+    try {
+      if (new URL(response.url()).origin !== expectedOrigin) return;
+    } catch {
+      return;
+    }
+    errors.push(`${response.status()} ${response.request().method()} ${response.url()}`);
+  });
+});
+
+test.afterEach(async ({ page }) => {
+  const errors = unexpectedServerErrors.get(page) ?? [];
+  expect(errors, `Unexpected same-origin HTTP 5xx responses:\n${errors.join('\n')}`).toEqual([]);
+});
 
 /** Wait until local-owner shell is visible (no login). */
 export async function waitForShell(page: Page): Promise<void> {

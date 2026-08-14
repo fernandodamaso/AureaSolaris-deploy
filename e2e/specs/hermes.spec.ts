@@ -22,26 +22,51 @@ test('hermes-mocked-proposal: reply stays proposal until review', async ({ page 
   await expect(proposedCard.first()).toBeVisible({ timeout: 30_000 });
 });
 
-test('study-loop: map to hermes to caderno', async ({ page }) => {
+test('study-loop: map to hermes to caderno and persists after reload', async ({ page }) => {
   await installHermesMocks(page);
   await waitForShell(page);
   await page.getByRole('button', { name: 'Astrologia' }).click();
   await expect(page.getByLabel('Proveniência do cálculo')).toBeVisible({ timeout: 60_000 });
+
+  await page.getByLabel('Mapa em foco').selectOption({ label: 'Natal: Pessoa Conhecida' });
+  await page.getByRole('button', { name: 'Atualizar cálculo do mapa' }).click();
+  await expect(page.getByLabel('Proveniência do cálculo')).toBeVisible({ timeout: 60_000 });
+
   await page.getByRole('button', { name: /Tutor IA/i }).click();
   await page.getByText(/Permito enviar esta conversa/i).click();
   await page.getByLabel('Pergunte ao Hermes').fill('Explique o Sol no mapa de teste');
   await page.getByRole('button', { name: 'Enviar mensagem ao Hermes' }).click();
   await expect(page.getByText('Resposta ficticia de teste do Hermes.').first()).toBeVisible({ timeout: 30_000 });
   await page.getByRole('button', { name: /Estudar no Caderno/i }).first().click();
-  await expect(page.getByRole('button', { name: /Estudo —/ })).toBeVisible({ timeout: 30_000 });
-  await expect(page.getByRole('button', { name: 'Boards' })).toBeVisible();
+
+  const studyName = 'Estudo — Natal: Pessoa Conhecida';
+  await expect(page.getByRole('button', { name: studyName })).toBeVisible({ timeout: 30_000 });
+  await expect
+    .poll(async () => {
+      const values = await page.locator('textarea').evaluateAll((els) =>
+        els.map((el) => (el as HTMLTextAreaElement).value),
+      );
+      return values.some((value) => value.includes('Origem: Natal: Pessoa Conhecida'));
+    }, { timeout: 30_000 })
+    .toBe(true);
+
   await page.reload();
   await waitForShell(page);
   await page.getByRole('button', { name: 'Caderno Vivo' }).click();
-  // After study creation, last board may restore; accept open canvas or board list.
-  await expect(
-    page.getByRole('button', { name: /Estudo —/ })
-      .or(page.getByLabel(/Abrir caderno/i).first())
-      .or(page.getByRole('heading', { name: 'Seus cadernos' })),
-  ).toBeVisible({ timeout: 30_000 });
+
+  const openPersistedStudy = page.getByRole('button', { name: studyName })
+    .or(page.getByLabel(`Abrir caderno ${studyName}`));
+  await expect(openPersistedStudy.first()).toBeVisible({ timeout: 30_000 });
+  const browseButton = page.getByLabel(`Abrir caderno ${studyName}`);
+  if (await browseButton.isVisible().catch(() => false)) {
+    await browseButton.click();
+  }
+  await expect
+    .poll(async () => {
+      const values = await page.locator('textarea').evaluateAll((els) =>
+        els.map((el) => (el as HTMLTextAreaElement).value),
+      );
+      return values.some((value) => value.includes('Origem: Natal: Pessoa Conhecida'));
+    }, { timeout: 30_000 })
+    .toBe(true);
 });
