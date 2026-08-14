@@ -2,30 +2,40 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import { HermesChat } from '../../components/HermesChat';
 
-const ctxHolder: { current: ReturnType<typeof makeCtx> } = {
-  current: null as unknown as ReturnType<typeof makeCtx>,
+const globalHolder: { current: ReturnType<typeof makeGlobal> } = {
+  current: null as unknown as ReturnType<typeof makeGlobal>,
+};
+const identityHolder: { current: ReturnType<typeof makeIdentity> } = {
+  current: null as unknown as ReturnType<typeof makeIdentity>,
 };
 
-function makeCtx(overrides: { loading?: boolean } = {}) {
+function makeGlobal(overrides: { loading?: boolean } = {}) {
   return {
-    agenda: {
-      activeProfile: { id: 'owner-1', name: 'Titular' },
-      activeSubjectId: 'owner-1',
-      mapSubjects: [{
-        id: 'owner-1',
-        ownerProfileId: 'owner-1',
-        kind: 'profile',
-        name: 'Titular',
-        source: { id: 'owner-1', name: 'Titular', certifiedNatalCalculation: undefined as unknown },
-      }],
-    },
     astro: { liveData: null, loading: overrides.loading ?? false },
     system: { status: 'Stable' },
   };
 }
 
+function makeIdentity() {
+  return {
+    activeProfile: { id: 'owner-1', name: 'Titular' },
+    activeSubjectId: 'owner-1',
+    mapSubjects: [{
+      id: 'owner-1',
+      ownerProfileId: 'owner-1',
+      kind: 'profile' as const,
+      name: 'Titular',
+      source: { id: 'owner-1', name: 'Titular', certifiedNatalCalculation: undefined as unknown },
+    }],
+  };
+}
+
 vi.mock('../../context/GlobalContext', () => ({
-  useGlobalContext: () => ctxHolder.current,
+  useGlobalContext: () => globalHolder.current,
+}));
+
+vi.mock('../../features/identity/IdentityContext', () => ({
+  useIdentity: () => identityHolder.current,
 }));
 
 vi.mock('../../services/chat', () => ({
@@ -43,7 +53,8 @@ describe('HermesChat thread open', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     Element.prototype.scrollIntoView = vi.fn();
-    ctxHolder.current = makeCtx();
+    globalHolder.current = makeGlobal();
+    identityHolder.current = makeIdentity();
     vi.mocked(openHermesThread).mockResolvedValue({
       thread: { id: 'thread-1' },
     } as unknown as Awaited<ReturnType<typeof openHermesThread>>);
@@ -53,14 +64,14 @@ describe('HermesChat thread open', () => {
     } as unknown as Awaited<ReturnType<typeof getHermesThreadContext>>);
   });
 
-  it('does not reopen the thread when global context refreshes', async () => {
+  it('does not reopen the thread when global astro context refreshes', async () => {
     const { rerender } = render(<HermesChat isOpen onClose={() => undefined} />);
 
     await waitFor(() => {
       expect(openHermesThread).toHaveBeenCalledTimes(1);
     });
 
-    ctxHolder.current = makeCtx({ loading: true });
+    globalHolder.current = makeGlobal({ loading: true });
     rerender(<HermesChat isOpen onClose={() => undefined} />);
 
     await Promise.resolve();
@@ -91,20 +102,17 @@ describe('HermesChat thread open', () => {
         },
       },
     };
-    const base = makeCtx();
-    ctxHolder.current = {
+    const base = makeIdentity();
+    identityHolder.current = {
       ...base,
-      agenda: {
-        ...base.agenda,
-        mapSubjects: [{
-          ...base.agenda.mapSubjects[0],
-          source: {
-            id: 'owner-1',
-            name: 'Titular',
-            certifiedNatalCalculation: natal,
-          },
-        }],
-      },
+      mapSubjects: [{
+        ...base.mapSubjects[0],
+        source: {
+          id: 'owner-1',
+          name: 'Titular',
+          certifiedNatalCalculation: natal,
+        },
+      }],
     };
     rerender(<HermesChat isOpen onClose={() => undefined} />);
 
