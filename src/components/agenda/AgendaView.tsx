@@ -4,7 +4,9 @@ import {
   Clock,
   Trash2, ListTodo
 } from 'lucide-react';
-import { useAgendaContext } from '../../context/AgendaContext';
+import { useAgenda } from '../../features/agenda/AgendaContext';
+import { getPlanetRegency } from '../../features/astrology/planetaryRegency';
+import { useIdentity } from '../../features/identity/IdentityContext';
 import { Card } from '../common/UIComponents';
 
 export const AgendaView = () => {
@@ -14,13 +16,14 @@ export const AgendaView = () => {
     activeProfileId,
     activeSubjectId,
     setActiveSubjectId,
+  } = useIdentity();
+  const {
     tasks,
     events,
     selectedDay, setSelectedDay, weekDays,
     nextWeek, prevWeek, addTask, deleteTask, toggleTask,
     addEvent, deleteEvent,
-    getPlanetRegency
-  } = useAgendaContext();
+  } = useAgenda();
 
   const [showEventModal, setShowEventModal] = useState(false);
   const [showTaskModal, setShowTaskModal] = useState(false);
@@ -47,7 +50,7 @@ export const AgendaView = () => {
       const [hours, minutes] = eventTime.split(':').map(Number);
       const localStart = new Date(selectedDay);
       localStart.setHours(hours, minutes, 0, 0);
-      await addEvent(modalText.trim(), localStart.toISOString());
+      await addEvent(modalText.trim(), localStart.toISOString(), activeProfileId || undefined);
       setEventAction({ status: 'success', message: 'Compromisso criado com sucesso.' });
       setModalText('');
     } catch (error) {
