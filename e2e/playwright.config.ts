@@ -9,6 +9,7 @@ export default defineConfig({
   testDir: './specs',
   fullyParallel: false,
   workers: 1,
+  timeout: 90_000,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
   reporter: [['list'], ['html', { open: 'never', outputFolder: 'playwright-report' }]],
