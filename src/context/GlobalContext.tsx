@@ -1,6 +1,13 @@
-import { createContext, useContext, ReactNode, useMemo } from 'react';
+import { createContext, useContext, type ReactNode, useMemo } from 'react';
+import { getHermesInsights } from '../app/workflows/hermesAgendaWorkflow';
+import { useAgenda } from '../features/agenda/AgendaContext';
+import type { AureaEvent, AureaTask } from '../features/agenda/types';
+import { getPlanetaryDayRegent } from '../features/astrology/planetaryRegency';
+import { useHealthDocuments } from '../features/health/HealthDocumentsContext';
+import type { AureaDocument } from '../features/health/types';
+import { useIdentity } from '../features/identity/IdentityContext';
+import type { AstroMapSubject, AureaProfile } from '../features/identity/types';
 import { useLiveTransitData } from '../hooks/useLiveTransitData';
-import { useAgendaContext, AureaProfile, AureaTask, AureaEvent, AureaDocument, AstroMapSubject } from './AgendaContext';
 import type { LiveAstroData, AstroAspect, PlanetaryPosition } from '../types/astrology';
 import type { HermesInsight } from '../types/private-profile';
 
@@ -15,6 +22,7 @@ interface AstroState {
 
 interface GlobalContextType {
   astro: AstroState;
+  /** @deprecated Read compatibility only while consumers move to feature hooks. */
   agenda: {
     profiles: AureaProfile[];
     mapSubjects: AstroMapSubject[];
@@ -41,33 +49,33 @@ interface GlobalContextType {
 const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
 
 export const GlobalProvider = ({ children }: { children: ReactNode }) => {
-  const agenda = useAgendaContext();
+  const identity = useIdentity();
+  const agenda = useAgenda();
+  const healthDocuments = useHealthDocuments();
   // Personal transits stay unavailable until this context consumes a natal
   // calculation with a verifiable receipt, never the legacy `profile.natal`.
   const { liveData, transits, loading, error, getPlanetaryHour } = useLiveTransitData(undefined);
 
   const value = useMemo(() => {
-    const activeProfile = agenda.activeProfile;
     const pPager = getPlanetaryHour();
-    const dRegent = agenda.getPlanetaryDayRegent(new Date());
+    const dRegent = getPlanetaryDayRegent(new Date());
 
     const getAiContext = () => {
-      const pendingTasks = agenda.tasks.filter((t: AureaTask) => !t.completed && !t.is_completed);
-      const completedTasks = agenda.tasks.filter((t: AureaTask) => t.completed || t.is_completed);
-      
+      const pendingTasks = agenda.tasks.filter((task) => !task.completed && !task.is_completed);
+      const completedTasks = agenda.tasks.filter((task) => task.completed || task.is_completed);
       const planets = liveData?.planets || {};
       const retrogradePlanets = Object.entries(planets)
         .filter(([name, value]: [string, PlanetaryPosition]) => value?.retrograde && !['ASC', 'MC', 'DSC', 'IC'].includes(name))
-        .map(([k]) => k);
-      
+        .map(([key]) => key);
       const planetPositions = Object.entries(planets)
-        .map(([k, v]: [string, PlanetaryPosition]) => Number.isFinite(v?.pos_in_sign) && typeof v?.sign === 'string'
-          ? `${k}: ${v.pos_in_sign.toFixed(1)}° ${v.sign}`
+        .map(([key, value]: [string, PlanetaryPosition]) => Number.isFinite(value?.pos_in_sign) && typeof value?.sign === 'string'
+          ? `${key}: ${value.pos_in_sign.toFixed(1)}° ${value.sign}`
           : null)
         .filter((position): position is string => Boolean(position))
         .join(', ');
-      
-      const skyAspects = (liveData?.aspects || []).slice(0, 5).map((a: AstroAspect) => `${a.p1} ${a.symbol} ${a.p2}`).join(', ') || 'Nenhum';
+      const skyAspects = (liveData?.aspects || []).slice(0, 5)
+        .map((aspect: AstroAspect) => `${aspect.p1} ${aspect.symbol} ${aspect.p2}`)
+        .join(', ') || 'Nenhum';
       const transitSummary = 'Não calculados: mapa natal certificado não disponível';
 
       return `
@@ -81,7 +89,7 @@ Hora Planetária: ${pPager.icon} ${pPager.name} (${pPager.time})
 Regente do Dia: ${dRegent.icon} ${dRegent.name}
 
 --- PERFIL ---
-Nome: ${activeProfile?.name || 'Não configurado'}
+Nome: ${identity.activeProfile?.name || 'Não configurado'}
 
 --- ASTROLOGIA ---
 Planetas: ${planetPositions}
@@ -91,10 +99,10 @@ Retrogradações: ${retrogradePlanets.length > 0 ? retrogradePlanets.join(', ') 
 
 --- TAREFAS ---
 Pendentes: ${pendingTasks.length} | Completas: ${completedTasks.length} | Progresso: ${agenda.getMetrics().done}%
-Top 3 Pendentes: ${pendingTasks.slice(0, 3).map((t: AureaTask) => `- ${t.content}`).join('\n') || 'Nenhuma'}
+Top 3 Pendentes: ${pendingTasks.slice(0, 3).map((task) => `- ${task.content}`).join('\n') || 'Nenhuma'}
 
 --- SAÚDE ---
-Documentos: ${agenda.documents.length} registrados
+Documentos: ${healthDocuments.documents.length} registrados
 
 --- STATUS DO SISTEMA ---
 Estabilidade: Alta | Agentes: Sintonizados | Conectividade: OK
@@ -104,31 +112,33 @@ Estabilidade: Alta | Agentes: Sintonizados | Conectividade: OK
     return {
       astro: { liveData, transits, loading, error, planetaryHour: pPager, dayRegent: dRegent },
       agenda: {
-        profiles: agenda.profiles,
-        mapSubjects: agenda.mapSubjects ?? [],
-        activeProfile,
-        activeSubjectId: agenda.activeSubjectId,
+        profiles: identity.profiles,
+        mapSubjects: identity.mapSubjects,
+        activeProfile: identity.activeProfile,
+        activeSubjectId: identity.activeSubjectId,
         tasks: agenda.tasks,
         events: agenda.events,
         metrics: agenda.getMetrics(),
-        documents: agenda.documents,
-        insights: agenda.getHermesInsights(transits),
-        setActiveProfileId: agenda.setActiveProfileId,
-        addProfile: agenda.addProfile,
-        ensureLocalUiProfile: agenda.ensureLocalUiProfile,
-        hydrateProfilesFromStorage: agenda.hydrateProfilesFromStorage,
-        updateProfile: agenda.updateProfile
+        documents: healthDocuments.documents,
+        insights: getHermesInsights(transits),
+        setActiveProfileId: identity.setActiveProfileId,
+        addProfile: identity.addProfile,
+        ensureLocalUiProfile: identity.ensureLocalUiProfile,
+        hydrateProfilesFromStorage: () => {
+          identity.refreshFromStorage();
+          agenda.refreshFromStorage();
+        },
+        updateProfile: identity.updateProfile,
       },
-      system: { status: error ? 'Astronomical engine unavailable' : loading ? 'Calculating' : 'Stable', lastSync: new Date() },
-      getAiContext
+      system: {
+        status: error ? 'Astronomical engine unavailable' : loading ? 'Calculating' : 'Stable',
+        lastSync: new Date(),
+      },
+      getAiContext,
     };
-  }, [liveData, transits, loading, error, getPlanetaryHour, agenda]);
+  }, [liveData, transits, loading, error, getPlanetaryHour, identity, agenda, healthDocuments.documents]);
 
-  return (
-    <GlobalContext.Provider value={value}>
-      {children}
-    </GlobalContext.Provider>
-  );
+  return <GlobalContext.Provider value={value}>{children}</GlobalContext.Provider>;
 };
 
 export const useGlobalContext = () => {
