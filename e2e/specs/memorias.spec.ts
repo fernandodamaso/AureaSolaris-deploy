@@ -9,10 +9,10 @@ function memoryCard(page: import('@playwright/test').Page, content: string) {
 test('memorias-review: approve revoke forget lifecycle', async ({ page }) => {
   await waitForShell(page);
   await page.getByRole('button', { name: 'Memórias' }).click();
-  await expect(page.getByText('Memoria proposta de teste', { exact: true })).toBeVisible({ timeout: 30_000 });
-  await expect(page.getByText('Memoria aprovada de teste', { exact: true })).toBeVisible();
+  await expect(page.getByText('Memoria proposta de teste.', { exact: true })).toBeVisible({ timeout: 30_000 });
+  await expect(page.getByText('Memoria aprovada de teste.', { exact: true })).toBeVisible();
 
-  const card = memoryCard(page, 'Memoria proposta de teste');
+  const card = memoryCard(page, 'Memoria proposta de teste.');
   await expect(card).toContainText('Status: proposed');
 
   await card.getByRole('button', { name: 'Aprovar' }).click();
@@ -25,7 +25,7 @@ test('memorias-review: approve revoke forget lifecycle', async ({ page }) => {
   await expect(card).toContainText('Status: approved', { timeout: 30_000 });
 
   await card.getByRole('button', { name: 'Esquecer' }).click();
-  await expect(page.getByText('Memoria proposta de teste', { exact: true })).toHaveCount(0, { timeout: 30_000 });
+  await expect(page.getByText('Memoria proposta de teste.', { exact: true })).toHaveCount(0, { timeout: 30_000 });
 });
 
 test('memorias-open-caderno: Estudar no Caderno from approved memory', async ({ page }) => {
