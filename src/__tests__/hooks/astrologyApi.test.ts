@@ -49,8 +49,17 @@ describe('astrologyApi transport', () => {
     expect(payload).not.toHaveProperty('timezone_name');
   });
 
-  it('builds an empty transit payload', () => {
-    expect(JSON.parse(buildTransitPayload())).toEqual({});
+  it('builds an explicit UTC transit payload from a fixed instant', () => {
+    const now = new Date('2026-08-14T21:30:00.000Z');
+
+    expect(JSON.parse(buildTransitPayload(now))).toEqual({
+      year: 2026,
+      month: 8,
+      day: 14,
+      hour: 21.5,
+      timezone: 'UTC',
+      utc_offset_minutes: 0,
+    });
   });
 
   it('decodes JSON responses and converts parse failures', () => {

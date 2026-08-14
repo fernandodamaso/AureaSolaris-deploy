@@ -79,3 +79,8 @@ backups/
 *.njsproj
 *.sln
 *.sw?
+
+# Playwright E2E outputs
+playwright-report/
+test-results/
+blob-report/

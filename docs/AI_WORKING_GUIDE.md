@@ -89,6 +89,15 @@ On `-Reset`, the launcher stops Aurea test-user runtimes on ports **9878–9899*
 
 Full persistence details: `docs/data-persistence.md`.
 
+## Agent E2E
+
+- Catalog: `e2e/catalog/README.md`
+- Headless / CI: `python tools/run_e2e.py` (or `.aurea-build-venv\Scripts\python.exe tools\run_e2e.py`)
+- On request (visual + sandbox): use the project skill `.cursor/skills/aurea-e2e/`
+- Never run E2E against `%LOCALAPPDATA%\Aurea Solaris\data`
+- `npm run check` does not include E2E; CI workflow `.github/workflows/e2e.yml` does
+- Prefer Playwright + playbooks over `tests/mandala_visual_smoke.ps1` when both cover the same id; keep the PowerShell smoke until Astrologia E2E + mandala playbook are green, then leave it as optional legacy
+
 ## Required working loop
 
 1. Inspect `git status --short --branch` and preserve existing changes.
