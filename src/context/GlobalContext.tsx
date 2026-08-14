@@ -1,15 +1,10 @@
 import { createContext, useContext, type ReactNode, useMemo } from 'react';
-import { getHermesInsights } from '../app/workflows/hermesAgendaWorkflow';
 import { useAgenda } from '../features/agenda/AgendaContext';
-import type { AureaEvent, AureaTask } from '../features/agenda/types';
 import { getPlanetaryDayRegent } from '../features/astrology/planetaryRegency';
 import { useHealthDocuments } from '../features/health/HealthDocumentsContext';
-import type { AureaDocument } from '../features/health/types';
 import { useIdentity } from '../features/identity/IdentityContext';
-import type { AstroMapSubject, AureaProfile } from '../features/identity/types';
 import { useLiveTransitData } from '../hooks/useLiveTransitData';
 import type { LiveAstroData, AstroAspect, PlanetaryPosition } from '../types/astrology';
-import type { HermesInsight } from '../types/private-profile';
 
 interface AstroState {
   liveData: LiveAstroData | null;
@@ -22,23 +17,6 @@ interface AstroState {
 
 interface GlobalContextType {
   astro: AstroState;
-  /** @deprecated Read compatibility only while consumers move to feature hooks. */
-  agenda: {
-    profiles: AureaProfile[];
-    mapSubjects: AstroMapSubject[];
-    activeProfile: AureaProfile | null;
-    activeSubjectId: string;
-    tasks: AureaTask[];
-    events: AureaEvent[];
-    metrics: { done: number; pending: number; notDone: number };
-    documents: AureaDocument[];
-    insights: HermesInsight[];
-    setActiveProfileId: (id: string) => void;
-    addProfile: (name: string, password: string, id?: string) => Promise<AureaProfile>;
-    ensureLocalUiProfile: (ownerId: string, displayName: string) => void;
-    hydrateProfilesFromStorage: () => void;
-    updateProfile: (id: string, updates: Partial<AureaProfile>) => void;
-  };
   system: {
     status: string;
     lastSync: Date;
@@ -111,25 +89,6 @@ Estabilidade: Alta | Agentes: Sintonizados | Conectividade: OK
 
     return {
       astro: { liveData, transits, loading, error, planetaryHour: pPager, dayRegent: dRegent },
-      agenda: {
-        profiles: identity.profiles,
-        mapSubjects: identity.mapSubjects,
-        activeProfile: identity.activeProfile,
-        activeSubjectId: identity.activeSubjectId,
-        tasks: agenda.tasks,
-        events: agenda.events,
-        metrics: agenda.getMetrics(),
-        documents: healthDocuments.documents,
-        insights: getHermesInsights(transits),
-        setActiveProfileId: identity.setActiveProfileId,
-        addProfile: identity.addProfile,
-        ensureLocalUiProfile: identity.ensureLocalUiProfile,
-        hydrateProfilesFromStorage: () => {
-          identity.refreshFromStorage();
-          agenda.refreshFromStorage();
-        },
-        updateProfile: identity.updateProfile,
-      },
       system: {
         status: error ? 'Astronomical engine unavailable' : loading ? 'Calculating' : 'Stable',
         lastSync: new Date(),
