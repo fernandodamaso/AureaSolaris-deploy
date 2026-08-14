@@ -19,7 +19,8 @@ export async function executeHermesInsight(
   await actions.addEvent(text, now().toISOString(), ownerId);
 }
 
-export function getHermesInsights(_transits?: unknown[]): HermesInsight[] {
+export function getHermesInsights(transits?: unknown[]): HermesInsight[] {
+  void transits;
   // Do not publish interpretations before they can carry rule, source and
   // a visible "Hermes inference" label in the certified vertical.
   return [];
