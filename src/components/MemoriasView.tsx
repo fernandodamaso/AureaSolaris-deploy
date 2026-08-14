@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useGlobalContext } from '../context/GlobalContext';
+import { useIdentity } from '../features/identity/IdentityContext';
 import {
   listHermesMemories,
   reviewHermesMemory,
@@ -8,13 +8,13 @@ import {
 import { KnowledgeLibraryPanel } from './KnowledgeLibraryPanel';
 
 export const MemoriasView: React.FC = () => {
-  const { agenda } = useGlobalContext();
+  const { activeProfile } = useIdentity();
   const [memories, setMemories] = useState<HermesMemory[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const loadMemories = useCallback(async () => {
-    if (!agenda.activeProfile) {
+    if (!activeProfile) {
       setMemories([]);
       setLoading(false);
       return;
@@ -23,23 +23,23 @@ export const MemoriasView: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await listHermesMemories({ ownerId: agenda.activeProfile.id, limit: 50 });
+      const response = await listHermesMemories({ ownerId: activeProfile.id, limit: 50 });
       setMemories(response.memories);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Falha ao carregar memorias.');
     } finally {
       setLoading(false);
     }
-  }, [agenda.activeProfile]);
+  }, [activeProfile]);
 
   useEffect(() => {
     void loadMemories();
   }, [loadMemories]);
 
   const handleReview = async (memoryId: string, decision: 'approve' | 'revoke' | 'forget') => {
-    if (!agenda.activeProfile) return;
+    if (!activeProfile) return;
     try {
-      await reviewHermesMemory({ ownerId: agenda.activeProfile.id, memoryId, decision });
+      await reviewHermesMemory({ ownerId: activeProfile.id, memoryId, decision });
       void loadMemories();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Falha ao revisar a memoria.');
@@ -56,7 +56,7 @@ export const MemoriasView: React.FC = () => {
     }));
   };
 
-  if (!agenda.activeProfile) {
+  if (!activeProfile) {
     return (
       <div className="flex h-full items-center justify-center">
         <div className="text-center">
