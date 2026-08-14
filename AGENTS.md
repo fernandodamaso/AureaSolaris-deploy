@@ -59,7 +59,14 @@ Pesquisa externa só ocorre dentro dos filtros de fontes configurados e com tran
 
 | Área | Pontos de entrada |
 | --- | --- |
-| Interface React | `src/App.tsx`, `src/components/`, `src/context/` |
+| Composição React | `src/app/AppProviders.tsx`, `src/App.tsx` |
+| Interface/componentes | `src/components/` |
+| Identidade, perfis e mapas | `src/features/identity/` |
+| Agenda, tarefas, eventos e calendário | `src/features/agenda/` |
+| Preferências/helpers de astrologia | `src/features/astrology/` |
+| Estado frontend de documentos de saúde | `src/features/health/` |
+| Workflows Hermes entre features | `src/app/workflows/` |
+| Compatibilidade legada de contexts | `src/context/` — não adicionar novo estado de feature ao `AgendaContext` |
 | Caderno/Mesa | `src/components/MesaCriacao.tsx`, `src/components/DiarioView.tsx` |
 | Motor e API local | `astro_engine.py`, `main_api.py` |
 | Desktop/Rust | `src-tauri/src/lib.rs`, `src-tauri/tauri.conf.json` |
