@@ -32,14 +32,11 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r requirements-api.txt
 
-      - name: Run frontend unit tests
-        run: npm test
+      - name: Run frontend check
+        run: npm run check
 
       - name: Run E2E harness unit tests
         run: python -m unittest tests.test_run_e2e -v
-
-      - name: Build frontend
-        run: npm run build
 
       - name: Run E2E harness
         run: python tools/run_e2e.py
