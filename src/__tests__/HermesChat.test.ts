@@ -4,7 +4,7 @@ import { buildSystemPrompt } from '../components/HermesChat';
 describe('Hermes por mapa em foco', () => {
   it('usa o sujeito selecionado e não injeta regras sem fonte', () => {
     const context = {
-      agenda: {
+      identity: {
         activeProfile: { id: 'owner-a', name: 'Titular' },
         activeSubjectId: 'subject-b',
         mapSubjects: [
@@ -49,7 +49,7 @@ describe('Hermes por mapa em foco', () => {
 
   it('não aceita um sujeito pertencente a outro titular', () => {
     const context = {
-      agenda: {
+      identity: {
         activeProfile: { id: 'owner-a', name: 'Titular A', birthDate: '1990-01-01' },
         activeSubjectId: 'foreign-subject',
         mapSubjects: [{
