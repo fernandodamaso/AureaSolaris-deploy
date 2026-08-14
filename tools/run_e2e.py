@@ -70,22 +70,76 @@ def pick_free_port(host: str = "127.0.0.1") -> int:
         return int(sock.getsockname()[1])
 
 
+def ensure_frontend_built() -> None:
+    index = REPO_ROOT / "dist" / "index.html"
+    if index.is_file():
+        return
+    subprocess.run(["npm", "run", "build"], cwd=REPO_ROOT, check=True)
+
+
+def run_playwright(base_url: str) -> int:
+    env = os.environ.copy()
+    env["AUREA_E2E_URL"] = base_url
+    completed = subprocess.run(
+        ["npx", "playwright", "test", "--config=e2e/playwright.config.ts"],
+        cwd=REPO_ROOT,
+        env=env,
+    )
+    return int(completed.returncode)
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Run Aurea E2E against an isolated test-user API.")
-    parser.add_argument(
-        "--check-forbidden",
-        type=Path,
-        help="Exit 2 if PATH is the personal Aurea data dir; else exit 0.",
-    )
+    parser.add_argument("--check-forbidden", type=Path)
+    parser.add_argument("--keep-temp", action="store_true", help="Do not delete temp data dir (debug).")
     args = parser.parse_args(argv)
+
     if args.check_forbidden is not None:
         if is_forbidden_personal_data_dir(args.check_forbidden):
             print(f"REFUSED personal data dir: {args.check_forbidden.resolve()}", file=sys.stderr)
             return 2
         print("ok")
         return 0
-    print("Harness body not wired yet; use Task 3.", file=sys.stderr)
-    return 1
+
+    ensure_frontend_built()
+    temp_root = Path(tempfile.mkdtemp(prefix="aurea-e2e-"))
+    data_dir = temp_root / "data"
+    data_dir.mkdir(parents=True, exist_ok=True)
+
+    if is_forbidden_personal_data_dir(data_dir):
+        print(f"REFUSED personal data dir: {data_dir}", file=sys.stderr)
+        return 2
+
+    api_process: subprocess.Popen | None = None
+    try:
+        seed_test_user(data_dir)
+        port = pick_free_port()
+        base_url = f"http://127.0.0.1:{port}"
+        env = os.environ.copy()
+        env["AUREA_DATA_DIR"] = str(data_dir)
+        env["AUREA_TEST_USER"] = "1"
+        env["ASTRO_API_PORT"] = str(port)
+        # Force local-owner for E2E even if the parent shell has require-login.
+        env.pop("AUREA_REQUIRE_LOGIN", None)
+
+        python = sys.executable
+        api_process = subprocess.Popen(
+            [python, str(REPO_ROOT / "main_api.py")],
+            cwd=REPO_ROOT,
+            env=env,
+        )
+        wait_for_test_user_health(base_url, timeout_s=45)
+        return run_playwright(base_url)
+    finally:
+        if api_process is not None:
+            api_process.terminate()
+            try:
+                api_process.wait(timeout=10)
+            except subprocess.TimeoutExpired:
+                api_process.kill()
+        if not args.keep_temp:
+            import shutil
+            shutil.rmtree(temp_root, ignore_errors=True)
 
 
 if __name__ == "__main__":
