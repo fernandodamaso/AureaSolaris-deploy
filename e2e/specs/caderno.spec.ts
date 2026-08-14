@@ -37,13 +37,12 @@ test('caderno-edit-undo: sticky + undo', async ({ page }) => {
     .toBeGreaterThan(beforeCount);
   await page.getByTitle('Desfazer (Ctrl+Z)').click();
   await expect
-    .poll(async () => {
-      const values = await page.locator('textarea').evaluateAll((els) =>
-        els.map((el) => (el as HTMLTextAreaElement).value),
-      );
-      return values.includes('Nota A de teste') && values.includes('Nota B de teste');
-    }, { timeout: 10_000 })
-    .toBe(true);
+    .poll(async () => page.locator('textarea').count(), { timeout: 10_000 })
+    .toBe(beforeCount);
+  const values = await page.locator('textarea').evaluateAll((els) =>
+    els.map((el) => (el as HTMLTextAreaElement).value),
+  );
+  expect(values).toEqual(expect.arrayContaining(['Nota A de teste', 'Nota B de teste']));
 });
 
 test('caderno-create-study: from Astrologia portal', async ({ page }) => {

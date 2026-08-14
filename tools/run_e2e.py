@@ -6,6 +6,7 @@ import argparse
 import importlib.util
 import json
 import os
+import shutil
 import socket
 import subprocess
 import sys
@@ -33,6 +34,7 @@ __all__ = [
     "http_get_json",
     "wait_for_test_user_health",
     "pick_free_port",
+    "resolve_node_command",
     "main",
 ]
 
@@ -70,16 +72,26 @@ def pick_free_port(host: str = "127.0.0.1") -> int:
         return int(sock.getsockname()[1])
 
 
+def resolve_node_command(command: str, platform_name: str | None = None) -> str:
+    """Resolve npm/npx through their Windows .cmd shims when required."""
+    platform_name = platform_name or os.name
+    candidate = f"{command}.cmd" if platform_name == "nt" else command
+    resolved = shutil.which(candidate)
+    if resolved is None:
+        raise RuntimeError(f"Required command not found on PATH: {candidate}")
+    return resolved
+
+
 def ensure_frontend_built() -> None:
     # Always rebuild so local/CI harness never serves a stale dist against newer src.
-    subprocess.run(["npm", "run", "build"], cwd=REPO_ROOT, check=True)
+    subprocess.run([resolve_node_command("npm"), "run", "build"], cwd=REPO_ROOT, check=True)
 
 
 def run_playwright(base_url: str) -> int:
     env = os.environ.copy()
     env["AUREA_E2E_URL"] = base_url
     completed = subprocess.run(
-        ["npx", "playwright", "test", "--config=e2e/playwright.config.ts"],
+        [resolve_node_command("npx"), "playwright", "test", "--config=e2e/playwright.config.ts"],
         cwd=REPO_ROOT,
         env=env,
     )
@@ -136,7 +148,6 @@ def main(argv: list[str] | None = None) -> int:
             except subprocess.TimeoutExpired:
                 api_process.kill()
         if not args.keep_temp:
-            import shutil
             shutil.rmtree(temp_root, ignore_errors=True)
 
 

@@ -37,6 +37,23 @@ class TestRunE2EHelpers(unittest.TestCase):
                 run_e2e.wait_for_test_user_health("http://127.0.0.1:9876", timeout_s=0.1)
             self.assertIn("test_user", str(ctx.exception).lower())
 
+    def test_resolve_node_command_uses_cmd_shim_on_windows(self) -> None:
+        expected = r"C:\Program Files\nodejs\npm.cmd"
+        with patch.object(run_e2e.shutil, "which", return_value=expected) as which:
+            self.assertEqual(run_e2e.resolve_node_command("npm", platform_name="nt"), expected)
+        which.assert_called_once_with("npm.cmd")
+
+    def test_resolve_node_command_uses_plain_name_off_windows(self) -> None:
+        expected = "/usr/bin/npx"
+        with patch.object(run_e2e.shutil, "which", return_value=expected) as which:
+            self.assertEqual(run_e2e.resolve_node_command("npx", platform_name="posix"), expected)
+        which.assert_called_once_with("npx")
+
+    def test_resolve_node_command_fails_when_missing(self) -> None:
+        with patch.object(run_e2e.shutil, "which", return_value=None):
+            with self.assertRaisesRegex(RuntimeError, "npm.cmd"):
+                run_e2e.resolve_node_command("npm", platform_name="nt")
+
 
 if __name__ == "__main__":
     unittest.main()

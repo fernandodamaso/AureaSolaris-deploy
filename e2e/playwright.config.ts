@@ -11,7 +11,8 @@ export default defineConfig({
   workers: 1,
   timeout: 90_000,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 1 : 0,
+  // Specs mutate one shared isolated runtime. A retry would reuse dirty state.
+  retries: 0,
   reporter: [['list'], ['html', { open: 'never', outputFolder: 'playwright-report' }]],
   use: {
     baseURL,

@@ -3,9 +3,10 @@
 Catalog: `study-loop` (default, mocked) and `hermes-live-provider` (only if person requested live)
 
 ## Mocked / default
-1. Run study-loop visually after Playwright.
-2. Pass if Hermes distinguishes answer as assistant text and "Propor memória" remains a proposal.
-3. Fail if a memory/task/event appears without explicit approval.
+1. Keep this check inside Playwright so the page-scoped mocks from `installHermesMocks(page)` remain active. Do not send Hermes messages from the standalone test-user Chrome profile in mocked mode.
+2. Against the clean test-user sandbox, run `e2e/specs/hermes.spec.ts` with `--headed` and `--config=e2e/playwright.config.ts`.
+3. Pass if Hermes distinguishes answer as assistant text and "Propor memória" remains a proposal.
+4. Fail if a memory/task/event appears without explicit approval, or if any Hermes request escapes the Playwright mocks.
 
 ## Live (only when requested)
 1. Still test-user only.

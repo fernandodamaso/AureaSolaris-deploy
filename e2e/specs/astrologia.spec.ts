@@ -8,6 +8,17 @@ async function openAstrologia(page: import('@playwright/test').Page) {
   await expect(page.getByRole('tab', { name: 'Mandala visual' })).toBeVisible();
 }
 
+async function readInputHash(page: import('@playwright/test').Page): Promise<string> {
+  const label = page.getByText(/Hash da entrada:/);
+  if (!(await label.isVisible().catch(() => false))) {
+    await page.getByText('Ver recibo técnico').click();
+  }
+  const hashRow = page.getByText(/Hash da entrada:/).locator('..');
+  await expect(hashRow).toBeVisible({ timeout: 60_000 });
+  await expect(hashRow).not.toContainText('não declarado');
+  return (await hashRow.textContent())?.replace(/\s+/g, ' ').trim() ?? '';
+}
+
 test('astrologia-seeded-natal: receipt shows UTC, IANA, hash', async ({ page }) => {
   await openAstrologia(page);
   await expect(page.getByLabel('Proveniência do cálculo')).toBeVisible({ timeout: 60_000 });
@@ -20,13 +31,23 @@ test('astrologia-seeded-natal: receipt shows UTC, IANA, hash', async ({ page }) 
   await expect(hashRow).not.toContainText('não declarado');
 });
 
-test('astrologia-recalculate: switch maps and refresh', async ({ page }) => {
+test('astrologia-recalculate: switch maps changes calculation receipt', async ({ page }) => {
   await openAstrologia(page);
+  const referenceHash = await readInputHash(page);
+  expect(referenceHash).not.toBe('');
+
   await page.getByLabel('Mapa em foco').selectOption({ label: 'Natal: Pessoa Conhecida' });
   await page.getByRole('button', { name: 'Atualizar cálculo do mapa' }).click();
   await expect(page.getByLabel('Proveniência do cálculo')).toBeVisible({ timeout: 60_000 });
+  await expect
+    .poll(() => readInputHash(page), { timeout: 60_000 })
+    .not.toBe(referenceHash);
+
   await page.getByLabel('Mapa em foco').selectOption({ label: 'Natal: Mapa de referencia' });
-  await expect(page.getByLabel('Proveniência do cálculo')).toBeVisible({ timeout: 60_000 });
+  await page.getByRole('button', { name: 'Atualizar cálculo do mapa' }).click();
+  await expect
+    .poll(() => readInputHash(page), { timeout: 60_000 })
+    .toBe(referenceHash);
 });
 
 test('astrologia-incomplete-birth: no invented chart', async ({ page }) => {

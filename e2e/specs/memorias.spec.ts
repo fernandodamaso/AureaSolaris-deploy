@@ -1,15 +1,31 @@
 import { test, expect } from '@playwright/test';
 import { waitForShell } from '../helpers/app';
 
-test('memorias-review: approve revoke forget controls exist on seeded memories', async ({ page }) => {
+function memoryCard(page: import('@playwright/test').Page, content: string) {
+  return page.getByText(content, { exact: true })
+    .locator('xpath=ancestor::div[.//button[normalize-space()="Aprovar"]][1]');
+}
+
+test('memorias-review: approve revoke forget lifecycle', async ({ page }) => {
   await waitForShell(page);
   await page.getByRole('button', { name: 'Memórias' }).click();
-  await expect(page.getByText(/Memoria proposta de teste/)).toBeVisible({ timeout: 30_000 });
-  await expect(page.getByText(/Memoria aprovada de teste/)).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Aprovar' }).first()).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Revogar' }).first()).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Esquecer' }).first()).toBeVisible();
-  await page.getByRole('button', { name: 'Aprovar' }).first().click();
+  await expect(page.getByText('Memoria proposta de teste', { exact: true })).toBeVisible({ timeout: 30_000 });
+  await expect(page.getByText('Memoria aprovada de teste', { exact: true })).toBeVisible();
+
+  const card = memoryCard(page, 'Memoria proposta de teste');
+  await expect(card).toContainText('Status: proposed');
+
+  await card.getByRole('button', { name: 'Aprovar' }).click();
+  await expect(card).toContainText('Status: approved', { timeout: 30_000 });
+
+  await card.getByRole('button', { name: 'Revogar' }).click();
+  await expect(card).toContainText('Status: revoked', { timeout: 30_000 });
+
+  await card.getByRole('button', { name: 'Aprovar' }).click();
+  await expect(card).toContainText('Status: approved', { timeout: 30_000 });
+
+  await card.getByRole('button', { name: 'Esquecer' }).click();
+  await expect(page.getByText('Memoria proposta de teste', { exact: true })).toHaveCount(0, { timeout: 30_000 });
 });
 
 test('memorias-open-caderno: Estudar no Caderno from approved memory', async ({ page }) => {
