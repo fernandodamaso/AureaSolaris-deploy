@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { DiarioView } from '../../components/DiarioView';
-import { AgendaProvider } from '../../context/AgendaContext';
+import { IdentityProvider } from '../../features/identity/IdentityContext';
 
 // Mock safeInvoke at module level
 vi.mock('../../utils/tauri', () => ({
@@ -38,23 +38,24 @@ vi.mock('../../utils/tauri', () => ({
   }),
 }));
 
-const renderWithAgenda = (ui: React.ReactElement) => render(<AgendaProvider>{ui}</AgendaProvider>);
+const renderWithIdentity = (ui: React.ReactElement) => render(<IdentityProvider>{ui}</IdentityProvider>);
 
 describe('DiarioView', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    localStorage.clear();
   });
 
   it('renders without crashing', async () => {
-    const { container } = renderWithAgenda(<DiarioView />);
+    const { container } = renderWithIdentity(<DiarioView />);
     await waitFor(() => {
-      expect(container.textContent).toContain('Diário');
+      expect(container.textContent).toContain('Histórico');
     });
   });
 
   it('compiles a board study and returns to its source card', async () => {
     const onOpenStudy = vi.fn();
-    renderWithAgenda(<DiarioView onOpenStudy={onOpenStudy} />);
+    renderWithIdentity(<DiarioView onOpenStudy={onOpenStudy} />);
 
     expect((await screen.findAllByText('Saturno na casa 4')).length).toBeGreaterThan(0);
     expect(screen.getByText('Registro real ligado ao card.')).toBeTruthy();
