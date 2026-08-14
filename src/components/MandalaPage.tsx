@@ -2,7 +2,8 @@ import { useState, useMemo, useEffect, useRef } from 'react';
 import { useCertifiedNatalCalculation } from '../hooks/useCertifiedNatalCalculation';
 import { MandalaChart } from './MandalaChart';
 import { RefreshCw, User, Users, Plus, Edit3, MessageSquare, FileText } from 'lucide-react';
-import { useAgendaContext, type AureaProfile } from '../context/AgendaContext';
+import { useIdentity } from '../features/identity/IdentityContext';
+import type { AureaProfile } from '../features/identity/types';
 import { BirthForm } from './common/BirthForm';
 import { CalculationEvidence } from './common/CalculationEvidence';
 import { readCertifiedCalculation } from '../utils/certifiedCalculation';
@@ -40,7 +41,7 @@ function readBirthInput(profile: AureaProfile | ProfileConnection | null | undef
 }
 
 export const MandalaPage = () => {
-  const { profiles, mapSubjects, activeProfileId, activeSubjectId, setActiveSubjectId, addConnection, updateProfile } = useAgendaContext();
+  const { profiles, mapSubjects, activeProfileId, activeSubjectId, setActiveSubjectId, addConnection, updateProfile } = useIdentity();
   const selectedTarget = activeSubjectId;
   const [showForm, setShowForm] = useState(false);
   const [editingConnectionId, setEditingConnectionId] = useState<string | null>(null);
