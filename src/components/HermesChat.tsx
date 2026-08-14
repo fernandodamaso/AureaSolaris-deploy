@@ -1,7 +1,9 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Send, Sparkles, X } from 'lucide-react';
 import { useGlobalContext } from '../context/GlobalContext';
+import { useIdentity, type IdentityContextValue } from '../features/identity/IdentityContext';
 import { readCertifiedCalculation } from '../utils/certifiedCalculation';
+import type { LiveAstroData } from '../types/astrology';
 import type { BirthData } from '../types/private-profile';
 import {
   appendHermesMessage,
@@ -13,6 +15,12 @@ import {
 interface ChatMessage {
   role: 'user' | 'assistant';
   content: string;
+}
+
+export interface HermesPromptContext {
+  identity: Pick<IdentityContextValue, 'activeProfile' | 'activeSubjectId' | 'mapSubjects'>;
+  astro: { liveData: LiveAstroData | null };
+  system: { status: string };
 }
 
 function storedMessageToChat(message: HermesStoredMessage): ChatMessage | null {
@@ -39,10 +47,10 @@ function formatCalculatedPositions(positions: Record<string, unknown>): string {
     .join(' | ');
 }
 
-function resolveActiveSubject(ctx: ReturnType<typeof useGlobalContext>) {
-  const owner = ctx.agenda.activeProfile;
-  const subject = ctx.agenda.mapSubjects?.find(candidate =>
-    candidate.ownerProfileId === owner?.id && candidate.id === ctx.agenda.activeSubjectId
+function resolveActiveSubject(ctx: HermesPromptContext) {
+  const owner = ctx.identity.activeProfile;
+  const subject = ctx.identity.mapSubjects?.find(candidate =>
+    candidate.ownerProfileId === owner?.id && candidate.id === ctx.identity.activeSubjectId
   );
   return {
     owner,
@@ -52,7 +60,7 @@ function resolveActiveSubject(ctx: ReturnType<typeof useGlobalContext>) {
   };
 }
 
-export function buildSystemPrompt(ctx: ReturnType<typeof useGlobalContext>): string {
+export function buildSystemPrompt(ctx: HermesPromptContext): string {
   const { astro, system } = ctx;
   const { owner, subject, source, name } = resolveActiveSubject(ctx);
   const birthSource = (source?.birthData ?? source?.natal ?? {}) as BirthData;
@@ -111,10 +119,20 @@ ESTADO LOCAL — ${system.status}.`;
 }
 
 export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {
-  const ctx = useGlobalContext();
-  const activeOwner = ctx.agenda.activeProfile;
-  const activeSubject = ctx.agenda.mapSubjects?.find(subject =>
-    subject.ownerProfileId === activeOwner?.id && subject.id === ctx.agenda.activeSubjectId
+  const global = useGlobalContext();
+  const identity = useIdentity();
+  const promptContext: HermesPromptContext = {
+    identity: {
+      activeProfile: identity.activeProfile,
+      activeSubjectId: identity.activeSubjectId,
+      mapSubjects: identity.mapSubjects,
+    },
+    astro: { liveData: global.astro.liveData },
+    system: { status: global.system.status },
+  };
+  const activeOwner = identity.activeProfile;
+  const activeSubject = identity.mapSubjects?.find(subject =>
+    subject.ownerProfileId === activeOwner?.id && subject.id === identity.activeSubjectId
   );
   const activeSubjectName = activeSubject?.name ?? activeOwner?.name ?? 'Mapa não selecionado';
   const activeSubjectSource = activeSubject?.source ?? activeOwner;
@@ -125,7 +143,7 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
     activeSubjectSource?.certifiedNatalCalculation,
     'natal',
   );
-  const certifiedTransit = readCertifiedCalculation(ctx.astro.liveData, 'transit');
+  const certifiedTransit = readCertifiedCalculation(global.astro.liveData, 'transit');
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -141,8 +159,8 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
   const [useFullPrompt, setUseFullPrompt] = useState<boolean>(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const sendMessageRef = useRef<(overrideText?: string) => Promise<void>>(async () => {});
-  const ctxRef = useRef(ctx);
-  ctxRef.current = ctx;
+  const ctxRef = useRef(promptContext);
+  ctxRef.current = promptContext;
 
   // Refs for current state inside event listener
   const stateRef = useRef({ messages, loading });
@@ -166,7 +184,7 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
     if (!isOpen) return;
 
     let cancelled = false;
-    const profile = ctxRef.current.agenda.activeProfile;
+    const profile = ctxRef.current.identity.activeProfile;
     setThreadId(null);
     setInitialized(false);
 
@@ -283,7 +301,7 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
       // Choose which prompt to use. If the user requested full prompt for
       // the next message, use it and reset the flag; otherwise prefer the
       // summarized prompt for speed.
-      let promptToUse = buildSystemPrompt(ctxRef.current);
+      const promptToUse = buildSystemPrompt(ctxRef.current);
       if (useFullPrompt) {
         setUseFullPrompt(false);
       }
@@ -396,7 +414,7 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
   }, [sendMessage]);
 
   const proposeHermesMemoryFromMessage = async (message: ChatMessage) => {
-    const ownerId = ctx.agenda.activeProfile?.id;
+    const ownerId = identity.activeProfile?.id;
     const currentThreadId = threadId;
     if (!ownerId || !currentThreadId || message.role !== 'assistant') return;
 
@@ -511,7 +529,7 @@ export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
           <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
             <div className={`message-bubble ${m.role === 'user' ? 'user-bubble text-right' : 'assistant-bubble text-left'}`}>
               <div>{m.content}</div>
-              {m.role === 'assistant' && ctx.agenda.activeProfile && threadId && (
+              {m.role === 'assistant' && identity.activeProfile && threadId && (
                 <div className="message-action flex justify-end">
                   <button
                     type="button"
