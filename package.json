@@ -18,7 +18,8 @@
     "lint:fix": "eslint src/ --fix",
     "check": "npm run lint && npm run test && npm run build",
     "test": "vitest run --configLoader runner",
-    "test:watch": "vitest --configLoader runner"
+    "test:watch": "vitest --configLoader runner",
+    "test:e2e": "playwright test --config=e2e/playwright.config.ts"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.2.1",
@@ -31,6 +32,7 @@
     "react-dom": "^19.1.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.55.1",
     "@tauri-apps/cli": "^2",
     "@testing-library/react": "^16.3.2",
     "@types/react": "^19.1.8",
