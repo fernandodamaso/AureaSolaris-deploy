@@ -4,7 +4,7 @@ import { DiarioSidebar } from './diario/DiarioSidebar';
 import DiarioEditor from './diario/DiarioEditor';
 import { StudyArchive } from './diario/StudyArchive';
 import { History, PenLine, Plus } from 'lucide-react';
-import { useAgendaContext } from '../context/AgendaContext';
+import { useIdentity } from '../features/identity/IdentityContext';
 
 type DiarioViewProps = {
   onOpenStudy?: (boardId: string, nodeId: number) => void;
@@ -12,7 +12,7 @@ type DiarioViewProps = {
 
 const DiarioViewInner: React.FC<DiarioViewProps> = ({ onOpenStudy = () => undefined }) => {
   const { activeEntry, createEntry, isLoading } = useDiario();
-  const { profiles, mapSubjects, activeProfileId, activeSubjectId, setActiveSubjectId } = useAgendaContext();
+  const { profiles, mapSubjects, activeProfileId, activeSubjectId, setActiveSubjectId } = useIdentity();
   const [mode, setMode] = useState<'history' | 'notes'>('history');
 
   const availableMaps = useMemo(() => {
@@ -138,7 +138,7 @@ const EmptyState = ({ onCreate }: { onCreate: () => Promise<void> }) => (
   </div>
 );
 
-export const DiarioView: React.FC<DiarioViewProps> = props => (
+export const DiarioView: React.FC<DiarioViewProps> = (props) => (
   <DiarioProvider>
     <DiarioViewInner {...props} />
   </DiarioProvider>
