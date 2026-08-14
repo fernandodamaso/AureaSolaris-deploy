@@ -52,7 +52,15 @@ test('caderno-create-study: from Astrologia portal', async ({ page }) => {
   await page.getByRole('tab', { name: 'Caderno Vivo' }).click();
   await page.getByLabel(/O que você quer estudar agora/i).fill('Mercurio E2E');
   await page.getByRole('button', { name: 'Criar estudo' }).click();
-  await expect(page.getByText(/Mercurio E2E|Caderno/i).first()).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Estudo — Mercurio E2E' })).toBeVisible({ timeout: 30_000 });
+  await expect
+    .poll(async () => {
+      const values = await page.locator('textarea').evaluateAll((els) =>
+        els.map((el) => (el as HTMLTextAreaElement).value),
+      );
+      return values.some((value) => value.includes('Mercurio E2E'));
+    }, { timeout: 30_000 })
+    .toBe(true);
 });
 
 test('caderno-reload: notes survive reload', async ({ page }) => {

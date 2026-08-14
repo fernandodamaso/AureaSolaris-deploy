@@ -46,7 +46,9 @@ test('astrologia-incomplete-birth: no invented chart', async ({ page }) => {
 test('astrologia-open-caderno: Estudar no Caderno', async ({ page }) => {
   await openAstrologia(page);
   await page.getByRole('button', { name: /Estudar no Caderno/i }).click();
-  await expect(page.getByText(/Caderno/i).first()).toBeVisible();
+  // Destination-only landmarks: opened study board, not the sidebar/source button text.
+  await expect(page.getByRole('button', { name: /Estudo —/ })).toBeVisible({ timeout: 30_000 });
+  await expect(page.getByRole('button', { name: 'Boards' })).toBeVisible();
 });
 
 test('astrologia-open-hermes: Tutor IA', async ({ page }) => {

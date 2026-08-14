@@ -12,9 +12,14 @@ test('hermes-mocked-proposal: reply stays proposal until review', async ({ page 
   await page.getByRole('button', { name: 'Enviar mensagem ao Hermes' }).click();
   await expect(page.getByText('Resposta ficticia de teste do Hermes.')).toBeVisible({ timeout: 30_000 });
   await page.getByRole('button', { name: 'Propor memória' }).click();
-  // Memory is proposed, not silently approved — open Memórias and look for proposed status if UI surfaces it.
+  await expect(page.getByText('Memória Hermes proposta com sucesso.')).toBeVisible({ timeout: 30_000 });
   await page.getByRole('button', { name: 'Memórias' }).click();
-  await expect(page.getByText(/proposed|proposta|Pergunta E2E|Resposta ficticia/i).first()).toBeVisible({ timeout: 30_000 });
+  await expect(page.getByRole('heading', { name: 'Memória do Hermes' })).toBeVisible();
+  // Evidence note is unique to a newly proposed memory (not the open Hermes chat bubble).
+  const proposedCard = page.locator('div').filter({
+    hasText: /Memória proposta a partir da conversa Hermes/,
+  }).filter({ hasText: 'Status: proposed' });
+  await expect(proposedCard.first()).toBeVisible({ timeout: 30_000 });
 });
 
 test('study-loop: map to hermes to caderno', async ({ page }) => {
@@ -28,10 +33,15 @@ test('study-loop: map to hermes to caderno', async ({ page }) => {
   await page.getByRole('button', { name: 'Enviar mensagem ao Hermes' }).click();
   await expect(page.getByText('Resposta ficticia de teste do Hermes.').first()).toBeVisible({ timeout: 30_000 });
   await page.getByRole('button', { name: /Estudar no Caderno/i }).first().click();
-  await expect(page.getByText(/Caderno/i).first()).toBeVisible();
+  await expect(page.getByRole('button', { name: /Estudo —/ })).toBeVisible({ timeout: 30_000 });
+  await expect(page.getByRole('button', { name: 'Boards' })).toBeVisible();
   await page.reload();
   await waitForShell(page);
   await page.getByRole('button', { name: 'Caderno Vivo' }).click();
-  // Board still opens after study loop
-  await expect(page.getByText(/Nota A de teste|Caderno/i).first()).toBeVisible({ timeout: 30_000 });
+  // After study creation, last board may restore; accept open canvas or board list.
+  await expect(
+    page.getByRole('button', { name: /Estudo —/ })
+      .or(page.getByLabel(/Abrir caderno/i).first())
+      .or(page.getByRole('heading', { name: 'Seus cadernos' })),
+  ).toBeVisible({ timeout: 30_000 });
 });

@@ -12,4 +12,5 @@ export async function assertHealthIsTestUser(request: import('@playwright/test')
   expect(response.ok()).toBeTruthy();
   const body = await response.json();
   expect(body.test_user).toBe(true);
+  expect(body.browser_contract_version).toBe(2);
 }

@@ -71,9 +71,7 @@ def pick_free_port(host: str = "127.0.0.1") -> int:
 
 
 def ensure_frontend_built() -> None:
-    index = REPO_ROOT / "dist" / "index.html"
-    if index.is_file():
-        return
+    # Always rebuild so local/CI harness never serves a stale dist against newer src.
     subprocess.run(["npm", "run", "build"], cwd=REPO_ROOT, check=True)
 
 
