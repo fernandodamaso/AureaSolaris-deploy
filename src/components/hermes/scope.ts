@@ -1,12 +1,20 @@
 import type { useGlobalContext } from '../../context/GlobalContext';
+import type { IdentityContextValue } from '../../features/identity/IdentityContext';
 import { buildHermesTopicKey } from './threadModel';
 
 export type HermesGlobalContext = ReturnType<typeof useGlobalContext>;
+export type HermesIdentityContext = Pick<
+  IdentityContextValue,
+  'activeProfile' | 'activeSubjectId' | 'mapSubjects'
+>;
+export type HermesPromptContext = Pick<HermesGlobalContext, 'astro' | 'system'> & {
+  identity: HermesIdentityContext;
+};
 
-export function resolveHermesActiveScope(ctx: HermesGlobalContext) {
-  const owner = ctx.agenda.activeProfile;
-  const subject = ctx.agenda.mapSubjects?.find(candidate =>
-    candidate.ownerProfileId === owner?.id && candidate.id === ctx.agenda.activeSubjectId
+export function resolveHermesActiveScope(identity: HermesIdentityContext) {
+  const owner = identity.activeProfile;
+  const subject = identity.mapSubjects?.find(candidate =>
+    candidate.ownerProfileId === owner?.id && candidate.id === identity.activeSubjectId
   );
   const source = subject?.source ?? owner;
   const name = subject?.name ?? owner?.name ?? 'Mapa não selecionado';
