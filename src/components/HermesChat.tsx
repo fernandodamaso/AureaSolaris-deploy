@@ -1,17 +1,29 @@
 import React from 'react';
 import { useGlobalContext } from '../context/GlobalContext';
+import { useIdentity } from '../features/identity/IdentityContext';
 import { readCertifiedCalculation } from '../utils/certifiedCalculation';
 import { HermesPanel } from './hermes/HermesPanel';
-import { resolveHermesActiveScope } from './hermes/scope';
+import { resolveHermesActiveScope, type HermesPromptContext } from './hermes/scope';
 import { useHermesChatController } from './hermes/useHermesChatController';
 
 export { buildSystemPrompt } from './hermes/prompt';
+export type { HermesPromptContext } from './hermes/scope';
 
 export const HermesChat: React.FC<{ isOpen: boolean; onClose: () => void }> = ({ isOpen, onClose }) => {
-  const ctx = useGlobalContext();
-  const scope = resolveHermesActiveScope(ctx);
+  const global = useGlobalContext();
+  const identity = useIdentity();
+  const ctx: HermesPromptContext = {
+    identity: {
+      activeProfile: identity.activeProfile,
+      activeSubjectId: identity.activeSubjectId,
+      mapSubjects: identity.mapSubjects,
+    },
+    astro: global.astro,
+    system: global.system,
+  };
+  const scope = resolveHermesActiveScope(ctx.identity);
   const certifiedNatal = readCertifiedCalculation(scope.source?.certifiedNatalCalculation, 'natal');
-  const certifiedTransit = readCertifiedCalculation(ctx.astro.liveData, 'transit');
+  const certifiedTransit = readCertifiedCalculation(global.astro.liveData, 'transit');
   const controller = useHermesChatController({ isOpen, ctx, scope });
 
   if (!isOpen) return null;
