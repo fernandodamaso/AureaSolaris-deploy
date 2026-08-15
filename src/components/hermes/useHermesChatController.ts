@@ -38,6 +38,7 @@ export function useHermesChatController({ isOpen, ctx, scope }: UseHermesChatCon
   const sendMessageRef = useRef<(overrideText?: string) => Promise<void>>(async () => {});
   const ctxRef = useRef(ctx);
   ctxRef.current = ctx;
+  const scopeOwnerId = scope.owner?.id;
 
   const stateRef = useRef({ messages, loading });
   useEffect(() => {
@@ -60,29 +61,28 @@ export function useHermesChatController({ isOpen, ctx, scope }: UseHermesChatCon
     if (!isOpen) return;
 
     let cancelled = false;
-    const profile = scope.owner;
     setThreadId(null);
     setInitialized(false);
 
-    if (!profile) {
+    if (!scopeOwnerId) {
       setMemoryStatus('Memoria local indisponivel: entre em um perfil.');
       return () => {
         cancelled = true;
       };
     }
 
-    const topicKey = scope.topicKey ?? `hermes:owner:${profile.id}:subject:${profile.id}`;
+    const topicKey = scope.topicKey ?? `hermes:owner:${scopeOwnerId}:subject:${scopeOwnerId}`;
     const title = `Hermes — ${scope.name}`;
 
     const openPersistentThread = async () => {
       setMemoryStatus('Abrindo memoria local...');
       const opened = await openHermesThread({
-        ownerId: profile.id,
+        ownerId: scopeOwnerId,
         topicKey,
         title,
       });
       const context = await getHermesThreadContext({
-        ownerId: profile.id,
+        ownerId: scopeOwnerId,
         threadId: opened.thread.id,
         limit: 50,
       });
@@ -110,7 +110,7 @@ export function useHermesChatController({ isOpen, ctx, scope }: UseHermesChatCon
     return () => {
       cancelled = true;
     };
-  }, [isOpen, scope.owner, scope.topicKey, scope.name]);
+  }, [isOpen, scopeOwnerId, scope.topicKey, scope.name]);
 
   useEffect(() => {
     if (!initialized && isOpen) {
@@ -146,7 +146,7 @@ export function useHermesChatController({ isOpen, ctx, scope }: UseHermesChatCon
     if (!overrideText) setInput('');
     setLoading(true);
 
-    const ownerId = scope.owner?.id;
+    const ownerId = scopeOwnerId;
     const currentThreadId = threadId;
 
     try {
@@ -260,7 +260,7 @@ export function useHermesChatController({ isOpen, ctx, scope }: UseHermesChatCon
     externalConsent,
     input,
     provider,
-    scope.owner?.id,
+    scopeOwnerId,
     streamingEnabled,
     threadId,
     useFullPrompt,
@@ -271,7 +271,7 @@ export function useHermesChatController({ isOpen, ctx, scope }: UseHermesChatCon
   }, [sendMessage]);
 
   const proposeMemoryFromMessage = useCallback(async (message: HermesChatMessage) => {
-    const ownerId = scope.owner?.id;
+    const ownerId = scopeOwnerId;
     const currentThreadId = threadId;
     if (!ownerId || !currentThreadId || message.role !== 'assistant') return;
 
@@ -291,7 +291,7 @@ export function useHermesChatController({ isOpen, ctx, scope }: UseHermesChatCon
       const errorMessage = error instanceof Error ? error.message : 'falha ao propor memoria';
       setMemoryStatus(`Memória local indisponível: ${errorMessage}`);
     }
-  }, [scope.owner?.id, scope.topicKey, threadId]);
+  }, [scopeOwnerId, scope.topicKey, threadId]);
 
   return {
     messages,
