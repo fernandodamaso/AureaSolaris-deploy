@@ -35,6 +35,9 @@ jobs:
       - name: Run frontend unit tests
         run: npm test
 
+      - name: Run persistence unit tests
+        run: python -m unittest tests.test_persistence_repositories tests.test_local_storage tests.test_hermes_mind_api -v
+
       - name: Run E2E harness unit tests
         run: python -m unittest tests.test_run_e2e -v
 
