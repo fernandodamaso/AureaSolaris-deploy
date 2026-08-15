@@ -1,9 +1,8 @@
 """Focused database lifecycle boundary for Aurea persistence.
 
-The legacy LocalStorage implementation remains the compatibility backend while
-callers migrate to feature-owned repositories.  This class intentionally
-exposes lifecycle/diagnostic/backup operations only; feature CRUD belongs to
-other repositories in this package.
+Migration discovery/checksum/application remains inside the audited backend for
+compatibility, but production callers reach it only through this lifecycle
+contract. Feature CRUD and backups live in separate repositories.
 """
 
 from __future__ import annotations
@@ -12,7 +11,7 @@ from typing import Any
 
 
 class DatabaseRepository:
-    """Database lifecycle, migration initialization, diagnostics and backup."""
+    """Database initialization/migrations and integrity diagnostics only."""
 
     __slots__ = ("_storage",)
 
@@ -24,6 +23,3 @@ class DatabaseRepository:
 
     def diagnostic(self) -> dict:
         return self._storage.diagnostic()
-
-    def backup_private(self) -> dict:
-        return self._storage.backup_private()
