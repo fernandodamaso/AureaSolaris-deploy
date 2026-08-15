@@ -110,7 +110,7 @@ export function useHermesChatController({ isOpen, ctx, scope }: UseHermesChatCon
     return () => {
       cancelled = true;
     };
-  }, [isOpen, scope.owner?.id, scope.topicKey, scope.name]);
+  }, [isOpen, scope.owner, scope.topicKey, scope.name]);
 
   useEffect(() => {
     if (!initialized && isOpen) {
