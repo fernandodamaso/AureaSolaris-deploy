@@ -32,6 +32,9 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r requirements-api.txt
 
+      - name: Run frontend lint
+        run: npm run lint
+
       - name: Run frontend unit tests
         run: npm test
 
