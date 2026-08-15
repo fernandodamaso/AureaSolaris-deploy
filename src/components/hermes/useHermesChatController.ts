@@ -9,14 +9,14 @@ import {
 } from '../../services/chat';
 import { readCertifiedCalculation } from '../../utils/certifiedCalculation';
 import { buildSystemPrompt } from './prompt';
-import type { HermesActiveScope, HermesGlobalContext } from './scope';
+import type { HermesActiveScope, HermesPromptContext } from './scope';
 import { storedMessageToChat, type HermesChatMessage } from './threadModel';
 
 export type HermesProvider = 'openai' | 'hermes_gateway';
 
 interface UseHermesChatControllerOptions {
   isOpen: boolean;
-  ctx: HermesGlobalContext;
+  ctx: HermesPromptContext;
   scope: HermesActiveScope;
 }
 
@@ -60,7 +60,7 @@ export function useHermesChatController({ isOpen, ctx, scope }: UseHermesChatCon
     if (!isOpen) return;
 
     let cancelled = false;
-    const profile = ctxRef.current.agenda.activeProfile;
+    const profile = scope.owner;
     setThreadId(null);
     setInitialized(false);
 
