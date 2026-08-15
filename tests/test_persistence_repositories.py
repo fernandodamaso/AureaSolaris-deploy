@@ -1,9 +1,12 @@
 from __future__ import annotations
 
+from persistence.backup import BackupRepository
+from persistence.compatibility import StorageCompatibilityFacade
 from persistence.databases import DatabaseRepository
 from persistence.hermes_repository import HermesRepository
 from persistence.identity_repository import IdentityRepository
 from persistence.knowledge_repository import KnowledgeRepository
+from persistence.services import PersistenceRepositories
 
 
 class StorageSpy:
@@ -60,12 +63,23 @@ class StorageSpy:
         return self._record("search_knowledge", *args, **kwargs)
 
 
-def test_database_repository_owns_lifecycle_and_backup_only() -> None:
+def test_database_repository_owns_lifecycle_without_feature_or_backup_api() -> None:
     storage = StorageSpy()
     repository = DatabaseRepository(storage)
 
+    assert repository.initialize()["method"] == "initialize"
     assert repository.diagnostic()["method"] == "diagnostic"
+    assert not hasattr(repository, "backup_private")
+    assert not hasattr(repository, "open_hermes_thread")
+    assert not hasattr(repository, "create_private_account")
+
+
+def test_backup_repository_owns_backup_without_database_or_feature_api() -> None:
+    storage = StorageSpy()
+    repository = BackupRepository(storage)
+
     assert repository.backup_private()["method"] == "backup_private"
+    assert not hasattr(repository, "diagnostic")
     assert not hasattr(repository, "open_hermes_thread")
     assert not hasattr(repository, "create_private_account")
 
@@ -117,3 +131,23 @@ def test_knowledge_repository_has_read_focused_contract() -> None:
     assert result["args"] == ("saturno",)
     assert result["kwargs"] == {"limit": 8, "types": ["claim"]}
     assert not hasattr(repository, "create_account")
+
+
+def test_compatibility_facade_routes_legacy_callers_through_focused_repositories() -> None:
+    storage = StorageSpy()
+    repositories = PersistenceRepositories.from_storage(storage)
+    facade = StorageCompatibilityFacade(repositories)
+
+    assert facade.diagnostic()["method"] == "diagnostic"
+    assert facade.backup_private()["method"] == "backup_private"
+    assert facade.list_private_accounts_for_bootstrap()["method"] == "list_private_accounts_for_bootstrap"
+    assert facade.create_private_account(
+        account_id="owner-a",
+        display_name="Owner A",
+        login_name="owner-a",
+        password="secret",
+    )["method"] == "create_private_account"
+    assert facade.open_hermes_thread("owner-a", "topic-a", "Topic A")["method"] == "open_hermes_thread"
+    assert facade.search_knowledge("saturno", limit=8, types=["claim"])["method"] == "search_knowledge"
+
+    assert not hasattr(facade, "_storage")
