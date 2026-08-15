@@ -22,8 +22,8 @@ export interface Aspect {
   p1: string;
   p2: string;
   type: string;
-  orb: number;
   symbol: string;
+  orb: number;
 }
 
 export interface MandalaChartProps {
@@ -55,4 +55,45 @@ export interface MandalaLayout {
 export interface MandalaPlanetPosition {
   degree: number;
   house?: number;
+}
+
+export interface MandalaSpecialRule {
+  label: string;
+  layer: string;
+  school: string;
+  criterion: string;
+  aspects: readonly number[];
+  orbs: Readonly<Record<number, number>>;
+}
+
+export interface PlanetTooltipModel {
+  name: string;
+  sign: string;
+  degree: string;
+  retrograde: boolean;
+  stationary: boolean;
+  motion: string;
+  color: string;
+  x: number;
+  y: number;
+  decanate: string;
+  term: string;
+  mansion: string | null;
+  star: string | null;
+  dignity: string;
+  visibility: string;
+  special: string | null;
+  specialRule?: MandalaSpecialRule;
+}
+
+export interface AspectTooltipModel {
+  type: string;
+  p1: string;
+  p2: string;
+  orb: number;
+  general: string;
+  specific: string;
+  x: number;
+  y: number;
+  color: string;
 }

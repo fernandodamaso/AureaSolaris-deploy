@@ -1,4 +1,4 @@
-import { normalizeDegree } from '../../utils/mandalaGeometry';
+import { normalizeDegree } from '../../utils/mandala-geometry';
 import type { MandalaLayout, MandalaPlanetPosition, Planet } from './types';
 
 const DEFAULT_HIDDEN_SECONDARY_BODIES = new Set(['SouthNode', 'Lilith', 'Vertex']);
