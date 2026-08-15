@@ -9,7 +9,7 @@ describe('Hermes thread model', () => {
   });
 
   it('maps persisted Hermes and system roles back to assistant presentation messages', () => {
-    const base = {
+    const base: Omit<HermesStoredMessage, 'role'> = {
       id: 'message-a',
       owner_id: 'owner-a',
       thread_id: 'thread-a',
@@ -18,17 +18,17 @@ describe('Hermes thread model', () => {
       calculation_receipt_hash: null,
       source_refs: [],
       created_at: '2026-08-14T00:00:00Z',
-    } as const;
+    };
 
-    expect(storedMessageToChat({ ...base, role: 'user' } as HermesStoredMessage)).toEqual({
+    expect(storedMessageToChat({ ...base, role: 'user' })).toEqual({
       role: 'user',
       content: 'content',
     });
-    expect(storedMessageToChat({ ...base, role: 'hermes' } as HermesStoredMessage)).toEqual({
+    expect(storedMessageToChat({ ...base, role: 'hermes' })).toEqual({
       role: 'assistant',
       content: 'content',
     });
-    expect(storedMessageToChat({ ...base, role: 'system' } as HermesStoredMessage)).toEqual({
+    expect(storedMessageToChat({ ...base, role: 'system' })).toEqual({
       role: 'assistant',
       content: 'content',
     });

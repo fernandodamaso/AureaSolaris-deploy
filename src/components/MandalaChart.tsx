@@ -5,10 +5,8 @@ import { MandalaPanels } from './mandala/MandalaPanels';
 import { MandalaLayerSettings, MandalaTooltipOverlays } from './mandala/MandalaWheelChrome';
 import { renderMandalaWheel } from './mandala/renderMandalaWheel';
 import type {
-  Aspect,
   AspectTooltipModel,
   MandalaChartProps,
-  Planet,
   PlanetTooltipModel,
 } from './mandala/types';
 
