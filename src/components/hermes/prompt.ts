@@ -1,6 +1,6 @@
 import type { BirthData } from '../../types/private-profile';
 import { readCertifiedCalculation } from '../../utils/certifiedCalculation';
-import { resolveHermesActiveScope, type HermesGlobalContext } from './scope';
+import { resolveHermesActiveScope, type HermesPromptContext } from './scope';
 
 function formatCalculatedPositions(positions: Record<string, unknown>): string {
   return Object.entries(positions)
@@ -18,9 +18,9 @@ function formatCalculatedPositions(positions: Record<string, unknown>): string {
     .join(' | ');
 }
 
-export function buildSystemPrompt(ctx: HermesGlobalContext): string {
-  const { astro, system } = ctx;
-  const { owner, subject, source, name } = resolveHermesActiveScope(ctx);
+export function buildSystemPrompt(ctx: HermesPromptContext): string {
+  const { astro, system, identity } = ctx;
+  const { owner, subject, source, name } = resolveHermesActiveScope(identity);
   const birthSource = (source?.birthData ?? source?.natal ?? {}) as BirthData;
   const birthDate = source?.birthDate ?? birthSource.birthDate ?? birthSource.date;
   const birthTime = source?.birthTime ?? birthSource.birthTime ?? birthSource.time;
