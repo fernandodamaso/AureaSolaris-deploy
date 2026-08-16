@@ -9,6 +9,10 @@ on:
         description: "Exact Vercel deployment URL to smoke-test"
         required: true
         type: string
+      deployment_sha:
+        description: "Optional Git commit SHA that produced this deployment"
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -23,7 +27,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout deployed source revision
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.client_payload.git.sha || inputs.deployment_sha || github.sha }}
 
       - uses: actions/setup-node@v4
         with:
@@ -34,6 +41,7 @@ jobs:
         id: target
         env:
           RAW_DEPLOYMENT_URL: ${{ github.event.client_payload.url || inputs.deployment_url }}
+          RAW_DEPLOYMENT_SHA: ${{ github.event.client_payload.git.sha || inputs.deployment_sha || github.sha }}
         run: |
           python - <<'PY'
           import os
@@ -52,9 +60,15 @@ jobs:
               print('::error::Deployed E2E only accepts HTTPS *.vercel.app deployment URLs so automation secrets cannot be sent to an arbitrary host.')
               raise SystemExit(1)
 
+          sha = os.environ.get('RAW_DEPLOYMENT_SHA', '').strip()
+          if not sha:
+              print('::error::No source revision is associated with this deployment test.')
+              raise SystemExit(1)
+
           with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as output:
               output.write(f'url={raw}\n')
-          print(f'Validated Vercel deployment: {raw}')
+              output.write(f'sha={sha}\n')
+          print(f'Validated Vercel deployment: {raw} from {sha}')
           PY
 
       - name: Install Node dependencies
@@ -94,12 +108,13 @@ jobs:
             echo "## Deployed E2E"
             echo
             echo "Deployment: \`${{ steps.target.outputs.url || 'target validation failed' }}\`"
+            echo "Source revision: \`${{ steps.target.outputs.sha || 'source revision unavailable' }}\`"
             echo
             echo "This gate checks the deployed web build only: root document, React bootstrap, critical same-origin JS/CSS, and uncaught browser errors. It does **not** replace the Python-backed isolated local-runtime E2E."
             echo
             echo "| Gate | Outcome |"
             echo "|---|---|"
-            echo "| target safety validation | ${{ steps.target.outcome }} |"
+            echo "| target/source safety validation | ${{ steps.target.outcome }} |"
             echo "| npm ci | ${{ steps.install.outcome }} |"
             echo "| Chromium install | ${{ steps.chromium.outcome }} |"
             echo "| deployed web smoke | ${{ steps.smoke.outcome }} |"
@@ -107,16 +122,17 @@ jobs:
             echo
             echo "### Reproduce against this deployment"
             echo '```bash'
+            echo "git checkout '${{ steps.target.outputs.sha }}'"
             echo "AUREA_E2E_URL='${{ steps.target.outputs.url }}' npx playwright test deployed-smoke.spec.ts --config=e2e/playwright.config.ts"
             echo '```'
             echo
             if [ "${{ steps.target.outcome }}" = "failure" ]; then
-              echo "**Start with:** the deployment URL/integration payload. Only an HTTPS \`*.vercel.app\` deployment target is accepted."
+              echo "**Start with:** the deployment URL/source revision integration payload. Only an HTTPS \`*.vercel.app\` deployment target is accepted."
             elif [ "${{ steps.smoke.outcome }}" = "failure" ]; then
-              echo "**Start with:** the Vercel deployment itself. Inspect the Playwright failure and \`deployed-playwright-artifacts-${{ github.run_id }}-${{ github.run_attempt }}\` when available."
+              echo "**Start with:** the exact Vercel deployment above. Inspect the Playwright failure and \`deployed-playwright-artifacts-${{ github.run_id }}-${{ github.run_attempt }}\` when available."
             elif [ "${{ steps.chromium.outcome }}" = "failure" ] || [ "${{ steps.install.outcome }}" = "failure" ]; then
               echo "**Start with:** CI/Playwright setup before changing application code."
             else
-              echo "The deployed web shell passed its non-destructive smoke contract."
+              echo "The deployed web shell passed its non-destructive smoke contract for the recorded source revision."
             fi
           } >> "$GITHUB_STEP_SUMMARY"
