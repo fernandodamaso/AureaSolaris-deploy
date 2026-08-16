@@ -19,7 +19,13 @@ Aurea Solaris is a local-first Windows application whose primary experience is c
 
 | Task | Start here |
 |---|---|
-| React screens/components | `src/App.tsx`, `src/components/`, `src/context/` |
+| React screens/components | `src/App.tsx`, `src/components/` |
+| Frontend identity/profile state | `src/features/identity/` |
+| Frontend agenda/task/event state | `src/features/agenda/` |
+| Frontend astrology preferences/helpers | `src/features/astrology/` |
+| Frontend health-document state | `src/features/health/` |
+| Cross-feature frontend workflows | `src/app/workflows/`, `src/app/AppProviders.tsx` |
+| Legacy frontend context compatibility | `src/context/AgendaContext.tsx` — thin adapter only; do not add new state, persistence, or domain rules here |
 | Caderno Vivo / journal | `src/components/MesaCriacao.tsx`, `src/components/DiarioView.tsx` |
 | Browser/Chrome runtime | `vite.config.ts`, `main_api.py`, `launch_chrome.bat` |
 | Tauri commands/window/native compatibility | `src-tauri/src/lib.rs`, `src-tauri/tauri.conf.json`, `docs/tauri-ipc-api.md` |
@@ -28,6 +34,8 @@ Aurea Solaris is a local-first Windows application whose primary experience is c
 | Knowledge corpus/import | `knowledge/engenharia_astrologica/`, `docs/astrology-knowledge-contract.md`, `docs/data/ENGENHARIA_SYNC_PLAYBOOK.md` |
 | Hermes memory/API | `src/components/HermesChat.tsx`, `docs/HERMES_MIND_ARCHITECTURE.md`, `docs/HERMES_MIND_API.md` |
 | Release/installer | `build.bat`, `build_sidecar.spec`, `src-tauri/binaries/`, `docs/RELEASE_VALIDATION_2026-08-10.md` |
+
+Feature-owned frontend state keeps domain logic separate from browser persistence. Put pure behavior in the feature model, browser-key access in that feature's storage adapter, and React state/actions in the feature context. New feature code must consume the feature API rather than expanding the legacy `AgendaContext` facade.
 
 ## Chrome access and release path
 
