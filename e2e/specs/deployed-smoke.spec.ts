@@ -6,18 +6,14 @@ if (!deploymentUrl) {
 }
 
 const deploymentOrigin = new URL(deploymentUrl).origin;
+const criticalResourceTypes = new Set(['document', 'script', 'stylesheet']);
 
-test('deployed-smoke: built web shell boots without critical static failures', async ({ page }) => {
-  const pageErrors: string[] = [];
+function collectCriticalNetworkFailures(page: Parameters<typeof test>[0] extends never ? never : any): string[] {
   const criticalRequestFailures: string[] = [];
 
-  page.on('pageerror', (error) => {
-    pageErrors.push(error.message);
-  });
-
-  page.on('requestfailed', (request) => {
+  page.on('requestfailed', (request: any) => {
     const resourceType = request.resourceType();
-    if (!['document', 'script', 'stylesheet'].includes(resourceType)) return;
+    if (!criticalResourceTypes.has(resourceType)) return;
 
     try {
       if (new URL(request.url()).origin !== deploymentOrigin) return;
@@ -28,6 +24,17 @@ test('deployed-smoke: built web shell boots without critical static failures', a
     criticalRequestFailures.push(
       `${resourceType}: ${request.url()} (${request.failure()?.errorText ?? 'unknown failure'})`,
     );
+  });
+
+  return criticalRequestFailures;
+}
+
+test('deployed-smoke: built web shell boots without critical static failures', async ({ page }) => {
+  const pageErrors: string[] = [];
+  const criticalRequestFailures = collectCriticalNetworkFailures(page);
+
+  page.on('pageerror', (error) => {
+    pageErrors.push(error.message);
   });
 
   const bypassSecret = process.env.VERCEL_AUTOMATION_BYPASS_SECRET;
@@ -71,4 +78,24 @@ test('deployed-smoke: built web shell boots without critical static failures', a
     criticalRequestFailures,
     `same-origin document/script/stylesheet failures:\n${criticalRequestFailures.join('\n')}`,
   ).toEqual([]);
+});
+
+test('deployed-smoke detector treats critical HTTP 404 responses as failures', async ({ page }) => {
+  const criticalRequestFailures = collectCriticalNetworkFailures(page);
+  const missingStylesheet = `${deploymentOrigin}/__deployed-smoke-missing.css`;
+
+  await page.route(missingStylesheet, async (route) => {
+    await route.fulfill({
+      status: 404,
+      contentType: 'text/css',
+      body: '/* synthetic missing stylesheet */',
+    });
+  });
+
+  await page.setContent(`<link rel="stylesheet" href="${missingStylesheet}">`, { waitUntil: 'load' });
+  await page.waitForTimeout(100);
+
+  expect(criticalRequestFailures).toEqual([
+    expect.stringContaining('stylesheet:'),
+  ]);
 });
