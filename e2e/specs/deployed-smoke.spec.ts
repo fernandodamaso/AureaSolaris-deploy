@@ -8,60 +8,46 @@ if (!deploymentUrl) {
 const deploymentOrigin = new URL(deploymentUrl).origin;
 const criticalResourceTypes = new Set(['document', 'script', 'stylesheet']);
 
+function isCriticalSameOriginRequest(url: string, resourceType: string): boolean {
+  if (!criticalResourceTypes.has(resourceType)) return false;
+  try {
+    return new URL(url).origin === deploymentOrigin;
+  } catch {
+    return false;
+  }
+}
+
 function collectCriticalNetworkFailures(page: Page): string[] {
-  const criticalRequestFailures: string[] = [];
+  const criticalFailures: string[] = [];
 
   page.on('requestfailed', (request) => {
     const resourceType = request.resourceType();
-    if (!criticalResourceTypes.has(resourceType)) return;
+    if (!isCriticalSameOriginRequest(request.url(), resourceType)) return;
 
-    try {
-      if (new URL(request.url()).origin !== deploymentOrigin) return;
-    } catch {
-      return;
-    }
-
-    criticalRequestFailures.push(
-      `${resourceType}: ${request.url()} (${request.failure()?.errorText ?? 'unknown failure'})`,
+    criticalFailures.push(
+      `${resourceType}: ${request.url()} (${request.failure()?.errorText ?? 'network failure'})`,
     );
   });
 
-  return criticalRequestFailures;
+  page.on('response', (response) => {
+    const request = response.request();
+    const resourceType = request.resourceType();
+    if (!isCriticalSameOriginRequest(response.url(), resourceType)) return;
+    if (response.status() >= 200 && response.status() < 300) return;
+
+    criticalFailures.push(`${resourceType}: ${response.url()} (HTTP ${response.status()})`);
+  });
+
+  return criticalFailures;
 }
 
 test('deployed-smoke: built web shell boots without critical static failures', async ({ page }) => {
   const pageErrors: string[] = [];
-  const criticalRequestFailures = collectCriticalNetworkFailures(page);
+  const criticalFailures = collectCriticalNetworkFailures(page);
 
   page.on('pageerror', (error) => {
     pageErrors.push(error.message);
   });
-
-  const bypassSecret = process.env.VERCEL_AUTOMATION_BYPASS_SECRET;
-  if (bypassSecret) {
-    await page.route('**/*', async (route) => {
-      const request = route.request();
-      let sameDeploymentOrigin = false;
-      try {
-        sameDeploymentOrigin = new URL(request.url()).origin === deploymentOrigin;
-      } catch {
-        // Leave malformed/non-URL requests untouched; Playwright will surface failures normally.
-      }
-
-      if (!sameDeploymentOrigin) {
-        await route.continue();
-        return;
-      }
-
-      await route.continue({
-        headers: {
-          ...request.headers(),
-          'x-vercel-protection-bypass': bypassSecret,
-          'x-vercel-set-bypass-cookie': 'true',
-        },
-      });
-    });
-  }
 
   const response = await page.goto('/', { waitUntil: 'domcontentloaded' });
   expect(response, 'root document should return an HTTP response').not.toBeNull();
@@ -75,13 +61,13 @@ test('deployed-smoke: built web shell boots without critical static failures', a
 
   expect(pageErrors, `uncaught browser errors:\n${pageErrors.join('\n')}`).toEqual([]);
   expect(
-    criticalRequestFailures,
-    `same-origin document/script/stylesheet failures:\n${criticalRequestFailures.join('\n')}`,
+    criticalFailures,
+    `same-origin document/script/stylesheet failures:\n${criticalFailures.join('\n')}`,
   ).toEqual([]);
 });
 
 test('deployed-smoke detector treats real critical HTTP 404 responses as failures', async ({ page }) => {
-  const criticalRequestFailures = collectCriticalNetworkFailures(page);
+  const criticalFailures = collectCriticalNetworkFailures(page);
   const missingStylesheet = `${deploymentOrigin}/__deployed-smoke-missing.css`;
 
   await page.goto('/', { waitUntil: 'domcontentloaded' });
@@ -95,7 +81,8 @@ test('deployed-smoke detector treats real critical HTTP 404 responses as failure
 
   const response = await missingResponse;
   expect(response.status()).toBe(404);
-  expect(criticalRequestFailures).toEqual([
+  expect(criticalFailures).toEqual([
     expect.stringContaining('stylesheet:'),
+    expect.stringContaining('HTTP 404'),
   ]);
 });
