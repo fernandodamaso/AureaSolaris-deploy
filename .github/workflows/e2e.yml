@@ -264,7 +264,7 @@ jobs:
 
       - name: Upload Playwright artifacts
         id: artifacts
-        if: steps.browser-e2e.outcome == 'failure'
+        if: failure() && steps.browser-e2e.outcome == 'failure'
         uses: actions/upload-artifact@v4
         with:
           name: playwright-artifacts-${{ github.run_id }}-${{ github.run_attempt }}
