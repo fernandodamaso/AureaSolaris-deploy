@@ -1,0 +1,56 @@
+import { test, expect } from '@playwright/test';
+
+const deploymentUrl = process.env.AUREA_E2E_URL;
+if (!deploymentUrl) {
+  throw new Error('AUREA_E2E_URL is required for deployed smoke validation.');
+}
+
+const deploymentOrigin = new URL(deploymentUrl).origin;
+
+test('deployed-smoke: built web shell boots without critical static failures', async ({ page }) => {
+  const pageErrors: string[] = [];
+  const criticalRequestFailures: string[] = [];
+
+  page.on('pageerror', (error) => {
+    pageErrors.push(error.message);
+  });
+
+  page.on('requestfailed', (request) => {
+    const resourceType = request.resourceType();
+    if (!['document', 'script', 'stylesheet'].includes(resourceType)) return;
+
+    try {
+      if (new URL(request.url()).origin !== deploymentOrigin) return;
+    } catch {
+      return;
+    }
+
+    criticalRequestFailures.push(
+      `${resourceType}: ${request.url()} (${request.failure()?.errorText ?? 'unknown failure'})`,
+    );
+  });
+
+  const bypassSecret = process.env.VERCEL_AUTOMATION_BYPASS_SECRET;
+  if (bypassSecret) {
+    await page.setExtraHTTPHeaders({
+      'x-vercel-protection-bypass': bypassSecret,
+      'x-vercel-set-bypass-cookie': 'true',
+    });
+  }
+
+  const response = await page.goto('/', { waitUntil: 'domcontentloaded' });
+  expect(response, 'root document should return an HTTP response').not.toBeNull();
+  expect(response?.ok(), `root document returned ${response?.status()}`).toBe(true);
+
+  await expect(page).toHaveTitle(/Aurea Solaris/i);
+  await expect(page.locator('#root')).not.toBeEmpty({ timeout: 15_000 });
+
+  // Let bootstrap promises and lazy static resources surface deterministic failures.
+  await page.waitForTimeout(750);
+
+  expect(pageErrors, `uncaught browser errors:\n${pageErrors.join('\n')}`).toEqual([]);
+  expect(
+    criticalRequestFailures,
+    `same-origin document/script/stylesheet failures:\n${criticalRequestFailures.join('\n')}`,
+  ).toEqual([]);
+});
