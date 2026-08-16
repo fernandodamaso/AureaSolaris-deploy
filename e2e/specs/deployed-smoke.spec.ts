@@ -81,8 +81,7 @@ test('deployed-smoke detector treats real critical HTTP 404 responses as failure
 
   const response = await missingResponse;
   expect(response.status()).toBe(404);
-  expect(criticalFailures).toEqual([
-    expect.stringContaining('stylesheet:'),
-    expect.stringContaining('HTTP 404'),
-  ]);
+  expect(criticalFailures).toHaveLength(1);
+  expect(criticalFailures[0]).toContain('stylesheet:');
+  expect(criticalFailures[0]).toContain('HTTP 404');
 });
