@@ -32,9 +32,27 @@ test('deployed-smoke: built web shell boots without critical static failures', a
 
   const bypassSecret = process.env.VERCEL_AUTOMATION_BYPASS_SECRET;
   if (bypassSecret) {
-    await page.setExtraHTTPHeaders({
-      'x-vercel-protection-bypass': bypassSecret,
-      'x-vercel-set-bypass-cookie': 'true',
+    await page.route('**/*', async (route) => {
+      const request = route.request();
+      let sameDeploymentOrigin = false;
+      try {
+        sameDeploymentOrigin = new URL(request.url()).origin === deploymentOrigin;
+      } catch {
+        // Leave malformed/non-URL requests untouched; Playwright will surface failures normally.
+      }
+
+      if (!sameDeploymentOrigin) {
+        await route.continue();
+        return;
+      }
+
+      await route.continue({
+        headers: {
+          ...request.headers(),
+          'x-vercel-protection-bypass': bypassSecret,
+          'x-vercel-set-bypass-cookie': 'true',
+        },
+      });
     });
   }
 
