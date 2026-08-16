@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
 
 const deploymentUrl = process.env.AUREA_E2E_URL;
 if (!deploymentUrl) {
@@ -8,10 +8,10 @@ if (!deploymentUrl) {
 const deploymentOrigin = new URL(deploymentUrl).origin;
 const criticalResourceTypes = new Set(['document', 'script', 'stylesheet']);
 
-function collectCriticalNetworkFailures(page: Parameters<typeof test>[0] extends never ? never : any): string[] {
+function collectCriticalNetworkFailures(page: Page): string[] {
   const criticalRequestFailures: string[] = [];
 
-  page.on('requestfailed', (request: any) => {
+  page.on('requestfailed', (request) => {
     const resourceType = request.resourceType();
     if (!criticalResourceTypes.has(resourceType)) return;
 
@@ -80,21 +80,21 @@ test('deployed-smoke: built web shell boots without critical static failures', a
   ).toEqual([]);
 });
 
-test('deployed-smoke detector treats critical HTTP 404 responses as failures', async ({ page }) => {
+test('deployed-smoke detector treats real critical HTTP 404 responses as failures', async ({ page }) => {
   const criticalRequestFailures = collectCriticalNetworkFailures(page);
   const missingStylesheet = `${deploymentOrigin}/__deployed-smoke-missing.css`;
 
-  await page.route(missingStylesheet, async (route) => {
-    await route.fulfill({
-      status: 404,
-      contentType: 'text/css',
-      body: '/* synthetic missing stylesheet */',
-    });
-  });
+  await page.goto('/', { waitUntil: 'domcontentloaded' });
+  const missingResponse = page.waitForResponse((response) => response.url() === missingStylesheet);
+  await page.evaluate((href) => {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = href;
+    document.head.appendChild(link);
+  }, missingStylesheet);
 
-  await page.setContent(`<link rel="stylesheet" href="${missingStylesheet}">`, { waitUntil: 'load' });
-  await page.waitForTimeout(100);
-
+  const response = await missingResponse;
+  expect(response.status()).toBe(404);
   expect(criticalRequestFailures).toEqual([
     expect.stringContaining('stylesheet:'),
   ]);
