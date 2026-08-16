@@ -1,5 +1,7 @@
 # Every tests/test_*.py module must appear exactly once.
 # Categories define where an agent should expect the test to run.
+# Python Quality supplies an explicit runner-temporary AUREA_DATA_DIR so direct
+# FastAPI tests never depend on or fall back to a person's local Aurea data.
 #
 # python-quality  Fast Ubuntu-safe unit/API/runtime tests; executed in Python Quality.
 # integration     Requires built/runtime integration state; executed later in E2E.
