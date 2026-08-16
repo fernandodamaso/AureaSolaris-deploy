@@ -1,0 +1,122 @@
+name: Deployed E2E
+
+on:
+  repository_dispatch:
+    types: [vercel.deployment.success]
+  workflow_dispatch:
+    inputs:
+      deployment_url:
+        description: "Exact Vercel deployment URL to smoke-test"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deployed-e2e-${{ github.event.client_payload.url || inputs.deployment_url }}
+  cancel-in-progress: true
+
+jobs:
+  deployed-e2e:
+    name: Deployed E2E
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Validate deployment target
+        id: target
+        env:
+          RAW_DEPLOYMENT_URL: ${{ github.event.client_payload.url || inputs.deployment_url }}
+        run: |
+          python - <<'PY'
+          import os
+          from urllib.parse import urlparse
+
+          raw = os.environ.get('RAW_DEPLOYMENT_URL', '').strip().rstrip('/')
+          if not raw:
+              print('::error::No Vercel deployment URL was supplied.')
+              raise SystemExit(1)
+          if '://' not in raw:
+              raw = f'https://{raw}'
+
+          parsed = urlparse(raw)
+          hostname = (parsed.hostname or '').lower()
+          if parsed.scheme != 'https' or not hostname.endswith('.vercel.app'):
+              print('::error::Deployed E2E only accepts HTTPS *.vercel.app deployment URLs so automation secrets cannot be sent to an arbitrary host.')
+              raise SystemExit(1)
+
+          with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as output:
+              output.write(f'url={raw}\n')
+          print(f'Validated Vercel deployment: {raw}')
+          PY
+
+      - name: Install Node dependencies
+        id: install
+        run: npm ci
+
+      - name: Install Playwright Chromium
+        id: chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Smoke-test deployed web shell
+        id: smoke
+        env:
+          AUREA_E2E_URL: ${{ steps.target.outputs.url }}
+          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+        run: npx playwright test deployed-smoke.spec.ts --config=e2e/playwright.config.ts
+
+      - name: Upload deployed Playwright artifacts
+        id: artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: deployed-playwright-artifacts-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            playwright-report/
+            test-results/
+            e2e/playwright-report/
+            e2e/test-results/
+          if-no-files-found: ignore
+          retention-days: 7
+
+      - name: Agent handoff summary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "## Deployed E2E"
+            echo
+            echo "Deployment: \`${{ steps.target.outputs.url || 'target validation failed' }}\`"
+            echo
+            echo "This gate checks the deployed web build only: root document, React bootstrap, critical same-origin JS/CSS, and uncaught browser errors. It does **not** replace the Python-backed isolated local-runtime E2E."
+            echo
+            echo "| Gate | Outcome |"
+            echo "|---|---|"
+            echo "| target safety validation | ${{ steps.target.outcome }} |"
+            echo "| npm ci | ${{ steps.install.outcome }} |"
+            echo "| Chromium install | ${{ steps.chromium.outcome }} |"
+            echo "| deployed web smoke | ${{ steps.smoke.outcome }} |"
+            echo "| diagnostic artifact upload | ${{ steps.artifacts.outcome }} |"
+            echo
+            echo "### Reproduce against this deployment"
+            echo '```bash'
+            echo "AUREA_E2E_URL='${{ steps.target.outputs.url }}' npx playwright test deployed-smoke.spec.ts --config=e2e/playwright.config.ts"
+            echo '```'
+            echo
+            if [ "${{ steps.target.outcome }}" = "failure" ]; then
+              echo "**Start with:** the deployment URL/integration payload. Only an HTTPS \`*.vercel.app\` deployment target is accepted."
+            elif [ "${{ steps.smoke.outcome }}" = "failure" ]; then
+              echo "**Start with:** the Vercel deployment itself. Inspect the Playwright failure and \`deployed-playwright-artifacts-${{ github.run_id }}-${{ github.run_attempt }}\` when available."
+            elif [ "${{ steps.chromium.outcome }}" = "failure" ] || [ "${{ steps.install.outcome }}" = "failure" ]; then
+              echo "**Start with:** CI/Playwright setup before changing application code."
+            else
+              echo "The deployed web shell passed its non-destructive smoke contract."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
