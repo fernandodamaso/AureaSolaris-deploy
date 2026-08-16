@@ -70,6 +70,10 @@ def _allocate_loopback_port() -> int:
 
 def _assert_port_rebinds(port: int) -> None:
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as listener:
+        # Linux can retain accepted connections in TIME_WAIT after the API process
+        # has exited. Match normal server rebinding semantics so that state does not
+        # look like a leaked listener; an actually live listener still owns the port.
+        listener.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         listener.bind(("127.0.0.1", port))
         listener.listen(1)
 

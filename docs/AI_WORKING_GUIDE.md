@@ -89,14 +89,46 @@ On `-Reset`, the launcher stops Aurea test-user runtimes on ports **9878–9899*
 
 Full persistence details: `docs/data-persistence.md`.
 
-## Agent E2E
+## Agent CI and E2E contract
+
+CI is an executable supervisor for agentic development, not only a merge signal. A failure is a handoff to the next agent session: it must identify the failing layer, preserve useful evidence, and give a copyable reproduction command without requiring the project owner to diagnose raw logs.
+
+The three PR check names below are stable automation interfaces. Do not casually rename them; agent workflows and future branch protection may depend on the exact names.
+
+| Check | Purpose | Local equivalent |
+|---|---|---|
+| `Frontend Quality` | Cheap React/TypeScript correctness | `npm run lint`, `npm run typecheck`, `npm test` |
+| `Python Quality` | Ubuntu-safe API/runtime/storage/unit coverage | classified `python -m unittest ... -v` suite |
+| `E2E` | Authoritative isolated compiled frontend + Python runtime + Playwright validation | build → compiled runtime smoke → `python tools/run_e2e.py --skip-build` |
+
+`Frontend Quality` and `Python Quality` run independently. `E2E` starts only after both pass, builds `dist` once, runs `tests.test_compiled_runtime_smoke`, installs Chromium only after that preflight, then runs the isolated Playwright harness against the exact build.
+
+For normal local/agent E2E, use `python tools/run_e2e.py`; it intentionally rebuilds `dist` so stale frontend output cannot be tested accidentally. Use `python tools/run_e2e.py --skip-build` only when `npm run build` completed successfully immediately beforehand in the same workflow/session and the caller intends to test that exact build.
+
+Every `tests/test_*.py` file must be listed exactly once in `.github/python-test-classification.txt`. The CI classification check fails on new unclassified tests, deleted-but-listed tests, duplicates, or unknown categories. `python-quality` modules run in `Python Quality`; `integration` modules run after prerequisites such as `dist`; platform/release-only and legacy pytest-style coverage remain explicitly classified rather than silently omitted.
+
+Each CI job writes an agent handoff to the GitHub job summary with gate outcomes, local reproduction commands, the likely subsystem to inspect first, and artifact names where relevant. Playwright remains single-worker with zero retries so a green run cannot be created by retrying dirty shared state.
 
 - Catalog: `e2e/catalog/README.md`
-- Headless / CI: `python tools/run_e2e.py` (or `.aurea-build-venv\Scripts\python.exe tools\run_e2e.py`)
+- Headless local runtime: `python tools/run_e2e.py` (or `.aurea-build-venv\Scripts\python.exe tools\run_e2e.py`)
 - On request (visual + sandbox): use the project skill `.cursor/skills/aurea-e2e/`
-- Never run E2E against `%LOCALAPPDATA%\Aurea Solaris\data`
-- `npm run check` does not include E2E; CI workflow `.github/workflows/e2e.yml` does
+- Never run local E2E against `%LOCALAPPDATA%\Aurea Solaris\data`
+- `npm run check` does not include authoritative browser E2E; `.github/workflows/e2e.yml` does
 - Prefer Playwright + playbooks over `tests/mandala_visual_smoke.ps1` when both cover the same id; keep the PowerShell smoke until Astrologia E2E + mandala playbook are green, then leave it as optional legacy
+
+## Vercel preview and deployed validation
+
+Vercel is a second agent validation environment, not a substitute for the local Python-backed runtime. The workflow `.github/workflows/deployed-e2e.yml` accepts a successful Vercel deployment event or an explicit deployment URL plus exact deployment SHA and runs only the non-destructive `deployed-smoke.spec.ts` contract: root document, React bootstrap, critical same-origin document/script/stylesheet network failures **and non-2xx HTTP responses**, and uncaught browser errors.
+
+- Review an unmerged branch on that branch/PR's **Vercel Preview Deployment**, never on the production URL.
+- `https://aurea-solaris.vercel.app` represents `main`/production and is suitable only for post-merge smoke or production inspection.
+- Keep the exact deployment URL associated with the PR/commit being reviewed; an agent must not infer that production contains unmerged code.
+- **Privileged deployed validation never executes the deployed/PR commit.** The deployment URL and deployment SHA are metadata only. `Deployed E2E` checks out the smoke harness and Node dependencies from trusted `main`, then points that trusted harness at the supplied Vercel deployment.
+- A manual `workflow_dispatch` run requires both the exact deployment URL and a 40-character deployment SHA. That SHA is operator-supplied expected provenance and is **not** independently verified against Vercel metadata; do not describe it as Vercel-confirmed. Automatic `repository_dispatch` runs require Vercel's `client_payload.git.sha` and refuse to invent a fallback revision.
+- The deployed smoke currently validates the hosted web build only. It does not certify `main_api.py`, persistence, private data, astrology calculations, or the full test-user lifecycle; those remain responsibilities of `E2E`.
+- If deployed tests later need API/data behavior, provide a dedicated synthetic/isolated backend. Never connect Vercel previews or automated browser agents to the owner's real Aurea private data.
+- **Do not expose a long-lived Vercel automation bypass secret to this workflow.** The current smoke requires a deployment the runner can access without a project-wide bypass credential. If protected-preview automation is required later, use a short-lived, policy-restricted trusted-source/OIDC mechanism and keep the trusted harness boundary; never execute PR-controlled code with deployment credentials.
+- Automatic preview smoke requires the Vercel project to be Git-connected to this GitHub repository and configured to emit successful-deployment events. Until that external integration is enabled and proven, `Deployed E2E` is supplemental and is not a required PR status check.
 
 ## Required working loop
 
@@ -104,8 +136,8 @@ Full persistence details: `docs/data-persistence.md`.
 2. Search with `rg`; read the smallest relevant code and domain document.
 3. Make a small change with `apply_patch`.
 4. Update the relevant documentation when behavior, data, or workflow changes.
-5. Validate proportionally: `npm run check` for the frontend gate; Python tests and `cargo check --manifest-path .\src-tauri\Cargo.toml` remain separate gates; use `build.bat` for release work.
-6. Report files changed, data/privacy risk, validation performed, and real remaining blockers.
+5. Validate proportionally using the same commands as the relevant CI gate; use authoritative local `E2E` for runtime/browser changes and the exact Vercel preview URL for deployed-web review when available.
+6. Report files changed, data/privacy risk, validation performed, commit hash, CI/deployment evidence, and real remaining blockers.
 
 Never use destructive Git commands, invent astrological values or sources, commit secrets, mix private data with editorial data, or silently downgrade a certified calculation to a fallback.
 

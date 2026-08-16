@@ -36,6 +36,7 @@ __all__ = [
     "pick_free_port",
     "resolve_node_command",
     "has_unhandled_api_exception",
+    "ensure_frontend_ready",
     "main",
 ]
 
@@ -93,6 +94,20 @@ def ensure_frontend_built() -> None:
     subprocess.run([resolve_node_command("npm"), "run", "build"], cwd=REPO_ROOT, check=True)
 
 
+def ensure_frontend_ready(*, skip_build: bool) -> None:
+    """Build the frontend normally, or verify a CI-owned build is present."""
+    if not skip_build:
+        ensure_frontend_built()
+        return
+
+    dist_index = REPO_ROOT / "dist" / "index.html"
+    if not dist_index.is_file():
+        raise RuntimeError(
+            "--skip-build requires an existing dist/index.html. "
+            "Run `npm run build` first or omit --skip-build."
+        )
+
+
 def run_playwright(base_url: str) -> int:
     env = os.environ.copy()
     env["AUREA_E2E_URL"] = base_url
@@ -108,6 +123,11 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Run Aurea E2E against an isolated test-user API.")
     parser.add_argument("--check-forbidden", type=Path)
     parser.add_argument("--keep-temp", action="store_true", help="Do not delete temp data dir (debug).")
+    parser.add_argument(
+        "--skip-build",
+        action="store_true",
+        help="Reuse an existing dist/ build instead of rebuilding the frontend.",
+    )
     args = parser.parse_args(argv)
 
     if args.check_forbidden is not None:
@@ -117,7 +137,7 @@ def main(argv: list[str] | None = None) -> int:
         print("ok")
         return 0
 
-    ensure_frontend_built()
+    ensure_frontend_ready(skip_build=args.skip_build)
     temp_root = Path(tempfile.mkdtemp(prefix="aurea-e2e-"))
     data_dir = temp_root / "data"
     data_dir.mkdir(parents=True, exist_ok=True)

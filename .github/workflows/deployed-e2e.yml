@@ -1,0 +1,183 @@
+name: Deployed E2E
+
+on:
+  repository_dispatch:
+    types: [vercel.deployment.success]
+  workflow_dispatch:
+    inputs:
+      deployment_url:
+        description: "Exact Vercel deployment URL to smoke-test"
+        required: true
+        type: string
+      deployment_sha:
+        description: "Exact Git commit SHA that produced this deployment"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deployed-e2e-${{ github.event.client_payload.url || inputs.deployment_url }}
+  cancel-in-progress: true
+
+jobs:
+  deployed-e2e:
+    name: Deployed E2E
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Validate deployment target and source metadata
+        id: target
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          RAW_DEPLOYMENT_URL: ${{ github.event.client_payload.url || inputs.deployment_url }}
+          EVENT_DEPLOYMENT_SHA: ${{ github.event.client_payload.git.sha }}
+          INPUT_DEPLOYMENT_SHA: ${{ inputs.deployment_sha }}
+        run: |
+          python - <<'PY'
+          import os
+          import re
+          from urllib.parse import urlparse
+
+          raw = os.environ.get('RAW_DEPLOYMENT_URL', '').strip().rstrip('/')
+          if not raw:
+              print('::error::No Vercel deployment URL was supplied.')
+              raise SystemExit(1)
+          if '://' not in raw:
+              raw = f'https://{raw}'
+
+          parsed = urlparse(raw)
+          hostname = (parsed.hostname or '').lower()
+          if (
+              parsed.scheme != 'https'
+              or not hostname.endswith('.vercel.app')
+              or parsed.username is not None
+              or parsed.password is not None
+              or parsed.port not in (None, 443)
+          ):
+              print('::error::Deployed E2E only accepts standard HTTPS *.vercel.app deployment URLs.')
+              raise SystemExit(1)
+
+          event_name = os.environ.get('EVENT_NAME', '').strip()
+          if event_name == 'repository_dispatch':
+              sha = os.environ.get('EVENT_DEPLOYMENT_SHA', '').strip()
+              provenance = 'Vercel-reported deployment revision'
+              if not sha:
+                  print('::error::Vercel deployment dispatch is missing client_payload.git.sha; refusing to invent deployment provenance.')
+                  raise SystemExit(1)
+          else:
+              sha = os.environ.get('INPUT_DEPLOYMENT_SHA', '').strip()
+              provenance = 'operator-supplied expected deployment revision (not independently verified)'
+              if not sha:
+                  print('::error::Manual deployed smoke requires the exact deployment Git SHA.')
+                  raise SystemExit(1)
+
+          if re.fullmatch(r'[0-9a-fA-F]{40}', sha) is None:
+              print('::error::Deployment source revision must be an exact 40-character Git commit SHA.')
+              raise SystemExit(1)
+
+          deployment_origin = f'https://{hostname}'
+          with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as output:
+              output.write(f'url={deployment_origin}\n')
+              output.write(f'sha={sha.lower()}\n')
+              output.write(f'provenance={provenance}\n')
+          print(f'Validated Vercel deployment target: {deployment_origin}')
+          print(f'Deployment metadata: {sha.lower()} ({provenance})')
+          PY
+
+      # Security boundary: the deployment/PR commit is data only. Never checkout or
+      # execute it in this privileged workflow. The smoke harness always comes from
+      # the trusted default branch.
+      - name: Checkout trusted smoke harness
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: trusted-harness
+          persist-credentials: false
+
+      - name: Record trusted harness revision
+        id: harness
+        working-directory: trusted-harness
+        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: trusted-harness/package-lock.json
+
+      - name: Install trusted Node dependencies
+        id: install
+        working-directory: trusted-harness
+        run: npm ci
+
+      - name: Install Playwright Chromium
+        id: chromium
+        working-directory: trusted-harness
+        run: npx playwright install --with-deps chromium
+
+      - name: Smoke-test deployed web shell with trusted harness
+        id: smoke
+        working-directory: trusted-harness
+        env:
+          AUREA_E2E_URL: ${{ steps.target.outputs.url }}
+        run: npx playwright test deployed-smoke.spec.ts --config=e2e/playwright.config.ts
+
+      - name: Upload deployed Playwright artifacts
+        id: artifacts
+        if: failure() && steps.smoke.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: deployed-playwright-artifacts-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            trusted-harness/e2e/playwright-report/
+            trusted-harness/e2e/test-results/
+          if-no-files-found: ignore
+          retention-days: 7
+
+      - name: Agent handoff summary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "## Deployed E2E"
+            echo
+            echo "Deployment: \`${{ steps.target.outputs.url || 'target validation failed' }}\`"
+            echo "Deployment source metadata: \`${{ steps.target.outputs.sha || 'source revision unavailable' }}\`"
+            echo "Source metadata provenance: ${{ steps.target.outputs.provenance || 'unavailable' }}"
+            echo "Trusted smoke harness: \`${{ steps.harness.outputs.sha || 'trusted main checkout unavailable' }}\`"
+            echo
+            echo "**Security boundary:** the deployment commit is never checked out or executed here. URL/SHA are data only; Playwright and dependencies come from trusted \`main\`. This workflow carries no Vercel automation bypass secret."
+            echo
+            echo "This gate checks the deployed web build only: root document, React bootstrap, critical same-origin document/script/stylesheet network failures and non-2xx HTTP responses, plus uncaught browser errors. It does **not** replace the Python-backed isolated local-runtime E2E."
+            echo
+            echo "| Gate | Outcome |"
+            echo "|---|---|"
+            echo "| target/source metadata validation | ${{ steps.target.outcome }} |"
+            echo "| trusted harness checkout | ${{ steps.harness.outcome }} |"
+            echo "| npm ci | ${{ steps.install.outcome }} |"
+            echo "| Chromium install | ${{ steps.chromium.outcome }} |"
+            echo "| deployed web smoke | ${{ steps.smoke.outcome }} |"
+            echo "| diagnostic artifact upload | ${{ steps.artifacts.outcome }} |"
+            echo
+            echo "### Reproduce with the same trusted harness"
+            echo '```bash'
+            echo "git checkout '${{ steps.harness.outputs.sha }}'"
+            echo "AUREA_E2E_URL='${{ steps.target.outputs.url }}' npx playwright test deployed-smoke.spec.ts --config=e2e/playwright.config.ts"
+            echo '```'
+            echo
+            if [ "${{ steps.target.outcome }}" = "failure" ]; then
+              echo "**Start with:** deployment URL/source metadata. Manual runs require an explicit 40-character deployment SHA; repository dispatches require Vercel's \`client_payload.git.sha\`."
+            elif [ "${{ steps.smoke.outcome }}" = "failure" ]; then
+              echo "**Start with:** the exact Vercel deployment above. Inspect the Playwright failure and \`deployed-playwright-artifacts-${{ github.run_id }}-${{ github.run_attempt }}\` when available."
+            elif [ "${{ steps.chromium.outcome }}" = "failure" ] || [ "${{ steps.install.outcome }}" = "failure" ] || [ "${{ steps.harness.outcome }}" = "failure" ]; then
+              echo "**Start with:** trusted CI/Playwright harness setup before changing deployed application code."
+            else
+              echo "The deployed web shell passed the trusted non-destructive smoke contract."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
