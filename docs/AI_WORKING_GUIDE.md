@@ -118,14 +118,16 @@ Each CI job writes an agent handoff to the GitHub job summary with gate outcomes
 
 ## Vercel preview and deployed validation
 
-Vercel is a second agent validation environment, not a substitute for the local Python-backed runtime. The workflow `.github/workflows/deployed-e2e.yml` accepts a successful Vercel deployment event or an explicit deployment URL and runs only the non-destructive `deployed-smoke.spec.ts` contract: root document, React bootstrap, critical same-origin JS/CSS, and uncaught browser errors.
+Vercel is a second agent validation environment, not a substitute for the local Python-backed runtime. The workflow `.github/workflows/deployed-e2e.yml` accepts a successful Vercel deployment event or an explicit deployment URL plus exact deployment SHA and runs only the non-destructive `deployed-smoke.spec.ts` contract: root document, React bootstrap, critical same-origin document/script/stylesheet network failures **and non-2xx HTTP responses**, and uncaught browser errors.
 
 - Review an unmerged branch on that branch/PR's **Vercel Preview Deployment**, never on the production URL.
 - `https://aurea-solaris.vercel.app` represents `main`/production and is suitable only for post-merge smoke or production inspection.
 - Keep the exact deployment URL associated with the PR/commit being reviewed; an agent must not infer that production contains unmerged code.
+- **Privileged deployed validation never executes the deployed/PR commit.** The deployment URL and deployment SHA are metadata only. `Deployed E2E` checks out the smoke harness and Node dependencies from trusted `main`, then points that trusted harness at the supplied Vercel deployment.
+- A manual `workflow_dispatch` run requires both the exact deployment URL and a 40-character deployment SHA. That SHA is operator-supplied expected provenance and is **not** independently verified against Vercel metadata; do not describe it as Vercel-confirmed. Automatic `repository_dispatch` runs require Vercel's `client_payload.git.sha` and refuse to invent a fallback revision.
 - The deployed smoke currently validates the hosted web build only. It does not certify `main_api.py`, persistence, private data, astrology calculations, or the full test-user lifecycle; those remain responsibilities of `E2E`.
 - If deployed tests later need API/data behavior, provide a dedicated synthetic/isolated backend. Never connect Vercel previews or automated browser agents to the owner's real Aurea private data.
-- If Vercel Deployment Protection is enabled, store its automation bypass value only as the GitHub secret `VERCEL_AUTOMATION_BYPASS_SECRET`. The workflow accepts only HTTPS `*.vercel.app` targets before that secret can be used.
+- **Do not expose a long-lived Vercel automation bypass secret to this workflow.** The current smoke requires a deployment the runner can access without a project-wide bypass credential. If protected-preview automation is required later, use a short-lived, policy-restricted trusted-source/OIDC mechanism and keep the trusted harness boundary; never execute PR-controlled code with deployment credentials.
 - Automatic preview smoke requires the Vercel project to be Git-connected to this GitHub repository and configured to emit successful-deployment events. Until that external integration is enabled and proven, `Deployed E2E` is supplemental and is not a required PR status check.
 
 ## Required working loop
