@@ -81,6 +81,9 @@ jobs:
     name: Python Quality
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    env:
+      # Direct FastAPI tests must never fall back to a real user's local data path.
+      AUREA_DATA_DIR: ${{ runner.temp }}/aurea-python-quality/data
     steps:
       - uses: actions/checkout@v4
 
@@ -187,9 +190,10 @@ jobs:
             echo "| test classification | ${{ steps.classification.outcome }} |"
             echo "| classified unittest suite | ${{ steps.tests.outcome }} |"
             echo
-            echo "### Reproduce locally"
+            echo "### Reproduce locally (POSIX shell)"
             echo '```bash'
             echo 'python -m pip install -r requirements-api.txt'
+            echo 'export AUREA_DATA_DIR="$(mktemp -d)/data"'
             echo "python -m unittest $MODULES -v"
             echo '```'
             echo
@@ -200,7 +204,7 @@ jobs:
             elif [ "${{ steps.install.outcome }}" = "failure" ]; then
               echo "**Start with:** Python dependency installation/\`requirements-api.txt\`."
             else
-              echo "Python quality checks passed."
+              echo "Python quality checks passed using disposable CI data."
             fi
           } >> "$GITHUB_STEP_SUMMARY"
 
