@@ -81,9 +81,6 @@ jobs:
     name: Python Quality
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    env:
-      # Direct FastAPI tests must never fall back to a real user's local data path.
-      AUREA_DATA_DIR: ${{ runner.temp }}/aurea-python-quality/data
     steps:
       - uses: actions/checkout@v4
 
@@ -98,6 +95,15 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install -r requirements-api.txt
+
+      - name: Configure disposable Python data
+        id: data
+        shell: bash
+        run: |
+          data_dir="$RUNNER_TEMP/aurea-python-quality/data"
+          mkdir -p "$data_dir"
+          echo "AUREA_DATA_DIR=$data_dir" >> "$GITHUB_ENV"
+          echo "Using disposable AUREA_DATA_DIR=$data_dir"
 
       - name: Verify Python test classification
         id: classification
@@ -187,6 +193,7 @@ jobs:
             echo "| Gate | Outcome |"
             echo "|---|---|"
             echo "| dependency install | ${{ steps.install.outcome }} |"
+            echo "| disposable data setup | ${{ steps.data.outcome }} |"
             echo "| test classification | ${{ steps.classification.outcome }} |"
             echo "| classified unittest suite | ${{ steps.tests.outcome }} |"
             echo
@@ -197,7 +204,9 @@ jobs:
             echo "python -m unittest $MODULES -v"
             echo '```'
             echo
-            if [ "${{ steps.classification.outcome }}" = "failure" ]; then
+            if [ "${{ steps.data.outcome }}" = "failure" ]; then
+              echo "**Start with:** CI runner temporary-data setup. Do not fall back to a real Aurea data directory."
+            elif [ "${{ steps.classification.outcome }}" = "failure" ]; then
               echo "**Start with:** \`.github/python-test-classification.txt\`. Every \`tests/test_*.py\` file must be classified exactly once."
             elif [ "${{ steps.tests.outcome }}" = "failure" ]; then
               echo "**Start with:** the first failing Python test above. Its module identifies the affected API/runtime/storage subsystem."
