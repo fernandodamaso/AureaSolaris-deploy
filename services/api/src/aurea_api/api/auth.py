@@ -41,7 +41,7 @@ class InvalidTokenError(Exception):
 
 
 class _RefreshLimitedJwkClient:
-    """Use cached JWKS while rate-limiting attacker-triggered forced refreshes."""
+    """Use cached JWKS while rate-limiting attacker-triggered refresh attempts."""
 
     def __init__(
         self,
@@ -54,26 +54,44 @@ class _RefreshLimitedJwkClient:
         self._cooldown_seconds = cooldown_seconds
         self._clock = clock
         self._refresh_lock = Lock()
-        self._last_forced_refresh_at: float | None = None
+        self._last_refresh_attempt_at: float | None = None
 
     def _match_cached_key(self, kid: str) -> PyJWK | None:
         return PyJWKClient.match_kid(self._client.get_signing_keys(), kid)
 
+    def _refresh_cooldown_active(self, now: float) -> bool:
+        last_refresh = self._last_refresh_attempt_at
+        return last_refresh is not None and now - last_refresh < self._cooldown_seconds
+
+    def _jwks_cache_needs_fetch(self) -> bool:
+        cache = self._client.jwk_set_cache
+        return cache is None or cache.get() is None
+
     def get_signing_key(self, kid: str) -> PyJWK:
         with self._refresh_lock:
-            # The cache lookup can fetch when the JWKS set is cold or expired, so keep it
-            # under the same lock as forced refreshes to prevent concurrent stampedes.
-            signing_key = self._match_cached_key(kid)
+            # The cache lookup can fetch when the JWKS set is cold or expired. If a prior
+            # attempt failed, do not let serialized requests immediately retry the outage.
+            now = self._clock()
+            if self._jwks_cache_needs_fetch() and self._refresh_cooldown_active(now):
+                raise PyJWKClientError("JWKS fetch unavailable during refresh cooldown.")
+
+            try:
+                signing_key = self._match_cached_key(kid)
+            except PyJWKClientError:
+                # Record failed cold/expired-cache loads before releasing the lock so an
+                # outage burst cannot turn into one network attempt per waiting request.
+                self._last_refresh_attempt_at = now
+                raise
+
             if signing_key is not None:
                 return signing_key
 
             now = self._clock()
-            last_refresh = self._last_forced_refresh_at
-            if last_refresh is not None and now - last_refresh < self._cooldown_seconds:
+            if self._refresh_cooldown_active(now):
                 raise PyJWKClientError("Signing key unavailable during JWKS refresh cooldown.")
 
-            # Record the attempt before network I/O so endpoint failures are rate-limited too.
-            self._last_forced_refresh_at = now
+            # Record the forced refresh before network I/O so failures are rate-limited too.
+            self._last_refresh_attempt_at = now
             signing_keys = self._client.get_signing_keys(refresh=True)
             signing_key = PyJWKClient.match_kid(signing_keys, kid)
             if signing_key is None:
