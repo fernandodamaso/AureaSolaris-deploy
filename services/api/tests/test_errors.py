@@ -8,6 +8,7 @@ from uuid import UUID
 import pytest
 from fastapi import Query
 from fastapi.testclient import TestClient
+from pydantic import BaseModel, field_validator
 
 from aurea_api.config import Settings
 from aurea_api.main import create_app
@@ -30,29 +31,71 @@ def test_valid_request_id_is_preserved(api_settings: Settings) -> None:
     assert response.headers["X-Request-ID"] == request_id
 
 
-def test_cors_allows_only_configured_origins(api_settings: Settings) -> None:
+def test_cors_preflights_receive_request_ids_and_structured_logs(
+    api_settings: Settings,
+    caplog: pytest.LogCaptureFixture,
+) -> None:
     app = create_app(api_settings)
     preflight_headers = {
         "Access-Control-Request-Method": "GET",
         "Access-Control-Request-Headers": "authorization,content-type,x-request-id",
     }
+    allowed_request_id = "allowed-preflight-id"
+    denied_request_id = "denied-preflight-id"
+    caplog.set_level(logging.INFO, logger="aurea_api.request")
 
     with TestClient(app) as client:
         allowed = client.options(
             "/health",
-            headers={"Origin": "https://web.example.test", **preflight_headers},
+            headers={
+                "Origin": "https://web.example.test",
+                "X-Request-ID": allowed_request_id,
+                **preflight_headers,
+            },
         )
         denied = client.options(
             "/health",
-            headers={"Origin": "https://attacker.example.test", **preflight_headers},
+            headers={
+                "Origin": "https://attacker.example.test",
+                "X-Request-ID": denied_request_id,
+                **preflight_headers,
+            },
         )
 
     assert allowed.status_code == 200
     assert allowed.headers["access-control-allow-origin"] == "https://web.example.test"
     assert "*" not in allowed.headers["access-control-allow-origin"]
     assert "access-control-allow-credentials" not in allowed.headers
+    assert allowed.headers["X-Request-ID"] == allowed_request_id
     assert denied.status_code == 400
     assert "access-control-allow-origin" not in denied.headers
+    assert denied.headers["X-Request-ID"] == denied_request_id
+
+    request_events = [
+        json.loads(record.getMessage())
+        for record in caplog.records
+        if record.name == "aurea_api.request"
+    ]
+    assert request_events == [
+        {
+            "duration_ms": request_events[0]["duration_ms"],
+            "event": "http_request",
+            "method": "OPTIONS",
+            "request_id": allowed_request_id,
+            "route": "<unmatched>",
+            "status": 200,
+        },
+        {
+            "duration_ms": request_events[1]["duration_ms"],
+            "event": "http_request",
+            "method": "OPTIONS",
+            "request_id": denied_request_id,
+            "route": "<unmatched>",
+            "status": 400,
+        },
+    ]
+    assert all(isinstance(event["duration_ms"], float) for event in request_events)
+    assert all(event["duration_ms"] >= 0 for event in request_events)
 
 
 def test_validation_errors_use_safe_problem_shape(api_settings: Settings) -> None:
@@ -73,10 +116,51 @@ def test_validation_errors_use_safe_problem_shape(api_settings: Settings) -> Non
     assert payload["request_id"] == response.headers["X-Request-ID"]
     assert payload["fields"][0]["location"] == ["query", "limit"]
     assert payload["fields"][0]["type"] == "int_parsing"
+    assert payload["fields"][0]["message"] == "Invalid value."
     assert secret_input not in response.text
 
 
-def test_unhandled_errors_are_sanitized(api_settings: Settings) -> None:
+def test_custom_validation_errors_do_not_expose_value_error_messages(
+    api_settings: Settings,
+) -> None:
+    app = create_app(api_settings)
+    secret_marker = "sensitive-custom-validator-secret"
+    secret_input = "sensitive-custom-validator-input"
+
+    class SecretValidatedPayload(BaseModel):
+        value: str
+
+        @field_validator("value")
+        @classmethod
+        def reject_value(cls, value: str) -> str:
+            raise ValueError(f"rejected {value}: {secret_marker}")
+
+    @app.post("/_test/custom-validation")
+    async def custom_validation_endpoint(payload: SecretValidatedPayload) -> dict[str, str]:
+        return {"value": payload.value}
+
+    with TestClient(app) as client:
+        response = client.post("/_test/custom-validation", json={"value": secret_input})
+
+    payload = response.json()
+    assert response.status_code == 422
+    assert payload["code"] == "validation_error"
+    assert payload["message"] == "Request validation failed."
+    assert payload["request_id"] == response.headers["X-Request-ID"]
+    assert payload["fields"] == [
+        {
+            "location": ["body", "value"],
+            "message": "Invalid value.",
+            "type": "value_error",
+        }
+    ]
+    assert secret_marker not in response.text
+    assert secret_input not in response.text
+
+
+def test_unhandled_errors_are_sanitized_and_keep_allowed_origin_cors(
+    api_settings: Settings,
+) -> None:
     app = create_app(api_settings)
     secret_marker = "sensitive-unhandled-marker"
 
@@ -85,13 +169,17 @@ def test_unhandled_errors_are_sanitized(api_settings: Settings) -> None:
         raise RuntimeError(secret_marker)
 
     with TestClient(app) as client:
-        response = client.get("/_test/error")
+        response = client.get(
+            "/_test/error",
+            headers={"Origin": "https://web.example.test"},
+        )
 
     payload = response.json()
     assert response.status_code == 500
     assert payload["code"] == "internal_error"
     assert payload["message"] == "Internal server error."
     assert payload["request_id"] == response.headers["X-Request-ID"]
+    assert response.headers["access-control-allow-origin"] == "https://web.example.test"
     assert "fields" not in payload
     assert secret_marker not in response.text
 
