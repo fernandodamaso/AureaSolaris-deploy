@@ -273,6 +273,50 @@ def test_failed_cold_cache_fetch_burst_is_rate_limited_and_retries_after_cooldow
     assert attempts == [verifier.jwks_url, verifier.jwks_url]
 
 
+def test_malformed_cold_cache_fetch_burst_is_rate_limited_and_retries_after_cooldown(
+    api_settings: Settings,
+    signing_material: tuple[rsa.RSAPrivateKey, PyJWK],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    private_key, _ = signing_material
+    worker_count = 8
+    start = Barrier(worker_count)
+    attempts: list[str] = []
+    attempt_lock = Lock()
+    now = [1_000.0]
+
+    def fetch_data(client: PyJWKClient) -> dict[str, object]:
+        with attempt_lock:
+            attempts.append(client.uri)
+        sleep(0.05)
+        raise json.JSONDecodeError("simulated malformed JWKS", "{", 1)
+
+    monkeypatch.setattr(PyJWKClient, "fetch_data", fetch_data)
+    verifier = TokenVerifier(api_settings, clock=lambda: now[0])
+    tokens = [
+        _sign(private_key, _claims(), kid=f"malformed-unknown-key-{index}")
+        for index in range(worker_count)
+    ]
+
+    def verify_unknown(token: str) -> None:
+        start.wait(timeout=5)
+        with pytest.raises(InvalidTokenError):
+            verifier.verify(token)
+
+    with ThreadPoolExecutor(max_workers=worker_count) as executor:
+        futures = [executor.submit(verify_unknown, token) for token in tokens]
+        for future in futures:
+            future.result(timeout=5)
+
+    assert attempts == [verifier.jwks_url]
+
+    now[0] += 61
+    with pytest.raises(InvalidTokenError):
+        verifier.verify(_sign(private_key, _claims(), kid="malformed-retry-after-cooldown"))
+
+    assert attempts == [verifier.jwks_url, verifier.jwks_url]
+
+
 def test_key_rotation_can_refresh_after_unknown_kid_cooldown(
     api_settings: Settings,
     signing_material: tuple[rsa.RSAPrivateKey, PyJWK],
