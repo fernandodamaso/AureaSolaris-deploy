@@ -6,6 +6,8 @@ from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
+_SAFE_VALIDATION_MESSAGE = "Invalid value."
+
 
 class ApiProblem(Exception):
     """Expected API failure with a stable, client-safe public contract."""
@@ -55,7 +57,7 @@ async def validation_error_handler(request: Request, exc: Exception) -> JSONResp
     fields: list[dict[str, object]] = [
         {
             "location": list(error["loc"]),
-            "message": str(error["msg"]),
+            "message": _SAFE_VALIDATION_MESSAGE,
             "type": str(error["type"]),
         }
         for error in validation_error.errors()

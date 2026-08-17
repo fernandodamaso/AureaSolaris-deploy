@@ -34,23 +34,29 @@ def _route_template(request: Request) -> str:
     return path if isinstance(path, str) else "<unmatched>"
 
 
-class RequestContextMiddleware(BaseHTTPMiddleware):
-    """Attach request IDs, sanitize unhandled failures, and emit safe request logs."""
+class SafeApplicationErrorMiddleware(BaseHTTPMiddleware):
+    """Sanitize unhandled application errors before CORS decorates the response."""
 
     async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
-        request_id = _request_id(request)
-        request.state.request_id = request_id
-        started = perf_counter()
-
         try:
-            response = await call_next(request)
+            return await call_next(request)
         except Exception:
-            response = problem_response(
+            return problem_response(
                 request,
                 status_code=500,
                 code="internal_error",
                 message="Internal server error.",
             )
+
+
+class RequestContextMiddleware(BaseHTTPMiddleware):
+    """Attach request IDs and emit privacy-safe structured request logs."""
+
+    async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
+        request_id = _request_id(request)
+        request.state.request_id = request_id
+        started = perf_counter()
+        response = await call_next(request)
 
         duration_ms = round((perf_counter() - started) * 1000, 3)
         response.headers[REQUEST_ID_HEADER] = request_id
@@ -67,7 +73,7 @@ class RequestContextMiddleware(BaseHTTPMiddleware):
 
 
 def install_http_middleware(app: FastAPI, settings: Settings) -> None:
-    app.add_middleware(RequestContextMiddleware)
+    app.add_middleware(SafeApplicationErrorMiddleware)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=list(settings.allowed_origins),
@@ -76,3 +82,4 @@ def install_http_middleware(app: FastAPI, settings: Settings) -> None:
         allow_headers=_ALLOWED_HEADERS,
         expose_headers=[REQUEST_ID_HEADER],
     )
+    app.add_middleware(RequestContextMiddleware)
