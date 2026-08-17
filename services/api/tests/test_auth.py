@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import logging
 from datetime import UTC, datetime
+from pathlib import Path
 from typing import Annotated
 from uuid import UUID, uuid4
 
@@ -11,11 +12,16 @@ import pytest
 from cryptography.hazmat.primitives.asymmetric import rsa
 from fastapi import Depends, FastAPI
 from fastapi.testclient import TestClient
-from jwt import PyJWK
+from jwt import PyJWK, PyJWKClient
 from jwt.algorithms import RSAAlgorithm
 from jwt.utils import base64url_encode
 
-from aurea_api.auth import AuthenticatedUser, TokenVerifier, get_authenticated_user
+from aurea_api.auth import (
+    AuthenticatedUser,
+    InvalidTokenError,
+    TokenVerifier,
+    get_authenticated_user,
+)
 from aurea_api.config import Settings
 from aurea_api.main import create_app
 
@@ -45,12 +51,17 @@ def _claims(*, subject: UUID | str | None = None, **overrides: object) -> dict[s
     return claims
 
 
-def _sign(private_key: rsa.RSAPrivateKey, claims: dict[str, object]) -> str:
+def _sign(
+    private_key: rsa.RSAPrivateKey,
+    claims: dict[str, object],
+    *,
+    kid: str = _KEY_ID,
+) -> str:
     return jwt.encode(
         claims,
         private_key,
         algorithm="RS256",
-        headers={"alg": "RS256", "kid": _KEY_ID, "typ": "JWT"},
+        headers={"alg": "RS256", "kid": kid, "typ": "JWT"},
     )
 
 
@@ -62,13 +73,34 @@ def _none_token(claims: dict[str, object]) -> str:
     return f"{header}.{payload}."
 
 
+def _public_jwk(private_key: rsa.RSAPrivateKey, *, kid: str = _KEY_ID) -> dict[str, object]:
+    jwk_data = RSAAlgorithm.to_jwk(private_key.public_key(), as_dict=True)
+    assert isinstance(jwk_data, dict)
+    jwk_data.update({"alg": "RS256", "kid": kid, "use": "sig"})
+    return jwk_data
+
+
+def _install_jwks_fetch_stub(
+    monkeypatch: pytest.MonkeyPatch,
+    jwks: list[dict[str, object]],
+) -> list[str]:
+    fetches: list[str] = []
+
+    def fetch_data(client: PyJWKClient) -> dict[str, object]:
+        fetches.append(client.uri)
+        payload: dict[str, object] = {"keys": list(jwks)}
+        if client.jwk_set_cache is not None:
+            client.jwk_set_cache.put(payload)
+        return payload
+
+    monkeypatch.setattr(PyJWKClient, "fetch_data", fetch_data)
+    return fetches
+
+
 @pytest.fixture
 def signing_material() -> tuple[rsa.RSAPrivateKey, PyJWK]:
     private_key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
-    jwk_data = RSAAlgorithm.to_jwk(private_key.public_key(), as_dict=True)
-    assert isinstance(jwk_data, dict)
-    jwk_data.update({"alg": "RS256", "kid": _KEY_ID, "use": "sig"})
-    return private_key, PyJWK.from_dict(jwk_data)
+    return private_key, PyJWK.from_dict(_public_jwk(private_key))
 
 
 def _private_app(settings: Settings, verifier: TokenVerifier) -> FastAPI:
@@ -100,6 +132,13 @@ def _assert_unauthorized(response: object, *, secret: str | None = None) -> None
         assert secret not in response.text
 
 
+def test_auth_module_contract_uses_api_package_boundary() -> None:
+    api_package = Path(__file__).resolve().parents[1] / "src" / "aurea_api" / "api"
+
+    assert (api_package / "__init__.py").is_file()
+    assert (api_package / "auth.py").is_file()
+
+
 def test_token_verifier_derives_jwks_url_and_uses_ttl_jwks_cache_without_key_cache(
     api_settings: Settings,
     monkeypatch: pytest.MonkeyPatch,
@@ -124,6 +163,59 @@ def test_token_verifier_derives_jwks_url_and_uses_ttl_jwks_cache_without_key_cac
         "lifespan": 600,
         "timeout": 5,
     }
+
+
+def test_unknown_kids_do_not_force_repeated_jwks_fetches_inside_refresh_cooldown(
+    api_settings: Settings,
+    signing_material: tuple[rsa.RSAPrivateKey, PyJWK],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    private_key, _ = signing_material
+    jwks = [_public_jwk(private_key)]
+    fetches = _install_jwks_fetch_stub(monkeypatch, jwks)
+    verifier = TokenVerifier(api_settings)
+
+    verifier.verify(_sign(private_key, _claims()))
+    for kid in ("unknown-key-1", "unknown-key-2", "unknown-key-3"):
+        with pytest.raises(InvalidTokenError):
+            verifier.verify(_sign(private_key, _claims(), kid=kid))
+
+    assert fetches == [verifier.jwks_url, verifier.jwks_url]
+
+
+def test_key_rotation_can_refresh_after_unknown_kid_cooldown(
+    api_settings: Settings,
+    signing_material: tuple[rsa.RSAPrivateKey, PyJWK],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    private_key, _ = signing_material
+    rotated_private_key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
+    rotated_kid = "rotated-signing-key"
+    rotated_subject = uuid4()
+    jwks = [_public_jwk(private_key)]
+    fetches = _install_jwks_fetch_stub(monkeypatch, jwks)
+    now = [1_000.0]
+    verifier = TokenVerifier(api_settings, clock=lambda: now[0])
+    rotated_token = _sign(
+        rotated_private_key,
+        _claims(subject=rotated_subject),
+        kid=rotated_kid,
+    )
+
+    verifier.verify(_sign(private_key, _claims()))
+    with pytest.raises(InvalidTokenError):
+        verifier.verify(rotated_token)
+
+    jwks.append(_public_jwk(rotated_private_key, kid=rotated_kid))
+    with pytest.raises(InvalidTokenError):
+        verifier.verify(rotated_token)
+    assert len(fetches) == 2
+
+    now[0] += 61
+    identity = verifier.verify(rotated_token)
+
+    assert identity.subject == rotated_subject
+    assert len(fetches) == 3
 
 
 @pytest.mark.parametrize(
