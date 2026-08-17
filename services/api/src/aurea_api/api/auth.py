@@ -60,12 +60,9 @@ class _RefreshLimitedJwkClient:
         return PyJWKClient.match_kid(self._client.get_signing_keys(), kid)
 
     def get_signing_key(self, kid: str) -> PyJWK:
-        signing_key = self._match_cached_key(kid)
-        if signing_key is not None:
-            return signing_key
-
         with self._refresh_lock:
-            # Another request may have refreshed the JWKS while this one waited.
+            # The cache lookup can fetch when the JWKS set is cold or expired, so keep it
+            # under the same lock as forced refreshes to prevent concurrent stampedes.
             signing_key = self._match_cached_key(kid)
             if signing_key is not None:
                 return signing_key
