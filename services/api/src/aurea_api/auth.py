@@ -14,7 +14,6 @@ from .errors import ApiProblem
 
 _ALLOWED_ALGORITHMS = ("ES256", "RS256")
 _JWKS_CACHE_LIFESPAN_SECONDS = 600
-_JWKS_MAX_CACHED_KEYS = 16
 _JWKS_TIMEOUT_SECONDS = 5
 _WWW_AUTHENTICATE = {"WWW-Authenticate": "Bearer"}
 
@@ -52,8 +51,7 @@ class TokenVerifier:
         self._audience = settings.jwt_audience
         self._jwk_client: SigningKeyProvider = jwk_client or PyJWKClient(
             self.jwks_url,
-            cache_keys=True,
-            max_cached_keys=_JWKS_MAX_CACHED_KEYS,
+            cache_keys=False,
             cache_jwk_set=True,
             lifespan=_JWKS_CACHE_LIFESPAN_SECONDS,
             timeout=_JWKS_TIMEOUT_SECONDS,
