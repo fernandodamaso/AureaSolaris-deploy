@@ -2,8 +2,11 @@ from __future__ import annotations
 
 import json
 import logging
+from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime
 from pathlib import Path
+from threading import Barrier, Lock
+from time import sleep
 from typing import Annotated
 from uuid import UUID, uuid4
 
@@ -181,6 +184,48 @@ def test_unknown_kids_do_not_force_repeated_jwks_fetches_inside_refresh_cooldown
             verifier.verify(_sign(private_key, _claims(), kid=kid))
 
     assert fetches == [verifier.jwks_url, verifier.jwks_url]
+
+
+def test_cold_cache_unknown_kid_burst_has_bounded_jwks_fetches(
+    api_settings: Settings,
+    signing_material: tuple[rsa.RSAPrivateKey, PyJWK],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    private_key, _ = signing_material
+    jwks = [_public_jwk(private_key)]
+    worker_count = 8
+    start = Barrier(worker_count)
+    fetches: list[str] = []
+    fetch_lock = Lock()
+
+    def fetch_data(client: PyJWKClient) -> dict[str, object]:
+        with fetch_lock:
+            fetches.append(client.uri)
+        sleep(0.05)
+        payload: dict[str, object] = {"keys": list(jwks)}
+        if client.jwk_set_cache is not None:
+            client.jwk_set_cache.put(payload)
+        return payload
+
+    monkeypatch.setattr(PyJWKClient, "fetch_data", fetch_data)
+    verifier = TokenVerifier(api_settings)
+    tokens = [
+        _sign(private_key, _claims(), kid=f"cold-unknown-key-{index}")
+        for index in range(worker_count)
+    ]
+
+    def verify_unknown(token: str) -> None:
+        start.wait(timeout=5)
+        with pytest.raises(InvalidTokenError):
+            verifier.verify(token)
+
+    with ThreadPoolExecutor(max_workers=worker_count) as executor:
+        futures = [executor.submit(verify_unknown, token) for token in tokens]
+        for future in futures:
+            future.result(timeout=5)
+
+    assert len(fetches) <= 2
+    assert all(uri == verifier.jwks_url for uri in fetches)
 
 
 def test_key_rotation_can_refresh_after_unknown_kid_cooldown(
