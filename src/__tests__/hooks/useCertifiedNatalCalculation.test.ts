@@ -11,38 +11,57 @@ vi.mock('../../services/astrologyApi', async () => {
   return {
     ...actual,
     postNatalCalculation: vi.fn(),
-    buildNatalPayload: vi.fn((birthData?: Record<string, unknown>) => JSON.stringify(birthData ?? { year: 2000 })),
   };
 });
 
 import { safeInvoke } from '../../utils/tauri';
-import { buildNatalPayload, postNatalCalculation } from '../../services/astrologyApi';
+import { postNatalCalculation } from '../../services/astrologyApi';
 
 const birthData = {
-  year: 1990,
-  month: 5,
-  day: 15,
-  hour: 14.5,
-  lat: -23.55,
-  lon: -46.63,
+  year: 2000,
+  month: 1,
+  day: 1,
+  hour: 23.5,
+  lat: -23.5505,
+  lon: -46.6333,
+  timezone_name: 'America/Sao_Paulo',
+  utc_offset_minutes: -120,
   house_system: 'Regiomontanus',
+};
+
+const expectedNatalPayload = {
+  year: 2000,
+  month: 1,
+  day: 1,
+  hour: 23.5,
+  lat: -23.5505,
+  lon: -46.6333,
+  utc_offset_minutes: -120,
+  house_system: 'Regiomontanus',
+  timezone: 'America/Sao_Paulo',
 };
 
 const makeCertifiedNatalResponse = () => ({
   planets: {
-    Sun: { degree: 54.2, sign: 'Taurus' },
-    Moon: { degree: 210.1, sign: 'Sco' },
-    ASC: { degree: 12.4, sign: 'Ari' },
-    MC: { degree: 281.7, sign: 'Cap' },
+    Sun: { degree: 281.15, sign: 'Cap' },
+    Moon: { degree: 224.01, sign: 'Sco' },
+    ASC: { degree: 111.67, sign: 'Can' },
+    MC: { degree: 24.85, sign: 'Ari' },
   },
   houses: Array.from({ length: 12 }, (_, index) => ({ degree: index * 30 })),
+  aspects: [],
   meta: {
     receipt: {
       schema_version: 'calculation-receipt.v1',
       kind: 'natal',
       input_hash: 'natal-input-hash',
       engine: { name: 'aurea-solaris-astro-engine', version: '2026.08.audit-1' },
-      resolved_time: { utc: '2026-08-10T12:00:00Z', iana_timezone: 'UTC' },
+      resolved_time: {
+        utc: '2000-01-02T01:30:00Z',
+        iana_timezone: 'America/Sao_Paulo',
+        utc_offset_minutes: -120,
+      },
+      ephemeris: { library: 'pyswisseph', library_version: '2.10.03', mode: 'swiss' },
     },
   },
 });
@@ -53,10 +72,8 @@ describe('useCertifiedNatalCalculation', () => {
     vi.mocked(safeInvoke).mockResolvedValue(null);
   });
 
-  it('requests natal transport with the birth payload and returns certified data', async () => {
+  it('preserves the normalized birth payload and accepts certified natal data', async () => {
     const certified = makeCertifiedNatalResponse();
-    const payload = JSON.stringify(birthData);
-    vi.mocked(buildNatalPayload).mockReturnValue(payload);
     vi.mocked(postNatalCalculation).mockResolvedValue(JSON.stringify(certified));
 
     const { result } = renderHook(() => useCertifiedNatalCalculation(birthData));
@@ -67,17 +84,25 @@ describe('useCertifiedNatalCalculation', () => {
       expect(result.current.loading).toBe(false);
     });
 
-    expect(buildNatalPayload).toHaveBeenCalledWith(birthData);
-    expect(postNatalCalculation).toHaveBeenCalledWith(payload);
+    expect(postNatalCalculation).toHaveBeenCalledTimes(1);
+    const [payload] = vi.mocked(postNatalCalculation).mock.calls[0];
+    expect(JSON.parse(payload)).toEqual(expectedNatalPayload);
     expect(result.current.data).toEqual(certified);
+    expect(result.current.data?.meta.receipt).toMatchObject({
+      kind: 'natal',
+      input_hash: 'natal-input-hash',
+      engine: { name: 'aurea-solaris-astro-engine', version: '2026.08.audit-1' },
+      resolved_time: {
+        utc: '2000-01-02T01:30:00Z',
+        iana_timezone: 'America/Sao_Paulo',
+      },
+    });
     expect(result.current.error).toBeNull();
     expect(safeInvoke).not.toHaveBeenCalled();
   });
 
   it('falls back to Tauri only after HTTP transport returns null', async () => {
     const certified = makeCertifiedNatalResponse();
-    const payload = JSON.stringify(birthData);
-    vi.mocked(buildNatalPayload).mockReturnValue(payload);
     vi.mocked(postNatalCalculation).mockResolvedValue(null);
     vi.mocked(safeInvoke).mockResolvedValue(JSON.stringify(certified));
 
@@ -87,6 +112,8 @@ describe('useCertifiedNatalCalculation', () => {
       expect(result.current.loading).toBe(false);
     });
 
+    const [payload] = vi.mocked(postNatalCalculation).mock.calls[0];
+    expect(JSON.parse(payload)).toEqual(expectedNatalPayload);
     expect(safeInvoke).toHaveBeenCalledWith('run_astro_engine', { payload });
     expect(result.current.data).toEqual(certified);
   });
@@ -107,6 +134,21 @@ describe('useCertifiedNatalCalculation', () => {
   it('rejects responses without an audit receipt instead of silently displaying them', async () => {
     const uncertified = { planets: makeCertifiedNatalResponse().planets, houses: makeCertifiedNatalResponse().houses };
     vi.mocked(postNatalCalculation).mockResolvedValue(JSON.stringify(uncertified));
+
+    const { result } = renderHook(() => useCertifiedNatalCalculation(birthData));
+
+    await waitFor(() => {
+      expect(result.current.loading).toBe(false);
+    });
+
+    expect(result.current.data).toBeNull();
+    expect(result.current.error).toContain('recibo auditável');
+  });
+
+  it('rejects a certified receipt for the wrong calculation kind', async () => {
+    const wrongKind = makeCertifiedNatalResponse();
+    wrongKind.meta.receipt.kind = 'transit';
+    vi.mocked(postNatalCalculation).mockResolvedValue(JSON.stringify(wrongKind));
 
     const { result } = renderHook(() => useCertifiedNatalCalculation(birthData));
 
@@ -155,8 +197,6 @@ describe('useCertifiedNatalCalculation', () => {
 
   it('does not recalculate when birthData object identity changes but values stay the same', async () => {
     const certified = makeCertifiedNatalResponse();
-    const payload = JSON.stringify(birthData);
-    vi.mocked(buildNatalPayload).mockReturnValue(payload);
     vi.mocked(postNatalCalculation).mockResolvedValue(JSON.stringify(certified));
 
     const { result, rerender } = renderHook(

@@ -104,10 +104,11 @@ describe('App navigation', () => {
     });
   });
 
-  it('loads each primary screen landmark after navigation', async () => {
+  it('keeps Astrologia as the authenticated default and loads each primary screen landmark', async () => {
     renderApp();
     fireEvent.click(await screen.findByRole('button', { name: 'ENTRAR' }));
     await screen.findByTitle('Astrologia', {}, { timeout: 10000 });
+    expect(await screen.findByText('Astrologia landmark')).toBeTruthy();
 
     const pages: Array<{ label: string; landmark: string }> = [
       { label: 'Astrologia', landmark: 'Astrologia landmark' },
