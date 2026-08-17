@@ -13,6 +13,17 @@ from pydantic import BaseModel, field_validator
 from aurea_api.config import Settings
 from aurea_api.main import create_app
 
+_CUSTOM_VALIDATOR_SECRET = "sensitive-custom-validator-secret"
+
+
+class SecretValidatedPayload(BaseModel):
+    value: str
+
+    @field_validator("value")
+    @classmethod
+    def reject_value(cls, value: str) -> str:
+        raise ValueError(f"rejected {value}: {_CUSTOM_VALIDATOR_SECRET}")
+
 
 def test_request_id_is_generated_when_missing(api_settings: Settings) -> None:
     with TestClient(create_app(api_settings)) as client:
@@ -124,16 +135,7 @@ def test_custom_validation_errors_do_not_expose_value_error_messages(
     api_settings: Settings,
 ) -> None:
     app = create_app(api_settings)
-    secret_marker = "sensitive-custom-validator-secret"
     secret_input = "sensitive-custom-validator-input"
-
-    class SecretValidatedPayload(BaseModel):
-        value: str
-
-        @field_validator("value")
-        @classmethod
-        def reject_value(cls, value: str) -> str:
-            raise ValueError(f"rejected {value}: {secret_marker}")
 
     @app.post("/_test/custom-validation")
     async def custom_validation_endpoint(payload: SecretValidatedPayload) -> dict[str, str]:
@@ -154,7 +156,7 @@ def test_custom_validation_errors_do_not_expose_value_error_messages(
             "type": "value_error",
         }
     ]
-    assert secret_marker not in response.text
+    assert _CUSTOM_VALIDATOR_SECRET not in response.text
     assert secret_input not in response.text
 
 
