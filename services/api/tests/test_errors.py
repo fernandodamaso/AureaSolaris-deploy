@@ -41,6 +41,16 @@ def _request_events(stderr: str) -> list[dict[str, object]]:
     return events
 
 
+def _reset_request_logger_for_bootstrap() -> logging.Logger:
+    request_logger = logging.getLogger("aurea_api.request")
+    for handler in list(request_logger.handlers):
+        request_logger.removeHandler(handler)
+        handler.close()
+    request_logger.setLevel(logging.NOTSET)
+    request_logger.propagate = True
+    return request_logger
+
+
 def test_request_id_is_generated_when_missing(api_settings: Settings) -> None:
     with TestClient(create_app(api_settings)) as client:
         response = client.get("/health")
@@ -62,6 +72,7 @@ def test_cors_preflights_receive_request_ids_and_structured_logs(
     api_settings: Settings,
     capfd: pytest.CaptureFixture[str],
 ) -> None:
+    _reset_request_logger_for_bootstrap()
     app = create_app(api_settings)
     preflight_headers = {
         "Access-Control-Request-Method": "GET",
@@ -226,10 +237,7 @@ def test_create_app_bootstraps_request_logging(
     api_settings: Settings,
     capfd: pytest.CaptureFixture[str],
 ) -> None:
-    request_logger = logging.getLogger("aurea_api.request")
-    request_logger.handlers.clear()
-    request_logger.setLevel(logging.NOTSET)
-    request_logger.propagate = True
+    request_logger = _reset_request_logger_for_bootstrap()
 
     with TestClient(create_app(api_settings)) as client:
         response = client.get("/health", headers={"X-Request-ID": "bootstrap-request-id"})
@@ -256,6 +264,7 @@ def test_structured_request_log_excludes_authorization_and_body(
     api_settings: Settings,
     capfd: pytest.CaptureFixture[str],
 ) -> None:
+    _reset_request_logger_for_bootstrap()
     app = create_app(api_settings)
 
     @app.post("/_test/logging")
