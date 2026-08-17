@@ -1,6 +1,9 @@
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass
+from threading import Lock
+from time import monotonic
 from typing import Protocol, cast
 from uuid import UUID
 
@@ -9,11 +12,12 @@ from fastapi import Request
 from jwt import PyJWK, PyJWKClient
 from jwt.exceptions import PyJWKClientError, PyJWTError
 
-from .config import Settings
-from .errors import ApiProblem
+from ..config import Settings
+from ..errors import ApiProblem
 
 _ALLOWED_ALGORITHMS = ("ES256", "RS256")
 _JWKS_CACHE_LIFESPAN_SECONDS = 600
+_JWKS_FORCED_REFRESH_COOLDOWN_SECONDS = 60
 _JWKS_TIMEOUT_SECONDS = 5
 _WWW_AUTHENTICATE = {"WWW-Authenticate": "Bearer"}
 
@@ -27,13 +31,57 @@ class AuthenticatedUser:
 
 
 class SigningKeyProvider(Protocol):
-    """Minimal JWKS key lookup seam used by TokenVerifier and tests."""
+    """Minimal signing-key lookup seam used by TokenVerifier and tests."""
 
     def get_signing_key(self, kid: str) -> PyJWK: ...
 
 
 class InvalidTokenError(Exception):
     """Internal authentication failure that never exposes token details."""
+
+
+class _RefreshLimitedJwkClient:
+    """Use cached JWKS while rate-limiting attacker-triggered forced refreshes."""
+
+    def __init__(
+        self,
+        client: PyJWKClient,
+        *,
+        cooldown_seconds: float,
+        clock: Callable[[], float],
+    ) -> None:
+        self._client = client
+        self._cooldown_seconds = cooldown_seconds
+        self._clock = clock
+        self._refresh_lock = Lock()
+        self._last_forced_refresh_at: float | None = None
+
+    def _match_cached_key(self, kid: str) -> PyJWK | None:
+        return PyJWKClient.match_kid(self._client.get_signing_keys(), kid)
+
+    def get_signing_key(self, kid: str) -> PyJWK:
+        signing_key = self._match_cached_key(kid)
+        if signing_key is not None:
+            return signing_key
+
+        with self._refresh_lock:
+            # Another request may have refreshed the JWKS while this one waited.
+            signing_key = self._match_cached_key(kid)
+            if signing_key is not None:
+                return signing_key
+
+            now = self._clock()
+            last_refresh = self._last_forced_refresh_at
+            if last_refresh is not None and now - last_refresh < self._cooldown_seconds:
+                raise PyJWKClientError("Signing key unavailable during JWKS refresh cooldown.")
+
+            # Record the attempt before network I/O so endpoint failures are rate-limited too.
+            self._last_forced_refresh_at = now
+            signing_keys = self._client.get_signing_keys(refresh=True)
+            signing_key = PyJWKClient.match_kid(signing_keys, kid)
+            if signing_key is None:
+                raise PyJWKClientError("Unable to find a matching signing key.")
+            return signing_key
 
 
 class TokenVerifier:
@@ -44,18 +92,27 @@ class TokenVerifier:
         settings: Settings,
         *,
         jwk_client: SigningKeyProvider | None = None,
+        clock: Callable[[], float] = monotonic,
     ) -> None:
         supabase_base_url = str(settings.supabase_url).rstrip("/")
         self.issuer = f"{supabase_base_url}/auth/v1"
         self.jwks_url = f"{self.issuer}/.well-known/jwks.json"
         self._audience = settings.jwt_audience
-        self._jwk_client: SigningKeyProvider = jwk_client or PyJWKClient(
-            self.jwks_url,
-            cache_keys=False,
-            cache_jwk_set=True,
-            lifespan=_JWKS_CACHE_LIFESPAN_SECONDS,
-            timeout=_JWKS_TIMEOUT_SECONDS,
-        )
+        if jwk_client is not None:
+            self._jwk_client = jwk_client
+        else:
+            base_client = PyJWKClient(
+                self.jwks_url,
+                cache_keys=False,
+                cache_jwk_set=True,
+                lifespan=_JWKS_CACHE_LIFESPAN_SECONDS,
+                timeout=_JWKS_TIMEOUT_SECONDS,
+            )
+            self._jwk_client = _RefreshLimitedJwkClient(
+                base_client,
+                cooldown_seconds=_JWKS_FORCED_REFRESH_COOLDOWN_SECONDS,
+                clock=clock,
+            )
 
     def verify(self, token: str) -> AuthenticatedUser:
         """Return a trusted identity or raise a token-safe authentication failure."""

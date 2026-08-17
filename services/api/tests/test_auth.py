@@ -16,7 +16,7 @@ from jwt import PyJWK, PyJWKClient
 from jwt.algorithms import RSAAlgorithm
 from jwt.utils import base64url_encode
 
-from aurea_api.auth import (
+from aurea_api.api.auth import (
     AuthenticatedUser,
     InvalidTokenError,
     TokenVerifier,
@@ -150,7 +150,7 @@ def test_token_verifier_derives_jwks_url_and_uses_ttl_jwks_cache_without_key_cac
             captured["uri"] = uri
             captured.update(kwargs)
 
-    monkeypatch.setattr("aurea_api.auth.PyJWKClient", CapturingPyJWKClient)
+    monkeypatch.setattr("aurea_api.api.auth.PyJWKClient", CapturingPyJWKClient)
 
     verifier = TokenVerifier(api_settings)
 

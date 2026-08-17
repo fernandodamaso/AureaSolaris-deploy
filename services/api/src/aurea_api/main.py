@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from fastapi import FastAPI
 
-from .auth import TokenVerifier
+from .api.auth import TokenVerifier
 from .config import Settings, get_settings
 from .dependencies import unavailable_readiness_probe
 from .errors import register_error_handlers
