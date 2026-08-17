@@ -2,9 +2,7 @@ import { StrictMode } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import App from '../App';
-import { GlobalProvider } from '../context/GlobalContext';
-import { AgendaProvider } from '../context/AgendaContext';
-import { SaudeProvider } from '../context/SaudeContext';
+import { AppProviders } from '../app/AppProviders';
 
 const { openInitialAccess, safeInvoke } = vi.hoisted(() => ({
   openInitialAccess: vi.fn(),
@@ -82,13 +80,9 @@ vi.mock('../components/HermesChat', () => ({
 
 const renderApp = (strict = false) => {
   const tree = (
-    <AgendaProvider>
-      <SaudeProvider>
-        <GlobalProvider>
-          <App />
-        </GlobalProvider>
-      </SaudeProvider>
-    </AgendaProvider>
+    <AppProviders>
+      <App />
+    </AppProviders>
   );
   return render(strict ? <StrictMode>{tree}</StrictMode> : tree);
 };
