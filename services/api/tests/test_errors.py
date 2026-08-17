@@ -25,6 +25,22 @@ class SecretValidatedPayload(BaseModel):
         raise ValueError(f"rejected {value}: {_CUSTOM_VALIDATOR_SECRET}")
 
 
+class DictionaryKeyPayload(BaseModel):
+    values: dict[int, str]
+
+
+def _request_events(stderr: str) -> list[dict[str, object]]:
+    events: list[dict[str, object]] = []
+    for line in stderr.splitlines():
+        try:
+            event = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if isinstance(event, dict) and event.get("event") == "http_request":
+            events.append(event)
+    return events
+
+
 def test_request_id_is_generated_when_missing(api_settings: Settings) -> None:
     with TestClient(create_app(api_settings)) as client:
         response = client.get("/health")
@@ -44,7 +60,7 @@ def test_valid_request_id_is_preserved(api_settings: Settings) -> None:
 
 def test_cors_preflights_receive_request_ids_and_structured_logs(
     api_settings: Settings,
-    caplog: pytest.LogCaptureFixture,
+    capfd: pytest.CaptureFixture[str],
 ) -> None:
     app = create_app(api_settings)
     preflight_headers = {
@@ -53,7 +69,6 @@ def test_cors_preflights_receive_request_ids_and_structured_logs(
     }
     allowed_request_id = "allowed-preflight-id"
     denied_request_id = "denied-preflight-id"
-    caplog.set_level(logging.INFO, logger="aurea_api.request")
 
     with TestClient(app) as client:
         allowed = client.options(
@@ -82,11 +97,8 @@ def test_cors_preflights_receive_request_ids_and_structured_logs(
     assert "access-control-allow-origin" not in denied.headers
     assert denied.headers["X-Request-ID"] == denied_request_id
 
-    request_events = [
-        json.loads(record.getMessage())
-        for record in caplog.records
-        if record.name == "aurea_api.request"
-    ]
+    request_events = _request_events(capfd.readouterr().err)
+    assert len(request_events) == 2
     assert request_events == [
         {
             "duration_ms": request_events[0]["duration_ms"],
@@ -125,7 +137,7 @@ def test_validation_errors_use_safe_problem_shape(api_settings: Settings) -> Non
     assert payload["code"] == "validation_error"
     assert payload["message"] == "Request validation failed."
     assert payload["request_id"] == response.headers["X-Request-ID"]
-    assert payload["fields"][0]["location"] == ["query", "limit"]
+    assert payload["fields"][0]["location"] == ["query", "field"]
     assert payload["fields"][0]["type"] == "int_parsing"
     assert payload["fields"][0]["message"] == "Invalid value."
     assert secret_input not in response.text
@@ -151,13 +163,37 @@ def test_custom_validation_errors_do_not_expose_value_error_messages(
     assert payload["request_id"] == response.headers["X-Request-ID"]
     assert payload["fields"] == [
         {
-            "location": ["body", "value"],
+            "location": ["body", "field"],
             "message": "Invalid value.",
             "type": "value_error",
         }
     ]
     assert _CUSTOM_VALIDATOR_SECRET not in response.text
     assert secret_input not in response.text
+
+
+def test_validation_locations_do_not_expose_invalid_dictionary_keys(
+    api_settings: Settings,
+) -> None:
+    app = create_app(api_settings)
+    secret_key = "sensitive-invalid-dictionary-key"
+
+    @app.post("/_test/dictionary-key-validation")
+    async def dictionary_key_endpoint(payload: DictionaryKeyPayload) -> dict[str, int]:
+        return {"count": len(payload.values)}
+
+    with TestClient(app) as client:
+        response = client.post(
+            "/_test/dictionary-key-validation",
+            json={"values": {secret_key: "safe-value"}},
+        )
+
+    payload = response.json()
+    assert response.status_code == 422
+    assert payload["code"] == "validation_error"
+    assert payload["fields"][0]["location"] == ["body", "field", "key"]
+    assert payload["fields"][0]["type"] == "int_parsing"
+    assert secret_key not in response.text
 
 
 def test_unhandled_errors_are_sanitized_and_keep_allowed_origin_cors(
@@ -186,9 +222,39 @@ def test_unhandled_errors_are_sanitized_and_keep_allowed_origin_cors(
     assert secret_marker not in response.text
 
 
+def test_create_app_bootstraps_request_logging(
+    api_settings: Settings,
+    capfd: pytest.CaptureFixture[str],
+) -> None:
+    request_logger = logging.getLogger("aurea_api.request")
+    request_logger.handlers.clear()
+    request_logger.setLevel(logging.NOTSET)
+    request_logger.propagate = True
+
+    with TestClient(create_app(api_settings)) as client:
+        response = client.get("/health", headers={"X-Request-ID": "bootstrap-request-id"})
+
+    request_events = _request_events(capfd.readouterr().err)
+    assert response.status_code == 200
+    assert request_logger.level == logging.INFO
+    assert request_logger.propagate is False
+    assert len(request_logger.handlers) == 1
+    assert request_logger.handlers[0].level == logging.INFO
+    assert request_events == [
+        {
+            "duration_ms": request_events[0]["duration_ms"],
+            "event": "http_request",
+            "method": "GET",
+            "request_id": "bootstrap-request-id",
+            "route": "/health",
+            "status": 200,
+        }
+    ]
+
+
 def test_structured_request_log_excludes_authorization_and_body(
     api_settings: Settings,
-    caplog: pytest.LogCaptureFixture,
+    capfd: pytest.CaptureFixture[str],
 ) -> None:
     app = create_app(api_settings)
 
@@ -198,7 +264,6 @@ def test_structured_request_log_excludes_authorization_and_body(
 
     authorization_marker = "Bearer sensitive-authorization-marker"
     body_marker = "sensitive-request-body-marker"
-    caplog.set_level(logging.INFO, logger="aurea_api.request")
 
     with TestClient(app) as client:
         response = client.post(
@@ -207,12 +272,12 @@ def test_structured_request_log_excludes_authorization_and_body(
             json={"private": body_marker},
         )
 
-    request_records = [record for record in caplog.records if record.name == "aurea_api.request"]
+    request_events = _request_events(capfd.readouterr().err)
     assert response.status_code == 200
-    assert len(request_records) == 1
+    assert len(request_events) == 1
 
-    raw_log = request_records[0].getMessage()
-    event = json.loads(raw_log)
+    raw_log = json.dumps(request_events[0], separators=(",", ":"), sort_keys=True)
+    event = request_events[0]
     assert event["route"] == "/_test/logging"
     assert event["status"] == 200
     assert event["method"] == "POST"
