@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from fastapi import FastAPI
 
+from .auth import TokenVerifier
 from .config import Settings, get_settings
 from .dependencies import unavailable_readiness_probe
 from .errors import register_error_handlers
@@ -19,6 +20,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.state.settings = resolved_settings
     app.state.database_readiness = unavailable_readiness_probe
     app.state.engine_readiness = unavailable_readiness_probe
+    app.state.token_verifier = TokenVerifier(resolved_settings)
 
     register_error_handlers(app)
     app.include_router(health_router)

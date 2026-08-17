@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Mapping
 from typing import cast
 
 from fastapi import FastAPI, Request
@@ -13,11 +14,19 @@ _TRUSTED_VALIDATION_SOURCES = frozenset({"body", "query", "path", "header", "coo
 class ApiProblem(Exception):
     """Expected API failure with a stable, client-safe public contract."""
 
-    def __init__(self, *, status_code: int, code: str, message: str) -> None:
+    def __init__(
+        self,
+        *,
+        status_code: int,
+        code: str,
+        message: str,
+        headers: Mapping[str, str] | None = None,
+    ) -> None:
         super().__init__(code)
         self.status_code = status_code
         self.code = code
         self.message = message
+        self.headers = dict(headers) if headers is not None else None
 
 
 def _request_id(request: Request) -> str:
@@ -55,6 +64,7 @@ def problem_response(
     code: str,
     message: str,
     fields: list[dict[str, object]] | None = None,
+    headers: Mapping[str, str] | None = None,
 ) -> JSONResponse:
     payload: dict[str, object] = {
         "code": code,
@@ -63,7 +73,7 @@ def problem_response(
     }
     if fields is not None:
         payload["fields"] = fields
-    return JSONResponse(status_code=status_code, content=payload)
+    return JSONResponse(status_code=status_code, content=payload, headers=headers)
 
 
 async def api_problem_handler(request: Request, exc: Exception) -> JSONResponse:
@@ -73,6 +83,7 @@ async def api_problem_handler(request: Request, exc: Exception) -> JSONResponse:
         status_code=problem.status_code,
         code=problem.code,
         message=problem.message,
+        headers=problem.headers,
     )
 
 
