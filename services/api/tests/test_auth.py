@@ -100,7 +100,7 @@ def _assert_unauthorized(response: object, *, secret: str | None = None) -> None
         assert secret not in response.text
 
 
-def test_token_verifier_derives_jwks_url_and_uses_bounded_cache(
+def test_token_verifier_derives_jwks_url_and_uses_ttl_jwks_cache_without_key_cache(
     api_settings: Settings,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -119,8 +119,7 @@ def test_token_verifier_derives_jwks_url_and_uses_bounded_cache(
     assert verifier.jwks_url == f"{_ISSUER}/.well-known/jwks.json"
     assert captured == {
         "uri": f"{_ISSUER}/.well-known/jwks.json",
-        "cache_keys": True,
-        "max_cached_keys": 16,
+        "cache_keys": False,
         "cache_jwk_set": True,
         "lifespan": 600,
         "timeout": 5,
