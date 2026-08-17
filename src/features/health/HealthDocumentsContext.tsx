@@ -5,6 +5,7 @@ import type { AureaDocument } from './types';
 interface HealthDocumentsContextValue {
   documents: AureaDocument[];
   addDocument: (document: Omit<AureaDocument, 'id' | 'date'>) => void;
+  refreshFromStorage: () => void;
 }
 
 const HealthDocumentsContext = createContext<HealthDocumentsContextValue | undefined>(undefined);
@@ -32,6 +33,14 @@ export function HealthDocumentsProvider({
   });
   const documentsRef = useRef(documents);
 
+  const refreshFromStorage = () => {
+    const loaded = resolvedStorage.loadDocuments();
+    const sanitized = sanitizeHealthDocuments(loaded);
+    if (loaded.length > 0) resolvedStorage.saveDocuments(sanitized);
+    documentsRef.current = sanitized;
+    setDocuments(sanitized);
+  };
+
   const addDocument = (document: Omit<AureaDocument, 'id' | 'date'>) => {
     const timestamp = now();
     const newDocument: AureaDocument = {
@@ -46,7 +55,7 @@ export function HealthDocumentsProvider({
   };
 
   return (
-    <HealthDocumentsContext.Provider value={{ documents, addDocument }}>
+    <HealthDocumentsContext.Provider value={{ documents, addDocument, refreshFromStorage }}>
       {children}
     </HealthDocumentsContext.Provider>
   );
