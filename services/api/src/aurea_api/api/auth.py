@@ -77,10 +77,11 @@ class _RefreshLimitedJwkClient:
 
             try:
                 signing_key = self._match_cached_key(kid)
-            except PyJWKClientError:
-                # Record failed cold/expired-cache loads before releasing the lock so an
-                # outage burst cannot turn into one network attempt per waiting request.
-                self._last_refresh_attempt_at = now
+            except (PyJWKClientError, PyJWTError, TypeError, ValueError):
+                # Record any expected cold/expired-cache retrieval failure that leaves the
+                # cache unavailable, including connection and malformed-JSON failures.
+                if self._jwks_cache_needs_fetch():
+                    self._last_refresh_attempt_at = now
                 raise
 
             if signing_key is not None:
