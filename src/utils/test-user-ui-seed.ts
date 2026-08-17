@@ -1,5 +1,6 @@
 import testUserUiFixture from '../fixtures/test-user-ui.json';
-import type { AureaEvent, AureaProfile, AureaTask } from '../context/AgendaContext';
+import type { AureaEvent, AureaTask } from '../features/agenda/types';
+import type { AureaProfile } from '../features/identity/types';
 import type { ProfileConnection } from '../types/private-profile';
 
 export const TEST_USER_OWNER_ID = 'aurea-test';
@@ -49,12 +50,8 @@ export function applyTestUserUiSeed(
   displayName: string,
   storage: StorageLike = localStorage,
 ): void {
-  if (ownerId !== TEST_USER_OWNER_ID) {
-    return;
-  }
-  if (storage.getItem(TEST_USER_UI_SEED_STORAGE_KEY) === TEST_USER_UI_SEED_VERSION) {
-    return;
-  }
+  if (ownerId !== TEST_USER_OWNER_ID) return;
+  if (storage.getItem(TEST_USER_UI_SEED_STORAGE_KEY) === TEST_USER_UI_SEED_VERSION) return;
 
   const profiles = readProfiles(storage);
   const existing = profiles.find((profile) => profile.id === ownerId);
@@ -85,10 +82,7 @@ export function applyTestUserUiSeed(
   }
 
   if (readJsonArray<AureaEvent>(storage, 'aurea_events').length === 0) {
-    const events = testUserUiFixture.events.map((event) => ({
-      ...event,
-      profileId: ownerId,
-    }));
+    const events = testUserUiFixture.events.map((event) => ({ ...event, profileId: ownerId }));
     storage.setItem('aurea_events', JSON.stringify(events));
   }
 

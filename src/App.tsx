@@ -4,6 +4,8 @@ import "./styles.css";
 
 // Contexts
 import { useGlobalContext } from './context/GlobalContext.tsx';
+import { useAgenda } from './features/agenda/AgendaContext';
+import { useIdentity } from './features/identity/IdentityContext';
 
 // Components
 import { NavItem } from './components/common/UIComponents';
@@ -111,8 +113,9 @@ export default function App() {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [cadernoIntent, setCadernoIntent] = useState<CadernoIntent | null>(null);
 
-  const { agenda } = useGlobalContext();
-  const masterProfile = agenda.activeProfile;
+  const identity = useIdentity();
+  const agenda = useAgenda();
+  const masterProfile = identity.activeProfile;
 
   const isMesa = currentPage === 'mesa-criacao';
   const pageTitles: Record<string, string> = {
@@ -137,14 +140,15 @@ export default function App() {
       if (!active) return;
       setAccess(result);
       if (result.kind === 'local-owner') {
-        agenda.ensureLocalUiProfile(result.ownerId, result.displayName);
+        identity.ensureLocalUiProfile(result.ownerId, result.displayName);
         try {
           const healthResponse = await fetch(`${LOCAL_API_URL}/health`);
           if (healthResponse.ok) {
             const health = await healthResponse.json() as { test_user?: boolean };
             if (health.test_user === true && result.ownerId === TEST_USER_OWNER_ID) {
               applyTestUserUiSeed(result.ownerId, result.displayName);
-              agenda.hydrateProfilesFromStorage();
+              identity.refreshFromStorage();
+              agenda.refreshFromStorage();
             }
           }
         } catch {
@@ -158,7 +162,7 @@ export default function App() {
     };
     void restoreAccess();
     return () => { active = false; };
-    // Retry is explicit via bootAttempt. Do not re-run when agenda identity changes.
+    // Retry is explicit via bootAttempt. Do not re-run when feature identity changes.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bootAttempt]);
 
@@ -166,7 +170,7 @@ export default function App() {
     await safeInvoke('private_session_close');
     await safeInvoke('remembered_owner_clear');
     localStorage.removeItem('aurea_active_id');
-    agenda.setActiveProfileId('');
+    identity.setActiveProfileId('');
     setIsAuthenticated(false);
     setIsProfileOpen(false);
   };
@@ -186,10 +190,6 @@ export default function App() {
       window.removeEventListener('open-caderno-vivo', handleOpenCaderno);
     };
   }, []);
-
-  
-
-  
 
   const renderPage = () => {
     switch (currentPage) {
@@ -234,9 +234,9 @@ export default function App() {
   if (access.kind === 'login-required' && !isAuthenticated) {
     return (
       <LoginView 
-        profiles={agenda.profiles} 
+        profiles={identity.profiles} 
         onLogin={async (id, password, rememberAccess) => {
-          const profile = agenda.profiles.find(candidate => candidate.id === id);
+          const profile = identity.profiles.find(candidate => candidate.id === id);
           if (!profile) return { ok: false, error: 'Perfil não encontrado.' };
           const openedOwner = await safeInvoke<string>('private_session_open', {
             ownerId: id,
@@ -244,7 +244,7 @@ export default function App() {
             password,
           });
           if (openedOwner !== id) return { ok: false, error: 'Não foi possível abrir sua sessão privada neste computador.' };
-          agenda.setActiveProfileId(id);
+          identity.setActiveProfileId(id);
           localStorage.setItem('aurea_active_id', id);
           let notice: string | undefined;
           await safeInvoke('remembered_owner_clear');
@@ -262,7 +262,7 @@ export default function App() {
               password,
             });
             if (openedOwner !== accountId) return { ok: false, error: 'Não foi possível criar o perfil privado neste computador.' };
-            await agenda.addProfile(name, password, accountId);
+            await identity.addProfile(name, password, accountId);
             let notice: string | undefined;
             await safeInvoke('remembered_owner_clear');
             if (rememberAccess) notice = 'Por segurança, será necessário confirmar a senha ao reabrir o aplicativo.';
@@ -304,7 +304,6 @@ export default function App() {
           <NavItem icon={<Activity size={18} />} label="Saúde & Vitalidade" active={currentPage === 'saude'} onClick={() => setCurrentPage('saude')} collapsed={isSidebarCollapsed} />
           <NavItem icon={<Calendar size={18} />} label="Agenda Preditiva" active={currentPage === 'agenda'} onClick={() => setCurrentPage('agenda')} collapsed={isSidebarCollapsed} />
           <NavItem icon={<FileText size={18} />} label="Memórias" active={currentPage === 'memorias'} onClick={() => setCurrentPage('memorias')} collapsed={isSidebarCollapsed} />
-
           <NavItem icon={<Edit3 size={18} />} label="Histórico & Notas" active={currentPage === 'diario'} onClick={() => setCurrentPage('diario')} collapsed={isSidebarCollapsed} />
         </nav>
 
@@ -355,7 +354,7 @@ export default function App() {
           profile={masterProfile}
           showLogout={access.kind === 'login-required'}
           onSave={(updates) => {
-            agenda.updateProfile(masterProfile.id, updates);
+            identity.updateProfile(masterProfile.id, updates);
             setIsProfileOpen(false);
           }}
           onClose={() => setIsProfileOpen(false)}

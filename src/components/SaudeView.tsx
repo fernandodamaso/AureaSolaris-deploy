@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Activity, FileText, Loader2, Moon, UploadCloud } from 'lucide-react';
 import { getBrowserSessionHeaders, isTauriRuntime, safeInvoke } from '../utils/tauri';
 import { useCertifiedNatalCalculation } from '../hooks/useCertifiedNatalCalculation';
-import { useAgendaContext } from '../context/AgendaContext';
+import { useIdentity } from '../features/identity/IdentityContext';
 import { readConfirmedBirthInput } from '../utils/confirmedBirthInput';
 import { readCertifiedCalculation } from '../utils/certifiedCalculation';
 import type { PlanetaryPosition } from '../types/astrology';
@@ -22,7 +22,7 @@ export const SaudeView = () => {
     activeProfileId,
     activeSubjectId,
     setActiveSubjectId,
-  } = useAgendaContext();
+  } = useIdentity();
   const [healthHistory, setHealthHistory] = useState<HealthRecord[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
