@@ -1,0 +1,91 @@
+name: Supabase Schema
+
+on:
+  pull_request:
+    paths:
+      - "supabase/**"
+      - ".github/workflows/schema.yml"
+  push:
+    branches: [main]
+    paths:
+      - "supabase/**"
+      - ".github/workflows/schema.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: supabase-schema-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  schema:
+    name: Supabase Schema
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out repository without persisted credentials
+        id: checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Supabase CLI
+        id: cli
+        uses: supabase/setup-cli@v3
+        with:
+          version: 2.114.0
+
+      - name: Start local Supabase
+        id: start
+        run: supabase start
+
+      - name: Reset clean database
+        id: reset
+        run: supabase db reset
+
+      - name: Run pgTAP schema and RLS tests
+        id: tests
+        run: supabase test db
+
+      - name: Agent handoff summary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "## Supabase Schema"
+            echo
+            echo "This workflow uses only the disposable local Supabase stack on the GitHub runner. It does not link to or authenticate with a hosted project."
+            echo
+            echo "| Gate | Outcome |"
+            echo "|---|---|"
+            echo "| credential-free checkout | ${{ steps.checkout.outcome }} |"
+            echo "| Supabase CLI setup | ${{ steps.cli.outcome }} |"
+            echo "| local Supabase start | ${{ steps.start.outcome }} |"
+            echo "| clean database reset | ${{ steps.reset.outcome }} |"
+            echo "| pgTAP schema/RLS tests | ${{ steps.tests.outcome }} |"
+            echo
+            echo "### Reproduce from repository root"
+            echo '```bash'
+            echo 'supabase start'
+            echo 'supabase db reset'
+            echo 'supabase test db'
+            echo '```'
+            echo
+            if [ "${{ steps.checkout.outcome }}" = "failure" ]; then
+              echo "**Start with:** repository checkout before debugging Supabase or schema code."
+            elif [ "${{ steps.cli.outcome }}" = "failure" ]; then
+              echo "**Start with:** pinned Supabase CLI setup before debugging migrations or tests."
+            elif [ "${{ steps.start.outcome }}" = "failure" ]; then
+              echo "**Start with:** local Supabase/Docker startup before changing migrations or tests."
+            elif [ "${{ steps.reset.outcome }}" = "failure" ]; then
+              echo "**Start with:** the first migration error from the clean database reset."
+            elif [ "${{ steps.tests.outcome }}" = "failure" ]; then
+              echo "**Start with:** the first failing pgTAP assertion above."
+            elif [ "${{ steps.tests.outcome }}" = "success" ]; then
+              echo "Clean-database migrations and pgTAP schema/RLS checks passed."
+            else
+              echo "Schema validation did not complete. Inspect the first skipped or cancelled gate above."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
