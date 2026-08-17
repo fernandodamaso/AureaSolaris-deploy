@@ -94,7 +94,8 @@ Use Python 3.12 for these commands; the Web API package intentionally rejects ot
 
 ```bash
 python -m pip install -e "./services/api[dev]"
-python -m pytest services/api/tests/test_config.py -q
+python -m pytest services/api/tests/test_health.py services/api/tests/test_errors.py -q
+python -m pytest services/api/tests -q
 python -m ruff check services/api
 python -m mypy --config-file services/api/pyproject.toml services/api/src
 ```
