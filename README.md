@@ -67,6 +67,38 @@ npm run tauri -- dev
 
 The Python sidecar uses the isolated `.aurea-build-venv`; do not depend on a globally installed Python for release work.
 
+## Quality commands
+
+Run from the repository root:
+
+### Web workspace
+
+```bash
+npm ci
+npm run check:web
+```
+
+### Supabase schema and RLS
+
+Install the Supabase CLI and start Docker before running this disposable local-database check. These commands do not require hosted Supabase credentials.
+
+```bash
+supabase start
+supabase db reset
+supabase test db
+```
+
+### Web API
+
+Use Python 3.12 for these commands; the Web API package intentionally rejects other Python versions.
+
+```bash
+python -m pip install -e "./services/api[dev]"
+python -m pytest services/api/tests/test_config.py -q
+python -m ruff check services/api
+python -m mypy --config-file services/api/pyproject.toml services/api/src
+```
+
 ## Windows release
 
 `build.bat` rebuilds the PyInstaller sidecar, copies it into `src-tauri/binaries/`, and creates the NSIS installer. The current release evidence, artifact hashes, technical checks, and remaining manual acceptance are recorded in [`docs/RELEASE_VALIDATION_2026-08-10.md`](docs/RELEASE_VALIDATION_2026-08-10.md).

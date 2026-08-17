@@ -30,17 +30,9 @@ jobs:
         id: install
         run: npm ci
 
-      - name: Lint
-        id: lint
-        run: npm run lint
-
-      - name: Typecheck
-        id: typecheck
-        run: npm run typecheck
-
-      - name: Unit and component tests
-        id: tests
-        run: npm test
+      - name: Run web workspace quality checks
+        id: web-quality
+        run: npm run check:web
 
       - name: Agent handoff summary
         if: always()
@@ -52,24 +44,16 @@ jobs:
             echo "| Gate | Outcome |"
             echo "|---|---|"
             echo "| npm ci | ${{ steps.install.outcome }} |"
-            echo "| lint | ${{ steps.lint.outcome }} |"
-            echo "| typecheck | ${{ steps.typecheck.outcome }} |"
-            echo "| unit/component tests | ${{ steps.tests.outcome }} |"
+            echo "| web workspace quality | ${{ steps.web-quality.outcome }} |"
             echo
             echo "### Reproduce locally"
             echo '```bash'
             echo 'npm ci'
-            echo 'npm run lint'
-            echo 'npm run typecheck'
-            echo 'npm test'
+            echo 'npm run check:web'
             echo '```'
             echo
-            if [ "${{ steps.lint.outcome }}" = "failure" ]; then
-              echo "**Start with:** frontend linting. Inspect the first ESLint error above."
-            elif [ "${{ steps.typecheck.outcome }}" = "failure" ]; then
-              echo "**Start with:** TypeScript correctness. Inspect the first compiler error above."
-            elif [ "${{ steps.tests.outcome }}" = "failure" ]; then
-              echo "**Start with:** the named Vitest file/test above; this is a frontend behavior or component regression."
+            if [ "${{ steps.web-quality.outcome }}" = "failure" ]; then
+              echo "**Start with:** the first failing lint, test, or build command reported by `npm run check:web` above."
             elif [ "${{ steps.install.outcome }}" = "failure" ]; then
               echo "**Start with:** dependency installation/package-lock consistency."
             else
@@ -248,7 +232,7 @@ jobs:
 
       - name: Build frontend
         id: build
-        run: npm run build
+        run: npm run build:web
 
       - name: Compiled runtime smoke
         id: runtime-smoke
@@ -301,7 +285,7 @@ jobs:
             echo '```bash'
             echo 'npm ci'
             echo 'python -m pip install -r requirements-api.txt'
-            echo 'npm run build'
+            echo 'npm run build:web'
             echo 'python -m unittest tests.test_compiled_runtime_smoke -v'
             echo 'npx playwright install chromium'
             echo 'python tools/run_e2e.py --skip-build'
