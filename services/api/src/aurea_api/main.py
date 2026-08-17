@@ -6,13 +6,15 @@ from .config import Settings, get_settings
 from .dependencies import unavailable_readiness_probe
 from .errors import register_error_handlers
 from .health import router as health_router
-from .middleware import install_http_middleware
+from .middleware import configure_request_logging, install_http_middleware
 
 
 def create_app(settings: Settings | None = None) -> FastAPI:
     """Build the Web V1 API without opening external connections at import time."""
 
     resolved_settings = settings if settings is not None else get_settings()
+    configure_request_logging()
+
     app = FastAPI(title="Aurea Solaris API", version="0.1.0")
     app.state.settings = resolved_settings
     app.state.database_readiness = unavailable_readiness_probe

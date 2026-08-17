@@ -17,8 +17,29 @@ from .errors import problem_response
 REQUEST_ID_HEADER = "X-Request-ID"
 _REQUEST_ID_PATTERN = re.compile(r"^[A-Za-z0-9._:-]{1,128}$")
 _REQUEST_LOGGER = logging.getLogger("aurea_api.request")
+_REQUEST_LOG_HANDLER_NAME = "aurea_api.request.stderr"
 _ALLOWED_METHODS = ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
 _ALLOWED_HEADERS = ["Authorization", "Content-Type", REQUEST_ID_HEADER]
+
+
+def configure_request_logging() -> None:
+    """Install the service-owned request logger configuration once per process."""
+
+    _REQUEST_LOGGER.disabled = False
+    _REQUEST_LOGGER.setLevel(logging.INFO)
+    _REQUEST_LOGGER.propagate = False
+
+    for handler in _REQUEST_LOGGER.handlers:
+        if handler.get_name() == _REQUEST_LOG_HANDLER_NAME:
+            handler.setLevel(logging.INFO)
+            handler.setFormatter(logging.Formatter("%(message)s"))
+            return
+
+    handler = logging.StreamHandler()
+    handler.set_name(_REQUEST_LOG_HANDLER_NAME)
+    handler.setLevel(logging.INFO)
+    handler.setFormatter(logging.Formatter("%(message)s"))
+    _REQUEST_LOGGER.addHandler(handler)
 
 
 def _request_id(request: Request) -> str:

@@ -7,6 +7,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
 _SAFE_VALIDATION_MESSAGE = "Invalid value."
+_TRUSTED_VALIDATION_SOURCES = frozenset({"body", "query", "path", "header", "cookie"})
 
 
 class ApiProblem(Exception):
@@ -22,6 +23,29 @@ class ApiProblem(Exception):
 def _request_id(request: Request) -> str:
     value = getattr(request.state, "request_id", None)
     return value if isinstance(value, str) else "unavailable"
+
+
+def _safe_validation_location(location: tuple[str | int, ...]) -> list[str]:
+    """Expose only trusted request source plus generic non-sensitive path tokens."""
+
+    if not location:
+        return ["request"]
+
+    first = location[0]
+    source = first if isinstance(first, str) and first in _TRUSTED_VALIDATION_SOURCES else "request"
+    public_location = [source]
+
+    for segment in location[1:]:
+        if segment == "[key]":
+            if len(public_location) > 1:
+                public_location.pop()
+            public_location.append("key")
+        elif isinstance(segment, int):
+            public_location.append("item")
+        else:
+            public_location.append("field")
+
+    return public_location
 
 
 def problem_response(
@@ -56,7 +80,7 @@ async def validation_error_handler(request: Request, exc: Exception) -> JSONResp
     validation_error = cast(RequestValidationError, exc)
     fields: list[dict[str, object]] = [
         {
-            "location": list(error["loc"]),
+            "location": _safe_validation_location(error["loc"]),
             "message": _SAFE_VALIDATION_MESSAGE,
             "type": str(error["type"]),
         }
