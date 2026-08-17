@@ -5,11 +5,12 @@ import type { HealthDocumentsStorage } from '../../../features/health/healthDocu
 import type { AureaDocument } from '../../../features/health/types';
 
 function Probe() {
-  const { documents, addDocument } = useHealthDocuments();
+  const { documents, addDocument, refreshFromStorage } = useHealthDocuments();
   return (
     <div>
       <output data-testid="documents">{JSON.stringify(documents)}</output>
       <button type="button" onClick={() => addDocument({ name: 'Exame.pdf', type: 'pdf', size: '10 KB' })}>add</button>
+      <button type="button" onClick={refreshFromStorage}>refresh</button>
     </div>
   );
 }
@@ -39,5 +40,35 @@ describe('HealthDocumentsProvider', () => {
       date: '2026-08-14',
     });
     expect(docs[1].id).toBe('d2');
+  });
+
+  it('reloads and sanitizes documents from the injected storage', () => {
+    let docs: AureaDocument[] = [
+      { id: 'existing', name: 'Antigo.pdf', type: 'pdf', size: '1 KB', path: '/old' },
+    ];
+    const storage: HealthDocumentsStorage = {
+      loadDocuments: () => structuredClone(docs),
+      saveDocuments: (next) => { docs = structuredClone(next); },
+    };
+
+    render(
+      <HealthDocumentsProvider storage={storage}>
+        <Probe />
+      </HealthDocumentsProvider>,
+    );
+
+    docs = [
+      { id: 'd1', name: 'generated', type: 'pdf', size: '1 KB', path: '#' },
+      { id: 'fresh', name: 'Novo.pdf', type: 'pdf', size: '2 KB', path: '/fresh' },
+    ];
+
+    fireEvent.click(screen.getByRole('button', { name: 'refresh' }));
+
+    expect(JSON.parse(screen.getByTestId('documents').textContent || '[]')).toEqual([
+      { id: 'fresh', name: 'Novo.pdf', type: 'pdf', size: '2 KB', path: '/fresh' },
+    ]);
+    expect(docs).toEqual([
+      { id: 'fresh', name: 'Novo.pdf', type: 'pdf', size: '2 KB', path: '/fresh' },
+    ]);
   });
 });
