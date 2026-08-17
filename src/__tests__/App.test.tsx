@@ -108,7 +108,7 @@ describe('App navigation', () => {
     renderApp();
     fireEvent.click(await screen.findByRole('button', { name: 'ENTRAR' }));
     await screen.findByTitle('Astrologia', {}, { timeout: 10000 });
-    expect(screen.getByText('Astrologia landmark')).toBeTruthy();
+    expect(await screen.findByText('Astrologia landmark')).toBeTruthy();
 
     const pages: Array<{ label: string; landmark: string }> = [
       { label: 'Astrologia', landmark: 'Astrologia landmark' },
