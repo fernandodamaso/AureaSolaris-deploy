@@ -1,0 +1,59 @@
+name: Sync AureaSolaris upstream
+
+on:
+  push:
+    branches: [mirror-control]
+    paths:
+      - ".github/workflows/sync-upstream.yml"
+      - ".mirror-trigger"
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: aurea-upstream-mirror
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Mirror production and active preview refs
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          upstream="https://github.com/vivicabsb-eng/AureaSolaris.git"
+          mirror="https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+
+          git clone --bare "$upstream" upstream.git
+          cd upstream.git
+          git remote add mirror "$mirror"
+
+          # Production must be the exact upstream Git object, not a reconstructed commit.
+          git push --force mirror refs/heads/main:refs/heads/main
+
+          # Mirror only branches that back currently open PRs. This gives Vercel
+          # useful preview refs without importing every stale upstream branch.
+          curl --fail --silent --show-error \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/vivicabsb-eng/AureaSolaris/pulls?state=open&per_page=100" \
+            | jq -r '.[].head.ref' \
+            | sort -u \
+            | while IFS= read -r branch; do
+                [ -n "$branch" ] || continue
+                if git show-ref --verify --quiet "refs/heads/$branch"; then
+                  git push --force mirror "refs/heads/$branch:refs/heads/$branch"
+                fi
+              done
+
+          upstream_sha="$(git rev-parse refs/heads/main)"
+          mirror_sha="$(git ls-remote "$mirror" refs/heads/main | awk '{print $1}')"
+          printf 'upstream_main=%s\nmirror_main=%s\n' "$upstream_sha" "$mirror_sha"
+          test "$upstream_sha" = "$mirror_sha"
