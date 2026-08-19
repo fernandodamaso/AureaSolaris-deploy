@@ -1,0 +1,2 @@
+fastapi==0.115.12
+pyswisseph==2.10.3.2
