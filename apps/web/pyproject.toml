@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools==80.9.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "aurea-vercel-compat-spike"
+version = "0.0.0"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "asyncpg==0.31.0",
+  "fastapi==0.115.12",
+  "kerykeion==5.8.1",
+  "pydantic==2.11.3",
+  "PyJWT[crypto]==2.13.0",
+  "pyswisseph==2.10.3.2",
+  "tzdata==2026.3",
+]
