@@ -13,8 +13,9 @@ import { LoginView } from './components/LoginView';
 import { ProfileEditor } from './components/ProfileEditor';
 import { HermesChat } from './components/HermesChat';
 import { AppErrorBoundary } from './app/AppErrorBoundary';
-import { OnboardingStatusPanel, ServiceStatusPanel } from './app/ServiceStatusPanel';
+import { ServiceStatusPanel } from './app/ServiceStatusPanel';
 import { useAppBootstrap } from './app/useAppBootstrap';
+import { ProfileOnboarding } from './profile/ProfileOnboarding';
 import type { CadernoIntent } from './components/MesaCriacao';
 
 const AstrologiaPage = lazy(() => import('./components/AstrologiaBoard').then(m => ({ default: m.AstrologiaPage })));
@@ -82,7 +83,11 @@ function AppContent() {
   const [cadernoIntent, setCadernoIntent] = useState<CadernoIntent | null>(null);
 
   const identity = useIdentity();
-  const masterProfile = identity.activeProfile;
+  const masterProfile = identity.activeProfile ?? (
+    bootstrapState.status === 'ready'
+      ? { id: bootstrapState.profile.id, name: bootstrapState.profile.display_name, active: true }
+      : null
+  );
 
   const isMesa = currentPage === 'mesa-criacao';
   const pageTitles: Record<string, string> = {
@@ -158,11 +163,11 @@ function AppContent() {
   }
 
   if (bootstrapState.status === 'needs-profile') {
-    return <OnboardingStatusPanel title="Configure seu perfil" message="Seu perfil ainda não foi configurado." onLogout={() => { void handleLogout(); }} />;
+    return <ProfileOnboarding mode="profile" onComplete={retryBootstrap} onLogout={() => { void handleLogout(); }} />;
   }
 
   if (bootstrapState.status === 'needs-birth-profile') {
-    return <OnboardingStatusPanel title="Adicione seus dados de nascimento" message="Seu perfil precisa de um mapa de nascimento para continuar." onLogout={() => { void handleLogout(); }} />;
+    return <ProfileOnboarding mode="birth-profile" profile={bootstrapState.profile} onComplete={retryBootstrap} onLogout={() => { void handleLogout(); }} />;
   }
 
   if (bootstrapState.status === 'service-unavailable') {
@@ -245,6 +250,8 @@ function AppContent() {
       {isProfileOpen && masterProfile && (
         <ProfileEditor
           profile={masterProfile}
+          apiProfile={bootstrapState.status === 'ready' ? bootstrapState.profile : undefined}
+          apiBirthProfile={bootstrapState.status === 'ready' ? bootstrapState.birthProfile : undefined}
           showLogout
           onSave={(updates) => {
             identity.updateProfile(masterProfile.id, updates);

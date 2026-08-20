@@ -10,7 +10,11 @@ const { bootstrapState, retryBootstrap, signOut, openInitialAccess } = vi.hoiste
   signOut: vi.fn(async () => ({ ok: true as const })),
   openInitialAccess: vi.fn(),
 }));
-const readyState = { status: 'ready' } as AppBootstrapState;
+const readyState = {
+  status: 'ready',
+  profile: { id: 'profile-1', display_name: 'Teste' } as never,
+  birthProfile: {} as never,
+} as AppBootstrapState;
 
 vi.mock('../app/useAppBootstrap', () => ({
   useAppBootstrap: () => ({ state: bootstrapState.current, retry: retryBootstrap, signOut }),
@@ -33,6 +37,12 @@ vi.mock('../hooks/useLiveTransitData', () => ({
 
 vi.mock('../components/LoginView', () => ({
   LoginView: () => <div>Login screen</div>,
+}));
+
+vi.mock('../profile/ProfileOnboarding', () => ({
+  ProfileOnboarding: ({ mode, onLogout }: { mode: string; onLogout: () => void }) => (
+    <div>{mode === 'profile' ? 'Profile onboarding' : 'Birth onboarding'}<button type="button" onClick={onLogout}>Sair</button></div>
+  ),
 }));
 
 vi.mock('../components/AstrologiaBoard', () => ({
@@ -81,7 +91,7 @@ describe('App bootstrap states', () => {
   it('keeps profile onboarding states stable with a logout control', () => {
     bootstrapState.current = { status: 'needs-profile' };
     const first = renderApp();
-    expect(screen.getByText('Seu perfil ainda não foi configurado.')).toBeTruthy();
+    expect(screen.getByText('Profile onboarding')).toBeTruthy();
     expect(screen.getByRole('button', { name: 'Sair' })).toBeTruthy();
     first.unmount();
 
@@ -90,7 +100,7 @@ describe('App bootstrap states', () => {
       profile: {} as never,
     };
     renderApp();
-    expect(screen.getByText('Seu perfil precisa de um mapa de nascimento para continuar.')).toBeTruthy();
+    expect(screen.getByText('Birth onboarding')).toBeTruthy();
   });
 
   it('exposes safe retry and logout controls when the service is unavailable', () => {

@@ -4,6 +4,7 @@ import { Clock, MapPin, Calendar, Save, UserPlus, X } from 'lucide-react';
 interface BirthFormProps {
   onSave: (data: {
     name: string;
+    label?: string;
     date: string;
     time: string;
     location: string;
@@ -114,6 +115,7 @@ export const BirthForm = ({ onSave, onClose, initialData, title }: BirthFormProp
     setFormError('');
     onSave({
       name: name.trim(),
+      label: name.trim(),
       date,
       time,
       location: location.trim(),
@@ -195,6 +197,21 @@ export const BirthForm = ({ onSave, onClose, initialData, title }: BirthFormProp
                   <option key={city.name} value={city.name}>{city.name}</option>
                 ))}
               </select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <div className="space-y-2">
+              <label htmlFor="birth-latitude" className="text-[10px] font-black uppercase text-gray-400 pl-4 tracking-widest">Latitude</label>
+              <input id="birth-latitude" inputMode="decimal" className={inputClass} value={lat} onChange={event => { setLat(event.target.value); setFormError(''); }} />
+            </div>
+            <div className="space-y-2">
+              <label htmlFor="birth-longitude" className="text-[10px] font-black uppercase text-gray-400 pl-4 tracking-widest">Longitude</label>
+              <input id="birth-longitude" inputMode="decimal" className={inputClass} value={lng} onChange={event => { setLng(event.target.value); setFormError(''); }} />
+            </div>
+            <div className="space-y-2">
+              <label htmlFor="birth-timezone" className="text-[10px] font-black uppercase text-gray-400 pl-4 tracking-widest">Fuso IANA</label>
+              <input id="birth-timezone" className={inputClass} value={timezone} onChange={event => { setTimezone(event.target.value); setFormError(''); }} placeholder="America/Sao_Paulo" />
             </div>
           </div>
 

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useContext } from 'react';
 import {
   X, Save, User,
   CalendarDays,
@@ -9,6 +9,9 @@ import { LOCAL_API_URL } from '../utils/api';
 import { readCertifiedCalculation } from '../utils/certifiedCalculation';
 import type { PrivateProfile } from '../types/private-profile';
 import type { PlanetaryPosition } from '../types/astrology';
+import { ApiClientContext } from '../api/provider';
+import type { BirthProfileResponse, ProfileResponse } from '../api/client';
+import { ApiProblem } from '../api/errors';
 
 interface ProfileEditorProps {
   profile: PrivateProfile;
@@ -16,6 +19,9 @@ interface ProfileEditorProps {
   onClose: () => void;
   onLogout: () => void;
   showLogout: boolean;
+  apiProfile?: ProfileResponse;
+  apiBirthProfile?: BirthProfileResponse;
+  onApiSaved?: () => void;
 }
 
 const BRAZILIAN_CITIES = [
@@ -49,17 +55,20 @@ function parseBirthDate(value: string): string | null {
   return `${yearText}-${monthText}-${dayText}`;
 }
 
-export const ProfileEditor = ({ profile, onSave, onClose, onLogout, showLogout }: ProfileEditorProps) => {
-  const [name, setName] = useState(profile.name || '');
-  const [birthDateInput, setBirthDateInput] = useState(() => formatBirthDate(profile.birthDate));
+export const ProfileEditor = ({ profile, onSave, onClose, onLogout, showLogout, apiProfile, apiBirthProfile, onApiSaved }: ProfileEditorProps) => {
+  const api = useContext(ApiClientContext);
+  const [name, setName] = useState(profile.name || apiProfile?.display_name || '');
+  const [birthDateInput, setBirthDateInput] = useState(() => formatBirthDate(profile.birthDate || apiBirthProfile?.birth_date));
   const [birthDateError, setBirthDateError] = useState('');
-  const [birthTime, setBirthTime] = useState(profile.birthTime || '');
-  const [birthCity, setBirthCity] = useState(profile.birthCity || '');
+  const [birthTime, setBirthTime] = useState(profile.birthTime || apiBirthProfile?.birth_time?.slice(0, 5) || '');
+  const [birthCity, setBirthCity] = useState(profile.birthCity || apiBirthProfile?.place || '');
   const [context, setContext] = useState(profile.context || '');
   const [dialogStyle, setDialogStyle] = useState(profile.dialogStyle || 'Inteligente e Poética');
   const [natalPreview, setNatalPreview] = useState<string>('');
   const [loadingNatal, setLoadingNatal] = useState(false);
   const [avatar, setAvatar] = useState<string>(profile.avatar || '');
+  const [saveError, setSaveError] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const birthDate = parseBirthDate(birthDateInput);
 
@@ -139,7 +148,7 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout, showLogout }
     reader.readAsDataURL(file);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (birthDateInput.trim() && !birthDate) {
       setBirthDateError('Use a data no formato DD/MM/AAAA. O conteúdo digitado não foi alterado.');
       return;
@@ -150,7 +159,10 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout, showLogout }
       return;
     }
     const city = BRAZILIAN_CITIES.find(c => c.name === birthCity);
-    if ((birthDate || birthTime) && !city) {
+    const apiHasCoordinates = apiBirthProfile
+      && Number.isFinite(Number(apiBirthProfile.latitude))
+      && Number.isFinite(Number(apiBirthProfile.longitude));
+    if ((birthDate || birthTime) && !city && !apiHasCoordinates) {
       alert('Selecione a cidade de nascimento. O Aurea não presume coordenadas.');
       return;
     }
@@ -174,7 +186,7 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout, showLogout }
       ? { birthDate, birthTime, lat: city.lat, lng: city.lon, timezone: city.timezone }
       : undefined;
 
-    onSave({
+    const updates = {
       avatar,
       name,
       birthDate: birthDate ?? undefined,
@@ -185,7 +197,39 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout, showLogout }
       dialogStyle,
       natal,
       birthData,
-    });
+    };
+
+    if (apiProfile && apiBirthProfile && api) {
+      setSaveError('');
+      setIsSaving(true);
+      try {
+        await api.updateProfile({
+          display_name: name.trim(),
+          locale: apiProfile.locale,
+          timezone: city?.timezone || apiProfile.timezone,
+        });
+        await api.updateBirthProfile({
+          label: apiBirthProfile.label,
+          birth_date: birthDate || apiBirthProfile.birth_date,
+          birth_time: birthTime || apiBirthProfile.birth_time.slice(0, 5),
+          house_system: 'P',
+          place: birthCity || apiBirthProfile.place,
+          latitude: city?.lat ?? Number(apiBirthProfile.latitude),
+          longitude: city?.lon ?? Number(apiBirthProfile.longitude),
+          timezone: city?.timezone || apiBirthProfile.timezone,
+        });
+        onSave(updates);
+        onApiSaved?.();
+        onClose();
+      } catch (error) {
+        setSaveError(error instanceof ApiProblem ? 'Não foi possível salvar os dados. Verifique os campos e tente novamente.' : 'Não foi possível salvar os dados. Tente novamente.');
+      } finally {
+        setIsSaving(false);
+      }
+      return;
+    }
+
+    onSave(updates);
   };
 
   return (
@@ -370,6 +414,7 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout, showLogout }
 
         {/* Footer */}
         <div className="mt-8 flex justify-between items-center border-t pt-6" style={{ borderColor: 'var(--aurea-line)' }}>
+          {saveError && <p role="alert" className="text-sm font-semibold text-red-600">{saveError}</p>}
           {showLogout ? (
             <button
               onClick={onLogout}
@@ -382,7 +427,7 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout, showLogout }
           )}
           <div className="flex gap-4">
             <button onClick={onClose} className="aurea-button-secondary px-8 py-3 font-black uppercase text-[10px] tracking-[0.2em] transition-all">Cancelar</button>
-            <button onClick={handleSave} className="aurea-button-primary px-10 py-3 rounded-lg font-black uppercase text-[10px] tracking-[0.2em] transition-all flex items-center gap-2">
+            <button onClick={() => { void handleSave(); }} disabled={isSaving} className="aurea-button-primary px-10 py-3 rounded-lg font-black uppercase text-[10px] tracking-[0.2em] transition-all flex items-center gap-2 disabled:opacity-60">
               <Save size={12} /> Salvar
             </button>
           </div>
