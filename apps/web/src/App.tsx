@@ -4,7 +4,6 @@ import "./styles.css";
 
 // Contexts
 import { useGlobalContext } from './context/GlobalContext.tsx';
-import { useAgenda } from './features/agenda/AgendaContext';
 import { useIdentity } from './features/identity/IdentityContext';
 
 // Components
@@ -13,9 +12,9 @@ import { PageLoadingFallback } from './components/common/PageLoadingFallback';
 import { LoginView } from './components/LoginView';
 import { ProfileEditor } from './components/ProfileEditor';
 import { HermesChat } from './components/HermesChat';
-import { openInitialAccess, safeInvoke, type InitialAccess } from './utils/tauri';
-import { LOCAL_API_URL } from './utils/api';
-import { applyTestUserUiSeed, TEST_USER_OWNER_ID } from './utils/test-user-ui-seed';
+import { AppErrorBoundary } from './app/AppErrorBoundary';
+import { OnboardingStatusPanel, ServiceStatusPanel } from './app/ServiceStatusPanel';
+import { useAppBootstrap } from './app/useAppBootstrap';
 import type { CadernoIntent } from './components/MesaCriacao';
 
 const AstrologiaPage = lazy(() => import('./components/AstrologiaBoard').then(m => ({ default: m.AstrologiaPage })));
@@ -74,39 +73,8 @@ const PlanetaryInfo = () => {
   );
 };
 
-function AccessStatusPanel({
-  title,
-  message,
-  retry,
-}: {
-  title: string;
-  message: string;
-  retry?: () => void;
-}) {
-  return (
-    <div
-      className="fixed inset-0 z-[2000] flex items-center justify-center font-sans"
-      style={{ background: 'var(--aurea-bg)' }}
-      role={retry ? 'alert' : 'status'}
-    >
-      <div className="max-w-md p-10 text-center space-y-4">
-        <h1 className="text-lg font-black uppercase tracking-[0.2em]" style={{ color: 'var(--aurea-text)' }}>{title}</h1>
-        <p className="text-sm leading-relaxed" style={{ color: 'var(--aurea-text-muted)' }}>{message}</p>
-        {retry && (
-          <button type="button" onClick={retry} className="aurea-button-primary px-8 py-3 font-black uppercase text-[10px] tracking-[0.2em]">
-            Tentar novamente
-          </button>
-        )}
-      </div>
-    </div>
-  );
-}
-
-export default function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isRestoringAccess, setIsRestoringAccess] = useState(true);
-  const [access, setAccess] = useState<InitialAccess | null>(null);
-  const [bootAttempt, setBootAttempt] = useState(0);
+function AppContent() {
+  const { state: bootstrapState, retry: retryBootstrap, signOut } = useAppBootstrap();
   const [currentPage, setCurrentPage] = useState('astrologia');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -114,7 +82,6 @@ export default function App() {
   const [cadernoIntent, setCadernoIntent] = useState<CadernoIntent | null>(null);
 
   const identity = useIdentity();
-  const agenda = useAgenda();
   const masterProfile = identity.activeProfile;
 
   const isMesa = currentPage === 'mesa-criacao';
@@ -132,46 +99,9 @@ export default function App() {
     setCurrentPage('mesa-criacao');
   };
 
-  useEffect(() => {
-    let active = true;
-    const restoreAccess = async () => {
-      setIsRestoringAccess(true);
-      const result = await openInitialAccess();
-      if (!active) return;
-      setAccess(result);
-      if (result.kind === 'local-owner') {
-        identity.ensureLocalUiProfile(result.ownerId, result.displayName);
-        try {
-          const healthResponse = await fetch(`${LOCAL_API_URL}/health`);
-          if (healthResponse.ok) {
-            const health = await healthResponse.json() as { test_user?: boolean };
-            if (health.test_user === true && result.ownerId === TEST_USER_OWNER_ID) {
-              applyTestUserUiSeed(result.ownerId, result.displayName);
-              identity.refreshFromStorage();
-              agenda.refreshFromStorage();
-            }
-          }
-        } catch {
-          // Test-user UI seed is optional; normal local-owner boot continues.
-        }
-        setIsAuthenticated(true);
-      } else {
-        setIsAuthenticated(false);
-      }
-      setIsRestoringAccess(false);
-    };
-    void restoreAccess();
-    return () => { active = false; };
-    // Retry is explicit via bootAttempt. Do not re-run when feature identity changes.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [bootAttempt]);
-
   const handleLogout = async () => {
-    await safeInvoke('private_session_close');
-    await safeInvoke('remembered_owner_clear');
-    localStorage.removeItem('aurea_active_id');
+    await signOut();
     identity.setActiveProfileId('');
-    setIsAuthenticated(false);
     setIsProfileOpen(false);
   };
 
@@ -213,67 +143,30 @@ export default function App() {
     </Suspense>
   );
 
-  if (isRestoringAccess || !access) {
+  if (bootstrapState.status === 'restoring-session') {
     return <div className="fixed inset-0 bg-[#FCF9F1]" aria-label="Restaurando acesso" />;
   }
 
-  if (access.kind === 'setup-required') {
-    return <AccessStatusPanel title="Configuração necessária" message={access.message} />;
+  if (bootstrapState.status === 'signed-out') {
+    return <LoginView />;
   }
 
-  if (access.kind === 'runtime-failure') {
+  if (bootstrapState.status === 'loading-account') {
     return (
-      <AccessStatusPanel
-        title="Não foi possível iniciar"
-        message={access.message}
-        retry={() => setBootAttempt((attempt) => attempt + 1)}
-      />
+      <div className="fixed inset-0 bg-[#FCF9F1]" aria-label="Carregando sua conta" role="status" />
     );
   }
 
-  if (access.kind === 'login-required' && !isAuthenticated) {
-    return (
-      <LoginView 
-        profiles={identity.profiles} 
-        onLogin={async (id, password, rememberAccess) => {
-          const profile = identity.profiles.find(candidate => candidate.id === id);
-          if (!profile) return { ok: false, error: 'Perfil não encontrado.' };
-          const openedOwner = await safeInvoke<string>('private_session_open', {
-            ownerId: id,
-            loginName: profile.name,
-            password,
-          });
-          if (openedOwner !== id) return { ok: false, error: 'Não foi possível abrir sua sessão privada neste computador.' };
-          identity.setActiveProfileId(id);
-          localStorage.setItem('aurea_active_id', id);
-          let notice: string | undefined;
-          await safeInvoke('remembered_owner_clear');
-          if (rememberAccess) notice = 'Por segurança, será necessário confirmar a senha ao reabrir o aplicativo.';
-          setIsAuthenticated(true);
-          return { ok: true, notice };
-        }}
-        onSignUp={async (name, password, rememberAccess) => {
-          try {
-            const accountId = crypto.randomUUID();
-            const openedOwner = await safeInvoke<string>('private_account_register', {
-              ownerId: accountId,
-              displayName: name,
-              loginName: name,
-              password,
-            });
-            if (openedOwner !== accountId) return { ok: false, error: 'Não foi possível criar o perfil privado neste computador.' };
-            await identity.addProfile(name, password, accountId);
-            let notice: string | undefined;
-            await safeInvoke('remembered_owner_clear');
-            if (rememberAccess) notice = 'Por segurança, será necessário confirmar a senha ao reabrir o aplicativo.';
-            setIsAuthenticated(true);
-            return { ok: true, notice };
-          } catch (error) {
-            return { ok: false, error: error instanceof Error ? error.message : 'Não foi possível criar o perfil.' };
-          }
-        }}
-      />
-    );
+  if (bootstrapState.status === 'needs-profile') {
+    return <OnboardingStatusPanel title="Configure seu perfil" message="Seu perfil ainda não foi configurado." onLogout={() => { void handleLogout(); }} />;
+  }
+
+  if (bootstrapState.status === 'needs-birth-profile') {
+    return <OnboardingStatusPanel title="Adicione seus dados de nascimento" message="Seu perfil precisa de um mapa de nascimento para continuar." onLogout={() => { void handleLogout(); }} />;
+  }
+
+  if (bootstrapState.status === 'service-unavailable') {
+    return <ServiceStatusPanel message={bootstrapState.message} onRetry={retryBootstrap} onLogout={() => { void handleLogout(); }} />;
   }
 
   return (
@@ -352,7 +245,7 @@ export default function App() {
       {isProfileOpen && masterProfile && (
         <ProfileEditor
           profile={masterProfile}
-          showLogout={access.kind === 'login-required'}
+          showLogout
           onSave={(updates) => {
             identity.updateProfile(masterProfile.id, updates);
             setIsProfileOpen(false);
@@ -362,5 +255,13 @@ export default function App() {
         />
       )}
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <AppErrorBoundary>
+      <AppContent />
+    </AppErrorBoundary>
   );
 }
