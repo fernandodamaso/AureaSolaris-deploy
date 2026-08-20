@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
-import { safeInvoke } from '../utils/tauri';
+import { useApiClient } from '../api/provider';
+import { AstrologyApiError, requestNatal } from '../services/astrologyApi';
 import { readCertifiedCalculation } from '../utils/certifiedCalculation';
-import { buildNatalPayload, decodeAstrologyResponse, postNatalCalculation } from '../services/astrologyApi';
 import type { AstrologyCalculationRequest, CertifiedAstrologyResult } from '../types/astrology';
 
 const ASPECT_MAP: Record<string, string> = {
@@ -30,57 +30,50 @@ function hasDisplayableNatalShape(value: CertifiedAstrologyResult): boolean {
     value.houses.every((house: unknown) => hasDegree(house));
 }
 
+function isAbortError(error: unknown): boolean {
+  return (error instanceof DOMException && error.name === 'AbortError') ||
+    (typeof error === 'object' && error !== null && 'name' in error && error.name === 'AbortError');
+}
+
 export const useCertifiedNatalCalculation = (birthData?: AstrologyCalculationRequest, enabled = true) => {
+  const api = useApiClient();
   const [data, setData] = useState<CertifiedAstrologyResult | null>(null);
   const [loading, setLoading] = useState(enabled);
   const [error, setError] = useState<string | null>(null);
-
   const birthDataKey = JSON.stringify(birthData ?? null);
 
-  const calculate = useCallback(async () => {
-    const request = birthDataKey === 'null'
-      ? undefined
-      : JSON.parse(birthDataKey) as AstrologyCalculationRequest;
+  const calculate = useCallback(async (force = false, signal?: AbortSignal) => {
     setLoading(true);
     setError(null);
-    setData(null);
     try {
-      const payloadStr = buildNatalPayload(request as Record<string, unknown> | undefined);
+      const receipt = await requestNatal(api, signal, force);
+      const parsed = receipt.result_payload as unknown as CertifiedAstrologyResult;
+      const displayable = {
+        ...parsed,
+        aspects: parsed.aspects?.map((aspect) => ({
+          ...aspect,
+          type: ASPECT_MAP[aspect.type] || aspect.type,
+        })),
+      };
 
-      let result: string | null = await postNatalCalculation(payloadStr);
-
-      if (!result) {
-        result = await safeInvoke<string | null>('run_astro_engine', { payload: payloadStr });
-      }
-
-      if (result === null) {
-        setError('Motor astrológico indisponível. O mapa não será estimado. Verifique o serviço local e tente novamente.');
-        return;
-      }
-      const parsed = decodeAstrologyResponse(result) as CertifiedAstrologyResult;
-      if (parsed.aspects) {
-        parsed.aspects = parsed.aspects.map((asp) => ({
-          ...asp,
-          type: ASPECT_MAP[asp.type] || asp.type,
-        }));
-      }
-      if (parsed.error) {
-        setError(parsed.error);
-      } else if (!readCertifiedCalculation(parsed, 'natal')) {
-        setData(null);
+      if (displayable.error) {
+        setError(displayable.error);
+      } else if (!readCertifiedCalculation(displayable, 'natal')) {
         setError('O motor respondeu sem recibo auditável. Nenhuma mandala será exibida.');
-      } else if (!hasDisplayableNatalShape(parsed)) {
-        setData(null);
+      } else if (!hasDisplayableNatalShape(displayable)) {
         setError('O recibo natal não contém os pontos e casas necessários para desenhar uma mandala confiável.');
       } else {
-        setData(parsed);
+        setData(displayable);
       }
-    } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : String(e));
+    } catch (caught: unknown) {
+      if (isAbortError(caught)) return;
+      setError(caught instanceof AstrologyApiError
+        ? caught.message
+        : 'Não foi possível calcular o mapa natal. Tente novamente.');
     } finally {
-      setLoading(false);
+      if (!signal?.aborted) setLoading(false);
     }
-  }, [birthDataKey]);
+  }, [api]);
 
   useEffect(() => {
     if (!enabled) {
@@ -89,8 +82,11 @@ export const useCertifiedNatalCalculation = (birthData?: AstrologyCalculationReq
       setLoading(false);
       return;
     }
-    calculate();
+    const controller = new AbortController();
+    void calculate(false, controller.signal);
+    return () => controller.abort();
   }, [birthDataKey, enabled, calculate]);
 
-  return { data, loading, error, recalculate: calculate };
+  const recalculate = useCallback(() => calculate(true), [calculate]);
+  return { data, loading, error, recalculate };
 };

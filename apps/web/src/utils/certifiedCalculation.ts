@@ -11,6 +11,7 @@ export interface CertifiedCalculation {
       input_hash: string;
       engine: { name: string; version: string };
       resolved_time: { utc: string; iana_timezone: string };
+      ephemeris?: { library?: string; library_version?: string; mode?: string };
     };
   };
 }
