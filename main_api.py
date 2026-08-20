@@ -36,7 +36,11 @@ if sys.platform == "win32":
             _stream.reconfigure(encoding="utf-8")
 
 # ─── Importa o engine (cold start ÚNICO, uma vez) ───
-from astro_engine import (
+_API_SRC = Path(__file__).resolve().parent / "services" / "api" / "src"
+if str(_API_SRC) not in sys.path:
+    sys.path.insert(0, str(_API_SRC))
+
+from aurea_api.domain.astrology.engine import (
     calculate_astrology,
     calculate_transit_positions,
     HOUSE_SYSTEMS,
@@ -44,7 +48,7 @@ from astro_engine import (
     SWE_AVAILABLE,
     KERYKEION_AVAILABLE,
 )
-from engine_governance import EngineGovernance
+from aurea_api.domain.astrology.governance import EngineGovernance
 
 from local_storage import (
     StorageNotFoundError,

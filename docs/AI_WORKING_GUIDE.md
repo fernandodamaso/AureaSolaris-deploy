@@ -29,7 +29,7 @@ Aurea Solaris is a local-first Windows application whose primary experience is c
 | Caderno Vivo / journal | `apps/web/src/components/MesaCriacao.tsx`, `apps/web/src/components/DiarioView.tsx` |
 | Browser/Chrome runtime | `apps/web/vite.config.ts`, `main_api.py`, `launch_chrome.bat` |
 | Tauri commands/window/native compatibility | `src-tauri/src/lib.rs`, `src-tauri/tauri.conf.json`, `docs/tauri-ipc-api.md` |
-| Astrology calculations/API | `astro_engine.py`, `main_api.py`, `docs/astrology-engine.md` |
+| Astrology calculations/API | `services/api/src/aurea_api/domain/astrology/`, `services/api/ephe/`, `main_api.py`, `docs/astrology-engine.md` |
 | Private/editorial storage | `local_storage.py`, `src-tauri/migrations/`, `docs/data-persistence.md`, `docs/data/DOMINIOS_DE_DADOS.md` |
 | Knowledge corpus/import | `knowledge/engenharia_astrologica/`, `docs/astrology-knowledge-contract.md`, `docs/data/ENGENHARIA_SYNC_PLAYBOOK.md` |
 | Hermes memory/API | `apps/web/src/components/HermesChat.tsx`, `docs/HERMES_MIND_ARCHITECTURE.md`, `docs/HERMES_MIND_API.md` |
