@@ -4,11 +4,12 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from threading import Lock
 from time import monotonic
-from typing import Protocol, cast
+from typing import Annotated, Protocol, cast
 from uuid import UUID
 
 import jwt
-from fastapi import Request
+from fastapi import Depends, Request
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jwt import PyJWK, PyJWKClient
 from jwt.exceptions import PyJWKClientError, PyJWTError
 
@@ -20,6 +21,7 @@ _JWKS_CACHE_LIFESPAN_SECONDS = 600
 _JWKS_FORCED_REFRESH_COOLDOWN_SECONDS = 60
 _JWKS_TIMEOUT_SECONDS = 5
 _WWW_AUTHENTICATE = {"WWW-Authenticate": "Bearer"}
+_BEARER_SCHEME = HTTPBearer(auto_error=False)
 
 
 @dataclass(frozen=True, slots=True)
@@ -188,10 +190,15 @@ def _unauthorized_problem() -> ApiProblem:
     )
 
 
-def get_authenticated_user(request: Request) -> AuthenticatedUser:
+def get_authenticated_user(
+    request: Request,
+    credentials: Annotated[HTTPAuthorizationCredentials | None, Depends(_BEARER_SCHEME)] = None,
+) -> AuthenticatedUser:
     """FastAPI dependency that exposes only verified server-derived identity."""
 
-    token = _bearer_token(request.headers.get("Authorization"))
+    token = credentials.credentials if credentials is not None else _bearer_token(
+        request.headers.get("Authorization")
+    )
     if token is None:
         raise _unauthorized_problem()
 

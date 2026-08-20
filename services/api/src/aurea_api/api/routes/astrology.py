@@ -17,7 +17,7 @@ from aurea_api.domain.astrology.service import (
     CalculationUnavailableError,
     ReceiptNotFoundError,
 )
-from aurea_api.errors import ApiProblem
+from aurea_api.errors import PROBLEM_RESPONSES, ApiProblem
 from aurea_api.infrastructure.db import CalculationReceiptRecord
 
 router = APIRouter(prefix="/v1/astrology", tags=["astrology"])
@@ -88,7 +88,7 @@ def _service_problem(exc: Exception) -> ApiProblem:
     raise exc
 
 
-@router.post("/natal", response_model=ReceiptResponse)
+@router.post("/natal", response_model=ReceiptResponse, responses=PROBLEM_RESPONSES)
 async def post_natal(
     user: Annotated[AuthenticatedUser, Depends(get_authenticated_user)],
     service: Annotated[AstrologyService, Depends(get_astrology_service)],
@@ -101,7 +101,7 @@ async def post_natal(
     return ReceiptResponse.from_record(receipt)
 
 
-@router.post("/transits", response_model=ReceiptResponse)
+@router.post("/transits", response_model=ReceiptResponse, responses=PROBLEM_RESPONSES)
 async def post_transits(
     request: TransitRequest,
     user: Annotated[AuthenticatedUser, Depends(get_authenticated_user)],
@@ -114,7 +114,7 @@ async def post_transits(
     return ReceiptResponse.from_record(receipt)
 
 
-@router.get("/receipts/{receipt_id}", response_model=ReceiptResponse)
+@router.get("/receipts/{receipt_id}", response_model=ReceiptResponse, responses=PROBLEM_RESPONSES)
 async def get_receipt(
     receipt_id: UUID,
     user: Annotated[AuthenticatedUser, Depends(get_authenticated_user)],
