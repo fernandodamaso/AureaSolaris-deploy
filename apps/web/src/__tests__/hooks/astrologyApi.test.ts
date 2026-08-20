@@ -1,21 +1,14 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ReceiptResponse } from '../../api/client';
-import {
-  buildTransitPayload,
-  decodeAstrologyResponse,
-  postTransitPositions,
-  requestNatal,
-  AstrologyApiError,
-} from '../../services/astrologyApi';
-import { LOCAL_API_URL } from '../../utils/api';
+import { requestNatal, requestTransits, AstrologyApiError } from '../../services/astrologyApi';
 
-const makeNatalResult = () => ({
+const makeResult = (kind: 'natal' | 'transit' = 'natal') => ({
   planets: { Sun: { degree: 10 } },
   meta: {
     receipt: {
       schema_version: 'calculation-receipt.v1',
-      kind: 'natal',
-      input_hash: 'natal-input-hash',
+      kind,
+      input_hash: `${kind}-input-hash`,
       engine: { name: 'aurea-solaris-astro-engine', version: '2026.08.audit-1' },
       resolved_time: { utc: '2000-01-02T01:30:00Z', iana_timezone: 'America/Sao_Paulo' },
       ephemeris: { library_version: '2.10.03' },
@@ -23,12 +16,15 @@ const makeNatalResult = () => ({
   },
 });
 
-const makeReceipt = (result_payload = makeNatalResult()): ReceiptResponse => ({
+const makeReceipt = (
+  kind: 'natal' | 'transit' = 'natal',
+  result_payload: ReceiptResponse['result_payload'] = makeResult(kind),
+): ReceiptResponse => ({
   id: 'receipt-id',
   birth_profile_id: 'birth-profile-id',
-  kind: 'natal',
+  kind,
   schema_version: 'calculation-receipt.v1',
-  input_hash: 'natal-input-hash',
+  input_hash: `${kind}-input-hash`,
   input_payload: {},
   result_payload,
   engine_name: 'aurea-solaris-astro-engine',
@@ -39,26 +35,8 @@ const makeReceipt = (result_payload = makeNatalResult()): ReceiptResponse => ({
   created_at: '2000-01-02T01:30:00Z',
 });
 
-describe('astrologyApi transport', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
-  it('builds an explicit UTC transit payload from a fixed instant', () => {
-    expect(JSON.parse(buildTransitPayload(new Date('2026-08-14T21:30:00.000Z')))).toEqual({
-      year: 2026,
-      month: 8,
-      day: 14,
-      hour: 21.5,
-      timezone: 'UTC',
-      utc_offset_minutes: 0,
-    });
-  });
-
-  it('decodes JSON responses and converts parse failures', () => {
-    expect(decodeAstrologyResponse('{"planets":{}}')).toEqual({ planets: {} });
-    expect(() => decodeAstrologyResponse('not-json')).toThrow(AstrologyApiError);
-  });
+describe('astrologyApi receipts', () => {
+  beforeEach(() => vi.clearAllMocks());
 
   it('uses the typed authenticated natal client and verifies receipt metadata', async () => {
     const calculateNatal = vi.fn().mockResolvedValue(makeReceipt());
@@ -66,11 +44,23 @@ describe('astrologyApi transport', () => {
     const receipt = await requestNatal({ calculateNatal }, signal);
 
     expect(calculateNatal).toHaveBeenCalledWith({ force: false }, { signal });
-    expect(receipt.result_payload).toEqual(makeNatalResult());
+    expect(receipt.result_payload).toEqual(makeResult());
   });
 
-  it('rejects a natal response without certification or matching ephemeris', async () => {
-    const uncertified = { ...makeReceipt(), result_payload: { planets: {} } };
+  it('sends a UTC ISO timestamp and force flag for transit receipts', async () => {
+    const calculateTransits = vi.fn().mockResolvedValue(makeReceipt('transit'));
+    const signal = new AbortController().signal;
+    const receipt = await requestTransits({ calculateTransits }, '2026-08-14T21:30:00.000Z', signal, true);
+
+    expect(calculateTransits).toHaveBeenCalledWith(
+      { as_of: '2026-08-14T21:30:00.000Z', force: true },
+      { signal },
+    );
+    expect(receipt.kind).toBe('transit');
+  });
+
+  it('rejects a response without certification or matching ephemeris', async () => {
+    const uncertified = makeReceipt('natal', { planets: {} });
     await expect(requestNatal({ calculateNatal: vi.fn().mockResolvedValue(uncertified) }, undefined))
       .rejects.toThrow('certificação auditável');
 
@@ -82,29 +72,17 @@ describe('astrologyApi transport', () => {
 
   it('forwards cancellation to the typed client', async () => {
     const controller = new AbortController();
-    const calculateNatal = vi.fn(async (_input: { force: boolean }, options: { signal?: AbortSignal }) => {
+    const calculateTransits = vi.fn(async (_input: { as_of: string; force: boolean }, options: { signal?: AbortSignal }) => {
       expect(options.signal).toBe(controller.signal);
       throw new DOMException('aborted', 'AbortError');
     });
 
-    await expect(requestNatal({ calculateNatal }, controller.signal)).rejects.toMatchObject({ name: 'AbortError' });
+    await expect(requestTransits({ calculateTransits }, '2026-08-14T21:30:00.000Z', controller.signal))
+      .rejects.toMatchObject({ name: 'AbortError' });
   });
 
-  it('posts transit requests only through the legacy transit transport', async () => {
-    const fetchMock = vi.fn().mockResolvedValue({
-      ok: true,
-      text: async () => '{"planets":{"Sun":{}}}',
-    });
-    vi.stubGlobal('fetch', fetchMock);
-
-    const payload = buildTransitPayload();
-    const response = await postTransitPositions(payload);
-
-    expect(fetchMock).toHaveBeenCalledWith(`${LOCAL_API_URL}/transit`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: payload,
-    });
-    expect(response).toBe('{"planets":{"Sun":{}}}');
+  it('exposes a typed error for invalid receipt metadata', async () => {
+    await expect(requestTransits({ calculateTransits: vi.fn().mockResolvedValue(makeReceipt()) }, 'now'))
+      .rejects.toBeInstanceOf(AstrologyApiError);
   });
 });

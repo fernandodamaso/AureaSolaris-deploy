@@ -1,30 +1,16 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { createElement, type ReactNode } from 'react';
+import type { ApiClient, ReceiptResponse } from '../../api/client';
+import { ApiClientContext } from '../../api/provider';
 import { useLiveTransitData } from '../../hooks/useLiveTransitData';
 
-vi.mock('../../utils/tauri', () => ({
-  safeInvoke: vi.fn(),
-}));
-
-vi.mock('../../services/astrologyApi', async () => {
-  const actual = await vi.importActual<typeof import('../../services/astrologyApi')>('../../services/astrologyApi');
-  return {
-    ...actual,
-    postTransitPositions: vi.fn(),
-  };
-});
-
-import { safeInvoke } from '../../utils/tauri';
-import { buildTransitPayload, postTransitPositions } from '../../services/astrologyApi';
-
-const makeCertifiedTransitResponse = () => ({
+const makeTransitResult = () => ({
   planets: {
     Sun: { sign: 'Ari', degree: 10, pos_in_sign: 10, element: 'Fire' },
     Moon: { sign: 'Tau', degree: 45, pos_in_sign: 15, element: 'Earth' },
   },
-  secondary: {
-    NorthNode: { sign: 'Gem', degree: 75, pos_in_sign: 15 },
-  },
+  secondary: { NorthNode: { sign: 'Gem', degree: 75, pos_in_sign: 15 } },
   moon_phase: { phase: 'Crescente', icon: '🌒', illumination: 22.5 },
   meta: {
     timestamp: '2026-08-10T12:30:00+00:00',
@@ -43,143 +29,135 @@ const makeCertifiedTransitResponse = () => ({
   },
 });
 
+const makeReceipt = (result_payload: ReceiptResponse['result_payload'] = makeTransitResult()): ReceiptResponse => ({
+  id: 'receipt-id',
+  birth_profile_id: 'birth-profile-id',
+  kind: 'transit',
+  schema_version: 'calculation-receipt.v1',
+  input_hash: 'transit-input-hash',
+  input_payload: {},
+  result_payload,
+  engine_name: 'aurea-solaris-astro-engine',
+  engine_version: '2026.08.audit-1',
+  ephemeris_version: '2.10.03',
+  resolved_at: '2026-08-10T12:30:00Z',
+  resolved_timezone: 'UTC',
+  created_at: '2026-08-10T12:30:00Z',
+});
+
+function wrapperFor(api: ApiClient) {
+  const ApiWrapper = ({ children }: { children: ReactNode }) => createElement(
+    ApiClientContext.Provider,
+    { value: api },
+    children,
+  );
+  ApiWrapper.displayName = 'ApiWrapper';
+  return ApiWrapper;
+}
+
 describe('useLiveTransitData', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-    vi.mocked(safeInvoke).mockResolvedValue(null);
-  });
+  beforeEach(() => vi.clearAllMocks());
 
-  afterEach(() => {
-    vi.useRealTimers();
-  });
-
-  it('builds the transport payload from a fixed UTC instant', () => {
-    expect(JSON.parse(buildTransitPayload(new Date('2026-08-10T12:30:00.000Z')))).toEqual({
-      year: 2026,
-      month: 8,
-      day: 10,
-      hour: 12.5,
-      timezone: 'UTC',
-      utc_offset_minutes: 0,
-    });
-  });
-
-  it('requests transit transport with UTC provenance and preserves the certified lightweight envelope', async () => {
-    const certified = makeCertifiedTransitResponse();
-    vi.mocked(postTransitPositions).mockResolvedValue(JSON.stringify(certified));
-
-    const { result } = renderHook(() => useLiveTransitData());
+  it('requests a certified transit receipt with a UTC ISO timestamp and normalizes presentation values', async () => {
+    const calculateTransits = vi.fn().mockResolvedValue(makeReceipt());
+    const api = { calculateTransits } as unknown as ApiClient;
+    const { result } = renderHook(() => useLiveTransitData(), { wrapper: wrapperFor(api) });
 
     expect(result.current.loading).toBe(true);
+    await waitFor(() => expect(result.current.loading).toBe(false));
 
-    await waitFor(() => {
-      expect(result.current.loading).toBe(false);
-    });
-
-    expect(postTransitPositions).toHaveBeenCalledTimes(1);
-    const [payload] = vi.mocked(postTransitPositions).mock.calls[0];
-    expect(JSON.parse(payload)).toMatchObject({
-      timezone: 'UTC',
-      utc_offset_minutes: 0,
-    });
+    expect(calculateTransits).toHaveBeenCalledTimes(1);
+    const [input, options] = calculateTransits.mock.calls[0];
+    expect(input).toMatchObject({ force: false });
+    expect(input.as_of).toMatch(/^\d{4}-\d{2}-\d{2}T.*Z$/);
+    expect(options.signal).toBeInstanceOf(AbortSignal);
     expect(result.current.liveData).toMatchObject({
-      planets: {
-        Sun: { sign: 'Áries', degree: 10, element: 'Fogo' },
-        Moon: { sign: 'Touro', degree: 45, element: 'Terra' },
-      },
-      secondary: {
-        NorthNode: { sign: 'Gêmeos', degree: 75 },
-      },
-      moon_phase: { phase: 'Crescente', icon: '🌒', illumination: 22.5 },
-      meta: {
-        timestamp_utc: '2026-08-10T12:30:00Z',
-        receipt: {
-          kind: 'transit',
-          input_hash: 'transit-input-hash',
-          engine: { name: 'aurea-solaris-astro-engine', version: '2026.08.audit-1' },
-          resolved_time: { utc: '2026-08-10T12:30:00Z', iana_timezone: 'UTC' },
-        },
-      },
+      planets: { Sun: { sign: 'Áries', degree: 10, element: 'Fogo' }, Moon: { sign: 'Touro' } },
+      secondary: { NorthNode: { sign: 'Gêmeos' } },
+      meta: { receipt: { kind: 'transit', input_hash: 'transit-input-hash' } },
     });
     expect(result.current.error).toBeNull();
-    expect(safeInvoke).not.toHaveBeenCalled();
   });
 
-  it('falls back to Tauri only after HTTP transport returns null', async () => {
-    const certified = makeCertifiedTransitResponse();
-    vi.mocked(postTransitPositions).mockResolvedValue(null);
-    vi.mocked(safeInvoke).mockResolvedValue(JSON.stringify(certified));
+  it('rejects uncertified results without approximating positions', async () => {
+    const api = { calculateTransits: vi.fn().mockResolvedValue(makeReceipt({ planets: {} })) } as unknown as ApiClient;
+    const { result } = renderHook(() => useLiveTransitData(), { wrapper: wrapperFor(api) });
 
-    const { result } = renderHook(() => useLiveTransitData());
-
-    await waitFor(() => {
-      expect(result.current.loading).toBe(false);
-    });
-
-    const [payload] = vi.mocked(postTransitPositions).mock.calls[0];
-    expect(safeInvoke).toHaveBeenCalledWith('get_transit_positions', { payload });
-    expect(result.current.liveData?.planets.Sun.sign).toBe('Áries');
-  });
-
-  it('surfaces engine unavailability without approximating positions', async () => {
-    vi.mocked(postTransitPositions).mockResolvedValue(null);
-
-    const { result } = renderHook(() => useLiveTransitData());
-
-    await waitFor(() => {
-      expect(result.current.loading).toBe(false);
-    });
+    await waitFor(() => expect(result.current.loading).toBe(false));
 
     expect(result.current.liveData).toBeNull();
     expect(result.current.error).toContain('Nenhum valor aproximado será exibido');
   });
 
-  it('rejects responses without an audit receipt instead of silently displaying them', async () => {
-    const uncertified = { planets: makeCertifiedTransitResponse().planets };
-    vi.mocked(postTransitPositions).mockResolvedValue(JSON.stringify(uncertified));
-
-    const { result } = renderHook(() => useLiveTransitData());
-
-    await waitFor(() => {
-      expect(result.current.loading).toBe(false);
+  it('cancels an in-flight request on unmount', async () => {
+    let receivedSignal: AbortSignal | undefined;
+    const calculateTransits = vi.fn((_input: { as_of: string; force: boolean }, options: { signal?: AbortSignal }) => {
+      receivedSignal = options.signal;
+      return new Promise<ReceiptResponse>(() => undefined);
     });
+    const api = { calculateTransits } as unknown as ApiClient;
+    const { unmount } = renderHook(() => useLiveTransitData(), { wrapper: wrapperFor(api) });
 
+    await waitFor(() => expect(receivedSignal).toBeInstanceOf(AbortSignal));
+    unmount();
+    expect(receivedSignal?.aborted).toBe(true);
+  });
+
+  it('retries with force and replaces unavailable data only after a failed request', async () => {
+    const calculateTransits = vi.fn().mockResolvedValue(makeReceipt());
+    const api = { calculateTransits } as unknown as ApiClient;
+    const { result } = renderHook(() => useLiveTransitData(), { wrapper: wrapperFor(api) });
+    await waitFor(() => expect(result.current.liveData).not.toBeNull());
+
+    calculateTransits.mockRejectedValueOnce(new Error('provider detail'));
+    await act(async () => { await result.current.fetchAstro(true); });
+
+    expect(calculateTransits).toHaveBeenLastCalledWith(
+      expect.objectContaining({ force: true, as_of: expect.stringMatching(/Z$/) }),
+      expect.objectContaining({ signal: expect.any(AbortSignal) }),
+    );
     expect(result.current.liveData).toBeNull();
     expect(result.current.error).toContain('Nenhum valor aproximado será exibido');
   });
 
-  it('rejects a certified receipt for the wrong calculation kind', async () => {
-    const wrongKind = makeCertifiedTransitResponse();
-    wrongKind.meta.receipt.kind = 'natal';
-    vi.mocked(postTransitPositions).mockResolvedValue(JSON.stringify(wrongKind));
+  it('suppresses a stale response when a newer request completes first', async () => {
+    let resolveFirst!: (value: ReceiptResponse) => void;
+    const first = new Promise<ReceiptResponse>((resolve) => { resolveFirst = resolve; });
+    const calculateTransits = vi.fn()
+      .mockReturnValueOnce(first)
+      .mockResolvedValue(makeReceipt());
+    const api = { calculateTransits } as unknown as ApiClient;
+    type TestNatal = { Sun: number; Moon: number; ASC: number } | undefined;
+    const { result, rerender } = renderHook(
+      ({ natal }) => useLiveTransitData(natal),
+      { initialProps: { natal: undefined as TestNatal }, wrapper: wrapperFor(api) },
+    );
 
-    const { result } = renderHook(() => useLiveTransitData());
+    rerender({ natal: { Sun: 1, Moon: 2, ASC: 3 } });
+    await waitFor(() => expect(result.current.liveData).not.toBeNull());
+    const latest = result.current.liveData;
+    resolveFirst(makeReceipt({ planets: { Sun: { sign: 'Sco', degree: 200 } } }));
+    await act(async () => { await Promise.resolve(); });
 
-    await waitFor(() => {
-      expect(result.current.loading).toBe(false);
-    });
-
-    expect(result.current.liveData).toBeNull();
-    expect(result.current.error).toContain('Nenhum valor aproximado será exibido');
+    expect(result.current.liveData).toBe(latest);
   });
 
-  it('refreshes transit data every 60 seconds', async () => {
+  it('does not poll while the document is hidden and refreshes when visible again', async () => {
     vi.useFakeTimers();
-    const certified = makeCertifiedTransitResponse();
-    vi.mocked(postTransitPositions).mockResolvedValue(JSON.stringify(certified));
+    Object.defineProperty(document, 'visibilityState', { configurable: true, value: 'visible' });
+    const calculateTransits = vi.fn().mockResolvedValue(makeReceipt());
+    const api = { calculateTransits } as unknown as ApiClient;
+    renderHook(() => useLiveTransitData(), { wrapper: wrapperFor(api) });
+    await act(async () => { await Promise.resolve(); });
 
-    renderHook(() => useLiveTransitData());
+    Object.defineProperty(document, 'visibilityState', { configurable: true, value: 'hidden' });
+    await act(async () => { await vi.advanceTimersByTimeAsync(60_000); });
+    expect(calculateTransits).toHaveBeenCalledTimes(1);
 
-    await act(async () => {
-      await Promise.resolve();
-    });
-
-    expect(postTransitPositions).toHaveBeenCalledTimes(1);
-
-    await act(async () => {
-      await vi.advanceTimersByTimeAsync(60_000);
-    });
-
-    expect(postTransitPositions).toHaveBeenCalledTimes(2);
+    Object.defineProperty(document, 'visibilityState', { configurable: true, value: 'visible' });
+    document.dispatchEvent(new Event('visibilitychange'));
+    await act(async () => { await Promise.resolve(); });
+    expect(calculateTransits).toHaveBeenCalledTimes(2);
+    vi.useRealTimers();
   });
 });
