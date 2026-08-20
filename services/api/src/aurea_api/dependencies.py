@@ -6,11 +6,15 @@ from typing import Protocol, cast
 import asyncpg
 from fastapi import Request
 
+from aurea_api.domain.astrology.service import AstrologyService
+from aurea_api.errors import ApiProblem
 from aurea_api.infrastructure.db import (
     BirthProfileRepository,
     ProfileRepository,
+    ReceiptRepository,
     create_database_pool,
 )
+from aurea_api.infrastructure.ephemeris import AstrologyEngine
 
 
 class ReadinessProbe(Protocol):
@@ -61,3 +65,32 @@ async def get_birth_profile_repository(request: Request) -> BirthProfileReposito
         repository = BirthProfileRepository(await _get_database_pool(request))
         request.app.state.birth_profile_repository = repository
     return repository
+
+
+async def get_receipt_repository(request: Request) -> ReceiptRepository:
+    repository = cast(ReceiptRepository | None, request.app.state.receipt_repository)
+    if repository is None:
+        repository = ReceiptRepository(await _get_database_pool(request))
+        request.app.state.receipt_repository = repository
+    return repository
+
+
+async def get_astrology_service(request: Request) -> AstrologyService:
+    service = cast(AstrologyService | None, request.app.state.astrology_service)
+    if service is not None:
+        return service
+    try:
+        engine = AstrologyEngine(request.app.state.settings.ephemeris_path)
+    except (FileNotFoundError, RuntimeError) as exc:
+        raise ApiProblem(
+            status_code=503,
+            code="calculation_unavailable",
+            message="The astrology engine is unavailable.",
+        ) from exc
+    service = AstrologyService(
+        engine,
+        await get_birth_profile_repository(request),
+        await get_receipt_repository(request),
+    )
+    request.app.state.astrology_service = service
+    return service

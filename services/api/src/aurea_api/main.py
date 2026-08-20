@@ -9,6 +9,7 @@ import asyncpg
 from fastapi import FastAPI
 
 from .api.auth import TokenVerifier
+from .api.routes.astrology import router as astrology_router
 from .api.routes.birth_profile import router as birth_profile_router
 from .api.routes.me import router as me_router
 from .config import Settings, get_settings
@@ -29,6 +30,8 @@ async def _lifespan(app: FastAPI) -> AsyncIterator[None]:
             app.state.database_pool = None
             app.state.profile_repository = None
             app.state.birth_profile_repository = None
+            app.state.receipt_repository = None
+            app.state.astrology_service = None
 
 
 def create_app(settings: Settings | None = None) -> FastAPI:
@@ -46,10 +49,13 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.state.database_pool_lock = asyncio.Lock()
     app.state.profile_repository = None
     app.state.birth_profile_repository = None
+    app.state.receipt_repository = None
+    app.state.astrology_service = None
 
     register_error_handlers(app)
     app.include_router(health_router)
     app.include_router(me_router)
     app.include_router(birth_profile_router)
+    app.include_router(astrology_router)
     install_http_middleware(app, resolved_settings)
     return app
