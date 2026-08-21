@@ -12,9 +12,9 @@ MIGRATION_SHA256="42d3b1f57a52ae3fff45a0086075518a18d8924f6deb5cf7d5b1143aef46dc
 
 select_tools() {
   if [[ -z "${PYTHON:-}" ]]; then
-    if command -v python.exe >/dev/null 2>&1; then PYTHON="python.exe"
+    if command -v python3 >/dev/null 2>&1; then PYTHON="python3"
     elif command -v python >/dev/null 2>&1; then PYTHON="python"
-    elif command -v python3 >/dev/null 2>&1; then PYTHON="python3"
+    elif command -v python.exe >/dev/null 2>&1; then PYTHON="python.exe"
     else printf 'Python 3 is required.\n' >&2; exit 1; fi
   fi
   if [[ -z "${SUPABASE:-}" ]]; then
@@ -22,8 +22,8 @@ select_tools() {
     elif command -v supabase >/dev/null 2>&1; then SUPABASE="supabase"
     else printf 'Supabase CLI is required.\n' >&2; exit 1; fi
   fi
-  if command -v curl.exe >/dev/null 2>&1; then CURL="curl.exe"
-  elif command -v curl >/dev/null 2>&1; then CURL="curl"
+  if command -v curl >/dev/null 2>&1; then CURL="curl"
+  elif command -v curl.exe >/dev/null 2>&1; then CURL="curl.exe"
   else printf 'curl is required for Auth policy checks.\n' >&2; exit 1; fi
 }
 
