@@ -50,6 +50,7 @@ if os.environ.get("AUREA_EPHEMERIS_DIAGNOSTICS") == "1":
             "service_root": str(SERVICE_ROOT),
             "cwd": str(Path.cwd()),
             "candidates": {str(path): path.is_dir() for path in candidates},
+            "sqlite_files": [str(path) for path in Path("/var/task").rglob("*.sqlite")],
         },
         flush=True,
     )
