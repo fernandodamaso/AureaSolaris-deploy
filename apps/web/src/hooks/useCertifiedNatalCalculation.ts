@@ -82,6 +82,7 @@ export const useCertifiedNatalCalculation = (birthData?: AstrologyCalculationReq
       setLoading(false);
       return;
     }
+    setData(null);
     const controller = new AbortController();
     void calculate(false, controller.signal);
     return () => controller.abort();

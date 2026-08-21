@@ -69,6 +69,28 @@ describe('useLiveTransitData', () => {
     expect(calculateTransits).not.toHaveBeenCalled();
   });
 
+  it('keeps transit evidence empty when a disabled in-flight request resolves', async () => {
+    let resolveTransit!: (value: ReceiptResponse) => void;
+    const pendingTransit = new Promise<ReceiptResponse>((resolve) => { resolveTransit = resolve; });
+    const calculateTransits = vi.fn().mockReturnValue(pendingTransit);
+    const api = { calculateTransits } as unknown as ApiClient;
+    const natal = { Sun: 1, Moon: 2, ASC: 3 };
+    const { result, rerender } = renderHook(
+      ({ enabled }) => useLiveTransitData(natal, enabled),
+      { initialProps: { enabled: true }, wrapper: wrapperFor(api) },
+    );
+    await waitFor(() => expect(calculateTransits).toHaveBeenCalledTimes(1));
+
+    rerender({ enabled: false });
+    expect(result.current.loading).toBe(false);
+    expect(result.current.liveData).toBeNull();
+
+    await act(async () => { resolveTransit(makeReceipt()); });
+
+    expect(result.current.liveData).toBeNull();
+    expect(result.current.error).toBeNull();
+  });
+
   it('requests a certified transit receipt with a UTC ISO timestamp and normalizes presentation values', async () => {
     const calculateTransits = vi.fn().mockResolvedValue(makeReceipt());
     const api = { calculateTransits } as unknown as ApiClient;

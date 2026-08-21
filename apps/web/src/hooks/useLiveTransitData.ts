@@ -125,6 +125,7 @@ export const useLiveTransitData = (natalData?: NatalPositions, enabled = true) =
 
   useEffect(() => {
     if (!enabled) {
+      requestSequence.current += 1;
       activeRequest.current?.abort();
       setLiveData(null);
       setError(null);

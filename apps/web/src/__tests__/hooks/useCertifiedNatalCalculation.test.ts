@@ -129,6 +129,32 @@ describe('useCertifiedNatalCalculation', () => {
     expect(calculateNatal).toHaveBeenCalledTimes(1);
   });
 
+  it('clears the previous certified natal while a changed map is pending and after it fails', async () => {
+    let rejectChangedMap!: (error: Error) => void;
+    const changedMap = new Promise<ReceiptResponse>((_resolve, reject) => { rejectChangedMap = reject; });
+    calculateNatal
+      .mockResolvedValueOnce(makeReceipt())
+      .mockReturnValueOnce(changedMap);
+    const api = { calculateNatal } as unknown as ApiClient;
+    const { result, rerender } = renderHook(
+      ({ request }) => useCertifiedNatalCalculation(request),
+      { initialProps: { request: birthData }, wrapper: wrapperFor(api) },
+    );
+    await waitFor(() => expect(result.current.data).not.toBeNull());
+
+    rerender({ request: { ...birthData, year: 2001 } });
+    await waitFor(() => expect(calculateNatal).toHaveBeenCalledTimes(2));
+
+    expect(result.current.loading).toBe(true);
+    expect(result.current.data).toBeNull();
+
+    await act(async () => { rejectChangedMap(new Error('changed map failed')); });
+    await waitFor(() => expect(result.current.loading).toBe(false));
+
+    expect(result.current.data).toBeNull();
+    expect(result.current.error).toContain('Não foi possível calcular');
+  });
+
   it('skips calculation when disabled and clears prior state', async () => {
     const api = { calculateNatal } as unknown as ApiClient;
     const { result } = renderHook(() => useCertifiedNatalCalculation(birthData, false), { wrapper: wrapperFor(api) });
