@@ -61,6 +61,16 @@ export AUREA_SMOKE_JWT=""
 export AUREA_PRODUCTION_API_URL="${AUREA_PRODUCTION_API_URL:-https://aurea-solaris-api.vercel.app}"
 export AUREA_PRODUCTION_SUPABASE_URL="${AUREA_PRODUCTION_SUPABASE_URL:-}"
 
-cmd.exe /d /s /c "set AUREA_E2E_URL=$AUREA_E2E_URL&&set AUREA_E2E_API_URL=$AUREA_E2E_API_URL&&set AUREA_E2E_EMAIL=$AUREA_E2E_EMAIL&&set AUREA_E2E_PASSWORD=$AUREA_E2E_PASSWORD&&set AUREA_E2E_SECOND_JWT=$AUREA_E2E_SECOND_JWT&&set AUREA_VERCEL_PROTECTION_BYPASS=$AUREA_VERCEL_WEB_PROTECTION_BYPASS&&set AUREA_VERCEL_WEB_PROTECTION_BYPASS=$AUREA_VERCEL_WEB_PROTECTION_BYPASS&&set AUREA_VERCEL_API_PROTECTION_BYPASS=$AUREA_VERCEL_API_PROTECTION_BYPASS&&set AUREA_PRODUCTION_API_URL=$AUREA_PRODUCTION_API_URL&&set AUREA_PRODUCTION_SUPABASE_URL=$AUREA_PRODUCTION_SUPABASE_URL&&npx.cmd playwright test apps/web/e2e/specs/ownership.spec.ts --config=apps/web/e2e/playwright.config.ts --project=chromium --workers=1"
+if command -v npx.cmd >/dev/null 2>&1; then
+  NPX=(npx.cmd)
+elif command -v npx >/dev/null 2>&1; then
+  NPX=(npx)
+else
+  printf 'npx is required.\n' >&2
+  exit 1
+fi
+
+"${NPX[@]}" playwright test apps/web/e2e/specs/ownership.spec.ts \
+  --config=apps/web/e2e/playwright.config.ts --project=chromium --workers=1
 
 printf 'PASS: hosted preview ownership gate completed without printing credentials or payloads\n'

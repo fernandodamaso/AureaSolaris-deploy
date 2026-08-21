@@ -48,3 +48,23 @@ browser-safe public key; never place a service-role key or database URL in a
 
 Keep deployment protection enabled. Use a short-lived local CLI bypass only for
 verification; do not add it to GitHub Actions or commit it.
+
+## Protected hosted acceptance on Windows
+
+Load the approved short-lived values into the current PowerShell process through the secure provider/secret-store path. Do not place their values in a command string. Then invoke Git Bash directly so it inherits the environment:
+
+```powershell
+$requiredNames = @(
+  'AUREA_E2E_URL', 'AUREA_E2E_API_URL', 'AUREA_E2E_EMAIL',
+  'AUREA_E2E_PASSWORD', 'AUREA_E2E_SECOND_JWT',
+  'AUREA_VERCEL_WEB_PROTECTION_BYPASS',
+  'AUREA_VERCEL_API_PROTECTION_BYPASS',
+  'SUPABASE_PREVIEW_URL', 'SUPABASE_PREVIEW_ANON_KEY'
+)
+$missingNames = $requiredNames | Where-Object { -not (Test-Path "Env:$_") }
+if ($missingNames) { throw "Missing secure environment names: $($missingNames -join ', ')" }
+& 'C:\Program Files\Git\bin\bash.exe' scripts/verify_preview.sh
+if ($LASTEXITCODE -ne 0) { throw 'Hosted preview verification failed.' }
+```
+
+Use Git Bash on Windows. Do not use WSL to launch Windows Node because WSL does not forward arbitrary Linux environment variables to Windows child processes.
