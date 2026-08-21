@@ -9,6 +9,11 @@ type ReceiptBody = {
   };
 };
 
+const productionSupabase = process.env.AUREA_PRODUCTION_SUPABASE_URL;
+if (!productionSupabase) {
+  throw new Error('AUREA_PRODUCTION_SUPABASE_URL is required.');
+}
+
 test.use({ trace: 'off', screenshot: 'off', video: 'off' });
 
 test('hosted private flow and receipt ownership boundary', async ({ page, request }) => {
@@ -91,13 +96,12 @@ test('hosted private flow and receipt ownership boundary', async ({ page, reques
   await expect(page.getByRole('button', { name: 'Entrar' })).toBeVisible();
 
   const productionApi = process.env.AUREA_PRODUCTION_API_URL ?? 'https://aurea-solaris-api.vercel.app';
-  const productionSupabase = process.env.AUREA_PRODUCTION_SUPABASE_URL ?? '';
   for (const value of observedUrls) {
     const parsed = new URL(value);
     expect(parsed.protocol, `mixed-content request: ${value}`).not.toBe('http:');
     expect(value).not.toContain('localhost');
     expect(value).not.toContain('127.0.0.1');
     expect(value).not.toContain(productionApi);
-    if (productionSupabase) expect(value).not.toContain(productionSupabase);
+    expect(value).not.toContain(productionSupabase);
   }
 });

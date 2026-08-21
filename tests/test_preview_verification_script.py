@@ -1,43 +1,409 @@
+from __future__ import annotations
+
+import os
 from pathlib import Path
+import shutil
+import subprocess
+import tempfile
+import textwrap
 import unittest
 
 
 ROOT = Path(__file__).resolve().parents[1]
+GIT_BASH = Path(r"C:\Program Files\Git\bin\bash.exe")
+
+
+def _bash_path(path: Path) -> str:
+    value = path.resolve().as_posix()
+    if len(value) >= 3 and value[1:3] == ":/":
+        return f"/{value[0].lower()}{value[2:]}"
+    return value
+
+
+def _write_executable(path: Path, content: str) -> None:
+    path.write_text(textwrap.dedent(content).lstrip(), encoding="utf-8", newline="\n")
+    path.chmod(0o755)
 
 
 class PreviewVerificationScriptTests(unittest.TestCase):
-    def test_secrets_are_not_copied_into_command_lines(self) -> None:
-        script = (ROOT / "scripts" / "verify_preview.sh").read_text(encoding="utf-8")
+    def setUp(self) -> None:
+        if not GIT_BASH.exists():
+            self.skipTest("The Windows Git Bash executable is required for verifier tests.")
 
-        self.assertNotIn("cmd.exe /d /s /c", script)
-        self.assertNotIn("set AUREA_E2E_PASSWORD=", script)
-        self.assertNotIn("set AUREA_E2E_SECOND_JWT=", script)
-        self.assertNotIn("set AUREA_VERCEL_API_PROTECTION_BYPASS=", script)
-        self.assertNotIn(
-            '-H "x-vercel-protection-bypass: $AUREA_VERCEL_API_PROTECTION_BYPASS"',
-            script,
+        self.temp_dir = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temp_dir.cleanup)
+        self.stub_dir = Path(self.temp_dir.name)
+        self.arg_log = self.stub_dir / "curl-args.bin"
+        self.header_log = self.stub_dir / "curl-headers.txt"
+        self.body_log = self.stub_dir / "curl-bodies.txt"
+        self.python_log = self.stub_dir / "python-launchers.txt"
+
+        real_python = _bash_path(Path(os.sys.executable))
+        _write_executable(
+            self.stub_dir / "python3",
+            """
+            #!/usr/bin/env bash
+            printf 'python3\n' >> "$AUREA_TEST_PYTHON_LOG"
+            exit 1
+            """,
         )
-        self.assertNotIn('-H "apikey: $SUPABASE_PREVIEW_ANON_KEY"', script)
-        self.assertEqual(script.count("-H @-"), 2)
-        self.assertIn('"${NPX[@]}" playwright test', script)
-
-    def test_python_launcher_is_executed_before_it_is_selected(self) -> None:
-        for script_name in ("verify_preview.sh", "smoke_api.sh"):
-            with self.subTest(script=script_name):
-                script = (ROOT / "scripts" / script_name).read_text(encoding="utf-8")
-
-                self.assertIn("for candidate in python3 python python.exe; do", script)
-                self.assertIn(
-                    'command -v "$candidate" >/dev/null 2>&1 '
-                    '&& "$candidate" --version >/dev/null 2>&1',
-                    script,
-                )
-                self.assertIn('PYTHON="$candidate"', script)
-
-        verify_script = (ROOT / "scripts" / "verify_preview.sh").read_text(
-            encoding="utf-8"
+        _write_executable(
+            self.stub_dir / "python",
+            f"""
+            #!/usr/bin/env bash
+            printf 'python\n' >> "$AUREA_TEST_PYTHON_LOG"
+            exec {real_python!r} "$@"
+            """,
         )
-        self.assertIn('signup_error_code="$("$PYTHON" - ', verify_script)
+        _write_executable(
+            self.stub_dir / "python.exe",
+            """
+            #!/usr/bin/env bash
+            printf 'python.exe\n' >> "$AUREA_TEST_PYTHON_LOG"
+            exit 1
+            """,
+        )
+        _write_executable(
+            self.stub_dir / "npx",
+            """
+            #!/usr/bin/env bash
+            exit 0
+            """,
+        )
+        _write_executable(
+            self.stub_dir / "supabase",
+            """
+            #!/usr/bin/env bash
+            case "$1 $2" in
+              'projects list')
+                printf '%s\n' '{"projects":[{"ref":"rosklqnnbmhowohoyboj","status":"ACTIVE_HEALTHY"},{"ref":"tgpcpxqqusehssaihvcp","status":"ACTIVE_HEALTHY"}]}'
+                ;;
+              'migration list')
+                printf '%s\n' '{"versions":["202608150001","20260821172829"]}'
+                ;;
+              'projects api-keys')
+                printf '%s\n' '[{"type":"publishable","name":"anon","api_key":"test-publishable-key"}]'
+                ;;
+              'db query')
+                printf '%s\n' '{"rows":[{"tablename":"birth_profiles","rls_enabled":true,"policy_count":1,"policy_names":"birth_profiles_owner_all"},{"tablename":"calculation_receipts","rls_enabled":true,"policy_count":1,"policy_names":"calculation_receipts_owner_all"},{"tablename":"profiles","rls_enabled":true,"policy_count":1,"policy_names":"profiles_owner_all"}]}'
+                ;;
+              *)
+                printf 'unexpected supabase stub call\n' >&2
+                exit 2
+                ;;
+            esac
+            """,
+        )
+        _write_executable(
+            self.stub_dir / "curl",
+            r"""
+            #!/usr/bin/env bash
+            set -euo pipefail
+
+            printf '<call>\0' >> "$AUREA_TEST_CURL_ARG_LOG"
+            printf '%s\0' "$@" >> "$AUREA_TEST_CURL_ARG_LOG"
+
+            output=''
+            url=''
+            call_headers=''
+            write_status=0
+            while (($#)); do
+              case "$1" in
+                -o)
+                  output="$2"
+                  shift 2
+                  ;;
+                -w)
+                  write_status=1
+                  shift 2
+                  ;;
+                --max-time|-X|-c|-b)
+                  shift 2
+                  ;;
+                -H)
+                  header_source="$2"
+                  if [[ "$header_source" == @- ]]; then
+                    header_value="$(cat)"
+                  elif [[ "$header_source" == @* ]]; then
+                    header_file="$(printf '%s' "$header_source" | sed 's/^@//')"
+                    header_value="$(cat "$header_file")"
+                  else
+                    header_value="$header_source"
+                  fi
+                  call_headers+="$header_value"$'\n'
+                  printf '%s\n' "$header_value" >> "$AUREA_TEST_CURL_HEADER_LOG"
+                  shift 2
+                  ;;
+                --data|--data-binary|-d)
+                  data_source="$2"
+                  if [[ "$data_source" == @- ]]; then
+                    cat >> "$AUREA_TEST_CURL_BODY_LOG"
+                  else
+                    printf '%s\n' "$data_source" >> "$AUREA_TEST_CURL_BODY_LOG"
+                  fi
+                  shift 2
+                  ;;
+                http://*|https://*)
+                  url="$1"
+                  shift
+                  ;;
+                *)
+                  shift
+                  ;;
+              esac
+            done
+
+            status=200
+            payload='{}'
+            case "$url" in
+              */health)
+                payload='{"status":"ok"}'
+                ;;
+              */ready)
+                status=503
+                payload='{"code":"service_not_ready"}'
+                ;;
+              */auth/v1/signup)
+                status=422
+                payload='{"error_code":"signup_disabled"}'
+                ;;
+              */auth/v1/settings)
+                payload='{"external":{"email":true},"disable_signup":true}'
+                ;;
+              */auth/v1/admin/users*)
+                payload='{"users":[{}]}'
+                ;;
+              */v1/me)
+                if [[ "$call_headers" == *'Authorization: Bearer '* ]]; then
+                  status=404
+                  payload='{"code":"profile_not_found"}'
+                else
+                  status=401
+                  payload='{"code":"missing_bearer_token"}'
+                fi
+                ;;
+              */v1/birth-profile)
+                payload='{}'
+                ;;
+              */v1/astrology/natal)
+                payload='{"engine_name":"aurea-solaris-astro-engine","ephemeris_version":"test-version"}'
+                ;;
+              *)
+                printf 'unexpected curl stub URL: %s\n' "$url" >&2
+                exit 2
+                ;;
+            esac
+
+            if [[ -n "$output" ]]; then
+              printf '%s' "$payload" > "$output"
+            else
+              printf '%s' "$payload"
+            fi
+            if [[ "$write_status" == 1 ]]; then
+              printf '%s' "$status"
+            fi
+            """,
+        )
+
+    def _environment(self) -> dict[str, str]:
+        env = os.environ.copy()
+        env.update(
+            {
+                "AUREA_TEST_STUB_DIR": _bash_path(self.stub_dir),
+                "AUREA_TEST_CURL_ARG_LOG": _bash_path(self.arg_log),
+                "AUREA_TEST_CURL_HEADER_LOG": _bash_path(self.header_log),
+                "AUREA_TEST_CURL_BODY_LOG": _bash_path(self.body_log),
+                "AUREA_TEST_PYTHON_LOG": _bash_path(self.python_log),
+                "AUREA_E2E_URL": "https://preview-web.example.test",
+                "AUREA_E2E_API_URL": "https://preview-api.example.test",
+                "AUREA_E2E_EMAIL": "preview-user@example.test",
+                "AUREA_E2E_PASSWORD": "test-preview-password",
+                "AUREA_E2E_SECOND_JWT": "test-second-jwt",
+                "AUREA_VERCEL_WEB_PROTECTION_BYPASS": "test-web-bypass",
+                "AUREA_VERCEL_API_PROTECTION_BYPASS": "test-api-bypass",
+                "SUPABASE_PREVIEW_URL": "https://preview-ref.supabase.co",
+                "SUPABASE_PREVIEW_ANON_KEY": "test-preview-anon-key",
+                "AUREA_PRODUCTION_API_URL": "https://production-api.example.test",
+                "AUREA_PRODUCTION_SUPABASE_URL": "https://production-ref.supabase.co",
+                "AUREA_SMOKE_JWT": "test-smoke-jwt",
+                "AUREA_SMOKE_ASTROLOGY": "1",
+                "AUREA_VERCEL_PROTECTION_BYPASS": "test-api-bypass",
+                "SUPABASE_SERVICE_ROLE_KEY_PREVIEW": "test-preview-service-role",
+                "SUPABASE_SERVICE_ROLE_KEY_PRODUCTION": "test-production-service-role",
+                "SUPABASE": _bash_path(self.stub_dir / "supabase"),
+            }
+        )
+        env.pop("PYTHON", None)
+        return env
+
+    def _run_script(
+        self,
+        script: str,
+        *args: str,
+        environment: dict[str, str] | None = None,
+    ) -> subprocess.CompletedProcess[str]:
+        env = environment or self._environment()
+        env["AUREA_TEST_SCRIPT"] = script
+        command = (
+            'export PATH="$AUREA_TEST_STUB_DIR:/usr/bin:/bin"; '
+            'exec bash "$AUREA_TEST_SCRIPT" "$@"'
+        )
+        return subprocess.run(
+            [
+                str(GIT_BASH),
+                "--noprofile",
+                "--norc",
+                "-c",
+                command,
+                "aurea-verifier-test",
+                *args,
+            ],
+            cwd=ROOT,
+            env=env,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            timeout=60,
+            check=False,
+        )
+
+    def _curl_arguments(self) -> list[str]:
+        if not self.arg_log.exists():
+            return []
+        return [
+            value.decode("utf-8")
+            for value in self.arg_log.read_bytes().split(b"\0")
+            if value
+        ]
+
+    def _clear_logs(self) -> None:
+        for path in (self.arg_log, self.header_log, self.body_log, self.python_log):
+            path.unlink(missing_ok=True)
+
+    def test_smoke_keeps_headers_and_birth_body_out_of_process_arguments(self) -> None:
+        result = self._run_script(
+            "scripts/smoke_api.sh",
+            "https://preview-api.example.test",
+        )
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+        arguments = "\n".join(self._curl_arguments())
+        for sensitive_value in (
+            "test-api-bypass",
+            "test-smoke-jwt",
+            "1990-01-01",
+            "12:00:00",
+            '"place":"E2E"',
+        ):
+            with self.subTest(value=sensitive_value):
+                self.assertNotIn(sensitive_value, arguments)
+
+        headers = (
+            self.header_log.read_text(encoding="utf-8")
+            if self.header_log.exists()
+            else ""
+        )
+        bodies = self.body_log.read_text(encoding="utf-8")
+        self.assertIn("test-api-bypass", headers)
+        self.assertIn("test-smoke-jwt", headers)
+        self.assertIn("1990-01-01", bodies)
+        self.assertIn('"place":"E2E"', bodies)
+
+    def test_preview_wrapper_requires_production_origin_and_reads_auth_settings(self) -> None:
+        missing_environment = self._environment()
+        missing_environment.pop("AUREA_PRODUCTION_SUPABASE_URL")
+        missing_result = self._run_script(
+            "scripts/verify_preview.sh",
+            environment=missing_environment,
+        )
+        self.assertNotEqual(missing_result.returncode, 0)
+        self.assertIn("AUREA_PRODUCTION_SUPABASE_URL is required", missing_result.stderr)
+
+        self._clear_logs()
+        result = self._run_script("scripts/verify_preview.sh")
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("public_signup=disabled", result.stdout)
+
+        arguments = "\n".join(self._curl_arguments())
+        self.assertIn("/auth/v1/settings", arguments)
+        self.assertNotIn("/auth/v1/signup", arguments)
+        self.assertNotIn("--data", arguments)
+        self.assertFalse(self.body_log.exists() and self.body_log.read_text(encoding="utf-8"))
+
+    def test_all_verifiers_execute_python_before_selecting_it(self) -> None:
+        cases = (
+            ("scripts/smoke_api.sh", ("https://preview-api.example.test",)),
+            ("scripts/verify_preview.sh", ()),
+            ("scripts/verify_supabase_environment.sh", ()),
+        )
+        for script, args in cases:
+            with self.subTest(script=script):
+                self._clear_logs()
+                result = self._run_script(script, *args)
+                self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+                launches = self.python_log.read_text(encoding="utf-8").splitlines()
+                self.assertIn("python3", launches)
+                self.assertIn("python", launches)
+
+        arguments = "\n".join(self._curl_arguments())
+        self.assertNotIn("test-publishable-key", arguments)
+        self.assertNotIn("test-preview-service-role", arguments)
+        self.assertNotIn("test-production-service-role", arguments)
+        headers = (
+            self.header_log.read_text(encoding="utf-8")
+            if self.header_log.exists()
+            else ""
+        )
+        self.assertIn("test-publishable-key", headers)
+        self.assertIn("test-preview-service-role", headers)
+        self.assertIn("test-production-service-role", headers)
+
+    def test_ownership_discovery_requires_production_supabase_origin(self) -> None:
+        npx = shutil.which("npx.cmd") or shutil.which("npx")
+        if not npx:
+            self.skipTest("npx is required for Playwright discovery.")
+
+        env = os.environ.copy()
+        env["AUREA_E2E_URL"] = "https://preview-web.example.test"
+        env.pop("AUREA_PRODUCTION_SUPABASE_URL", None)
+        command = [
+            npx,
+            "playwright",
+            "test",
+            "apps/web/e2e/specs/ownership.spec.ts",
+            "--config=apps/web/e2e/playwright.config.ts",
+            "--project=chromium",
+            "--workers=1",
+            "--list",
+        ]
+        missing = subprocess.run(
+            command,
+            cwd=ROOT,
+            env=env,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            timeout=60,
+            check=False,
+        )
+        self.assertNotEqual(missing.returncode, 0)
+        self.assertIn(
+            "AUREA_PRODUCTION_SUPABASE_URL is required",
+            missing.stdout + missing.stderr,
+        )
+
+        env["AUREA_PRODUCTION_SUPABASE_URL"] = "https://production-ref.supabase.co"
+        present = subprocess.run(
+            command,
+            cwd=ROOT,
+            env=env,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            timeout=60,
+            check=False,
+        )
+        self.assertEqual(present.returncode, 0, present.stdout + present.stderr)
 
 
 if __name__ == "__main__":

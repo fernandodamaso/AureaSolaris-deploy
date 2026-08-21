@@ -47,6 +47,11 @@ bash scripts/verify_supabase_environment.sh
 
 The command checks the committed migration hash, project health, hosted migration history, Auth settings, and RLS/policy state. It prints only project refs, migration versions and hashes, table/policy names, and counts. It does not print API keys.
 
+All repository verifier scripts probe each Python launcher by executing
+`--version` before selection. This avoids the disabled Windows Store alias
+and falls back to the next working launcher. Supabase Auth headers use standard
+input and do not place publishable or service-role values in process arguments.
+
 For an unattended identity-count check, provide service-role credentials through the secure execution environment only. The variable names are `SUPABASE_SERVICE_ROLE_KEY_PREVIEW` and `SUPABASE_SERVICE_ROLE_KEY_PRODUCTION`; do not commit them or put them in a browser, workflow file, Linear, logs, or chat. The production check fails unless exactly one Auth user exists.
 
 After a schema change, run the Supabase security advisors for both refs and record only the advisory names and remediation state. The current remaining advisory is the provider's leaked-password-protection recommendation; enabling it is a separate Auth security decision and does not change this migration.

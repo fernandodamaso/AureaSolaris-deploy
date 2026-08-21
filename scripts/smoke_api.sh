@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/lib/select_python.sh"
+
 BASE_URL="${1:-}"
 [[ -n "$BASE_URL" ]] || { printf 'Usage: %s <api-url>\n' "$0" >&2; exit 2; }
 BASE_URL="${BASE_URL%/}"
@@ -8,34 +11,51 @@ BASE_URL="${BASE_URL%/}"
 if command -v curl >/dev/null 2>&1; then CURL="curl"
 elif command -v curl.exe >/dev/null 2>&1; then CURL="curl.exe"
 else printf 'curl is required.\n' >&2; exit 1; fi
-PYTHON=""
-for candidate in python3 python python.exe; do
-  if command -v "$candidate" >/dev/null 2>&1 && "$candidate" --version >/dev/null 2>&1; then
-    PYTHON="$candidate"
-    break
-  fi
-done
-[[ -n "$PYTHON" ]] || { printf 'Python 3 is required.\n' >&2; exit 1; }
+aurea_select_python || exit 1
 
 TMP_DIR="$(mktemp -d)"
 trap 'rm -rf "$TMP_DIR"' EXIT
 
+curl_with_secure_headers() {
+  local auth_mode="$1"
+  shift
+
+  if [[ -n "${AUREA_VERCEL_PROTECTION_BYPASS:-}" && "$auth_mode" == auth ]]; then
+    "$CURL" \
+      -H @<(builtin printf 'x-vercel-protection-bypass: %s\n' \
+        "$AUREA_VERCEL_PROTECTION_BYPASS") \
+      -H @<(builtin printf 'Authorization: Bearer %s\n' "$AUREA_SMOKE_JWT") \
+      "$@"
+  elif [[ -n "${AUREA_VERCEL_PROTECTION_BYPASS:-}" ]]; then
+    "$CURL" \
+      -H @<(builtin printf 'x-vercel-protection-bypass: %s\n' \
+        "$AUREA_VERCEL_PROTECTION_BYPASS") \
+      "$@"
+  elif [[ "$auth_mode" == auth ]]; then
+    "$CURL" \
+      -H @<(builtin printf 'Authorization: Bearer %s\n' "$AUREA_SMOKE_JWT") \
+      "$@"
+  else
+    "$CURL" "$@"
+  fi
+}
+
 request() {
-  local name="$1" path="$2" output="$TMP_DIR/$1.json"; shift 2
-  local status url="$BASE_URL$path"
-  if [[ -n "${AUREA_VERCEL_SHARE_QUERY:-}" ]]; then
-    url="$url?${AUREA_VERCEL_SHARE_QUERY#\?}"
+  local name="$1" path="$2" auth_mode="${3:-none}" method="${4:-}" has_body="${5:-0}"
+  local output="$TMP_DIR/$1.json" status url="$BASE_URL$path"
+  local -a content_flags=() method_flags=() body_flags=()
+  if [[ -n "$method" ]]; then
+    method_flags=(-X "$method")
   fi
-  local -a share_flags=()
-  if [[ -n "${AUREA_VERCEL_SHARE_QUERY:-}" ]]; then
-    share_flags=(-L -c "$TMP_DIR/cookies.txt" -b "$TMP_DIR/cookies.txt")
+  if [[ "$has_body" == 1 ]]; then
+    content_flags=(-H 'Content-Type: application/json')
+    body_flags=(--data-binary @-)
   fi
-  local -a protection_flags=()
-  if [[ -n "${AUREA_VERCEL_PROTECTION_BYPASS:-}" ]]; then
-    protection_flags=(-H "x-vercel-protection-bypass: $AUREA_VERCEL_PROTECTION_BYPASS")
-  fi
-  status="$("$CURL" --fail-with-body --silent --show-error --max-time 30 \
-    "${share_flags[@]}" "${protection_flags[@]}" -o "$output" -w '%{http_code}' "$url" "$@" 2>/dev/null || true)"
+
+  status="$(curl_with_secure_headers "$auth_mode" \
+    --fail-with-body --silent --show-error --max-time 30 \
+    "${content_flags[@]}" "${method_flags[@]}" "${body_flags[@]}" \
+    -o "$output" -w '%{http_code}' "$url" 2>/dev/null || true)"
   printf '%s %s %s\n' "$name" "$status" "$output"
 }
 
@@ -73,7 +93,7 @@ unauth_status="$(printf '%s' "$unauth" | awk '{print $2}')"
 printf 'unauthenticated_me=401\n'
 
 if [[ -n "${AUREA_SMOKE_JWT:-}" ]]; then
-  auth="$(request auth /v1/me -H "Authorization: Bearer $AUREA_SMOKE_JWT")"
+  auth="$(request auth /v1/me auth)"
   auth_status="$(printf '%s' "$auth" | awk '{print $2}')"
   auth_file="$(printf '%s' "$auth" | awk '{print $3}')"
   printf 'authenticated_me_status=%s\n' "$auth_status"
@@ -89,11 +109,11 @@ if [[ -n "${AUREA_SMOKE_JWT:-}" ]]; then
 
   if [[ "${AUREA_SMOKE_ASTROLOGY:-0}" == 1 ]]; then
     profile_body='{"label":"Vercel E2E","birth_date":"1990-01-01","birth_time":"12:00:00","timezone":"UTC","latitude":0,"longitude":0,"place":"E2E","house_system":"P"}'
-    profile="$(request birth_profile /v1/birth-profile -X PUT -H "Authorization: Bearer $AUREA_SMOKE_JWT" -H 'Content-Type: application/json' --data "$profile_body")"
+    profile="$(builtin printf '%s' "$profile_body" | request birth_profile /v1/birth-profile auth PUT 1)"
     profile_status="$(printf '%s' "$profile" | awk '{print $2}')"
     printf 'birth_profile_status=%s\n' "$profile_status"
     [[ "$profile_status" == 200 ]] || { printf 'FAIL: birth profile setup\n' >&2; exit 1; }
-    astrology="$(request astrology /v1/astrology/natal -X POST -H "Authorization: Bearer $AUREA_SMOKE_JWT" -H 'Content-Type: application/json' --data '{}')"
+    astrology="$(builtin printf '{}' | request astrology /v1/astrology/natal auth POST 1)"
     astrology_status="$(printf '%s' "$astrology" | awk '{print $2}')"
     astrology_file="$(printf '%s' "$astrology" | awk '{print $3}')"
     printf 'astrology_status=%s\n' "$astrology_status"

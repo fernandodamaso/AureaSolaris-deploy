@@ -56,7 +56,7 @@ AUREA_VERCEL_PROTECTION_BYPASS="$LOCAL_ONLY_BYPASS" \
 bash scripts/smoke_api.sh https://aurea-solaris-api.vercel.app
 ```
 
-The script checks `/health`, fail-closed `/ready`, safe unauthenticated `401`, authenticated `/v1/me`, and (when requested) the real astrology route. It prints status and engine metadata only. It never prints the JWT, response bodies, birth payload, or database credential. It does not run against production.
+The script checks `/health`, fail-closed `/ready`, safe unauthenticated `401`, authenticated `/v1/me`, and (when requested) the real astrology route. It prints status and engine metadata only. Sensitive headers use pipe-backed descriptors, and the synthetic birth body uses standard input, so their values do not enter child-process arguments or files. It never prints the JWT, response bodies, birth payload, or database credential. It does not run against production.
 
 `LOCAL_ONLY_BYPASS` is a short-lived Vercel deployment-protection value supplied by
 the authenticated local CLI. Keep it in the local process environment only; do not

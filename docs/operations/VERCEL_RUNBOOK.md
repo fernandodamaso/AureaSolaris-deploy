@@ -46,6 +46,12 @@ browser-safe public key; never place a service-role key or database URL in a
 5. Check the API CORS preflight from the exact preview web origin and run the
    API smoke against the matching preview deployment.
 
+The hosted ownership test also requires the known production Supabase origin.
+It fails before browser startup when that origin is absent, so the request
+boundary cannot silently skip the production-project exclusion. The public
+sign-up assertion reads `/auth/v1/settings`; it does not submit a sign-up
+request or create an Auth user.
+
 Keep deployment protection enabled. Use a short-lived local CLI bypass only for
 verification; do not add it to GitHub Actions or commit it.
 
@@ -59,7 +65,8 @@ $requiredNames = @(
   'AUREA_E2E_PASSWORD', 'AUREA_E2E_SECOND_JWT',
   'AUREA_VERCEL_WEB_PROTECTION_BYPASS',
   'AUREA_VERCEL_API_PROTECTION_BYPASS',
-  'SUPABASE_PREVIEW_URL', 'SUPABASE_PREVIEW_ANON_KEY'
+  'SUPABASE_PREVIEW_URL', 'SUPABASE_PREVIEW_ANON_KEY',
+  'AUREA_PRODUCTION_SUPABASE_URL'
 )
 $missingNames = $requiredNames | Where-Object { -not (Test-Path "Env:$_") }
 if ($missingNames) { throw "Missing secure environment names: $($missingNames -join ', ')" }
