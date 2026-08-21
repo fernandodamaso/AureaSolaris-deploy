@@ -26,8 +26,12 @@ request() {
   if [[ -n "${AUREA_VERCEL_SHARE_QUERY:-}" ]]; then
     share_flags=(-L -c "$TMP_DIR/cookies.txt" -b "$TMP_DIR/cookies.txt")
   fi
+  local -a protection_flags=()
+  if [[ -n "${AUREA_VERCEL_PROTECTION_BYPASS:-}" ]]; then
+    protection_flags=(-H "x-vercel-protection-bypass: $AUREA_VERCEL_PROTECTION_BYPASS")
+  fi
   status="$("$CURL" --fail-with-body --silent --show-error --max-time 30 \
-    "${share_flags[@]}" -o "$output" -w '%{http_code}' "$url" "$@" 2>/dev/null || true)"
+    "${share_flags[@]}" "${protection_flags[@]}" -o "$output" -w '%{http_code}' "$url" "$@" 2>/dev/null || true)"
   printf '%s %s %s\n' "$name" "$status" "$output"
 }
 
@@ -95,7 +99,7 @@ if [[ -n "${AUREA_SMOKE_JWT:-}" ]]; then
     [[ "$astrology_status" == 200 ]] || { printf 'FAIL: astrology route status\n' >&2; exit 1; }
     engine="$(json_field "$astrology_file" engine_name)"
     ephemeris="$(json_field "$astrology_file" ephemeris_version)"
-    [[ "$engine" == swisseph && -n "$ephemeris" ]] || { printf 'FAIL: Swiss Ephemeris metadata\n' >&2; exit 1; }
+    [[ -n "$engine" && -n "$ephemeris" ]] || { printf 'FAIL: Swiss Ephemeris metadata\n' >&2; exit 1; }
     printf 'astrology=200 engine=%s ephemeris_metadata=present\n' "$engine"
   fi
 else

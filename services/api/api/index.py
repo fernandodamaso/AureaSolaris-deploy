@@ -33,24 +33,3 @@ def _settings_for_import() -> Settings:
 
 
 app = create_app(_settings_for_import())
-
-if os.environ.get("AUREA_EPHEMERIS_DIAGNOSTICS") == "1":
-    candidates = (
-        SERVICE_ROOT / "ephe",
-        Path.cwd() / "ephe",
-        Path("/var/task/ephe"),
-        Path("/var/task/services/api/ephe"),
-        Path("/var/task/api/ephe"),
-        Path("/var/task/knowledge/engenharia_astrologica/knowledge/build/editorial_current.sqlite"),
-        Path("/var/task/knowledge/editorial_current.sqlite"),
-    )
-    print(
-        {
-            "event": "ephemeris_path_probe",
-            "service_root": str(SERVICE_ROOT),
-            "cwd": str(Path.cwd()),
-            "candidates": {str(path): path.is_dir() for path in candidates},
-            "sqlite_files": [str(path) for path in Path("/var/task").rglob("*.sqlite")],
-        },
-        flush=True,
-    )
