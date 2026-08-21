@@ -8,10 +8,14 @@ BASE_URL="${BASE_URL%/}"
 if command -v curl >/dev/null 2>&1; then CURL="curl"
 elif command -v curl.exe >/dev/null 2>&1; then CURL="curl.exe"
 else printf 'curl is required.\n' >&2; exit 1; fi
-if command -v python3 >/dev/null 2>&1; then PYTHON="python3"
-elif command -v python >/dev/null 2>&1; then PYTHON="python"
-elif command -v python.exe >/dev/null 2>&1; then PYTHON="python.exe"
-else printf 'Python 3 is required.\n' >&2; exit 1; fi
+PYTHON=""
+for candidate in python3 python python.exe; do
+  if command -v "$candidate" >/dev/null 2>&1 && "$candidate" --version >/dev/null 2>&1; then
+    PYTHON="$candidate"
+    break
+  fi
+done
+[[ -n "$PYTHON" ]] || { printf 'Python 3 is required.\n' >&2; exit 1; }
 
 TMP_DIR="$(mktemp -d)"
 trap 'rm -rf "$TMP_DIR"' EXIT

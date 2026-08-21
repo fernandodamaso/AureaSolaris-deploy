@@ -14,6 +14,14 @@ set -euo pipefail
 if command -v curl >/dev/null 2>&1; then CURL="curl"
 elif command -v curl.exe >/dev/null 2>&1; then CURL="curl.exe"
 else printf 'curl is required.\n' >&2; exit 1; fi
+PYTHON=""
+for candidate in python3 python python.exe; do
+  if command -v "$candidate" >/dev/null 2>&1 && "$candidate" --version >/dev/null 2>&1; then
+    PYTHON="$candidate"
+    break
+  fi
+done
+[[ -n "$PYTHON" ]] || { printf 'Python 3 is required.\n' >&2; exit 1; }
 
 TMP_DIR="$(mktemp -d)"
 trap 'rm -rf "$TMP_DIR"' EXIT
@@ -39,7 +47,7 @@ signup_status="$(printf 'apikey: %s\nContent-Type: application/json\n' "$SUPABAS
     -H @- -o "$TMP_DIR/signup.json" -w '%{http_code}' \
     --data "{\"email\":\"$signup_email\",\"password\":\"Preview-disabled-9Aa!\"}" \
     "$SUPABASE_PREVIEW_URL/auth/v1/signup" 2>/dev/null || true)"
-signup_error_code="$(python3 - "$TMP_DIR/signup.json" <<'PY'
+signup_error_code="$("$PYTHON" - "$TMP_DIR/signup.json" <<'PY'
 import json
 import sys
 
