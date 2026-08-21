@@ -67,11 +67,19 @@ function normalizeUrl(env: PublicEnv, name: string, mode: string): string {
   if (!['http:', 'https:'].includes(parsed.protocol) || !parsed.hostname) {
     throw new PublicConfigError(`invalid_${name}`);
   }
+  if (parsed.hostname.includes('*')) {
+    throw new PublicConfigError(`invalid_${name}`);
+  }
   if (parsed.username || parsed.password || parsed.search || parsed.hash) {
     throw new PublicConfigError(`invalid_${name}`);
   }
-  if (mode === 'production' && isLoopback(parsed.hostname)) {
-    throw new PublicConfigError(`localhost_${name}`);
+  if (mode === 'production') {
+    if (parsed.protocol !== 'https:') {
+      throw new PublicConfigError(`https_${name}`);
+    }
+    if (isLoopback(parsed.hostname)) {
+      throw new PublicConfigError(`localhost_${name}`);
+    }
   }
 
   const pathname = parsed.pathname.replace(/\/+$/, '');

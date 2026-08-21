@@ -14,21 +14,18 @@ from aurea_api.domain.astrology import (
     calculate_transit_positions,
     configure_ephemeris,
 )
+from aurea_api.ephemeris_integrity import (
+    CERTIFIED_EPHEMERIS_ASSETS,
+)
 
-_CERTIFIED_ASSETS = ("seas_18.se1", "semo_18.se1", "sepl_18.se1")
+_CERTIFIED_ASSETS = tuple(CERTIFIED_EPHEMERIS_ASSETS)
 
 
 class AstrologyEngine:
     """Pure façade over the certified astrology calculation functions."""
 
     def __init__(self, ephemeris_path: Path | str) -> None:
-        self.ephemeris_path = Path(ephemeris_path).resolve()
-        missing = [name for name in _CERTIFIED_ASSETS if not (self.ephemeris_path / name).is_file()]
-        if missing:
-            raise FileNotFoundError(
-                f"Certified Swiss Ephemeris assets are missing: {', '.join(missing)}"
-            )
-        configure_ephemeris(self.ephemeris_path)
+        self.ephemeris_path = configure_ephemeris(ephemeris_path)
 
     def is_ready(self) -> bool:
         if not all((self.ephemeris_path / name).is_file() for name in _CERTIFIED_ASSETS):

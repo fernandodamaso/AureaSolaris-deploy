@@ -45,6 +45,17 @@ describe('readPublicConfig', () => {
       .toBe('http://localhost:9876');
   });
 
+  it('requires HTTPS for production URLs and accepts a concrete Vercel preview URL', () => {
+    expect(() => readPublicConfig({ ...validEnv, VITE_AUREA_API_URL: 'http://api.example.test' }, 'production'))
+      .toThrow(PublicConfigError);
+    expect(readPublicConfig(
+      { ...validEnv, VITE_AUREA_API_URL: 'https://aurea-solaris-api-preview-abc.vercel.app' },
+      'preview',
+    ).apiUrl).toBe('https://aurea-solaris-api-preview-abc.vercel.app');
+    expect(() => readPublicConfig({ ...validEnv, VITE_AUREA_API_URL: 'https://*.vercel.app' }, 'preview'))
+      .toThrow(PublicConfigError);
+  });
+
   it('rejects forbidden secret variable names without exposing values', () => {
     const secret = 'service-role-secret-value';
 

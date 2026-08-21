@@ -51,6 +51,8 @@ import traceback
 import warnings
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
+from aurea_api.ephemeris_integrity import validate_packaged_ephemeris
+
 # ──────────────────────────────────────────────────────
 #  SUPPRESS ONLY SWISSEPH DEPRECATION WARNINGS
 # ──────────────────────────────────────────────────────
@@ -77,20 +79,17 @@ except ImportError:
 ENGINE_NAME = "aurea-solaris-astro-engine"
 ENGINE_VERSION = "2026.08.audit-1"
 RECEIPT_SCHEMA_VERSION = "calculation-receipt.v1"
-_CERTIFIED_EPHEMERIS_ASSETS = ("seas_18.se1", "semo_18.se1", "sepl_18.se1")
 
 
 def configure_ephemeris(ephemeris_path: Path | str) -> Path:
     """Point Swiss Ephemeris at the packaged, certified asset directory."""
 
-    path = Path(ephemeris_path).resolve()
-    if not path.is_dir():
-        raise FileNotFoundError(f"Swiss Ephemeris directory is missing: {path}")
-    missing = [name for name in _CERTIFIED_EPHEMERIS_ASSETS if not (path / name).is_file()]
-    if missing:
-        raise FileNotFoundError(
-            f"Certified Swiss Ephemeris assets are missing: {', '.join(missing)}"
-        )
+    try:
+        path = validate_packaged_ephemeris(ephemeris_path)
+    except ValueError as error:
+        if "missing" in str(error) or "incomplete" in str(error):
+            raise FileNotFoundError(str(error)) from error
+        raise
     if not SWE_AVAILABLE:
         raise RuntimeError("Swiss Ephemeris is unavailable")
     swe.set_ephe_path(str(path))
