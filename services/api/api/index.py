@@ -33,3 +33,21 @@ def _settings_for_import() -> Settings:
 
 
 app = create_app(_settings_for_import())
+
+if os.environ.get("AUREA_EPHEMERIS_DIAGNOSTICS") == "1":
+    candidates = (
+        SERVICE_ROOT / "ephe",
+        Path.cwd() / "ephe",
+        Path("/var/task/ephe"),
+        Path("/var/task/services/api/ephe"),
+        Path("/var/task/api/ephe"),
+    )
+    print(
+        {
+            "event": "ephemeris_path_probe",
+            "service_root": str(SERVICE_ROOT),
+            "cwd": str(Path.cwd()),
+            "candidates": {str(path): path.is_dir() for path in candidates},
+        },
+        flush=True,
+    )
