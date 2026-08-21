@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { useCertifiedNatalCalculation } from '../hooks/useCertifiedNatalCalculation';
+import { useLiveTransitData } from '../hooks/useLiveTransitData';
 import { MandalaChart } from './MandalaChart';
 import { RefreshCw, User, Users, Plus, Edit3 } from 'lucide-react';
 import { useIdentity } from '../features/identity/IdentityContext';
@@ -119,6 +120,27 @@ export const MandalaPage = () => {
     [birthData],
   );
   const { data, loading, error, recalculate } = useCertifiedNatalCalculation(calculationRequest, calculationEnabled);
+  const certifiedNatal = useMemo(() => readCertifiedCalculation(data, 'natal'), [data]);
+  const natalPositions = useMemo(() => {
+    const planets = certifiedNatal?.planets as Record<string, Partial<PlanetaryPosition>> | undefined;
+    const Sun = planets?.Sun?.degree;
+    const Moon = planets?.Moon?.degree;
+    const ASC = planets?.ASC?.degree;
+    if (![Sun, Moon, ASC].every(Number.isFinite)) return undefined;
+    return {
+      Sun: Sun as number,
+      Moon: Moon as number,
+      ASC: ASC as number,
+      Mercury: planets?.Mercury?.degree,
+      Venus: planets?.Venus?.degree,
+      Mars: planets?.Mars?.degree,
+    };
+  }, [certifiedNatal]);
+  const {
+    liveData: transitData,
+    loading: transitLoading,
+    error: transitError,
+  } = useLiveTransitData(natalPositions, Boolean(natalPositions));
 
   // Parse data for MandalaChart - includes planets, secondary bodies, and angles
   const chartPlanets = useMemo(() => {
@@ -282,8 +304,25 @@ export const MandalaPage = () => {
         </div>
       </div>
 
-      <div className="w-full max-w-3xl">
-        <CalculationEvidence meta={data?.meta} loading={loading} error={error} />
+      <div className="grid w-full max-w-3xl gap-3 lg:grid-cols-2">
+        <div>
+          <h2 className="sr-only">Mapa natal</h2>
+          <CalculationEvidence
+            ariaLabel="Proveniência do mapa natal"
+            meta={data?.meta}
+            loading={loading}
+            error={error}
+          />
+        </div>
+        <div>
+          <h2 className="sr-only">Trânsitos atuais</h2>
+          <CalculationEvidence
+            ariaLabel="Proveniência dos trânsitos atuais"
+            meta={transitData?.meta}
+            loading={transitLoading}
+            error={transitError}
+          />
+        </div>
       </div>
 
       {error && (

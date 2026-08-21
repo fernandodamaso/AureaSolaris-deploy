@@ -58,6 +58,17 @@ function wrapperFor(api: ApiClient) {
 describe('useLiveTransitData', () => {
   beforeEach(() => vi.clearAllMocks());
 
+  it('does not request a transit before a certified natal result is available', async () => {
+    const calculateTransits = vi.fn();
+    const api = { calculateTransits } as unknown as ApiClient;
+    const { result } = renderHook(() => useLiveTransitData(undefined, false), {
+      wrapper: wrapperFor(api),
+    });
+
+    expect(result.current.loading).toBe(false);
+    expect(calculateTransits).not.toHaveBeenCalled();
+  });
+
   it('requests a certified transit receipt with a UTC ISO timestamp and normalizes presentation values', async () => {
     const calculateTransits = vi.fn().mockResolvedValue(makeReceipt());
     const api = { calculateTransits } as unknown as ApiClient;

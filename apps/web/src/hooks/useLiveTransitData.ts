@@ -68,10 +68,10 @@ type NatalPositions = {
   Mars?: number;
 };
 
-export const useLiveTransitData = (natalData?: NatalPositions) => {
+export const useLiveTransitData = (natalData?: NatalPositions, enabled = true) => {
   const api = useApiClient();
   const [liveData, setLiveData] = useState<LiveAstroData | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(enabled);
   const [error, setError] = useState<string | null>(null);
 
   const natalRef = useRef<NatalPositions | undefined>(natalData);
@@ -86,6 +86,10 @@ export const useLiveTransitData = (natalData?: NatalPositions) => {
   }, [natalData]);
 
   const fetchAstro = useCallback(async (force = false) => {
+    if (!enabled) {
+      setLoading(false);
+      return;
+    }
     activeRequest.current?.abort();
     const controller = new AbortController();
     activeRequest.current = controller;
@@ -117,9 +121,16 @@ export const useLiveTransitData = (natalData?: NatalPositions) => {
       if (sequence === requestSequence.current && !controller.signal.aborted) setLoading(false);
       stopTimer();
     }
-  }, [api]);
+  }, [api, enabled]);
 
   useEffect(() => {
+    if (!enabled) {
+      activeRequest.current?.abort();
+      setLiveData(null);
+      setError(null);
+      setLoading(false);
+      return;
+    }
     void fetchAstro();
     const interval = setInterval(() => {
       if (document.visibilityState === 'visible') void fetchAstro();
@@ -133,7 +144,7 @@ export const useLiveTransitData = (natalData?: NatalPositions) => {
       document.removeEventListener('visibilitychange', onVisibilityChange);
       activeRequest.current?.abort();
     };
-  }, [sunVal, moonVal, ascVal, fetchAstro]);
+  }, [sunVal, moonVal, ascVal, enabled, fetchAstro]);
 
   const getAspect = (degreeA: number, degreeB: number) => {
     const difference = Math.abs(degreeA - degreeB) % 360;
