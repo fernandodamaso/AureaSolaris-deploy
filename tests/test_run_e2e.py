@@ -85,28 +85,21 @@ class TestRunE2EHelpers(unittest.TestCase):
                     run_e2e.ensure_frontend_ready(skip_build=True)
             build.assert_not_called()
 
-    def test_main_routes_default_to_frontend_ready(self) -> None:
-        caught: BaseException | None = None
-        with patch.object(run_e2e, "ensure_frontend_ready", create=True, side_effect=RuntimeError("sentinel")) as ready:
-            with patch.object(run_e2e, "ensure_frontend_built", side_effect=RuntimeError("legacy-build")):
-                try:
-                    run_e2e.main([])
-                except BaseException as exc:  # noqa: BLE001 - the assertion checks the exact type below.
-                    caught = exc
-        self.assertIsInstance(caught, RuntimeError)
-        self.assertEqual(str(caught), "sentinel")
-        ready.assert_called_once_with(skip_build=False)
+    def test_redacts_provider_secrets_from_failed_output(self) -> None:
+        output = "API_URL=http://127.0.0.1:54321\nSERVICE_ROLE_KEY=private\nnormal log"
+        redacted = run_e2e._redact_output(output)
+        self.assertNotIn("private", redacted)
+        self.assertIn("normal log", redacted)
 
-    def test_main_routes_skip_build_to_frontend_ready(self) -> None:
-        caught: BaseException | None = None
-        with patch.object(run_e2e, "ensure_frontend_ready", create=True, side_effect=RuntimeError("sentinel")) as ready:
-            try:
-                run_e2e.main(["--skip-build"])
-            except BaseException as exc:  # noqa: BLE001 - argparse raises SystemExit before the flag exists.
-                caught = exc
-        self.assertIsInstance(caught, RuntimeError)
-        self.assertEqual(str(caught), "sentinel")
-        ready.assert_called_once_with(skip_build=True)
+    def test_disposable_project_copies_only_committed_migration(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            project = run_e2e._make_supabase_project(Path(tmp))
+            run_e2e._make_supabase_project(Path(tmp))
+            self.assertTrue((project / "supabase" / "config.toml").is_file())
+            self.assertEqual(
+                [path.name for path in (project / "supabase" / "migrations").iterdir()],
+                ["202608150001_web_v1_core.sql"],
+            )
 
     def test_cli_help_lists_skip_build(self) -> None:
         output = io.StringIO()

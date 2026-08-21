@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { User, PanelLeftOpen, PanelLeftClose } from 'lucide-react';
 import "./styles.css";
 
@@ -45,6 +45,37 @@ function AppContent() {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   const identity = useIdentity();
+  const syncedAccountKey = useRef('');
+
+  useEffect(() => {
+    if (bootstrapState.status !== 'ready') {
+      syncedAccountKey.current = '';
+      return;
+    }
+    const { profile, birthProfile } = bootstrapState;
+    const birthTime = typeof birthProfile.birth_time === 'string' ? birthProfile.birth_time.slice(0, 5) : '';
+    const key = `${profile.id}:${profile.updated_at ?? ''}:${birthProfile.id ?? ''}:${birthProfile.updated_at ?? ''}`;
+    if (syncedAccountKey.current === key) return;
+    syncedAccountKey.current = key;
+    identity.ensureLocalUiProfile(profile.id, profile.display_name);
+    if (birthTime && birthProfile.birth_date && birthProfile.place && birthProfile.timezone) {
+      identity.updateProfile(profile.id, {
+        birthDate: birthProfile.birth_date,
+        birthTime,
+        birthCity: birthProfile.place,
+        birthTimezone: birthProfile.timezone,
+        birthData: {
+          label: birthProfile.label,
+          date: birthProfile.birth_date,
+          time: birthTime,
+          location: birthProfile.place,
+          lat: Number(birthProfile.latitude),
+          lng: Number(birthProfile.longitude),
+          timezone: birthProfile.timezone,
+        },
+      });
+    }
+  }, [bootstrapState, identity]);
   const masterProfile = identity.activeProfile ?? (
     bootstrapState.status === 'ready'
       ? { id: bootstrapState.profile.id, name: bootstrapState.profile.display_name, active: true }

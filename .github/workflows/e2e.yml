@@ -244,7 +244,7 @@ jobs:
 
       - name: Run isolated browser E2E
         id: browser-e2e
-        run: python tools/run_e2e.py --skip-build
+        run: python tools/run_e2e.py
 
       - name: Upload Playwright artifacts
         id: artifacts
@@ -288,7 +288,7 @@ jobs:
             echo 'npm run build:web'
             echo 'python -m unittest tests.test_compiled_runtime_smoke -v'
             echo 'npx playwright install chromium'
-            echo 'python tools/run_e2e.py --skip-build'
+            echo 'python tools/run_e2e.py'
             echo '```'
             echo
             if [ "${{ steps.build.outcome }}" = "failure" ]; then

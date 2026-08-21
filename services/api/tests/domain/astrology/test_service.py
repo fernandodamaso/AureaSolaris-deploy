@@ -190,6 +190,7 @@ async def test_transit_uses_utc_normalized_hash_and_persists_versions() -> None:
     assert write.input_payload["calculation"]["as_of_utc"] == "2026-08-20T15:00:00Z"
     assert write.input_payload["calculation"]["zodiac"] == "tropical"
     assert write.input_payload["calculation"]["house_system"] == "Placidus"
+    assert write.result_payload["meta"]["receipt"]["input_hash"] == write.input_hash
 
 
 @pytest.mark.asyncio

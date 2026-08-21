@@ -84,17 +84,19 @@ export function ProfileOnboarding({ mode, profile, birthProfile, onComplete, onL
     const birthDate = storageDate(date);
     const lat = coordinate(latitude, -90, 90);
     const lon = coordinate(longitude, -180, 180);
+    const hasBirthInput = [date, time, place, latitude, longitude].some((value) => value.trim().length > 0);
+    const shouldSaveBirth = mode === 'birth-profile' || hasBirthInput;
 
     if (mode === 'profile' && !displayName.trim()) {
       setError('Informe seu nome.');
       return;
     }
-    if (!label.trim() || !birthDate || !time || !place.trim() || lat === null || lon === null || !validTimezone(timezone)) {
+    if (shouldSaveBirth && (!label.trim() || !birthDate || !time || !place.trim() || lat === null || lon === null || !validTimezone(timezone))) {
       setError('Revise os dados de nascimento.');
       return;
     }
 
-    const birthPayload: BirthProfileUpdate = {
+    const birthPayload: BirthProfileUpdate | null = shouldSaveBirth && birthDate && lat !== null && lon !== null ? {
       label: label.trim(),
       birth_date: birthDate,
       birth_time: time,
@@ -103,7 +105,7 @@ export function ProfileOnboarding({ mode, profile, birthProfile, onComplete, onL
       longitude: lon,
       timezone: timezone.trim(),
       house_system: 'P',
-    };
+    } : null;
     const profilePayload: ProfileUpdate = {
       display_name: displayName.trim(),
       locale: locale.trim() || 'pt-BR',
@@ -114,7 +116,7 @@ export function ProfileOnboarding({ mode, profile, birthProfile, onComplete, onL
     setIsSaving(true);
     try {
       if (mode === 'profile') await api.updateProfile(profilePayload);
-      await api.updateBirthProfile(birthPayload);
+      if (birthPayload) await api.updateBirthProfile(birthPayload);
       await onComplete();
     } catch (saveError) {
       setError(safeApiError(saveError));

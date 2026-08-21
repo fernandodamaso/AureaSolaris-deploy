@@ -207,6 +207,7 @@ class AstrologyService:
             raise CalculationUnavailableError("The astrology engine is unavailable.") from exc
 
         receipt = self._certified_receipt(result)
+        receipt["input_hash"] = input_hash
         resolved_at, resolved_timezone = self._resolved_time(
             receipt,
             fallback=as_of.astimezone(UTC) if as_of is not None else self._birth_utc(birth_profile),

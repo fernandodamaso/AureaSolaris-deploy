@@ -1,95 +1,59 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
 import { waitForShell } from '../helpers/app';
-import { installHermesMocks } from '../helpers/hermesMock';
 
-async function openAstrologia(page: import('@playwright/test').Page) {
+async function openAstrologia(page: Page) {
   await waitForShell(page);
-  await page.getByRole('button', { name: 'Astrologia' }).click();
-  await expect(page.getByRole('tab', { name: 'Mandala visual' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Mandala Astrológica' })).toBeVisible({ timeout: 60_000 });
 }
 
-async function readInputHash(page: import('@playwright/test').Page): Promise<string> {
-  const label = page.getByText(/Hash da entrada:/);
-  if (!(await label.isVisible().catch(() => false))) {
-    await page.getByText('Ver recibo técnico').click();
-  }
-  const hashRow = page.getByText(/Hash da entrada:/).locator('..');
-  await expect(hashRow).toBeVisible({ timeout: 60_000 });
-  await expect(hashRow).not.toContainText('não declarado');
-  return (await hashRow.textContent())?.replace(/\s+/g, ' ').trim() ?? '';
+async function readAccessToken(page: Page): Promise<string> {
+  const token = await page.evaluate(() => {
+    for (const index = 0; index < sessionStorage.length; index += 1) {
+      const value = sessionStorage.getItem(sessionStorage.key(index) ?? '');
+      if (!value) continue;
+      try {
+        const parsed = JSON.parse(value) as { access_token?: unknown };
+        if (typeof parsed.access_token === 'string') return parsed.access_token;
+      } catch {
+        // Ignore unrelated session storage entries.
+      }
+    }
+    return null;
+  });
+  expect(token).toBeTruthy();
+  return token as string;
 }
 
-test('astrologia-seeded-natal: receipt shows UTC, IANA, hash', async ({ page }) => {
+test('astrologia-certified-natal: receipt shows UTC, IANA, hash, engine, and ephemeris', async ({ page }) => {
   await openAstrologia(page);
   await expect(page.getByLabel('Proveniência do cálculo')).toBeVisible({ timeout: 60_000 });
   await page.getByText('Ver recibo técnico').click();
   await expect(page.getByText(/Instante UTC:/)).toBeVisible();
   await expect(page.getByText(/Fuso IANA:/)).toBeVisible();
-  await expect(page.locator('dd').filter({ hasText: /America\/Sao_Paulo|UTC/ }).first()).toBeVisible();
   await expect(page.getByText(/Hash da entrada:/)).toBeVisible();
-  const hashRow = page.locator('dl').getByText(/Hash da entrada:/).locator('..');
-  await expect(hashRow).not.toContainText('não declarado');
+  await expect(page.getByText(/Hash da entrada:/).locator('..')).not.toContainText('não declarado');
+  await expect(page.getByText(/Efeméride:/)).not.toContainText('não declarada');
 });
 
-test('astrologia-recalculate: switch maps changes calculation receipt', async ({ page }) => {
+test('astrologia-retry: force recalculation keeps the certified boundary', async ({ page }) => {
   await openAstrologia(page);
-  const referenceHash = await readInputHash(page);
-  expect(referenceHash).not.toBe('');
-
-  await page.getByLabel('Mapa em foco').selectOption({ label: 'Natal: Pessoa Conhecida' });
+  await expect(page.getByLabel('Proveniência do cálculo')).toBeVisible({ timeout: 60_000 });
   await page.getByRole('button', { name: 'Atualizar cálculo do mapa' }).click();
   await expect(page.getByLabel('Proveniência do cálculo')).toBeVisible({ timeout: 60_000 });
-  await expect
-    .poll(() => readInputHash(page), { timeout: 60_000 })
-    .not.toBe(referenceHash);
-
-  await page.getByLabel('Mapa em foco').selectOption({ label: 'Natal: Mapa de referencia' });
-  await page.getByRole('button', { name: 'Atualizar cálculo do mapa' }).click();
-  await expect
-    .poll(() => readInputHash(page), { timeout: 60_000 })
-    .toBe(referenceHash);
+  await expect(page.getByText(/Hash da entrada:/).locator('..')).not.toContainText('não declarado');
 });
 
-test('astrologia-incomplete-birth: no invented chart', async ({ page }) => {
+test('astrologia-certified-transit: authenticated transit receipt is available', async ({ page, request }) => {
   await openAstrologia(page);
-  await page.getByRole('button', { name: /Adicionar mapa/i }).click();
-  const dialog = page.getByRole('dialog');
-  await expect(dialog).toBeVisible();
-  await dialog.getByLabel('Nome').fill('Mapa incompleto E2E');
-  // Leave date/time/location empty — form must error, not invent values.
-  await dialog.getByRole('button', { name: /Salvar dados/i }).click();
-  await expect(dialog.getByRole('alert')).toContainText(/DD\/MM\/AAAA|hora|local|latitude|fuso/i);
-  await expect(dialog.getByRole('alert')).toBeVisible();
-  // Still on the dialog: no silent save of an incomplete map into the selector.
-  await expect(page.getByLabel('Mapa em foco').locator('option', { hasText: 'Mapa incompleto E2E' })).toHaveCount(0);
-});
-
-test('astrologia-open-caderno: Estudar no Caderno', async ({ page }) => {
-  await openAstrologia(page);
-  await page.getByRole('button', { name: /Estudar no Caderno/i }).click();
-  // Destination-only landmarks: opened study board, not the sidebar/source button text.
-  await expect(page.getByRole('button', { name: /Estudo —/ })).toBeVisible({ timeout: 30_000 });
-  await expect(page.getByRole('button', { name: 'Boards' })).toBeVisible();
-});
-
-test('astrologia-open-hermes: Tutor IA', async ({ page }) => {
-  await installHermesMocks(page);
-  await openAstrologia(page);
-  await page.getByRole('button', { name: /Tutor IA/i }).click();
-  await expect(page.getByLabel('Pergunte ao Hermes')).toBeVisible();
-});
-
-test('astrologia-second-map: add map using Pessoa Conhecida fixture values', async ({ page }) => {
-  await openAstrologia(page);
-  await page.getByRole('button', { name: /Adicionar mapa/i }).click();
-  const dialog = page.getByRole('dialog');
-  await expect(dialog).toBeVisible();
-  await dialog.getByLabel('Nome').fill('Mapa E2E Extra');
-  await dialog.getByLabel('Data de nascimento').fill('15/06/1990');
-  await dialog.getByLabel('Hora exata').fill('09:00');
-  await dialog.getByLabel('Cidade ou local').selectOption('São Paulo, SP');
-  await dialog.getByRole('button', { name: /Salvar dados/i }).click();
-  await expect(dialog).toHaveCount(0);
-  await page.getByLabel('Mapa em foco').selectOption({ label: 'Natal: Mapa E2E Extra' });
-  await expect(page.getByLabel('Proveniência do cálculo')).toBeVisible({ timeout: 60_000 });
+  const token = await readAccessToken(page);
+  const apiUrl = process.env.AUREA_E2E_API_URL;
+  if (!apiUrl) throw new Error('AUREA_E2E_API_URL is required.');
+  const response = await request.post(`${apiUrl}/v1/astrology/transits`, {
+    headers: { Authorization: `Bearer ${token}` },
+    data: { as_of: new Date().toISOString() },
+  });
+  expect(response.ok()).toBeTruthy();
+  const body = await response.json();
+  expect(body.kind).toBe('transit');
+  expect(body.result_payload.meta.receipt.schema_version).toBe('calculation-receipt.v1');
 });

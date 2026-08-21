@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { useCertifiedNatalCalculation } from '../hooks/useCertifiedNatalCalculation';
 import { MandalaChart } from './MandalaChart';
-import { RefreshCw, User, Users, Plus, Edit3, MessageSquare, FileText } from 'lucide-react';
+import { RefreshCw, User, Users, Plus, Edit3 } from 'lucide-react';
 import { useIdentity } from '../features/identity/IdentityContext';
 import type { AureaProfile } from '../features/identity/types';
 import { BirthForm } from './common/BirthForm';
@@ -49,7 +49,6 @@ export const MandalaPage = () => {
   // regras interpretativas pertencem ao estudo com fonte, não ao canvas.
   const showDetails = false;
 
-  // O mapa é a visão principal. O Caderno abre apenas por uma ação explícita.
 
   const containerRef = useRef<HTMLDivElement>(null);
   const [containerWidth, setContainerWidth] = useState(800);
@@ -209,27 +208,6 @@ export const MandalaPage = () => {
     icon: map.kind === 'profile' ? <User size={14} /> : <Users size={14} />,
   }));
 
-  const activeTargetLabel = allTargets.find(t => t.id === selectedTarget)?.name || 'Mapa selecionado';
-
-  const openHermesForCurrentMap = () => {
-    window.dispatchEvent(new Event('open-hermes-chat'));
-  };
-
-  const openCadernoForCurrentMap = () => {
-    const auditReceipt = data?.meta?.receipt;
-    const meta = data?.meta as (CertifiedAstrologyResult['meta'] & { timestamp?: string; location?: { lat?: number; lon?: number } }) | undefined;
-    const receipt = meta
-      ? `Cálculo astronômico recebido\n• UTC: ${auditReceipt?.resolved_time?.utc || meta.timestamp || 'não informado'}\n• Fuso IANA: ${auditReceipt?.resolved_time?.iana_timezone || 'não informado'}\n• Local: ${meta.location?.lat ?? '—'}, ${meta.location?.lon ?? '—'}\n• Motor: ${auditReceipt?.engine?.name || 'não informado'} ${auditReceipt?.engine?.version || ''}\n• Hash da entrada: ${auditReceipt?.input_hash || 'não informado'}`
-      : 'Cálculo astronômico indisponível — não registrar interpretação como fato.';
-    window.dispatchEvent(new CustomEvent('open-caderno-vivo', {
-      detail: {
-        type: 'create-study',
-        topic: activeTargetLabel,
-        seedNote: `Origem: ${activeTargetLabel}\n\n${receipt}\n\nRegra interpretativa: a selecionar\nFonte: a selecionar\nInferência Hermes: a solicitar\n\nMinha anotação:`,
-      },
-    }));
-  };
-
   const editingConnection = editingConnectionId
     ? activeProfile.connections?.find((connection) => connection.id === editingConnectionId)
     : undefined;
@@ -290,24 +268,6 @@ export const MandalaPage = () => {
               <Edit3 size={16} />
             </button>
           )}
-
-          <button
-            onClick={openCadernoForCurrentMap}
-            className="mandala-action"
-            title="Criar estudo no Caderno Vivo a partir deste mapa"
-          >
-            <FileText size={16} />
-            <span>Estudar no Caderno</span>
-          </button>
-
-          <button
-            onClick={openHermesForCurrentMap}
-            className="mandala-action"
-            title="Abrir Hermes com este mapa em foco"
-          >
-            <MessageSquare size={16} />
-            <span>Tutor IA</span>
-          </button>
 
           <button
             onClick={recalculate}

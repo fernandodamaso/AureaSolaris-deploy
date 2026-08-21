@@ -23,6 +23,7 @@
     "test": "npm run test:web",
     "test:watch": "npm --workspace @aurea/web run test:watch",
     "test:e2e": "npm --workspace @aurea/web run test:e2e",
+    "test:e2e:local": "python tools/run_e2e.py",
     "dev:web": "npm --workspace @aurea/web run dev",
     "test:web": "npm --workspace @aurea/web run test",
     "api:generate": "npm --workspace @aurea/web run api:generate",
