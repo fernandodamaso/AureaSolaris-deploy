@@ -6,6 +6,10 @@ on:
       - "services/api/**"
       - ".env.example"
       - ".gitignore"
+      - "package.json"
+      - "package-lock.json"
+      - "scripts/quality-gate.sh"
+      - ".github/workflows/quality.yml"
       - ".github/workflows/web-api-quality.yml"
   push:
     branches: [main]
@@ -13,6 +17,10 @@ on:
       - "services/api/**"
       - ".env.example"
       - ".gitignore"
+      - "package.json"
+      - "package-lock.json"
+      - "scripts/quality-gate.sh"
+      - ".github/workflows/quality.yml"
       - ".github/workflows/web-api-quality.yml"
   workflow_dispatch:
 
