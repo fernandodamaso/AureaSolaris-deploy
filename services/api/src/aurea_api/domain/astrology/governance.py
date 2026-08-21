@@ -100,7 +100,11 @@ def _resolve_default_db_path() -> Path:
     # Default operacional: knowledge.sqlite na raiz da biblioteca.
     # Fallback opcional para o build antigo se ainda existir.
     repository_root = Path(__file__).resolve().parents[6]
+    packaged_root = Path(__file__).resolve().parents[4]
     candidates = [
+        # The API deployment carries the same canonical snapshot under its
+        # project root because Vercel builds from services/api.
+        packaged_root / "knowledge" / "editorial_current.sqlite",
         # The versioned study snapshot is the only editorial database a clean
         # checkout is guaranteed to contain. Local staging databases must
         # never become an implicit production dependency.
