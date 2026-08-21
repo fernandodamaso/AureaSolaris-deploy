@@ -15,14 +15,14 @@ VERCEL_IGNORE = SERVICE_ROOT / ".vercelignore"
 EPHEMERIS = SERVICE_ROOT / "ephe"
 
 
-def test_deployment_metadata_selects_python_312_and_bundles_only_certified_ephemeris() -> None:
+def test_deployment_metadata_selects_python_312_and_bundles_exact_approved_files() -> None:
     config = json.loads(VERCEL_CONFIG.read_text(encoding="utf-8"))
     build = config["builds"][0]
 
     assert build["src"] == "api/index.py"
     assert build["use"] == "@vercel/python"
     assert build["config"]["runtime"] == "python3.12"
-    assert build["config"]["includeFiles"] == ["ephe/*.se1"]
+    assert build["config"]["includeFiles"] == ["ephe/*.se1", "knowledge/editorial_current.sqlite"]
     assert config["routes"] == [{"src": "/(.*)", "dest": "api/index.py"}]
 
     ignored = VERCEL_IGNORE.read_text(encoding="utf-8").splitlines()

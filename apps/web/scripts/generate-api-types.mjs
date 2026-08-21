@@ -24,9 +24,9 @@ if (check) {
   const temporaryOutput = join(temporaryDirectory, 'generated.ts');
   try {
     generate(temporaryOutput);
-    const expected = readFileSync(temporaryOutput);
-    const current = readFileSync(output);
-    if (!expected.equals(current)) {
+    const expected = readFileSync(temporaryOutput, 'utf8').replace(/\r\n/g, '\n');
+    const current = readFileSync(output, 'utf8').replace(/\r\n/g, '\n');
+    if (expected !== current) {
       console.error('Generated API types are out of date. Run api:generate.');
       process.exitCode = 1;
     }
