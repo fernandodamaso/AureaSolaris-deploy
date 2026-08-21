@@ -41,6 +41,8 @@ if os.environ.get("AUREA_EPHEMERIS_DIAGNOSTICS") == "1":
         Path("/var/task/ephe"),
         Path("/var/task/services/api/ephe"),
         Path("/var/task/api/ephe"),
+        Path("/var/task/knowledge/engenharia_astrologica/knowledge/build/editorial_current.sqlite"),
+        Path("/var/task/knowledge/editorial_current.sqlite"),
     )
     print(
         {

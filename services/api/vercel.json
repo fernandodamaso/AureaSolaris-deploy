@@ -6,7 +6,10 @@
       "use": "@vercel/python",
       "config": {
         "runtime": "python3.12",
-        "includeFiles": ["ephe/*.se1"]
+        "includeFiles": [
+          "ephe/*.se1",
+          "../../knowledge/engenharia_astrologica/knowledge/build/editorial_current.sqlite"
+        ]
       }
     }
   ],
