@@ -25,7 +25,11 @@ _SAFE_DEFAULTS = {
 def _settings_for_import() -> Settings:
     """Allow build-time module inspection without inventing production secrets."""
 
-    return Settings.from_env({**_SAFE_DEFAULTS, **os.environ})
+    source = {**_SAFE_DEFAULTS, **os.environ}
+    ephemeris_path = Path(source["AUREA_EPHEMERIS_PATH"])
+    if not ephemeris_path.is_absolute():
+        source["AUREA_EPHEMERIS_PATH"] = str(SERVICE_ROOT / ephemeris_path)
+    return Settings.from_env(source)
 
 
 app = create_app(_settings_for_import())

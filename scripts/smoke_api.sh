@@ -82,10 +82,16 @@ if [[ -n "${AUREA_SMOKE_JWT:-}" ]]; then
   if [[ "${AUREA_SMOKE_ASTROLOGY:-0}" == 1 ]]; then
     profile_body='{"label":"Vercel E2E","birth_date":"1990-01-01","birth_time":"12:00:00","timezone":"UTC","latitude":0,"longitude":0,"place":"E2E","house_system":"P"}'
     profile="$(request birth_profile /v1/birth-profile -X PUT -H "Authorization: Bearer $AUREA_SMOKE_JWT" -H 'Content-Type: application/json' --data "$profile_body")"
-    [[ "$(printf '%s' "$profile" | awk '{print $2}')" == 200 ]] || { printf 'FAIL: birth profile setup\n' >&2; exit 1; }
+    profile_status="$(printf '%s' "$profile" | awk '{print $2}')"
+    printf 'birth_profile_status=%s\n' "$profile_status"
+    [[ "$profile_status" == 200 ]] || { printf 'FAIL: birth profile setup\n' >&2; exit 1; }
     astrology="$(request astrology /v1/astrology/natal -X POST -H "Authorization: Bearer $AUREA_SMOKE_JWT" -H 'Content-Type: application/json' --data '{}')"
     astrology_status="$(printf '%s' "$astrology" | awk '{print $2}')"
     astrology_file="$(printf '%s' "$astrology" | awk '{print $3}')"
+    printf 'astrology_status=%s\n' "$astrology_status"
+    if [[ "$astrology_status" != 200 ]]; then
+      printf 'astrology_code=%s\n' "$(json_field "$astrology_file" code)"
+    fi
     [[ "$astrology_status" == 200 ]] || { printf 'FAIL: astrology route status\n' >&2; exit 1; }
     engine="$(json_field "$astrology_file" engine_name)"
     ephemeris="$(json_field "$astrology_file" ephemeris_version)"
