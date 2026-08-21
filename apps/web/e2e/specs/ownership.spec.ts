@@ -59,7 +59,7 @@ test('hosted private flow and receipt ownership boundary', async ({ page, reques
   await expect(natalEvidence.getByText(/Hash da entrada:/).locator('..')).not.toContainText('não declarado');
   await expect(transitEvidence.getByText(/Hash da entrada:/).locator('..')).not.toContainText('não declarado');
   await expect(page.getByRole('heading', { name: 'Mandala Astrológica' })).toBeVisible();
-  await expect(page.locator('.mandala-chart-shell svg')).toBeVisible({ timeout: 60_000 });
+  await expect(page.getByRole('img', { name: 'Mandala Astrológica' })).toBeVisible({ timeout: 60_000 });
 
   const noToken = await request.get(`${apiUrl}/v1/astrology/receipts/${natalBody.id}`, {
     headers: apiBypass ? { 'x-vercel-protection-bypass': apiBypass } : undefined,
