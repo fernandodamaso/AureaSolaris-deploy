@@ -6,7 +6,21 @@ test.beforeEach(async ({ page, request }) => {
   const apiUrl = process.env.AUREA_E2E_API_URL;
   if (!apiUrl) throw new Error('AUREA_E2E_API_URL is required for private E2E health checks.');
 
-  const response = await request.get(`${apiUrl}/health`);
+  const apiBypass = process.env.AUREA_VERCEL_API_PROTECTION_BYPASS;
+  if (apiBypass) {
+    await page.route(`${apiUrl.replace(/\/$/, '')}/**`, async (route) => {
+      await route.continue({
+        headers: {
+          ...route.request().headers(),
+          'x-vercel-protection-bypass': apiBypass,
+        },
+      });
+    });
+  }
+
+  const response = await request.get(`${apiUrl}/health`, {
+    headers: apiBypass ? { 'x-vercel-protection-bypass': apiBypass } : undefined,
+  });
   expect(response.ok()).toBeTruthy();
   expect((await response.json()).status).toBe('ok');
 
@@ -32,6 +46,24 @@ export async function login(page: Page): Promise<void> {
   await page.getByLabel('E-mail').fill(email);
   await page.getByLabel('Senha').fill(password);
   await page.getByRole('button', { name: 'Entrar' }).click();
+}
+
+export async function readAccessToken(page: Page): Promise<string> {
+  const token = await page.evaluate(() => {
+    for (let index = 0; index < sessionStorage.length; index += 1) {
+      const value = sessionStorage.getItem(sessionStorage.key(index) ?? '');
+      if (!value) continue;
+      try {
+        const parsed = JSON.parse(value) as { access_token?: unknown };
+        if (typeof parsed.access_token === 'string') return parsed.access_token;
+      } catch {
+        // Ignore unrelated session storage entries.
+      }
+    }
+    return null;
+  });
+  if (!token) throw new Error('Authenticated browser session was not available.');
+  return token;
 }
 
 export async function waitForShell(page: Page): Promise<void> {
