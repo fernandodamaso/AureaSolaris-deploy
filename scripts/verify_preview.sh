@@ -20,9 +20,9 @@ trap 'rm -rf "$TMP_DIR"' EXIT
 
 request() {
   local output="$TMP_DIR/response.json"
-  "$CURL" --fail-with-body --silent --show-error --max-time 30 \
-    -H "x-vercel-protection-bypass: $AUREA_VERCEL_API_PROTECTION_BYPASS" \
-    -o "$output" -w '%{http_code}' "$@" 2>/dev/null || true
+  printf 'x-vercel-protection-bypass: %s\n' "$AUREA_VERCEL_API_PROTECTION_BYPASS" | \
+    "$CURL" --fail-with-body --silent --show-error --max-time 30 \
+      -H @- -o "$output" -w '%{http_code}' "$@" 2>/dev/null || true
 }
 
 health_status="$(request "$AUREA_E2E_API_URL/health")"
@@ -34,11 +34,11 @@ unauth_status="$(request "$AUREA_E2E_API_URL/v1/me")"
 printf 'api_unauthenticated_me=401\n'
 
 signup_email="preview-disabled-$(date +%s)-$$@example.com"
-signup_status="$($CURL --fail-with-body --silent --show-error --max-time 30 \
-  -o "$TMP_DIR/signup.json" -w '%{http_code}' \
-  -H "apikey: $SUPABASE_PREVIEW_ANON_KEY" -H 'Content-Type: application/json' \
-  --data "{\"email\":\"$signup_email\",\"password\":\"Preview-disabled-9Aa!\"}" \
-  "$SUPABASE_PREVIEW_URL/auth/v1/signup" 2>/dev/null || true)"
+signup_status="$(printf 'apikey: %s\nContent-Type: application/json\n' "$SUPABASE_PREVIEW_ANON_KEY" | \
+  "$CURL" --fail-with-body --silent --show-error --max-time 30 \
+    -H @- -o "$TMP_DIR/signup.json" -w '%{http_code}' \
+    --data "{\"email\":\"$signup_email\",\"password\":\"Preview-disabled-9Aa!\"}" \
+    "$SUPABASE_PREVIEW_URL/auth/v1/signup" 2>/dev/null || true)"
 signup_error_code="$(python3 - "$TMP_DIR/signup.json" <<'PY'
 import json
 import sys
