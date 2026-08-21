@@ -4,8 +4,6 @@ import {
   CalendarDays,
   Key, Palette, Camera
 } from 'lucide-react';
-import { safeInvoke } from '../utils/tauri';
-import { LOCAL_API_URL } from '../utils/api';
 import { readCertifiedCalculation } from '../utils/certifiedCalculation';
 import type { PrivateProfile } from '../types/private-profile';
 import type { PlanetaryPosition } from '../types/astrology';
@@ -82,49 +80,32 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout, showLogout, 
     const calculatePreview = async () => {
       setLoadingNatal(true);
       try {
-        const [y, m, d] = birthDate.split('-').map(Number);
-        const [h, min] = birthTime.split(':').map(Number);
         const city = BRAZILIAN_CITIES.find(c => c.name === birthCity);
         if (!city) {
           setNatalPreview('Selecione uma cidade com coordenadas verificadas.');
           return;
         }
-
-        const payload = { year: y, month: m, day: d, hour: h + (min / 60), lat: city.lat, lon: city.lon, timezone: city.timezone };
-        let result: string | null = null;
-
-        // Try direct HTTP to sidecar first (works in both Tauri and browser dev mode)
-        try {
-          const res = await fetch(`${LOCAL_API_URL}/natal`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload),
-          });
-          if (res.ok) result = await res.text();
-        } catch { /* sidecar not reachable, fall through to Tauri invoke */ }
-
-        // Fallback to Tauri invoke if direct HTTP failed
-        if (!result) {
-          result = await safeInvoke<string>('run_astro_engine', { payload: JSON.stringify(payload) });
+        if (!api) {
+          setNatalPreview('Cálculo indisponível. Nenhum valor foi estimado.');
+          return;
         }
 
-        if (result) {
-          const data = JSON.parse(result);
-          if (!readCertifiedCalculation(data, 'natal')) {
-            setNatalPreview('Cálculo recebido sem recibo auditável. Nenhum valor astrológico será exibido.');
-          } else if (data.planets) {
-            const summary = Object.entries(data.planets)
-              .filter(([name]) => !['ASC', 'MC', 'DSC', 'IC', 'Chiron'].includes(name))
-              .slice(0, 6)
-              .map(([name, info]) => {
-                const position = info as PlanetaryPosition & { sign_full?: string };
-                const deg = Math.floor(position.pos_in_sign ?? 0);
-                const min = Math.round(((position.pos_in_sign ?? 0) % 1) * 60);
-                return `${name}: ${deg}°${min > 0 ? `${String(min).padStart(2, '0')}'` : ''} ${position.sign_full || position.sign || '?'}`;
-              })
-              .join(' | ');
-            setNatalPreview(summary);
-          }
+        const response = await api.calculateNatal();
+        const data = response.result_payload;
+        if (!readCertifiedCalculation(data, 'natal')) {
+          setNatalPreview('Cálculo recebido sem recibo auditável. Nenhum valor astrológico será exibido.');
+        } else if (data.planets) {
+          const summary = Object.entries(data.planets)
+            .filter(([name]) => !['ASC', 'MC', 'DSC', 'IC', 'Chiron'].includes(name))
+            .slice(0, 6)
+            .map(([name, info]) => {
+              const position = info as PlanetaryPosition & { sign_full?: string };
+              const deg = Math.floor(position.pos_in_sign ?? 0);
+              const min = Math.round(((position.pos_in_sign ?? 0) % 1) * 60);
+              return `${name}: ${deg}°${min > 0 ? `${String(min).padStart(2, '0')}'` : ''} ${position.sign_full || position.sign || '?'}`;
+            })
+            .join(' | ');
+          setNatalPreview(summary);
         }
       } catch {
         setNatalPreview('Cálculo indisponível. Nenhum valor foi estimado.');
@@ -134,7 +115,7 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout, showLogout, 
     };
     const timer = setTimeout(calculatePreview, 800);
     return () => clearTimeout(timer);
-  }, [birthDate, birthTime, birthCity]);
+  }, [api, birthDate, birthTime, birthCity]);
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

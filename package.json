@@ -29,6 +29,8 @@
     "api:generate": "npm --workspace @aurea/web run api:generate",
     "api:check": "npm --workspace @aurea/web run api:check",
     "build:web": "npm --workspace @aurea/web run build",
-    "check:web": "npm --workspace @aurea/web run check"
+    "check:web": "npm --workspace @aurea/web run check",
+    "assert:web-only": "npm --workspace @aurea/web run assert:web-only",
+    "test:web-only": "npm --workspace @aurea/web run test:web-only"
   }
 }

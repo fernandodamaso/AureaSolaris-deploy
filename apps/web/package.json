@@ -20,6 +20,8 @@
     "test": "vitest run --configLoader runner",
     "api:generate": "node scripts/generate-api-types.mjs",
     "api:check": "node scripts/generate-api-types.mjs --check",
+    "assert:web-only": "node scripts/assert-web-only.mjs",
+    "test:web-only": "node --test scripts/assert-web-only.test.mjs",
     "test:watch": "vitest --configLoader runner",
     "test:e2e": "playwright test --config=e2e/playwright.config.ts"
   },
