@@ -20,10 +20,11 @@ test('astrologia-certified-natal: receipt shows UTC, IANA, hash, engine, and eph
 
 test('astrologia-retry: force recalculation keeps the certified boundary', async ({ page }) => {
   await openAstrologia(page);
-  await expect(page.getByRole('region', { name: 'Proveniência do mapa natal' })).toBeVisible({ timeout: 60_000 });
+  const natalEvidence = page.getByRole('region', { name: 'Proveniência do mapa natal' });
+  await expect(natalEvidence).toBeVisible({ timeout: 60_000 });
   await page.getByRole('button', { name: 'Atualizar cálculo do mapa' }).click();
-  await expect(page.getByRole('region', { name: 'Proveniência do mapa natal' })).toBeVisible({ timeout: 60_000 });
-  await expect(page.getByText(/Hash da entrada:/).locator('..')).not.toContainText('não declarado');
+  await expect(natalEvidence).toBeVisible({ timeout: 60_000 });
+  await expect(natalEvidence.getByText(/Hash da entrada:/).locator('..')).not.toContainText('não declarado');
 });
 
 test('astrologia-certified-transit: rendered transit receipt is available', async ({ page }) => {
