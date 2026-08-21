@@ -26,7 +26,7 @@ The project has separate `preview` and `production` values for the six server va
 - `AUREA_ALLOWED_ORIGINS`
 - `AUREA_EPHEMERIS_PATH`
 
-The database URL uses a dedicated `aurea_api` database role in each Supabase project. Its password is generated and stored only as a sensitive Vercel environment value. The role bypasses RLS because the trusted API enforces the authenticated owner ID; browser clients never receive this credential.
+The database URL uses a dedicated `aurea_api` database role in each Supabase project through the regional Supavisor session-pooler host. The direct `db.<ref>.supabase.co` host is IPv6-only and is not suitable for this Vercel runtime. Its password is generated and stored only as a sensitive Vercel environment value. The role bypasses RLS because the trusted API enforces the authenticated owner ID; browser clients never receive this credential.
 
 Preview uses the preview Supabase ref and API origin. Production uses the production Supabase ref and the canonical web origin `https://aurea-solaris.vercel.app`. Do not copy a production value into preview or vice versa.
 
