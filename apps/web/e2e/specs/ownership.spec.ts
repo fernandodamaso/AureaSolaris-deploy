@@ -1,5 +1,13 @@
 import { test, expect } from '@playwright/test';
-import { readAccessToken, waitForShell } from '../helpers/app';
+import { waitForShell } from '../helpers/app';
+
+type ReceiptBody = {
+  id: string;
+  kind: 'natal' | 'transit';
+  result_payload: {
+    meta?: { receipt?: { schema_version?: string; input_hash?: string } };
+  };
+};
 
 test.use({ trace: 'off', screenshot: 'off', video: 'off' });
 
@@ -12,27 +20,46 @@ test('hosted private flow and receipt ownership boundary', async ({ page, reques
   const observedUrls: string[] = [];
   page.on('request', (requestEvent) => observedUrls.push(requestEvent.url()));
 
+  const natalResponsePromise = page.waitForResponse(
+    (response) => response.request().method() === 'POST'
+      && response.url().startsWith(apiUrl)
+      && response.url().endsWith('/v1/astrology/natal'),
+    { timeout: 60_000 },
+  );
+  const transitResponsePromise = page.waitForResponse(
+    (response) => response.request().method() === 'POST'
+      && response.url().startsWith(apiUrl)
+      && response.url().endsWith('/v1/astrology/transits'),
+    { timeout: 60_000 },
+  );
+
   await waitForShell(page);
+  const [natalResponse, transitResponse] = await Promise.all([
+    natalResponsePromise,
+    transitResponsePromise,
+  ]);
+  expect(natalResponse.status()).toBe(200);
+  expect(transitResponse.status()).toBe(200);
+  const natalBody = await natalResponse.json() as ReceiptBody;
+  const transitBody = await transitResponse.json() as ReceiptBody;
+  expect(natalBody.kind).toBe('natal');
+  expect(transitBody.kind).toBe('transit');
+  expect(natalBody.result_payload.meta?.receipt?.schema_version).toBe('calculation-receipt.v1');
+  expect(transitBody.result_payload.meta?.receipt?.schema_version).toBe('calculation-receipt.v1');
   await expect(page.getByRole('button', { name: 'Astrologia' })).toBeVisible();
 
-  const headers = {
-    Authorization: `Bearer ${await readAccessToken(page)}`,
-    ...(apiBypass ? { 'x-vercel-protection-bypass': apiBypass } : {}),
-  };
-  const natal = await request.post(`${apiUrl}/v1/astrology/natal`, {
-    headers,
-    data: {},
-  });
-  expect(natal.status()).toBe(200);
-  const natalBody = await natal.json() as { id: string };
   expect(natalBody.id).toMatch(/^[0-9a-f-]{36}$/i);
 
-  const transit = await request.post(`${apiUrl}/v1/astrology/transits`, {
-    headers,
-    data: { as_of: new Date().toISOString() },
-  });
-  expect(transit.status()).toBe(200);
-  expect((await transit.json()).kind).toBe('transit');
+  const natalEvidence = page.getByRole('region', { name: 'Proveniência do mapa natal' });
+  const transitEvidence = page.getByRole('region', { name: 'Proveniência dos trânsitos atuais' });
+  await expect(natalEvidence).toBeVisible({ timeout: 60_000 });
+  await expect(transitEvidence).toBeVisible({ timeout: 60_000 });
+  await natalEvidence.getByText('Ver recibo técnico').click();
+  await transitEvidence.getByText('Ver recibo técnico').click();
+  await expect(natalEvidence.getByText(/Hash da entrada:/).locator('..')).not.toContainText('não declarado');
+  await expect(transitEvidence.getByText(/Hash da entrada:/).locator('..')).not.toContainText('não declarado');
+  await expect(page.getByRole('heading', { name: 'Mandala Astrológica' })).toBeVisible();
+  await expect(page.locator('.mandala-chart-shell svg')).toBeVisible();
 
   const noToken = await request.get(`${apiUrl}/v1/astrology/receipts/${natalBody.id}`, {
     headers: apiBypass ? { 'x-vercel-protection-bypass': apiBypass } : undefined,
@@ -48,9 +75,15 @@ test('hosted private flow and receipt ownership boundary', async ({ page, reques
   expect(otherUser.status()).toBe(404);
   expect((await otherUser.json()).code).toBe('receipt_not_found');
 
+  const reloadedNatal = page.waitForResponse((response) =>
+    response.request().method() === 'POST' && response.url().endsWith('/v1/astrology/natal'));
+  const reloadedTransit = page.waitForResponse((response) =>
+    response.request().method() === 'POST' && response.url().endsWith('/v1/astrology/transits'));
   await page.reload();
-  await waitForShell(page);
-  await expect(page.getByRole('button', { name: 'Astrologia' })).toBeVisible();
+  await Promise.all([reloadedNatal, reloadedTransit]);
+  await expect(page.getByRole('button', { name: 'E2E Test User' })).toBeVisible({ timeout: 60_000 });
+  await expect(page.getByRole('region', { name: 'Proveniência do mapa natal' })).toBeVisible();
+  await expect(page.getByRole('region', { name: 'Proveniência dos trânsitos atuais' })).toBeVisible();
 
   const profileButton = page.locator('aside button').last();
   await profileButton.click();

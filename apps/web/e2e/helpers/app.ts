@@ -48,24 +48,6 @@ export async function login(page: Page): Promise<void> {
   await page.getByRole('button', { name: 'Entrar' }).click();
 }
 
-export async function readAccessToken(page: Page): Promise<string> {
-  const token = await page.evaluate(() => {
-    for (let index = 0; index < sessionStorage.length; index += 1) {
-      const value = sessionStorage.getItem(sessionStorage.key(index) ?? '');
-      if (!value) continue;
-      try {
-        const parsed = JSON.parse(value) as { access_token?: unknown };
-        if (typeof parsed.access_token === 'string') return parsed.access_token;
-      } catch {
-        // Ignore unrelated session storage entries.
-      }
-    }
-    return null;
-  });
-  if (!token) throw new Error('Authenticated browser session was not available.');
-  return token;
-}
-
 export async function waitForShell(page: Page): Promise<void> {
   await page.goto('/');
   const loginButton = page.getByRole('button', { name: 'Entrar' });
