@@ -216,9 +216,11 @@ jobs:
 
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: "3.12"
           cache: pip
-          cache-dependency-path: requirements-api.txt
+          cache-dependency-path: |
+            requirements-api.txt
+            services/api/pyproject.toml
 
       - name: Install Node dependencies
         id: node-install
@@ -229,6 +231,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install -r requirements-api.txt
+          python -m pip install -e "./services/api"
 
       - name: Build frontend
         id: build
@@ -285,6 +288,7 @@ jobs:
             echo '```bash'
             echo 'npm ci'
             echo 'python -m pip install -r requirements-api.txt'
+            echo 'python -m pip install -e "./services/api"'
             echo 'npm run build:web'
             echo 'python -m unittest tests.test_compiled_runtime_smoke -v'
             echo 'npx playwright install chromium'
