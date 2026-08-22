@@ -1,0 +1,63 @@
+name: FDM-733 Mirror Preview Exact SHA
+
+on:
+  push:
+    branches:
+      - fdm-733/mirror-preview-d578067
+
+permissions:
+  contents: write
+
+concurrency:
+  group: fdm-733-mirror-preview
+  cancel-in-progress: false
+
+jobs:
+  mirror-preview:
+    name: Import upstream object and fast-forward preview
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      UPSTREAM_REPO: vivicabsb-eng/AureaSolaris
+      MIRROR_REPO: fernandodamaso/AureaSolaris-deploy
+      EXPECTED_UPSTREAM_SHA: d578067e3bdaedbd4f81a9ef481b6a22b856bc6d
+      EXPECTED_PREVIEW_SHA: 33739cba13c1779e3cb5cf602ebb3a41240df724
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Import exact upstream main object and fast-forward preview
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init --quiet mirror-transfer
+          cd mirror-transfer
+
+          git remote add upstream "https://github.com/${UPSTREAM_REPO}.git"
+          git remote add mirror "https://x-access-token:${GH_TOKEN}@github.com/${MIRROR_REPO}.git"
+
+          git fetch --quiet --no-tags upstream main
+          upstream_sha="$(git rev-parse FETCH_HEAD)"
+          if [[ "$upstream_sha" != "$EXPECTED_UPSTREAM_SHA" ]]; then
+            echo "::error::Upstream main moved: expected ${EXPECTED_UPSTREAM_SHA}, got ${upstream_sha}."
+            exit 1
+          fi
+
+          git fetch --quiet --no-tags mirror preview
+          preview_sha="$(git rev-parse FETCH_HEAD)"
+          if [[ "$preview_sha" != "$EXPECTED_PREVIEW_SHA" ]]; then
+            echo "::error::Mirror preview diverged: expected ${EXPECTED_PREVIEW_SHA}, got ${preview_sha}."
+            exit 1
+          fi
+
+          if ! git merge-base --is-ancestor "$preview_sha" "$upstream_sha"; then
+            echo "::error::Refusing non-fast-forward preview move."
+            exit 1
+          fi
+
+          git push --quiet mirror "${upstream_sha}:refs/heads/preview"
+          remote_sha="$(git ls-remote mirror refs/heads/preview | awk '{print $1}')"
+          if [[ "$remote_sha" != "$upstream_sha" ]]; then
+            echo "::error::Mirror preview verification failed: expected ${upstream_sha}, got ${remote_sha}."
+            exit 1
+          fi
+
+          echo "Mirror preview now equals exact upstream main object ${upstream_sha}."
