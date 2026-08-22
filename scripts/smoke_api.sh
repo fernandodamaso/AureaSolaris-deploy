@@ -16,45 +16,47 @@ aurea_select_python || exit 1
 TMP_DIR="$(mktemp -d)"
 trap 'rm -rf "$TMP_DIR"' EXIT
 
-curl_with_secure_headers() {
-  local auth_mode="$1"
-  shift
+curl_config_value() {
+  local value="$1"
+  value="${value//\\/\\\\}"
+  value="${value//\"/\\\"}"
+  value="${value//$'\r'/\\r}"
+  value="${value//$'\n'/\\n}"
+  builtin printf '%s' "$value"
+}
 
-  if [[ -n "${AUREA_VERCEL_PROTECTION_BYPASS:-}" && "$auth_mode" == auth ]]; then
-    "$CURL" \
-      -H @<(builtin printf 'x-vercel-protection-bypass: %s\n' \
-        "$AUREA_VERCEL_PROTECTION_BYPASS") \
-      -H @<(builtin printf 'Authorization: Bearer %s\n' "$AUREA_SMOKE_JWT") \
-      "$@"
-  elif [[ -n "${AUREA_VERCEL_PROTECTION_BYPASS:-}" ]]; then
-    "$CURL" \
-      -H @<(builtin printf 'x-vercel-protection-bypass: %s\n' \
-        "$AUREA_VERCEL_PROTECTION_BYPASS") \
-      "$@"
-  elif [[ "$auth_mode" == auth ]]; then
-    "$CURL" \
-      -H @<(builtin printf 'Authorization: Bearer %s\n' "$AUREA_SMOKE_JWT") \
-      "$@"
-  else
-    "$CURL" "$@"
-  fi
+curl_with_secure_input() {
+  local auth_mode="$1" has_body="$2" body="$3"
+  shift 3
+
+  {
+    if [[ -n "${AUREA_VERCEL_PROTECTION_BYPASS:-}" ]]; then
+      builtin printf 'header = "x-vercel-protection-bypass: %s"\n' \
+        "$(curl_config_value "$AUREA_VERCEL_PROTECTION_BYPASS")"
+    fi
+    if [[ "$auth_mode" == auth ]]; then
+      builtin printf 'header = "Authorization: Bearer %s"\n' \
+        "$(curl_config_value "$AUREA_SMOKE_JWT")"
+    fi
+    if [[ "$has_body" == 1 ]]; then
+      builtin printf 'header = "Content-Type: application/json"\n'
+      builtin printf 'data-binary = "%s"\n' "$(curl_config_value "$body")"
+    fi
+  } | "$CURL" --config - "$@"
 }
 
 request() {
   local name="$1" path="$2" auth_mode="${3:-none}" method="${4:-}" has_body="${5:-0}"
+  local body="${6:-}"
   local output="$TMP_DIR/$1.json" status url="$BASE_URL$path"
-  local -a content_flags=() method_flags=() body_flags=()
+  local -a method_flags=()
   if [[ -n "$method" ]]; then
     method_flags=(-X "$method")
   fi
-  if [[ "$has_body" == 1 ]]; then
-    content_flags=(-H 'Content-Type: application/json')
-    body_flags=(--data-binary @-)
-  fi
 
-  status="$(curl_with_secure_headers "$auth_mode" \
+  status="$(curl_with_secure_input "$auth_mode" "$has_body" "$body" \
     --fail-with-body --silent --show-error --max-time 30 \
-    "${content_flags[@]}" "${method_flags[@]}" "${body_flags[@]}" \
+    "${method_flags[@]}" \
     -o "$output" -w '%{http_code}' "$url" 2>/dev/null || true)"
   printf '%s %s %s\n' "$name" "$status" "$output"
 }
@@ -109,11 +111,11 @@ if [[ -n "${AUREA_SMOKE_JWT:-}" ]]; then
 
   if [[ "${AUREA_SMOKE_ASTROLOGY:-0}" == 1 ]]; then
     profile_body='{"label":"Vercel E2E","birth_date":"1990-01-01","birth_time":"12:00:00","timezone":"UTC","latitude":0,"longitude":0,"place":"E2E","house_system":"P"}'
-    profile="$(builtin printf '%s' "$profile_body" | request birth_profile /v1/birth-profile auth PUT 1)"
+    profile="$(request birth_profile /v1/birth-profile auth PUT 1 "$profile_body")"
     profile_status="$(printf '%s' "$profile" | awk '{print $2}')"
     printf 'birth_profile_status=%s\n' "$profile_status"
     [[ "$profile_status" == 200 ]] || { printf 'FAIL: birth profile setup\n' >&2; exit 1; }
-    astrology="$(builtin printf '{}' | request astrology /v1/astrology/natal auth POST 1)"
+    astrology="$(request astrology /v1/astrology/natal auth POST 1 '{}')"
     astrology_status="$(printf '%s' "$astrology" | awk '{print $2}')"
     astrology_file="$(printf '%s' "$astrology" | awk '{print $3}')"
     printf 'astrology_status=%s\n' "$astrology_status"

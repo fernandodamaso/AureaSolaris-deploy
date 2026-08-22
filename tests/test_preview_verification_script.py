@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 import os
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 import shutil
 import subprocess
 import tempfile
 import textwrap
+import threading
 import unittest
 
 
@@ -118,6 +120,18 @@ class PreviewVerificationScriptTests(unittest.TestCase):
                   shift 2
                   ;;
                 --max-time|-X|-c|-b)
+                  shift 2
+                  ;;
+                --config)
+                  if [[ "$2" != - ]]; then
+                    printf 'unexpected curl config source\n' >&2
+                    exit 2
+                  fi
+                  config_value="$(cat)"
+                  call_headers+="$config_value"$'\n'
+                  printf '%s\n' "$config_value" >> "$AUREA_TEST_CURL_HEADER_LOG"
+                  printf '%s\n' "$config_value" | sed 's/\\"/"/g; s/\\\\/\\/g' \
+                    >> "$AUREA_TEST_CURL_BODY_LOG"
                   shift 2
                   ;;
                 -H)
@@ -308,6 +322,92 @@ class PreviewVerificationScriptTests(unittest.TestCase):
         self.assertIn("test-smoke-jwt", headers)
         self.assertIn("1990-01-01", bodies)
         self.assertIn('"place":"E2E"', bodies)
+
+    def test_smoke_secure_streams_work_with_the_real_windows_curl(self) -> None:
+        real_curl = shutil.which("curl.exe") or shutil.which("curl")
+        if not real_curl:
+            self.skipTest("curl is required for the real executable regression.")
+
+        requests: list[tuple[str, str, bytes]] = []
+
+        class Handler(BaseHTTPRequestHandler):
+            def _respond(self, status: int, payload: str) -> None:
+                length = int(self.headers.get("Content-Length", "0"))
+                body = self.rfile.read(length) if length else b""
+                requests.append((self.path, self.headers.get("Authorization", ""), body))
+                encoded = payload.encode("utf-8")
+                self.send_response(status)
+                self.send_header("Content-Type", "application/json")
+                self.send_header("Content-Length", str(len(encoded)))
+                self.end_headers()
+                self.wfile.write(encoded)
+
+            def do_GET(self) -> None:  # noqa: N802
+                if self.path == "/health":
+                    self._respond(200, '{"status":"ok"}')
+                elif self.path == "/ready":
+                    self._respond(503, '{"code":"service_not_ready"}')
+                elif self.path == "/v1/me" and self.headers.get("Authorization"):
+                    self._respond(404, '{"code":"profile_not_found"}')
+                elif self.path == "/v1/me":
+                    self._respond(401, '{"code":"missing_bearer_token"}')
+                else:
+                    self._respond(404, '{"code":"not_found"}')
+
+            def do_PUT(self) -> None:  # noqa: N802
+                self._respond(200, "{}")
+
+            def do_POST(self) -> None:  # noqa: N802
+                self._respond(
+                    200,
+                    '{"engine_name":"aurea-solaris-astro-engine",'
+                    '"ephemeris_version":"test-version"}',
+                )
+
+            def log_message(self, _format: str, *_args: object) -> None:
+                return
+
+        server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        self.addCleanup(server.server_close)
+        self.addCleanup(thread.join, 5)
+        self.addCleanup(server.shutdown)
+
+        _write_executable(
+            self.stub_dir / "curl",
+            r"""
+            #!/usr/bin/env bash
+            printf '<call>\0' >> "$AUREA_TEST_CURL_ARG_LOG"
+            printf '%s\0' "$@" >> "$AUREA_TEST_CURL_ARG_LOG"
+            exec "$AUREA_TEST_REAL_CURL" "$@"
+            """,
+        )
+        environment = self._environment()
+        environment["AUREA_TEST_REAL_CURL"] = _bash_path(Path(real_curl))
+        result = self._run_script(
+            "scripts/smoke_api.sh",
+            f"http://127.0.0.1:{server.server_port}",
+            environment=environment,
+        )
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+        arguments = "\n".join(self._curl_arguments())
+        for sensitive_value in (
+            "test-api-bypass",
+            "test-smoke-jwt",
+            "1990-01-01",
+            "12:00:00",
+            '"place":"E2E"',
+        ):
+            with self.subTest(value=sensitive_value):
+                self.assertNotIn(sensitive_value, arguments)
+
+        self.assertTrue(
+            any(auth == "Bearer test-smoke-jwt" for _, auth, _ in requests)
+        )
+        self.assertTrue(any(b"1990-01-01" in body for _, _, body in requests))
+        self.assertTrue(any(b'"place":"E2E"' in body for _, _, body in requests))
 
     def test_preview_wrapper_requires_production_origin_and_reads_auth_settings(self) -> None:
         missing_environment = self._environment()
