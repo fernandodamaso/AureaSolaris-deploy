@@ -48,7 +48,7 @@ verify_project() {
   printf '%s' "$auth_json" | "$PYTHON" -c 'import json,sys; settings=json.load(sys.stdin); label=sys.argv[1]; sys.exit(1) if settings.get("external",{}).get("email") is not True or settings.get("disable_signup") is not True else print(f"{label}: auth_email_password=enabled public_signup=disabled")' "$label"
 
   query_output="$("$SUPABASE" db query --linked --project-ref "$ref" --output-format json \
-    "select c.relname as tablename, c.relrowsecurity as rls_enabled, count(p.policyname) as policy_count, coalesce(string_agg(p.policyname, ',' order by p.policyname), '') as policy_names from pg_class c join pg_namespace n on n.oid=c.relnamespace left join pg_policies p on p.schemaname='public' and p.tablename=c.relname where n.nspname='public' and c.relname in ('profiles','birth_profiles','calculation_receipts') group by c.relname,c.relrowsecurity order by c.relname;" 2>/dev/null)" \
+    "select c.relname as tablename, c.relrowsecurity as rls_enabled, p.policyname, p.roles::text as roles, p.cmd, p.qual, p.with_check from pg_class c join pg_namespace n on n.oid=c.relnamespace left join pg_policies p on p.schemaname='public' and p.tablename=c.relname where n.nspname='public' and c.relname in ('profiles','birth_profiles','calculation_receipts') order by c.relname,p.policyname;" 2>/dev/null)" \
     || fail "$label RLS query unavailable"
   printf '%s' "$query_output" | "$PYTHON" -c 'import json,sys; text=sys.stdin.read(); decoder=json.JSONDecoder(); payload=None
 for index,char in enumerate(text):
@@ -57,9 +57,13 @@ for index,char in enumerate(text):
         except json.JSONDecodeError: continue
         if isinstance(candidate,dict) and "rows" in candidate: payload=candidate; break
 if payload is None: raise SystemExit(1)
-expected={"profiles":"profiles_owner_all","birth_profiles":"birth_profiles_owner_all","calculation_receipts":"calculation_receipts_owner_all"}; rows={row["tablename"]:row for row in payload["rows"]}
-if set(rows)!=set(expected) or any(row.get("rls_enabled") is not True or int(row.get("policy_count",0))<1 or expected[name] not in row.get("policy_names","") for name,row in rows.items()): raise SystemExit(1)
-tables=",".join(sorted(rows)); print(f"{sys.argv[1]}: rls=enabled owner_policies=present tables={tables}")' "$label"
+expected={"profiles":"profiles_owner_all","birth_profiles":"birth_profiles_owner_all","calculation_receipts":"calculation_receipts_owner_all"}; rows=payload["rows"]
+owner_expr="(( SELECT auth.uid() AS uid) = user_id)"
+if len(rows)!=len(expected) or {row.get("tablename") for row in rows}!=set(expected): raise SystemExit(1)
+for row in rows:
+    table=row["tablename"]
+    if row.get("rls_enabled") is not True or row.get("policyname")!=expected[table] or row.get("roles")!="{authenticated}" or row.get("cmd")!="ALL" or row.get("qual")!=owner_expr or row.get("with_check")!=owner_expr: raise SystemExit(1)
+tables=",".join(sorted(expected)); print(f"{sys.argv[1]}: rls=enabled owner_policies=verified tables={tables}")' "$label"
 
   local admin_var="SUPABASE_SERVICE_ROLE_KEY_${label^^}" admin_key
   admin_key="$(printenv "$admin_var" 2>/dev/null || true)"

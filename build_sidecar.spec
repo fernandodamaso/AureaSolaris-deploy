@@ -14,19 +14,18 @@ from PyInstaller.utils.hooks import collect_all
 # packaged motor exit before opening its HTTP port on Windows.
 backports_datas, backports_binaries, backports_hiddenimports = collect_all('backports')
 
-# Verificar se o diretório ephe existe para incluir no bundle
-ephe_datas = []
-ephe_path = os.path.join(os.path.dirname(os.path.abspath('.')), 'ephe')
-if os.path.isdir('ephe'):
-    ephe_datas = [('ephe', 'ephe')]
-elif os.path.isdir(ephe_path):
-    ephe_datas = [(ephe_path, 'ephe')]
+# The compatibility sidecar imports the certified engine from the Web V1
+# package. Keep the source path and certified assets in the bundle until the
+# later, gated legacy-runtime removal.
+api_source_path = os.path.abspath('services/api/src')
+ephe_source_path = os.path.join('services', 'api', 'ephe')
+ephe_datas = [(ephe_source_path, 'ephe')]
 
 frontend_datas = [('apps/web/dist', 'apps/web/dist')]
 
 a = Analysis(
     ['main_api.py'],
-    pathex=[],
+    pathex=[api_source_path],
     binaries=backports_binaries,
     datas=[
         ('astro_engine.py', '.'),        # Engine original (importado como módulo)
@@ -37,7 +36,7 @@ a = Analysis(
         # Snapshot editorial canônico para a primeira instalação local de
         # knowledge.sqlite; o importador preserva hash e proveniência.
         ('knowledge/engenharia_astrologica/knowledge/build/editorial_current.sqlite',
-         'knowledge/engenharia_astrologica/knowledge/build'),
+         'knowledge'),
     ] + ephe_datas + frontend_datas + backports_datas,
     hiddenimports=[
         'astro_engine',

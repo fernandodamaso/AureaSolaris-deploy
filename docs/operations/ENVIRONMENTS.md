@@ -6,6 +6,26 @@ PostgreSQL connection, and the repository-certified Swiss Ephemeris directory.
 Preview may use a concrete hostname from the expected Aurea Solaris Vercel web
 project. Wildcard origins are never valid.
 
+## Approved deployment bindings
+
+The two hosted environments are separate trust boundaries. Bind each deployment
+to its approved Supabase ref and browser origin:
+
+| Environment | `AUREA_SUPABASE_URL` / `VITE_SUPABASE_URL` | API `AUREA_ALLOWED_ORIGINS` |
+| --- | --- | --- |
+| Preview | `https://rosklqnnbmhowohoyboj.supabase.co` | One exact `https://aurea-solaris-<deployment-slug>-fernando-damasos-projects.vercel.app` preview origin |
+| Production | `https://tgpcpxqqusehssaihvcp.supabase.co` | `https://aurea-solaris.vercel.app` |
+
+Preview browser configuration uses the preview Supabase URL, the matching
+same-candidate API preview deployment, and the exact Vercel web preview origin.
+Production browser configuration uses the production Supabase URL, the
+production API domain, and `https://aurea-solaris.vercel.app`. Do not use a
+production ref or origin in preview, or a preview ref or origin in production.
+Both API environments use the assigned session pooler
+`aws-0-sa-east-1.pooler.supabase.com:5432/postgres`, with only their own
+`aurea_api.<project-ref>` role. Each deployed API accepts exactly one browser
+origin.
+
 ## Server configuration
 
 These variables are server-only. They must not be copied into browser bundles.

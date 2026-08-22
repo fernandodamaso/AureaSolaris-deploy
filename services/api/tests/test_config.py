@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import shutil
+from collections.abc import Callable
 from pathlib import Path
 
 import pytest
@@ -9,6 +10,10 @@ from pydantic import SecretStr, ValidationError
 from aurea_api.config import Settings, get_settings
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
+PREVIEW_REF = "rosklqnnbmhowohoyboj"
+PRODUCTION_REF = "tgpcpxqqusehssaihvcp"
+PRODUCTION_WEB_ORIGIN = "https://aurea-solaris.vercel.app"
+DATABASE_HOST = "aws-0-sa-east-1.pooler.supabase.com"
 
 
 def valid_environment() -> dict[str, str]:
@@ -25,14 +30,34 @@ def valid_environment() -> dict[str, str]:
 def production_environment() -> dict[str, str]:
     return {
         "AUREA_ENVIRONMENT": "production",
-        "AUREA_SUPABASE_URL": "https://example.supabase.co",
+        "AUREA_SUPABASE_URL": f"https://{PRODUCTION_REF}.supabase.co",
         "AUREA_JWT_AUDIENCE": "authenticated",
         "AUREA_DATABASE_URL": (
-            "postgresql://aurea:super-secret@db.example.test:5432/aurea?sslmode=require"
+            f"postgresql://aurea_api.{PRODUCTION_REF}:super-secret@"
+            f"{DATABASE_HOST}:5432/postgres?sslmode=require"
         ),
-        "AUREA_ALLOWED_ORIGINS": "https://aurea-solaris.vercel.app",
+        "AUREA_ALLOWED_ORIGINS": PRODUCTION_WEB_ORIGIN,
         "AUREA_EPHEMERIS_PATH": str(REPO_ROOT / "services" / "api" / "ephe"),
     }
+
+
+def preview_environment() -> dict[str, str]:
+    environment = production_environment()
+    environment.update(
+        {
+            "AUREA_ENVIRONMENT": "preview",
+            "AUREA_SUPABASE_URL": f"https://{PREVIEW_REF}.supabase.co",
+            "AUREA_DATABASE_URL": (
+                f"postgresql://aurea_api.{PREVIEW_REF}:super-secret@"
+                f"{DATABASE_HOST}:5432/postgres?sslmode=require"
+            ),
+            "AUREA_ALLOWED_ORIGINS": (
+                "https://aurea-solaris-preview-abc-"
+                "fernando-damasos-projects.vercel.app"
+            ),
+        }
+    )
+    return environment
 
 
 @pytest.mark.parametrize(
@@ -113,10 +138,12 @@ def test_settings_parse_allowed_origins_without_changing_values() -> None:
     [
         ("AUREA_SUPABASE_URL", "http://supabase.example.test"),
         ("AUREA_SUPABASE_URL", "https://localhost"),
+        ("AUREA_SUPABASE_URL", f"https://{PRODUCTION_REF}.supabase.co:444"),
         ("AUREA_DATABASE_URL", "postgresql://aurea:secret@localhost/aurea?sslmode=require"),
         ("AUREA_DATABASE_URL", "postgresql://aurea:secret@db.example.test/aurea"),
         ("AUREA_ALLOWED_ORIGINS", "http://web.example.test"),
         ("AUREA_ALLOWED_ORIGINS", "https://127.0.0.1"),
+        ("AUREA_ALLOWED_ORIGINS", f"{PRODUCTION_WEB_ORIGIN}:444"),
     ],
 )
 def test_production_rejects_insecure_remote_boundaries(key: str, value: str) -> None:
@@ -128,17 +155,94 @@ def test_production_rejects_insecure_remote_boundaries(key: str, value: str) -> 
 
 
 def test_preview_accepts_concrete_expected_vercel_hostname() -> None:
-    environment = production_environment()
-    environment.update(
-        {
-            "AUREA_ENVIRONMENT": "preview",
-            "AUREA_ALLOWED_ORIGINS": "https://aurea-solaris-preview-abc.vercel.app",
-        }
-    )
+    environment = preview_environment()
 
     settings = Settings.from_env(environment)
 
-    assert settings.allowed_origins == ("https://aurea-solaris-preview-abc.vercel.app",)
+    assert settings.allowed_origins == (
+        "https://aurea-solaris-preview-abc-fernando-damasos-projects.vercel.app",
+    )
+
+
+@pytest.mark.parametrize(
+    ("environment_factory", "key", "value"),
+    [
+        (
+            production_environment,
+            "AUREA_SUPABASE_URL",
+            f"https://{PREVIEW_REF}.supabase.co",
+        ),
+        (
+            production_environment,
+            "AUREA_DATABASE_URL",
+            f"postgresql://aurea_api.{PREVIEW_REF}:secret@"
+            f"{DATABASE_HOST}:5432/postgres?sslmode=require",
+        ),
+        (production_environment, "AUREA_ALLOWED_ORIGINS", "https://example.test"),
+        (
+            preview_environment,
+            "AUREA_SUPABASE_URL",
+            f"https://{PRODUCTION_REF}.supabase.co",
+        ),
+        (
+            preview_environment,
+            "AUREA_DATABASE_URL",
+            f"postgresql://aurea_api.{PRODUCTION_REF}:secret@"
+            f"{DATABASE_HOST}:5432/postgres?sslmode=require",
+        ),
+        (preview_environment, "AUREA_ALLOWED_ORIGINS", PRODUCTION_WEB_ORIGIN),
+    ],
+)
+def test_deployed_settings_reject_cross_environment_values(
+    environment_factory: Callable[[], dict[str, str]],
+    key: str,
+    value: str,
+) -> None:
+    environment = environment_factory()
+    environment[key] = value
+
+    with pytest.raises(ValidationError):
+        Settings.from_env(environment)
+
+
+@pytest.mark.parametrize(
+    ("key", "value"),
+    [
+        (
+            "AUREA_DATABASE_URL",
+            f"postgresql://aurea_api.{PRODUCTION_REF}:secret@"
+            "aws-1-sa-east-1.pooler.supabase.com:5432/postgres?sslmode=require",
+        ),
+        (
+            "AUREA_DATABASE_URL",
+            f"postgresql://aurea_api.{PRODUCTION_REF}:secret@"
+            f"{DATABASE_HOST}:9999/postgres?sslmode=require",
+        ),
+        (
+            "AUREA_DATABASE_URL",
+            f"postgresql://aurea_api.{PRODUCTION_REF}:secret@"
+            f"{DATABASE_HOST}:5432/other?sslmode=require",
+        ),
+        (
+            "AUREA_DATABASE_URL",
+            f"postgresql://aurea_api:secret@db.{PRODUCTION_REF}.supabase.co:5432/"
+            "postgres?sslmode=require",
+        ),
+        (
+            "AUREA_ALLOWED_ORIGINS",
+            f"{PRODUCTION_WEB_ORIGIN},{PRODUCTION_WEB_ORIGIN}",
+        ),
+    ],
+)
+def test_deployed_settings_require_one_exact_provider_endpoint(
+    key: str,
+    value: str,
+) -> None:
+    environment = production_environment()
+    environment[key] = value
+
+    with pytest.raises(ValidationError):
+        Settings.from_env(environment)
 
 
 def test_wildcard_origin_is_rejected_and_errors_are_redacted() -> None:

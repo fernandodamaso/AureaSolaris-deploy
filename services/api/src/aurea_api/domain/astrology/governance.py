@@ -24,6 +24,7 @@ Filosofia:
 from __future__ import annotations
 
 import sqlite3
+import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -100,7 +101,9 @@ def _resolve_default_db_path() -> Path:
     # Default operacional: knowledge.sqlite na raiz da biblioteca.
     # Fallback opcional para o build antigo se ainda existir.
     repository_root = Path(__file__).resolve().parents[6]
-    packaged_root = Path(__file__).resolve().parents[4]
+    packaged_root = Path(
+        getattr(sys, "_MEIPASS", Path(__file__).resolve().parents[4])
+    )
     candidates = [
         # The API deployment carries the same canonical snapshot under its
         # project root because Vercel builds from services/api.

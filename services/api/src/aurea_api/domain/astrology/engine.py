@@ -65,7 +65,10 @@ SWE_AVAILABLE = False
 try:
     import swisseph as swe
     SWE_AVAILABLE = True
-    ephe_dir = Path(__file__).resolve().parents[4] / "ephe"
+    package_root = Path(
+        getattr(sys, "_MEIPASS", Path(__file__).resolve().parents[4])
+    )
+    ephe_dir = package_root / "ephe"
     if os.path.isdir(ephe_dir):
         swe.set_ephe_path(str(ephe_dir))
     else:

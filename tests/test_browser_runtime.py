@@ -156,8 +156,46 @@ class TestBrowserRuntime(unittest.TestCase):
         repository_root = Path(__file__).resolve().parents[1]
         spec_source = (repository_root / "build_sidecar.spec").read_text(encoding="utf-8")
         api_source = (repository_root / "main_api.py").read_text(encoding="utf-8")
+        astrology_package = (
+            repository_root
+            / "services"
+            / "api"
+            / "src"
+            / "aurea_api"
+            / "domain"
+            / "astrology"
+            / "__init__.py"
+        ).read_text(encoding="utf-8")
+        engine_source = (
+            repository_root
+            / "services"
+            / "api"
+            / "src"
+            / "aurea_api"
+            / "domain"
+            / "astrology"
+            / "engine.py"
+        ).read_text(encoding="utf-8")
+        governance_source = (
+            repository_root
+            / "services"
+            / "api"
+            / "src"
+            / "aurea_api"
+            / "domain"
+            / "astrology"
+            / "governance.py"
+        ).read_text(encoding="utf-8")
 
         self.assertRegex(spec_source, r"(?m)^frontend_datas = \[\('apps/web/dist', 'apps/web/dist'\)\]\s*$")
+        self.assertIn("api_source_path = os.path.abspath('services/api/src')", spec_source)
+        self.assertIn("pathex=[api_source_path]", spec_source)
+        self.assertIn("os.path.join('services', 'api', 'ephe')", spec_source)
+        self.assertNotIn("os.path.isdir('ephe')", spec_source)
+        self.assertNotIn("from .service import", astrology_package)
+        self.assertIn('getattr(sys, "_MEIPASS"', engine_source)
+        self.assertIn('getattr(sys, "_MEIPASS"', governance_source)
+        self.assertIn("'knowledge/engenharia_astrologica/knowledge/build/editorial_current.sqlite',\n         'knowledge'", spec_source)
         health_route = api_source.index('@app.get("/health")')
         frontend_mount = api_source.index('app.mount("/", StaticFiles')
         self.assertLess(health_route, frontend_mount)

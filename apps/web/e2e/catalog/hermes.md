@@ -5,7 +5,7 @@
 - feature: Hermes
 - steps: Open chat; mock provider; consent; send; propose memory.
 - assert: Mock reply visible; memory stays proposal until review.
-- spec: `e2e/specs/hermes.spec.ts`
+- spec: none
 - playbook: none
 - seed: Hermes UI + mocks
 
@@ -23,6 +23,6 @@
 - feature: Hermes
 - steps: Map → Tutor IA → mocked reply → Estudar no Caderno → reload Caderno.
 - assert: The specific study and its source note persist after reload and reopen.
-- spec: `e2e/specs/hermes.spec.ts`
+- spec: none
 - playbook: `e2e/playbooks/hermes.md`
 - seed: seeded natal + Caderno

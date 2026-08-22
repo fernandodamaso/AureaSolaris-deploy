@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable
+import json
 import os
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -70,6 +71,8 @@ class PreviewVerificationScriptTests(unittest.TestCase):
         self.body_log = self.stub_dir / "curl-bodies.txt"
         self.python_log = self.stub_dir / "python-launchers.txt"
         self.npx_log = self.stub_dir / "npx-launch.txt"
+        self.vercel_log = self.stub_dir / "vercel-calls.jsonl"
+        self.fake_vercel = self.stub_dir / "fake_vercel.py"
 
         real_python = _bash_path(Path(os.sys.executable))
         _write_executable(
@@ -100,6 +103,8 @@ class PreviewVerificationScriptTests(unittest.TestCase):
             self.stub_dir / "npx",
             """
             #!/usr/bin/env bash
+            printf 'web_url=%s\n' "$AUREA_E2E_URL" >> "$AUREA_TEST_NPX_LOG"
+            printf 'api_url=%s\n' "$AUREA_E2E_API_URL" >> "$AUREA_TEST_NPX_LOG"
             printf 'production_supabase=%s\n' \
               "$AUREA_PRODUCTION_SUPABASE_URL" >> "$AUREA_TEST_NPX_LOG"
             if [[ -n "${AUREA_VERCEL_PROTECTION_BYPASS:-}" ]]; then
@@ -108,6 +113,59 @@ class PreviewVerificationScriptTests(unittest.TestCase):
               printf 'global_bypass=absent\n' >> "$AUREA_TEST_NPX_LOG"
             fi
             exit 0
+            """,
+        )
+        _write_executable(
+            self.fake_vercel,
+            """
+            import json
+            import os
+            from pathlib import Path
+            import sys
+
+            arguments = sys.argv[1:]
+            log = Path(os.environ["AUREA_TEST_VERCEL_LOG"])
+            with log.open("a", encoding="utf-8") as handle:
+                handle.write(json.dumps(arguments) + "\\n")
+            if arguments[0] == "list":
+                project = arguments[1]
+                host = (
+                    "aurea-solaris-api-candidate-test-team.vercel.app"
+                    if project == "aurea-solaris-api"
+                    else "aurea-solaris-candidate-test-team.vercel.app"
+                )
+                print(json.dumps({
+                    "deployments": [{
+                        "uid": f"dpl_{project}",
+                        "name": project,
+                        "url": host,
+                        "state": "READY",
+                        "readyState": "READY",
+                        "meta": {
+                            "githubCommitSha": os.environ["AUREA_EXPECTED_PREVIEW_SHA"],
+                            "githubCommitRef": "preview",
+                        },
+                    }],
+                    "pagination": {"next": None},
+                }))
+            elif arguments[0] == "inspect":
+                supplied = arguments[1]
+                host = supplied.removeprefix("https://")
+                if "api" in host:
+                    host = "aurea-solaris-api-candidate-test-team.vercel.app"
+                    project = "aurea-solaris-api"
+                else:
+                    host = "aurea-solaris-candidate-test-team.vercel.app"
+                    project = "aurea-solaris"
+                print(json.dumps({
+                    "id": f"dpl_{project}",
+                    "name": project,
+                    "url": host,
+                    "readyState": "READY",
+                    "target": "preview",
+                }))
+            else:
+                raise SystemExit(2)
             """,
         )
         _write_executable(
@@ -125,7 +183,11 @@ class PreviewVerificationScriptTests(unittest.TestCase):
                 printf '%s\n' '[{"type":"publishable","name":"anon","api_key":"test-publishable-key"}]'
                 ;;
               'db query')
-                printf '%s\n' '{"rows":[{"tablename":"birth_profiles","rls_enabled":true,"policy_count":1,"policy_names":"birth_profiles_owner_all"},{"tablename":"calculation_receipts","rls_enabled":true,"policy_count":1,"policy_names":"calculation_receipts_owner_all"},{"tablename":"profiles","rls_enabled":true,"policy_count":1,"policy_names":"profiles_owner_all"}]}'
+                if [[ "${AUREA_TEST_UNSAFE_POLICY:-0}" == 1 ]]; then
+                  printf '%s\n' '{"rows":[{"tablename":"birth_profiles","rls_enabled":true,"policy_count":1,"policy_names":"birth_profiles_owner_all","policyname":"birth_profiles_owner_all","roles":"{authenticated}","cmd":"ALL","qual":"true","with_check":"true"},{"tablename":"calculation_receipts","rls_enabled":true,"policy_count":1,"policy_names":"calculation_receipts_owner_all","policyname":"calculation_receipts_owner_all","roles":"{authenticated}","cmd":"ALL","qual":"true","with_check":"true"},{"tablename":"profiles","rls_enabled":true,"policy_count":1,"policy_names":"profiles_owner_all","policyname":"profiles_owner_all","roles":"{authenticated}","cmd":"ALL","qual":"true","with_check":"true"}]}'
+                else
+                  printf '%s\n' '{"rows":[{"tablename":"birth_profiles","rls_enabled":true,"policy_count":1,"policy_names":"birth_profiles_owner_all","policyname":"birth_profiles_owner_all","roles":"{authenticated}","cmd":"ALL","qual":"(( SELECT auth.uid() AS uid) = user_id)","with_check":"(( SELECT auth.uid() AS uid) = user_id)"},{"tablename":"calculation_receipts","rls_enabled":true,"policy_count":1,"policy_names":"calculation_receipts_owner_all","policyname":"calculation_receipts_owner_all","roles":"{authenticated}","cmd":"ALL","qual":"(( SELECT auth.uid() AS uid) = user_id)","with_check":"(( SELECT auth.uid() AS uid) = user_id)"},{"tablename":"profiles","rls_enabled":true,"policy_count":1,"policy_names":"profiles_owner_all","policyname":"profiles_owner_all","roles":"{authenticated}","cmd":"ALL","qual":"(( SELECT auth.uid() AS uid) = user_id)","with_check":"(( SELECT auth.uid() AS uid) = user_id)"}]}'
+                fi
                 ;;
               *)
                 printf 'unexpected supabase stub call\n' >&2
@@ -267,6 +329,7 @@ class PreviewVerificationScriptTests(unittest.TestCase):
                 "AUREA_TEST_CURL_BODY_LOG": _bash_path(self.body_log),
                 "AUREA_TEST_PYTHON_LOG": _bash_path(self.python_log),
                 "AUREA_TEST_NPX_LOG": _bash_path(self.npx_log),
+                "AUREA_TEST_VERCEL_LOG": str(self.vercel_log),
                 "AUREA_E2E_URL": "https://preview-web.example.test",
                 "AUREA_E2E_API_URL": "https://preview-api.example.test",
                 "AUREA_E2E_EMAIL": "preview-user@example.test",
@@ -274,6 +337,9 @@ class PreviewVerificationScriptTests(unittest.TestCase):
                 "AUREA_E2E_SECOND_JWT": "test-second-jwt",
                 "AUREA_VERCEL_WEB_PROTECTION_BYPASS": "test-web-bypass",
                 "AUREA_VERCEL_API_PROTECTION_BYPASS": "test-api-bypass",
+                "AUREA_EXPECTED_PREVIEW_SHA": "1" * 40,
+                "AUREA_VERCEL_SCOPE": "test-team",
+                "AUREA_VERCEL_CLI": str(self.fake_vercel),
                 "SUPABASE_PREVIEW_URL": CANONICAL_PREVIEW_SUPABASE_URL,
                 "SUPABASE_PREVIEW_ANON_KEY": "test-preview-anon-key",
                 "AUREA_PRODUCTION_API_URL": "https://production-api.example.test",
@@ -336,6 +402,7 @@ class PreviewVerificationScriptTests(unittest.TestCase):
             self.body_log,
             self.python_log,
             self.npx_log,
+            self.vercel_log,
         ):
             path.unlink(missing_ok=True)
 
@@ -516,6 +583,8 @@ class PreviewVerificationScriptTests(unittest.TestCase):
         self.assertEqual(
             self.npx_log.read_text(encoding="utf-8").splitlines(),
             [
+                "web_url=https://aurea-solaris-candidate-test-team.vercel.app",
+                "api_url=https://aurea-solaris-api-candidate-test-team.vercel.app",
                 f"production_supabase={CANONICAL_PRODUCTION_SUPABASE_URL}",
                 "global_bypass=absent",
             ],
@@ -526,6 +595,31 @@ class PreviewVerificationScriptTests(unittest.TestCase):
         self.assertNotIn("/auth/v1/signup", arguments)
         self.assertNotIn("--data", arguments)
         self.assertFalse(self.body_log.exists() and self.body_log.read_text(encoding="utf-8"))
+
+    def test_preview_wrapper_verifies_both_exact_sha_deployments_before_network(self) -> None:
+        missing_sha = self._environment()
+        missing_sha.pop("AUREA_EXPECTED_PREVIEW_SHA")
+
+        missing_result = self._run_script(
+            "scripts/verify_preview.sh",
+            environment=missing_sha,
+        )
+
+        self.assertNotEqual(missing_result.returncode, 0)
+        self.assertFalse(self.vercel_log.exists(), "missing SHA reached Vercel")
+        self.assertFalse(self.arg_log.exists(), "missing SHA reached curl")
+        self.assertFalse(self.npx_log.exists(), "missing SHA reached browser")
+
+        self._clear_logs()
+        result = self._run_script("scripts/verify_preview.sh")
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+        calls = [
+            json.loads(line)
+            for line in self.vercel_log.read_text(encoding="utf-8").splitlines()
+        ]
+        listed_projects = [call[1] for call in calls if call[0] == "list"]
+        self.assertEqual(listed_projects, ["aurea-solaris", "aurea-solaris-api"])
 
     def test_all_verifiers_execute_python_before_selecting_it(self) -> None:
         cases = (
@@ -554,6 +648,21 @@ class PreviewVerificationScriptTests(unittest.TestCase):
         self.assertIn("test-publishable-key", headers)
         self.assertIn("test-preview-service-role", headers)
         self.assertIn("test-production-service-role", headers)
+
+    def test_supabase_verifier_rejects_a_named_but_permissive_owner_policy(self) -> None:
+        environment = self._environment()
+        environment["AUREA_TEST_UNSAFE_POLICY"] = "1"
+
+        result = self._run_script(
+            "scripts/verify_supabase_environment.sh",
+            environment=environment,
+        )
+
+        self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertNotIn(
+            "PASS: preview and production Supabase environments verified",
+            result.stdout,
+        )
 
     def test_ownership_spec_guards_the_exact_production_supabase_origin(self) -> None:
         source = (ROOT / "apps/web/e2e/specs/ownership.spec.ts").read_text(
@@ -586,11 +695,16 @@ class PreviewVerificationScriptTests(unittest.TestCase):
             "scripts/smoke_api.sh https://aurea-solaris-api.vercel.app",
             source,
         )
-        self.assertEqual(
-            source.count("scripts/smoke_verified_preview_api.sh"),
-            2,
+        self.assertIn("bash scripts/verify_preview.sh", source)
+        self.assertIn("Before any network or browser check", source)
+        self.assertIn(
+            "scripts/verify_vercel_preview.py --project aurea-solaris",
+            source,
         )
-        self.assertIn("verifies every READY deployment page", source)
+        self.assertIn("--project aurea-solaris-api", source)
+        self.assertIn("exactly one READY deployment", source)
+        self.assertIn("AUREA_EXPECTED_PREVIEW_SHA", source)
+        self.assertIn("AUREA_VERCEL_SCOPE", source)
         self.assertNotIn("vercel list aurea-solaris-api", source)
         self.assertNotIn("--meta", source)
         self.assertNotIn(

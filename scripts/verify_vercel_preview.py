@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Bind an API preview URL to one READY Vercel deployment and Git SHA."""
+"""Bind a web or API preview URL to one READY Vercel deployment and Git SHA."""
 
 from __future__ import annotations
 
@@ -16,7 +16,10 @@ from urllib.parse import urlsplit
 
 
 PROJECT = "aurea-solaris-api"
-PRODUCTION_HOST = "aurea-solaris-api.vercel.app"
+PROJECT_PRODUCTION_HOSTS = {
+    "aurea-solaris": "aurea-solaris.vercel.app",
+    PROJECT: "aurea-solaris-api.vercel.app",
+}
 FULL_SHA = re.compile(r"[0-9a-fA-F]{40}")
 
 
@@ -106,13 +109,16 @@ def _is_ready(deployment: dict[str, Any]) -> bool:
     return bool(present) and all(state == "READY" for state in present)
 
 
-def verify(expected_sha: str, supplied_url: str) -> str:
+def verify(expected_sha: str, supplied_url: str, *, project: str = PROJECT) -> str:
+    if project not in PROJECT_PRODUCTION_HOSTS:
+        raise VerificationError("Project must be an approved Aurea Vercel project.")
     if not FULL_SHA.fullmatch(expected_sha):
         raise VerificationError("Expected SHA must be exactly 40 hexadecimal characters.")
     expected_sha = expected_sha.lower()
     supplied_url = _https_url(supplied_url, label="Supplied preview URL")
-    if urlsplit(supplied_url).hostname == PRODUCTION_HOST:
-        raise VerificationError("The canonical production API host is not a preview.")
+    production_host = PROJECT_PRODUCTION_HOSTS[project]
+    if urlsplit(supplied_url).hostname == production_host:
+        raise VerificationError("The canonical production host is not a preview.")
 
     scope = os.environ.get("AUREA_VERCEL_SCOPE", "").strip()
     if not scope:
@@ -120,7 +126,7 @@ def verify(expected_sha: str, supplied_url: str) -> str:
     cli = _cli_command()
     list_arguments = [
         "list",
-        PROJECT,
+        project,
         "--scope",
         scope,
         "--status",
@@ -151,7 +157,7 @@ def verify(expected_sha: str, supplied_url: str) -> str:
         sha = meta.get("githubCommitSha") if isinstance(meta, dict) else None
         ref = meta.get("githubCommitRef") if isinstance(meta, dict) else None
         if (
-            deployment.get("name") == PROJECT
+            deployment.get("name") == project
             and _is_ready(deployment)
             and isinstance(sha, str)
             and sha.lower() == expected_sha
@@ -164,7 +170,7 @@ def verify(expected_sha: str, supplied_url: str) -> str:
         )
 
     matched_url = _https_url(matches[0].get("url"), label="Matched deployment")
-    if urlsplit(matched_url).hostname == PRODUCTION_HOST:
+    if urlsplit(matched_url).hostname == production_host:
         raise VerificationError("The matched deployment resolved to production.")
     inspected = _run_vercel(
         cli,
@@ -182,13 +188,24 @@ def verify(expected_sha: str, supplied_url: str) -> str:
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Verify one exact-SHA Vercel API preview deployment."
+        description="Verify one exact-SHA Aurea Vercel preview deployment."
+    )
+    parser.add_argument(
+        "--project",
+        choices=tuple(PROJECT_PRODUCTION_HOSTS),
+        default=PROJECT,
     )
     parser.add_argument("expected_sha")
     parser.add_argument("preview_url")
     arguments = parser.parse_args()
     try:
-        print(verify(arguments.expected_sha, arguments.preview_url))
+        print(
+            verify(
+                arguments.expected_sha,
+                arguments.preview_url,
+                project=arguments.project,
+            )
+        )
     except VerificationError as error:
         print(f"Preview verification failed: {error}", file=sys.stderr)
         return 1

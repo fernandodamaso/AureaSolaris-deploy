@@ -25,7 +25,17 @@ Required tables and policies:
 - `birth_profiles` with `birth_profiles_owner_all`
 - `calculation_receipts` with `calculation_receipts_owner_all`
 
-All three tables must have RLS enabled. Each owner policy is for `authenticated` and checks `auth.uid()` for both reads/writes.
+All three tables must have RLS enabled. Each owner policy must be exact:
+
+- role: `authenticated`
+- command: `ALL`
+- `USING`: `auth.uid() = user_id`
+- `WITH CHECK`: `auth.uid() = user_id`
+
+The hosted catalog renders the function as `(( SELECT auth.uid() AS uid) =
+user_id)`. The verifier requires that exact hosted expression in both policy
+columns. Any `true` policy, another role, a narrower command, or a missing
+`WITH CHECK` fails verification.
 
 ## Auth policy
 

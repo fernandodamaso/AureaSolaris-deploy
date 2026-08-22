@@ -67,6 +67,23 @@ try {
     if ($openapi.Content -notmatch '/browser/command') { throw 'OpenAPI não contém /browser/command.' }
     Write-Output "HEALTH auth_mode=$($healthJson.auth_mode) browser_contract_version=$($healthJson.browser_contract_version) engine=$($healthJson.engine)"
 
+    $natalBody = @{
+        year = 2000; month = 1; day = 1; hour = 12.0
+        lat = 0.0; lon = 0.0; timezone = 'UTC'; utc_offset_minutes = 0
+        house_system = 'Regiomontanus'
+    } | ConvertTo-Json -Compress
+    $natal = Invoke-RestMethod "$base/natal" -Method Post -ContentType 'application/json' -Body $natalBody -TimeoutSec 30
+    if ([string]$natal.meta.receipt.schema_version -ne 'calculation-receipt.v1') {
+        throw 'O cálculo empacotado não devolveu o recibo certificado.'
+    }
+    if ([string]$natal.meta.receipt.ephemeris.mode -ne 'swiss') {
+        throw "Modo de efeméride inesperado: $($natal.meta.receipt.ephemeris.mode)"
+    }
+    if ($natal.meta.governance.allowed -ne $true) {
+        throw 'A governança empacotada bloqueou o cálculo de referência.'
+    }
+    Write-Output 'NATAL receipt=calculation-receipt.v1 ephemeris=swiss governance=allowed'
+
     function Invoke-BrowserCommand {
         param(
             [string]$Command,
@@ -126,7 +143,7 @@ try {
         throw 'load_board não devolveu o caderno gravado'
     }
     Write-Output "BOARD_ROUNDTRIP status=ok owner_kind=$kind"
-    Write-Output "SMOKE PASS port=$ApiPort health=200 engine=swisseph auth_mode=local-owner browser_contract_version=2 root=200 openapi=200 token_equality=true board_roundtrip=ok"
+    Write-Output "SMOKE PASS port=$ApiPort health=200 engine=swisseph auth_mode=local-owner browser_contract_version=2 root=200 openapi=200 natal=certified token_equality=true board_roundtrip=ok"
 } finally {
     Invoke-CleanupStep 'runtime-tree' { if ($null -ne $runtime) { Stop-Tree $runtime } }
     Invoke-CleanupStep 'ASTRO_API_PORT-restore' {

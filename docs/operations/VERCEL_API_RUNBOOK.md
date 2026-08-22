@@ -31,52 +31,55 @@ The project has separate `preview` and `production` values for the six server va
 - `AUREA_ALLOWED_ORIGINS`
 - `AUREA_EPHEMERIS_PATH`
 
-The database URL uses a dedicated `aurea_api` database role in each Supabase project through the regional Supavisor session-pooler host. The direct `db.<ref>.supabase.co` host is IPv6-only and is not suitable for this Vercel runtime. Its password is generated and stored only as a sensitive Vercel environment value. The role bypasses RLS because the trusted API enforces the authenticated owner ID; browser clients never receive this credential.
+The database URL uses the dedicated environment role through the assigned
+Supavisor session pooler `aws-0-sa-east-1.pooler.supabase.com`, port `5432`,
+database `postgres`. The direct `db.<ref>.supabase.co` host is IPv6-only and is
+not valid for this Vercel runtime. Its password is generated and stored only as
+a sensitive Vercel environment value. The role bypasses RLS because the trusted
+API enforces the authenticated owner ID; browser clients never receive this
+credential.
 
-Preview uses the preview Supabase ref and API origin. Production uses the production Supabase ref and the canonical web origin `https://aurea-solaris.vercel.app`. Do not copy a production value into preview or vice versa.
+Preview uses the approved preview Supabase ref and an approved Vercel web preview
+origin. Production uses the approved production Supabase ref and the canonical
+web origin `https://aurea-solaris.vercel.app`. Do not copy a production value
+into preview or vice versa.
 
 ## Deployment and smoke
 
 Deploy from the exact mirror SHA with the Vercel CLI. Record only the deployment ID, URL, target, and exact SHA. Never record environment values or request bodies.
 
-Before any authenticated smoke, bind the URL to the exact expected preview SHA. The
-wrapper verifies every READY deployment page without a metadata filter. It requires
-exactly one `aurea-solaris-api` deployment whose Git SHA and branch are the expected
-40-character SHA and `preview`. It then inspects the supplied URL or alias and requires
-the same resolved deployment URL, READY state, and preview target. It rejects the
-canonical production host. The wrapper captures the verifier result first, stops on
-failure, and only then exports the verified URL and starts the smoke. Stop if any check
-differs.
+Before any network or browser check, bind both preview URLs to the exact expected
+SHA. `scripts/verify_preview.sh` calls
+`scripts/verify_vercel_preview.py --project aurea-solaris` and
+`--project aurea-solaris-api`. Each call requires exactly one READY deployment for
+that project with the expected 40-character Git SHA and `preview` target, then
+inspects the supplied URL or alias and requires the same resolved deployment URL.
+The verifier rejects the canonical production host. The wrapper exports the URLs
+only after both project checks pass; stop on any mismatch.
 
 ```bash
-: "${AUREA_PREVIEW_API_URL:?Set the protected preview API deployment URL or alias}"
-: "${AUREA_EXPECTED_PREVIEW_SHA:?Set the full candidate SHA}"
-: "${AUREA_VERCEL_SCOPE:?Set the verified Vercel team scope}"
+: "${AUREA_E2E_URL:?required}"
+: "${AUREA_E2E_API_URL:?required}"
+: "${AUREA_EXPECTED_PREVIEW_SHA:?required}"
+: "${AUREA_VERCEL_SCOPE:?required}"
 ```
 
-Only after that comparison succeeds, run the smoke script with a short-lived preview
-JWT held in the process environment:
+The wrapper also requires these process-only names: `AUREA_E2E_EMAIL`,
+`AUREA_E2E_PASSWORD`, `AUREA_E2E_SECOND_JWT`,
+`AUREA_VERCEL_WEB_PROTECTION_BYPASS`, `AUREA_VERCEL_API_PROTECTION_BYPASS`,
+`SUPABASE_PREVIEW_URL`, `SUPABASE_PREVIEW_ANON_KEY`, and
+`AUREA_PRODUCTION_SUPABASE_URL`. Keep their values in the secure execution
+environment. Never place them in command arguments, source, logs, or this runbook.
+
+Only after both deployment comparisons succeed, run the wrapper. It performs API
+health and ownership checks, confirms disabled public sign-up against the approved
+preview Supabase project, and then starts the non-destructive browser ownership test:
 
 ```bash
-AUREA_SMOKE_JWT="$SHORT_LIVED_PREVIEW_JWT" \
-AUREA_VERCEL_PROTECTION_BYPASS="$LOCAL_ONLY_BYPASS" \
-bash scripts/smoke_verified_preview_api.sh
+bash scripts/verify_preview.sh
 ```
 
-For the certified Swiss Ephemeris check, use an isolated preview identity and synthetic birth profile only:
-
-```bash
-AUREA_SMOKE_JWT="$SHORT_LIVED_PREVIEW_JWT" \
-AUREA_SMOKE_ASTROLOGY=1 \
-AUREA_VERCEL_PROTECTION_BYPASS="$LOCAL_ONLY_BYPASS" \
-bash scripts/smoke_verified_preview_api.sh
-```
-
-The script checks `/health`, fail-closed `/ready`, safe unauthenticated `401`, authenticated `/v1/me`, and (when requested) the real astrology route. It prints status and engine metadata only. Sensitive headers and the synthetic birth body use a curl configuration stream on standard input, so those input values do not enter child-process arguments. Curl stores response JSON only in a private temporary directory; the exit trap removes those files. The script never prints the JWT, response bodies, birth payload, or database credential, and it retains no response file. It does not run against production.
-
-`LOCAL_ONLY_BYPASS` is a short-lived Vercel deployment-protection value supplied by
-the authenticated local CLI. Keep it in the local process environment only; do not
-commit it, add it to GitHub Actions, or record it in an issue.
+The script prints status only. It does not run against production.
 
 ## Failure boundaries
 

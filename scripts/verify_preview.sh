@@ -11,6 +11,8 @@ source "$SCRIPT_DIR/lib/select_python.sh"
 : "${AUREA_E2E_SECOND_JWT:?AUREA_E2E_SECOND_JWT is required}"
 : "${AUREA_VERCEL_WEB_PROTECTION_BYPASS:?AUREA_VERCEL_WEB_PROTECTION_BYPASS is required}"
 : "${AUREA_VERCEL_API_PROTECTION_BYPASS:?AUREA_VERCEL_API_PROTECTION_BYPASS is required}"
+: "${AUREA_EXPECTED_PREVIEW_SHA:?AUREA_EXPECTED_PREVIEW_SHA is required}"
+: "${AUREA_VERCEL_SCOPE:?AUREA_VERCEL_SCOPE is required}"
 : "${SUPABASE_PREVIEW_URL:?SUPABASE_PREVIEW_URL is required}"
 : "${SUPABASE_PREVIEW_ANON_KEY:?SUPABASE_PREVIEW_ANON_KEY is required}"
 : "${AUREA_PRODUCTION_SUPABASE_URL:?AUREA_PRODUCTION_SUPABASE_URL is required}"
@@ -33,10 +35,23 @@ if [[ "$normalized_production_supabase_url" != "$CANONICAL_PRODUCTION_SUPABASE_U
 fi
 export AUREA_PRODUCTION_SUPABASE_URL="$normalized_production_supabase_url"
 
+aurea_select_python || exit 1
+verified_web_url="$(
+  "$PYTHON" "$SCRIPT_DIR/verify_vercel_preview.py" \
+    --project aurea-solaris \
+    "$AUREA_EXPECTED_PREVIEW_SHA" "$AUREA_E2E_URL"
+)" || exit 1
+verified_api_url="$(
+  "$PYTHON" "$SCRIPT_DIR/verify_vercel_preview.py" \
+    --project aurea-solaris-api \
+    "$AUREA_EXPECTED_PREVIEW_SHA" "$AUREA_E2E_API_URL"
+)" || exit 1
+export AUREA_E2E_URL="$verified_web_url"
+export AUREA_E2E_API_URL="$verified_api_url"
+
 if command -v curl >/dev/null 2>&1; then CURL="curl"
 elif command -v curl.exe >/dev/null 2>&1; then CURL="curl.exe"
 else printf 'curl is required.\n' >&2; exit 1; fi
-aurea_select_python || exit 1
 
 TMP_DIR="$(mktemp -d)"
 trap 'rm -rf "$TMP_DIR"' EXIT

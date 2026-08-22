@@ -18,6 +18,10 @@ SCOPE = "test-team"
 DEPLOYMENT_HOST = "aurea-solaris-api-expected-test-team.vercel.app"
 DEPLOYMENT_URL = f"https://{DEPLOYMENT_HOST}"
 PRODUCTION_URL = "https://aurea-solaris-api.vercel.app"
+WEB_PROJECT = "aurea-solaris"
+WEB_DEPLOYMENT_HOST = "aurea-solaris-expected-test-team.vercel.app"
+WEB_DEPLOYMENT_URL = f"https://{WEB_DEPLOYMENT_HOST}"
+WEB_PRODUCTION_URL = "https://aurea-solaris.vercel.app"
 
 
 class VercelPreviewVerifierTests(unittest.TestCase):
@@ -289,6 +293,32 @@ class VercelPreviewVerifierTests(unittest.TestCase):
                 ],
             ],
         )
+
+    def test_can_verify_the_web_project_without_accepting_its_production_host(self) -> None:
+        web_deployment = self._deployment(host=WEB_DEPLOYMENT_HOST)
+        web_deployment["name"] = WEB_PROJECT
+        valid = self._run(
+            "--project",
+            WEB_PROJECT,
+            EXPECTED_SHA,
+            WEB_DEPLOYMENT_URL,
+            pages=[self._page([web_deployment])],
+            inspection=self._inspection(host=WEB_DEPLOYMENT_HOST),
+        )
+
+        self.assertEqual(valid.returncode, 0, valid.stderr)
+        self.assertEqual(valid.stdout, f"{WEB_DEPLOYMENT_URL}\n")
+        self.assertEqual(self._calls()[0][1], WEB_PROJECT)
+
+        self.cli_log.unlink(missing_ok=True)
+        production = self._run(
+            "--project",
+            WEB_PROJECT,
+            EXPECTED_SHA,
+            WEB_PRODUCTION_URL,
+        )
+        self.assertNotEqual(production.returncode, 0)
+        self.assertEqual(self._calls(), [])
 
 
 if __name__ == "__main__":

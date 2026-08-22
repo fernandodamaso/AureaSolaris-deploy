@@ -1,55 +1,28 @@
 # Astrologia
 
-## astrologia-seeded-natal
+## astrologia-certified-natal
 
 - feature: Astrologia
-- steps: Open Astrologia → Mandala visual; open technical receipt.
-- assert: Receipt shows UTC, IANA timezone, input hash (not undeclared).
+- steps: Open the natal provenance receipt.
+- assert: The receipt shows UTC, IANA timezone, input hash, and declared ephemeris.
 - spec: `e2e/specs/astrologia.spec.ts`
 - playbook: `e2e/playbooks/mandala.md`
-- seed: Mapa de referencia + Pessoa Conhecida
+- seed: private Web V1 birth profile
 
-## astrologia-recalculate
-
-- feature: Astrologia
-- steps: Switch map to Pessoa Conhecida; refresh; switch back to Mapa de referencia.
-- assert: Provenance badge remains visible after each change.
-- spec: `e2e/specs/astrologia.spec.ts`
-- playbook: none
-- seed: two seeded maps
-
-## astrologia-incomplete-birth
+## astrologia-retry
 
 - feature: Astrologia
-- steps: Add map with name only; leave date/time/location empty; try save.
-- assert: Form errors; no silent invented values; map not added to selector.
+- steps: Force recalculation of the natal map.
+- assert: The natal provenance remains visible and the input hash is declared.
 - spec: `e2e/specs/astrologia.spec.ts`
 - playbook: none
-- seed: none beyond boot
+- seed: private Web V1 birth profile
 
-## astrologia-open-caderno
+## astrologia-certified-transit
 
 - feature: Astrologia
-- steps: Click Estudar no Caderno.
-- assert: Caderno Vivo opens.
+- steps: Open the current-transits provenance receipt.
+- assert: The transit receipt shows a declared input hash and ephemeris.
 - spec: `e2e/specs/astrologia.spec.ts`
 - playbook: none
-- seed: seeded natal
-
-## astrologia-open-hermes
-
-- feature: Astrologia
-- steps: Click Tutor IA (Hermes mocked).
-- assert: Hermes composer visible.
-- spec: `e2e/specs/astrologia.spec.ts`
-- playbook: none
-- seed: seeded natal
-
-## astrologia-second-map
-
-- feature: Astrologia
-- steps: Add map using Pessoa Conhecida fixture values from São Paulo city select.
-- assert: New map selectable; provenance visible.
-- spec: `e2e/specs/astrologia.spec.ts`
-- playbook: none
-- seed: BirthForm São Paulo city entry
+- seed: private Web V1 birth profile
