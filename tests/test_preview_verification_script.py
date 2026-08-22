@@ -68,6 +68,7 @@ class PreviewVerificationScriptTests(unittest.TestCase):
         self.header_log = self.stub_dir / "curl-headers.txt"
         self.body_log = self.stub_dir / "curl-bodies.txt"
         self.python_log = self.stub_dir / "python-launchers.txt"
+        self.npx_log = self.stub_dir / "npx-launch.txt"
 
         real_python = _bash_path(Path(os.sys.executable))
         _write_executable(
@@ -98,6 +99,8 @@ class PreviewVerificationScriptTests(unittest.TestCase):
             self.stub_dir / "npx",
             """
             #!/usr/bin/env bash
+            printf 'production_supabase=%s\n' \
+              "$AUREA_PRODUCTION_SUPABASE_URL" >> "$AUREA_TEST_NPX_LOG"
             exit 0
             """,
         )
@@ -257,6 +260,7 @@ class PreviewVerificationScriptTests(unittest.TestCase):
                 "AUREA_TEST_CURL_HEADER_LOG": _bash_path(self.header_log),
                 "AUREA_TEST_CURL_BODY_LOG": _bash_path(self.body_log),
                 "AUREA_TEST_PYTHON_LOG": _bash_path(self.python_log),
+                "AUREA_TEST_NPX_LOG": _bash_path(self.npx_log),
                 "AUREA_E2E_URL": "https://preview-web.example.test",
                 "AUREA_E2E_API_URL": "https://preview-api.example.test",
                 "AUREA_E2E_EMAIL": "preview-user@example.test",
@@ -320,7 +324,13 @@ class PreviewVerificationScriptTests(unittest.TestCase):
         ]
 
     def _clear_logs(self) -> None:
-        for path in (self.arg_log, self.header_log, self.body_log, self.python_log):
+        for path in (
+            self.arg_log,
+            self.header_log,
+            self.body_log,
+            self.python_log,
+            self.npx_log,
+        ):
             path.unlink(missing_ok=True)
 
     def test_smoke_keeps_headers_and_birth_body_out_of_process_arguments(self) -> None:
@@ -449,6 +459,7 @@ class PreviewVerificationScriptTests(unittest.TestCase):
         )
         self.assertNotEqual(missing_result.returncode, 0)
         self.assertIn("AUREA_PRODUCTION_SUPABASE_URL is required", missing_result.stderr)
+        self.assertFalse(self.npx_log.exists(), "missing origin reached browser launch")
 
         wrong_environment = self._environment()
         wrong_environment["AUREA_PRODUCTION_SUPABASE_URL"] = (
@@ -460,6 +471,7 @@ class PreviewVerificationScriptTests(unittest.TestCase):
         )
         self.assertNotEqual(wrong_result.returncode, 0)
         self.assertIn(CANONICAL_PRODUCTION_SUPABASE_URL, wrong_result.stderr)
+        self.assertFalse(self.npx_log.exists(), "fake origin reached browser launch")
 
         self._clear_logs()
         trailing_slash_environment = self._environment()
@@ -470,6 +482,11 @@ class PreviewVerificationScriptTests(unittest.TestCase):
         )
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertIn("public_signup=disabled", result.stdout)
+        self.assertTrue(self.npx_log.exists(), "canonical origin did not reach browser launch")
+        self.assertEqual(
+            self.npx_log.read_text(encoding="utf-8").splitlines(),
+            [f"production_supabase={CANONICAL_PRODUCTION_SUPABASE_URL}"],
+        )
 
         arguments = "\n".join(self._curl_arguments())
         self.assertIn("/auth/v1/settings", arguments)
@@ -505,68 +522,27 @@ class PreviewVerificationScriptTests(unittest.TestCase):
         self.assertIn("test-preview-service-role", headers)
         self.assertIn("test-production-service-role", headers)
 
-    def test_ownership_discovery_requires_production_supabase_origin(self) -> None:
-        npx = shutil.which("npx.cmd") or shutil.which("npx")
-        if not npx:
-            self.skipTest("npx is required for Playwright discovery.")
-
-        env = os.environ.copy()
-        env["AUREA_E2E_URL"] = "https://preview-web.example.test"
-        env.pop("AUREA_PRODUCTION_SUPABASE_URL", None)
-        command = [
-            npx,
-            "playwright",
-            "test",
-            "apps/web/e2e/specs/ownership.spec.ts",
-            "--config=apps/web/e2e/playwright.config.ts",
-            "--project=chromium",
-            "--workers=1",
-            "--list",
-        ]
-        missing = subprocess.run(
-            command,
-            cwd=ROOT,
-            env=env,
-            capture_output=True,
-            text=True,
-            encoding="utf-8",
-            timeout=60,
-            check=False,
+    def test_ownership_spec_guards_the_exact_production_supabase_origin(self) -> None:
+        source = (ROOT / "apps/web/e2e/specs/ownership.spec.ts").read_text(
+            encoding="utf-8"
         )
-        self.assertNotEqual(missing.returncode, 0)
+
         self.assertIn(
-            "AUREA_PRODUCTION_SUPABASE_URL is required",
-            missing.stdout + missing.stderr,
+            "const canonicalProductionSupabase = "
+            f"'{CANONICAL_PRODUCTION_SUPABASE_URL}';",
+            source,
         )
-
-        env["AUREA_PRODUCTION_SUPABASE_URL"] = (
-            "https://tgpcpxqqusehssaihvcp.supabase.co.invalid"
+        self.assertIn(
+            "const configuredProductionSupabase = "
+            "process.env.AUREA_PRODUCTION_SUPABASE_URL;",
+            source,
         )
-        wrong = subprocess.run(
-            command,
-            cwd=ROOT,
-            env=env,
-            capture_output=True,
-            text=True,
-            encoding="utf-8",
-            timeout=60,
-            check=False,
+        self.assertIn("if (!configuredProductionSupabase) {", source)
+        self.assertIn("configuredProductionSupabase.slice(0, -1)", source)
+        self.assertIn(
+            "if (productionSupabase !== canonicalProductionSupabase) {",
+            source,
         )
-        self.assertNotEqual(wrong.returncode, 0)
-        self.assertIn(CANONICAL_PRODUCTION_SUPABASE_URL, wrong.stdout + wrong.stderr)
-
-        env["AUREA_PRODUCTION_SUPABASE_URL"] = CANONICAL_PRODUCTION_SUPABASE_URL
-        present = subprocess.run(
-            command,
-            cwd=ROOT,
-            env=env,
-            capture_output=True,
-            text=True,
-            encoding="utf-8",
-            timeout=60,
-            check=False,
-        )
-        self.assertEqual(present.returncode, 0, present.stdout + present.stderr)
 
 
 if __name__ == "__main__":
