@@ -1,14 +1,15 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useContext } from 'react';
 import {
   X, Save, User,
   CalendarDays,
   Key, Palette, Camera
 } from 'lucide-react';
-import { safeInvoke } from '../utils/tauri';
-import { LOCAL_API_URL } from '../utils/api';
 import { readCertifiedCalculation } from '../utils/certifiedCalculation';
 import type { PrivateProfile } from '../types/private-profile';
 import type { PlanetaryPosition } from '../types/astrology';
+import { ApiClientContext } from '../api/provider';
+import type { BirthProfileResponse, ProfileResponse } from '../api/client';
+import { ApiProblem } from '../api/errors';
 
 interface ProfileEditorProps {
   profile: PrivateProfile;
@@ -16,6 +17,9 @@ interface ProfileEditorProps {
   onClose: () => void;
   onLogout: () => void;
   showLogout: boolean;
+  apiProfile?: ProfileResponse;
+  apiBirthProfile?: BirthProfileResponse;
+  onApiSaved?: () => void;
 }
 
 const BRAZILIAN_CITIES = [
@@ -49,17 +53,20 @@ function parseBirthDate(value: string): string | null {
   return `${yearText}-${monthText}-${dayText}`;
 }
 
-export const ProfileEditor = ({ profile, onSave, onClose, onLogout, showLogout }: ProfileEditorProps) => {
-  const [name, setName] = useState(profile.name || '');
-  const [birthDateInput, setBirthDateInput] = useState(() => formatBirthDate(profile.birthDate));
+export const ProfileEditor = ({ profile, onSave, onClose, onLogout, showLogout, apiProfile, apiBirthProfile, onApiSaved }: ProfileEditorProps) => {
+  const api = useContext(ApiClientContext);
+  const [name, setName] = useState(profile.name || apiProfile?.display_name || '');
+  const [birthDateInput, setBirthDateInput] = useState(() => formatBirthDate(profile.birthDate || apiBirthProfile?.birth_date));
   const [birthDateError, setBirthDateError] = useState('');
-  const [birthTime, setBirthTime] = useState(profile.birthTime || '');
-  const [birthCity, setBirthCity] = useState(profile.birthCity || '');
+  const [birthTime, setBirthTime] = useState(profile.birthTime || apiBirthProfile?.birth_time?.slice(0, 5) || '');
+  const [birthCity, setBirthCity] = useState(profile.birthCity || apiBirthProfile?.place || '');
   const [context, setContext] = useState(profile.context || '');
   const [dialogStyle, setDialogStyle] = useState(profile.dialogStyle || 'Inteligente e Poética');
   const [natalPreview, setNatalPreview] = useState<string>('');
   const [loadingNatal, setLoadingNatal] = useState(false);
   const [avatar, setAvatar] = useState<string>(profile.avatar || '');
+  const [saveError, setSaveError] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const birthDate = parseBirthDate(birthDateInput);
 
@@ -73,49 +80,32 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout, showLogout }
     const calculatePreview = async () => {
       setLoadingNatal(true);
       try {
-        const [y, m, d] = birthDate.split('-').map(Number);
-        const [h, min] = birthTime.split(':').map(Number);
         const city = BRAZILIAN_CITIES.find(c => c.name === birthCity);
         if (!city) {
           setNatalPreview('Selecione uma cidade com coordenadas verificadas.');
           return;
         }
-
-        const payload = { year: y, month: m, day: d, hour: h + (min / 60), lat: city.lat, lon: city.lon, timezone: city.timezone };
-        let result: string | null = null;
-
-        // Try direct HTTP to sidecar first (works in both Tauri and browser dev mode)
-        try {
-          const res = await fetch(`${LOCAL_API_URL}/natal`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload),
-          });
-          if (res.ok) result = await res.text();
-        } catch { /* sidecar not reachable, fall through to Tauri invoke */ }
-
-        // Fallback to Tauri invoke if direct HTTP failed
-        if (!result) {
-          result = await safeInvoke<string>('run_astro_engine', { payload: JSON.stringify(payload) });
+        if (!api) {
+          setNatalPreview('Cálculo indisponível. Nenhum valor foi estimado.');
+          return;
         }
 
-        if (result) {
-          const data = JSON.parse(result);
-          if (!readCertifiedCalculation(data, 'natal')) {
-            setNatalPreview('Cálculo recebido sem recibo auditável. Nenhum valor astrológico será exibido.');
-          } else if (data.planets) {
-            const summary = Object.entries(data.planets)
-              .filter(([name]) => !['ASC', 'MC', 'DSC', 'IC', 'Chiron'].includes(name))
-              .slice(0, 6)
-              .map(([name, info]) => {
-                const position = info as PlanetaryPosition & { sign_full?: string };
-                const deg = Math.floor(position.pos_in_sign ?? 0);
-                const min = Math.round(((position.pos_in_sign ?? 0) % 1) * 60);
-                return `${name}: ${deg}°${min > 0 ? `${String(min).padStart(2, '0')}'` : ''} ${position.sign_full || position.sign || '?'}`;
-              })
-              .join(' | ');
-            setNatalPreview(summary);
-          }
+        const response = await api.calculateNatal();
+        const data = response.result_payload;
+        if (!readCertifiedCalculation(data, 'natal')) {
+          setNatalPreview('Cálculo recebido sem recibo auditável. Nenhum valor astrológico será exibido.');
+        } else if (data.planets) {
+          const summary = Object.entries(data.planets)
+            .filter(([name]) => !['ASC', 'MC', 'DSC', 'IC', 'Chiron'].includes(name))
+            .slice(0, 6)
+            .map(([name, info]) => {
+              const position = info as PlanetaryPosition & { sign_full?: string };
+              const deg = Math.floor(position.pos_in_sign ?? 0);
+              const min = Math.round(((position.pos_in_sign ?? 0) % 1) * 60);
+              return `${name}: ${deg}°${min > 0 ? `${String(min).padStart(2, '0')}'` : ''} ${position.sign_full || position.sign || '?'}`;
+            })
+            .join(' | ');
+          setNatalPreview(summary);
         }
       } catch {
         setNatalPreview('Cálculo indisponível. Nenhum valor foi estimado.');
@@ -125,7 +115,7 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout, showLogout }
     };
     const timer = setTimeout(calculatePreview, 800);
     return () => clearTimeout(timer);
-  }, [birthDate, birthTime, birthCity]);
+  }, [api, birthDate, birthTime, birthCity]);
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -139,7 +129,7 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout, showLogout }
     reader.readAsDataURL(file);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (birthDateInput.trim() && !birthDate) {
       setBirthDateError('Use a data no formato DD/MM/AAAA. O conteúdo digitado não foi alterado.');
       return;
@@ -150,7 +140,10 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout, showLogout }
       return;
     }
     const city = BRAZILIAN_CITIES.find(c => c.name === birthCity);
-    if ((birthDate || birthTime) && !city) {
+    const apiHasCoordinates = apiBirthProfile
+      && Number.isFinite(Number(apiBirthProfile.latitude))
+      && Number.isFinite(Number(apiBirthProfile.longitude));
+    if ((birthDate || birthTime) && !city && !apiHasCoordinates) {
       alert('Selecione a cidade de nascimento. O Aurea não presume coordenadas.');
       return;
     }
@@ -174,7 +167,7 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout, showLogout }
       ? { birthDate, birthTime, lat: city.lat, lng: city.lon, timezone: city.timezone }
       : undefined;
 
-    onSave({
+    const updates = {
       avatar,
       name,
       birthDate: birthDate ?? undefined,
@@ -185,7 +178,39 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout, showLogout }
       dialogStyle,
       natal,
       birthData,
-    });
+    };
+
+    if (apiProfile && apiBirthProfile && api) {
+      setSaveError('');
+      setIsSaving(true);
+      try {
+        await api.updateProfile({
+          display_name: name.trim(),
+          locale: apiProfile.locale,
+          timezone: city?.timezone || apiProfile.timezone,
+        });
+        await api.updateBirthProfile({
+          label: apiBirthProfile.label,
+          birth_date: birthDate || apiBirthProfile.birth_date,
+          birth_time: birthTime || apiBirthProfile.birth_time.slice(0, 5),
+          house_system: 'P',
+          place: birthCity || apiBirthProfile.place,
+          latitude: city?.lat ?? Number(apiBirthProfile.latitude),
+          longitude: city?.lon ?? Number(apiBirthProfile.longitude),
+          timezone: city?.timezone || apiBirthProfile.timezone,
+        });
+        onSave(updates);
+        onApiSaved?.();
+        onClose();
+      } catch (error) {
+        setSaveError(error instanceof ApiProblem ? 'Não foi possível salvar os dados. Verifique os campos e tente novamente.' : 'Não foi possível salvar os dados. Tente novamente.');
+      } finally {
+        setIsSaving(false);
+      }
+      return;
+    }
+
+    onSave(updates);
   };
 
   return (
@@ -370,6 +395,7 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout, showLogout }
 
         {/* Footer */}
         <div className="mt-8 flex justify-between items-center border-t pt-6" style={{ borderColor: 'var(--aurea-line)' }}>
+          {saveError && <p role="alert" className="text-sm font-semibold text-red-600">{saveError}</p>}
           {showLogout ? (
             <button
               onClick={onLogout}
@@ -382,7 +408,7 @@ export const ProfileEditor = ({ profile, onSave, onClose, onLogout, showLogout }
           )}
           <div className="flex gap-4">
             <button onClick={onClose} className="aurea-button-secondary px-8 py-3 font-black uppercase text-[10px] tracking-[0.2em] transition-all">Cancelar</button>
-            <button onClick={handleSave} className="aurea-button-primary px-10 py-3 rounded-lg font-black uppercase text-[10px] tracking-[0.2em] transition-all flex items-center gap-2">
+            <button onClick={() => { void handleSave(); }} disabled={isSaving} className="aurea-button-primary px-10 py-3 rounded-lg font-black uppercase text-[10px] tracking-[0.2em] transition-all flex items-center gap-2 disabled:opacity-60">
               <Save size={12} /> Salvar
             </button>
           </div>

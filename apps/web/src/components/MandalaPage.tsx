@@ -1,7 +1,8 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { useCertifiedNatalCalculation } from '../hooks/useCertifiedNatalCalculation';
+import { useLiveTransitData } from '../hooks/useLiveTransitData';
 import { MandalaChart } from './MandalaChart';
-import { RefreshCw, User, Users, Plus, Edit3, MessageSquare, FileText } from 'lucide-react';
+import { RefreshCw, User, Users, Plus, Edit3 } from 'lucide-react';
 import { useIdentity } from '../features/identity/IdentityContext';
 import type { AureaProfile } from '../features/identity/types';
 import { BirthForm } from './common/BirthForm';
@@ -49,7 +50,6 @@ export const MandalaPage = () => {
   // regras interpretativas pertencem ao estudo com fonte, não ao canvas.
   const showDetails = false;
 
-  // O mapa é a visão principal. O Caderno abre apenas por uma ação explícita.
 
   const containerRef = useRef<HTMLDivElement>(null);
   const [containerWidth, setContainerWidth] = useState(800);
@@ -120,6 +120,27 @@ export const MandalaPage = () => {
     [birthData],
   );
   const { data, loading, error, recalculate } = useCertifiedNatalCalculation(calculationRequest, calculationEnabled);
+  const certifiedNatal = useMemo(() => readCertifiedCalculation(data, 'natal'), [data]);
+  const natalPositions = useMemo(() => {
+    const planets = certifiedNatal?.planets as Record<string, Partial<PlanetaryPosition>> | undefined;
+    const Sun = planets?.Sun?.degree;
+    const Moon = planets?.Moon?.degree;
+    const ASC = planets?.ASC?.degree;
+    if (![Sun, Moon, ASC].every(Number.isFinite)) return undefined;
+    return {
+      Sun: Sun as number,
+      Moon: Moon as number,
+      ASC: ASC as number,
+      Mercury: planets?.Mercury?.degree,
+      Venus: planets?.Venus?.degree,
+      Mars: planets?.Mars?.degree,
+    };
+  }, [certifiedNatal]);
+  const {
+    liveData: transitData,
+    loading: transitLoading,
+    error: transitError,
+  } = useLiveTransitData(natalPositions, Boolean(natalPositions));
 
   // Parse data for MandalaChart - includes planets, secondary bodies, and angles
   const chartPlanets = useMemo(() => {
@@ -209,27 +230,6 @@ export const MandalaPage = () => {
     icon: map.kind === 'profile' ? <User size={14} /> : <Users size={14} />,
   }));
 
-  const activeTargetLabel = allTargets.find(t => t.id === selectedTarget)?.name || 'Mapa selecionado';
-
-  const openHermesForCurrentMap = () => {
-    window.dispatchEvent(new Event('open-hermes-chat'));
-  };
-
-  const openCadernoForCurrentMap = () => {
-    const auditReceipt = data?.meta?.receipt;
-    const meta = data?.meta as (CertifiedAstrologyResult['meta'] & { timestamp?: string; location?: { lat?: number; lon?: number } }) | undefined;
-    const receipt = meta
-      ? `Cálculo astronômico recebido\n• UTC: ${auditReceipt?.resolved_time?.utc || meta.timestamp || 'não informado'}\n• Fuso IANA: ${auditReceipt?.resolved_time?.iana_timezone || 'não informado'}\n• Local: ${meta.location?.lat ?? '—'}, ${meta.location?.lon ?? '—'}\n• Motor: ${auditReceipt?.engine?.name || 'não informado'} ${auditReceipt?.engine?.version || ''}\n• Hash da entrada: ${auditReceipt?.input_hash || 'não informado'}`
-      : 'Cálculo astronômico indisponível — não registrar interpretação como fato.';
-    window.dispatchEvent(new CustomEvent('open-caderno-vivo', {
-      detail: {
-        type: 'create-study',
-        topic: activeTargetLabel,
-        seedNote: `Origem: ${activeTargetLabel}\n\n${receipt}\n\nRegra interpretativa: a selecionar\nFonte: a selecionar\nInferência Hermes: a solicitar\n\nMinha anotação:`,
-      },
-    }));
-  };
-
   const editingConnection = editingConnectionId
     ? activeProfile.connections?.find((connection) => connection.id === editingConnectionId)
     : undefined;
@@ -292,24 +292,6 @@ export const MandalaPage = () => {
           )}
 
           <button
-            onClick={openCadernoForCurrentMap}
-            className="mandala-action"
-            title="Criar estudo no Caderno Vivo a partir deste mapa"
-          >
-            <FileText size={16} />
-            <span>Estudar no Caderno</span>
-          </button>
-
-          <button
-            onClick={openHermesForCurrentMap}
-            className="mandala-action"
-            title="Abrir Hermes com este mapa em foco"
-          >
-            <MessageSquare size={16} />
-            <span>Tutor IA</span>
-          </button>
-
-          <button
             onClick={recalculate}
             disabled={loading || !birthData}
             aria-label={loading ? 'Calculando mapa' : birthData ? 'Atualizar cálculo do mapa' : 'Complete os dados de nascimento para calcular'}
@@ -322,8 +304,25 @@ export const MandalaPage = () => {
         </div>
       </div>
 
-      <div className="w-full max-w-3xl">
-        <CalculationEvidence meta={data?.meta} loading={loading} error={error} />
+      <div className="grid w-full max-w-3xl gap-3 lg:grid-cols-2">
+        <div>
+          <h2 className="sr-only">Mapa natal</h2>
+          <CalculationEvidence
+            ariaLabel="Proveniência do mapa natal"
+            meta={data?.meta}
+            loading={loading}
+            error={error}
+          />
+        </div>
+        <div>
+          <h2 className="sr-only">Trânsitos atuais</h2>
+          <CalculationEvidence
+            ariaLabel="Proveniência dos trânsitos atuais"
+            meta={transitData?.meta}
+            loading={transitLoading}
+            error={transitError}
+          />
+        </div>
       </div>
 
       {error && (

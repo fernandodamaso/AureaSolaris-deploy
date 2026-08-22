@@ -23,7 +23,10 @@ ALLOWED_STATUSES = {"pending_reference", "approved_reference", "rejected_referen
 DEFAULT_TOLERANCES = {"degree": 0.01, "house": 0.01, "orb": 0.01}
 
 sys.path.insert(0, str(REPOSITORY_ROOT))
-from astro_engine import calculate_astrology, calculate_transit_positions  # noqa: E402
+from services.api.src.aurea_api.domain.astrology.engine import (  # noqa: E402
+    calculate_astrology,
+    calculate_transit_positions,
+)
 
 
 class FixtureConfigurationError(ValueError):

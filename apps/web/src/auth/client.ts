@@ -4,6 +4,8 @@ import {
   type Session,
 } from '@supabase/supabase-js';
 
+import { readPublicConfig } from '../config';
+
 export type AuthSession = Session;
 
 export type AuthClientError = {
@@ -36,14 +38,8 @@ export type AuthClient = {
 let browserAuthClient: AuthClient | null = null;
 
 function readBrowserAuthConfig() {
-  const url = import.meta.env.VITE_SUPABASE_URL?.trim();
-  const anonymousKey = import.meta.env.VITE_SUPABASE_ANON_KEY?.trim();
-
-  if (!url || !anonymousKey) {
-    throw new Error('Supabase browser authentication is not configured.');
-  }
-
-  return { url, anonymousKey };
+  const { supabaseUrl, supabaseAnonKey } = readPublicConfig();
+  return { url: supabaseUrl, anonymousKey: supabaseAnonKey };
 }
 
 export function getBrowserAuthClient(): AuthClient {

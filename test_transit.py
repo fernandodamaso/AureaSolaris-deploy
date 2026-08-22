@@ -10,7 +10,7 @@ import os
 sys.path.insert(0, os.path.dirname(__file__))
 
 # Import the function we will implement
-from astro_engine import calculate_transit_positions
+from services.api.src.aurea_api.domain.astrology.engine import calculate_transit_positions
 
 def test_transit_basic():
     """Test that transit calculation returns expected structure without houses/aspects."""

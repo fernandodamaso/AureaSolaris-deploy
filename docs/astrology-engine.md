@@ -12,16 +12,20 @@ Frontend (React)
     → Tauri IPC → lib.rs
       → HTTP POST localhost:9876/natal (ou /transit)
         → main_api.py (FastAPI)
-          → astro_engine.py (motor)
+          → aurea_api.domain.astrology.engine (motor)
             → Swiss Ephemeris (precisão)
-            → Kerykeion (fallback)
+            → services/api/ephe (ativos certificados)
 ```
 
-## Motor Python (astro_engine.py)
+## Motor Python (`services/api/src/aurea_api/domain/astrology/engine.py`)
 
 ### Dependências
 - **swisseph (swe)** — cálculo astronômico de precisão profissional
-- **kerykeion** — fallback quando swisseph não está disponível
+- **Swiss Ephemeris assets** — `services/api/ephe/seas_18.se1`, `semo_18.se1`, and `sepl_18.se1`
+
+`AstrologyEngine` configures the packaged assets, performs a real readiness
+smoke calculation, and rejects a Moshier fallback. The repository-root
+`astro_engine.py` remains only as a compatibility import for the local sidecar.
 - **fastapi + uvicorn** — servidor HTTP
 
 ### Funções Principais

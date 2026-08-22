@@ -1,7 +1,5 @@
 import { createContext, useContext, type ReactNode, useMemo } from 'react';
-import { useAgenda } from '../features/agenda/AgendaContext';
 import { getPlanetaryDayRegent } from '../features/astrology/planetaryRegency';
-import { useHealthDocuments } from '../features/health/HealthDocumentsContext';
 import { useIdentity } from '../features/identity/IdentityContext';
 import { useLiveTransitData } from '../hooks/useLiveTransitData';
 import type { LiveAstroData, AstroAspect, PlanetaryPosition } from '../types/astrology';
@@ -28,8 +26,6 @@ const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
 
 export const GlobalProvider = ({ children }: { children: ReactNode }) => {
   const identity = useIdentity();
-  const agenda = useAgenda();
-  const healthDocuments = useHealthDocuments();
   // Personal transits stay unavailable until this context consumes a natal
   // calculation with a verifiable receipt, never the legacy `profile.natal`.
   const { liveData, transits, loading, error, getPlanetaryHour } = useLiveTransitData(undefined);
@@ -39,8 +35,6 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
     const dRegent = getPlanetaryDayRegent(new Date());
 
     const getAiContext = () => {
-      const pendingTasks = agenda.tasks.filter((task) => !task.completed && !task.is_completed);
-      const completedTasks = agenda.tasks.filter((task) => task.completed || task.is_completed);
       const planets = liveData?.planets || {};
       const retrogradePlanets = Object.entries(planets)
         .filter(([name, value]: [string, PlanetaryPosition]) => value?.retrograde && !['ASC', 'MC', 'DSC', 'IC'].includes(name))
@@ -75,13 +69,6 @@ Aspectos no céu: ${skyAspects}
 Trânsitos pessoais: ${transitSummary}
 Retrogradações: ${retrogradePlanets.length > 0 ? retrogradePlanets.join(', ') : 'Nenhuma'}
 
---- TAREFAS ---
-Pendentes: ${pendingTasks.length} | Completas: ${completedTasks.length} | Progresso: ${agenda.getMetrics().done}%
-Top 3 Pendentes: ${pendingTasks.slice(0, 3).map((task) => `- ${task.content}`).join('\n') || 'Nenhuma'}
-
---- SAÚDE ---
-Documentos: ${healthDocuments.documents.length} registrados
-
 --- STATUS DO SISTEMA ---
 Estabilidade: Alta | Agentes: Sintonizados | Conectividade: OK
 `;
@@ -95,7 +82,7 @@ Estabilidade: Alta | Agentes: Sintonizados | Conectividade: OK
       },
       getAiContext,
     };
-  }, [liveData, transits, loading, error, getPlanetaryHour, identity, agenda, healthDocuments.documents]);
+  }, [liveData, transits, loading, error, getPlanetaryHour, identity]);
 
   return <GlobalContext.Provider value={value}>{children}</GlobalContext.Provider>;
 };

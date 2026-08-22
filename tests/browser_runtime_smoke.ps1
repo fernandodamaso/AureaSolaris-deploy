@@ -34,9 +34,9 @@ $chromeCandidates = @(
 $chromePath = $chromeCandidates | Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1
 if ($null -eq $chromePath) { throw 'Chrome não foi encontrado nos caminhos padrão.' }
 
-$distIndex = Join-Path $repoRoot 'dist\index.html'
+$distIndex = Join-Path $repoRoot 'apps\web\dist\index.html'
 if (-not (Test-Path -LiteralPath $distIndex)) {
-    throw 'dist/index.html não foi encontrado. Execute npm run build antes do smoke de origem.'
+    throw 'apps/web/dist/index.html não foi encontrado. Execute npm run build antes do smoke de origem.'
 }
 
 $apiPortRange = 9877..9899

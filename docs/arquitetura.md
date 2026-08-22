@@ -10,7 +10,7 @@ The primary experience is a local web app opened in Chrome on Windows by `launch
 Chrome
   └─ React + TypeScript + Vite
        ├─ local HTTP API: FastAPI / Uvicorn at 127.0.0.1:9876
-       │    ├─ Swiss Ephemeris / Kerykeion fallback
+       │    ├─ `aurea_api.domain.astrology` + packaged Swiss Ephemeris
        │    ├─ SQLite editorial and private storage
        │    └─ Hermes/local services
        └─ browser adapter for operations previously exposed by Tauri IPC
@@ -26,7 +26,7 @@ Tauri 2 + Rust ── starts/coordinates the same Python sidecar
 | UI | `src/App.tsx`, `src/components/`, `src/context/` |
 | Browser startup | `launch_chrome.bat`, `vite.config.ts`, `start-dev.bat` |
 | Local API | `main_api.py`, `local_storage.py` |
-| Astrology | `astro_engine.py` |
+| Astrology | `services/api/src/aurea_api/domain/astrology/`, `services/api/ephe/` |
 | Native compatibility | `src-tauri/src/lib.rs`, `src-tauri/tauri.conf.json` |
 | Migrations | `src-tauri/migrations/private/`, `src-tauri/migrations/knowledge/` |
 | Editorial corpus | `knowledge/engenharia_astrologica/` |

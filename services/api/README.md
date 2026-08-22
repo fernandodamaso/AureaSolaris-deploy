@@ -19,3 +19,9 @@ The JWKS set is cached for 600 seconds, while PyJWT's non-TTL per-key cache rema
 Request logs contain only the request ID, HTTP method, matched route template, status, and duration. They do not include authorization values or request bodies. CORS origins come only from `AUREA_ALLOWED_ORIGINS`.
 
 The explicit mypy config path is required because mypy does not discover a nested `pyproject.toml` from the repository root. Keep database credentials and other secrets in ignored or deployment-managed environment storage only.
+
+The certified astrology engine lives under `aurea_api.domain.astrology`. Use
+`AstrologyEngine` from `aurea_api.infrastructure.ephemeris` with `services/api/ephe`; it requires the three checked-in
+Swiss Ephemeris assets and rejects a Moshier fallback. The repository-root
+`astro_engine.py` and `engine_governance.py` files are compatibility imports for
+the local sidecar and legacy characterization tests.

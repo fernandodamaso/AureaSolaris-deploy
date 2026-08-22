@@ -92,6 +92,8 @@ export const MandalaChart = ({
 
         <svg
           ref={svgRef}
+          role="img"
+          aria-label="Mandala Astrológica"
           width={size}
           height={size}
           viewBox={`0 0 ${size} ${size}`}

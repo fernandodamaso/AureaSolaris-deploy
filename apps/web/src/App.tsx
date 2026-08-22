@@ -1,29 +1,18 @@
-import { lazy, Suspense, useEffect, useState } from 'react';
-import { Edit3, Star, Activity, Calendar, User, PanelLeftOpen, PanelLeftClose, MessageCircle, FileText } from 'lucide-react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
+import { User, PanelLeftOpen, PanelLeftClose } from 'lucide-react';
 import "./styles.css";
 
-// Contexts
-import { useGlobalContext } from './context/GlobalContext.tsx';
-import { useAgenda } from './features/agenda/AgendaContext';
 import { useIdentity } from './features/identity/IdentityContext';
-
-// Components
-import { NavItem } from './components/common/UIComponents';
 import { PageLoadingFallback } from './components/common/PageLoadingFallback';
 import { LoginView } from './components/LoginView';
 import { ProfileEditor } from './components/ProfileEditor';
-import { HermesChat } from './components/HermesChat';
-import { openInitialAccess, safeInvoke, type InitialAccess } from './utils/tauri';
-import { LOCAL_API_URL } from './utils/api';
-import { applyTestUserUiSeed, TEST_USER_OWNER_ID } from './utils/test-user-ui-seed';
-import type { CadernoIntent } from './components/MesaCriacao';
+import { AppErrorBoundary } from './app/AppErrorBoundary';
+import { ServiceStatusPanel } from './app/ServiceStatusPanel';
+import { useAppBootstrap } from './app/useAppBootstrap';
+import { ProfileOnboarding } from './profile/ProfileOnboarding';
+import { V1Navigation, resolveV1Page, type V1Page } from './app/V1Navigation';
 
 const AstrologiaPage = lazy(() => import('./components/AstrologiaBoard').then(m => ({ default: m.AstrologiaPage })));
-const SaudeView = lazy(() => import('./components/SaudeView').then(m => ({ default: m.SaudeView })));
-const AgendaView = lazy(() => import('./components/agenda/AgendaView').then(m => ({ default: m.AgendaView })));
-const MesaCriacao = lazy(() => import('./components/MesaCriacao').then(m => ({ default: m.MesaCriacao })));
-const MemoriasView = lazy(() => import('./components/MemoriasView').then(m => ({ default: m.MemoriasView })));
-const DiarioView = lazy(() => import('./components/DiarioView').then(m => ({ default: m.DiarioView })));
 
 // --- ESTILOS GLOBAIS ---
 const globalStyles = `
@@ -49,231 +38,86 @@ const globalStyles = `
   }
 `;
 
-const PlanetaryInfo = () => {
-  const { astro } = useGlobalContext();
-  return (
-    <div className="flex items-center gap-2 flex-nowrap">
-      {/* Moon Phase */}
-      <div title={astro.error || 'Valor astronômico recebido do motor'} className="flex items-center gap-1.5 bg-mystic-bg border border-gold/20 px-2 py-1 rounded-sm">
-        <span className="text-gold text-[10px]">{astro.liveData?.moon_phase?.icon || '—'}</span>
-        <span className="text-[10px] font-bold uppercase tracking-wider text-gold">{astro.loading ? 'calculando' : astro.liveData?.moon_phase?.phase || 'indisponível'}</span>
-      </div>
-
-      {/* Regent Pill */}
-      <div title="Regra tradicional baseada no dia da semana; não é um valor astronômico calculado." className="flex items-center gap-2 bg-white border border-gray-100 px-2 py-1 rounded-sm">
-        <span className="text-gold text-[10px]">{astro.dayRegent.icon}</span>
-        <span className="text-[9px] font-bold uppercase text-gray-400 tracking-wider">Regra do dia: {astro.dayRegent.name}</span>
-      </div>
-
-      {/* Planetary Hour */}
-      <div title={astro.error || 'Valor astronômico recebido do motor'} className="flex items-center gap-1.5 bg-[#171c31] text-gold px-2 py-1 rounded-sm border border-gold/30">
-        <span className="text-[10px] opacity-80">{astro.planetaryHour.icon}</span>
-        <span className="text-[10px] font-bold text-white">{astro.loading ? '...' : astro.planetaryHour.time}</span>
-      </div>
-    </div>
-  );
-};
-
-function AccessStatusPanel({
-  title,
-  message,
-  retry,
-}: {
-  title: string;
-  message: string;
-  retry?: () => void;
-}) {
-  return (
-    <div
-      className="fixed inset-0 z-[2000] flex items-center justify-center font-sans"
-      style={{ background: 'var(--aurea-bg)' }}
-      role={retry ? 'alert' : 'status'}
-    >
-      <div className="max-w-md p-10 text-center space-y-4">
-        <h1 className="text-lg font-black uppercase tracking-[0.2em]" style={{ color: 'var(--aurea-text)' }}>{title}</h1>
-        <p className="text-sm leading-relaxed" style={{ color: 'var(--aurea-text-muted)' }}>{message}</p>
-        {retry && (
-          <button type="button" onClick={retry} className="aurea-button-primary px-8 py-3 font-black uppercase text-[10px] tracking-[0.2em]">
-            Tentar novamente
-          </button>
-        )}
-      </div>
-    </div>
-  );
-}
-
-export default function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isRestoringAccess, setIsRestoringAccess] = useState(true);
-  const [access, setAccess] = useState<InitialAccess | null>(null);
-  const [bootAttempt, setBootAttempt] = useState(0);
-  const [currentPage, setCurrentPage] = useState('astrologia');
+function AppContent() {
+  const { state: bootstrapState, retry: retryBootstrap, signOut } = useAppBootstrap();
+  const [currentPage, setCurrentPage] = useState<V1Page>('astrologia');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [isChatOpen, setIsChatOpen] = useState(false);
-  const [cadernoIntent, setCadernoIntent] = useState<CadernoIntent | null>(null);
 
   const identity = useIdentity();
-  const agenda = useAgenda();
-  const masterProfile = identity.activeProfile;
-
-  const isMesa = currentPage === 'mesa-criacao';
-  const pageTitles: Record<string, string> = {
-    astrologia: 'Astrologia',
-    saude: 'Saúde & Vitalidade',
-    agenda: 'Agenda Preditiva',
-    memorias: 'Memórias',
-    diario: 'Histórico & Notas',
-    'mesa-criacao': 'Caderno Vivo',
-  };
-
-  const openCaderno = (intent: CadernoIntent) => {
-    setCadernoIntent(intent);
-    setCurrentPage('mesa-criacao');
-  };
+  const syncedAccountKey = useRef('');
 
   useEffect(() => {
-    let active = true;
-    const restoreAccess = async () => {
-      setIsRestoringAccess(true);
-      const result = await openInitialAccess();
-      if (!active) return;
-      setAccess(result);
-      if (result.kind === 'local-owner') {
-        identity.ensureLocalUiProfile(result.ownerId, result.displayName);
-        try {
-          const healthResponse = await fetch(`${LOCAL_API_URL}/health`);
-          if (healthResponse.ok) {
-            const health = await healthResponse.json() as { test_user?: boolean };
-            if (health.test_user === true && result.ownerId === TEST_USER_OWNER_ID) {
-              applyTestUserUiSeed(result.ownerId, result.displayName);
-              identity.refreshFromStorage();
-              agenda.refreshFromStorage();
-            }
-          }
-        } catch {
-          // Test-user UI seed is optional; normal local-owner boot continues.
-        }
-        setIsAuthenticated(true);
-      } else {
-        setIsAuthenticated(false);
-      }
-      setIsRestoringAccess(false);
-    };
-    void restoreAccess();
-    return () => { active = false; };
-    // Retry is explicit via bootAttempt. Do not re-run when feature identity changes.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [bootAttempt]);
+    if (bootstrapState.status !== 'ready') {
+      syncedAccountKey.current = '';
+      return;
+    }
+    const { profile, birthProfile } = bootstrapState;
+    const birthTime = typeof birthProfile.birth_time === 'string' ? birthProfile.birth_time.slice(0, 5) : '';
+    const key = `${profile.id}:${profile.updated_at ?? ''}:${birthProfile.id ?? ''}:${birthProfile.updated_at ?? ''}`;
+    if (syncedAccountKey.current === key) return;
+    syncedAccountKey.current = key;
+    identity.ensureLocalUiProfile(profile.id, profile.display_name);
+    if (birthTime && birthProfile.birth_date && birthProfile.place && birthProfile.timezone) {
+      identity.updateProfile(profile.id, {
+        birthDate: birthProfile.birth_date,
+        birthTime,
+        birthCity: birthProfile.place,
+        birthTimezone: birthProfile.timezone,
+        birthData: {
+          label: birthProfile.label,
+          date: birthProfile.birth_date,
+          time: birthTime,
+          location: birthProfile.place,
+          lat: Number(birthProfile.latitude),
+          lng: Number(birthProfile.longitude),
+          timezone: birthProfile.timezone,
+        },
+      });
+    }
+  }, [bootstrapState, identity]);
+  const masterProfile = identity.activeProfile ?? (
+    bootstrapState.status === 'ready'
+      ? { id: bootstrapState.profile.id, name: bootstrapState.profile.display_name, active: true }
+      : null
+  );
 
   const handleLogout = async () => {
-    await safeInvoke('private_session_close');
-    await safeInvoke('remembered_owner_clear');
-    localStorage.removeItem('aurea_active_id');
+    await signOut();
     identity.setActiveProfileId('');
-    setIsAuthenticated(false);
     setIsProfileOpen(false);
-  };
-
-  useEffect(() => {
-    const handleOpen = () => setIsChatOpen(true);
-    const handleOpenCaderno = (event: Event) => {
-      const intent = (event as CustomEvent<CadernoIntent>).detail;
-      if (!intent || !['browse', 'create-study', 'open-study'].includes(intent.type)) return;
-      setCadernoIntent(intent);
-      setCurrentPage('mesa-criacao');
-    };
-    window.addEventListener('open-hermes-chat', handleOpen);
-    window.addEventListener('open-caderno-vivo', handleOpenCaderno);
-    return () => {
-      window.removeEventListener('open-hermes-chat', handleOpen);
-      window.removeEventListener('open-caderno-vivo', handleOpenCaderno);
-    };
-  }, []);
-
-  const renderPage = () => {
-    switch (currentPage) {
-      case 'astrologia': return <AstrologiaPage onOpenCaderno={openCaderno} />;
-      case 'saude': return <SaudeView />;
-      case 'agenda': return <AgendaView />;
-      case 'mesa-criacao': return <MesaCriacao intent={cadernoIntent} onIntentHandled={() => setCadernoIntent(null)} />;
-      case 'memorias': return <MemoriasView />;
-      case 'diario': return (
-        <DiarioView
-          onOpenStudy={(boardId, nodeId) => openCaderno({ type: 'open-study', boardId, nodeId })}
-        />
-      );
-      default: return <AstrologiaPage onOpenCaderno={openCaderno} />;
-    }
   };
 
   const pageContent = (
     <Suspense fallback={<PageLoadingFallback />}>
-      {renderPage()}
+      <AstrologiaPage />
     </Suspense>
   );
 
-  if (isRestoringAccess || !access) {
+  if (bootstrapState.status === 'restoring-session') {
     return <div className="fixed inset-0 bg-[#FCF9F1]" aria-label="Restaurando acesso" />;
   }
 
-  if (access.kind === 'setup-required') {
-    return <AccessStatusPanel title="Configuração necessária" message={access.message} />;
+  if (bootstrapState.status === 'signed-out') {
+    return <LoginView />;
   }
 
-  if (access.kind === 'runtime-failure') {
+  if (bootstrapState.status === 'loading-account') {
     return (
-      <AccessStatusPanel
-        title="Não foi possível iniciar"
-        message={access.message}
-        retry={() => setBootAttempt((attempt) => attempt + 1)}
-      />
+      <div className="fixed inset-0 bg-[#FCF9F1]" aria-label="Carregando sua conta" role="status" />
     );
   }
 
-  if (access.kind === 'login-required' && !isAuthenticated) {
-    return (
-      <LoginView 
-        profiles={identity.profiles} 
-        onLogin={async (id, password, rememberAccess) => {
-          const profile = identity.profiles.find(candidate => candidate.id === id);
-          if (!profile) return { ok: false, error: 'Perfil não encontrado.' };
-          const openedOwner = await safeInvoke<string>('private_session_open', {
-            ownerId: id,
-            loginName: profile.name,
-            password,
-          });
-          if (openedOwner !== id) return { ok: false, error: 'Não foi possível abrir sua sessão privada neste computador.' };
-          identity.setActiveProfileId(id);
-          localStorage.setItem('aurea_active_id', id);
-          let notice: string | undefined;
-          await safeInvoke('remembered_owner_clear');
-          if (rememberAccess) notice = 'Por segurança, será necessário confirmar a senha ao reabrir o aplicativo.';
-          setIsAuthenticated(true);
-          return { ok: true, notice };
-        }}
-        onSignUp={async (name, password, rememberAccess) => {
-          try {
-            const accountId = crypto.randomUUID();
-            const openedOwner = await safeInvoke<string>('private_account_register', {
-              ownerId: accountId,
-              displayName: name,
-              loginName: name,
-              password,
-            });
-            if (openedOwner !== accountId) return { ok: false, error: 'Não foi possível criar o perfil privado neste computador.' };
-            await identity.addProfile(name, password, accountId);
-            let notice: string | undefined;
-            await safeInvoke('remembered_owner_clear');
-            if (rememberAccess) notice = 'Por segurança, será necessário confirmar a senha ao reabrir o aplicativo.';
-            setIsAuthenticated(true);
-            return { ok: true, notice };
-          } catch (error) {
-            return { ok: false, error: error instanceof Error ? error.message : 'Não foi possível criar o perfil.' };
-          }
-        }}
-      />
-    );
+  if (bootstrapState.status === 'needs-profile') {
+    return <ProfileOnboarding mode="profile" onComplete={retryBootstrap} onLogout={() => { void handleLogout(); }} />;
+  }
+
+  if (bootstrapState.status === 'needs-birth-profile') {
+    return <ProfileOnboarding mode="birth-profile" profile={bootstrapState.profile} onComplete={retryBootstrap} onLogout={() => { void handleLogout(); }} />;
+  }
+
+  if (bootstrapState.status === 'service-unavailable') {
+    return <ServiceStatusPanel message={bootstrapState.message} onRetry={retryBootstrap} onLogout={() => { void handleLogout(); }} />;
   }
 
   return (
@@ -298,14 +142,7 @@ export default function App() {
           {!isSidebarCollapsed && <h1 className="text-[12px] font-black tracking-[0.2em] text-[var(--color-gold)] uppercase">Aurea Solaris</h1>}
         </div>
         
-        <nav className="flex-1 space-y-1.5 px-4 overflow-y-auto no-scrollbar pb-6 pt-4">
-          <NavItem icon={<Edit3 size={18} />} label="Caderno Vivo" active={currentPage === 'mesa-criacao'} onClick={() => { setCadernoIntent(null); setCurrentPage('mesa-criacao'); }} collapsed={isSidebarCollapsed} />
-          <NavItem icon={<Star size={18} />} label="Astrologia" active={currentPage === 'astrologia'} onClick={() => setCurrentPage('astrologia')} collapsed={isSidebarCollapsed} />
-          <NavItem icon={<Activity size={18} />} label="Saúde & Vitalidade" active={currentPage === 'saude'} onClick={() => setCurrentPage('saude')} collapsed={isSidebarCollapsed} />
-          <NavItem icon={<Calendar size={18} />} label="Agenda Preditiva" active={currentPage === 'agenda'} onClick={() => setCurrentPage('agenda')} collapsed={isSidebarCollapsed} />
-          <NavItem icon={<FileText size={18} />} label="Memórias" active={currentPage === 'memorias'} onClick={() => setCurrentPage('memorias')} collapsed={isSidebarCollapsed} />
-          <NavItem icon={<Edit3 size={18} />} label="Histórico & Notas" active={currentPage === 'diario'} onClick={() => setCurrentPage('diario')} collapsed={isSidebarCollapsed} />
-        </nav>
+        <V1Navigation currentPage={currentPage} onNavigate={(page) => setCurrentPage(resolveV1Page(page))} collapsed={isSidebarCollapsed} />
 
         <div className="p-4 pt-2 border-t border-white/10 shrink-0">
           <button onClick={() => setIsProfileOpen(true)} className="w-full flex items-center gap-4 p-4 rounded-2xl border border-white/10 transition-all group shadow-sm" style={{ background: 'rgba(255,255,255,0.06)' }}>
@@ -317,42 +154,19 @@ export default function App() {
 
       {/* CONTEÚDO PRINCIPAL */}
       <main className="main-area cosmic-border">
-        {!isMesa && currentPage !== 'astrologia' && (
-          <header className="aurea-page-header px-6 py-3 flex justify-between items-center glass-panel shrink-0 z-20">
-            <h2 className="aurea-page-title text-sm uppercase truncate mr-3">{pageTitles[currentPage] || currentPage.replace('-', ' ')}</h2>
-            <PlanetaryInfo />
-          </header>
-        )}
-        <div className={`flex-1 relative overflow-hidden ${isMesa ? '' : currentPage === 'astrologia' ? 'flex flex-col px-6 pt-6' : 'px-6 pt-8 overflow-y-auto no-scrollbar pb-32'}`}>
-          {currentPage === 'astrologia' ? (
-            <div className="flex-1 h-full flex flex-col overflow-hidden">
-              {pageContent}
-            </div>
-          ) : (
-            pageContent
-          )}
+        <div className="flex-1 relative overflow-hidden flex flex-col px-6 pt-6">
+          <div className="flex-1 h-full flex flex-col overflow-hidden">
+            {pageContent}
+          </div>
         </div>
       </main>
-
-      {/* HERMES CHAT PANEL */}
-      <HermesChat isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
-      
-      {/* CHAT FAB BUTTON */}
-      {!isChatOpen && (
-        <button
-          onClick={() => setIsChatOpen(true)}
-          className="fixed bottom-6 right-6 z-50 flex h-12 w-12 items-center justify-center rounded-full border-2 border-gold/30 bg-[#171c31] text-gold shadow-xl transition-all hover:scale-110"
-          aria-label="Abrir conversa com Hermes"
-          title="Perguntar ao Hermes"
-        >
-          <MessageCircle size={21} />
-        </button>
-      )}
 
       {isProfileOpen && masterProfile && (
         <ProfileEditor
           profile={masterProfile}
-          showLogout={access.kind === 'login-required'}
+          apiProfile={bootstrapState.status === 'ready' ? bootstrapState.profile : undefined}
+          apiBirthProfile={bootstrapState.status === 'ready' ? bootstrapState.birthProfile : undefined}
+          showLogout
           onSave={(updates) => {
             identity.updateProfile(masterProfile.id, updates);
             setIsProfileOpen(false);
@@ -362,5 +176,13 @@ export default function App() {
         />
       )}
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <AppErrorBoundary>
+      <AppContent />
+    </AppErrorBoundary>
   );
 }

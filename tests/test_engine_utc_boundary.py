@@ -12,7 +12,11 @@ import unittest
 
 import swisseph as swe
 
-from astro_engine import calculate_astrology, calculate_transit_positions, to_julian_day
+from services.api.src.aurea_api.domain.astrology.engine import (
+    calculate_astrology,
+    calculate_transit_positions,
+    to_julian_day,
+)
 
 
 UTC_BOUNDARY_INPUT = {

@@ -1,9 +1,9 @@
-import { useState, useEffect, useRef } from 'react';
-import { safeInvoke } from '../utils/tauri';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { useApiClient } from '../api/provider';
 import { getAspectOrbs, AspectOrb } from '../utils/astro-settings';
 import { astroLogger } from '../utils/logger';
 import { readCertifiedCalculation } from '../utils/certifiedCalculation';
-import { buildTransitPayload, decodeAstrologyResponse, postTransitPositions } from '../services/astrologyApi';
+import { requestTransits } from '../services/astrologyApi';
 import type { LiveAstroData, AstroAspect, PlanetaryPosition } from '../types/astrology';
 
 export type { PlanetaryPosition, AstroAspect, LiveAstroData };
@@ -68,12 +68,15 @@ type NatalPositions = {
   Mars?: number;
 };
 
-export const useLiveTransitData = (natalData?: NatalPositions) => {
+export const useLiveTransitData = (natalData?: NatalPositions, enabled = true) => {
+  const api = useApiClient();
   const [liveData, setLiveData] = useState<LiveAstroData | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(enabled);
   const [error, setError] = useState<string | null>(null);
 
   const natalRef = useRef<NatalPositions | undefined>(natalData);
+  const requestSequence = useRef(0);
+  const activeRequest = useRef<AbortController | null>(null);
   const sunVal = natalData?.Sun;
   const moonVal = natalData?.Moon;
   const ascVal = natalData?.ASC;
@@ -82,21 +85,23 @@ export const useLiveTransitData = (natalData?: NatalPositions) => {
     natalRef.current = natalData;
   }, [natalData]);
 
-  const fetchAstro = async () => {
+  const fetchAstro = useCallback(async (force = false) => {
+    if (!enabled) {
+      setLoading(false);
+      return;
+    }
+    activeRequest.current?.abort();
+    const controller = new AbortController();
+    activeRequest.current = controller;
+    const sequence = ++requestSequence.current;
     const stopTimer = astroLogger.startTimer();
     setLoading(true);
     setError(null);
 
     try {
-      const payload = buildTransitPayload();
-      let response: string | null = await postTransitPositions(payload);
-
-      if (!response) {
-        response = await safeInvoke<string>('get_transit_positions', { payload });
-      }
-      if (!response) throw new Error('O motor não retornou dados verificáveis.');
-
-      const parsed = decodeAstrologyResponse(response);
+      const receipt = await requestTransits(api, new Date().toISOString(), controller.signal, force);
+      if (sequence !== requestSequence.current) return;
+      const parsed = receipt.result_payload;
       const record = parsed as { error?: string; planets?: unknown };
       if (record?.error || !record?.planets) throw new Error(record?.error || 'Resposta do motor incompleta.');
       if (!readCertifiedCalculation(parsed, 'transit')) {
@@ -108,20 +113,39 @@ export const useLiveTransitData = (natalData?: NatalPositions) => {
 
       setLiveData(previous => JSON.stringify(previous) === JSON.stringify(normalized) ? previous : normalized);
     } catch (cause) {
-      console.error('Erro ao buscar dados astronômicos:', cause);
+      if (controller.signal.aborted || (typeof cause === 'object' && cause !== null && 'name' in cause && cause.name === 'AbortError')) return;
+      if (sequence !== requestSequence.current) return;
       setLiveData(null);
       setError('Cálculo astronômico indisponível. Nenhum valor aproximado será exibido.');
     } finally {
-      setLoading(false);
+      if (sequence === requestSequence.current && !controller.signal.aborted) setLoading(false);
       stopTimer();
     }
-  };
+  }, [api, enabled]);
 
   useEffect(() => {
-    fetchAstro();
-    const interval = setInterval(fetchAstro, 60_000);
-    return () => clearInterval(interval);
-  }, [sunVal, moonVal, ascVal]);
+    if (!enabled) {
+      requestSequence.current += 1;
+      activeRequest.current?.abort();
+      setLiveData(null);
+      setError(null);
+      setLoading(false);
+      return;
+    }
+    void fetchAstro();
+    const interval = setInterval(() => {
+      if (document.visibilityState === 'visible') void fetchAstro();
+    }, 60_000);
+    const onVisibilityChange = () => {
+      if (document.visibilityState === 'visible') void fetchAstro();
+    };
+    document.addEventListener('visibilitychange', onVisibilityChange);
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+      activeRequest.current?.abort();
+    };
+  }, [sunVal, moonVal, ascVal, enabled, fetchAstro]);
 
   const getAspect = (degreeA: number, degreeB: number) => {
     const difference = Math.abs(degreeA - degreeB) % 360;

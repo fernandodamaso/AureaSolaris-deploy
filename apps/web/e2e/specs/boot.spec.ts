@@ -1,14 +1,20 @@
 import { test, expect } from '@playwright/test';
-import { assertHealthIsTestUser, waitForShell } from '../helpers/app';
+import { waitForShell } from '../helpers/app';
 
-test.describe('boot', () => {
-  test('boot-health-test-user: /health reports test_user true', async ({ request }) => {
-    await assertHealthIsTestUser(request);
+test.describe('private boot', () => {
+  test('health reports the disposable API', async ({ request }) => {
+    const apiUrl = process.env.AUREA_E2E_API_URL;
+    if (!apiUrl) throw new Error('AUREA_E2E_API_URL is required.');
+    const response = await request.get(`${apiUrl}/health`);
+    expect(response.ok()).toBeTruthy();
+    await expect(response).toBeOK();
+    expect((await response.json()).status).toBe('ok');
   });
 
-  test('boot-local-owner: opens Pessoa Teste without login', async ({ page }) => {
+  test('login and onboarding open the private Astrology shell', async ({ page }) => {
     await waitForShell(page);
-    await expect(page.getByText(/Pessoa Teste/i)).toBeVisible();
-    await expect(page.getByRole('button', { name: /ENTRAR/i })).toHaveCount(0);
+    await expect(page.getByRole('button', { name: 'Entrar' })).toHaveCount(0);
+    await expect(page.getByRole('button', { name: 'Agenda Preditiva' })).toHaveCount(0);
+    await expect(page.getByRole('button', { name: 'Astrologia' })).toBeVisible();
   });
 });

@@ -7,13 +7,13 @@ from fastapi import APIRouter, Depends
 from aurea_api.api.auth import AuthenticatedUser, get_authenticated_user
 from aurea_api.dependencies import get_profile_repository
 from aurea_api.domain.users.models import ProfileResponse, ProfileUpdate
-from aurea_api.errors import ApiProblem
+from aurea_api.errors import PROBLEM_RESPONSES, ApiProblem
 from aurea_api.infrastructure.db import ProfileRepository
 
 router = APIRouter(prefix="/v1", tags=["profile"])
 
 
-@router.get("/me", response_model=ProfileResponse)
+@router.get("/me", response_model=ProfileResponse, responses=PROBLEM_RESPONSES)
 async def get_me(
     user: Annotated[AuthenticatedUser, Depends(get_authenticated_user)],
     repository: Annotated[ProfileRepository, Depends(get_profile_repository)],
@@ -28,7 +28,7 @@ async def get_me(
     return profile
 
 
-@router.put("/me/profile", response_model=ProfileResponse)
+@router.put("/me/profile", response_model=ProfileResponse, responses=PROBLEM_RESPONSES)
 async def put_profile(
     profile: ProfileUpdate,
     user: Annotated[AuthenticatedUser, Depends(get_authenticated_user)],

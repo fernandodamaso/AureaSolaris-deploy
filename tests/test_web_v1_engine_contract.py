@@ -13,7 +13,7 @@ import unittest
 
 import swisseph as swe
 
-from astro_engine import (
+from services.api.src.aurea_api.domain.astrology.engine import (
     ENGINE_NAME,
     ENGINE_VERSION,
     RECEIPT_SCHEMA_VERSION,

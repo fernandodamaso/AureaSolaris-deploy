@@ -1,14 +1,32 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
-from typing import cast
+from typing import Any, cast
 
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+from pydantic import BaseModel, ConfigDict, Field
 
 _SAFE_VALIDATION_MESSAGE = "Invalid value."
 _TRUSTED_VALIDATION_SOURCES = frozenset({"body", "query", "path", "header", "cookie"})
+
+
+class ProblemResponse(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    code: str
+    message: str
+    request_id: str
+    fields: list[dict[str, object]] | None = Field(default=None)
+
+
+PROBLEM_RESPONSES: dict[int | str, dict[str, Any]] = {
+    401: {"model": ProblemResponse, "description": "Authentication required."},
+    404: {"model": ProblemResponse, "description": "Resource not found."},
+    422: {"model": ProblemResponse, "description": "Request validation failed."},
+    503: {"model": ProblemResponse, "description": "Service unavailable."},
+}
 
 
 class ApiProblem(Exception):

@@ -19,6 +19,7 @@ export interface CalculationMeta {
 }
 
 interface CalculationEvidenceProps {
+  ariaLabel?: string;
   meta?: CalculationMeta;
   loading: boolean;
   error?: string | null;
@@ -31,13 +32,13 @@ function formatTimestamp(value?: string) {
 }
 
 /** Mostra o recibo técnico do motor antes de qualquer camada interpretativa. */
-export const CalculationEvidence = ({ meta, loading, error }: CalculationEvidenceProps) => {
+export const CalculationEvidence = ({ ariaLabel = 'Proveniência do cálculo', meta, loading, error }: CalculationEvidenceProps) => {
   if (loading) {
-    return <div role="status" className="flex items-center gap-2 rounded-xl border border-gold/20 bg-[#FCF9F1] px-4 py-2.5 text-[10px] font-bold uppercase tracking-wider text-[#8b7344]"><LoaderCircle size={14} className="animate-spin" />Calculando no motor local…</div>;
+    return <div role="status" aria-label={ariaLabel} className="flex items-center gap-2 rounded-xl border border-gold/20 bg-[#FCF9F1] px-4 py-2.5 text-[10px] font-bold uppercase tracking-wider text-[#8b7344]"><LoaderCircle size={14} className="animate-spin" />Calculando no motor local…</div>;
   }
 
   if (error || !meta?.receipt) {
-    return <div role="status" className="flex items-center gap-2 rounded-xl border border-amber-200 bg-amber-50 px-4 py-2.5 text-[10px] font-bold uppercase tracking-wider text-amber-800"><CircleAlert size={14} />Sem cálculo astronômico auditável</div>;
+    return <div role="status" aria-label={ariaLabel} className="flex items-center gap-2 rounded-xl border border-amber-200 bg-amber-50 px-4 py-2.5 text-[10px] font-bold uppercase tracking-wider text-amber-800"><CircleAlert size={14} />Sem cálculo astronômico auditável</div>;
   }
 
   const receipt = meta.receipt;
@@ -48,7 +49,7 @@ export const CalculationEvidence = ({ meta, loading, error }: CalculationEvidenc
   const ephemeris = [receipt.ephemeris?.library, receipt.ephemeris?.library_version, receipt.ephemeris?.mode].filter(Boolean).join(' · ') || meta.ephemeris || 'efeméride não declarada';
 
   return (
-    <section aria-label="Proveniência do cálculo" className="rounded-xl border border-emerald-100 bg-emerald-50/40 px-4 py-3">
+    <section aria-label={ariaLabel} className="rounded-xl border border-emerald-100 bg-emerald-50/40 px-4 py-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2 text-emerald-800"><CircleCheck size={15} aria-hidden="true" /><span className="text-[10px] font-black uppercase tracking-wider">Valor astronômico calculado</span></div>
         <span className="text-[10px] font-semibold text-emerald-700/80">{ephemeris}</span>

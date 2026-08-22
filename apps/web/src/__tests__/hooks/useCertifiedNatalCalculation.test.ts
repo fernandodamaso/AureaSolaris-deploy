@@ -1,21 +1,9 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { createElement, type ReactNode } from 'react';
+import type { ApiClient, ReceiptResponse } from '../../api/client';
+import { ApiClientContext } from '../../api/provider';
 import { useCertifiedNatalCalculation } from '../../hooks/useCertifiedNatalCalculation';
-
-vi.mock('../../utils/tauri', () => ({
-  safeInvoke: vi.fn(),
-}));
-
-vi.mock('../../services/astrologyApi', async () => {
-  const actual = await vi.importActual<typeof import('../../services/astrologyApi')>('../../services/astrologyApi');
-  return {
-    ...actual,
-    postNatalCalculation: vi.fn(),
-  };
-});
-
-import { safeInvoke } from '../../utils/tauri';
-import { postNatalCalculation } from '../../services/astrologyApi';
 
 const birthData = {
   year: 2000,
@@ -29,19 +17,7 @@ const birthData = {
   house_system: 'Regiomontanus',
 };
 
-const expectedNatalPayload = {
-  year: 2000,
-  month: 1,
-  day: 1,
-  hour: 23.5,
-  lat: -23.5505,
-  lon: -46.6333,
-  utc_offset_minutes: -120,
-  house_system: 'Regiomontanus',
-  timezone: 'America/Sao_Paulo',
-};
-
-const makeCertifiedNatalResponse = () => ({
+const makeCertifiedNatalResponse = (inputHash = 'natal-input-hash') => ({
   planets: {
     Sun: { degree: 281.15, sign: 'Cap' },
     Moon: { degree: 224.01, sign: 'Sco' },
@@ -49,12 +25,12 @@ const makeCertifiedNatalResponse = () => ({
     MC: { degree: 24.85, sign: 'Ari' },
   },
   houses: Array.from({ length: 12 }, (_, index) => ({ degree: index * 30 })),
-  aspects: [],
+  aspects: [{ p1: 'Sun', p2: 'Moon', type: 'Trine', symbol: '△', orb: 1 }],
   meta: {
     receipt: {
       schema_version: 'calculation-receipt.v1',
       kind: 'natal',
-      input_hash: 'natal-input-hash',
+      input_hash: inputHash,
       engine: { name: 'aurea-solaris-astro-engine', version: '2026.08.audit-1' },
       resolved_time: {
         utc: '2000-01-02T01:30:00Z',
@@ -66,156 +42,220 @@ const makeCertifiedNatalResponse = () => ({
   },
 });
 
+const makeReceipt = (result_payload: ReceiptResponse['result_payload'] = makeCertifiedNatalResponse()): ReceiptResponse => ({
+  id: 'receipt-id',
+  birth_profile_id: 'birth-profile-id',
+  kind: 'natal',
+  schema_version: 'calculation-receipt.v1',
+  input_hash: (result_payload as { meta?: { receipt?: { input_hash?: string } } })
+    .meta?.receipt?.input_hash ?? 'natal-input-hash',
+  input_payload: {},
+  result_payload,
+  engine_name: 'aurea-solaris-astro-engine',
+  engine_version: '2026.08.audit-1',
+  ephemeris_version: '2.10.03',
+  resolved_at: '2000-01-02T01:30:00Z',
+  resolved_timezone: 'America/Sao_Paulo',
+  created_at: '2000-01-02T01:30:00Z',
+});
+
+function deferred<T>() {
+  let resolve!: (value: T) => void;
+  let reject!: (error: Error) => void;
+  const promise = new Promise<T>((resolvePromise, rejectPromise) => {
+    resolve = resolvePromise;
+    reject = rejectPromise;
+  });
+  return { promise, reject, resolve };
+}
+
+function wrapperFor(api: ApiClient) {
+  const ApiWrapper = ({ children }: { children: ReactNode }) => (
+    createElement(ApiClientContext.Provider, { value: api }, children)
+  );
+  ApiWrapper.displayName = 'ApiWrapper';
+  return ApiWrapper;
+}
+
 describe('useCertifiedNatalCalculation', () => {
+  let calculateNatal: ReturnType<typeof vi.fn>;
+
   beforeEach(() => {
-    vi.clearAllMocks();
-    vi.mocked(safeInvoke).mockResolvedValue(null);
+    calculateNatal = vi.fn().mockResolvedValue(makeReceipt());
   });
 
-  it('preserves the normalized birth payload and accepts certified natal data', async () => {
-    const certified = makeCertifiedNatalResponse();
-    vi.mocked(postNatalCalculation).mockResolvedValue(JSON.stringify(certified));
+  it('uses the API receipt result and preserves certified metadata', async () => {
+    const api = { calculateNatal } as unknown as ApiClient;
+    const { result } = renderHook(() => useCertifiedNatalCalculation(birthData), { wrapper: wrapperFor(api) });
 
-    const { result } = renderHook(() => useCertifiedNatalCalculation(birthData));
+    await waitFor(() => expect(result.current.loading).toBe(false));
 
-    expect(result.current.loading).toBe(true);
-
-    await waitFor(() => {
-      expect(result.current.loading).toBe(false);
-    });
-
-    expect(postNatalCalculation).toHaveBeenCalledTimes(1);
-    const [payload] = vi.mocked(postNatalCalculation).mock.calls[0];
-    expect(JSON.parse(payload)).toEqual(expectedNatalPayload);
-    expect(result.current.data).toEqual(certified);
+    expect(calculateNatal).toHaveBeenCalledWith({ force: false }, expect.objectContaining({ signal: expect.any(AbortSignal) }));
     expect(result.current.data?.meta.receipt).toMatchObject({
       kind: 'natal',
       input_hash: 'natal-input-hash',
       engine: { name: 'aurea-solaris-astro-engine', version: '2026.08.audit-1' },
-      resolved_time: {
-        utc: '2000-01-02T01:30:00Z',
-        iana_timezone: 'America/Sao_Paulo',
-      },
     });
+    expect(result.current.data?.aspects?.[0].type).toBe('Trígono');
     expect(result.current.error).toBeNull();
-    expect(safeInvoke).not.toHaveBeenCalled();
   });
 
-  it('falls back to Tauri only after HTTP transport returns null', async () => {
-    const certified = makeCertifiedNatalResponse();
-    vi.mocked(postNatalCalculation).mockResolvedValue(null);
-    vi.mocked(safeInvoke).mockResolvedValue(JSON.stringify(certified));
-
-    const { result } = renderHook(() => useCertifiedNatalCalculation(birthData));
-
-    await waitFor(() => {
-      expect(result.current.loading).toBe(false);
-    });
-
-    const [payload] = vi.mocked(postNatalCalculation).mock.calls[0];
-    expect(JSON.parse(payload)).toEqual(expectedNatalPayload);
-    expect(safeInvoke).toHaveBeenCalledWith('run_astro_engine', { payload });
-    expect(result.current.data).toEqual(certified);
-  });
-
-  it('surfaces engine unavailability without estimating a chart', async () => {
-    vi.mocked(postNatalCalculation).mockResolvedValue(null);
-
-    const { result } = renderHook(() => useCertifiedNatalCalculation(birthData));
-
-    await waitFor(() => {
-      expect(result.current.loading).toBe(false);
-    });
-
-    expect(result.current.data).toBeNull();
-    expect(result.current.error).toContain('Motor astrológico indisponível');
-  });
-
-  it('rejects responses without an audit receipt instead of silently displaying them', async () => {
-    const uncertified = { planets: makeCertifiedNatalResponse().planets, houses: makeCertifiedNatalResponse().houses };
-    vi.mocked(postNatalCalculation).mockResolvedValue(JSON.stringify(uncertified));
-
-    const { result } = renderHook(() => useCertifiedNatalCalculation(birthData));
-
-    await waitFor(() => {
-      expect(result.current.loading).toBe(false);
-    });
-
-    expect(result.current.data).toBeNull();
-    expect(result.current.error).toContain('recibo auditável');
-  });
-
-  it('rejects a certified receipt for the wrong calculation kind', async () => {
-    const wrongKind = makeCertifiedNatalResponse();
-    wrongKind.meta.receipt.kind = 'transit';
-    vi.mocked(postNatalCalculation).mockResolvedValue(JSON.stringify(wrongKind));
-
-    const { result } = renderHook(() => useCertifiedNatalCalculation(birthData));
-
-    await waitFor(() => {
-      expect(result.current.loading).toBe(false);
-    });
-
-    expect(result.current.data).toBeNull();
-    expect(result.current.error).toContain('recibo auditável');
-  });
-
-  it('does not recalculate when birth data is a new object with the same contents', async () => {
-    const certified = makeCertifiedNatalResponse();
-    vi.mocked(postNatalCalculation).mockResolvedValue(JSON.stringify(certified));
-
-    const { rerender } = renderHook(
-      ({ request }) => useCertifiedNatalCalculation(request),
-      { initialProps: { request: { ...birthData } } },
-    );
-
-    await waitFor(() => {
-      expect(postNatalCalculation).toHaveBeenCalledTimes(1);
-    });
-
-    rerender({ request: { ...birthData } });
+  it('retries with force and keeps the cached chart when retry fails', async () => {
+    const api = { calculateNatal } as unknown as ApiClient;
+    const { result } = renderHook(() => useCertifiedNatalCalculation(birthData), { wrapper: wrapperFor(api) });
+    await waitFor(() => expect(result.current.data).not.toBeNull());
+    const cached = result.current.data;
+    calculateNatal.mockRejectedValueOnce(new Error('provider detail'));
 
     await act(async () => {
-      await Promise.resolve();
+      await result.current.recalculate();
     });
 
-    expect(postNatalCalculation).toHaveBeenCalledTimes(1);
+    expect(calculateNatal).toHaveBeenLastCalledWith(
+      { force: true },
+      expect.objectContaining({ signal: expect.any(AbortSignal) }),
+    );
+    expect(result.current.data).toBe(cached);
+    expect(result.current.error).toContain('Não foi possível calcular');
+  });
+
+  it('rejects an uncertified response without displaying a chart', async () => {
+    const api = { calculateNatal: vi.fn().mockResolvedValue(makeReceipt({ planets: {} })) } as unknown as ApiClient;
+    const { result } = renderHook(() => useCertifiedNatalCalculation(birthData), { wrapper: wrapperFor(api) });
+
+    await waitFor(() => expect(result.current.loading).toBe(false));
+
+    expect(result.current.data).toBeNull();
+    expect(result.current.error).toContain('certificação auditável');
+  });
+
+  it('does not recalculate for a new birth-data object with the same values', async () => {
+    const api = { calculateNatal } as unknown as ApiClient;
+    const { rerender } = renderHook(
+      ({ request }) => useCertifiedNatalCalculation(request),
+      { initialProps: { request: { ...birthData } }, wrapper: wrapperFor(api) },
+    );
+    await waitFor(() => expect(calculateNatal).toHaveBeenCalledTimes(1));
+
+    rerender({ request: { ...birthData } });
+    await act(async () => { await Promise.resolve(); });
+
+    expect(calculateNatal).toHaveBeenCalledTimes(1);
+  });
+
+  it('clears the previous certified natal while a changed map is pending and after it fails', async () => {
+    let rejectChangedMap!: (error: Error) => void;
+    const changedMap = new Promise<ReceiptResponse>((_resolve, reject) => { rejectChangedMap = reject; });
+    calculateNatal
+      .mockResolvedValueOnce(makeReceipt())
+      .mockReturnValueOnce(changedMap);
+    const api = { calculateNatal } as unknown as ApiClient;
+    const { result, rerender } = renderHook(
+      ({ request }) => useCertifiedNatalCalculation(request),
+      { initialProps: { request: birthData }, wrapper: wrapperFor(api) },
+    );
+    await waitFor(() => expect(result.current.data).not.toBeNull());
+
+    rerender({ request: { ...birthData, year: 2001 } });
+    await waitFor(() => expect(calculateNatal).toHaveBeenCalledTimes(2));
+
+    expect(result.current.loading).toBe(true);
+    expect(result.current.data).toBeNull();
+
+    await act(async () => { rejectChangedMap(new Error('changed map failed')); });
+    await waitFor(() => expect(result.current.loading).toBe(false));
+
+    expect(result.current.data).toBeNull();
+    expect(result.current.error).toContain('Não foi possível calcular');
   });
 
   it('skips calculation when disabled and clears prior state', async () => {
-    const { result } = renderHook(() => useCertifiedNatalCalculation(birthData, false));
+    const api = { calculateNatal } as unknown as ApiClient;
+    const { result } = renderHook(() => useCertifiedNatalCalculation(birthData, false), { wrapper: wrapperFor(api) });
 
-    await act(async () => {
-      await Promise.resolve();
-    });
+    await act(async () => { await Promise.resolve(); });
 
-    expect(postNatalCalculation).not.toHaveBeenCalled();
+    expect(calculateNatal).not.toHaveBeenCalled();
     expect(result.current.loading).toBe(false);
     expect(result.current.data).toBeNull();
     expect(result.current.error).toBeNull();
   });
 
-  it('does not recalculate when birthData object identity changes but values stay the same', async () => {
-    const certified = makeCertifiedNatalResponse();
-    vi.mocked(postNatalCalculation).mockResolvedValue(JSON.stringify(certified));
-
+  it('keeps a newer automatic map when an obsolete manual request resolves', async () => {
+    const manual = deferred<ReceiptResponse>();
+    calculateNatal
+      .mockResolvedValueOnce(makeReceipt(makeCertifiedNatalResponse('initial-map')))
+      .mockReturnValueOnce(manual.promise)
+      .mockResolvedValueOnce(makeReceipt(makeCertifiedNatalResponse('newer-automatic-map')));
+    const api = { calculateNatal } as unknown as ApiClient;
     const { result, rerender } = renderHook(
-      ({ data }) => useCertifiedNatalCalculation(data),
-      { initialProps: { data: birthData } },
+      ({ request }) => useCertifiedNatalCalculation(request),
+      { initialProps: { request: birthData }, wrapper: wrapperFor(api) },
     );
+    await waitFor(() => expect(result.current.data?.meta.receipt.input_hash).toBe('initial-map'));
 
-    await waitFor(() => {
-      expect(result.current.loading).toBe(false);
-    });
-
-    expect(postNatalCalculation).toHaveBeenCalledTimes(1);
-
-    rerender({ data: { ...birthData } });
+    let manualRun!: Promise<void>;
+    act(() => { manualRun = result.current.recalculate(); });
+    await waitFor(() => expect(calculateNatal).toHaveBeenCalledTimes(2));
+    rerender({ request: { ...birthData, year: 2001 } });
+    await waitFor(() => expect(result.current.data?.meta.receipt.input_hash).toBe('newer-automatic-map'));
 
     await act(async () => {
-      await Promise.resolve();
+      manual.resolve(makeReceipt(makeCertifiedNatalResponse('obsolete-manual-map')));
+      await manualRun;
     });
 
-    expect(postNatalCalculation).toHaveBeenCalledTimes(1);
+    expect(result.current.data?.meta.receipt.input_hash).toBe('newer-automatic-map');
+    expect(result.current.error).toBeNull();
+    expect(result.current.loading).toBe(false);
+  });
+
+  it('ignores an obsolete automatic error after a newer manual result', async () => {
+    const automatic = deferred<ReceiptResponse>();
+    calculateNatal
+      .mockReturnValueOnce(automatic.promise)
+      .mockResolvedValueOnce(makeReceipt(makeCertifiedNatalResponse('newer-manual-map')));
+    const api = { calculateNatal } as unknown as ApiClient;
+    const { result } = renderHook(() => useCertifiedNatalCalculation(birthData), {
+      wrapper: wrapperFor(api),
+    });
+    await waitFor(() => expect(calculateNatal).toHaveBeenCalledTimes(1));
+
+    await act(async () => { await result.current.recalculate(); });
+    expect(result.current.data?.meta.receipt.input_hash).toBe('newer-manual-map');
+
+    await act(async () => { automatic.reject(new Error('obsolete automatic failure')); });
+
+    expect(result.current.data?.meta.receipt.input_hash).toBe('newer-manual-map');
+    expect(result.current.error).toBeNull();
+    expect(result.current.loading).toBe(false);
+  });
+
+  it('invalidates a pending manual request when calculation is disabled', async () => {
+    const manual = deferred<ReceiptResponse>();
+    calculateNatal
+      .mockResolvedValueOnce(makeReceipt())
+      .mockReturnValueOnce(manual.promise);
+    const api = { calculateNatal } as unknown as ApiClient;
+    const { result, rerender } = renderHook(
+      ({ enabled }) => useCertifiedNatalCalculation(birthData, enabled),
+      { initialProps: { enabled: true }, wrapper: wrapperFor(api) },
+    );
+    await waitFor(() => expect(result.current.data).not.toBeNull());
+
+    let manualRun!: Promise<void>;
+    act(() => { manualRun = result.current.recalculate(); });
+    await waitFor(() => expect(result.current.loading).toBe(true));
+    rerender({ enabled: false });
+    await waitFor(() => expect(result.current.loading).toBe(false));
+
+    await act(async () => {
+      manual.resolve(makeReceipt(makeCertifiedNatalResponse('disabled-manual-map')));
+      await manualRun;
+    });
+
+    expect(result.current.data).toBeNull();
+    expect(result.current.error).toBeNull();
+    expect(result.current.loading).toBe(false);
   });
 });

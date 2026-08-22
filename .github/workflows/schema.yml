@@ -8,6 +8,9 @@ on:
       - "services/api/src/aurea_api/infrastructure/db/**"
       - "services/api/src/aurea_api/domain/users/**"
       - "services/api/tests/infrastructure/**"
+      - "scripts/quality-gate.sh"
+      - "package.json"
+      - ".github/workflows/quality.yml"
       - ".github/workflows/schema.yml"
   push:
     branches: [main]
@@ -17,6 +20,9 @@ on:
       - "services/api/src/aurea_api/infrastructure/db/**"
       - "services/api/src/aurea_api/domain/users/**"
       - "services/api/tests/infrastructure/**"
+      - "scripts/quality-gate.sh"
+      - "package.json"
+      - ".github/workflows/quality.yml"
       - ".github/workflows/schema.yml"
   workflow_dispatch:
 
@@ -47,7 +53,12 @@ jobs:
 
       - name: Start local Supabase
         id: start
-        run: supabase start
+        run: |
+          start_log="$RUNNER_TEMP/supabase-start.log"
+          if ! supabase start >"$start_log" 2>&1; then
+            cat "$start_log"
+            exit 1
+          fi
 
       - name: Reset clean database
         id: reset

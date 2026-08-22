@@ -1,9 +1,11 @@
 import type { CertifiedAstrologyResult } from './astrology';
 
 export interface BirthData {
+  label?: string;
   date?: string;
   time?: string;
   location?: string;
+  place?: string;
   lat?: number;
   lng?: number;
   timezone?: string;
