@@ -46,6 +46,11 @@ browser-safe public key; never place a service-role key or database URL in a
 5. Check the API CORS preflight from the exact preview web origin and run the
    API smoke against the matching preview deployment.
 
+Use the protected `preview` branch aliases as the browser and API origins. The
+verification wrapper resolves both aliases to their unique READY exact-SHA
+deployments before the test and repeats that check after the test. An alias change
+during the gate is a failure.
+
 The hosted ownership test also requires the canonical production Supabase origin
 `https://tgpcpxqqusehssaihvcp.supabase.co`. The wrapper rejects any other value
 before browser startup; one trailing slash is normalized. The browser test then

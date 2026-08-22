@@ -125,8 +125,14 @@ class PreviewVerificationScriptTests(unittest.TestCase):
 
             arguments = sys.argv[1:]
             log = Path(os.environ["AUREA_TEST_VERCEL_LOG"])
+            prior_calls = (
+                len(log.read_text(encoding="utf-8").splitlines())
+                if log.exists()
+                else 0
+            )
             with log.open("a", encoding="utf-8") as handle:
                 handle.write(json.dumps(arguments) + "\\n")
+            drift = os.environ.get("AUREA_TEST_VERCEL_DRIFT") == "1" and prior_calls >= 4
             if arguments[0] == "list":
                 project = arguments[1]
                 host = (
@@ -134,6 +140,8 @@ class PreviewVerificationScriptTests(unittest.TestCase):
                     if project == "aurea-solaris-api"
                     else "aurea-solaris-candidate-test-team.vercel.app"
                 )
+                if drift:
+                    host = host.replace(".vercel.app", "-drift.vercel.app")
                 print(json.dumps({
                     "deployments": [{
                         "uid": f"dpl_{project}",
@@ -157,6 +165,8 @@ class PreviewVerificationScriptTests(unittest.TestCase):
                 else:
                     host = "aurea-solaris-candidate-test-team.vercel.app"
                     project = "aurea-solaris"
+                if drift:
+                    host = host.replace(".vercel.app", "-drift.vercel.app")
                 print(json.dumps({
                     "id": f"dpl_{project}",
                     "name": project,
@@ -583,8 +593,8 @@ class PreviewVerificationScriptTests(unittest.TestCase):
         self.assertEqual(
             self.npx_log.read_text(encoding="utf-8").splitlines(),
             [
-                "web_url=https://aurea-solaris-candidate-test-team.vercel.app",
-                "api_url=https://aurea-solaris-api-candidate-test-team.vercel.app",
+                "web_url=https://preview-web.example.test",
+                "api_url=https://preview-api.example.test",
                 f"production_supabase={CANONICAL_PRODUCTION_SUPABASE_URL}",
                 "global_bypass=absent",
             ],
@@ -619,7 +629,41 @@ class PreviewVerificationScriptTests(unittest.TestCase):
             for line in self.vercel_log.read_text(encoding="utf-8").splitlines()
         ]
         listed_projects = [call[1] for call in calls if call[0] == "list"]
-        self.assertEqual(listed_projects, ["aurea-solaris", "aurea-solaris-api"])
+        inspected_projects = [call[1] for call in calls if call[0] == "inspect"]
+        self.assertEqual(
+            listed_projects,
+            ["aurea-solaris", "aurea-solaris-api"] * 2,
+        )
+        self.assertEqual(
+            inspected_projects,
+            ["https://preview-web.example.test", "https://preview-api.example.test"] * 2,
+        )
+
+    def test_preview_wrapper_rejects_alias_drift_after_playwright(self) -> None:
+        environment = self._environment()
+        environment["AUREA_TEST_VERCEL_DRIFT"] = "1"
+
+        result = self._run_script(
+            "scripts/verify_preview.sh",
+            environment=environment,
+        )
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn(
+            "FAIL: preview deployment alias drift detected; exact deployment changed during the gate.",
+            result.stderr,
+        )
+        output = result.stdout + result.stderr
+        for secret in (
+            "test-preview-password",
+            "test-second-jwt",
+            "test-web-bypass",
+            "test-api-bypass",
+            "test-preview-anon-key",
+            "-drift.vercel.app",
+        ):
+            with self.subTest(secret=secret):
+                self.assertNotIn(secret, output)
 
     def test_all_verifiers_execute_python_before_selecting_it(self) -> None:
         cases = (

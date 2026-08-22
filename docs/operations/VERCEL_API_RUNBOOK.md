@@ -54,8 +54,10 @@ SHA. `scripts/verify_preview.sh` calls
 `--project aurea-solaris-api`. Each call requires exactly one READY deployment for
 that project with the expected 40-character Git SHA and `preview` target, then
 inspects the supplied URL or alias and requires the same resolved deployment URL.
-The verifier rejects the canonical production host. The wrapper exports the URLs
-only after both project checks pass; stop on any mismatch.
+The verifier rejects the canonical production host. The wrapper keeps the supplied
+branch aliases because they are the exact configured CORS origins. It records the
+resolved immutable URLs in process memory, runs the gate, then resolves both aliases
+again. It fails if either alias changed during the gate.
 
 ```bash
 : "${AUREA_E2E_URL:?required}"

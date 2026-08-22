@@ -46,8 +46,6 @@ verified_api_url="$(
     --project aurea-solaris-api \
     "$AUREA_EXPECTED_PREVIEW_SHA" "$AUREA_E2E_API_URL"
 )" || exit 1
-export AUREA_E2E_URL="$verified_web_url"
-export AUREA_E2E_API_URL="$verified_api_url"
 
 if command -v curl >/dev/null 2>&1; then CURL="curl"
 elif command -v curl.exe >/dev/null 2>&1; then CURL="curl.exe"
@@ -110,5 +108,20 @@ fi
 
 "${NPX[@]}" playwright test apps/web/e2e/specs/ownership.spec.ts \
   --config=apps/web/e2e/playwright.config.ts --project=chromium --workers=1
+
+post_verified_web_url="$(
+  "$PYTHON" "$SCRIPT_DIR/verify_vercel_preview.py" \
+    --project aurea-solaris \
+    "$AUREA_EXPECTED_PREVIEW_SHA" "$AUREA_E2E_URL"
+)" || exit 1
+post_verified_api_url="$(
+  "$PYTHON" "$SCRIPT_DIR/verify_vercel_preview.py" \
+    --project aurea-solaris-api \
+    "$AUREA_EXPECTED_PREVIEW_SHA" "$AUREA_E2E_API_URL"
+)" || exit 1
+if [[ "$post_verified_web_url" != "$verified_web_url" || "$post_verified_api_url" != "$verified_api_url" ]]; then
+  printf 'FAIL: preview deployment alias drift detected; exact deployment changed during the gate.\n' >&2
+  exit 1
+fi
 
 printf 'PASS: hosted preview ownership gate completed without printing credentials or payloads\n'
