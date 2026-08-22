@@ -53,7 +53,7 @@ jobs:
             echo '```'
             echo
             if [ "${{ steps.web-quality.outcome }}" = "failure" ]; then
-              echo '**Start with:** the first failing lint, test, or build command reported by `npm run check:web` above.'
+              echo "**Start with:** the first failing lint, test, or build command reported by \`npm run check:web\` above."
             elif [ "${{ steps.install.outcome }}" = "failure" ]; then
               echo "**Start with:** dependency installation/package-lock consistency."
             else
