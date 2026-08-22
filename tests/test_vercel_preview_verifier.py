@@ -35,11 +35,18 @@ class VercelPreviewVerifierTests(unittest.TestCase):
                 from pathlib import Path
                 import sys
 
-                Path(os.environ["AUREA_FAKE_VERCEL_LOG"]).open(
-                    "a", encoding="utf-8"
-                ).write(json.dumps(sys.argv[1:]) + "\\n")
+                log_path = Path(os.environ["AUREA_FAKE_VERCEL_LOG"])
+                existing_calls = [
+                    json.loads(line)
+                    for line in log_path.read_text(encoding="utf-8").splitlines()
+                ] if log_path.exists() else []
+                log_path.open("a", encoding="utf-8").write(
+                    json.dumps(sys.argv[1:]) + "\\n"
+                )
                 if sys.argv[1:2] == ["list"]:
-                    print(os.environ["AUREA_FAKE_VERCEL_LIST_JSON"])
+                    pages = json.loads(os.environ["AUREA_FAKE_VERCEL_LIST_PAGES_JSON"])
+                    list_index = sum(call[:1] == ["list"] for call in existing_calls)
+                    print(json.dumps(pages[list_index]))
                 elif sys.argv[1:2] == ["inspect"]:
                     print(os.environ["AUREA_FAKE_VERCEL_INSPECT_JSON"])
                 else:
@@ -55,6 +62,7 @@ class VercelPreviewVerifierTests(unittest.TestCase):
         sha: str = EXPECTED_SHA,
         host: str = DEPLOYMENT_HOST,
         uid: str = "dpl_expected",
+        ref: str = "preview",
     ) -> dict[str, object]:
         return {
             "uid": uid,
@@ -64,7 +72,7 @@ class VercelPreviewVerifierTests(unittest.TestCase):
             "readyState": "READY",
             "meta": {
                 "githubCommitSha": sha,
-                "githubCommitRef": "preview",
+                "githubCommitRef": ref,
             },
         }
 
@@ -82,10 +90,24 @@ class VercelPreviewVerifierTests(unittest.TestCase):
             "target": target,
         }
 
+    @staticmethod
+    def _page(
+        deployments: list[dict[str, object]],
+        *,
+        next_cursor: object = None,
+        pagination: object | None = None,
+    ) -> dict[str, object]:
+        return {
+            "deployments": deployments,
+            "pagination": (
+                {"next": next_cursor} if pagination is None else pagination
+            ),
+        }
+
     def _run(
         self,
         *arguments: str,
-        deployments: list[dict[str, object]] | None = None,
+        pages: list[dict[str, object]] | None = None,
         inspection: dict[str, object] | None = None,
     ) -> subprocess.CompletedProcess[str]:
         environment = os.environ.copy()
@@ -94,8 +116,8 @@ class VercelPreviewVerifierTests(unittest.TestCase):
                 "AUREA_VERCEL_CLI": str(self.fake_vercel),
                 "AUREA_VERCEL_SCOPE": SCOPE,
                 "AUREA_FAKE_VERCEL_LOG": str(self.cli_log),
-                "AUREA_FAKE_VERCEL_LIST_JSON": json.dumps(
-                    deployments if deployments is not None else [self._deployment()]
+                "AUREA_FAKE_VERCEL_LIST_PAGES_JSON": json.dumps(
+                    pages if pages is not None else [self._page([self._deployment()])]
                 ),
                 "AUREA_FAKE_VERCEL_INSPECT_JSON": json.dumps(
                     inspection if inspection is not None else self._inspection()
@@ -134,7 +156,7 @@ class VercelPreviewVerifierTests(unittest.TestCase):
         result = self._run(
             EXPECTED_SHA,
             DEPLOYMENT_URL,
-            deployments=[self._deployment(sha=OTHER_SHA)],
+            pages=[self._page([self._deployment(sha=OTHER_SHA)])],
         )
 
         self.assertNotEqual(result.returncode, 0)
@@ -144,9 +166,14 @@ class VercelPreviewVerifierTests(unittest.TestCase):
         result = self._run(
             EXPECTED_SHA,
             DEPLOYMENT_URL,
-            deployments=[
-                self._deployment(),
-                self._deployment(host="duplicate-test-team.vercel.app", uid="dpl_duplicate"),
+            pages=[
+                self._page([self._deployment()], next_cursor=12345),
+                self._page([
+                    self._deployment(
+                        host="duplicate-test-team.vercel.app",
+                        uid="dpl_duplicate",
+                    )
+                ]),
             ],
         )
 
@@ -156,13 +183,53 @@ class VercelPreviewVerifierTests(unittest.TestCase):
             [[
                 "list",
                 "aurea-solaris-api",
+                "--scope",
+                SCOPE,
                 "--status",
                 "READY",
                 "--json",
+                "--limit",
+                "100",
+            ], [
+                "list",
+                "aurea-solaris-api",
                 "--scope",
                 SCOPE,
+                "--status",
+                "READY",
+                "--json",
+                "--limit",
+                "100",
+                "--next",
+                "12345",
             ]],
         )
+
+    def test_rejects_an_exact_sha_from_the_wrong_git_ref(self) -> None:
+        result = self._run(
+            EXPECTED_SHA,
+            DEPLOYMENT_URL,
+            pages=[self._page([self._deployment(ref="main")])],
+        )
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertEqual(len(self._calls()), 1)
+
+    def test_rejects_repeated_or_invalid_pagination(self) -> None:
+        cases = (
+            [
+                self._page([], next_cursor="same-cursor"),
+                self._page([], next_cursor="same-cursor"),
+            ],
+            [self._page([self._deployment()], pagination="invalid")],
+        )
+        expected_list_calls = (2, 1)
+        for pages, call_count in zip(cases, expected_list_calls, strict=True):
+            with self.subTest(pages=pages):
+                self.cli_log.unlink(missing_ok=True)
+                result = self._run(EXPECTED_SHA, DEPLOYMENT_URL, pages=pages)
+                self.assertNotEqual(result.returncode, 0)
+                self.assertEqual(len(self._calls()), call_count)
 
     def test_rejects_the_canonical_production_input_before_cli_access(self) -> None:
         result = self._run(EXPECTED_SHA, PRODUCTION_URL)
@@ -190,10 +257,10 @@ class VercelPreviewVerifierTests(unittest.TestCase):
         result = self._run(
             EXPECTED_SHA,
             "https://preview-api-alias-test-team.vercel.app",
-            deployments=[
+            pages=[self._page([
                 self._deployment(sha=OTHER_SHA, host="older-test-team.vercel.app"),
                 self._deployment(),
-            ],
+            ])],
         )
 
         self.assertEqual(result.returncode, 0, result.stderr)
@@ -205,11 +272,13 @@ class VercelPreviewVerifierTests(unittest.TestCase):
                 [
                     "list",
                     "aurea-solaris-api",
+                    "--scope",
+                    SCOPE,
                     "--status",
                     "READY",
                     "--json",
-                    "--scope",
-                    SCOPE,
+                    "--limit",
+                    "100",
                 ],
                 [
                     "inspect",

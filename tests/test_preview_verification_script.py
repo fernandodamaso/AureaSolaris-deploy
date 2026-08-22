@@ -562,17 +562,45 @@ class PreviewVerificationScriptTests(unittest.TestCase):
             source,
         )
         self.assertEqual(
-            source.count('scripts/smoke_api.sh "$AUREA_VERIFIED_PREVIEW_API_URL"'),
+            source.count("scripts/smoke_verified_preview_api.sh"),
             2,
         )
-        self.assertIn("scripts/verify_vercel_preview.py", source)
-        self.assertIn('"$AUREA_EXPECTED_PREVIEW_SHA" "$AUREA_PREVIEW_API_URL"', source)
+        self.assertIn("verifies every READY deployment page", source)
         self.assertNotIn("vercel list aurea-solaris-api", source)
         self.assertNotIn("--meta", source)
         self.assertNotIn(
-            'AUREA_VERIFIED_PREVIEW_API_URL="$AUREA_PREVIEW_API_URL"',
+            'export AUREA_VERIFIED_PREVIEW_API_URL="$(',
             source,
         )
+
+    def test_verified_smoke_stops_before_curl_when_preview_verification_fails(self) -> None:
+        fake_vercel = self.stub_dir / "fake_vercel.py"
+        fake_vercel.write_text(
+            "import json, os, sys\n"
+            "if sys.argv[1:2] == ['list']:\n"
+            "    print(json.dumps({'deployments': [], 'pagination': {'next': None}}))\n"
+            "else:\n"
+            "    raise SystemExit(2)\n",
+            encoding="utf-8",
+        )
+        environment = self._environment()
+        environment.update(
+            {
+                "AUREA_EXPECTED_PREVIEW_SHA": "1" * 40,
+                "AUREA_PREVIEW_API_URL": "https://preview-api.example.test",
+                "AUREA_VERCEL_SCOPE": "test-team",
+                "AUREA_VERCEL_CLI": str(fake_vercel),
+            }
+        )
+
+        result = self._run_script(
+            "scripts/smoke_verified_preview_api.sh",
+            environment=environment,
+        )
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("Preview verification failed", result.stderr)
+        self.assertFalse(self.arg_log.exists(), "failed verification reached curl")
 
 
 if __name__ == "__main__":

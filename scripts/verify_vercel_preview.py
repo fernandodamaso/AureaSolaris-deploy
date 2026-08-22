@@ -79,14 +79,25 @@ def _run_vercel(command: list[str], arguments: list[str]) -> Any:
         ) from error
 
 
-def _deployments(payload: Any) -> list[dict[str, Any]]:
-    if isinstance(payload, list):
-        values = payload
-    elif isinstance(payload, dict) and isinstance(payload.get("deployments"), list):
-        values = payload["deployments"]
-    else:
+def _deployment_page(payload: Any) -> tuple[list[dict[str, Any]], str | None]:
+    if not isinstance(payload, dict) or not isinstance(payload.get("deployments"), list):
         raise VerificationError("Vercel list did not return a deployment list.")
-    return [value for value in values if isinstance(value, dict)]
+    pagination = payload.get("pagination", {})
+    if pagination is None:
+        pagination = {}
+    if not isinstance(pagination, dict):
+        raise VerificationError("Vercel list returned invalid pagination metadata.")
+    next_cursor = pagination.get("next")
+    if next_cursor is not None and (
+        isinstance(next_cursor, bool)
+        or not isinstance(next_cursor, (int, str))
+        or not str(next_cursor).strip()
+    ):
+        raise VerificationError("Vercel list returned an invalid next cursor.")
+    deployments = [
+        value for value in payload["deployments"] if isinstance(value, dict)
+    ]
+    return deployments, None if next_cursor is None else str(next_cursor)
 
 
 def _is_ready(deployment: dict[str, Any]) -> bool:
@@ -107,20 +118,35 @@ def verify(expected_sha: str, supplied_url: str) -> str:
     if not scope:
         raise VerificationError("AUREA_VERCEL_SCOPE is required.")
     cli = _cli_command()
-    listed = _run_vercel(
-        cli,
-        [
-            "list",
-            PROJECT,
-            "--status",
-            "READY",
-            "--json",
-            "--scope",
-            scope,
-        ],
-    )
+    list_arguments = [
+        "list",
+        PROJECT,
+        "--scope",
+        scope,
+        "--status",
+        "READY",
+        "--json",
+        "--limit",
+        "100",
+    ]
+    deployments: list[dict[str, Any]] = []
+    next_cursor: str | None = None
+    seen_cursors: set[str] = set()
+    while True:
+        arguments = list_arguments.copy()
+        if next_cursor is not None:
+            arguments.extend(["--next", next_cursor])
+        page, following_cursor = _deployment_page(_run_vercel(cli, arguments))
+        deployments.extend(page)
+        if following_cursor is None:
+            break
+        if following_cursor in seen_cursors:
+            raise VerificationError("Vercel list repeated a pagination cursor.")
+        seen_cursors.add(following_cursor)
+        next_cursor = following_cursor
+
     matches = []
-    for deployment in _deployments(listed):
+    for deployment in deployments:
         meta = deployment.get("meta")
         sha = meta.get("githubCommitSha") if isinstance(meta, dict) else None
         ref = meta.get("githubCommitRef") if isinstance(meta, dict) else None

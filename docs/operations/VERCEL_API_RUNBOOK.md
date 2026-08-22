@@ -40,22 +40,18 @@ Preview uses the preview Supabase ref and API origin. Production uses the produc
 Deploy from the exact mirror SHA with the Vercel CLI. Record only the deployment ID, URL, target, and exact SHA. Never record environment values or request bodies.
 
 Before any authenticated smoke, bind the URL to the exact expected preview SHA. The
-verifier reads the full READY deployment list without a metadata filter. It requires
+wrapper verifies every READY deployment page without a metadata filter. It requires
 exactly one `aurea-solaris-api` deployment whose Git SHA and branch are the expected
 40-character SHA and `preview`. It then inspects the supplied URL or alias and requires
 the same resolved deployment URL, READY state, and preview target. It rejects the
-canonical production host. Stop if any check differs.
+canonical production host. The wrapper captures the verifier result first, stops on
+failure, and only then exports the verified URL and starts the smoke. Stop if any check
+differs.
 
 ```bash
 : "${AUREA_PREVIEW_API_URL:?Set the protected preview API deployment URL or alias}"
 : "${AUREA_EXPECTED_PREVIEW_SHA:?Set the full candidate SHA}"
 : "${AUREA_VERCEL_SCOPE:?Set the verified Vercel team scope}"
-source scripts/lib/select_python.sh
-aurea_select_python
-export AUREA_VERIFIED_PREVIEW_API_URL="$(
-  "$PYTHON" scripts/verify_vercel_preview.py \
-    "$AUREA_EXPECTED_PREVIEW_SHA" "$AUREA_PREVIEW_API_URL"
-)"
 ```
 
 Only after that comparison succeeds, run the smoke script with a short-lived preview
@@ -64,7 +60,7 @@ JWT held in the process environment:
 ```bash
 AUREA_SMOKE_JWT="$SHORT_LIVED_PREVIEW_JWT" \
 AUREA_VERCEL_PROTECTION_BYPASS="$LOCAL_ONLY_BYPASS" \
-bash scripts/smoke_api.sh "$AUREA_VERIFIED_PREVIEW_API_URL"
+bash scripts/smoke_verified_preview_api.sh
 ```
 
 For the certified Swiss Ephemeris check, use an isolated preview identity and synthetic birth profile only:
@@ -73,7 +69,7 @@ For the certified Swiss Ephemeris check, use an isolated preview identity and sy
 AUREA_SMOKE_JWT="$SHORT_LIVED_PREVIEW_JWT" \
 AUREA_SMOKE_ASTROLOGY=1 \
 AUREA_VERCEL_PROTECTION_BYPASS="$LOCAL_ONLY_BYPASS" \
-bash scripts/smoke_api.sh "$AUREA_VERIFIED_PREVIEW_API_URL"
+bash scripts/smoke_verified_preview_api.sh
 ```
 
 The script checks `/health`, fail-closed `/ready`, safe unauthenticated `401`, authenticated `/v1/me`, and (when requested) the real astrology route. It prints status and engine metadata only. Sensitive headers and the synthetic birth body use a curl configuration stream on standard input, so those input values do not enter child-process arguments. Curl stores response JSON only in a private temporary directory; the exit trap removes those files. The script never prints the JWT, response bodies, birth payload, or database credential, and it retains no response file. It does not run against production.
