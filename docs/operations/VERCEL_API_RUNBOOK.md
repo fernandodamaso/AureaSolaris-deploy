@@ -40,18 +40,22 @@ Preview uses the preview Supabase ref and API origin. Production uses the produc
 Deploy from the exact mirror SHA with the Vercel CLI. Record only the deployment ID, URL, target, and exact SHA. Never record environment values or request bodies.
 
 Before any authenticated smoke, bind the URL to the exact expected preview SHA. The
-deployment list must show a READY `aurea-solaris-api` preview deployment with the
-expected `githubCommitSha` metadata, and `vercel inspect` must identify that same URL
-and SHA. Stop if either check differs.
+verifier reads the full READY deployment list without a metadata filter. It requires
+exactly one `aurea-solaris-api` deployment whose Git SHA and branch are the expected
+40-character SHA and `preview`. It then inspects the supplied URL or alias and requires
+the same resolved deployment URL, READY state, and preview target. It rejects the
+canonical production host. Stop if any check differs.
 
 ```bash
 : "${AUREA_PREVIEW_API_URL:?Set the protected preview API deployment URL or alias}"
 : "${AUREA_EXPECTED_PREVIEW_SHA:?Set the full candidate SHA}"
 : "${AUREA_VERCEL_SCOPE:?Set the verified Vercel team scope}"
-vercel list aurea-solaris-api --scope "$AUREA_VERCEL_SCOPE" --status READY \
-  --meta "githubCommitSha=$AUREA_EXPECTED_PREVIEW_SHA"
-vercel inspect "$AUREA_PREVIEW_API_URL" --scope "$AUREA_VERCEL_SCOPE"
-export AUREA_VERIFIED_PREVIEW_API_URL="$AUREA_PREVIEW_API_URL"
+source scripts/lib/select_python.sh
+aurea_select_python
+export AUREA_VERIFIED_PREVIEW_API_URL="$(
+  "$PYTHON" scripts/verify_vercel_preview.py \
+    "$AUREA_EXPECTED_PREVIEW_SHA" "$AUREA_PREVIEW_API_URL"
+)"
 ```
 
 Only after that comparison succeeds, run the smoke script with a short-lived preview

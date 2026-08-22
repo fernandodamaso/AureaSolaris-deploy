@@ -565,8 +565,14 @@ class PreviewVerificationScriptTests(unittest.TestCase):
             source.count('scripts/smoke_api.sh "$AUREA_VERIFIED_PREVIEW_API_URL"'),
             2,
         )
-        self.assertIn('githubCommitSha=$AUREA_EXPECTED_PREVIEW_SHA', source)
-        self.assertIn('vercel inspect "$AUREA_PREVIEW_API_URL"', source)
+        self.assertIn("scripts/verify_vercel_preview.py", source)
+        self.assertIn('"$AUREA_EXPECTED_PREVIEW_SHA" "$AUREA_PREVIEW_API_URL"', source)
+        self.assertNotIn("vercel list aurea-solaris-api", source)
+        self.assertNotIn("--meta", source)
+        self.assertNotIn(
+            'AUREA_VERIFIED_PREVIEW_API_URL="$AUREA_PREVIEW_API_URL"',
+            source,
+        )
 
 
 if __name__ == "__main__":

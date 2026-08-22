@@ -6,6 +6,15 @@ import { installPreviewProtectionRoutes } from '../helpers/app';
 const bypassHeader = 'x-vercel-protection-bypass';
 const webBypass = 'test-web-bypass';
 const apiBypass = 'test-api-bypass';
+const changedEnvironmentNames = [
+  'AUREA_E2E_URL',
+  'AUREA_E2E_API_URL',
+  'AUREA_VERCEL_WEB_PROTECTION_BYPASS',
+  'AUREA_VERCEL_API_PROTECTION_BYPASS',
+] as const;
+const originalEnvironment = new Map(
+  changedEnvironmentNames.map((name) => [name, process.env[name]]),
+);
 
 type RecordedOrigin = {
   headers: IncomingHttpHeaders[];
@@ -51,11 +60,19 @@ test.beforeAll(async () => {
 });
 
 test.afterAll(async () => {
-  await Promise.all([webOrigin, apiOrigin, otherOrigin].map(
-    ({ server }) => new Promise<void>((resolve, reject) => {
-      server.close((error) => error ? reject(error) : resolve());
-    }),
-  ));
+  try {
+    await Promise.all([webOrigin, apiOrigin, otherOrigin].map(
+      ({ server }) => new Promise<void>((resolve, reject) => {
+        server.close((error) => error ? reject(error) : resolve());
+      }),
+    ));
+  } finally {
+    for (const name of changedEnvironmentNames) {
+      const originalValue = originalEnvironment.get(name);
+      if (originalValue === undefined) delete process.env[name];
+      else process.env[name] = originalValue;
+    }
+  }
 });
 
 test('keeps preview bypass headers on their exact origins', async ({ page }) => {
