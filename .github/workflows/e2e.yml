@@ -53,7 +53,7 @@ jobs:
             echo '```'
             echo
             if [ "${{ steps.web-quality.outcome }}" = "failure" ]; then
-              echo "**Start with:** the first failing lint, test, or build command reported by `npm run check:web` above."
+              echo '**Start with:** the first failing lint, test, or build command reported by `npm run check:web` above.'
             elif [ "${{ steps.install.outcome }}" = "failure" ]; then
               echo "**Start with:** dependency installation/package-lock consistency."
             else
@@ -184,7 +184,7 @@ jobs:
             echo "### Reproduce locally (POSIX shell)"
             echo '```bash'
             echo 'python -m pip install -r requirements-api.txt'
-            echo 'export AUREA_DATA_DIR="$(mktemp -d)/data"'
+            echo "export AUREA_DATA_DIR=\"\$(mktemp -d)/data\""
             echo "python -m unittest $MODULES -v"
             echo '```'
             echo

@@ -9,7 +9,7 @@ PREVIEW_REF="rosklqnnbmhowohoyboj"
 PRODUCTION_REF="tgpcpxqqusehssaihvcp"
 MIGRATION_FILE="supabase/migrations/202608150001_web_v1_core.sql"
 MIGRATION_VERSION="202608150001"
-MIGRATION_SHA256="42d3b1f57a52ae3fff45a0086075518a18d8924f6deb5cf7d5b1143aef46dcb2"
+MIGRATION_SHA256="c4d0772f680786789f0604684f1b11670dfdcec6903ab34968ab1a3ebe17b864"
 
 select_tools() {
   aurea_select_python || exit 1
