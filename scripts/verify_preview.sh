@@ -16,6 +16,15 @@ source "$SCRIPT_DIR/lib/select_python.sh"
 : "${AUREA_PRODUCTION_SUPABASE_URL:?AUREA_PRODUCTION_SUPABASE_URL is required}"
 
 CANONICAL_PRODUCTION_SUPABASE_URL="https://tgpcpxqqusehssaihvcp.supabase.co"
+CANONICAL_PREVIEW_SUPABASE_URL="https://rosklqnnbmhowohoyboj.supabase.co"
+normalized_preview_supabase_url="${SUPABASE_PREVIEW_URL%/}"
+if [[ "$normalized_preview_supabase_url" != "$CANONICAL_PREVIEW_SUPABASE_URL" ]]; then
+  printf 'SUPABASE_PREVIEW_URL must equal %s\n' \
+    "$CANONICAL_PREVIEW_SUPABASE_URL" >&2
+  exit 1
+fi
+export SUPABASE_PREVIEW_URL="$normalized_preview_supabase_url"
+
 normalized_production_supabase_url="${AUREA_PRODUCTION_SUPABASE_URL%/}"
 if [[ "$normalized_production_supabase_url" != "$CANONICAL_PRODUCTION_SUPABASE_URL" ]]; then
   printf 'AUREA_PRODUCTION_SUPABASE_URL must equal %s\n' \

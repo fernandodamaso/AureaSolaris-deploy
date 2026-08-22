@@ -25,5 +25,6 @@ Source of truth for agent and CI workflows. Spec: `docs/superpowers/specs/2026-0
 | hermes-mocked-proposal | hermes | yes | none | implemented |
 | hermes-live-provider | hermes | no | e2e/playbooks/hermes.md | pending |
 | study-loop | hermes | yes | e2e/playbooks/hermes.md | implemented |
+| protection-boundary | protection | yes | none | implemented |
 
 When a spec lands, flip `status` to `implemented`. Playbooks are under `e2e/playbooks/`.

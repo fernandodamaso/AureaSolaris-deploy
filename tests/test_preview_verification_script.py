@@ -15,6 +15,7 @@ import unittest
 ROOT = Path(__file__).resolve().parents[1]
 GIT_BASH = Path(r"C:\Program Files\Git\bin\bash.exe")
 CANONICAL_PRODUCTION_SUPABASE_URL = "https://tgpcpxqqusehssaihvcp.supabase.co"
+CANONICAL_PREVIEW_SUPABASE_URL = "https://rosklqnnbmhowohoyboj.supabase.co"
 
 
 def _resolve_bash(
@@ -273,7 +274,7 @@ class PreviewVerificationScriptTests(unittest.TestCase):
                 "AUREA_E2E_SECOND_JWT": "test-second-jwt",
                 "AUREA_VERCEL_WEB_PROTECTION_BYPASS": "test-web-bypass",
                 "AUREA_VERCEL_API_PROTECTION_BYPASS": "test-api-bypass",
-                "SUPABASE_PREVIEW_URL": "https://preview-ref.supabase.co",
+                "SUPABASE_PREVIEW_URL": CANONICAL_PREVIEW_SUPABASE_URL,
                 "SUPABASE_PREVIEW_ANON_KEY": "test-preview-anon-key",
                 "AUREA_PRODUCTION_API_URL": "https://production-api.example.test",
                 "AUREA_PRODUCTION_SUPABASE_URL": CANONICAL_PRODUCTION_SUPABASE_URL,
@@ -367,12 +368,10 @@ class PreviewVerificationScriptTests(unittest.TestCase):
         self.assertIn("1990-01-01", bodies)
         self.assertIn('"place":"E2E"', bodies)
 
-    def test_smoke_secure_streams_work_with_the_real_windows_curl(self) -> None:
-        if os.name != "nt":
-            self.skipTest("This regression targets native Windows curl.")
+    def test_smoke_secure_streams_work_with_real_curl(self) -> None:
         real_curl = shutil.which("curl.exe") or shutil.which("curl")
         if not real_curl:
-            self.skipTest("curl is required for the real executable regression.")
+            self.skipTest("curl is required for the executable regression.")
 
         requests: list[tuple[str, str, bytes]] = []
 
@@ -476,10 +475,36 @@ class PreviewVerificationScriptTests(unittest.TestCase):
         )
         self.assertNotEqual(wrong_result.returncode, 0)
         self.assertIn(CANONICAL_PRODUCTION_SUPABASE_URL, wrong_result.stderr)
+        self.assertFalse(self.arg_log.exists(), "fake production origin reached curl")
         self.assertFalse(self.npx_log.exists(), "fake origin reached browser launch")
+
+        missing_preview_environment = self._environment()
+        missing_preview_environment.pop("SUPABASE_PREVIEW_URL")
+        missing_preview_result = self._run_script(
+            "scripts/verify_preview.sh",
+            environment=missing_preview_environment,
+        )
+        self.assertNotEqual(missing_preview_result.returncode, 0)
+        self.assertIn("SUPABASE_PREVIEW_URL is required", missing_preview_result.stderr)
+        self.assertFalse(self.arg_log.exists(), "missing preview origin reached curl")
+        self.assertFalse(self.npx_log.exists(), "missing preview origin reached browser launch")
+
+        wrong_preview_environment = self._environment()
+        wrong_preview_environment["SUPABASE_PREVIEW_URL"] = (
+            "https://rosklqnnbmhowohoyboj.supabase.co.invalid"
+        )
+        wrong_preview_result = self._run_script(
+            "scripts/verify_preview.sh",
+            environment=wrong_preview_environment,
+        )
+        self.assertNotEqual(wrong_preview_result.returncode, 0)
+        self.assertIn(CANONICAL_PREVIEW_SUPABASE_URL, wrong_preview_result.stderr)
+        self.assertFalse(self.arg_log.exists(), "fake preview origin reached curl")
+        self.assertFalse(self.npx_log.exists(), "fake preview origin reached browser launch")
 
         self._clear_logs()
         trailing_slash_environment = self._environment()
+        trailing_slash_environment["SUPABASE_PREVIEW_URL"] += "/"
         trailing_slash_environment["AUREA_PRODUCTION_SUPABASE_URL"] += "/"
         result = self._run_script(
             "scripts/verify_preview.sh",
