@@ -15,6 +15,15 @@ source "$SCRIPT_DIR/lib/select_python.sh"
 : "${SUPABASE_PREVIEW_ANON_KEY:?SUPABASE_PREVIEW_ANON_KEY is required}"
 : "${AUREA_PRODUCTION_SUPABASE_URL:?AUREA_PRODUCTION_SUPABASE_URL is required}"
 
+CANONICAL_PRODUCTION_SUPABASE_URL="https://tgpcpxqqusehssaihvcp.supabase.co"
+normalized_production_supabase_url="${AUREA_PRODUCTION_SUPABASE_URL%/}"
+if [[ "$normalized_production_supabase_url" != "$CANONICAL_PRODUCTION_SUPABASE_URL" ]]; then
+  printf 'AUREA_PRODUCTION_SUPABASE_URL must equal %s\n' \
+    "$CANONICAL_PRODUCTION_SUPABASE_URL" >&2
+  exit 1
+fi
+export AUREA_PRODUCTION_SUPABASE_URL="$normalized_production_supabase_url"
+
 if command -v curl >/dev/null 2>&1; then CURL="curl"
 elif command -v curl.exe >/dev/null 2>&1; then CURL="curl.exe"
 else printf 'curl is required.\n' >&2; exit 1; fi

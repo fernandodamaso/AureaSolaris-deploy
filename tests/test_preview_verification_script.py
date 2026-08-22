@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Callable
 import os
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -13,6 +14,21 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
 GIT_BASH = Path(r"C:\Program Files\Git\bin\bash.exe")
+CANONICAL_PRODUCTION_SUPABASE_URL = "https://tgpcpxqqusehssaihvcp.supabase.co"
+
+
+def _resolve_bash(
+    *,
+    platform: str = os.name,
+    which: Callable[[str], str | None] = shutil.which,
+) -> Path | None:
+    if platform == "nt" and GIT_BASH.exists():
+        return GIT_BASH
+    resolved = which("bash")
+    return Path(resolved) if resolved else None
+
+
+BASH = _resolve_bash()
 
 
 def _bash_path(path: Path) -> str:
@@ -27,10 +43,23 @@ def _write_executable(path: Path, content: str) -> None:
     path.chmod(0o755)
 
 
+class BashResolutionTests(unittest.TestCase):
+    def test_posix_bash_resolution_uses_path_lookup(self) -> None:
+        resolver = globals().get("_resolve_bash")
+        self.assertIsNotNone(resolver, "portable Bash resolution is required")
+        assert resolver is not None
+        resolved = resolver(
+            platform="posix",
+            which=lambda command: "/bin/bash" if command == "bash" else None,
+        )
+
+        self.assertEqual(resolved, Path("/bin/bash"))
+
+
 class PreviewVerificationScriptTests(unittest.TestCase):
     def setUp(self) -> None:
-        if not GIT_BASH.exists():
-            self.skipTest("The Windows Git Bash executable is required for verifier tests.")
+        if BASH is None:
+            self.skipTest("bash is required for verifier tests.")
 
         self.temp_dir = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp_dir.cleanup)
@@ -238,7 +267,7 @@ class PreviewVerificationScriptTests(unittest.TestCase):
                 "SUPABASE_PREVIEW_URL": "https://preview-ref.supabase.co",
                 "SUPABASE_PREVIEW_ANON_KEY": "test-preview-anon-key",
                 "AUREA_PRODUCTION_API_URL": "https://production-api.example.test",
-                "AUREA_PRODUCTION_SUPABASE_URL": "https://production-ref.supabase.co",
+                "AUREA_PRODUCTION_SUPABASE_URL": CANONICAL_PRODUCTION_SUPABASE_URL,
                 "AUREA_SMOKE_JWT": "test-smoke-jwt",
                 "AUREA_SMOKE_ASTROLOGY": "1",
                 "AUREA_VERCEL_PROTECTION_BYPASS": "test-api-bypass",
@@ -264,7 +293,7 @@ class PreviewVerificationScriptTests(unittest.TestCase):
         )
         return subprocess.run(
             [
-                str(GIT_BASH),
+                str(BASH),
                 "--noprofile",
                 "--norc",
                 "-c",
@@ -324,6 +353,8 @@ class PreviewVerificationScriptTests(unittest.TestCase):
         self.assertIn('"place":"E2E"', bodies)
 
     def test_smoke_secure_streams_work_with_the_real_windows_curl(self) -> None:
+        if os.name != "nt":
+            self.skipTest("This regression targets native Windows curl.")
         real_curl = shutil.which("curl.exe") or shutil.which("curl")
         if not real_curl:
             self.skipTest("curl is required for the real executable regression.")
@@ -419,8 +450,24 @@ class PreviewVerificationScriptTests(unittest.TestCase):
         self.assertNotEqual(missing_result.returncode, 0)
         self.assertIn("AUREA_PRODUCTION_SUPABASE_URL is required", missing_result.stderr)
 
+        wrong_environment = self._environment()
+        wrong_environment["AUREA_PRODUCTION_SUPABASE_URL"] = (
+            "https://tgpcpxqqusehssaihvcp.supabase.co.invalid"
+        )
+        wrong_result = self._run_script(
+            "scripts/verify_preview.sh",
+            environment=wrong_environment,
+        )
+        self.assertNotEqual(wrong_result.returncode, 0)
+        self.assertIn(CANONICAL_PRODUCTION_SUPABASE_URL, wrong_result.stderr)
+
         self._clear_logs()
-        result = self._run_script("scripts/verify_preview.sh")
+        trailing_slash_environment = self._environment()
+        trailing_slash_environment["AUREA_PRODUCTION_SUPABASE_URL"] += "/"
+        result = self._run_script(
+            "scripts/verify_preview.sh",
+            environment=trailing_slash_environment,
+        )
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertIn("public_signup=disabled", result.stdout)
 
@@ -492,7 +539,23 @@ class PreviewVerificationScriptTests(unittest.TestCase):
             missing.stdout + missing.stderr,
         )
 
-        env["AUREA_PRODUCTION_SUPABASE_URL"] = "https://production-ref.supabase.co"
+        env["AUREA_PRODUCTION_SUPABASE_URL"] = (
+            "https://tgpcpxqqusehssaihvcp.supabase.co.invalid"
+        )
+        wrong = subprocess.run(
+            command,
+            cwd=ROOT,
+            env=env,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            timeout=60,
+            check=False,
+        )
+        self.assertNotEqual(wrong.returncode, 0)
+        self.assertIn(CANONICAL_PRODUCTION_SUPABASE_URL, wrong.stdout + wrong.stderr)
+
+        env["AUREA_PRODUCTION_SUPABASE_URL"] = CANONICAL_PRODUCTION_SUPABASE_URL
         present = subprocess.run(
             command,
             cwd=ROOT,

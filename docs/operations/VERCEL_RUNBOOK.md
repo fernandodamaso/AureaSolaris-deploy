@@ -46,11 +46,11 @@ browser-safe public key; never place a service-role key or database URL in a
 5. Check the API CORS preflight from the exact preview web origin and run the
    API smoke against the matching preview deployment.
 
-The hosted ownership test also requires the known production Supabase origin.
-It fails before browser startup when that origin is absent, so the request
-boundary cannot silently skip the production-project exclusion. The public
-sign-up assertion reads `/auth/v1/settings`; it does not submit a sign-up
-request or create an Auth user.
+The hosted ownership test also requires the canonical production Supabase origin
+`https://tgpcpxqqusehssaihvcp.supabase.co`. The wrapper rejects any other value
+before browser startup; one trailing slash is normalized. The browser test then
+asserts that no request reached that origin. The public sign-up assertion reads
+`/auth/v1/settings`; it does not submit a sign-up request or create an Auth user.
 
 Keep deployment protection enabled. Use a short-lived local CLI bypass only for
 verification; do not add it to GitHub Actions or commit it.

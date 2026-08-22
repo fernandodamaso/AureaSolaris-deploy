@@ -9,9 +9,18 @@ type ReceiptBody = {
   };
 };
 
-const productionSupabase = process.env.AUREA_PRODUCTION_SUPABASE_URL;
-if (!productionSupabase) {
+const canonicalProductionSupabase = 'https://tgpcpxqqusehssaihvcp.supabase.co';
+const configuredProductionSupabase = process.env.AUREA_PRODUCTION_SUPABASE_URL;
+if (!configuredProductionSupabase) {
   throw new Error('AUREA_PRODUCTION_SUPABASE_URL is required.');
+}
+const productionSupabase = configuredProductionSupabase.endsWith('/')
+  ? configuredProductionSupabase.slice(0, -1)
+  : configuredProductionSupabase;
+if (productionSupabase !== canonicalProductionSupabase) {
+  throw new Error(
+    `AUREA_PRODUCTION_SUPABASE_URL must equal ${canonicalProductionSupabase}.`,
+  );
 }
 
 test.use({ trace: 'off', screenshot: 'off', video: 'off' });
