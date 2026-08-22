@@ -101,6 +101,11 @@ class PreviewVerificationScriptTests(unittest.TestCase):
             #!/usr/bin/env bash
             printf 'production_supabase=%s\n' \
               "$AUREA_PRODUCTION_SUPABASE_URL" >> "$AUREA_TEST_NPX_LOG"
+            if [[ -n "${AUREA_VERCEL_PROTECTION_BYPASS:-}" ]]; then
+              printf 'global_bypass=present\n' >> "$AUREA_TEST_NPX_LOG"
+            else
+              printf 'global_bypass=absent\n' >> "$AUREA_TEST_NPX_LOG"
+            fi
             exit 0
             """,
         )
@@ -485,7 +490,10 @@ class PreviewVerificationScriptTests(unittest.TestCase):
         self.assertTrue(self.npx_log.exists(), "canonical origin did not reach browser launch")
         self.assertEqual(
             self.npx_log.read_text(encoding="utf-8").splitlines(),
-            [f"production_supabase={CANONICAL_PRODUCTION_SUPABASE_URL}"],
+            [
+                f"production_supabase={CANONICAL_PRODUCTION_SUPABASE_URL}",
+                "global_bypass=absent",
+            ],
         )
 
         arguments = "\n".join(self._curl_arguments())
@@ -543,6 +551,22 @@ class PreviewVerificationScriptTests(unittest.TestCase):
             "if (productionSupabase !== canonicalProductionSupabase) {",
             source,
         )
+
+    def test_api_runbook_uses_only_an_exact_sha_preview_url_for_jwt_smoke(self) -> None:
+        source = (ROOT / "docs/operations/VERCEL_API_RUNBOOK.md").read_text(
+            encoding="utf-8"
+        )
+
+        self.assertNotIn(
+            "scripts/smoke_api.sh https://aurea-solaris-api.vercel.app",
+            source,
+        )
+        self.assertEqual(
+            source.count('scripts/smoke_api.sh "$AUREA_VERIFIED_PREVIEW_API_URL"'),
+            2,
+        )
+        self.assertIn('githubCommitSha=$AUREA_EXPECTED_PREVIEW_SHA', source)
+        self.assertIn('vercel inspect "$AUREA_PREVIEW_API_URL"', source)
 
 
 if __name__ == "__main__":

@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { waitForShell } from '../helpers/app';
+import { installPreviewProtectionRoutes, waitForShell } from '../helpers/app';
 
 type ReceiptBody = {
   id: string;
@@ -30,6 +30,8 @@ test('hosted private flow and receipt ownership boundary', async ({ page, reques
   const secondJwt = process.env.AUREA_E2E_SECOND_JWT;
   const apiBypass = process.env.AUREA_VERCEL_API_PROTECTION_BYPASS;
   if (!apiUrl || !secondJwt) throw new Error('Hosted ownership credentials are missing.');
+
+  await installPreviewProtectionRoutes(page);
 
   const observedUrls: string[] = [];
   page.on('request', (requestEvent) => observedUrls.push(requestEvent.url()));

@@ -71,7 +71,7 @@ PY
 }
 printf 'public_signup=disabled\n'
 
-export AUREA_VERCEL_PROTECTION_BYPASS="$AUREA_VERCEL_WEB_PROTECTION_BYPASS"
+unset AUREA_VERCEL_PROTECTION_BYPASS
 export AUREA_SMOKE_JWT=""
 export AUREA_PRODUCTION_API_URL="${AUREA_PRODUCTION_API_URL:-https://aurea-solaris-api.vercel.app}"
 

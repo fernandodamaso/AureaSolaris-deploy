@@ -39,12 +39,28 @@ Preview uses the preview Supabase ref and API origin. Production uses the produc
 
 Deploy from the exact mirror SHA with the Vercel CLI. Record only the deployment ID, URL, target, and exact SHA. Never record environment values or request bodies.
 
-Run the smoke script with a short-lived preview JWT held in the process environment:
+Before any authenticated smoke, bind the URL to the exact expected preview SHA. The
+deployment list must show a READY `aurea-solaris-api` preview deployment with the
+expected `githubCommitSha` metadata, and `vercel inspect` must identify that same URL
+and SHA. Stop if either check differs.
+
+```bash
+: "${AUREA_PREVIEW_API_URL:?Set the protected preview API deployment URL or alias}"
+: "${AUREA_EXPECTED_PREVIEW_SHA:?Set the full candidate SHA}"
+: "${AUREA_VERCEL_SCOPE:?Set the verified Vercel team scope}"
+vercel list aurea-solaris-api --scope "$AUREA_VERCEL_SCOPE" --status READY \
+  --meta "githubCommitSha=$AUREA_EXPECTED_PREVIEW_SHA"
+vercel inspect "$AUREA_PREVIEW_API_URL" --scope "$AUREA_VERCEL_SCOPE"
+export AUREA_VERIFIED_PREVIEW_API_URL="$AUREA_PREVIEW_API_URL"
+```
+
+Only after that comparison succeeds, run the smoke script with a short-lived preview
+JWT held in the process environment:
 
 ```bash
 AUREA_SMOKE_JWT="$SHORT_LIVED_PREVIEW_JWT" \
 AUREA_VERCEL_PROTECTION_BYPASS="$LOCAL_ONLY_BYPASS" \
-bash scripts/smoke_api.sh https://aurea-solaris-api.vercel.app
+bash scripts/smoke_api.sh "$AUREA_VERIFIED_PREVIEW_API_URL"
 ```
 
 For the certified Swiss Ephemeris check, use an isolated preview identity and synthetic birth profile only:
@@ -53,7 +69,7 @@ For the certified Swiss Ephemeris check, use an isolated preview identity and sy
 AUREA_SMOKE_JWT="$SHORT_LIVED_PREVIEW_JWT" \
 AUREA_SMOKE_ASTROLOGY=1 \
 AUREA_VERCEL_PROTECTION_BYPASS="$LOCAL_ONLY_BYPASS" \
-bash scripts/smoke_api.sh https://aurea-solaris-api.vercel.app
+bash scripts/smoke_api.sh "$AUREA_VERIFIED_PREVIEW_API_URL"
 ```
 
 The script checks `/health`, fail-closed `/ready`, safe unauthenticated `401`, authenticated `/v1/me`, and (when requested) the real astrology route. It prints status and engine metadata only. Sensitive headers and the synthetic birth body use a curl configuration stream on standard input, so those input values do not enter child-process arguments. Curl stores response JSON only in a private temporary directory; the exit trap removes those files. The script never prints the JWT, response bodies, birth payload, or database credential, and it retains no response file. It does not run against production.

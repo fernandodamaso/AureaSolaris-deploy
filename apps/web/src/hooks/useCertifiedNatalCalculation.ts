@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useApiClient } from '../api/provider';
 import { AstrologyApiError, requestNatal } from '../services/astrologyApi';
 import { readCertifiedCalculation } from '../utils/certifiedCalculation';
@@ -40,13 +40,27 @@ export const useCertifiedNatalCalculation = (birthData?: AstrologyCalculationReq
   const [data, setData] = useState<CertifiedAstrologyResult | null>(null);
   const [loading, setLoading] = useState(enabled);
   const [error, setError] = useState<string | null>(null);
+  const requestSequence = useRef(0);
+  const activeController = useRef<AbortController | null>(null);
   const birthDataKey = JSON.stringify(birthData ?? null);
 
-  const calculate = useCallback(async (force = false, signal?: AbortSignal) => {
+  const invalidatePending = useCallback(() => {
+    activeController.current?.abort();
+    activeController.current = null;
+    requestSequence.current += 1;
+  }, []);
+
+  const calculate = useCallback(async (force = false) => {
+    activeController.current?.abort();
+    const controller = new AbortController();
+    activeController.current = controller;
+    const sequence = ++requestSequence.current;
+    const isCurrent = () => requestSequence.current === sequence && !controller.signal.aborted;
     setLoading(true);
     setError(null);
     try {
-      const receipt = await requestNatal(api, signal, force);
+      const receipt = await requestNatal(api, controller.signal, force);
+      if (!isCurrent()) return;
       const parsed = receipt.result_payload as unknown as CertifiedAstrologyResult;
       const displayable = {
         ...parsed,
@@ -66,27 +80,28 @@ export const useCertifiedNatalCalculation = (birthData?: AstrologyCalculationReq
         setData(displayable);
       }
     } catch (caught: unknown) {
-      if (isAbortError(caught)) return;
+      if (!isCurrent() || isAbortError(caught)) return;
       setError(caught instanceof AstrologyApiError
         ? caught.message
         : 'Não foi possível calcular o mapa natal. Tente novamente.');
     } finally {
-      if (!signal?.aborted) setLoading(false);
+      if (isCurrent()) setLoading(false);
+      if (activeController.current === controller) activeController.current = null;
     }
   }, [api]);
 
   useEffect(() => {
     if (!enabled) {
+      invalidatePending();
       setData(null);
       setError(null);
       setLoading(false);
       return;
     }
     setData(null);
-    const controller = new AbortController();
-    void calculate(false, controller.signal);
-    return () => controller.abort();
-  }, [birthDataKey, enabled, calculate]);
+    void calculate(false);
+    return invalidatePending;
+  }, [birthDataKey, enabled, calculate, invalidatePending]);
 
   const recalculate = useCallback(() => calculate(true), [calculate]);
   return { data, loading, error, recalculate };

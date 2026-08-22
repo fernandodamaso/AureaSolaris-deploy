@@ -24,4 +24,29 @@ describe('CalculationEvidence', () => {
 
     expect(screen.getByRole('region', { name: 'Proveniência dos trânsitos atuais' })).toBeTruthy();
   });
+
+  it('keeps the supplied accessible name while loading', () => {
+    render(
+      <CalculationEvidence
+        ariaLabel="Proveniência do mapa natal"
+        loading
+      />,
+    );
+
+    expect(screen.getByRole('status', { name: 'Proveniência do mapa natal' }).textContent)
+      .toContain('Calculando no motor local');
+  });
+
+  it('keeps the supplied accessible name for an error', () => {
+    render(
+      <CalculationEvidence
+        ariaLabel="Proveniência dos trânsitos atuais"
+        error="Falha controlada"
+        loading={false}
+      />,
+    );
+
+    expect(screen.getByRole('status', { name: 'Proveniência dos trânsitos atuais' }).textContent)
+      .toContain('Sem cálculo astronômico auditável');
+  });
 });

@@ -7,17 +7,6 @@ test.beforeEach(async ({ page, request }) => {
   if (!apiUrl) throw new Error('AUREA_E2E_API_URL is required for private E2E health checks.');
 
   const apiBypass = process.env.AUREA_VERCEL_API_PROTECTION_BYPASS;
-  if (apiBypass) {
-    await page.route(`${apiUrl.replace(/\/$/, '')}/**`, async (route) => {
-      await route.continue({
-        headers: {
-          ...route.request().headers(),
-          'x-vercel-protection-bypass': apiBypass,
-        },
-      });
-    });
-  }
-
   const response = await request.get(`${apiUrl}/health`, {
     headers: apiBypass ? { 'x-vercel-protection-bypass': apiBypass } : undefined,
   });
@@ -33,6 +22,37 @@ test.beforeEach(async ({ page, request }) => {
     errors.push(`console: ${message.text()}`);
   });
 });
+
+const protectionBypassHeader = 'x-vercel-protection-bypass';
+
+export async function installPreviewProtectionRoutes(page: Page): Promise<void> {
+  const webUrl = process.env.AUREA_E2E_URL;
+  const apiUrl = process.env.AUREA_E2E_API_URL;
+  if (!webUrl || !apiUrl) {
+    throw new Error('AUREA_E2E_URL and AUREA_E2E_API_URL are required for protected E2E routing.');
+  }
+
+  const webOrigin = new URL(webUrl).origin;
+  const apiOrigin = new URL(apiUrl).origin;
+  const webBypass = process.env.AUREA_VERCEL_WEB_PROTECTION_BYPASS;
+  const apiBypass = process.env.AUREA_VERCEL_API_PROTECTION_BYPASS;
+
+  await page.route('**/*', async (route) => {
+    const headers = { ...route.request().headers() };
+    for (const name of Object.keys(headers)) {
+      if (name.toLowerCase() === protectionBypassHeader) delete headers[name];
+    }
+
+    const requestOrigin = new URL(route.request().url()).origin;
+    if (requestOrigin === webOrigin && webBypass) {
+      headers[protectionBypassHeader] = webBypass;
+    } else if (requestOrigin === apiOrigin && apiBypass) {
+      headers[protectionBypassHeader] = apiBypass;
+    }
+
+    await route.continue({ headers });
+  });
+}
 
 test.afterEach(async ({ page }) => {
   const errors = failures.get(page) ?? [];

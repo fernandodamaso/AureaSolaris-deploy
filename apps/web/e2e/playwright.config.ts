@@ -5,8 +5,6 @@ if (!baseURL) {
   throw new Error('AUREA_E2E_URL is required (set by tools/run_e2e.py or the aurea-e2e skill).');
 }
 
-const protectionBypass = process.env.AUREA_VERCEL_PROTECTION_BYPASS;
-
 export default defineConfig({
   testDir: './specs',
   fullyParallel: false,
@@ -18,9 +16,6 @@ export default defineConfig({
   reporter: [['list'], ['html', { open: 'never', outputFolder: 'playwright-report' }]],
   use: {
     baseURL,
-    ...(protectionBypass
-      ? { extraHTTPHeaders: { 'x-vercel-protection-bypass': protectionBypass } }
-      : {}),
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
     video: 'off',
