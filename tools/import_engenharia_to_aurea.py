@@ -20,8 +20,7 @@ DEFAULT_OUTPUT = ROOT / "knowledge" / "engenharia_astrologica" / "knowledge" / "
 EDITORIAL_SOURCE_ID = "editorial:engenharia_astrologica_corpus"
 IMPORTER_VERSION = "import_engenharia_to_aurea@2026-08-11"
 
-sys.path.insert(0, str(ROOT))
-from local_storage import LocalStorage  # noqa: E402
+EDITORIAL_SCHEMA = ROOT / "knowledge" / "engenharia_astrologica" / "knowledge" / "aurea_editorial_schema.sql"
 
 
 def clip_text(value: str, limit: int = 900) -> str:
@@ -292,12 +291,23 @@ def ensure_source(
     return source_id
 
 
+def initialize_editorial_database(database_path: Path) -> None:
+    database_path.parent.mkdir(parents=True, exist_ok=True)
+    schema = EDITORIAL_SCHEMA.read_text(encoding="utf-8")
+    checksum = hashlib.sha256(schema.encode("utf-8")).hexdigest()
+    with sqlite3.connect(database_path) as connection:
+        connection.executescript(schema)
+        connection.execute(
+            "INSERT OR IGNORE INTO schema_migration(version, checksum) VALUES (?, ?)",
+            ("0001_initial", checksum),
+        )
+        connection.commit()
+
+
 def import_corpus(source_root: Path, output: Path) -> dict[str, int]:
     with tempfile.TemporaryDirectory(prefix="aurea_knowledge_import_") as temp_dir:
-        temp_data_dir = Path(temp_dir) / "data"
-        storage = LocalStorage(temp_data_dir, migration_root=ROOT / "src-tauri" / "migrations")
-        storage.initialize()
-        database_path = temp_data_dir / "knowledge.sqlite"
+        database_path = Path(temp_dir) / "knowledge.sqlite"
+        initialize_editorial_database(database_path)
 
         items = load_items(source_root)
         tree_hash, file_count = compute_tree_hash(source_root)
