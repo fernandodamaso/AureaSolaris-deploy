@@ -40,7 +40,13 @@ The trusted API performs explicit owner-scoped database operations using the aut
 
 ## Exact-SHA deployment verification
 
-Before any network/browser acceptance:
+Before any network or browser check, bind both hosted preview URLs to the exact expected candidate.
+
+`scripts/verify_preview.sh` calls `scripts/verify_vercel_preview.py --project aurea-solaris` and the same verifier with `--project aurea-solaris-api`. Each call requires exactly one READY deployment for the expected project/ref with the expected 40-character Git SHA, then verifies that the supplied preview alias resolves to that deployment. The verifier rejects the canonical production host.
+
+The wrapper requires the expected candidate and provider scope through the process-only names `AUREA_EXPECTED_PREVIEW_SHA` and `AUREA_VERCEL_SCOPE`. Load their values from the approved execution environment; do not hard-code them in this runbook.
+
+The verification sequence is:
 
 1. Resolve current `vivicabsb-eng/AureaSolaris:main`.
 2. Resolve the exact mirror ref/SHA authorized for the candidate.
@@ -50,11 +56,9 @@ Before any network/browser acceptance:
 6. Run API health/deployment-contract checks and the ownership browser gate required by the issue.
 7. Resolve both aliases again after validation; alias movement during the gate invalidates the result.
 
-`scripts/verify_preview.sh` invokes `scripts/verify_vercel_preview.py` for both `aurea-solaris` and `aurea-solaris-api`. The script records statuses only and does not require secret values to be printed.
-
 ## Secure hosted acceptance
 
-The wrapper may require process-only names for synthetic preview identity credentials, Vercel protection bypasses, Supabase preview public configuration, and the expected SHA/scope. Load values from approved secure storage and keep them out of command arguments, source, logs, screenshots, PRs, Linear, and chat.
+The wrapper may require additional process-only names for synthetic preview identity credentials, Vercel protection bypasses, Supabase preview public configuration, and the production Supabase public origin used by the isolation guard. Load values from approved secure storage and keep them out of command arguments, source, logs, screenshots, PRs, Linear, and chat.
 
 Only after both deployments have been bound to the exact expected candidate should the hosted wrapper run:
 
