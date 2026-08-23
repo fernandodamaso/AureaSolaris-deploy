@@ -1,0 +1,51 @@
+name: FDM-736 exact preview import
+
+on:
+  push:
+    branches:
+      - fdm-736/import-runner-e8bd14e
+
+permissions:
+  contents: write
+
+jobs:
+  import-exact-object:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Import exact upstream object and fast-forward preview
+        shell: bash
+        run: |
+          set -euo pipefail
+          EXPECTED='e8bd14e45b6813b699dbf237a39f7cf34643259d'
+          EXPECTED_TREE='f6f4ca57bc19b90622198504b8d8b8fbd4847761'
+          EXPECTED_PREVIEW='d578067e3bdaedbd4f81a9ef481b6a22b856bc6d'
+          EXPECTED_MAIN='19f272acace62403e21a83ddfe842759a83617c6'
+          IMPORT_REF='fdm-736/import-e8bd14e'
+          RUNNER_REF='fdm-736/import-runner-e8bd14e'
+
+          current_preview="$(git ls-remote origin refs/heads/preview | awk '{print $1}')"
+          current_main="$(git ls-remote origin refs/heads/main | awk '{print $1}')"
+          test "$current_preview" = "$EXPECTED_PREVIEW"
+          test "$current_main" = "$EXPECTED_MAIN"
+
+          git remote add upstream https://github.com/vivicabsb-eng/AureaSolaris.git
+          git fetch --no-tags upstream "$EXPECTED"
+          test "$(git rev-parse FETCH_HEAD)" = "$EXPECTED"
+          test "$(git rev-parse "$EXPECTED^{tree}")" = "$EXPECTED_TREE"
+
+          git fetch --no-tags origin preview main
+          git merge-base --is-ancestor origin/preview "$EXPECTED"
+
+          git push origin "$EXPECTED:refs/heads/$IMPORT_REF"
+          test "$(git ls-remote origin "refs/heads/$IMPORT_REF" | awk '{print $1}')" = "$EXPECTED"
+
+          git push origin "$EXPECTED:refs/heads/preview"
+          test "$(git ls-remote origin refs/heads/preview | awk '{print $1}')" = "$EXPECTED"
+          test "$(git ls-remote origin refs/heads/main | awk '{print $1}')" = "$EXPECTED_MAIN"
+
+          git push origin --delete "$IMPORT_REF"
+          git push origin --delete "$RUNNER_REF"
