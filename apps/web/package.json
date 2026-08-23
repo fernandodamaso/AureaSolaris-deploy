@@ -12,7 +12,6 @@
     "build": "tsc && vite build --configLoader runner",
     "typecheck": "tsc --noEmit",
     "preview": "vite preview",
-    "tauri": "tauri",
     "dev:full": "npm run dev",
     "lint": "eslint src/ --max-warnings=0",
     "lint:fix": "eslint src/ --fix",
@@ -28,8 +27,6 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.111.0",
     "@tailwindcss/vite": "^4.2.1",
-    "@tauri-apps/api": "^2",
-    "@tauri-apps/plugin-dialog": "^2.6.0",
     "@types/d3": "^7.4.3",
     "d3": "^7.9.0",
     "lucide-react": "^0.577.0",
@@ -38,7 +35,6 @@
   },
   "devDependencies": {
     "@playwright/test": "1.55.1",
-    "@tauri-apps/cli": "^2",
     "@testing-library/react": "^16.3.2",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",

@@ -15,7 +15,6 @@
     "build": "npm run build:web",
     "typecheck": "npm --workspace @aurea/web run typecheck",
     "preview": "npm --workspace @aurea/web run preview",
-    "tauri": "tauri",
     "dev:full": "npm run dev:web",
     "lint": "npm --workspace @aurea/web run lint",
     "lint:fix": "npm --workspace @aurea/web run lint:fix",
