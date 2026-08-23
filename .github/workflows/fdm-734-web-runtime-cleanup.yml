@@ -1,0 +1,191 @@
+name: FDM-734 web runtime cleanup
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    if: github.head_ref == 'fernandoyarrum/fdm-734-p48-remove-the-verified-desktoplocal-runtime-and-retire-its'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+          persist-credentials: true
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Preserve Web V1 E2E personal-data guard without legacy seeder
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('tools/run_e2e.py')
+          source = path.read_text(encoding='utf-8')
+          source = source.replace('import importlib.util\n', '', 1)
+          old = '''_seed_path = REPO_ROOT / "tools" / "seed_test_user.py"
+          _seed_spec = importlib.util.spec_from_file_location("seed_test_user", _seed_path)
+          _seed = importlib.util.module_from_spec(_seed_spec)
+          assert _seed_spec.loader is not None
+          _seed_spec.loader.exec_module(_seed)
+          is_forbidden_personal_data_dir = _seed.is_forbidden_personal_data_dir
+          '''.replace('          ', '')
+          new = '''def is_forbidden_personal_data_dir(data_dir: Path) -> bool:
+              local = os.environ.get("LOCALAPPDATA") or os.environ.get("APPDATA")
+              if not local:
+                  return False
+              personal = (Path(local) / "Aurea Solaris" / "data").resolve()
+              resolved = data_dir.expanduser().resolve()
+              personal_key = os.path.normcase(str(personal))
+              resolved_key = os.path.normcase(str(resolved))
+              return resolved_key == personal_key or resolved_key.startswith(personal_key + os.sep)
+          '''.replace('          ', '')
+          if old not in source:
+              raise SystemExit('expected seed_test_user safety shim not found')
+          source = source.replace(old, new, 1)
+          if 'seed_test_user' in source:
+              raise SystemExit('legacy seeder dependency remains in tools/run_e2e.py')
+          path.write_text(source, encoding='utf-8')
+          PY
+
+      - name: Remove unreachable Tauri reverse-dependency closure
+        shell: bash
+        run: |
+          node --input-type=module <<'JS'
+          import { readFileSync, readdirSync, rmSync, statSync } from 'node:fs';
+          import { dirname, join, resolve } from 'node:path';
+          import { reachableSourceFiles } from './apps/web/scripts/assert-web-only.mjs';
+
+          const sourceRoot = resolve('apps/web/src');
+          const target = resolve(sourceRoot, 'utils/tauri.ts');
+          const extensions = ['.ts', '.tsx', '.js', '.jsx'];
+          const importPattern = /\b(?:import|export)\s+(?:[\s\S]*?\s+from\s+)?['"]([^'"]+)['"]/g;
+          const dynamicImportPattern = /\bimport\(\s*['"]([^'"]+)['"]\s*\)/g;
+
+          function listSourceFiles(root) {
+            const files = [];
+            const pending = [root];
+            while (pending.length) {
+              const current = pending.pop();
+              for (const entry of readdirSync(current, { withFileTypes: true })) {
+                const path = join(current, entry.name);
+                if (entry.isDirectory()) pending.push(path);
+                else if (extensions.some((ext) => entry.name.endsWith(ext))) files.push(resolve(path));
+              }
+            }
+            return files;
+          }
+
+          function resolveImport(fromFile, specifier) {
+            if (!specifier.startsWith('.')) return null;
+            const base = resolve(dirname(fromFile), specifier);
+            const candidates = [base, ...extensions.map((ext) => `${base}${ext}`), ...extensions.map((ext) => join(base, `index${ext}`))];
+            return candidates.find((candidate) => {
+              try { return statSync(candidate).isFile(); } catch { return false; }
+            }) ?? null;
+          }
+
+          const files = listSourceFiles(sourceRoot);
+          if (!files.includes(target)) throw new Error('Tauri bridge target is already absent');
+          const deps = new Map();
+          for (const file of files) {
+            const text = readFileSync(file, 'utf8');
+            const found = new Set();
+            for (const pattern of [importPattern, dynamicImportPattern]) {
+              for (const match of text.matchAll(pattern)) {
+                const imported = resolveImport(file, match[1]);
+                if (imported) found.add(imported);
+              }
+            }
+            deps.set(file, found);
+          }
+
+          const closure = new Set([target]);
+          let changed = true;
+          while (changed) {
+            changed = false;
+            for (const [file, imports] of deps) {
+              if (closure.has(file)) continue;
+              if ([...imports].some((dep) => closure.has(dep))) {
+                closure.add(file);
+                changed = true;
+              }
+            }
+          }
+
+          const active = new Set(reachableSourceFiles().map(resolve));
+          const activeClosure = [...closure].filter((file) => active.has(file));
+          if (activeClosure.length) {
+            throw new Error(`Refusing to remove Tauri closure reachable from Web V1:\n${activeClosure.join('\n')}`);
+          }
+
+          console.log('Removing unreachable retired Tauri closure:');
+          for (const file of [...closure].sort()) console.log(` - ${file.replace(`${process.cwd()}/`, '')}`);
+          for (const file of closure) rmSync(file);
+          JS
+
+      - name: Remove Tauri package scripts and dependencies
+        shell: bash
+        run: |
+          cp package-lock.json "$RUNNER_TEMP/package-lock.before.json"
+          node --input-type=module <<'JS'
+          import { readFileSync, writeFileSync } from 'node:fs';
+          for (const path of ['package.json', 'apps/web/package.json']) {
+            const data = JSON.parse(readFileSync(path, 'utf8'));
+            if (data.scripts) delete data.scripts.tauri;
+            for (const section of ['dependencies', 'devDependencies', 'optionalDependencies']) {
+              if (!data[section]) continue;
+              for (const name of Object.keys(data[section])) {
+                if (name.startsWith('@tauri-apps/')) delete data[section][name];
+              }
+              if (Object.keys(data[section]).length === 0) delete data[section];
+            }
+            writeFileSync(path, `${JSON.stringify(data, null, 2)}\n`);
+          }
+          JS
+          npm install --package-lock-only --ignore-scripts
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          old = json.loads(Path(os.environ['RUNNER_TEMP']).joinpath('package-lock.before.json').read_text(encoding='utf-8'))
+          new = json.loads(Path('package-lock.json').read_text(encoding='utf-8'))
+          old_packages = old.get('packages', {})
+          new_packages = new.get('packages', {})
+          added = sorted(set(new_packages) - set(old_packages))
+          changed_versions = sorted(
+              key for key in set(old_packages) & set(new_packages)
+              if old_packages[key].get('version') != new_packages[key].get('version')
+          )
+          if added:
+              raise SystemExit(f'unexpected package-lock additions: {added}')
+          if changed_versions:
+              raise SystemExit(f'unexpected package version changes: {changed_versions}')
+          print(f'package-lock cleanup removed {len(set(old_packages) - set(new_packages))} package records; existing versions unchanged')
+          PY
+
+      - name: Verify web cleanup
+        shell: bash
+        run: |
+          npm ci
+          npm run check:web
+          git diff --check
+
+      - name: Commit cleanup
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add tools/run_e2e.py apps/web/src package.json apps/web/package.json package-lock.json
+          git commit -m 'refactor: retire web desktop compatibility bridge'
+          git push origin HEAD:${GITHUB_HEAD_REF}
