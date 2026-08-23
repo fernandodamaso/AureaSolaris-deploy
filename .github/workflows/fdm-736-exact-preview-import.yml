@@ -4,9 +4,16 @@ on:
   push:
     branches:
       - fdm-736/import-runner-e8bd14e
+  pull_request:
+    branches:
+      - main
 
 permissions:
   contents: write
+
+concurrency:
+  group: fdm-736-exact-preview-import
+  cancel-in-progress: false
 
 jobs:
   import-exact-object:
@@ -29,23 +36,29 @@ jobs:
 
           current_preview="$(git ls-remote origin refs/heads/preview | awk '{print $1}')"
           current_main="$(git ls-remote origin refs/heads/main | awk '{print $1}')"
-          test "$current_preview" = "$EXPECTED_PREVIEW"
           test "$current_main" = "$EXPECTED_MAIN"
 
-          git remote add upstream https://github.com/vivicabsb-eng/AureaSolaris.git
-          git fetch --no-tags upstream "$EXPECTED"
-          test "$(git rev-parse FETCH_HEAD)" = "$EXPECTED"
-          test "$(git rev-parse "$EXPECTED^{tree}")" = "$EXPECTED_TREE"
+          if [ "$current_preview" != "$EXPECTED_PREVIEW" ] && [ "$current_preview" != "$EXPECTED" ]; then
+            echo 'Unexpected preview ref; refusing to continue.' >&2
+            exit 1
+          fi
 
-          git fetch --no-tags origin preview main
-          git merge-base --is-ancestor origin/preview "$EXPECTED"
+          if [ "$current_preview" = "$EXPECTED_PREVIEW" ]; then
+            git remote add upstream https://github.com/vivicabsb-eng/AureaSolaris.git
+            git fetch --no-tags upstream "$EXPECTED"
+            test "$(git rev-parse FETCH_HEAD)" = "$EXPECTED"
+            test "$(git rev-parse "$EXPECTED^{tree}")" = "$EXPECTED_TREE"
 
-          git push origin "$EXPECTED:refs/heads/$IMPORT_REF"
-          test "$(git ls-remote origin "refs/heads/$IMPORT_REF" | awk '{print $1}')" = "$EXPECTED"
+            git fetch --no-tags origin preview main
+            git merge-base --is-ancestor origin/preview "$EXPECTED"
 
-          git push origin "$EXPECTED:refs/heads/preview"
-          test "$(git ls-remote origin refs/heads/preview | awk '{print $1}')" = "$EXPECTED"
+            git push origin "$EXPECTED:refs/heads/$IMPORT_REF"
+            test "$(git ls-remote origin "refs/heads/$IMPORT_REF" | awk '{print $1}')" = "$EXPECTED"
+
+            git push origin "$EXPECTED:refs/heads/preview"
+            test "$(git ls-remote origin refs/heads/preview | awk '{print $1}')" = "$EXPECTED"
+          fi
+
           test "$(git ls-remote origin refs/heads/main | awk '{print $1}')" = "$EXPECTED_MAIN"
-
-          git push origin --delete "$IMPORT_REF"
-          git push origin --delete "$RUNNER_REF"
+          git push origin --delete "$IMPORT_REF" 2>/dev/null || true
+          git push origin --delete "$RUNNER_REF" 2>/dev/null || true
