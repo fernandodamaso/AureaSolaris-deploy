@@ -55,6 +55,10 @@ RETIRED_MARKERS = (
     "@tauri-apps/",
     "pyinstaller",
     "sidecar",
+    "aurea_data_dir",
+    "aurea_sidecar_token",
+    "aurea_session_secret",
+    "cargo_target_dir",
 )
 
 TEXT_SUFFIXES = {".py", ".ts", ".tsx", ".js", ".jsx", ".mjs", ".json", ".yml", ".yaml", ".md", ".toml", ".sh"}
