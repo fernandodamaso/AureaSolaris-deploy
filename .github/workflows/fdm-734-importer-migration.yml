@@ -1,0 +1,91 @@
+name: FDM-734 importer migration
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  migrate-importer:
+    if: github.head_ref == 'fernandoyarrum/fdm-734-p48-remove-the-verified-desktoplocal-runtime-and-retire-its'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Decouple editorial importer from retired runtime
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          schema_source = Path('src-tauri/migrations/knowledge/0001_initial.sql')
+          schema_target = Path('knowledge/engenharia_astrologica/knowledge/aurea_editorial_schema.sql')
+          schema_target.parent.mkdir(parents=True, exist_ok=True)
+          schema_target.write_text(schema_source.read_text(encoding='utf-8'), encoding='utf-8')
+
+          importer = Path('tools/import_engenharia_to_aurea.py')
+          source = importer.read_text(encoding='utf-8')
+
+          old_import = '''sys.path.insert(0, str(ROOT))
+          from local_storage import LocalStorage  # noqa: E402
+          '''.replace('          ', '')
+          new_import = '''EDITORIAL_SCHEMA = ROOT / "knowledge" / "engenharia_astrologica" / "knowledge" / "aurea_editorial_schema.sql"
+          '''.replace('          ', '')
+          if old_import not in source:
+              raise SystemExit('expected local_storage import block not found')
+          source = source.replace(old_import, new_import, 1)
+
+          old_bootstrap = '''def import_corpus(source_root: Path, output: Path) -> dict[str, int]:
+              with tempfile.TemporaryDirectory(prefix="aurea_knowledge_import_") as temp_dir:
+                  temp_data_dir = Path(temp_dir) / "data"
+                  storage = LocalStorage(temp_data_dir, migration_root=ROOT / "src-tauri" / "migrations")
+                  storage.initialize()
+                  database_path = temp_data_dir / "knowledge.sqlite"
+
+                  items = load_items(source_root)
+          '''.replace('              ', '')
+          new_bootstrap = '''def initialize_editorial_database(database_path: Path) -> None:
+              database_path.parent.mkdir(parents=True, exist_ok=True)
+              schema = EDITORIAL_SCHEMA.read_text(encoding="utf-8")
+              checksum = hashlib.sha256(schema.encode("utf-8")).hexdigest()
+              with sqlite3.connect(database_path) as connection:
+                  connection.executescript(schema)
+                  connection.execute(
+                      "INSERT OR IGNORE INTO schema_migration(version, checksum) VALUES (?, ?)",
+                      ("0001_initial", checksum),
+                  )
+                  connection.commit()
+
+
+          def import_corpus(source_root: Path, output: Path) -> dict[str, int]:
+              with tempfile.TemporaryDirectory(prefix="aurea_knowledge_import_") as temp_dir:
+                  database_path = Path(temp_dir) / "knowledge.sqlite"
+                  initialize_editorial_database(database_path)
+
+                  items = load_items(source_root)
+          '''.replace('              ', '')
+          if old_bootstrap not in source:
+              raise SystemExit('expected LocalStorage bootstrap block not found')
+          source = source.replace(old_bootstrap, new_bootstrap, 1)
+
+          if 'local_storage' in source or 'src-tauri' in source:
+              raise SystemExit('retired runtime dependency remains in importer')
+
+          importer.write_text(source, encoding='utf-8')
+          PY
+
+      - name: Commit migration
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add tools/import_engenharia_to_aurea.py knowledge/engenharia_astrologica/knowledge/aurea_editorial_schema.sql
+          git diff --cached --check
+          git commit -m 'refactor: decouple editorial importer from local runtime'
+          git push origin HEAD:${GITHUB_HEAD_REF}
