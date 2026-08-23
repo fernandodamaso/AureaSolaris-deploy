@@ -68,14 +68,6 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -e "./services/api[dev]"
           python -m pip install -r knowledge/engenharia_astrologica/requirements.txt
-      - name: Configure disposable test data guard
-        id: data
-        shell: bash
-        run: |
-          data_dir="$RUNNER_TEMP/aurea-python-quality/data"
-          mkdir -p "$data_dir"
-          echo "AUREA_DATA_DIR=$data_dir" >> "$GITHUB_ENV"
-          echo "Using disposable test directory $data_dir"
       - name: Verify Python test classification
         id: classification
         run: |
@@ -136,7 +128,6 @@ jobs:
             echo "| Gate | Outcome |"
             echo "|---|---|"
             echo "| supported dependency install | ${{ steps.install.outcome }} |"
-            echo "| disposable data guard | ${{ steps.data.outcome }} |"
             echo "| test classification | ${{ steps.classification.outcome }} |"
             echo "| supported root Python suite | ${{ steps.tests.outcome }} |"
             echo
@@ -144,7 +135,7 @@ jobs:
             echo '```bash'
             echo 'python -m pip install -e "./services/api[dev]"'
             echo 'python -m pip install -r knowledge/engenharia_astrologica/requirements.txt'
-            echo 'python -m unittest tests.test_editorial_importer tests.test_engine_utc_boundary tests.test_preview_verification_script tests.test_run_e2e tests.test_vercel_preview_verifier tests.test_web_v1_engine_contract -v'
+            echo 'python -m unittest tests.test_editorial_importer tests.test_engine_utc_boundary tests.test_legacy_runtime_retired tests.test_preview_verification_script tests.test_run_e2e tests.test_vercel_preview_verifier tests.test_web_v1_engine_contract -v'
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
 
