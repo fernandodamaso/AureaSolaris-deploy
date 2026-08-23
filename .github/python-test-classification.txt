@@ -1,25 +1,11 @@
 # Every tests/test_*.py module must appear exactly once.
-# Categories define where an agent should expect the test to run.
-# Python Quality supplies an explicit runner-temporary AUREA_DATA_DIR so direct
-# FastAPI tests never depend on or fall back to a person's local Aurea data.
-#
-# python-quality  Fast Ubuntu-safe unit/API/runtime tests; executed in Python Quality.
-# integration     Requires built/runtime integration state; executed later in E2E.
-# platform-release Platform-specific or release-only validation; not an Ubuntu PR gate.
-# legacy-pytest   Existing pytest-style coverage; classified but not in the unittest gate.
+# FDM-734 leaves only supported cross-platform Web V1, engine, editorial,
+# and hosted-verification contracts in the root Python suite.
+# python-quality tests run with disposable CI process state only.
 
-python-quality tests/test_browser_runtime.py
-python-quality tests/test_chat_provider_selection.py
 python-quality tests/test_editorial_importer.py
 python-quality tests/test_engine_utc_boundary.py
-python-quality tests/test_hermes_mind_api.py
-python-quality tests/test_local_storage.py
-python-quality tests/test_persistence_repositories.py
 python-quality tests/test_preview_verification_script.py
-python-quality tests/test_vercel_preview_verifier.py
 python-quality tests/test_run_e2e.py
-python-quality tests/test_seed_test_user.py
+python-quality tests/test_vercel_preview_verifier.py
 python-quality tests/test_web_v1_engine_contract.py
-integration tests/test_compiled_runtime_smoke.py
-platform-release tests/test_clean_generated.py
-legacy-pytest tests/test_pytest_capture_runtime.py
