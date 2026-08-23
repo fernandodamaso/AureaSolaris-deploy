@@ -1,54 +1,99 @@
 # Configuração de trabalho — Aurea Solaris
 
-Este documento define a configuração recomendada para desenvolver e manter o Aurea Solaris com ChatGPT/Codex, sem confundir a ferramenta de desenvolvimento com o produto final.
+Este documento define a configuração recomendada para desenvolver e manter a **Private Web V1** sem confundir ferramentas locais de engenharia com o produto final hospedado.
 
 ## Decisão atual
 
-O Aurea permanece um aplicativo **Windows desktop local-first**. Não usar WSL2 nesta fase: o instalador e o sidecar são nativos do Windows e adicionar outra camada agora aumenta custo e risco sem resolver um requisito do produto.
+O Aurea Solaris é web-first:
 
-Não mover a cópia de trabalho enquanto o primeiro instalador não tiver sido concluído e testado. Depois do marco de instalação, organizar assim:
+- React/Vite em `apps/web`;
+- FastAPI autenticada em `services/api`;
+- Vercel hospeda web e API;
+- Supabase fornece Auth, Postgres e RLS;
+- Railway não faz parte da Web V1.
 
-```text
-C:\Projetos\
-  AureaSolaris\                código-fonte do produto
-  Engenharia-Astrologica\      acervo-fonte preservado, somente leitura durante migração
-```
+O antigo produto desktop/local e seu empacotamento nativo estão aposentados. Não reinstale toolchains nativos ou reintroduza caminhos de execução históricos apenas porque aparecem em commits ou documentos antigos.
 
-Os bancos e anexos das pessoas usuárias não ficam dentro do repositório. Quando o runtime de dados for concluído, usar a pasta de dados do aplicativo por usuário, com backup/exportação explícitos e segredos isolados em cofre local.
+## Repositórios
+
+- Trabalhe em `vivicabsb-eng/AureaSolaris`, fonte de verdade para desenvolvimento, branches, PRs, CI e merges.
+- `fernandodamaso/AureaSolaris-deploy` é somente espelho de implantação por SHA exato; não use como checkout de desenvolvimento.
+- Uma promoção acontece apenas quando um issue/contrato autoriza mover o espelho para um SHA previamente validado.
+- Se upstream e espelho diferirem porque a promoção ainda não aconteceu, preserve essa diferença até existir autorização explícita de deploy.
 
 ## Ferramentas locais
 
-Para o marco atual, manter no Windows:
+A configuração mínima de engenharia é independente do sistema operacional, desde que as versões e comandos do repositório funcionem:
 
-- Node.js LTS e npm, para a interface e Tauri;
-- Python 3.11+, usado para empacotar o motor, nunca exigido da pessoa que instalar o app;
-- Rust/Cargo, para a camada desktop;
-- Git, para histórico e recuperação;
-- VS Code, como editor opcional.
+- Node.js 22 + npm para o frontend;
+- Python 3.12 para a API, validações e ferramentas;
+- Docker + Supabase CLI para schema/RLS e E2E descartável;
+- Git para histórico, branches e recuperação;
+- um editor/IDE ou coding agent com acesso somente ao workspace necessário.
 
-Não instalar extensões aleatórias de “ChatGPT” no VS Code. Se quiser assistência dentro do editor, usar somente a extensão oficial **Codex — OpenAI’s coding agent**, publicada por OpenAI. Ela não dá a um chat externo controle irrestrito do computador; continua sujeita às permissões e revisões da sessão.
+Ferramentas locais são auxiliares. Elas não alteram o fato de que a aplicação liberada roda em Vercel/Supabase.
 
-## Como usar Chat, Work e Codex
+## Bootstrap
 
-- **Chat:** conversa rápida, ideias, decisões e dúvidas cotidianas.
-- **Work:** pesquisa, auditoria, documentos, mapas e planejamento com entregáveis.
-- **Codex:** código, testes, build, revisão de arquivos e repositório do Aurea.
+Na raiz do repositório:
 
-Esta separação acompanha a orientação da OpenAI: Codex é a experiência dedicada a código e repositórios; Work atende pesquisas e entregáveis mais amplos. Permissões de arquivos, ferramentas e ações continuam sendo avaliadas na experiência ativa — não existe uma opção segura de “autonomia total” que dispense esses limites.
+```bash
+npm ci
+python -m pip install -e "./services/api[dev]"
+python -m pip install -r knowledge/engenharia_astrologica/requirements.txt
+```
+
+Para frontend local:
+
+```bash
+npm run dev:web
+```
+
+Para o gate completo, com Docker e Supabase CLI:
+
+```bash
+npm run quality:gate
+```
+
+Para E2E isolado:
+
+```bash
+python tools/run_e2e.py
+```
+
+O E2E cria infraestrutura e identidades sintéticas descartáveis. Não use dados pessoais reais, bancos históricos, backups ou credenciais de produção como conveniência de teste.
+
+## Configuração de ambientes e segredos
+
+- Variáveis públicas do browser usam somente o contrato `VITE_*` documentado em `.env.example`.
+- Credenciais do banco e outros segredos permanecem server-side e nos mecanismos seguros dos provedores.
+- Não grave segredos em Git, comandos compartilhados, screenshots, logs, Linear, PRs ou documentação.
+- Preview e produção têm fronteiras separadas; não copie configuração sensível de um ambiente para o outro.
+
+Runbook: [`operations/ENVIRONMENTS.md`](operations/ENVIRONMENTS.md).
+
+## Como usar agentes
+
+Agentes podem planejar, editar, testar, revisar, operar provedores e concluir o ciclo Git dentro do issue aprovado. O contrato FDM-695 evita gates humanos redundantes para:
+
+- configuração rotineira de provedores;
+- promoção do deployment mirror para um SHA exato aprovado;
+- deployments previstos pelo issue;
+- migrations já aprovadas pelo contrato;
+- review/fix loops de PR;
+- merge limpo após validação final.
+
+Essa autonomia não autoriza ação destrutiva fora do escopo, manipulação de dados reais, revelação/provisionamento de credenciais pelo chat, escolha ambígua de identidade/ambiente ou continuação quando o estado real do provedor contradiz o contrato.
 
 ## Regras de acesso
 
-1. Abrir no Codex apenas a pasta do projeto necessária ao trabalho.
-2. Conceder permissões pontuais, nunca acesso amplo por conveniência.
-3. Manter `.env`, bancos, anexos de saúde, backups e tokens fora do Git.
-4. Antes de qualquer mudança grande, conferir `git status` e preservar uma base recuperável.
-5. Browser e automação de computador são auxiliares para testes visuais; não substituem revisão de código, testes nem a autorização humana para ações relevantes.
+1. Abra somente o workspace/repositório necessário ao trabalho.
+2. Preserve mudanças existentes e confirme refs antes de mutações Git/provedor.
+3. Mantenha `.env`, dados privados, backups e tokens fora do Git.
+4. Use dados e identidades sintéticas para testes automatizados.
+5. Revise o diff completo e resultados de CI antes do merge.
+6. Para produção, prove SHA upstream, SHA do espelho, SHA do deployment, aliases e saúde; não confie apenas no nome de uma branch ou domínio.
 
-## Marco seguinte
+## Recuperação
 
-Concluir o instalador Windows, instalar em ambiente limpo e testar: abertura sem Python, motor astrológico disponível, login local e ausência de terminal visível. Só então migrar a cópia de trabalho para `C:\Projetos` e começar a Fase 2: banco privado/enciclopédico único com importação verificável da Engenharia Astrológica.
-
-## Referências oficiais
-
-- [Usando o Codex com seu plano ChatGPT](https://help.openai.com/pt-br/articles/11369540-using-codex-with-your-chatgpt-plan)
-- [ChatGPT Trabalho e Codex](https://help.openai.com/pt-br/articles/20001275-chatgpt-work-and-codex)
+Incidentes de aplicação seguem [`operations/INCIDENT_AND_ROLLBACK.md`](operations/INCIDENT_AND_ROLLBACK.md). Rollback de web/API deve restaurar uma combinação conhecida e compatível sem executar ações destrutivas sobre dados privados. Segredos comprometidos são rotacionados/revogados no provedor; aplicação pode ser temporariamente desabilitada por controles do provedor até a recuperação ser verificada.

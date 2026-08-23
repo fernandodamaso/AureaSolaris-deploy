@@ -1,148 +1,99 @@
-# Data Persistence
+# Data Persistence — Private Web V1
 
-The Chrome runtime keeps the editorial database and each person's private data
-separate. The browser session is held in memory and is not written to
-`localStorage`.
+## Current source of truth
 
-## Storage matrix
+Private Web V1 persistence is hosted in **Supabase Postgres** and accessed through the authenticated FastAPI service. Supabase Auth establishes identity and Row Level Security (RLS) provides defense in depth around person-owned rows.
 
-| Data type | Current Chrome storage | Ownership |
-|---|---|---|
-| Account credentials and Hermes records | Local SQLite under the configured Aurea data directory | `owner_id` in the private database |
-| Caderno Vivo boards | Local JSON under the owner's private workspace | Authenticated browser owner |
-| Diary folders and entries | Local JSON under the owner's private workspace | Authenticated browser owner |
-| Health document previews | Local JSON under the owner's private workspace | Authenticated browser owner and selected map |
-| Profile, agenda and UI preferences | Browser `localStorage` | App-local UI state; never used as password storage |
-| Editorial knowledge | Local SQLite imported from the canonical editorial snapshot | Shared impersonal corpus; never mixed with private records |
+The retired desktop/local product databases are not current sources of truth and are not migration inputs for routine development, testing, deployment, or incident recovery.
 
-In `local-owner` mode the UI does not invent a natal. For testing, enable the
-project mock chart (`src/fixtures/reference-natal.json`, Belo Horizonte,
-1985-12-01 16:04) with `?mockNatal=1` or `.\launch_chrome.ps1 -MockNatal`.
-That flag is remembered in `localStorage` as `aurea_mock_natal=1` until
-`?mockNatal=0`. The mock stays in the private UI profile and is never mixed
-into the editorial database.
+## Storage and ownership matrix
 
-## Real data vs test user
+| Data type | Current source of truth | Ownership/access |
+| --- | --- | --- |
+| Authentication identity | Supabase Auth | Authenticated Supabase user |
+| Application profile | Postgres `profiles` | `user_id`; API owner scope + RLS |
+| Birth profile | Postgres `birth_profiles` | `user_id`; API owner scope + RLS |
+| Certified calculation receipts | Postgres `calculation_receipts` | `user_id`; API owner scope + RLS |
+| Editorial astrology knowledge | Governed repository corpus and packaged editorial snapshot | Impersonal provenance domain; never a user profile store |
+| Development/E2E state | Disposable local test infrastructure | Synthetic identities only; not product data |
 
-The person's **real** private Aurea lives at `%LOCALAPPDATA%\Aurea Solaris\data`.
-Agents and automated checks must **not** seed, reset, or modify that directory.
-Use the isolated test-user sandbox instead.
+The schema contract is documented in [`data/WEB_V1_SCHEMA.md`](data/WEB_V1_SCHEMA.md).
 
-| Scope | Path |
-|---|---|
-| Real private data | `%LOCALAPPDATA%\Aurea Solaris\data` |
-| Test user root | `%LOCALAPPDATA%\Aurea Solaris\test-user` |
-| Test user private data | `%LOCALAPPDATA%\Aurea Solaris\test-user\data` |
-| Test user Chrome profile | `%LOCALAPPDATA%\Aurea Solaris\test-user\chrome-profile` |
+## Browser, API, and database responsibilities
 
-### Commands (PowerShell, repository root)
+The browser uses Supabase directly for authentication. Private product operations go through FastAPI rather than trusting browser-supplied ownership fields.
 
-Start the isolated test user:
+1. Supabase Auth establishes the authenticated identity.
+2. The browser sends the authenticated request to the API.
+3. The API validates the token and derives the owner identity.
+4. Repository queries are explicitly scoped to that owner.
+5. Postgres RLS independently constrains access to rows whose `user_id` matches `auth.uid()`.
+6. Owner-aware relationships prevent a receipt from referring to another account's birth profile.
 
-```powershell
-.\launch_chrome.ps1 -TestUser
-```
+Browser storage may support normal client/session mechanics, but it is not the source of truth for private application records and must never define a trusted owner or contain server-only credentials.
 
-Wipe the sandbox and re-seed a fresh dummy life:
+## Web V1 private records
 
-```powershell
-.\launch_chrome.ps1 -TestUser -Reset
-```
+### `profiles`
 
-`-Reset` only works with `-TestUser`. It stops Aurea test-user runtimes on ports
-**9878–9899** (it does not kill unrelated listeners), closes the isolated Chrome
-profile if it is still open, removes the entire `test-user` folder, runs
-`tools\seed_test_user.py`, and starts a new API process (it does not reuse a
-stale test-user runtime).
+One application profile per authenticated user. It stores the current Web V1 profile/onboarding fields such as display name, timezone, and locale.
 
-### Isolation and runtime
+### `birth_profiles`
 
-- Owner id: **`aurea-test`** (display name **Pessoa Teste**).
-- API: port **9878** by default; if busy, the launcher picks **9879–9899**. A later
-  `-TestUser` launch reuses a compatible test-user runtime already listening in
-  that range instead of starting another process.
-- Environment: the child runtime receives `AUREA_DATA_DIR` and `AUREA_TEST_USER=1`.
-  The launcher restores the parent PowerShell environment before returning, so a
-  later default launch in the same session does not inherit the sandbox. Test-user
-  always uses `local-owner`, even if `AUREA_REQUIRE_LOGIN=1` is set for the normal
-  runtime.
-- Chrome opens with a dedicated profile under `test-user\chrome-profile`. The
-  launcher looks for Chrome on `PATH` and in the usual Program Files / LocalAppData
-  install folders.
-- `GET /health` includes `"test_user": true` when the test-user API is active.
-- The default Aurea runtime (no `-TestUser`) uses port **9876** and the real data dir.
-- `-TestUser` requires `.aurea-build-venv` for the initial seed step (the launcher
-  always invokes `tools\seed_test_user.py` through that venv).
+Person-owned normalized birth inputs. Web V1 supports a persisted active birth profile used by the Mandala/dashboard and certified calculations.
 
-`tools/seed_test_user.py` seeds the private SQLite account and file-backed workspace.
-It **refuses** to run against `%LOCALAPPDATA%\Aurea Solaris\data` or any folder
-inside that tree.
+### `calculation_receipts`
 
-### Dummy life contents
+Immutable owner-scoped evidence for certified natal/transit calculations. Receipts preserve canonical input/result payloads plus engine, ephemeris, resolved timezone/time and input-hash metadata needed to reproduce or audit the calculation.
 
-**Backend seed** (`tools/seed_test_user.py`):
+A calculation receipt is evidence, not a second calculation engine. Certified engine behavior remains owned by the API's astrology domain.
 
-- Caderno Vivo board with sticky notes and an edge between them.
-- Diário folder and sample entry.
-- Fictional health document preview.
-- Hermes thread with a proposed memory and one approved memory.
+## Editorial knowledge is a separate domain
 
-**UI seed** (applied in the isolated Chrome profile only when `/health` reports
-`test_user: true` **and** the authenticated owner is `aurea-test`, from
-`src/fixtures/test-user-ui.json` via `src/utils/test-user-ui-seed.ts`):
+The Engenharia Astrológica corpus preserves sources, claims, schools/traditions, divergences, citations, import provenance, hashes, and review decisions. It is impersonal reference knowledge.
 
-- Mandala maps (reference natal fixture plus a second known-person map).
-- Agenda tasks and one calendar event in `localStorage`.
+Private application data must never be imported into the editorial corpus. Editorial knowledge may inform calculations or explanations, but that does not transfer ownership of a person's profile, birth data, receipts, notes, or future private records into the editorial domain.
 
-### `-MockNatal` vs `-TestUser`
+## Disposable test persistence
 
-| Mode | Data dir | Typical use |
-|---|---|---|
-| Default launch | Real `%LOCALAPPDATA%\Aurea Solaris\data` | Person's own Aurea |
-| `-TestUser` | `test-user\data` | Full isolated sandbox with seeded dummy life |
-| `-MockNatal` / `?mockNatal=1` | Same as current runtime | Inject the reference natal into the open owner's UI profile only |
+`python tools/run_e2e.py` creates an isolated local test environment using disposable Supabase infrastructure and synthetic identities. It is explicitly test infrastructure, not a user-facing local Aurea runtime.
 
-`-MockNatal` does not switch directories. If both `-TestUser` and `-MockNatal` are
-passed, **`-TestUser` wins** (the launcher exits before applying mock natal).
+Automated validation must never be redirected to real user directories, retained historical databases, backups, production credentials, or production private records in order to make a test pass.
 
-The browser adapter calls the local FastAPI runtime on every application
-opening. In default `local-owner` mode, the API resolves one unambiguous
-enabled owner, returns one process-lifetime session token held only in API and
-browser module memory, and reuses that token until the API process stops. There
-is no time-based or inactivity expiry in this mode. In `require-login` mode
-(`AUREA_REQUIRE_LOGIN=1`), password authentication and the existing
-session close behavior apply.
+## Future multi-user expansion
 
-Owner resolution is fail-closed. The API inspects `private.sqlite` accounts and
-`memory/owners/*` workspaces and must not select among accounts, migrate
-directories, or adopt orphan data. When reusing an existing account, the
-resolver must never assume its id is `local-owner`, never rename an owner or
-move a directory, and must not hash a throwaway password:
+Web V1 already uses the boundaries required for more than one user. Expansion preserves them:
 
-| Accounts in `private.sqlite` | Owner workspaces | Result |
-|---|---|---|
-| None | None | Create account `local-owner`, then use it |
-| Exactly one enabled account | None, or only the matching owner directory | Reuse that account's real id and display name |
-| One disabled account | Any | `setup-required: disabled-owner` |
-| More than one account, including disabled accounts | Any | `setup-required: multiple-owners` |
-| None | One or more owner directories | `setup-required: orphan-workspace` |
-| One account | Any non-matching owner directory | `setup-required: owner-conflict` |
+- every private record has a Supabase-authenticated owner;
+- API repositories scope all reads/writes to the authenticated owner;
+- RLS remains enabled on every private table;
+- cross-table relationships include ownership where needed to reject cross-owner references;
+- anonymous clients receive no private-table authority;
+- isolation changes are verified with at least two synthetic identities exercising both positive and negative cases.
 
-Full contract: `docs/superpowers/plans/2026-08-12-skip-login-local-owner.md`.
+Adding users is therefore a capacity/product-access change, not a reason to weaken ownership semantics.
 
-## Backups and migration
+## Migration of historical local data
 
-Private SQLite backups are created only by an explicit backup action and carry
-an integrity check and SHA-256 receipt. Schema migrations preserve the original
-database through a verified pre-migration backup. Editorial imports preserve
-source hashes and publication metadata.
+Migration of any real historical local Aurea data is **outside the Web V1 persistence path and outside routine operations**. No developer, CI job, deployment, rollback, or E2E harness may inspect or import a person's historical databases/backups implicitly.
 
-One pre-release private bootstrap checksum is recognized as a read-only
-compatibility marker so an existing database can open after the migration file
-was committed. The data and recorded historical checksum are not rewritten;
-any other checksum mismatch still blocks startup.
+If such a migration is ever approved, it requires a separate explicit contract covering consent, source identification, backups, validation, rollback, secret handling, owner mapping, and non-destructive verification.
 
-## Important boundary
+## Backup, rollback, and recovery boundary
 
-The old `src-tauri/memory/` files and the Tauri filesystem commands remain for
-native compatibility. They are not the source of truth for the Chrome path.
+Application deployment rollback never means destructive database rollback. During an application incident:
+
+- restore a compatible last-known-good web/API deployment;
+- rotate/revoke affected secrets through provider controls if required;
+- temporarily disable application access when necessary;
+- verify identity, schema compatibility, aliases, and health;
+- leave user data intact unless a separate, explicit data-recovery procedure has been approved.
+
+Schema/RLS changes follow committed migrations and the Supabase runbook. Do not use ad-hoc destructive SQL as an application recovery shortcut.
+
+## Related references
+
+- [`data/WEB_V1_SCHEMA.md`](data/WEB_V1_SCHEMA.md)
+- [`data/DOMINIOS_DE_DADOS.md`](data/DOMINIOS_DE_DADOS.md)
+- [`operations/SUPABASE_RUNBOOK.md`](operations/SUPABASE_RUNBOOK.md)
+- [`operations/INCIDENT_AND_ROLLBACK.md`](operations/INCIDENT_AND_ROLLBACK.md)
