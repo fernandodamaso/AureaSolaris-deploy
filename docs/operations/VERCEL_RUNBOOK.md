@@ -1,8 +1,6 @@
 # Vercel web runbook
 
-The web project is managed with the authenticated Vercel CLI and the
-deployment mirror. Do not store provider tokens or environment values in this
-repository.
+The Web V1 frontend is hosted by Vercel and sourced from the deployment-only mirror. Do not store provider tokens, protection bypasses, database credentials, or environment values in this repository.
 
 ## Project contract
 
@@ -17,67 +15,68 @@ repository.
 | Build | `npm run build` |
 | Output | `dist` |
 
-The current hosted candidate uses mirror `preview` and must match the API
-preview SHA before browser checks. Production `main` remains the verified
-upstream object until the normal merge gate advances it.
+`vivicabsb-eng/AureaSolaris` is the development source of truth. The deployment mirror is not a development checkout and must receive only an exact SHA already validated under an approved promotion issue.
+
+Railway is not part of Web V1.
 
 ## Browser-safe variables
 
-Preview and production each contain only these public variables:
+Preview and production contain only the browser-safe public configuration required by the frontend contract:
 
 - `VITE_SUPABASE_URL`
 - `VITE_SUPABASE_ANON_KEY`
 - `VITE_AUREA_API_URL`
 
-Preview points to the preview Supabase project, preview API branch alias, and
-the preview web origin. Production points to the production Supabase project,
-the production API domain, and the canonical web origin. The anon key is a
-browser-safe public key; never place a service-role key or database URL in a
-`VITE_` variable.
+Preview points to the preview Supabase project and the matching API preview. Production points to the production Supabase project, canonical API domain, and canonical web origin. Never place a service-role key, database credential, private key, provider token, or protection bypass in a `VITE_` variable.
 
-## Verification
+## Exact-SHA verification
 
-1. Compare upstream `main`, mirror `main`, and the selected mirror `preview`
-   object before deployment.
-2. Confirm the Vercel deployment metadata has the expected mirror repository,
-   branch, and exact SHA.
-3. Run the local Web V1 quality gate and hosted build.
-4. Fetch the protected preview with the authenticated local Vercel CLI.
-5. Check the API CORS preflight from the exact preview web origin and run the
-   API smoke against the matching preview deployment.
+Before accepting or promoting a web deployment:
 
-Use the protected `preview` branch aliases as the browser and API origins. The
-verification wrapper resolves both aliases to their unique READY exact-SHA
-deployments before the test and repeats that check after the test. An alias change
-during the gate is a failure.
+1. Resolve the current upstream development SHA.
+2. Resolve the exact deployment-mirror SHA/ref authorized by the issue.
+3. Confirm any upstream/mirror difference is intentional; do not mutate the mirror merely to eliminate the difference.
+4. Inspect the Vercel deployment metadata and require repository `fernandodamaso/AureaSolaris-deploy`, the expected ref, and exact 40-character Git SHA.
+5. Require a `READY` deployment before browser acceptance.
+6. Resolve the supplied preview/canonical alias to that inspected deployment rather than trusting the alias name.
+7. Pair the web deployment with a compatible API deployment for the same candidate/contract.
+8. Run the issue-required build, health, CORS, ownership, and browser checks.
+9. Resolve aliases again after the gate; an alias moving during verification invalidates the evidence.
 
-The hosted ownership test also requires the canonical production Supabase origin
-`https://tgpcpxqqusehssaihvcp.supabase.co`. The wrapper rejects any other value
-before browser startup; one trailing slash is normalized. The browser test then
-asserts that no request reached that origin. The public sign-up assertion reads
-`/auth/v1/settings`; it does not submit a sign-up request or create an Auth user.
+Production is whatever exact deployment is currently receiving the canonical alias. Upstream `main` may be newer than production when a newer commit has intentionally not been promoted.
 
-Keep deployment protection enabled. Use a short-lived local CLI bypass only for
-verification; do not add it to GitHub Actions or commit it.
+## Hosted preview acceptance
 
-## Protected hosted acceptance on Windows
+`scripts/verify_preview.sh` and `scripts/verify_vercel_preview.py` are the repository verification entry points. The verifier binds preview aliases to unique READY deployments at the expected SHA and refuses the canonical production host for preview tests.
 
-Load the approved short-lived values into the current PowerShell process through the secure provider/secret-store path. Do not place their values in a command string. Then invoke Git Bash directly so it inherits the environment:
+Protected preview credentials, synthetic identity credentials, and bypass values are process-only secrets. Load them from approved secure provider/secret-store paths without embedding their values in command strings, source, logs, screenshots, PRs, Linear, or chat.
+
+On Windows, invoke Git Bash directly after the approved environment names have been loaded securely into the process:
 
 ```powershell
-$requiredNames = @(
-  'AUREA_E2E_URL', 'AUREA_E2E_API_URL', 'AUREA_E2E_EMAIL',
-  'AUREA_E2E_PASSWORD', 'AUREA_E2E_SECOND_JWT',
-  'AUREA_VERCEL_WEB_PROTECTION_BYPASS',
-  'AUREA_VERCEL_API_PROTECTION_BYPASS',
-  'AUREA_EXPECTED_PREVIEW_SHA', 'AUREA_VERCEL_SCOPE',
-  'SUPABASE_PREVIEW_URL', 'SUPABASE_PREVIEW_ANON_KEY',
-  'AUREA_PRODUCTION_SUPABASE_URL'
-)
-$missingNames = $requiredNames | Where-Object { -not (Test-Path "Env:$_") }
-if ($missingNames) { throw "Missing secure environment names: $($missingNames -join ', ')" }
 & 'C:\Program Files\Git\bin\bash.exe' scripts/verify_preview.sh
 if ($LASTEXITCODE -ne 0) { throw 'Hosted preview verification failed.' }
 ```
 
-Use Git Bash on Windows. Do not use WSL to launch Windows Node because WSL does not forward arbitrary Linux environment variables to Windows child processes.
+Do not weaken Deployment Protection just to make automation simpler.
+
+## Production verification
+
+For a production promotion/cutover issue, record only sanitized evidence:
+
+- upstream SHA;
+- deployment-mirror SHA;
+- Vercel deployment ID/immutable URL and recorded Git SHA;
+- canonical alias;
+- web `/` HTTP status;
+- matching API deployment/health evidence.
+
+A branch name or successful build alone is insufficient proof.
+
+## Rollback
+
+Rollback is coordinated with the API project; do not roll the frontend to an arbitrary older deployment without confirming API/environment compatibility.
+
+Use [`INCIDENT_AND_ROLLBACK.md`](INCIDENT_AND_ROLLBACK.md). Depending on plan/capability, Vercel can point production traffic to a previous deployment using the provider rollback function or by promoting a known-good existing deployment. Inspect the exact target deployment first and verify aliases/health afterward.
+
+Application rollback must not perform destructive user-data actions.
