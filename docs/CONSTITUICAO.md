@@ -1,19 +1,70 @@
 # Constituição do Aurea Solaris
 
-Este é o documento-base para pessoas, IDEs e LLMs. Em caso de conflito, ele prevalece sobre telas, planos antigos e código legado.
+Este é o documento-base para pessoas, IDEs e LLMs. Em caso de conflito, ele prevalece sobre telas, planos antigos, registros históricos e código legado.
 
 O roteiro canônico de execução está em [ROADMAP.md](ROADMAP.md). Ele define dependências, verticais de entrega e o que fica fora de escopo em cada etapa.
 
 ## Missão
 
-O Aurea Solaris é um caderno vivo local-first para astrologia, estudo e organização pessoal. Caderno espacial (tipo Miro) e caderno de estudo são duas visões dos mesmos itens e relações; não são produtos nem cópias separadas.
+O Aurea Solaris é um ambiente privado para astrologia, estudo, organização pessoal e reflexão. Caderno espacial, caderno de estudo e outras visões podem representar os mesmos itens e relações sem transformar cada visão em um produto separado.
+
+A experiência de aplicação ativa é a **Private Web V1**. O antigo produto desktop/local foi aposentado como caminho executável. Registros históricos continuam recuperáveis para auditoria e contexto, mas não definem como desenvolver, executar ou operar a aplicação atual.
+
+## Escopo atual da Private Web V1
+
+A Web V1 entrega hoje:
+
+- autenticação da pessoa usuária;
+- perfil e onboarding;
+- perfil natal persistido;
+- Mandala/dashboard;
+- cálculos natais e de trânsitos pelo motor certificado;
+- recibos persistidos dos cálculos, com dados necessários para reprodução e auditoria.
+
+Recursos descritos em planos ou documentos históricos que não estejam nesse fluxo não se tornam parte da Web V1 apenas por existirem no repositório ou no histórico Git.
 
 ## Dois domínios, duas responsabilidades
 
-1. **Conhecimento astrológico editorial**: conceitos, fontes, afirmações, tradições/escolas, cálculos documentados e relações. É plural, rastreável e não pertence a um perfil individual.
-2. **Espaço privado da pessoa**: perfil, consentimento, mapas autorizados, diário, notas, tarefas, agenda, preferências, método interpretativo e memória aprovada do Hermes. Cada registro tem proprietário e nunca deve vazar para outra pessoa ou para o banco editorial.
+1. **Conhecimento astrológico editorial**: conceitos, fontes, afirmações, tradições/escolas, cálculos documentados e relações. É impessoal, plural, rastreável e não pertence a um perfil individual.
+2. **Espaço privado da pessoa**: perfil, dados de nascimento, recibos de cálculo e demais registros privados da aplicação. Cada registro privado é associado ao proprietário autenticado e não pode atravessar a fronteira de outra pessoa nem ser incorporado ao corpus editorial.
 
-Uma afirmação pode divergir de outra. O sistema preserva autor, tradição, fonte, trecho, revisão, incerteza e relação de concordância/contradição. Nunca elimina uma tradição apenas para simplificar a interface.
+Uma afirmação editorial pode divergir de outra. O sistema preserva autor, tradição, fonte, trecho, revisão, incerteza e relação de concordância/contradição. Nunca elimina uma tradição apenas para simplificar a interface.
+
+## Arquitetura e propriedade operacional da Web V1
+
+A arquitetura ativa é web-first:
+
+- `apps/web` contém a interface React/Vite;
+- `services/api` contém a API FastAPI autenticada;
+- **Vercel** hospeda os projetos web e API da Private Web V1;
+- **Supabase** é responsável por Auth, Postgres e Row Level Security (RLS) da Web V1;
+- o motor astrológico certificado e seus ativos de efemérides ficam sob a fronteira confiável da API;
+- **Railway não faz parte da Web V1**.
+
+O runtime desktop/local, empacotamento nativo e armazenamento SQLite do produto anterior não são caminhos ativos da aplicação. Eles não devem ser reintroduzidos por documentação, configuração, scripts ou código novo. Evidências históricas podem citar essas tecnologias quando estiverem claramente identificadas como histórico.
+
+`tools/run_e2e.py` é infraestrutura local descartável de teste. Ele pode criar serviços e identidades sintéticas para validação isolada, mas não é um runtime local voltado à pessoa usuária e nunca autoriza acesso a dados pessoais reais ou bancos históricos.
+
+## Repositórios e promoção
+
+- **`vivicabsb-eng/AureaSolaris` é o repositório de desenvolvimento e a fonte de verdade do código.** Trabalho de produto, branches, PRs, CI e merges acontecem nele.
+- **`fernandodamaso/AureaSolaris-deploy` é somente um espelho de implantação por SHA exato.** Ele não é um segundo repositório de desenvolvimento nem uma fonte alternativa de mudanças.
+- Uma promoção deve preservar a identidade do objeto Git validado: o SHA promovido ao espelho precisa ser explicitamente verificado antes de qualquer implantação.
+- Uma diferença entre o `main` upstream e o `main` do espelho pode ser intencional quando ainda não houve autorização de promoção. Não a trate automaticamente como drift.
+
+A verificação de uma implantação segura relaciona quatro fatos independentes: SHA do upstream, SHA do espelho autorizado, SHA registrado no deployment Vercel e aliases/saúde dos projetos web e API. Um alias sozinho não prova qual código está servindo produção.
+
+## Isolamento, identidade e RLS
+
+A identidade do proprietário vem da autenticação Supabase validada pela API. O cliente não escolhe livremente um proprietário para uma operação privada.
+
+- consultas e gravações de produto são explicitamente owner-scoped na API;
+- as tabelas privadas mantêm `user_id` e políticas RLS que limitam leitura e escrita a `auth.uid() = user_id`;
+- relações entre registros privados também preservam o proprietário, impedindo referências cruzadas entre contas;
+- credenciais confiáveis do servidor nunca são entregues ao navegador;
+- testes de isolamento devem provar o comportamento com pelo menos duas identidades sintéticas quando a fronteira de dados for alterada.
+
+A expansão futura para mais pessoas preserva exatamente essas fronteiras. Escala de usuários não justifica remover owner scoping, enfraquecer RLS, compartilhar credenciais privilegiadas com o browser nem misturar dados privados ao conhecimento editorial.
 
 ## Precisão astrológica
 
@@ -23,40 +74,28 @@ Precisão e confiabilidade são inegociáveis. Todo cálculo preserva instante U
 
 Hermes é tutor e parceiro de estudo: explica o raciocínio, distingue cálculo/fonte/inferência/opinião, corrige com respeito e cita as fontes. Ele consulta primeiro o conhecimento curado; pesquisa externa só dentro de fontes e consentimentos configurados. Memórias sobre o método da pessoa são propostas revisáveis e só se tornam persistentes após aprovação. Hermes nunca cria tarefas, eventos ou registros privados silenciosamente.
 
-Hermes é uma identidade de produto independente do modelo de IA. O ChatGPT pode ser o provedor inicial, mas cada conta pode escolher ou trocar o servidor/modelo autorizado. A troca nunca migra senhas, tokens, histórico integral ou dados privados para o novo provedor. O método, as memórias aprovadas, as anotações, as fontes e o conhecimento produzido pertencem ao Aurea e à pessoa, não ao agente usado em uma conversa.
+Hermes é uma identidade de produto independente do modelo de IA. Um provedor de IA pode ser escolhido ou trocado sem transferir silenciosamente senhas, tokens, histórico integral ou dados privados. O método, as memórias aprovadas, as anotações, as fontes e o conhecimento produzido pertencem ao Aurea e à pessoa, não ao agente usado em uma conversa.
 
 ## Enciclopédia e biblioteca pessoal
 
-A **Enciclopédia Visual** é a Engenharia Astrológica incorporada ao Aurea Solaris: uma biblioteca de referência interna, consultável apenas pelo aplicativo, com fontes, tradições e relações visuais preservadas. Ela não substitui a vivência ou as anotações da pessoa.
+A **Enciclopédia Visual** é a Engenharia Astrológica incorporada ao Aurea Solaris: uma biblioteca de referência interna com fontes, tradições e relações visuais preservadas. Ela não substitui a vivência ou as anotações da pessoa.
 
 O motor e a Enciclopédia obedecem a um contrato normativo explícito: a regra computável sempre identifica escola, variante, parâmetros e fonte; notas divergentes, curiosidades, etimologias, mitos e camadas não canônicas continuam estudáveis, mas não podem aparecer como default silencioso do cálculo.
 
-Cada conta também possui uma biblioteca pessoal: livros, PDFs, artigos, links e sites cadastrados pela própria pessoa. Arquivos de saúde, como exames, são anexos privados de alta sensibilidade e só são lidos, resumidos ou usados por Hermes após solicitação explícita. Uma pessoa pode estudar todas as escolas em comparação — como Vivi — ou configurar suas próprias preferências sem que o produto apague as demais fontes.
+Arquivos pessoais ou de saúde, quando existirem em escopos futuros, continuam privados e só podem ser processados após ação explícita. Astrologia médica é estudo/observação, nunca diagnóstico ou prescrição.
 
-## Escala de produto
+## Segredos, privacidade e recuperação
 
-Hoje, a experiência primária do Aurea é uma aplicação web local aberta no Chrome por um atalho de clique único no Windows, projetada primeiro para a tela de um notebook como o Galaxy Book 4 Ultra. A interface deve permanecer responsiva e preparada para tablet/mobile no futuro. O Tauri e instaladores estão fora do foco atual. A experiência canônica é a aplicação web local aberta em `127.0.0.1` no Chrome, via servidor local do projeto. Código, docs e agentes devem assumir essa realidade como padrão. Cada conta possui dados, preferências, integrações, consentimentos e memória Hermes isolados.
+Senhas, tokens, JWTs, cookies, URLs de banco com credenciais, chaves privadas e segredos de provedor não ficam em Git, documentação, tickets, logs ou bundles do navegador. Valores sensíveis pertencem aos mecanismos seguros dos provedores e ambientes de execução.
 
-- O modo padrão no Chrome é `local-owner`: a sessão do Windows e a API restrita ao loopback formam a fronteira de confiança local.
-- O Aurea reutiliza uma única conta privada existente quando ela é inequívoca; nunca escolhe entre contas, migra diretórios ou adota dados órfãos sem decisão humana.
-- A sessão `local-owner` existe somente na memória do processo e do navegador, não expira por tempo e termina quando a API reinicia.
-- `AUREA_REQUIRE_LOGIN=1` preserva o fluxo de senha para contas que já possuem uma senha conhecida.
-- Na reutilização de conta existente: nunca presumir que o identificador é `local-owner`; nunca renomear proprietário nem mover diretório; nunca gravar verificador de senha descartável.
+Rollback de aplicação não é rollback destrutivo de dados. Em incidentes, prefira restaurar uma implantação web/API conhecida e compatível, rotacionar/revogar segredos quando necessário, desabilitar temporariamente a aplicação por controles do provedor e verificar novamente identidade, aliases e saúde. Nunca apague, reescreva ou restaure dados privados como efeito colateral de um rollback de código sem um contrato separado, explícito e seguro para dados.
 
-## IA e provedores
+## Autonomia de agentes
 
-Hermes usa desde o início um provedor escolhido pela pessoa: **ChatGPT / OpenAI** ou **Hermes Gateway**. Ollama e qualquer IA local não são requisito, nem são sondados automaticamente. A conversa escolhe um único provedor; se ele falhar, Hermes informa a falha em vez de encaminhar conteúdo silenciosamente a outro serviço.
+Dentro de um issue/contrato já aprovado, operações rotineiras e reversíveis de engenharia não devem voltar a depender de confirmações humanas artificiais. Isso inclui configuração rotineira de provedores, atualização controlada do espelho por SHA exato, deployments previstos pelo contrato, migrations aprovadas, ciclos de revisão/correção de PR e merge limpo após verificações finais.
 
-Antes de enviar uma conversa, a interface mostra o provedor e pede consentimento explícito para aquela conversa. Senhas, tokens e memória integral não entram no prompt; o contexto enviado continua sujeito aos limites de privacidade e proveniência desta Constituição.
-
-## Privacidade e acesso
-
-O aplicativo é local-first hoje e poderá ser online depois sem mudar estes princípios. Senhas não são armazenadas em texto aberto. Segredos e tokens não ficam no frontend, em `localStorage`, em prompts ou em arquivos versionados; ficam em cofre criptografado local até existir infraestrutura de segredos no modo online. Login, sessão, dono do dado, permissões, backup, exportação e exclusão são requisitos de fundação.
-
-## Agenda, saúde e autonomia
-
-Agenda, tarefas, janelas astrológicas e diário compartilham o fluxo `mapa → janela → intenção → plano → tarefa/evento → reflexão → aprendizado`. Google Calendar e adaptadores externos são opcionais, não fonte de verdade. Saúde/astrologia médica é estudo e observação, nunca diagnóstico, prescrição ou substituto de cuidado profissional.
+Essa autonomia **não** elimina fronteiras de segurança. É obrigatório interromper e pedir decisão humana quando surgir ação destrutiva não aprovada, risco real a dados pessoais, necessidade de revelar ou fornecer uma credencial, ambiguidade material de identidade/ambiente, ou contradição entre o estado real dos provedores e o contrato aprovado.
 
 ## Regra para toda mudança
 
-Antes de criar uma tela ou recurso, declare o objeto que ela representa, sua fonte de verdade, como a pessoa revisa/desfaz/exporta e como Hermes explica origem e incerteza. Documentação, migrações e testes fazem parte da entrega.
+Antes de criar uma tela, recurso ou operação, declare o objeto que ela representa, sua fonte de verdade, proprietário, fronteira de acesso, como a pessoa revisa/desfaz/exporta e como Hermes explica origem e incerteza. Documentação, migrações, testes e evidência operacional fazem parte da entrega.
