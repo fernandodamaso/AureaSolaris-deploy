@@ -10,6 +10,7 @@
 
 python-quality tests/test_browser_runtime.py
 python-quality tests/test_chat_provider_selection.py
+python-quality tests/test_editorial_importer.py
 python-quality tests/test_engine_utc_boundary.py
 python-quality tests/test_hermes_mind_api.py
 python-quality tests/test_local_storage.py
