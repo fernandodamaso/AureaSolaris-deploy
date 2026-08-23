@@ -1,6 +1,8 @@
 # Supabase environment runbook
 
-This runbook is for the two approved Aurea Solaris Web V1 environments. It uses the authenticated Supabase CLI and supported Supabase APIs. It never stores or prints passwords, service-role keys, birth data, or access tokens.
+This runbook covers the approved Aurea Solaris Private Web V1 Supabase environments. Supabase owns Auth, Postgres, and Row Level Security (RLS); Vercel owns the web/API runtime. Railway is not part of Web V1.
+
+Use authenticated Supabase tooling/provider APIs without storing or printing passwords, service-role keys, database connection strings, birth data, or access tokens.
 
 ## Projects
 
@@ -11,65 +13,85 @@ This runbook is for the two approved Aurea Solaris Web V1 environments. It uses 
 
 The inactive `buddy` project is unrelated. Do not create a duplicate project.
 
+## Source and deployment ownership
+
+The schema source of truth is committed under `supabase/` in `vivicabsb-eng/AureaSolaris`. `fernandodamaso/AureaSolaris-deploy` is an exact-SHA deployment mirror, not an alternate schema-development repository.
+
+Schema/provider operations that are already approved by an issue may be performed autonomously by the agent, but the agent must stop for destructive user-data actions, ambiguous project identity, or any request that requires exposing/providing a secret value.
+
 ## Migration and schema
 
-The committed migration is [`supabase/migrations/202608150001_web_v1_core.sql`](../../supabase/migrations/202608150001_web_v1_core.sql). Its SHA-256 is:
+The committed Web V1 core migration is [`../../supabase/migrations/202608150001_web_v1_core.sql`](../../supabase/migrations/202608150001_web_v1_core.sql). Apply committed migrations to preview first, verify them, then apply the same reviewed migration set to production when the issue authorizes production mutation.
 
-`42d3b1f57a52ae3fff45a0086075518a18d8924f6deb5cf7d5b1143aef46dcb2`
+Do not repair or rewrite hosted migration history merely to make identifiers look prettier. Do not use ad-hoc destructive SQL to bypass a failed migration or application incident.
 
-Apply the exact file to preview first, verify it, then apply the same file to production. The hosted migration history records the execution name `web_v1_core` and provider execution versions. Do not repair or rewrite hosted history to force the committed timestamp.
-
-Required tables and policies:
+Required private tables/policies for Web V1 include:
 
 - `profiles` with `profiles_owner_all`
 - `birth_profiles` with `birth_profiles_owner_all`
 - `calculation_receipts` with `calculation_receipts_owner_all`
 
-All three tables must have RLS enabled. Each owner policy must be exact:
-
-- role: `authenticated`
-- command: `ALL`
-- `USING`: `auth.uid() = user_id`
-- `WITH CHECK`: `auth.uid() = user_id`
-
-The hosted catalog renders the function as `(( SELECT auth.uid() AS uid) =
-user_id)`. The verifier requires that exact hosted expression in both policy
-columns. Any `true` policy, another role, a narrower command, or a missing
-`WITH CHECK` fails verification.
+All private tables have RLS enabled. The authenticated owner policy uses the authenticated Supabase identity for both visibility and writes; any broader role/predicate or missing write check is a security failure.
 
 ## Auth policy
 
-- Email/password is enabled in both projects.
-- Public self-sign-up is disabled in both projects.
-- Email confirmation remains provider-controlled (`mailer_autoconfirm` is not enabled).
-- Preview may have the disposable E2E identity. Its credentials are stored only under the existing secure secret names `AUREA_PREVIEW_E2E_EMAIL` and `AUREA_PREVIEW_E2E_PASSWORD`.
-- Production keeps only the approved human identity. The production password is created or reset by the owner through the normal Supabase Auth flow. It is never a CI, Vercel, Git, Linear, log, or chat secret.
+- Email/password is enabled in both approved projects.
+- Public self-sign-up remains disabled unless a separate product/security contract changes it.
+- Preview may contain disposable E2E identities whose credentials live only in approved secret storage.
+- Production identity operations use supported Supabase Auth APIs/provider controls; never insert into or edit Auth system tables directly.
+- Passwords, reset links, service-role keys, JWTs, and private Auth metadata are never completion evidence.
 
-Auth user creation, deletion, and reset use the supported Auth Admin API from a trusted process. Never insert into or edit `auth.users` directly.
+## Owner isolation contract
 
-## Verification
+Private application data is never selected by a trusted `owner_id` supplied by the browser.
 
-Run from the repository root:
+1. Browser authenticates through Supabase Auth.
+2. FastAPI validates the token and derives the owner identity.
+3. API repositories scope private reads/writes to that owner.
+4. RLS independently constrains each private table to the authenticated `user_id`.
+5. Owner-aware relationships prevent cross-owner references.
+
+Future multi-user expansion keeps these rules. Any owner-boundary change must be tested with at least two synthetic identities proving both allowed self-access and denied cross-owner access/modification/reference.
+
+## Disposable schema/RLS validation
+
+From the source-of-truth repository root, the repository quality gate starts a disposable local Supabase environment, resets the schema, runs database tests, and executes repository isolation checks:
 
 ```bash
-bash scripts/verify_supabase_environment.sh
+npm run quality:schema
 ```
 
-The command checks the committed migration hash, project health, hosted migration history, Auth settings, and RLS/policy state. It prints only project refs, migration versions and hashes, table/policy names, and counts. It does not print API keys.
+The complete gate is:
 
-All repository verifier scripts probe each Python launcher by executing
-`--version` before selection. This avoids the disabled Windows Store alias
-and falls back to the next working launcher. Supabase Auth headers use standard
-input and do not place publishable or service-role values in process arguments.
+```bash
+npm run quality:gate
+```
 
-For an unattended identity-count check, provide service-role credentials through the secure execution environment only. The variable names are `SUPABASE_SERVICE_ROLE_KEY_PREVIEW` and `SUPABASE_SERVICE_ROLE_KEY_PRODUCTION`; do not commit them or put them in a browser, workflow file, Linear, logs, or chat. The production check fails unless exactly one Auth user exists.
+Disposable validation must not use production data, production credentials, real person records, historical local databases, or backups.
 
-After a schema change, run the Supabase security advisors for both refs and record only the advisory names and remediation state. The current remaining advisory is the provider's leaked-password-protection recommendation; enabling it is a separate Auth security decision and does not change this migration.
+## Hosted verification
+
+The hosted environment verifier checks project health, committed migrations/history, Auth settings, and RLS/policy state while printing only sanitized identifiers, hashes/names, and counts.
+
+For unattended checks that require privileged provider access, load service-role credentials through the approved secure execution environment. Do not place secret values in browser configuration, workflow source, process arguments, Git, Linear, logs, screenshots, or chat.
+
+After a schema/security change, inspect Supabase security advisors for both approved refs and record only advisory names/status/remediation—not credentials or private data.
 
 ## Safe operating rules
 
-1. Run a sanitized preflight before each provider mutation.
-2. Apply and verify preview before production.
-3. Use the committed migration only. Do not use ad-hoc SQL for product schema.
-4. Keep preview and production refs separate in every command.
-5. Never copy a secret into source, logs, screenshots, tickets, or chat.
+1. Confirm preview/production project identity before provider mutation.
+2. Run a sanitized preflight before each mutation.
+3. Apply and verify preview before production unless the approved incident contract explicitly requires a safe production-only response.
+4. Use committed migrations; do not improvise destructive schema repair.
+5. Keep preview and production configuration separate.
+6. Never disable RLS to make an application/test failure disappear.
+7. Never delete users or private rows as part of an application rollback.
+8. Record only sanitized evidence.
+
+## Incident and secret rotation boundary
+
+Application rollback is handled at the Vercel layer and does not roll Postgres data backward. If a secret may be compromised, rotate/revoke it in the owning provider, update dependent secure environment bindings, verify a candidate, and retire the old value without exposing either value.
+
+If database integrity itself is suspected, stop application writes/public access as safely as provider controls allow and open a separate data-recovery incident contract. Do not restore or rewrite private data under a generic web/API rollback procedure.
+
+See [`INCIDENT_AND_ROLLBACK.md`](INCIDENT_AND_ROLLBACK.md).

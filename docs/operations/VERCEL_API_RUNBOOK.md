@@ -1,6 +1,6 @@
 # Vercel API runbook
 
-The API project is managed with the authenticated Vercel CLI. No Vercel token is stored in the repository or printed by these steps.
+The authenticated Web V1 API is hosted by Vercel and sourced from the deployment-only mirror. No Vercel token, database credential, JWT, password, protection bypass, or provider secret is stored in this repository or printed by these steps.
 
 ## Project contract
 
@@ -13,79 +13,71 @@ The API project is managed with the authenticated Vercel CLI. No Vercel token is
 | Production branch | `main` |
 | Runtime | Python `>=3.12,<3.13` |
 
-The deployment mirror is not a development checkout. Deploy only an exact verified mirror object. The current verified baseline is `6ddda7627e9634e91fa303e296dec79fd93b9340`; confirm the upstream and mirror refs again before every deployment.
+`vivicabsb-eng/AureaSolaris` is the development source of truth. The deployment mirror is not a development checkout. Deploy only an exact mirror object that was already validated and explicitly authorized for promotion.
 
-The API bundle includes the canonical editorial governance snapshot at
-`services/api/knowledge/editorial_current.sqlite`. Its SHA-256 is
-`91cf0d23d0fb8869fd802eac1567ff3e22563fcca563e60b9f74f490f6efbcbd`; keep it
-byte-identical to `knowledge/engenharia_astrologica/knowledge/build/editorial_current.sqlite`.
+Do not pin a volatile “current production SHA” in this runbook. Resolve and verify the live upstream, mirror, and Vercel metadata immediately before every deployment or rollback. An upstream/mirror difference can be intentional when no promotion was authorized.
+
+Railway is not part of Web V1.
+
+## Certified bundle boundary
+
+The API bundle contains the certified astrology engine/assets and the governed editorial snapshot required by the service contract. Keep generated/packaged editorial artifacts byte-consistent with their governed source checks and preserve the existing certification tests. Do not change astrology behavior as part of deployment operations.
 
 ## Environment separation
 
-The project has separate `preview` and `production` values for the six server variables defined in [`ENVIRONMENTS.md`](ENVIRONMENTS.md):
+Preview and production use separate values for the server variables defined in [`ENVIRONMENTS.md`](ENVIRONMENTS.md):
 
 - `AUREA_ENVIRONMENT`
 - `AUREA_SUPABASE_URL`
 - `AUREA_JWT_AUDIENCE`
-- `AUREA_DATABASE_URL` (sensitive)
+- `AUREA_DATABASE_URL` (secret)
 - `AUREA_ALLOWED_ORIGINS`
 - `AUREA_EPHEMERIS_PATH`
 
-The database URL uses the dedicated environment role through the assigned
-Supavisor session pooler `aws-0-sa-east-1.pooler.supabase.com`, port `5432`,
-database `postgres`. The direct `db.<ref>.supabase.co` host is IPv6-only and is
-not valid for this Vercel runtime. Its password is generated and stored only as
-a sensitive Vercel environment value. The role bypasses RLS because the trusted
-API enforces the authenticated owner ID; browser clients never receive this
-credential.
+The database connection value belongs only in the secure Vercel environment. Preview uses the approved preview Supabase project and an exact preview web origin. Production uses the approved production Supabase project and the canonical web origin `https://aurea-solaris.vercel.app`. Do not copy production secrets into preview or vice versa.
 
-Preview uses the approved preview Supabase ref and an approved Vercel web preview
-origin. Production uses the approved production Supabase ref and the canonical
-web origin `https://aurea-solaris.vercel.app`. Do not copy a production value
-into preview or vice versa.
+The trusted API performs explicit owner-scoped database operations using the authenticated Supabase identity. Browser clients never receive the server database credential. Supabase RLS remains a separate defense-in-depth boundary for private tables.
 
-## Deployment and smoke
+## Exact-SHA deployment verification
 
-Deploy from the exact mirror SHA with the Vercel CLI. Record only the deployment ID, URL, target, and exact SHA. Never record environment values or request bodies.
+Before any network/browser acceptance:
 
-Before any network or browser check, bind both preview URLs to the exact expected
-SHA. `scripts/verify_preview.sh` calls
-`scripts/verify_vercel_preview.py --project aurea-solaris` and
-`--project aurea-solaris-api`. Each call requires exactly one READY deployment for
-that project with the expected 40-character Git SHA and `preview` target, then
-inspects the supplied URL or alias and requires the same resolved deployment URL.
-The verifier rejects the canonical production host. The wrapper keeps the supplied
-branch aliases because they are the exact configured CORS origins. It records the
-resolved immutable URLs in process memory, runs the gate, then resolves both aliases
-again. It fails if either alias changed during the gate.
+1. Resolve current `vivicabsb-eng/AureaSolaris:main`.
+2. Resolve the exact mirror ref/SHA authorized for the candidate.
+3. Inspect the Vercel API deployment and require `fernandodamaso/AureaSolaris-deploy`, expected ref, exact SHA, and `READY` state.
+4. Bind the supplied API alias/URL to that inspected deployment.
+5. Bind the web candidate independently and require a compatible candidate/environment.
+6. Run API health/deployment-contract checks and the ownership browser gate required by the issue.
+7. Resolve both aliases again after validation; alias movement during the gate invalidates the result.
 
-```bash
-: "${AUREA_E2E_URL:?required}"
-: "${AUREA_E2E_API_URL:?required}"
-: "${AUREA_EXPECTED_PREVIEW_SHA:?required}"
-: "${AUREA_VERCEL_SCOPE:?required}"
-```
+`scripts/verify_preview.sh` invokes `scripts/verify_vercel_preview.py` for both `aurea-solaris` and `aurea-solaris-api`. The script records statuses only and does not require secret values to be printed.
 
-The wrapper also requires these process-only names: `AUREA_E2E_EMAIL`,
-`AUREA_E2E_PASSWORD`, `AUREA_E2E_SECOND_JWT`,
-`AUREA_VERCEL_WEB_PROTECTION_BYPASS`, `AUREA_VERCEL_API_PROTECTION_BYPASS`,
-`SUPABASE_PREVIEW_URL`, `SUPABASE_PREVIEW_ANON_KEY`, and
-`AUREA_PRODUCTION_SUPABASE_URL`. Keep their values in the secure execution
-environment. Never place them in command arguments, source, logs, or this runbook.
+## Secure hosted acceptance
 
-Only after both deployment comparisons succeed, run the wrapper. It performs API
-health and ownership checks, confirms disabled public sign-up against the approved
-preview Supabase project, and then starts the non-destructive browser ownership test:
+The wrapper may require process-only names for synthetic preview identity credentials, Vercel protection bypasses, Supabase preview public configuration, and the expected SHA/scope. Load values from approved secure storage and keep them out of command arguments, source, logs, screenshots, PRs, Linear, and chat.
+
+Only after both deployments have been bound to the exact expected candidate should the hosted wrapper run:
 
 ```bash
 bash scripts/verify_preview.sh
 ```
 
-The script prints status only. It does not run against production.
+The script is for non-destructive preview verification and must not be repointed to production private data.
 
-## Failure boundaries
+## Production smoke
 
-- A `503 service_not_ready` response is a safe readiness result until concrete database and engine probes are enabled by the application contract.
-- Do not deploy a candidate SHA that is not present on the verified mirror ref.
-- Do not add a Vercel bypass secret to GitHub Actions.
-- Do not add Railway configuration or a Docker runtime requirement.
+After an authorized production promotion, verify:
+
+- deployment metadata repository/ref/SHA;
+- canonical API alias;
+- `/health` according to the current health contract;
+- `/ready` according to the current readiness contract;
+- canonical web health against the compatible frontend deployment.
+
+A `503 service_not_ready` readiness response is a deliberate fail-closed state while concrete readiness probes are disabled by the application contract; do not misreport it as deployment provenance failure.
+
+## Rollback
+
+Coordinate rollback with the web project. Select a known-good API/web pair whose exact Git provenance and environment compatibility are known, then use the provider-supported traffic rollback/promotion mechanism described in [`INCIDENT_AND_ROLLBACK.md`](INCIDENT_AND_ROLLBACK.md).
+
+Do not use rollback as an excuse to rewrite schema history, delete Auth users, restore a private database destructively, or expose credentials. Application rollback and user-data recovery are separate operations with separate contracts.
