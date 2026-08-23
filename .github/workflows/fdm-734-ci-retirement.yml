@@ -1,0 +1,393 @@
+name: FDM-734 CI gate retirement
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  retire-gates:
+    if: github.head_ref == 'fernandoyarrum/fdm-734-p48-remove-the-verified-desktoplocal-runtime-and-retire-its'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+          persist-credentials: true
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Remove stale local-runtime diagnostics from supported E2E harness
+        shell: bash
+        run: |
+          python - <<'PY'
+          import re
+          from pathlib import Path
+
+          harness = Path('tools/run_e2e.py')
+          source = harness.read_text(encoding='utf-8')
+          source, count = re.subn(
+              r'\ndef wait_for_test_user_health\(.*?\n\ndef wait_for_api_health',
+              '\n\ndef wait_for_api_health',
+              source,
+              count=1,
+              flags=re.S,
+          )
+          if count != 1:
+              raise SystemExit('expected wait_for_test_user_health block not found exactly once')
+          if 'local-owner' in source or '9876' in source or '9878' in source:
+              raise SystemExit('retired local-runtime marker remains in tools/run_e2e.py')
+          harness.write_text(source, encoding='utf-8')
+
+          tests = Path('tests/test_run_e2e.py')
+          source = tests.read_text(encoding='utf-8')
+          source, count = re.subn(
+              r'\n    def test_wait_for_test_user_health_rejects_non_test\(self\) -> None:.*?\n    def test_resolve_node_command_uses_cmd_shim_on_windows',
+              '\n    def test_resolve_node_command_uses_cmd_shim_on_windows',
+              source,
+              count=1,
+              flags=re.S,
+          )
+          if count != 1:
+              raise SystemExit('expected legacy run_e2e unit test not found exactly once')
+          source = source.replace(
+              'output = "[AureaSolaris] FastAPI sidecar rodando\\n[AureaSolaris] Sidecar encerrando.\\n"',
+              'output = "[AureaSolaris] FastAPI API running\\n[AureaSolaris] API stopped.\\n"',
+          )
+          if 'local-owner' in source or '9876' in source or '9878' in source or 'sidecar' in source.lower():
+              raise SystemExit('retired local-runtime marker remains in tests/test_run_e2e.py')
+          tests.write_text(source, encoding='utf-8')
+          PY
+
+      - name: Retire obsolete runtime tests and Windows launch smokes
+        shell: bash
+        run: |
+          rm -f \
+            tests/test_browser_runtime.py \
+            tests/test_chat_provider_selection.py \
+            tests/test_compiled_runtime_smoke.py \
+            tests/test_hermes_mind_api.py \
+            tests/test_local_storage.py \
+            tests/test_persistence_repositories.py \
+            tests/test_pytest_capture_runtime.py \
+            tests/test_seed_test_user.py \
+            tests/test_clean_generated.py \
+            tests/browser_runtime_packaged_smoke.ps1 \
+            tests/browser_runtime_process_tree.ps1 \
+            tests/browser_runtime_smoke.ps1 \
+            tests/manual_launcher_verify.ps1 \
+            tests/mandala_visual_smoke.ps1
+
+      - name: Make surviving Python/tool dependencies explicit
+        shell: bash
+        run: |
+          mkdir -p knowledge/engenharia_astrologica
+          cat > knowledge/engenharia_astrologica/requirements.txt <<'EOF'
+          PyYAML==6.0.3
+          EOF
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('services/api/pyproject.toml')
+          source = path.read_text(encoding='utf-8')
+          anchor = '  "ruff==0.11.10",\n'
+          replacement = '  "ruff==0.11.10",\n  "uvicorn[standard]==0.34.2",\n'
+          if 'uvicorn' not in source:
+              if anchor not in source:
+                  raise SystemExit('expected API dev dependency anchor not found')
+              source = source.replace(anchor, replacement, 1)
+          path.write_text(source, encoding='utf-8')
+          PY
+
+      - name: Rewrite Python test classification
+        shell: bash
+        run: |
+          cat > .github/python-test-classification.txt <<'EOF'
+          # Every tests/test_*.py module must appear exactly once.
+          # FDM-734 leaves only supported cross-platform Web V1, engine, editorial,
+          # and hosted-verification contracts in the root Python suite.
+          # python-quality tests run with disposable CI process state only.
+
+          python-quality tests/test_editorial_importer.py
+          python-quality tests/test_engine_utc_boundary.py
+          python-quality tests/test_preview_verification_script.py
+          python-quality tests/test_run_e2e.py
+          python-quality tests/test_vercel_preview_verifier.py
+          python-quality tests/test_web_v1_engine_contract.py
+          EOF
+
+      - name: Rewrite CI as Web V1-only gate
+        shell: bash
+        run: |
+          cat > .github/workflows/e2e.yml <<'YAML'
+          name: CI
+
+          on:
+            pull_request:
+            push:
+              branches: [main]
+            workflow_dispatch:
+
+          permissions:
+            contents: read
+
+          concurrency:
+            group: ci-${{ github.workflow }}-${{ github.ref }}
+            cancel-in-progress: true
+
+          jobs:
+            frontend-quality:
+              name: Frontend Quality
+              runs-on: ubuntu-latest
+              timeout-minutes: 10
+              steps:
+                - uses: actions/checkout@v4
+                - uses: actions/setup-node@v4
+                  with:
+                    node-version: "22"
+                    cache: npm
+                - name: Install Node dependencies
+                  id: install
+                  run: npm ci
+                - name: Run web workspace quality checks
+                  id: web-quality
+                  run: npm run check:web
+                - name: Agent handoff summary
+                  if: always()
+                  shell: bash
+                  run: |
+                    {
+                      echo "## Frontend Quality"
+                      echo
+                      echo "| Gate | Outcome |"
+                      echo "|---|---|"
+                      echo "| npm ci | ${{ steps.install.outcome }} |"
+                      echo "| web workspace quality | ${{ steps.web-quality.outcome }} |"
+                      echo
+                      echo "### Reproduce locally"
+                      echo '```bash'
+                      echo 'npm ci'
+                      echo 'npm run check:web'
+                      echo '```'
+                    } >> "$GITHUB_STEP_SUMMARY"
+
+            python-quality:
+              name: Python Quality
+              runs-on: ubuntu-latest
+              timeout-minutes: 15
+              steps:
+                - uses: actions/checkout@v4
+                - uses: actions/setup-python@v5
+                  with:
+                    python-version: "3.12"
+                    cache: pip
+                    cache-dependency-path: |
+                      services/api/pyproject.toml
+                      knowledge/engenharia_astrologica/requirements.txt
+                - name: Install supported Python dependencies
+                  id: install
+                  run: |
+                    python -m pip install --upgrade pip
+                    python -m pip install -e "./services/api[dev]"
+                    python -m pip install -r knowledge/engenharia_astrologica/requirements.txt
+                - name: Configure disposable test data guard
+                  id: data
+                  shell: bash
+                  run: |
+                    data_dir="$RUNNER_TEMP/aurea-python-quality/data"
+                    mkdir -p "$data_dir"
+                    echo "AUREA_DATA_DIR=$data_dir" >> "$GITHUB_ENV"
+                    echo "Using disposable test directory $data_dir"
+                - name: Verify Python test classification
+                  id: classification
+                  run: |
+                    python - <<'PY'
+                    from pathlib import Path
+                    entries: dict[str, str] = {}
+                    errors: list[str] = []
+                    for line_number, raw in enumerate(Path('.github/python-test-classification.txt').read_text(encoding='utf-8').splitlines(), 1):
+                        line = raw.strip()
+                        if not line or line.startswith('#'):
+                            continue
+                        parts = line.split(maxsplit=1)
+                        if len(parts) != 2:
+                            errors.append(f'line {line_number}: expected <category> <path>')
+                            continue
+                        category, path = parts
+                        if category != 'python-quality':
+                            errors.append(f'line {line_number}: unsupported category {category!r}')
+                        if path in entries:
+                            errors.append(f'line {line_number}: duplicate classification for {path}')
+                        entries[path] = category
+                    actual = {path.as_posix() for path in Path('tests').rglob('test_*.py')}
+                    classified = set(entries)
+                    for path in sorted(actual - classified):
+                        errors.append(f'unclassified Python test: {path}')
+                    for path in sorted(classified - actual):
+                        errors.append(f'classification references missing test: {path}')
+                    if errors:
+                        for error in errors:
+                            print(f'::error::{error}')
+                        raise SystemExit(1)
+                    print(f'Python test classification complete: {len(actual)} modules, no gaps.')
+                    PY
+                - name: Run classified Python quality suite
+                  id: tests
+                  run: |
+                    python - <<'PY'
+                    from pathlib import Path
+                    import subprocess
+                    import sys
+                    modules = []
+                    for raw in Path('.github/python-test-classification.txt').read_text(encoding='utf-8').splitlines():
+                        line = raw.strip()
+                        if not line or line.startswith('#'):
+                            continue
+                        _, path = line.split(maxsplit=1)
+                        modules.append(path.removesuffix('.py').replace('/', '.'))
+                    print('Running:', sys.executable, '-m unittest', *modules, '-v')
+                    raise SystemExit(subprocess.run([sys.executable, '-m', 'unittest', *modules, '-v']).returncode)
+                    PY
+                - name: Agent handoff summary
+                  if: always()
+                  shell: bash
+                  run: |
+                    {
+                      echo "## Python Quality"
+                      echo
+                      echo "| Gate | Outcome |"
+                      echo "|---|---|"
+                      echo "| supported dependency install | ${{ steps.install.outcome }} |"
+                      echo "| disposable data guard | ${{ steps.data.outcome }} |"
+                      echo "| test classification | ${{ steps.classification.outcome }} |"
+                      echo "| supported root Python suite | ${{ steps.tests.outcome }} |"
+                      echo
+                      echo "### Reproduce locally"
+                      echo '```bash'
+                      echo 'python -m pip install -e "./services/api[dev]"'
+                      echo 'python -m pip install -r knowledge/engenharia_astrologica/requirements.txt'
+                      echo 'python -m unittest tests.test_editorial_importer tests.test_engine_utc_boundary tests.test_preview_verification_script tests.test_run_e2e tests.test_vercel_preview_verifier tests.test_web_v1_engine_contract -v'
+                      echo '```'
+                    } >> "$GITHUB_STEP_SUMMARY"
+
+            e2e:
+              name: E2E
+              needs: [frontend-quality, python-quality]
+              runs-on: ubuntu-latest
+              timeout-minutes: 30
+              steps:
+                - uses: actions/checkout@v4
+                - uses: actions/setup-node@v4
+                  with:
+                    node-version: "22"
+                    cache: npm
+                - uses: actions/setup-python@v5
+                  with:
+                    python-version: "3.12"
+                    cache: pip
+                    cache-dependency-path: services/api/pyproject.toml
+                - name: Install Node dependencies
+                  id: node-install
+                  run: npm ci
+                - name: Install supported API/E2E dependencies
+                  id: python-install
+                  run: |
+                    python -m pip install --upgrade pip
+                    python -m pip install -e "./services/api[dev]"
+                - name: Build frontend
+                  id: build
+                  run: npm run build:web
+                - name: Install Playwright Chromium
+                  id: chromium
+                  run: npx playwright install --with-deps chromium
+                - name: Run isolated private Web V1 E2E
+                  id: browser-e2e
+                  run: python tools/run_e2e.py
+                - name: Upload Playwright artifacts
+                  id: artifacts
+                  if: failure() && steps.browser-e2e.outcome == 'failure'
+                  uses: actions/upload-artifact@v4
+                  with:
+                    name: playwright-artifacts-${{ github.run_id }}-${{ github.run_attempt }}
+                    path: |
+                      playwright-report/
+                      test-results/
+                      apps/web/playwright-report/
+                      apps/web/test-results/
+                      apps/web/e2e/playwright-report/
+                      apps/web/e2e/test-results/
+                    if-no-files-found: ignore
+                    retention-days: 7
+                - name: Agent handoff summary
+                  if: always()
+                  shell: bash
+                  run: |
+                    {
+                      echo "## E2E"
+                      echo
+                      echo "This is the authoritative isolated private Web V1 browser gate. It uses disposable infrastructure and never the owner's real Aurea data."
+                      echo
+                      echo "| Gate | Outcome |"
+                      echo "|---|---|"
+                      echo "| Node dependencies | ${{ steps.node-install.outcome }} |"
+                      echo "| API/E2E dependencies | ${{ steps.python-install.outcome }} |"
+                      echo "| frontend build | ${{ steps.build.outcome }} |"
+                      echo "| Chromium install | ${{ steps.chromium.outcome }} |"
+                      echo "| isolated Web V1 Playwright E2E | ${{ steps.browser-e2e.outcome }} |"
+                      echo "| diagnostic artifact upload | ${{ steps.artifacts.outcome }} |"
+                      echo
+                      echo "### Reproduce locally"
+                      echo '```bash'
+                      echo 'npm ci'
+                      echo 'python -m pip install -e "./services/api[dev]"'
+                      echo 'npm run build:web'
+                      echo 'npx playwright install chromium'
+                      echo 'python tools/run_e2e.py'
+                      echo '```'
+                    } >> "$GITHUB_STEP_SUMMARY"
+          YAML
+
+      - name: Verify surviving Python contracts
+        shell: bash
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e "./services/api[dev]"
+          python -m pip install -r knowledge/engenharia_astrologica/requirements.txt
+          python - <<'PY'
+          from pathlib import Path
+          expected = {
+              'tests/test_editorial_importer.py',
+              'tests/test_engine_utc_boundary.py',
+              'tests/test_preview_verification_script.py',
+              'tests/test_run_e2e.py',
+              'tests/test_vercel_preview_verifier.py',
+              'tests/test_web_v1_engine_contract.py',
+          }
+          actual = {path.as_posix() for path in Path('tests').rglob('test_*.py')}
+          if actual != expected:
+              raise SystemExit(f'root Python test inventory mismatch: actual={sorted(actual)}')
+          PY
+          python -m unittest \
+            tests.test_editorial_importer \
+            tests.test_engine_utc_boundary \
+            tests.test_preview_verification_script \
+            tests.test_run_e2e \
+            tests.test_vercel_preview_verifier \
+            tests.test_web_v1_engine_contract -v
+          git diff --check
+
+      - name: Commit gate retirement and remove this helper workflow
+        shell: bash
+        run: |
+          rm .github/workflows/fdm-734-ci-retirement.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git diff --cached --check
+          git commit -m 'ci: retire desktop runtime gates'
+          git push origin HEAD:${GITHUB_HEAD_REF}
