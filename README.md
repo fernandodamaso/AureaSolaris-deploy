@@ -1,114 +1,89 @@
 # Aurea Solaris
 
-Aurea Solaris is a local-first application for astrological study, personal organization, and reflection. Its current primary experience is a local web app opened in Chrome at `127.0.0.1`. Tauri and native installers are not the current focus. It is maintained through AI agents, so the repository's documentation is optimized for machine task routing and safe, small changes.
+Aurea Solaris Private Web V1 is a browser application in `apps/web`, backed by the authenticated FastAPI service in `services/api` and private Supabase storage. The former desktop/local application runtime has been retired; historical records may still describe it, but they are not supported execution paths.
 
-## Start Aurea in Chrome
-
-On Windows, double-click [`launch_chrome.bat`](launch_chrome.bat). It starts
-the local FastAPI runtime, serves the compiled frontend from `apps/web/dist/`, and opens
-Chrome. Vite is not used during normal startup. If the compiled frontend is
-missing in a source checkout, the launcher builds it once; after that, Node.js
-is not needed to open the app.
-
-For first-time setup, create the isolated Python environment and install the
-frontend/runtime dependencies:
-
-```powershell
-python -m venv .aurea-build-venv
-.\.aurea-build-venv\Scripts\python.exe -m pip install -r requirements-api.txt
-npm install
-```
-
-The default local address is `http://127.0.0.1:9876`. If that port is already
-occupied, the launcher selects another loopback port and the compiled frontend
-follows the service's local origin.
+FDM-735 owns the broader product/operations documentation normalization after this runtime retirement. This README reflects the executable repository truth needed to build and validate the current Web V1.
 
 ## Start here as an AI agent
 
 Read in this order:
 
-1. [`AGENTS.md`](AGENTS.md) — mandatory rules, privacy boundaries, product map, and commands.
-2. [`docs/CONSTITUICAO.md`](docs/CONSTITUICAO.md) — normative product and data decisions.
-3. [`docs/AI_WORKING_GUIDE.md`](docs/AI_WORKING_GUIDE.md) — compact task routing and validation loop.
+1. [`AGENTS.md`](AGENTS.md) — mandatory safety, privacy, repository, and validation rules.
+2. [`docs/CONSTITUICAO.md`](docs/CONSTITUICAO.md) — normative product/data decisions.
+3. [`docs/AI_WORKING_GUIDE.md`](docs/AI_WORKING_GUIDE.md) — current task routing and validation loop.
 4. [`docs/index.md`](docs/index.md) — domain references.
 
-Do not read the entire `docs/` tree by default. Use only the current domain document relevant to the task.
+Do not read the entire `docs/` tree by default. Use the smallest current domain reference needed for the task.
 
-## Product boundaries
+## Runtime map
 
-- The Caderno Vivo board and journal are two views of the same data.
-- Editorial astrology knowledge and private person-owned data are separate databases.
-- Hermes is the single assistant. Suggestions and memory are always reviewable and reversible.
-- Astrological calculations preserve UTC, IANA timezone, location, configuration, engine/ephemeris version, and input hash.
-- Financial features and Gmail are outside the current scope.
-
-## Code map
-
-| Area | Entry points |
-|---|---|
-| React interface | `apps/web/src/App.tsx`, `apps/web/src/components/`, `apps/web/src/context/` |
-| Caderno Vivo/journal | `apps/web/src/components/MesaCriacao.tsx`, `apps/web/src/components/DiarioView.tsx` |
-| Astrology engine/API | `astro_engine.py`, `main_api.py` |
-| Chrome/local runtime | `apps/web/vite.config.ts`, `main_api.py`, `launch_chrome.bat` |
-| Tauri/native compatibility | `src-tauri/src/lib.rs`, `src-tauri/tauri.conf.json` |
-| Data migrations | `src-tauri/migrations/knowledge/`, `src-tauri/migrations/private/` |
+| Area | Current entry points |
+| --- | --- |
+| React Web V1 | `apps/web/src/App.tsx`, `apps/web/src/app/`, `apps/web/src/components/`, `apps/web/src/features/` |
+| Browser authentication | `apps/web/src/auth/` |
+| Web API | `services/api/src/aurea_api/`, `services/api/api/index.py` |
+| Certified astrology engine | `services/api/src/aurea_api/domain/astrology/`, `services/api/ephe/` |
+| Private schema / RLS | `supabase/migrations/`, `supabase/tests/` |
 | Editorial corpus | `knowledge/engenharia_astrologica/` |
+| Disposable Web V1 E2E | `tools/run_e2e.py`, `tools/e2e_api.py`, `apps/web/e2e/` |
+| Hosted verification | `scripts/verify_preview.sh`, `scripts/verify_vercel_preview.py` |
 
-## Development commands
+## Development setup
 
-Run from the repository root:
+Requirements:
 
-```powershell
-npm run build
-npm run test
-cargo check --manifest-path .\src-tauri\Cargo.toml
-npm run tauri -- dev
-```
+- Node.js 22
+- Python 3.12
+- npm
+- Docker and the Supabase CLI for disposable schema/RLS and full E2E checks
 
-The Python sidecar uses the isolated `.aurea-build-venv`; do not depend on a globally installed Python for release work.
-
-## Quality commands
-
-Run from the repository root:
-
-### Web workspace
+From the repository root:
 
 ```bash
 npm ci
-npm run check:web
-```
-
-### Supabase schema and RLS
-
-Install the Supabase CLI and start Docker before running this disposable local-database check. These commands do not require hosted Supabase credentials.
-
-```bash
-supabase start
-supabase db reset
-supabase test db
-```
-
-### Web API
-
-Use Python 3.12 for these commands; the Web API package intentionally rejects other Python versions.
-
-```bash
 python -m pip install -e "./services/api[dev]"
-python -m pytest services/api/tests/test_health.py services/api/tests/test_errors.py -q
+python -m pip install -r knowledge/engenharia_astrologica/requirements.txt
+```
+
+Run the frontend development server with:
+
+```bash
+npm run dev:web
+```
+
+The Web API requires the environment documented in [`.env.example`](.env.example) and [`services/api/README.md`](services/api/README.md). For an integrated local verification environment, prefer the disposable harness instead of wiring a personal environment:
+
+```bash
+python tools/run_e2e.py
+```
+
+That harness creates disposable test infrastructure and must never be pointed at a person's real Aurea data.
+
+## Quality commands
+
+```bash
+npm run check:web
 python -m pytest services/api/tests -q
 python -m ruff check services/api
 python -m mypy --config-file services/api/pyproject.toml services/api/src
 ```
 
-## Windows release
+With Docker and the Supabase CLI available, the repository-wide gate is:
 
-`build.bat` rebuilds the PyInstaller sidecar, copies it into `src-tauri/binaries/`, and creates the NSIS installer. The current release evidence, artifact hashes, technical checks, and remaining manual acceptance are recorded in [`docs/RELEASE_VALIDATION_2026-08-10.md`](docs/RELEASE_VALIDATION_2026-08-10.md).
+```bash
+npm run quality:gate
+```
 
-Current state: the Chrome-first launcher/runtime is implemented and has
-automated bridge coverage; manual acceptance of login, navigation, persistence,
-Hermes, and shutdown on Windows remains. Native Windows installer work is
-paused.
+The authoritative isolated browser gate is:
 
-## Change discipline
+```bash
+python tools/run_e2e.py
+```
 
-Inspect Git status first. Preserve unrelated changes. Use `rg` for discovery and `apply_patch` for edits. Never commit secrets, mix private/editorial data, invent sources or calculations, or use destructive Git commands. Every change should report affected files, data/privacy risk, validation, and real pending work.
+## Product/data boundaries
+
+- Editorial astrology knowledge and private person-owned records remain separate trust domains.
+- Private Web V1 access is authenticated and owner-scoped.
+- Astrological calculations preserve UTC, IANA timezone, location, configuration, engine/ephemeris version, and input hash.
+- Never commit secrets or point automated tests at real personal data.
+- Historical release/desktop evidence is recoverable from Git and is not a current execution target.

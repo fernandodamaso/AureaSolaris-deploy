@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import argparse
-import importlib.util
 import json
 import os
 import re
@@ -22,38 +21,22 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-_seed_path = REPO_ROOT / "tools" / "seed_test_user.py"
-_seed_spec = importlib.util.spec_from_file_location("seed_test_user", _seed_path)
-_seed = importlib.util.module_from_spec(_seed_spec)
-assert _seed_spec.loader is not None
-_seed_spec.loader.exec_module(_seed)
-is_forbidden_personal_data_dir = _seed.is_forbidden_personal_data_dir
+
+def is_forbidden_personal_data_dir(data_dir: Path) -> bool:
+    local = os.environ.get("LOCALAPPDATA") or os.environ.get("APPDATA")
+    if not local:
+        return False
+    personal = (Path(local) / "Aurea Solaris" / "data").resolve()
+    resolved = data_dir.expanduser().resolve()
+    personal_key = os.path.normcase(str(personal))
+    resolved_key = os.path.normcase(str(resolved))
+    return resolved_key == personal_key or resolved_key.startswith(personal_key + os.sep)
 
 
 def http_get_json(url: str, timeout_s: float = 2.0) -> dict:
     request = urllib.request.Request(url, headers={"Accept": "application/json"})
     with urllib.request.urlopen(request, timeout=timeout_s) as response:
         return json.loads(response.read().decode("utf-8"))
-
-
-def wait_for_test_user_health(base_url: str, timeout_s: float = 30.0) -> dict:
-    """Legacy local-owner health guard kept for old diagnostics."""
-    deadline = time.time() + timeout_s
-    last_error = "no response"
-    while time.time() < deadline:
-        try:
-            payload = http_get_json(f"{base_url.rstrip('/')}/health")
-            if payload.get("test_user") is not True:
-                raise RuntimeError(f"Health at {base_url} is not test_user=true: {payload!r}")
-            if int(payload.get("browser_contract_version", -1)) != 2:
-                raise RuntimeError(f"Unexpected browser_contract_version: {payload!r}")
-            return payload
-        except RuntimeError:
-            raise
-        except (urllib.error.URLError, TimeoutError, json.JSONDecodeError, OSError) as exc:
-            last_error = str(exc)
-            time.sleep(0.25)
-    raise RuntimeError(f"Timed out waiting for test-user health at {base_url}: {last_error}")
 
 
 def wait_for_api_health(base_url: str, timeout_s: float = 45.0) -> dict:

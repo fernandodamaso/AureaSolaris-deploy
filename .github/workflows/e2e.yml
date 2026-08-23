@@ -20,20 +20,16 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
           cache: npm
-
       - name: Install Node dependencies
         id: install
         run: npm ci
-
       - name: Run web workspace quality checks
         id: web-quality
         run: npm run check:web
-
       - name: Agent handoff summary
         if: always()
         shell: bash
@@ -51,14 +47,6 @@ jobs:
             echo 'npm ci'
             echo 'npm run check:web'
             echo '```'
-            echo
-            if [ "${{ steps.web-quality.outcome }}" = "failure" ]; then
-              echo "**Start with:** the first failing lint, test, or build command reported by \`npm run check:web\` above."
-            elif [ "${{ steps.install.outcome }}" = "failure" ]; then
-              echo "**Start with:** dependency installation/package-lock consistency."
-            else
-              echo "Frontend source checks passed."
-            fi
           } >> "$GITHUB_STEP_SUMMARY"
 
   python-quality:
@@ -67,40 +55,27 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: "3.12"
           cache: pip
-          cache-dependency-path: requirements-api.txt
-
-      - name: Install Python dependencies
+          cache-dependency-path: |
+            services/api/pyproject.toml
+            knowledge/engenharia_astrologica/requirements.txt
+      - name: Install supported Python dependencies
         id: install
         run: |
           python -m pip install --upgrade pip
-          python -m pip install -r requirements-api.txt
-
-      - name: Configure disposable Python data
-        id: data
-        shell: bash
-        run: |
-          data_dir="$RUNNER_TEMP/aurea-python-quality/data"
-          mkdir -p "$data_dir"
-          echo "AUREA_DATA_DIR=$data_dir" >> "$GITHUB_ENV"
-          echo "Using disposable AUREA_DATA_DIR=$data_dir"
-
+          python -m pip install -e "./services/api[dev]"
+          python -m pip install -r knowledge/engenharia_astrologica/requirements.txt
       - name: Verify Python test classification
         id: classification
         run: |
           python - <<'PY'
           from pathlib import Path
-
-          classification = Path('.github/python-test-classification.txt')
-          allowed = {'python-quality', 'integration', 'platform-release', 'legacy-pytest'}
           entries: dict[str, str] = {}
           errors: list[str] = []
-
-          for line_number, raw in enumerate(classification.read_text(encoding='utf-8').splitlines(), 1):
+          for line_number, raw in enumerate(Path('.github/python-test-classification.txt').read_text(encoding='utf-8').splitlines(), 1):
               line = raw.strip()
               if not line or line.startswith('#'):
                   continue
@@ -109,27 +84,23 @@ jobs:
                   errors.append(f'line {line_number}: expected <category> <path>')
                   continue
               category, path = parts
-              if category not in allowed:
-                  errors.append(f'line {line_number}: unknown category {category!r}')
+              if category != 'python-quality':
+                  errors.append(f'line {line_number}: unsupported category {category!r}')
               if path in entries:
                   errors.append(f'line {line_number}: duplicate classification for {path}')
               entries[path] = category
-
           actual = {path.as_posix() for path in Path('tests').rglob('test_*.py')}
           classified = set(entries)
           for path in sorted(actual - classified):
               errors.append(f'unclassified Python test: {path}')
           for path in sorted(classified - actual):
               errors.append(f'classification references missing test: {path}')
-
           if errors:
               for error in errors:
                   print(f'::error::{error}')
               raise SystemExit(1)
-
           print(f'Python test classification complete: {len(actual)} modules, no gaps.')
           PY
-
       - name: Run classified Python quality suite
         id: tests
         run: |
@@ -137,68 +108,35 @@ jobs:
           from pathlib import Path
           import subprocess
           import sys
-
-          modules: list[str] = []
-          for raw in Path('.github/python-test-classification.txt').read_text(encoding='utf-8').splitlines():
-              line = raw.strip()
-              if not line or line.startswith('#'):
-                  continue
-              category, path = line.split(maxsplit=1)
-              if category == 'python-quality':
-                  modules.append(path.removesuffix('.py').replace('/', '.'))
-
-          if not modules:
-              raise SystemExit('No python-quality tests are classified.')
-
-          print('Running:', sys.executable, '-m unittest', *modules, '-v')
-          raise SystemExit(subprocess.run([sys.executable, '-m', 'unittest', *modules, '-v']).returncode)
-          PY
-
-      - name: Agent handoff summary
-        if: always()
-        shell: bash
-        run: |
-          MODULES="$(python - <<'PY'
-          from pathlib import Path
           modules = []
           for raw in Path('.github/python-test-classification.txt').read_text(encoding='utf-8').splitlines():
               line = raw.strip()
               if not line or line.startswith('#'):
                   continue
-              category, path = line.split(maxsplit=1)
-              if category == 'python-quality':
-                  modules.append(path.removesuffix('.py').replace('/', '.'))
-          print(' '.join(modules))
+              _, path = line.split(maxsplit=1)
+              modules.append(path.removesuffix('.py').replace('/', '.'))
+          print('Running:', sys.executable, '-m unittest', *modules, '-v')
+          raise SystemExit(subprocess.run([sys.executable, '-m', 'unittest', *modules, '-v']).returncode)
           PY
-          )"
+      - name: Agent handoff summary
+        if: always()
+        shell: bash
+        run: |
           {
             echo "## Python Quality"
             echo
             echo "| Gate | Outcome |"
             echo "|---|---|"
-            echo "| dependency install | ${{ steps.install.outcome }} |"
-            echo "| disposable data setup | ${{ steps.data.outcome }} |"
+            echo "| supported dependency install | ${{ steps.install.outcome }} |"
             echo "| test classification | ${{ steps.classification.outcome }} |"
-            echo "| classified unittest suite | ${{ steps.tests.outcome }} |"
+            echo "| supported root Python suite | ${{ steps.tests.outcome }} |"
             echo
-            echo "### Reproduce locally (POSIX shell)"
+            echo "### Reproduce locally"
             echo '```bash'
-            echo 'python -m pip install -r requirements-api.txt'
-            echo "export AUREA_DATA_DIR=\"\$(mktemp -d)/data\""
-            echo "python -m unittest $MODULES -v"
+            echo 'python -m pip install -e "./services/api[dev]"'
+            echo 'python -m pip install -r knowledge/engenharia_astrologica/requirements.txt'
+            echo 'python -m unittest tests.test_editorial_importer tests.test_engine_utc_boundary tests.test_legacy_runtime_retired tests.test_preview_verification_script tests.test_run_e2e tests.test_vercel_preview_verifier tests.test_web_v1_engine_contract -v'
             echo '```'
-            echo
-            if [ "${{ steps.data.outcome }}" = "failure" ]; then
-              echo "**Start with:** CI runner temporary-data setup. Do not fall back to a real Aurea data directory."
-            elif [ "${{ steps.classification.outcome }}" = "failure" ]; then
-              echo "**Start with:** \`.github/python-test-classification.txt\`. Every \`tests/test_*.py\` file must be classified exactly once."
-            elif [ "${{ steps.tests.outcome }}" = "failure" ]; then
-              echo "**Start with:** the first failing Python test above. Its module identifies the affected API/runtime/storage subsystem."
-            elif [ "${{ steps.install.outcome }}" = "failure" ]; then
-              echo "**Start with:** Python dependency installation/\`requirements-api.txt\`."
-            else
-              echo "Python quality checks passed using disposable CI data."
-            fi
           } >> "$GITHUB_STEP_SUMMARY"
 
   e2e:
@@ -208,47 +146,32 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
           cache: npm
-
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
           cache: pip
-          cache-dependency-path: |
-            requirements-api.txt
-            services/api/pyproject.toml
-
+          cache-dependency-path: services/api/pyproject.toml
       - name: Install Node dependencies
         id: node-install
         run: npm ci
-
-      - name: Install Python dependencies
+      - name: Install supported API/E2E dependencies
         id: python-install
         run: |
           python -m pip install --upgrade pip
-          python -m pip install -r requirements-api.txt
-          python -m pip install -e "./services/api"
-
+          python -m pip install -e "./services/api[dev]"
       - name: Build frontend
         id: build
         run: npm run build:web
-
-      - name: Compiled runtime smoke
-        id: runtime-smoke
-        run: python -m unittest tests.test_compiled_runtime_smoke -v
-
       - name: Install Playwright Chromium
         id: chromium
         run: npx playwright install --with-deps chromium
-
-      - name: Run isolated browser E2E
+      - name: Run isolated private Web V1 E2E
         id: browser-e2e
         run: python tools/run_e2e.py
-
       - name: Upload Playwright artifacts
         id: artifacts
         if: failure() && steps.browser-e2e.outcome == 'failure'
@@ -264,7 +187,6 @@ jobs:
             apps/web/e2e/test-results/
           if-no-files-found: ignore
           retention-days: 7
-
       - name: Agent handoff summary
         if: always()
         shell: bash
@@ -272,40 +194,23 @@ jobs:
           {
             echo "## E2E"
             echo
-            echo "This is the authoritative isolated local-runtime browser gate. It never uses the owner's real Aurea data."
+            echo "This is the authoritative isolated private Web V1 browser gate. It uses disposable infrastructure and never the owner's real Aurea data."
             echo
             echo "| Gate | Outcome |"
             echo "|---|---|"
             echo "| Node dependencies | ${{ steps.node-install.outcome }} |"
-            echo "| Python dependencies | ${{ steps.python-install.outcome }} |"
+            echo "| API/E2E dependencies | ${{ steps.python-install.outcome }} |"
             echo "| frontend build | ${{ steps.build.outcome }} |"
-            echo "| compiled runtime smoke | ${{ steps.runtime-smoke.outcome }} |"
             echo "| Chromium install | ${{ steps.chromium.outcome }} |"
-            echo "| isolated Playwright E2E | ${{ steps.browser-e2e.outcome }} |"
+            echo "| isolated Web V1 Playwright E2E | ${{ steps.browser-e2e.outcome }} |"
             echo "| diagnostic artifact upload | ${{ steps.artifacts.outcome }} |"
             echo
             echo "### Reproduce locally"
             echo '```bash'
             echo 'npm ci'
-            echo 'python -m pip install -r requirements-api.txt'
-            echo 'python -m pip install -e "./services/api"'
+            echo 'python -m pip install -e "./services/api[dev]"'
             echo 'npm run build:web'
-            echo 'python -m unittest tests.test_compiled_runtime_smoke -v'
             echo 'npx playwright install chromium'
             echo 'python tools/run_e2e.py'
             echo '```'
-            echo
-            if [ "${{ steps.build.outcome }}" = "failure" ]; then
-              echo "**Start with:** the production frontend build. Chromium was not installed because the build failed first."
-            elif [ "${{ steps.runtime-smoke.outcome }}" = "failure" ]; then
-              echo "**Start with:** compiled frontend + Python API/runtime integration. Chromium was not installed because preflight failed."
-            elif [ "${{ steps.chromium.outcome }}" = "failure" ]; then
-              echo "**Start with:** Playwright/runner infrastructure; source quality and compiled runtime already passed."
-            elif [ "${{ steps.browser-e2e.outcome }}" = "failure" ]; then
-              echo "**Start with:** browser/runtime integration. Download \`playwright-artifacts-${{ github.run_id }}-${{ github.run_attempt }}\` for report, trace, and screenshots when available."
-            elif [ "${{ steps.node-install.outcome }}" = "failure" ] || [ "${{ steps.python-install.outcome }}" = "failure" ]; then
-              echo "**Start with:** dependency installation before debugging product behavior."
-            else
-              echo "Authoritative isolated browser E2E passed."
-            fi
           } >> "$GITHUB_STEP_SUMMARY"

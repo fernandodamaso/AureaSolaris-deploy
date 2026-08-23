@@ -27,18 +27,6 @@ class TestRunE2EHelpers(unittest.TestCase):
                 self.assertTrue(run_e2e.is_forbidden_personal_data_dir(personal / "nested"))
                 self.assertFalse(run_e2e.is_forbidden_personal_data_dir(local / "Aurea Solaris" / "test-user" / "data"))
 
-    def test_wait_for_test_user_health_rejects_non_test(self) -> None:
-        class FakeResponse:
-            status_code = 200
-
-            def json(self):
-                return {"status": "ok", "test_user": False, "auth_mode": "local-owner", "browser_contract_version": 2}
-
-        with patch.object(run_e2e, "http_get_json", return_value=FakeResponse().json()):
-            with self.assertRaises(RuntimeError) as ctx:
-                run_e2e.wait_for_test_user_health("http://127.0.0.1:9876", timeout_s=0.1)
-            self.assertIn("test_user", str(ctx.exception).lower())
-
     def test_resolve_node_command_uses_cmd_shim_on_windows(self) -> None:
         expected = r"C:\Program Files\nodejs\npm.cmd"
         with patch.object(run_e2e.shutil, "which", return_value=expected) as which:
@@ -61,7 +49,7 @@ class TestRunE2EHelpers(unittest.TestCase):
         self.assertTrue(run_e2e.has_unhandled_api_exception(output))
 
     def test_normal_api_log_is_not_an_unhandled_exception(self) -> None:
-        output = "[AureaSolaris] FastAPI sidecar rodando\n[AureaSolaris] Sidecar encerrando.\n"
+        output = "[AureaSolaris] FastAPI API running\n[AureaSolaris] API stopped.\n"
         self.assertFalse(run_e2e.has_unhandled_api_exception(output))
 
     def test_frontend_ready_builds_by_default(self) -> None:

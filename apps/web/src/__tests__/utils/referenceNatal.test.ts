@@ -55,7 +55,7 @@ describe('reference natal fixture', () => {
       birthData: REFERENCE_NATAL_CONNECTION.birthData,
     };
     const next = withReferenceNatalConnection({
-      id: 'local-owner',
+      id: 'owner-1',
       name: 'Aurea',
       active: true,
       connections: [existing],
@@ -67,7 +67,7 @@ describe('reference natal fixture', () => {
 
   it('restores complete birth data on an incomplete reference map without changing its id', () => {
     const next = withReferenceNatalConnection({
-      id: 'local-owner',
+      id: 'owner-1',
       name: 'Aurea',
       active: true,
       connections: [{

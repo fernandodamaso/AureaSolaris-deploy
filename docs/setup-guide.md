@@ -1,88 +1,86 @@
-# Setup Guide
+# Setup Guide — Private Web V1
 
-Primary runtime: a local web app opened in Chrome. Tauri is optional compatibility tooling while the Chrome path is the active focus.
+The supported application runtime is the private Web V1: React/Vite in `apps/web`, FastAPI in `services/api`, and Supabase for authentication/private persistence.
 
 ## Requirements
 
-- Windows
-- Google Chrome
-- Python 3.10+
-- Repository Python environment `.aurea-build-venv` with `requirements-api.txt` installed
-- Node.js 18+ and npm only for the one-time frontend build in a source checkout
+- Node.js 22
+- npm
+- Python 3.12
+- Docker and Supabase CLI for disposable schema/RLS checks and the full local E2E harness
 
-Rust and the Tauri CLI are required only for native compatibility work, not for the primary browser runtime.
-
-## First setup
+## Install dependencies
 
 From the repository root:
 
-```powershell
-python -m venv .aurea-build-venv
-.\.aurea-build-venv\Scripts\python.exe -m pip install -r requirements-api.txt
-npm install
+```bash
+npm ci
+python -m pip install -e "./services/api[dev]"
+python -m pip install -r knowledge/engenharia_astrologica/requirements.txt
 ```
 
-## Start the local Chrome app
+## Frontend development
 
-Double-click [`launch_chrome.bat`](../launch_chrome.bat), or run it from a terminal:
-
-```powershell
-.\launch_chrome.bat
+```bash
+npm run dev:web
 ```
 
-The launcher starts:
+Frontend configuration uses the `VITE_*` variables documented in [`.env.example`](../.env.example). Never put production secrets in a Vite variable.
 
-- FastAPI local runtime: `http://127.0.0.1:9876` by default
-- the already-built frontend from `dist/`
-- Chrome at the local interface URL
+## Web API
 
-The API serves the frontend and the local API from the same loopback origin. Vite is not started by the launcher. No hosted URL or external data transfer is required for the local runtime.
+The API requires Python 3.12 and the server-side `AUREA_*` values documented in [`.env.example`](../.env.example). See [`services/api/README.md`](../services/api/README.md) for API validation and [`operations/ENVIRONMENTS.md`](operations/ENVIRONMENTS.md) for environment boundaries.
 
-On the first run from a source checkout, if `dist/index.html` is missing, the launcher performs `npm run build` once. After that, Node.js is not needed to open the application.
+## Disposable integrated E2E
 
-## Development commands
+For the authoritative local browser flow, use:
 
-| Command | Purpose |
-|---|---|
-| `npm start` | Start the browser UI in development mode only |
-| `npm run build` | TypeScript check and production frontend build |
-| `npm run test` | Run Vitest tests |
-| `python main_api.py` | Start the local API directly |
-| `npm run tauri -- dev` | Optional native compatibility path |
-| `build.bat` | Build the Windows release artifacts; currently paused while Chrome is primary |
-
-## Acceptance note
-
-The browser adapter and release-style launcher are implemented. Final product
-acceptance still requires a person to exercise login, private storage, Caderno
-Vivo, journal, Hermes, persistence after restart, and shutdown on the target
-Windows machine.
-
-## Troubleshooting
-
-### Port in use
-
-The release-style launcher prefers `127.0.0.1:9876`. If that port is occupied
-by an incompatible process, it selects a free loopback port between `9877` and
-`9899`. Check and stop only an old Aurea process if you want to return to the
-default port; do not terminate unrelated Python or Node processes.
-
-### API does not start
-
-```powershell
-& .\.aurea-build-venv\Scripts\python.exe -m pip install -r requirements-api.txt
-& .\.aurea-build-venv\Scripts\python.exe main_api.py
+```bash
+python tools/run_e2e.py
 ```
 
-### TypeScript or UI build errors
+This harness starts disposable local Supabase infrastructure, creates a synthetic identity, starts the authenticated API and a Vite preview on free loopback ports, runs Playwright, and cleans up. It is test infrastructure, not a user-facing local runtime.
 
-```powershell
-npm run build
+Never point automated checks at a person's real Aurea data or a real desktop database/backup retained from historical versions.
+
+## Quality gates
+
+### Web
+
+```bash
+npm run check:web
+npm run assert:web-only
+```
+
+### API
+
+```bash
+python -m pytest services/api/tests -q
+python -m ruff check services/api
+python -m mypy --config-file services/api/pyproject.toml services/api/src
+```
+
+### Full repository
+
+With Docker and Supabase CLI running:
+
+```bash
+npm run quality:gate
+```
+
+### E2E
+
+```bash
+python tools/run_e2e.py
 ```
 
 ## Related documentation
 
-- [`AGENTS.md`](../AGENTS.md) — mandatory agent rules
+- [`../AGENTS.md`](../AGENTS.md) — mandatory agent and privacy rules
 - [`AI_WORKING_GUIDE.md`](AI_WORKING_GUIDE.md) — compact task routing
-- [`arquitetura.md`](arquitetura.md) — system layers
-- [`RELEASE_VALIDATION_2026-08-10.md`](RELEASE_VALIDATION_2026-08-10.md) — historical Windows release evidence
+- [`operations/ENVIRONMENTS.md`](operations/ENVIRONMENTS.md) — preview/production boundaries
+- [`operations/SUPABASE_RUNBOOK.md`](operations/SUPABASE_RUNBOOK.md) — Supabase operations
+- [`operations/VERCEL_RUNBOOK.md`](operations/VERCEL_RUNBOOK.md) — web deployment operations
+- [`operations/VERCEL_API_RUNBOOK.md`](operations/VERCEL_API_RUNBOOK.md) — API deployment operations
+
+Historical desktop release evidence remains recoverable from Git but is not a supported setup path.
