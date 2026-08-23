@@ -2,7 +2,7 @@
   "name": "@aurea/web",
   "private": true,
   "version": "0.1.1",
-  "description": "Desktop app for astrology, personal organization, and reflective planning.",
+  "description": "Private React web application for Aurea Solaris Web V1.",
   "author": "Aurea Solaris contributors",
   "license": "MIT",
   "type": "module",
