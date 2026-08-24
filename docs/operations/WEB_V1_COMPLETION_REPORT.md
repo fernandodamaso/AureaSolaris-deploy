@@ -1,142 +1,145 @@
 # Private Web V1 Completion Audit — FDM-736
 
-Status: **AUDIT IN PROGRESS**
+Status: **PRE-MERGE AUDIT PASSED — FINAL CI / PRODUCTION PROMOTION PENDING**
 
-This report is the repository-local evidence map for Linear FDM-736, “P4.10 — Run the final security and Web V1 completion audit”. Linear’s current issue description is the acceptance contract. This document records only sanitized identifiers and test results; it must never contain credentials, JWTs, database URLs, provider tokens, protection bypasses, service-role keys, private user records, or secret values.
+This report is the sanitized repository evidence map for Linear FDM-736. It contains identifiers and outcomes only; credentials, JWTs, database URLs, service-role keys, provider tokens, protection-bypass values, and private user records are intentionally excluded.
 
-## Audit identity and evidence model
+## Audit identity
 
 - Development/source of truth: `vivicabsb-eng/AureaSolaris`.
 - Deployment-only exact-object mirror: `fernandodamaso/AureaSolaris-deploy`.
 - Upstream baseline before FDM-736: `d8b8c844821ef1fea4c30744fbe6c46419d19c81`, tree `2b7c48b0722a8c59e7c06257f254fd9625a91b98`.
-- Production baseline before FDM-736: deployment-mirror `main` at `19f272acace62403e21a83ddfe842759a83617c6`.
-- Current remediated application-code candidate before this report-only commit: `e2a0df3f978a4500217f302641544012d85ba650`.
+- Production mirror baseline: `19f272acace62403e21a83ddfe842759a83617c6`.
+- Hosted-audited application/report candidate: `e8bd14e45b6813b699dbf237a39f7cf34643259d`.
 - FDM-736 PR: #24.
 
-A Git commit cannot contain its own final SHA. Therefore the repository report identifies the exact application-code candidate immediately before report-only evidence updates. Final feature-head SHA/tree, merge SHA/tree, mirror SHA, and final Vercel deployment IDs are recorded in the FDM-736 Linear completion evidence after those immutable objects exist. Every final pass claim is still required to be bound to a fresh final feature head before merge.
+A commit cannot contain its own SHA. This report therefore records the hosted-audited candidate immediately before this evidence-only update. The final feature-head, merge/main, mirror, and production-deployment identifiers are recorded in Linear after those immutable objects exist. Any head movement requires fresh final-head CI before merge.
 
 ## Provider baseline
 
 ### Vercel production before final promotion
 
-- Web project: `aurea-solaris`.
-- API project: `aurea-solaris-api`.
 - Web deployment: `dpl_GXPuurL8YieiEa5iGb1m4XgPv32S` — `READY`.
 - API deployment: `dpl_Dj9CAUG2hFGDCiAXyv149nyH5hZf` — `READY`.
-- Both deployments identify source `git`, repository `fernandodamaso/AureaSolaris-deploy`, ref `main`, SHA `19f272acace62403e21a83ddfe842759a83617c6`.
+- Both identify source `git`, repository `fernandodamaso/AureaSolaris-deploy`, ref `main`, SHA `19f272acace62403e21a83ddfe842759a83617c6`.
 - Canonical web `/`: HTTP 200.
-- Canonical API `/health`: HTTP 200 with status `ok`.
-- Canonical API `/ready`: HTTP 503 `service_not_ready`, which is the documented accepted fail-closed contract while concrete readiness probes remain disabled.
-
-The upstream/mirror SHA difference at this baseline is intentional. FDM-735 did not deploy.
+- Canonical API `/health`: HTTP 200, `status=ok`.
+- Canonical API `/ready`: HTTP 503 `service_not_ready`, the documented fail-closed contract while concrete readiness probes remain disabled.
 
 ### Supabase
 
-Sanitized hosted-project metadata was inspected without querying private application rows.
+- Preview ref: `rosklqnnbmhowohoyboj` — `ACTIVE_HEALTHY`.
+- Production ref: `tgpcpxqqusehssaihvcp` — `ACTIVE_HEALTHY`.
+- Both contain the same `web_v1_core` migration statement digest: MD5 `0b232e06aa286c65092b542c750b24e4`.
+- Hosted migration versions: preview `20260821172829`; production `20260821172901`.
+- Committed migration blob: `b0a2910d7e9476a9ab1ee61670e1da7bbb4d1f6c`.
+- `profiles`, `birth_profiles`, and `calculation_receipts` have RLS enabled with authenticated owner predicates/checks based on `auth.uid() = user_id`.
+- Known provider advisory `auth_leaked_password_protection` remains on preview/production. No security boundary was weakened to suppress it.
 
-- Preview project ref: `rosklqnnbmhowohoyboj` — `ACTIVE_HEALTHY`.
-- Production project ref: `tgpcpxqqusehssaihvcp` — `ACTIVE_HEALTHY`.
-- Both hosted projects contain the `web_v1_core` migration.
-- Provider migration versions differ because the same migration was applied at different times:
-  - preview: `20260821172829`;
-  - production: `20260821172901`.
-- Provider migration statement digest on both: MD5 `0b232e06aa286c65092b542c750b24e4`.
-- Committed migration Git blob: `b0a2910d7e9476a9ab1ee61670e1da7bbb4d1f6c`.
-- `profiles`, `birth_profiles`, and `calculation_receipts` have RLS enabled in both hosted projects.
-- Each table has its authenticated owner policy with `auth.uid() = user_id` in both `USING` and `WITH CHECK`.
-- Supabase security advisors report the known hosted warning `auth_leaked_password_protection` on both projects. This is an Auth hardening limitation, not a bypass of application JWT validation, owner-scoped SQL, or RLS. No provider setting was weakened to suppress the warning.
+## Security and runtime findings
 
-## Security audit findings
+### Authentication / ownership / RLS — PASS
 
-### Authentication trust boundary — PASS
+FastAPI derives owner identity from verified bearer tokens. JWT/JWKS regressions cover issuer, audience, signature, algorithm, expiry, subject, key selection/rotation/cooldown, malformed material, and outages. Owner-scoped repository behavior, owner-aware references, cross-user denial, authenticated-only RLS, and anonymous denial remain covered by permanent tests.
 
-The FastAPI boundary derives identity from the bearer token, not a browser-supplied owner ID. The JWT/JWKS implementation requires asymmetric algorithms, issuer, audience, expiry, subject, matching `kid`/algorithm, and fails closed on invalid or unavailable verification material. Regression tests cover malformed bearer values, bad signatures, expired tokens, wrong issuer/audience/subject, `alg=none`, unknown-key refresh/cooldown behavior, malformed JWKS, key rotation, concurrency, and JWKS outages. Authorization values are not logged.
+### Browser/server boundaries — PASS
 
-### Ownership and RLS defense in depth — PASS
-
-Application repositories require authenticated `user_id` for reads/writes. Calculation receipts preserve owner identity and use owner-aware references. Disposable repository tests prove a second user cannot read another user’s receipt and cross-owner receipt-to-birth references are rejected. The committed schema enables RLS, revokes anonymous table access, grants authenticated access, and applies owner predicates/checks. Disposable pgTAP/RLS verification is part of the Web V1 Quality Gate.
-
-### Browser/server secret separation and origins — PASS
-
-The web runtime consumes only the documented public `VITE_*` boundary. Privileged database/JWT/provider credentials remain server or provider variables. CORS and environment validation are explicit and fail closed rather than broadening origins on configuration failure. Preview verification rejects production API/Supabase traffic, localhost, mixed HTTP, and credential leakage.
+Browser runtime uses only documented public `VITE_*` configuration. Privileged database/JWT/provider credentials remain server/provider-side. Preview verification rejects production API/Supabase traffic, localhost, mixed HTTP, and secret leakage. CORS remains explicit/fail-closed.
 
 ### Error/log leakage — PASS
 
-Request bodies and authorization material are excluded from structured request logs. Validation payloads are redacted to stable metadata and unexpected failures return a generic public 500 contract rather than exception text or private data.
+Authorization values and request bodies are excluded from structured request logs. Public validation/error responses do not expose private values or exception internals.
 
-### Certified astrology runtime — PASS at repository/deploy-contract layer
+### Certified astrology runtime — PASS
 
-Swiss Ephemeris package/runtime integrity remains pinned by expected assets, sizes and SHA-256 digests with production trust checks. Certified engine, UTC-boundary, API adapter and deploy-contract regressions remain part of the permanent quality gates. Browser-side fallback is not accepted.
+Swiss Ephemeris assets/package/runtime remain pinned and verified by permanent engine/deploy-contract regressions. Hosted audit confirmed successful natal/transit calculation receipts and deployed engine/ephemeris provenance metadata. No browser-side fallback is accepted.
 
-### Retired runtime/topology guard — PASS
+### Retired runtime/topology — PASS
 
-`tests/test_legacy_runtime_retired.py` permanently scans active product/runtime/configuration targets for reintroduction of Railway, Tauri/local-sidecar, retired local-owner/SQLite runtime paths, product Docker runtime, stale launchers/ports, or deployment-mirror development instructions. `tools/run_e2e.py` remains disposable test infrastructure only.
+Permanent regression coverage prevents Railway, Tauri/local-sidecar, retired local-owner/SQLite product runtime, product Docker runtime, stale launchers/ports, and deployment-mirror development from re-entering supported product paths.
 
 ## Concrete remediation
 
-### Finding: Vite dev-server advisory floor
+### Vite advisory floor
 
-The audit found that the web manifest admitted Vite `^7.0.4` and the lockfile resolved Vite `7.3.1`. The affected Vite 7.0.0–7.3.4 range has a 2026 dev-server security advisory. Production is a static Vercel build rather than an exposed Vite dev server, but the repository includes a `vite --host` development path, so leaving the vulnerable lock state was not accepted.
+The audit reproduced a Vite dev-server advisory exposure in the admitted/locked tooling range. A permanent regression test was added first, failed on the vulnerable floor, and the minimal remediation moved Vite within major 7 to manifest `^7.3.6` / lock `7.3.6`. No React, API, database, astrology, authentication, ownership, or product behavior changed.
 
-TDD evidence:
+Fresh dependency review after remediation reported 8 npm advisories (6 high, 2 low, 0 critical). Dependency-tree tracing classified the remaining findings as Node build/test/dev tooling rather than a browser-shipped remote Node runtime. No mass upgrade and no `npm audit fix --force` were used.
 
-1. Commit `af59bc889f121255edadf3cdf7dd94aee5995a08` added `tests/test_dependency_security_floor.py` and classified it in the permanent root Python regression suite.
-2. CI #240 reproduced the failure: the new dependency-floor test was the only failing root regression; the other 42 root tests passed.
-3. Minimal remediation updated only the Vite manifest/lock target within major 7.
-4. Remediated application-code candidate `e2a0df3f978a4500217f302641544012d85ba650` uses manifest `vite: ^7.3.6` and lockfile Vite `7.3.6`.
-5. The temporary lock-regeneration workflow removed itself and is not part of the final tree.
+## Hosted preview certification — PASS
 
-No React, API, database, astrology, authentication, ownership, or product behavior was changed for this remediation.
+The exact audited candidate `e8bd14e45b6813b699dbf237a39f7cf34643259d` was deployed automatically from deployment-mirror ref `preview`:
+
+- Web deployment `dpl_5DUKtcHX52jJan9K3XKyKb89dqWb` — `READY`.
+- API deployment `dpl_Dbeh67nM77PuNh62JtJ5EzbJn7Zo` — `READY`.
+- Both report source `git`, mirror repository `fernandodamaso/AureaSolaris-deploy`, ref `preview`, SHA `e8bd14e45b6813b699dbf237a39f7cf34643259d`.
+- Web branch alias `aurea-solaris-git-preview-fernando-damasos-projects.vercel.app` resolves to the same exact web deployment.
+- API branch alias `aurea-solaris-api-git-preview-fernando-damasos-projects.vercel.app` resolves to the same exact API deployment.
+
+The first automated browser attempt exposed a test-origin mismatch: the immutable web hostname was used while the built web candidate correctly targeted the API branch alias, causing CORS failure. Vercel metadata proved the branch aliases and immutable hostnames were the same exact deployment IDs/SHA, so the audit harness was aligned to the candidate branch aliases without changing application code or weakening CORS/Deployment Protection.
+
+Final disposable GitHub Actions hosted audit run `32747879078` passed all gates:
+
+- Vercel automation bypass: web 200, API 200.
+- API `/health`: 200.
+- API `/ready`: 503 accepted fail-closed response.
+- Unauthenticated `/v1/me`: 401.
+- Browser login/onboarding and authenticated shell: PASS.
+- Persisted profile/birth reload: PASS.
+- Natal/transit receipt creation and provenance UI: PASS.
+- Mandala rendering: PASS.
+- Cross-owner receipt access: 404 `receipt_not_found`.
+- No-token receipt access: 401.
+- Logout: PASS.
+- Browser production/localhost/mixed-content isolation assertions: PASS.
+- Hosted natal engine/ephemeris provenance metadata: PASS.
+- Disposable synthetic-user cleanup: 2/2 deleted; marker-scoped preview Auth users reverified at 0.
+
+The temporary audit Edge Function was returned to a JWT-protected HTTP 410 no-op tombstone after the run. The current Supabase connector cannot physically delete Edge Functions; therefore physical deletion of that inert helper remains an operational cleanup limitation, not an active credential or data path.
 
 ## Acceptance evidence matrix
 
 | FDM-736 criterion | Evidence | Status |
 | --- | --- | --- |
-| Web quality / build / generated API types | `npm run quality:web`; Web V1 Quality Gate exact final head | PENDING FINAL HEAD |
-| API lint/type/tests/contract | `npm run quality:api`; Web V1 Quality Gate exact final head | PENDING FINAL HEAD |
-| API deploy contract / Swiss runtime | `npm run quality:api-deploy-contract`; deployed Swiss smoke | PENDING FINAL HEAD |
-| Disposable Supabase schema/pgTAP/RLS | `npm run quality:schema`; hosted policy metadata | PENDING FINAL HEAD |
-| Root Python regressions / retired-runtime guard | CI classified root suite, including dependency and retired-runtime tests | PENDING FINAL HEAD |
-| Disposable full E2E orchestration | `python tools/run_e2e.py` / CI isolated Private Web V1 Playwright E2E | PENDING FINAL HEAD |
-| JWT/JWKS negative/security coverage | API auth regressions | PASS SOURCE REVIEW; FINAL CI PENDING |
-| Cross-owner denial and owner-aware FK | repository/RLS tests + hosted preview browser flow | PENDING HOSTED PREVIEW |
-| Public sign-up disabled | approved hosted-preview verifier + fresh provider/HTTP proof | PENDING HOSTED PREVIEW |
-| Preview credential/environment isolation | hosted verifier rejects production/localhost/mixed-content traffic | PENDING HOSTED PREVIEW |
-| Zero browser/page errors | Playwright hosted preview console/page-error capture | PENDING HOSTED PREVIEW |
-| Persisted birth/profile/Mandala/receipts | full hosted preview flow | PENDING HOSTED PREVIEW |
-| Production authenticated owner flow | FDM-733 owner login → persisted profile/birth/dashboard → logout attestation; password/token never exported | ACCEPTED REUSED BOUNDARY; FINAL TECHNICAL GATES PENDING |
-| Exact source → mirror → Vercel provenance | exact final SHA across upstream/mirror deployments and aliases | PENDING FINAL PROMOTION |
-| Automatic production deploy proof | Vercel Git deployments from mirror `main` at promoted exact SHA | PENDING FINAL PROMOTION |
-| Canonical production web/API smoke | web `/`, API `/health`, `/ready` documented interpretation | PENDING FINAL PROMOTION |
-| Railway/Tauri/local product runtime absent | permanent regression + stale-runtime search | PASS SOURCE REVIEW; FINAL CI/SEARCH PENDING |
-| Secret-pattern / private-data leakage review | PR diff, logs/evidence scan, provider metadata only | PENDING FINAL REVIEW |
-| Incident/rollback safety | `docs/operations/INCIDENT_AND_ROLLBACK.md` + recorded rollback targets | PENDING FINAL PROMOTION IDS |
+| Web/API/schema/deploy-contract quality | permanent GitHub Actions matrix | FINAL-HEAD CI PENDING |
+| Root Python / retired-runtime regressions | classified permanent root suite | FINAL-HEAD CI PENDING |
+| Disposable local full E2E | `python tools/run_e2e.py` / CI | FINAL-HEAD CI PENDING |
+| JWT/JWKS negatives and API-derived ownership | API regressions/source review | PASS; FINAL-HEAD CI PENDING |
+| Hosted login/onboarding/persistence/Mandala/receipts | hosted run `32747879078` | PASS |
+| Hosted unauthenticated/cross-owner denial | hosted run `32747879078` | PASS |
+| Hosted zero browser/page errors | Playwright hosted audit | PASS |
+| Preview-only API/Supabase / HTTPS / no localhost | Playwright isolation assertions | PASS |
+| Certified hosted Swiss runtime/provenance | hosted audit + deploy contract | PASS |
+| Public sign-up disabled | hosted/provider verification | PASS |
+| Production authenticated owner flow | reused FDM-733 owner attestation; no password/token exported | ACCEPTED REUSED BOUNDARY |
+| Exact source → mirror → Vercel preview provenance | deployment IDs above at `e8bd14e...` | PASS |
+| Final PR review/secret/stale-runtime scan | final-head review | PENDING |
+| Exact production promotion / automatic deploy | mirror `main` + Vercel production | PENDING |
+| Canonical production smoke | web `/`, API `/health`, documented `/ready` | PENDING |
 
-## Production-owner credential boundary
+## Known limitations / accepted residual risks
 
-FDM-736 explicitly permits reuse of the final FDM-733 owner-authenticated production attestation when exact-SHA technical gates are green. That attestation proves owner login, persisted profile/birth/dashboard behavior and logout. The real owner password, access token and refresh token must not be copied into CI, Vercel output, Linear, Git, logs, or this report. FDM-736 does not create a new human password-sharing gate.
-
-## Known limitations and accepted residual risks
-
-- API `/ready` intentionally returns `503 service_not_ready` until concrete readiness probes are enabled. This is fail-closed and documented; it is not treated as a healthy-while-unknown success response.
-- Supabase leaked-password protection currently produces a provider security-advisor warning on preview and production. No authentication, ownership or RLS boundary is weakened to remove it. Final FDM-736 disposition must remain consistent with the Linear acceptance contract.
-- FDM-742 external human astrology reference/provenance assurance is explicitly a separate deferred assurance item and does not invalidate the Web V1 engineering completion audit.
-- No speculative post-V1 modules are pulled into this audit.
+- API `/ready` intentionally returns `503 service_not_ready` until concrete readiness probes are enabled; this is fail-closed behavior.
+- Supabase leaked-password protection remains a provider advisory; it does not bypass application JWT validation, owner-scoped SQL, or RLS.
+- FDM-742 external human astrology-reference/provenance assurance remains a separate deferred assurance item and is not a Web V1 engineering completion blocker.
+- The retired `fdm-736-audit-helper` Edge Function is inert (JWT required, HTTP 410) but cannot be physically deleted through the currently available Supabase connector.
+- No speculative post-V1 modules are included.
 
 ## Rollback posture
 
-Before final FDM-736 promotion, the known-good production deployment-mirror target is `19f272acace62403e21a83ddfe842759a83617c6`, with web deployment `dpl_GXPuurL8YieiEa5iGb1m4XgPv32S` and API deployment `dpl_Dj9CAUG2hFGDCiAXyv149nyH5hZf`. The incident runbook requires rollback to a known exact Git object/provider deployment, application disablement where necessary, and credential rotation on suspected compromise without deleting private user data as an incident shortcut.
+Before final FDM-736 promotion, the known-good production mirror target is `19f272acace62403e21a83ddfe842759a83617c6`, with web deployment `dpl_GXPuurL8YieiEa5iGb1m4XgPv32S` and API deployment `dpl_Dj9CAUG2hFGDCiAXyv149nyH5hZf`. Rollback uses exact Git/provider objects and must never delete private user data as an incident shortcut.
 
 ## Finalization checklist
 
 - [ ] Fresh final-head complete CI matrix is green.
-- [ ] Fresh hosted preview pair is `READY` at the exact authorized candidate.
-- [ ] Full hosted preview browser/security/isolation flow passes with disposable identities only.
+- [x] Exact candidate hosted preview pair is `READY`.
+- [x] Full hosted preview browser/security/isolation flow passes with disposable identities only.
+- [x] Temporary synthetic identities are removed; marker count is 0.
 - [ ] PR full diff/scope/stale-runtime/secret-pattern/review-thread checks are clean.
 - [ ] PR is merged only after fresh final-head verification.
-- [ ] Final upstream `main` and merge tree are recorded.
+- [ ] Final upstream `main` SHA/tree are recorded.
 - [ ] Deployment-mirror `main` is promoted only to the exact authorized upstream object.
 - [ ] Automatic Vercel web/API production deployments prove mirror `main` and exact promoted SHA.
 - [ ] Fresh canonical web `/`, API `/health`, and documented `/ready` checks pass.
-- [ ] Sanitized immutable completion evidence is recorded in Linear and FDM-736 is marked Done only if every acceptance criterion passes.
+- [ ] Sanitized completion evidence is recorded in Linear; FDM-736 is marked Done only if every criterion passes.
 - [ ] No subsequent Linear issue is started.
